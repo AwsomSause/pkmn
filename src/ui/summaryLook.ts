@@ -5,7 +5,8 @@ import { natureEffectText, natureName } from '../core/natures';
 import { abilityStatus } from '../core/battle/abilities';
 import type { Content, StatName } from '../core/contentSchema';
 import { abilityOf, calcStats, getSpecies, maxPp } from '../core/pokemon';
-import type { PokemonInstance, RunState } from '../core/state';
+import { nextGoal, RANK_NAMES, speciesRank } from '../core/mastery';
+import type { PokemonInstance, Profile, RunState } from '../core/state';
 
 const cap = (s: string) => s[0]!.toUpperCase() + s.slice(1);
 
@@ -67,5 +68,35 @@ export function summaryInfo(content: Content, run: RunState | null, mon: Pokemon
     record,
     titles: history?.titles ?? [],
     memories: [...(history?.memories ?? [])].sort((a, b) => b.importance - a.importance || b.seq - a.seq).slice(0, 3).map((m) => m.text),
+  };
+}
+
+export interface GrowthInfo {
+  /** Where it can evolve to and how, or "Fully evolved". */
+  evolutions: string[];
+  /** Battle forms it can take and what they need (Mega Stones). */
+  forms: string[];
+  /** Its mastery rank this profile and the next goal. */
+  mastery: { rank: string; next: string | null };
+}
+
+/** The evolution, form and mastery page of the summary. Pure: reads content and the profile, changes nothing. */
+export function growthInfo(content: Content, profile: Profile | null, mon: PokemonInstance): GrowthInfo {
+  const species = getSpecies(content, mon.speciesId);
+  const name = (id: string) => content.species.get(id)?.name ?? id;
+  const evolutions = species.evolutions.map((e) => {
+    const how = e.item ? `with ${content.catalog.get(e.item)?.name ?? e.item}` : `at Lv${e.level}`;
+    const extra = [e.region ? `in ${content.regions.get(e.region)?.name ?? e.region}` : '', e.gender ? `(${e.gender} only)` : ''].filter(Boolean).join(' ');
+    return `${name(e.to)} ${how}${extra ? ` ${extra}` : ''}`;
+  });
+  const forms = [...content.items.values()]
+    .filter((it) => it.effect.kind === 'megaStone' && it.effect.forms[mon.speciesId] !== undefined)
+    .map((it) => `${name((it.effect as { forms: Record<string, string> }).forms[mon.speciesId]!)} (needs ${it.name})`);
+  const rec = profile?.mastery?.[mon.speciesId];
+  const goal = nextGoal(content, mon.speciesId, rec);
+  return {
+    evolutions: evolutions.length > 0 ? evolutions : ['Fully evolved'],
+    forms,
+    mastery: { rank: RANK_NAMES[speciesRank(content, mon.speciesId, rec)], next: goal ? `${RANK_NAMES[goal.rank]}: ${goal.parts.map((g) => `${g.text} (${g.current}/${g.target})`).join(', ')}` : null },
   };
 }
