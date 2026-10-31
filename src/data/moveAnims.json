@@ -10958,7 +10958,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growth"
     },
     "withdraw": {
       "anim": "withdraw",
@@ -11226,7 +11227,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "mudslap"
     },
     "mud-shot": {
       "anim": "mud-shot",
@@ -11243,7 +11245,8 @@
       "flash": null,
       "hitStopMs": 57,
       "telegraph": "normal",
-      "pack": "ess-metal-claw"
+      "pack": "ess-metal-claw",
+      "script": "metalclaw"
     },
     "confusion": {
       "anim": "confusion",
@@ -11288,7 +11291,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "hypnosis"
     },
     "powder-snow": {
       "anim": "powder-snow",
@@ -11408,7 +11412,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 63,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "nightslash"
     },
     "fairy-wind": {
       "anim": "fairy-wind",
@@ -11499,7 +11504,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 65,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "rockslide"
     },
     "astonish": {
       "anim": "astonish",
@@ -11525,7 +11531,8 @@
       "flash": null,
       "hitStopMs": 67,
       "telegraph": "normal",
-      "pack": "ess-shadow-ball"
+      "pack": "ess-shadow-ball",
+      "script": "shadowball"
     },
     "iron-defense": {
       "anim": "iron-defense",
@@ -11621,7 +11628,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 65,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "airslash"
     },
     "slash": {
       "anim": "slash",
@@ -11960,7 +11968,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "calmmind"
     },
     "charge-beam": {
       "anim": "charge-beam",
@@ -12002,7 +12011,8 @@
       "flash": "#c03028",
       "hitStopMs": 80,
       "telegraph": "strong",
-      "pack": "ess-close-combat"
+      "pack": "ess-close-combat",
+      "script": "closecombat"
     },
     "coil": {
       "anim": "coil",
@@ -12134,7 +12144,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "discharge"
     },
     "double-team": {
       "anim": "double-team",
@@ -12872,7 +12883,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "nastyplot"
     },
     "needle-arm": {
       "anim": "needle-arm",
@@ -13361,7 +13373,8 @@
       "flash": null,
       "hitStopMs": 60,
       "telegraph": "normal",
-      "pack": "ess-swift"
+      "pack": "ess-swift",
+      "script": "swift"
     },
     "swords-dance": {
       "anim": "swords-dance",
@@ -13562,7 +13575,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 67,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "zenheadbutt"
     },
     "zing-zap": {
       "anim": "zing-zap",
@@ -13680,7 +13694,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-confuse-ray"
+      "pack": "ess-confuse-ray",
+      "script": "confuseray"
     },
     "darkest-lariat": {
       "anim": "darkest-lariat",
@@ -13818,7 +13833,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-fury-swipes"
+      "pack": "ess-fury-swipes",
+      "script": "furyswipes"
     },
     "gear-grind": {
       "anim": "gear-grind",
@@ -13932,7 +13948,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-leech-seed"
+      "pack": "ess-leech-seed",
+      "script": "leechseed"
     },
     "magma-storm": {
       "anim": "magma-storm",
@@ -14025,7 +14042,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "recover"
     },
     "reversal": {
       "anim": "reversal",
@@ -14909,7 +14927,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-curse"
+      "pack": "ess-curse",
+      "script": "curse"
     },
     "dark-void": {
       "anim": "dark-void",
@@ -16303,7 +16322,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-light-screen"
+      "pack": "ess-light-screen",
+      "script": "lightscreen"
     },
     "light-that-burns-the-sky": {
       "anim": "light-that-burns-the-sky",
@@ -17240,7 +17260,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-rain-dance"
+      "pack": "ess-rain-dance",
+      "script": "raindance"
     },
     "rapid-spin": {
       "anim": "rapid-spin",
@@ -17381,7 +17402,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "rollout"
     },
     "roost": {
       "anim": "roost",
@@ -17421,7 +17443,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "safeguard"
     },
     "salt-cure": {
       "anim": "salt-cure",
@@ -18288,7 +18311,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-toxic"
+      "pack": "ess-toxic",
+      "script": "toxic"
     },
     "toxic-spikes": {
       "anim": "toxic-spikes",
