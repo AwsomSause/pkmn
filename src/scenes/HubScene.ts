@@ -194,7 +194,7 @@ export class HubScene extends Phaser.Scene {
     const all = [...session.content.species.values()].filter((sp) => !sp.id.includes('-') && services().assets.has(pokemonAssetIds(sp.assets).front));
     this.tileMons = Phaser.Utils.Array.Shuffle(all).slice(0, TILES.length);
     preloadPokemon(this, this.tileMons, { front: true });
-    queueAssets(this, ['ui.trainercard', 'ui.dex.seen', 'ui.dex.caught']);
+    queueAssets(this, ['ui.trainercard', 'ui.dex.seen', 'ui.dex.caught', 'ui.save.bg']);
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
@@ -1560,6 +1560,7 @@ export class HubScene extends Phaser.Scene {
     ];
     this.openPicker({
       title: 'Save data',
+      backdrop: 'ui.save.bg',
       rows,
       columns: 1,
       rowHeight: 56,
