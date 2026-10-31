@@ -835,30 +835,37 @@ export class MapScene extends Phaser.Scene {
     const content = session.content;
     const pv = raidPreview(content, session.run!, sideId);
     const species = content.species.get(pv.speciesId)!;
-    const poor = session.run!.money < pv.entryCost;
+    const money = session.run!.money;
+    // Regional and rival raids offer approaches (one row each); other raids are a single "fight" row.
+    const choices = pv.approaches.length > 0 ? pv.approaches : [{ id: '', label: '', text: '', cost: 0, leave: false }];
+    const kindName = { wild: 'Raid', regional: 'Regional Raid', rival: 'Rival Raid', anomaly: 'Anomaly Raid' }[pv.kind];
     const picker: Picker = new Picker(this, {
       glass: true,
-      title: `Raid - Tier ${pv.tier}: ${pv.name}`,
+      title: `${kindName} - Tier ${pv.tier}: ${pv.name}${pv.returning ? ' (it came back!)' : ''}`,
       columns: 1,
       rowHeight: 150,
-      rows: [
-        {
+      rows: choices.map((a) => {
+        const cost = pv.entryCost + a.cost;
+        return {
           ...speciesRow(species),
-          problem: poor ? `You need ₽${pv.entryCost} to enter.` : null,
-          hint: `${pv.blurb}  Mechanics: ${pv.mechanics.join(', ')}.  Rewards: ${pv.rewards.join(', ')}.  Entry: ₽${pv.entryCost}. Losing never ends your run.`,
-          draw: (scene, box, w) => {
-            box.add(scene.add.text(16, 8, `${species.name}  Lv${pv.level}   ·   Tier ${pv.tier}   ·   Entry ₽${pv.entryCost}`, textStyle(22)));
-            box.add(scene.add.text(16, 42, `Mechanics: ${pv.mechanics.join(' · ')}`, textStyle(16, '#ffd0a0', { wordWrap: { width: w - 32 } })));
-            box.add(scene.add.text(16, 88, `Rewards: ${pv.rewards.join(' · ')}`, textStyle(16, '#c0f0c0', { wordWrap: { width: w - 32 } })));
+          problem: !a.leave && money < cost ? `You need ₽${cost} to enter.` : null,
+          hint: `${pv.blurb}  Mechanics: ${pv.mechanics.join(', ')}.  Rewards: ${pv.rewards.join(', ')}.  Entry: ₽${cost}. Losing never ends your run.`,
+          draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+            if (scene.textures.exists('ui.raid.den_entry')) box.add(scene.add.image(0, 0, 'ui.raid.den_entry').setOrigin(0).setDisplaySize(w, 150).setAlpha(0.35));
+            box.add(scene.add.text(16, 8, a.label ? `${a.label}  ·  ${a.leave ? 'free' : `₽${cost}`}` : `${species.name}  Lv${pv.level}   ·   Tier ${pv.tier}   ·   Entry ₽${cost}`, textStyle(22)));
+            if (a.text) box.add(scene.add.text(16, 36, `${species.name} Lv${pv.level}: ${a.text}`, textStyle(16, '#ffe0a0', { wordWrap: { width: w - 32 } })));
+            box.add(scene.add.text(16, a.text ? 62 : 42, `Mechanics: ${pv.mechanics.join(' · ')}`, textStyle(16, '#ffd0a0', { wordWrap: { width: w - 32 } })));
+            box.add(scene.add.text(16, 104, `Rewards: ${pv.rewards.join(' · ')}`, textStyle(16, '#c0f0c0', { wordWrap: { width: w - 32 } })));
           },
-        },
-      ],
-      onSelect: () => {
+        };
+      }),
+      onSelect: (i) => {
+        const choice = choices[i]!;
         picker.close();
         this.picker = null;
         this.busy = true;
         playSfx(this, 'ui.select');
-        const run = session.enterRaid(sideId);
+        const run = session.enterRaid(sideId, choice.id || undefined);
         this.cameras.main.fadeOut(250);
         this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
       },

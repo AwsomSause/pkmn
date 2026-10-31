@@ -453,6 +453,11 @@ export const RaidBattleSchema = z.object({
   breaker: z.string().nullable().default(null),
   tank: z.string().nullable().default(null),
   survivor: z.string().nullable().default(null),
+  /** Raid types: a rival fights beside you, the boss is back after escaping, and the approach's prize changes. */
+  rivalHelped: z.boolean().default(false),
+  returning: z.boolean().default(false),
+  rewardPercent: z.number().int().default(100),
+  draftDelta: z.number().int().default(0),
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
@@ -641,6 +646,8 @@ export const SideStopSchema = z.object({
   kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition', 'minigame', 'service']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
+  /** A raid boss that escaped earlier and is back, stronger. */
+  returning: z.boolean().optional(),
   /** A Totem's territory: which Totem (totems.json) lives here. */
   totemId: z.string().optional(),
   /** An expedition gate: which expedition (expeditions.json) starts here. */
@@ -988,7 +995,7 @@ export const RunStateSchema = z.object({
   totems: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), done: z.array(z.string()), unlocks: z.array(z.string()), research: z.number().int().min(0) }).default(() => ({ entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 })),
   /** Crafting materials held (material id → count; core/crafting.ts). Run-only. */
   materials: z.record(z.string(), z.number().int().min(0)).default(() => ({})),
-  raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()), /** The best raid tier won in earlier runs (older saves: every tier open). */ unlockedTier: z.number().int().min(0).max(6).default(6) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6 })),
+  raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()), /** Raids whose boss escaped (the timer ran out); each comes back as a stronger den in a later stage. */ escaped: z.array(z.string()).default([]), /** The best raid tier won in earlier runs (older saves: every tier open). */ unlockedTier: z.number().int().min(0).max(6).default(6) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6, escaped: [] })),
   /** A past run's Pokémon waiting to meet you after this many battles (story slice 5); unset when none was chosen. */
   reunion: z.object({ mon: PastPokemonSchema, afterEncounters: z.number().int().min(1), done: z.boolean() }).optional(),
 });

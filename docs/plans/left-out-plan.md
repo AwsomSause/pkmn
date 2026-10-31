@@ -98,7 +98,7 @@ Kice asked to "search even further". Four more searches: the Untitled document a
 | 5.5 | **Rival who wins without you:** a rival can become a Gym Leader, regional finalist or Champion; ladder states past "contender" | Rivalry Engine §15, phases 5, 7 | NONE | M |
 | 5.6 | **Ultimate Rival presentation:** intro, emblem/title, custom battle intro, quest chain, "Previous Ultimate Rivals" in the Chronicle | Rivalry Engine §7, §14, phase 8 | PART | S–M |
 | 5.7 | **Rival simulation report** over many seeds (how many rivals, resolutions, repeats, contradictions) + QA scenarios | Rivalry Engine phase 13 | NONE | S |
-| 5.8 | **Raid memories** (First to Face the Beast, Broke Its Guard, Took the Hit for Everyone, The Final Blow Belonged to…, The One That Survived, The Rival Who Stood Beside You, The One That Got Away) and contribution rewards | Techno §3 | PART: first five built (5.8 PR); Rival Who Stood Beside You and One That Got Away come with 5.9 | S–M |
+| 5.8 | **Raid memories** (First to Face the Beast, Broke Its Guard, Took the Hit for Everyone, The Final Blow Belonged to…, The One That Survived, The Rival Who Stood Beside You, The One That Got Away) and contribution rewards | Techno §3 | BUILT (all seven; the last two with 5.9) | S–M |
 | 5.9 | **Raid types:** Regional Raid, Rival Raid (help, race for the last hit, or leave), Anomaly Raid; a boss that escapes and returns | Techno §3; Blueprint §1 Resolve | NONE | M |
 | 5.10 | **Doubles limits:** only the left Pokémon can transform; Hyper moments and rage follow only the left pair; only Tate & Liza fight boss doubles | Doubles thread | LIMITED | M |
 | 5.11 | **Daily Run as its own format:** curated daily starter set, daily modifiers, shorter route with a set final boss | Untitled §16.2 | PART | M |

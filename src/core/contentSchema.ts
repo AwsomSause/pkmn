@@ -515,6 +515,8 @@ export const BASE_COUNTER_NAMES = [
   /** Pokémon swapped at a Trade Post. */
   'tradesMade',
   'totemsWon',
+  /** Anomaly raids won. */
+  'anomalyRaidsWon',
   'rivalBattlesWon',
   /** Holiday-event stops: clues found, event bosses beaten and event finales won (map events' "count" effect). */
   'eventClues',

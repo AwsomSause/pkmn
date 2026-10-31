@@ -85,6 +85,7 @@ const COUNTER_WORDS: Record<string, string> = {
   tradesMade: 'trades made',
   raidsWon: 'raids won',
   totemsWon: 'Totems beaten',
+  anomalyRaidsWon: 'anomaly raids won',
   rivalBattlesWon: 'rival battles won',
   eventsCompleted: 'events completed',
   candiesEarned: 'candies earned',
