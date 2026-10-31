@@ -24,6 +24,7 @@ async function startBattle(page: Page) {
 }
 
 test('every scripted EBDX animation plays, finishes and restores the Pokémon', async ({ page }) => {
+  test.setTimeout(600_000);
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto('/?seed=ebdx-anims&debug=1');
