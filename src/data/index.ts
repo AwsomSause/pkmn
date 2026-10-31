@@ -503,10 +503,11 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   }
   if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');
   // Roaming Legendaries (balance.world): each needs a species and its own stop (event "roamer-<species>").
+  const hasRoamerEvents = [...content.events.values()].some((e) => e.stop === 'roamer');
   for (const r of content.balance.world.roamers) {
     if (!content.species.has(r.species)) problems.push(`balance.world roamer "${r.species}" is not a species`);
-    if (content.events.get(`roamer-${r.species}`)?.stop !== 'roamer') problems.push(`balance.world roamer "${r.species}" has no "roamer-${r.species}" event with stop "roamer"`);
-    if (r.gameEvent && !content.gameEvents.has(r.gameEvent)) problems.push(`balance.world roamer "${r.species}" belongs to unknown game event "${r.gameEvent}"`);
+    if (hasRoamerEvents && content.events.get(`roamer-${r.species}`)?.stop !== 'roamer') problems.push(`balance.world roamer "${r.species}" has no "roamer-${r.species}" event with stop "roamer"`);
+    if (hasRoamerEvents && r.gameEvent && !content.gameEvents.has(r.gameEvent)) problems.push(`balance.world roamer "${r.species}" belongs to unknown game event "${r.gameEvent}"`);
   }
   // Map events: every id they mention must exist.
   const knownItem = (id: string) => content.items.has(id) || content.catalog.has(id);

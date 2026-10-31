@@ -147,7 +147,7 @@ const WEEKLY: Json[] = [
   weekly('legendary-beasts-chase', 'Legendary Beasts Chase', 'Raikou, Entei and Suicune are roaming the region. Follow their trail, and be ready when they turn to face you.',
     'Raikou, Entei and Suicune roam every map from the third stage, moving as you do; tracks and sightings turn up on the road.',
     [{ kind: 'xpMultiplier', value: 1.1 }],
-    ['beast-clue-thunder', 'beast-clue-ash', 'beast-clue-ripple', 'beast-lookout', 'legend-clue-tracks', 'legend-clue-song', 'lookout-tower'],
+    ['beast-clue-thunder', 'beast-clue-ash', 'beast-clue-ripple', 'beast-lookout', 'lookout-tower'],
     [
       goal('trail', 'Follow 4 trails (clues)', 'eventClues', 4, rp(50)),
       goal('face', 'Face a beast', 'eventBossesWon', 1, rp(100)),
@@ -158,7 +158,7 @@ const WEEKLY: Json[] = [
   weekly('campfire-tales-week', 'Campfire Tales', 'Storytellers are out and the fires are lit. Every stop is a chance to hear, or tell, a story.',
     'Storytellers, ghost stories and Pokémon memories turn up at camps and on the road; your Pokémon bond faster at rest.',
     [{ kind: 'researchMultiplier', value: 1.15 }],
-    ['tale-storyteller', 'tale-ghost-story', 'tale-pokemon-memory', 'tale-world-lore', 'tale-festival-night', 'camp-checkpoint', 'camp-council', 'starry-camp'],
+    ['tale-storyteller', 'tale-ghost-story', 'tale-pokemon-memory', 'tale-world-lore', 'tale-festival-night', 'camp-checkpoint'],
     [
       goal('tales', 'Hear 4 tales (clues)', 'eventClues', 4, rp(50)),
       goal('events', 'Finish 8 map events', 'eventsCompleted', 8, rp(70)),
@@ -199,7 +199,7 @@ const WEEKLY: Json[] = [
   weekly('tower-of-legends', 'Tower of Legends', 'The Tower of Legends opens its doors to everyone. Five floors, each a different test, and a Legend at the top.',
     'The Tower of Legends has a door on every road: five floors that test resources, team, battle and endurance, with a Legendary at the top.',
     [{ kind: 'moneyMultiplier', value: 1.1 }],
-    ['tower-week-entrance', 'tower-1', 'tower-2', 'tower-3', 'tower-4', 'tower-5', 'legend-encounter'],
+    ['tower-week-entrance', 'tower-1', 'tower-2', 'tower-3', 'tower-4', 'tower-5'],
     [
       goal('climb', 'Climb 3 floors (clues)', 'eventClues', 3, rp(60)),
       goal('legend', 'Beat the Legend at the top', 'eventBossesWon', 1, rp(150)),
