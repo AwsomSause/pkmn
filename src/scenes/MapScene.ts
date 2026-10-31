@@ -244,6 +244,9 @@ export class MapScene extends Phaser.Scene {
       const band = fc.front.band === 'all' ? '' : fc.front.band === 'high' ? ', top route only' : ', lower routes only';
       this.add.text(GAME_WIDTH / 2, 71, `Forecast: ${FRONT_LABEL[fc.front.weather] ?? fc.front.weather} ${where}${band}`, textStyle(13, '#bfe4ff', { stroke: '#0b2a4a', strokeThickness: 3 })).setOrigin(0.5, 0).setName('forecast');
     }
+    // Convoy Mode: the escort's health, as hearts.
+    const convoy = league ? null : run.stage?.convoy;
+    if (convoy) this.add.text(GAME_WIDTH / 2, 88, `Escort: ${convoy.name}  ${'♥'.repeat(convoy.hp)}${'♡'.repeat(convoy.maxHp - convoy.hp)}`, textStyle(13, '#ffd0d8', { stroke: '#4a0b1a', strokeThickness: 3 })).setOrigin(0.5, 0).setName('convoy');
     const objectives = modeObjectives(run);
     if (objectives.length > 0) this.add.text(GAME_WIDTH - 24, 68, objectivesLine(objectives), textStyle(14, '#f0e0a0')).setOrigin(1, 0);
 

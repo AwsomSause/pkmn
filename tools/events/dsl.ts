@@ -85,6 +85,12 @@ export const room = (eventId: string): Json => ({ kind: 'addEvent', eventId });
 export const roomFrom = (...ids: string[]): Json => ({ kind: 'addEventFrom', ids });
 /** A weather front rolls in over the columns ahead. */
 export const front = (weather: string, columns = 3): Json => ({ kind: 'front', weather, columns });
+/** Convoy Mode: take an escort to the gym. */
+export const convoy = (name: string, hp = 4): Json => ({ kind: 'convoy', name, hp });
+/** The escort recovers. */
+export const convoyHeal = (amount: number): Json => ({ kind: 'convoyHeal', amount });
+/** An escort is (or is not) under your care. */
+export const escorting = (active = true): Json => ({ kind: 'convoy', active });
 /** A story flag condition: at least / at most. */
 export const flagIs = (key: string, atLeast = 1, atMost = 99): Json => ({ kind: 'flag', key, atLeast, atMost });
 /** A party Pokémon with one of these abilities. */

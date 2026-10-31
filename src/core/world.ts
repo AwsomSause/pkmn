@@ -247,3 +247,50 @@ export function partyHasAbility(content: Content, run: RunState, abilities: read
     return a !== null && abilities.includes(a);
   });
 }
+
+// ---------- convoy mode ----------
+
+/** An event brings an escort into the stage (mutates `run`); one at a time. */
+export function startConvoy(run: RunState, name: string, hp: number): boolean {
+  const stage = run.stage;
+  if (!stage || stage.kind !== 'stage' || stage.convoy) return false;
+  stage.convoy = { name, hp, maxHp: hp };
+  return true;
+}
+
+export function healConvoy(run: RunState, amount: number): void {
+  const convoy = run.stage?.convoy;
+  if (convoy) convoy.hp = Math.min(convoy.maxHp, convoy.hp + amount);
+}
+
+/**
+ * The player stepped to a node with an escort (mutates `run`). A battle node may strike it: a seeded roll
+ * from the stage and node, softened by a guarding ability in the party. At 0 health it is lost. At the gym
+ * a living escort is delivered for the reward; either way the escort ends there.
+ */
+export function convoyStep(content: Content, run: RunState, node: MapNode): void {
+  const stage = run.stage;
+  const convoy = stage?.convoy;
+  if (!stage || !convoy) return;
+  const w = worldOf(content);
+  const flag = (key: string): void => {
+    run.story.flags[`ev:${key}`] = Number(run.story.flags[`ev:${key}`] ?? 0) + 1;
+  };
+  if (node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion') {
+    if (convoy.hp > 0) {
+      run.money += w.convoyReward + convoy.hp * w.convoyRewardPerHp;
+      flag('convoy-delivered');
+    }
+    stage.convoy = null;
+    return;
+  }
+  if (node.kind !== 'wild' && node.kind !== 'trainer') return;
+  const rng = new Rng(hashSeed(`${run.seed}::convoy::${stageKey(run)}::${node.id}`));
+  if (!rng.chance(w.convoyHitChance)) return;
+  const guard = partyHasAbility(content, run, w.convoyGuardAbilities) ? 1 : 0;
+  convoy.hp = Math.max(0, convoy.hp - Math.max(1, rng.int(w.convoyHit[0], w.convoyHit[1]) - guard));
+  if (convoy.hp === 0) {
+    flag('convoy-lost');
+    stage.convoy = null;
+  }
+}

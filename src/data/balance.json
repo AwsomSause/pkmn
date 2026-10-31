@@ -694,6 +694,18 @@
     "gameEvent": "legendary-beasts-chase"
    }
   ],
+  "convoyHitChance": 0.5,
+  "convoyHit": [
+   1,
+   2
+  ],
+  "convoyGuardAbilities": [
+   "intimidate",
+   "magic-guard",
+   "sturdy"
+  ],
+  "convoyReward": 200,
+  "convoyRewardPerHp": 100,
   "campEvery": 2,
   "campColumns": [
    9,
