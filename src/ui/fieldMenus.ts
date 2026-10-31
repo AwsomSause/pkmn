@@ -7,6 +7,7 @@ import { attributeText } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
 import { itemUseProblem } from '../core/items';
 import { rivalChronicle } from '../core/rivals/chronicle';
+import { playerFame, protagonistTitle, worldBoards } from '../core/rivals/recognition';
 import { pastUltimateRivals } from '../core/rivals/legacy';
 import { ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
 import { standingSummary } from '../core/rivals/standing';
@@ -105,7 +106,7 @@ export function openStoryMenu(host: FieldMenuHost): void {
     const quest = r.quest.length > 0 ? `  Quest: ${r.quest.map((q) => `${q.done ? '✓' : '○'} ${q.text}`).join('; ')}.` : '';
     return {
       problem: null,
-      hint: `World: ${r.world}.  ${r.summary}  ${r.memory}${r.bonds.length > 0 ? `  Team: ${r.bonds.join('; ')}.` : ''}${quest}`,
+      hint: `World: ${r.world}.${r.signature ? `  Ace: ${r.signature}.` : ''}  ${r.summary}  ${r.memory}${r.bonds.length > 0 ? `  Team: ${r.bonds.join('; ')}.` : ''}${quest}`,
       draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
         box.add(scene.add.text(14, 8, `${r.ultimate ? `${ULTIMATE_EMBLEM} Ultimate Rival` : '★ Rival'} (${r.state}): ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
       },
@@ -123,6 +124,24 @@ export function openStoryMenu(host: FieldMenuHost): void {
       },
     });
   }
+  // World recognition: your title, then posters, headlines, the Champion board and the rival leaderboard.
+  const title = protagonistTitle(run);
+  for (const b of [...worldBoards(content, run)].reverse()) {
+    rivalRows.unshift({
+      problem: null,
+      hint: b.text,
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 8, b.text, textStyle(18, '#ffd28a', { fixedWidth: w - 28 })));
+      },
+    });
+  }
+  rivalRows.unshift({
+    problem: null,
+    hint: `Titles change how people talk to you, never your battles. Fame ${playerFame(run)}.`,
+    draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+      box.add(scene.add.text(14, 8, `You are known as: ${title.name}`, textStyle(20, '#ffe080', { fixedWidth: w - 28 })));
+    },
+  });
   const standing = standingSummary(run);
   if (standing) {
     rivalRows.unshift({

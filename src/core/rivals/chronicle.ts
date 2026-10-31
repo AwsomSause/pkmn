@@ -7,6 +7,7 @@ import { FEELING_NAMES, rivalFeeling } from './feelings';
 import { bondLines, reputation, signature } from './bonds';
 import { RIVAL_CONFIG, RIVAL_WORLD } from './schema';
 import { rivalStatusLine, rivalWorldView } from './progression';
+import { aceName } from './signatureTeam';
 import { everUltimateFlag, ultimateQuest, ultimateRival, type UltimateQuestStep } from './ultimate';
 
 export interface RivalLine {
@@ -22,6 +23,8 @@ export interface RivalLine {
   state: string;
   /** True for the rival the story follows. */
   ultimate: boolean;
+  /** Its signature ace's current form, once it has one. */
+  signature: string | null;
   /** Where it stands in the world: "Ahead · 2 badges · fame 9". */
   world: string;
   /** The Ultimate Rival quest chain, for a rival that is or was the Ultimate Rival (else empty). */
@@ -46,6 +49,7 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
       ultimate: ultimateRival(run)?.id === r.id,
       quest: run.story.flags[everUltimateFlag(r.id)] ? ultimateQuest(run, r) : [],
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
+      signature: aceName(content, r),
       bonds: [...(r.faction ? [`Faction: ${RIVAL_WORLD.factions.find((f) => f.id === r.faction)?.name ?? r.faction}`] : []), ...(r.sponsor ? [`Sponsored by ${RIVAL_WORLD.sponsors.find((x) => x.id === r.sponsor)?.name ?? r.sponsor}`] : []), ...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
     };
   });

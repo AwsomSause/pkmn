@@ -289,6 +289,8 @@ export const RivalSchema = z.object({
   /** Arcs it has finished, so a bond or Overdrive arc never repeats. */
   arcsDone: z.array(z.string()).optional(),
   faction: z.string().optional(),
+  /** Its signature ace's family (first-stage species id; core/rivals/signatureTeam.ts). */
+  ace: z.string().optional(),
   /** Where it stands in the world (core/rivals/progression.ts; filled from rivalProgress events, absent until the first one). */
   world: RivalWorldRecordSchema.optional(),
   /** Past contender (left-out 5.5): it took over a Gym, reached the regional finals, or became Champion. */
