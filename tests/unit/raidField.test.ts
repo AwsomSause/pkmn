@@ -3,10 +3,10 @@
 import { describe, expect, it } from 'vitest';
 import { createBattle, itemProblem, resolveTurn, type BattleContext } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
-import { applyBossHp, cheerProblem, freshRaidBattle, getRaid, raidFieldMultiplier, rotatingWeakness } from '../../src/core/raid/raid';
+import { raidMemories, applyBossHp, cheerProblem, freshRaidBattle, getRaid, raidFieldMultiplier, rotatingWeakness } from '../../src/core/raid/raid';
 import { raidCaptureTrack } from '../../src/core/presentation/battleMusic';
 import { hashSeed, Rng } from '../../src/core/rng';
-import { chooseStarter, createRun, enterRaid } from '../../src/core/run';
+import { chooseStarter, createRun, enterRaid, takeTurn } from '../../src/core/run';
 import type { PokemonInstance } from '../../src/core/state';
 import { content } from './helpers';
 
@@ -110,5 +110,42 @@ describe('raid capture jingle', () => {
     expect(raidCaptureTrack(3)).toBe('bgm.raid.capture.ultra');
     expect(raidCaptureTrack(4)).toBe('bgm.raid.capture.max');
     expect(raidCaptureTrack(6)).toBe('bgm.raid.capture.tera');
+  });
+});
+
+describe('raid memories', () => {
+  it('the Pokémon in front when a shield breaks earns "Broke Its Guard"', () => {
+    const { ctx, battle, boss, player } = fight('storm-gyarados');
+    expect(battle.raid!.breaker).toBeNull();
+    boss.hp = Math.floor(maxHp(content, boss) * 0.7);
+    battle.raid!.shieldHp = 1;
+    battle.raid!.shieldMax = 1;
+    for (let i = 0; i < 4 && !battle.raid!.breaker && !battle.outcome; i++) resolveTurn(ctx, { kind: 'move', index: 0 });
+    expect(battle.raid!.breaker).toBe(player.uid);
+  });
+
+  it('lists lead, breaker, tank, survivor and the finisher without duplicating keys', () => {
+    const { battle } = fight('sleeping-snorlax');
+    Object.assign(battle.raid!, { lead: 'a', breaker: 'b', tank: 'b', survivor: 'c' });
+    const list = raidMemories(battle, 'd');
+    expect(list.map((m) => m.key)).toEqual(['lead', 'breaker', 'tank', 'survivor', 'finisher']);
+    expect(list.find((m) => m.key === 'finisher')!.text('Pikachu', 'Snorlax')).toContain('final blow');
+  });
+
+  it('a won raid records memories and friendship for contributors', () => {
+    const run = chooseStarter(content, createRun(content, { runId: 'rm', seed: 'rm', archetypeId: 'red' }), 0);
+    const node = run.stage!.map.nodes.find((n) => n.column === 1)!;
+    node.sides.push({ id: 'raid-m', kind: 'raid', raidId: 'sleeping-snorlax', used: false });
+    run.stage!.current = node.id;
+    const started = enterRaid(content, run, 'raid-m');
+    expect(started.battle!.raid!.lead).toBe(started.party[0]!.uid);
+    started.battle!.enemyTeam[0]!.hp = 1;
+    started.party[0]!.level = 100;
+    const before = started.party[0]!.friendship;
+    let r = started;
+    for (let i = 0; i < 6 && r.battle; i++) r = takeTurn(content, r, { kind: 'move', index: 0 }).run;
+    const memories = r.story.histories[r.party[0]!.uid]?.memories.filter((m) => m.text.includes('final blow') || m.text.includes('first to face')) ?? [];
+    expect(memories.length).toBeGreaterThan(0);
+    expect(r.party[0]!.friendship).toBeGreaterThan(before);
   });
 });

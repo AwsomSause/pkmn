@@ -15,13 +15,14 @@ import { getArchetype, runPerks } from './archetypes';
 import { ATTRIBUTE_LABELS, addRunAttribute, effectiveAttributes, runAttributeEffects } from './attributes';
 import { createBattle } from './battle/engine';
 import type { Content, EventBattle, EventChoice, EventCondition, EventDef, EventEffect, EventOutcome, TradeWant, TypeName } from './contentSchema';
-import { enemyLevel, evolvedFormAt, levelScale, rollShiny } from './encounters';
+import { curveLevel, enemyLevel, evolvedFormAt, levelScale, rollShiny } from './encounters';
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
 import { championTeam } from './story/championDefense';
 import { oldFoe } from './story/promises';
 import { openFeud, settleFeud } from './story/feud';
+import { noteEventMorality } from './story/nemesis';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
@@ -31,7 +32,8 @@ import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, countShiny, discover } from './progress';
 import { eggStatus, layEgg } from './eggs';
 import { eggMoveOptions, familyId, teachEggMove } from './mastery';
-import { getCampaign, runLevelCap } from './regions';
+import { getCampaign, levelCap, runLevelCap } from './regions';
+import { auditEncounter, auditSpecies, directSpecies, type EncounterSource } from './encounterDirector';
 import { hashSeed, Rng } from './rng';
 import { continueAfterDecisions, healParty, newMon } from './run';
 import type { MapNode, RunState, SideStop } from './state';
@@ -426,6 +428,8 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   run.story.flags[risky ? 'choices:risky' : 'choices:safe'] = Number(run.story.flags[risky ? 'choices:risky' : 'choices:safe'] ?? 0) + 1;
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'event-choice', suppressed: false }, importance: risky ? 55 : 40, text: `${event.name}: ${choice.label}${risky ? (success ? ' (the gamble paid off)' : ' (the gamble failed)') : ''}` });
   emit(content, run, 'eventChoice', { data: { event: event.id, choice: choiceIndex, risky, success } });
+  // Kindness and cruelty are remembered by the event's Pokémon types (It Hasn't Forgotten…).
+  noteEventMorality(content, run, event.types ?? [], outcome.effects);
   const changes: string[] = [];
   // Prop Case: a Contest stop's Charisma counts twice.
   const contest = event.stop === 'contest' && hasPerk(content, run, 'doubleContest');
@@ -667,8 +671,9 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, 
     }
     case 'join': {
       const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
-      const speciesId = pickSpecies(content, run, e.species, e.types, rng);
-      const level = Math.max(1, eventLevel(content, run, node, rng) + e.levelBonus);
+      const speciesId = pickSpecies(content, run, e.species, e.types, rng, 'reward');
+      // No event lifts the party's level cap (Balancing Phase 7).
+      const level = Math.max(1, Math.min(runLevelCap(content, run), eventLevel(content, run, node, rng) + e.levelBonus));
       const mon = newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'p');
       mon.shiny = rollShiny(content, rng, runAttributeEffects(content, run).shinyChance * e.shinyMultiplier);
       if (mon.shiny) countShiny(run, mon.speciesId);
@@ -779,15 +784,25 @@ export function eventResearch(run: RunState): number {
 
 type EventBattleRef = NonNullable<NonNullable<RunState['battle']>['event']>;
 
-function pickSpecies(content: Content, run: RunState, species: string[], types: TypeName[], rng: Rng): string {
+/**
+ * An event's Pokémon goes through the Encounter Director (Balancing Phase 7): an event's own species
+ * list (or a Bell's favoured legendary) is an authored exception and only logged; otherwise the pool
+ * is gated by availability at the stage's curve level and each draw is validated like a wild one.
+ */
+function pickSpecies(content: Content, run: RunState, species: string[], types: TypeName[], rng: Rng, source: EncounterSource = 'event'): string {
+  const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current);
+  const gate = node ? curveLevel(content, levelScale(content, getCampaign(content, run.campaignId), run.regionIndex, run.stage!.index, node.column)) : 1;
   const known = species.filter((id) => content.species.has(id));
   // Tidal Bell / Clear Bell: their legendary answers whenever it is one of the choices.
   const favored = perksOf(activePerks(content, run), 'favorSpecies').map((p) => p.perk.species).find((id) => known.includes(id));
-  if (favored) return favored;
-  if (known.length > 0) return rng.pick(known);
+  const authored = favored ?? (known.length > 0 ? rng.pick(known) : null);
+  if (authored) {
+    auditSpecies(content, source, authored, gate, favored ? 'favored-species' : 'event-species-list');
+    return authored;
+  }
   const theme = getTheme(content, run.stage!.themeId);
-  const pool = typesPool(content, types.length > 0 ? types : theme.types, run.regionOrder[run.regionIndex]);
-  return rng.weighted(pool.map((p) => ({ item: p.speciesId, weight: p.weight })));
+  const pool = typesPool(content, types.length > 0 ? types : theme.types, run.regionOrder[run.regionIndex], gate).map((p) => ({ item: p.speciesId, weight: p.weight }));
+  return directSpecies(content, { source, level: gate, cap: levelCap(content, run.regionIndex), draw: () => rng.weighted(pool) }).speciesId;
 }
 
 function eventLevel(content: Content, run: RunState, node: MapNode, rng: Rng): number {
@@ -799,7 +814,8 @@ function eventLevel(content: Content, run: RunState, node: MapNode, rng: Rng): n
 function startEventBattle(content: Content, run: RunState, node: MapNode, b: EventBattle, rng: Rng, event: EventBattleRef): void {
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   const base = eventLevel(content, run, node, rng) + b.levelBonus;
-  const cap = 100;
+  // Event foes stay under the region's level cap like every ordinary enemy (Balancing Phase 7).
+  const cap = levelCap(content, run.regionIndex);
   if (b.kind === 'wild') {
     const speciesId = (b.recall ? oldFoe(run) : null) ?? pickSpecies(content, run, b.species, b.types, rng);
     const level = Math.min(cap, Math.max(1, base));
@@ -810,11 +826,13 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
   } else {
     const boss = b.bossId ? content.bosses.get(b.bossId) : undefined;
     const ghost = b.ghost ? championTeam(run.story) : [];
+    const authored = ghost.length > 0 ? 'rival-ghost-team' : boss ? 'event-boss-signature' : null;
     const team = ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
       const level = Math.min(cap, Math.max(1, base + (i === b.size - 1 ? 1 : 0)));
       const speciesId = boss ? boss.signature[i % boss.signature.length]! : pickSpecies(content, run, [], b.types, rng);
       return newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
     });
+    if (authored) for (const mon of team) auditEncounter(content, 'event', mon, authored);
     run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: b.name, leaderId: null });
   }
   run.battle.event = event;

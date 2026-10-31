@@ -34,7 +34,9 @@ import { graduateMentorships } from './mentorship';
 import { awardLegacyTitles, recordEpitaph } from './legacy';
 import { noteStruggle, recordChampionMemory } from './highHype';
 import { clearMomentFlags, detectMoments } from './moments';
-import { nemesisAfterBattle, noteNemesisBreakFree, noteNemesisFaint } from './nemesis';
+import { noteCodex } from './codex';
+import { noteRivalryLoss, noteRivalryWin } from './rivalryKinds';
+import { nemesisAfterBattle, noteNemesisBreakFree, noteNemesisFaint, noteRivalResult } from './nemesis';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
@@ -225,6 +227,15 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         });
         if (e.side === 'enemy' && by) noteFinisher(by, i);
         noteNemesisFaint(run, e.side, e.uid, by);
+        // Rivalry kinds (left-out 5.4): a loss may start a Bitter or One-Sided rivalry; a win may make one Mutual.
+        if (e.side === 'player' && by) {
+          const fallen = run.party.find((m) => m.uid === e.uid);
+          const foe = battle.enemyTeam.find((m) => m.uid === by);
+          if (fallen && foe) noteRivalryLoss(content, run, fallen, foe, where);
+        } else if (by && run.party.some((m) => m.uid === by) && noteRivalryWin(run, by, mon(e.uid)?.speciesId ?? '')) {
+          const def = content.story.definitions.find((d) => d.triggerConditions.trigger === 'rivalryMutual');
+          if (def) triggers.push({ ...makeTrigger(run, def, i, triggers.length, { name: speciesOf(by), enemy: speciesOf(e.uid) }, null, by), combat: false });
+        }
         if (avenged && by) advanceChains(content, run, 'avenged', by);
         break;
       }
@@ -410,6 +421,7 @@ function resolveTriggers(content: Content, run: RunState, triggers: StoryTrigger
       emotions: def.emotions,
     });
     advanceChains(content, run, def.id, t.side === 'player' ? actor : undefined);
+    if (!suppressed) noteCodex(run, def.id);
     // Effects the engine has not already applied (it decides every Hyper moment's effect itself).
     if (!suppressed && def.effect && !ENGINE_EFFECTS.has(def.effect.kind)) {
       const id = isBattleEffect(def.effect) ? cooldownKey(def, actor) : `${event.id}:${def.id}`;
@@ -477,6 +489,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   const rivalBack = battle.rivalId ? run.story.rivals.find((r) => r.id === battle.rivalId) : undefined;
   if (rivalBack && (result === 'win' || result === 'lose')) {
     const hpShare = totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0;
+    noteRivalResult(run, rivalBack.id, result === 'win');
     rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId), foes: fought };
     if (result === 'win') {
       const before = rivalBack.state;

@@ -71,3 +71,11 @@ export function expeditionTrack(tier: number): string {
   return `bgm.raid.adventure.${(['basic', 'ultra', 'max', 'tera'] as const)[Math.min(3, Math.max(0, tier - 1))]}`;
 }
 export const EXPEDITION_TRACK_IDS: readonly string[] = [1, 2, 3, 4].map(expeditionTrack);
+
+/** Map songs: Route 101 plus the pack's Bicycle and Surfing themes. A region keeps one (string hash, never the gameplay RNG). */
+export const MAP_TRACKS = ['bgm.map', 'bgm.map_bike', 'bgm.map_surf'] as const;
+export function mapTrack(regionId: string): string {
+  let h = 0;
+  for (const c of regionId) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return MAP_TRACKS[h % MAP_TRACKS.length]!;
+}

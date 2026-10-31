@@ -170,6 +170,7 @@ export function openBagMenu(host: FieldMenuHost): void {
   const picker: Picker = new Picker(host.scene, {
     glass: true,
     title: 'Bag',
+    badge: 'ui.bag.main',
     columns: 2,
     rowHeight: 48,
     rows: allIds.map((id) => {

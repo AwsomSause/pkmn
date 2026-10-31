@@ -10,8 +10,8 @@ import type { TrainerPlan } from '../../src/core/encounters';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
 import type { PokemonInstance, RunState } from '../../src/core/state';
-import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, nemesisAfterBattle, nemesisMember, nemesisTrainerPlan, noteNemesisBreakFree, noteNemesisFaint, NEMESIS_STAGE_FLAG } from '../../src/core/story/nemesis';
-import type { Nemesis } from '../../src/core/story/schema';
+import { forgetMorality, noteEventMorality, noteRivalResult, rememberedMorality, rivalryBothWays, beginNemesisBattle, counterTypes, dueNemesis, isHunted, nemesisAfterBattle, nemesisMember, nemesisTrainerPlan, noteNemesisBreakFree, noteNemesisFaint, NEMESIS_STAGE_FLAG } from '../../src/core/story/nemesis';
+import type { Nemesis, Rival } from '../../src/core/story/schema';
 import { MIGRATIONS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
 import { content, toBattle } from './helpers';
@@ -267,6 +267,55 @@ describe('The other Overdrive moments', () => {
     for (const t of ['rememberDefeat', 'notOverBetweenUs', 'fightingForPride', 'angerDangerous', 'somethingToProve', 'hunterHunted', 'enemyWillReturn', 'nemesisReckoning']) {
       expect(content.story.definitions.some((d) => d.triggerConditions.trigger === t)).toBe(true);
     }
+  });
+});
+
+describe('More rivalry moments (left-out 5.3)', () => {
+  const rival = (encounters: number): Rival =>
+    ({
+      id: 'r1', classId: 'youngster', name: 'Joey', archetype: 'x', style: 'y', rivalPotential: 10, state: 'active', encounters, setbacks: 0, away: 0, cooldown: 0, progress: 0, bonds: {}, offscreen: [], adaptations: [],
+      arc: null, origin: { eventId: 'e', where: { region: 0, stage: 1, turn: 0 }, path: 'p' },
+      traits: { empathy: 50, vindictiveness: 30, resilience: 50, pride: 40, ambition: 50, adaptability: 50 },
+      memory: { lastBattle: { eventId: 'e', result: 'lose', hpLeftShare: 0.5, turns: 6, team: [] } },
+    }) as unknown as Rival;
+
+  it('The Rivalry Has Only Grown Stronger! once both sides have won; It Has Studied Your Strategy! after three meetings', () => {
+    const run = battleRun('trainer', [createPokemon(content, 'snorlax', 40, 'r')]);
+    run.log.starterUid = null;
+    run.story.rivals = [rival(3)];
+    run.battle!.rivalId = 'r1';
+    noteRivalResult(run, 'r1', true);
+    expect(rivalryBothWays(run, 'r1')).toBe(false);
+    noteRivalResult(run, 'r1', false);
+    expect(rivalryBothWays(run, 'r1')).toBe(true);
+    const titles = takeTurn(always, run, { kind: 'move', index: 0 }).cues.map((c) => c.title).join(' · ');
+    expect(titles).toContain('The Rivalry Has Only Grown Stronger!');
+    expect(titles).toContain('It Has Studied Your Strategy!');
+    const fresh = battleRun('trainer', [createPokemon(content, 'snorlax', 40, 'r')]);
+    fresh.log.starterUid = null;
+    fresh.story.rivals = [rival(1)];
+    fresh.battle!.rivalId = 'r1';
+    const none = takeTurn(always, fresh, { kind: 'move', index: 0 }).cues.map((c) => c.title).join(' · ');
+    expect(none).not.toContain('It Has Studied Your Strategy!');
+    expect(none).not.toContain('The Rivalry Has Only Grown Stronger!');
+  });
+
+  it("kind or cruel event choices are remembered by that type's wild Pokémon in a later stage, once", () => {
+    const run = battleRun('wild', [weakFoe('e1')]);
+    noteEventMorality(content, run, ['normal'], [{ kind: 'attribute', key: 'goodEvil', amount: 1 }]);
+    expect(rememberedMorality(run, ['normal'])).toBeNull(); // too small to remember
+    noteEventMorality(content, run, ['normal'], [{ kind: 'attribute', key: 'goodEvil', amount: 5 }]);
+    expect(rememberedMorality(run, ['normal'])).toBeNull(); // not in the same stage
+    run.story.flags['kind:normal'] = '0:9';
+    run.log.starterUid = null;
+    const result = takeTurn(always, run, { kind: 'move', index: 0 });
+    expect(result.cues.map((c) => c.title)).toContain("It Hasn't Forgotten Your Kindness!");
+    expect(result.run.story.flags['kind:normal']).toBe('done');
+    noteEventMorality(content, run, ['fire'], [{ kind: 'attribute', key: 'goodEvil', amount: -4 }]);
+    run.story.flags['cruel:fire'] = '0:9';
+    expect(rememberedMorality(run, ['fire'])).toEqual({ kind: 'cruel', type: 'fire' });
+    forgetMorality(run, 'cruel', 'fire');
+    expect(rememberedMorality(run, ['fire'])).toBeNull();
   });
 });
 

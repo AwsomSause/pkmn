@@ -3,6 +3,7 @@
 // Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
+import { researchLines } from '../core/trainerResearch';
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
 import { LEGACY, legacySummary, ascend, buyNode, contactProblem, intelLevel, legacyOf, networkSlots, nextPrestige, nodeProblem, nodeStatus, prestigeProblem, prestigeRank, regionBoard, serviceFor, shelfProblem, shelveSeed, toggleContact, trainMove, trainProblem, unshelveSeed } from '../core/legacy';
 import { STANDARD_CHOICE } from '../core/rules';
@@ -32,9 +33,10 @@ import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showca
 import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
+import { codexEntries, codexTotals } from '../core/story/codex';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'card' | 'events' | 'fame' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -47,6 +49,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'quests', label: 'Trainer Quests', blurb: 'Each trainer\'s five-step quest line, done across runs (Enter for the steps).' },
   { room: 'mastery', label: 'Species Mastery', blurb: 'Every Pokémon you met, its mastery rank, and what each rank unlocks (Enter).' },
   { room: 'research', label: 'Research Room', blurb: 'Pokédex and form collection sets with Research Point milestones (Enter).' },
+  { room: 'codex', label: 'Moment Codex', blurb: 'Every Hyper and Overdrive moment you have discovered across runs (Enter).' },
   { room: 'card', label: 'Trainer Card', blurb: 'Your card: title, frame, runs, wins and badges.' },
   { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
   { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, the Contract Board, objectives and rewards (Enter)." },
@@ -191,7 +194,7 @@ export class HubScene extends Phaser.Scene {
     const all = [...session.content.species.values()].filter((sp) => !sp.id.includes('-') && services().assets.has(pokemonAssetIds(sp.assets).front));
     this.tileMons = Phaser.Utils.Array.Shuffle(all).slice(0, TILES.length);
     preloadPokemon(this, this.tileMons, { front: true });
-    queueAssets(this, ['ui.trainercard', 'ui.dex.seen', 'ui.dex.caught']);
+    queueAssets(this, ['ui.trainercard', 'ui.dex.seen', 'ui.dex.caught', 'ui.save.bg']);
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
@@ -493,6 +496,13 @@ export class HubScene extends Phaser.Scene {
         for (const m of topMoves(p)) y = this.line(y, `${session.content.moves.get(m.moveId)?.name ?? m.moveId}: ${m.uses} uses${m.rank === 'none' ? '' : ` (${m.rank})`}`, 14, COLORS.textMuted);
         break;
       }
+      case 'codex': {
+        y = this.line(y, 'Moment Codex', 22);
+        const t = codexTotals(session.content, p);
+        y = this.line(y, `${t.found} of ${t.total} moments discovered`, 16);
+        y = this.line(y, 'A moment counts once you see it in a battle and the run ends.', 14, COLORS.textMuted);
+        break;
+      }
       case 'card': {
         y = this.line(y, 'Trainer Card', 22);
         const frame = getFrame(p.cardFrame);
@@ -592,6 +602,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'research':
         this.openResearch();
+        break;
+      case 'codex':
+        this.openCodex();
         break;
       case 'wardrobe':
         this.openWardrobe();
@@ -1107,7 +1120,7 @@ export class HubScene extends Phaser.Scene {
       const problem = status === 'claimable' ? claimProblem(p, a) : null;
       return {
         problem: status === 'claimable' ? problem : null,
-        hint: archiveHint(a, status, p),
+        hint: `${archiveHint(a, status, p)}  ${researchLines(session.content, p, a).join('  ')}`,
         draw: (scene, box, w, h) => {
           box.add(trainerVisual(scene, a.spriteAssetId, a.name, 34, h / 2 + 4, 0.7));
           box.add(scene.add.text(76, 8, `${a.name}  ${a.title}`, textStyle(20)));
@@ -1504,6 +1517,23 @@ export class HubScene extends Phaser.Scene {
     });
   }
 
+  /** Hyper moment codex: every story moment, found ones named with how often you saw them, the rest hidden. */
+  private openCodex(): void {
+    const { session } = services();
+    const order = ['survival', 'bond', 'emotion', 'rivalry', 'enemy', 'evolution', 'legacy', 'flavour'];
+    const entries = codexEntries(session.content, session.profile).sort((a, b) => order.indexOf(a.def.category) - order.indexOf(b.def.category) || a.def.displayName.localeCompare(b.def.displayName));
+    const rows: PickerRow[] = entries.map(({ def, seen }) => ({
+      problem: null,
+      hint: seen > 0 ? (def.messagePool[0] ?? '') : `Not discovered yet (${def.category}).`,
+      draw: (scene, box, w, h) => {
+        box.add(scene.add.text(12, h / 2, seen > 0 ? def.displayName : '???', textStyle(16, seen > 0 ? def.visualCue.color : COLORS.textMuted)).setOrigin(0, 0.5));
+        box.add(scene.add.text(w - 12, h / 2, seen > 0 ? `${def.category} · ×${seen}` : def.category, textStyle(13, COLORS.textMuted)).setOrigin(1, 0.5));
+      },
+    }));
+    const t = codexTotals(session.content, session.profile);
+    this.openPicker({ title: `Moment Codex (${t.found}/${t.total})`, rows, columns: 2, rowHeight: 40, onSelect: () => undefined, onBack: () => this.closePicker() });
+  }
+
   private openHistory(): void {
     const { session } = services();
     const runs = session.profile.runHistory;
@@ -1530,6 +1560,7 @@ export class HubScene extends Phaser.Scene {
     ];
     this.openPicker({
       title: 'Save data',
+      backdrop: 'ui.save.bg',
       rows,
       columns: 1,
       rowHeight: 56,

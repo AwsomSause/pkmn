@@ -208,7 +208,7 @@ export class BattleScene extends Phaser.Scene {
     this.historyView = null;
     this.input.keyboard?.on('keydown-H', () => this.toggleHistory());
     // Presentation only: faster tweens and timers; the battle itself is unchanged.
-    const speed = { normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
+    const speed = { showcase: 0.75, normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
     this.tweens.timeScale = speed;
     this.time.timeScale = speed;
     this.role = this.battleRole();
@@ -592,6 +592,13 @@ export class BattleScene extends Phaser.Scene {
     // Text and bar positions follow the old art's slots (art pixel × 3).
     const left = isPlayer ? 48 : 24;
     const right = isPlayer ? 366 : 342;
+    // The kit art has no name or level plates, so the kit styles get small dark glass plates of our own behind the text.
+    if (kit) {
+      const plates = this.add.graphics();
+      plates.fillStyle(0x10202c, 0.72).fillRoundedRect(left - 10, 8, right - left - 74, 40, 12).fillRoundedRect(right - 82, 8, 92, 40, 12);
+      plates.lineStyle(2, 0xbfe9ff, 0.55).strokeRoundedRect(left - 10, 8, right - left - 74, 40, 12).strokeRoundedRect(right - 82, 8, 92, 40, 12);
+      container.add(plates);
+    }
     const name = this.add.text(left, 14, '', textStyle(26));
     const level = this.add.text(right, 14, '', textStyle(24)).setOrigin(1, 0);
     container.add([name, level]);
@@ -616,7 +623,7 @@ export class BattleScene extends Phaser.Scene {
     if (isPlayer) {
       box.hpText = this.add.text(right, 76, '', textStyle(24)).setOrigin(1, 0);
       container.add(box.hpText);
-      if (kit) box.xpBar = new KitBar(this, 123, 120, 'pack.dbk.box.basicExp', 1, 6, 2.7, 'xp');
+      if (kit) box.xpBar = new KitBar(this, 123, 104, 'pack.dbk.box.basicExp', 1, 6, 2.7, 'xp');
       else box.xpBar = new Bar(this, 123, 120, 255, 6, 'xp');
       box.xpBar.addTo(container);
     } else {
@@ -1474,6 +1481,7 @@ export class BattleScene extends Phaser.Scene {
             motion: this.motion,
             speed: 1,
             intensity: services().session.settings.effectIntensity,
+            shake: services().session.settings.shakeIntensity,
             onSwap: () => this.showSprite('player', { ...shownMon, speciesId: evo.to }),
           }),
         );
@@ -1539,7 +1547,7 @@ export class BattleScene extends Phaser.Scene {
     const content = session.content;
     const { battleAnimations, effectIntensity } = session.settings;
     // What the screen shows for each event; worked out from the finished turn, so it can't change it.
-    const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity });
+    const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity, shake: session.settings.shakeIntensity });
 
     for (const [index, e] of events.entries()) {
       // "Charmander used Ember!" goes up before its animation; other messages follow theirs.
@@ -1632,6 +1640,7 @@ export class BattleScene extends Phaser.Scene {
               motion: this.motion,
               speed: 1,
               intensity: services().session.settings.effectIntensity,
+            shake: services().session.settings.shakeIntensity,
               onSwap: () => {
                 mon!.speciesId = e.to;
                 mon!.hp = e.hpAfter;
@@ -1710,6 +1719,7 @@ export class BattleScene extends Phaser.Scene {
                 // The scene's clock already runs at the battle speed.
                 speed: 1,
                 intensity: services().session.settings.effectIntensity,
+            shake: services().session.settings.shakeIntensity,
                 onSwap: swapForm,
               }),
             );
@@ -1803,7 +1813,7 @@ export class BattleScene extends Phaser.Scene {
     try {
       const color = Phaser.Display.Color.HexStringToColor(cue.color).color;
       if (cue.sound) playSfx(this, cue.sound);
-      if (cue.shake && motion) this.cameras.main.shake(220, 0.006);
+      if (cue.shake && motion) this.cameras.main.shake(220, 0.006 * services().session.settings.shakeIntensity);
       const band = this.add.rectangle(GAME_WIDTH / 2, 132, GAME_WIDTH, 54, color, 0.85).setDepth(50).setAlpha(0);
       const title = this.add.text(GAME_WIDTH / 2, 132, cue.title, textStyle(30, '#ffffff', { stroke: '#202030', strokeThickness: 4 })).setOrigin(0.5).setDepth(51).setAlpha(0);
       // A bouncy pop-in (no movement when motion is reduced).
