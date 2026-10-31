@@ -300,6 +300,20 @@
   "scavenger": { "chance": 0.2, "money": 150 },
   "fortune": { "categories": ["currency", "attribute"], "weight": 1.3 },
   "survival": { "item": "last-stand-charm", "price": 3500, "minBadges": 2 },
+  "regional": {
+   "kanto": { "item": "moon-stone", "price": 2500 },
+   "johto": { "item": "kings-rock", "price": 2500 },
+   "hoenn": { "item": "deep-sea-tooth", "price": 2500 },
+   "sinnoh": { "item": "razor-claw", "price": 2500 },
+   "unova": { "item": "dubious-disc", "price": 3000 },
+   "kalos": { "item": "shiny-stone", "price": 2500 },
+   "alola": { "item": "ice-stone", "price": 2500 },
+   "galar": { "item": "galarica-cuff", "price": 3000 },
+   "paldea": { "item": "sweet-apple", "price": 2500 },
+   "grand": { "item": "dragon-scale", "price": 3500 }
+  },
+  "loan": { "money": 2000, "badges": 3, "penalty": 200 },
+  "vault": { "slots": 3, "minRarity": "rare" },
   "milestones": [
    { "credits": 500, "title": "Saver" },
    { "credits": 2000, "title": "Banker" },

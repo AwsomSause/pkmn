@@ -742,6 +742,10 @@ export const RunPrepSchema = z.object({
   directive: TypeNameSchema.nullable(),
   /** The Field License (Untitled doc §10): one exploration hint for the run, or none. */
   license: z.enum(['boss', 'shop', 'weakness']).nullable().default(null),
+  /** A Bank loan (core/bank.ts): extra starting money, repaid by reaching enough badges. */
+  loan: z.boolean().default(false),
+  /** An item taken out of the Collector's Vault to start this run with. */
+  vaultItem: z.string().nullable().default(null),
 });
 export type RunPrep = z.infer<typeof RunPrepSchema>;
 
@@ -1072,6 +1076,8 @@ export const ProfileSchema = z.object({
   lifetimeBankCredits: z.number().int().min(0),
   /** The Bank tier (1 to 5, core/bank.ts): higher tiers open services, not bigger payouts. */
   bankTier: z.number().int().min(1).max(5).default(1),
+  /** Items kept in the Collector's Vault (Bank tier 5). */
+  vault: z.array(z.string()).default([]),
   runHistory: z.array(RunRecordSchema),
   /** What the last finished run paid out (shown on the run-end screen and in the Bank). */
   lastPayout: PayoutSchema.nullable(),
