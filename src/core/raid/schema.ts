@@ -3,7 +3,7 @@
 // an optional turn timer and a reward table. Every mechanic is optional (low tiers use one or two).
 
 import { z } from 'zod';
-import { BoostStatSchema, WeatherSchema } from '../contentSchema';
+import { BoostStatSchema, TerrainSchema, TypeNameSchema, WeatherSchema } from '../contentSchema';
 
 const Fraction = z.number().gt(0).lt(1);
 
@@ -21,6 +21,19 @@ export const RaidPhaseSchema = z.object({
   cleanse: z.boolean().optional(),
 });
 export type RaidPhase = z.infer<typeof RaidPhaseSchema>;
+
+/** Field rules of a raid (Raid Battles pack): all optional. */
+export const RaidModifiersSchema = z.object({
+  /** A terrain that lasts the whole fight. */
+  terrain: TerrainSchema.optional(),
+  /** Elemental surge: the boss's moves of this type hit `boost` times as hard. */
+  surge: z.object({ type: TypeNameSchema, boost: z.number().min(1.1).max(2), text: z.string().min(1) }).optional(),
+  /** Healing restriction: no healing items and no Healing cheer. */
+  noHealing: z.boolean().optional(),
+  /** Rotating weakness: every `everyTurns` turns the boss is weak to the next type (your moves of it do `boost` times the damage). */
+  rotatingWeakness: z.object({ types: z.array(TypeNameSchema).min(2).max(6), everyTurns: z.number().int().min(2).max(6), boost: z.number().min(1.1).max(2) }).optional(),
+});
+export type RaidModifiers = z.infer<typeof RaidModifiersSchema>;
 
 export const RaidRewardSchema = z.object({
   /** Prize money = this × the boss's level. */
@@ -60,6 +73,9 @@ export const RaidDefSchema = z.object({
   /** The raid ends when the timer runs out. */
   timerTurns: z.number().int().min(5).max(60).nullable().default(null),
   weather: WeatherSchema.nullable().default(null),
+  modifiers: RaidModifiersSchema.default({}),
+  /** Moves the boss knows beyond the usual four (up to two more). */
+  extraMoves: z.array(z.string()).max(2).default([]),
   rewards: RaidRewardSchema,
   /** The Grand-Enemy's own fights (core/story/grandEnemy): placed by the campaign, never in the random den pool. */
   grand: z.enum(['contact', 'reckoning']).optional(),

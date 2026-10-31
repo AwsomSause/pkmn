@@ -954,11 +954,16 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   const boss = newMon(content, run, speciesId, level, 'e');
   applyBossHp(def, boss);
+  for (const id of def.extraMoves) {
+    const mv = content.moves.get(id);
+    if (mv && !boss.moves.some((m) => m.id === id)) boss.moves.push({ id, pp: mv.pp });
+  }
   boss.hp = maxHp(content, boss);
   run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
   run.battle.ai = 0.6;
   run.battle.raid = freshRaidBattle(def);
   if (def.weather) run.battle.weather = { id: def.weather, turns: 999 };
+  if (def.modifiers.terrain) run.battle.terrain = { id: def.modifiers.terrain, turns: 999 };
   run.raids.entered += 1;
   if (def.grand) startGrandBattle(content, run);
   discover(run, boss.speciesId, false);
@@ -1086,7 +1091,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     joined.status = null;
     count(run, 'pokemonCaught');
     discover(run, joined.speciesId, true);
-    run.pending.unshift({ kind: 'caught', mon: joined });
+    run.pending.unshift({ kind: 'caught', mon: joined, raidTier: def.tier });
   }
   // Mega resources and rare-encounter tokens roll from their own generator, so no other roll changes.
   if (def.rewards.megaStones > 0) {

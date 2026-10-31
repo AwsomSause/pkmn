@@ -76,7 +76,7 @@ import {
 } from './abilities';
 import { genderOf, oppositeGender, sameGender } from '../gender';
 import * as Held from './held';
-import { absorbHit, advanceRaid, chargedDamage, takeExtraAction } from '../raid/raid';
+import { absorbHit, advanceRaid, chargedDamage, cheerProblem, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
@@ -187,6 +187,8 @@ export type PlayerAction =
   | { kind: 'move'; index: number; transform?: TransformRequest }
   | { kind: 'switch'; partyIndex: number }
   | { kind: 'item'; itemId: string; targetIndex?: number }
+  /** A raid cheer (Raid Battles pack): uses the turn, costs one of three cheers. */
+  | { kind: 'cheer'; cheer: 'offense' | 'defense' | 'healing' }
   /** The Pokémon refused its command and does nothing this turn (only the Bond Engine sends this). */
   | { kind: 'idle' }
   /** A double battle: one command per spot (null for an empty or fainted spot). See battle/doubles.ts. */
@@ -521,6 +523,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     switchOutAbility(ctx, ctx.party[battle.activeIndex]!);
     switchIn(ctx, action.partyIndex, events);
     resolveEntries(ctx, events);
+  } else if (action.kind === 'cheer') {
+    useCheer(ctx, action.cheer, events);
   } else if (action.kind === 'item') {
     useItemInBattle(ctx, action.itemId, action.targetIndex, events);
     if (battle.outcome === 'caught') {
@@ -851,6 +855,29 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
   } else if (action.kind === 'item') {
     const problem = itemProblem(ctx, action.itemId, action.targetIndex);
     if (problem) throw new Error(problem);
+  } else if (action.kind === 'cheer') {
+    const problem = cheerProblem(ctx.content, ctx.battle, action.cheer);
+    if (problem) throw new Error(problem);
+  }
+}
+
+/** A raid cheer: Offense / Defense last a few turns; Healing restores some of the active Pokémon's HP and cures its status. */
+function useCheer(ctx: BattleContext, cheer: 'offense' | 'defense' | 'healing', events: BattleEvent[]): void {
+  const raid = ctx.battle.raid!;
+  raid.cheersLeft -= 1;
+  const text = { offense: 'Go all-out!', defense: 'Hang tough!', healing: 'Heal up!' }[cheer];
+  events.push({ type: 'raid', tone: 'info', text: `Cheer: ${text}` });
+  if (cheer === 'offense') raid.cheerOffense = CHEER_TURNS + 1;
+  else if (cheer === 'defense') raid.cheerDefense = CHEER_TURNS + 1;
+  else {
+    const mon = ctx.party[ctx.battle.activeIndex]!;
+    const max = calcStats(ctx.content, mon).hp;
+    const gain = Math.min(max - mon.hp, Math.max(1, Math.floor(max * HEALING_CHEER)));
+    if (gain > 0 && mon.hp > 0) {
+      mon.hp += gain;
+      events.push({ type: 'heal', side: 'player', amount: gain, hpAfter: mon.hp });
+    }
+    mon.status = null;
   }
 }
 
@@ -861,6 +888,8 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
   if (ctx.noBattleItems && item.category !== 'ball') return 'Your Empty Bag contract allows only Poké Balls in battle.';
   if (itemCount(ctx.inventory, itemId) <= 0) return `You have no ${item.name} left.`;
   if (!item.usableInBattle) return `${item.name} can't be used in battle.`;
+  const noHeal = raidItemProblem(ctx.content, ctx.battle, item.category === 'healing' || item.category === 'revive');
+  if (noHeal) return noHeal;
   if (item.effect.kind === 'catch') {
     if (ctx.battle.kind !== 'wild') return "You can't catch another trainer's Pokémon!";
     if (ctx.battle.totem) return "A Totem can't be caught mid-fight. Beat it and something rare may follow!";
@@ -1661,7 +1690,7 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
   const mods = ctx.typeModifiers;
   const attrs = ctx.attributes;
   const perks = ctx.perks;
-  const rivalry = rivalryMultiplier(ctx, user, target) * doublesDamageMultiplier(ctx, user, target, physical, moveType) * shadowDamageMultiplier(user.mon, target.mon);
+  const rivalry = rivalryMultiplier(ctx, user, target) * raidFieldMultiplier(ctx.content, ctx.battle, user.side, moveType) * doublesDamageMultiplier(ctx, user, target, physical, moveType) * shadowDamageMultiplier(user.mon, target.mon);
   if (!mods && !attrs && !perks && rivalry === 1) return damage;
   let multiplier = rivalry;
   const weather = weatherNow(ctx);

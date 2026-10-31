@@ -42,7 +42,7 @@ export const PokemonInstanceSchema = z.object({
   /** Total experience points (the level is derived from growth rate). */
   xp: z.number().int().min(0),
   hp: z.number().int().min(0),
-  moves: z.array(MoveSlotSchema).min(1).max(4),
+  moves: z.array(MoveSlotSchema).min(1).max(6),
   status: StatusSchema.nullable(),
   /** Vitamin stacks per stat; each stack multiplies that stat. */
   vitamins: z.record(StatNameSchema, z.number().int().min(0)),
@@ -444,6 +444,10 @@ export const RaidBattleSchema = z.object({
   timerLeft: z.number().int().nullable(),
   /** Messages for the player; the engine turns them into events at the end of the turn. */
   notes: z.array(z.object({ tone: z.enum(['shield', 'phase', 'warn', 'info']), text: z.string() })),
+  /** Cheers left (Raid Battles pack: Offense / Defense / Healing), and the turns the Offense and Defense cheers still last. */
+  cheersLeft: z.number().int().min(0).default(3),
+  cheerOffense: z.number().int().min(0).default(0),
+  cheerDefense: z.number().int().min(0).default(0),
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
@@ -698,7 +702,7 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   /** A Pokémon that knows four moves wants to learn another. */
   z.object({ kind: z.literal('learnMove'), uid: z.string(), moveId: z.string() }),
   /** A caught Pokémon waiting to join the party (or be released for candies). */
-  z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema }),
+  z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema, /** A beaten raid boss joining: the raid's tier (picks the capture jingle). */ raidTier: z.number().int().min(1).max(6).optional() }),
   /** A TM or HM: pick which of these moves the Pokémon learns (or skip). */
   z.object({ kind: z.literal('teachMove'), uid: z.string(), itemName: z.string(), moveIds: z.array(z.string()).min(1) }),
   /** A Pokémon from a past run wants to join (story slice 5, core/story/reunion.ts); `hallOfFame`: it won a past run with you. */
