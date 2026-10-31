@@ -24,6 +24,24 @@ export interface LevelScale {
   t: number;
   /** The region's level cap; no enemy goes above it. */
   cap: number;
+  /** Party-strength correction in levels (withPartyStrength); added before the archetype offset (GAME_DESIGN C7). */
+  party?: number;
+}
+
+/**
+ * Party-strength correction (GAME_DESIGN §2, C7): when the party's three highest
+ * levels average more than `grace` above the curve here, enemies gain
+ * (that excess) × `factor` levels, at most `maxBonus`. Never negative, so a weak
+ * party is not helped; capped, so Blue's faster leveling still pays off.
+ */
+export function withPartyStrength(content: Content, scale: LevelScale, partyLevels: readonly number[]): LevelScale {
+  const cfg = content.balance.difficulty.partyStrength;
+  if (!cfg.enabled || partyLevels.length === 0) return scale;
+  const top = [...partyLevels].sort((a, b) => b - a).slice(0, 3);
+  const average = top.reduce((a, b) => a + b, 0) / top.length;
+  const excess = average - curveLevel(content, scale) - cfg.grace;
+  const party = Math.max(0, Math.min(cfg.maxBonus, Math.round(excess * cfg.factor)));
+  return party > 0 ? { ...scale, party } : scale;
 }
 
 export function levelScale(content: Content, campaign: Campaign, regionIndex: number, stageIndex: number, column: number): LevelScale {
@@ -64,9 +82,10 @@ export function enemyLevel(content: Content, archetype: Archetype, scale: LevelS
   const progressLevels = (scale.end - scale.start) * Math.pow(scale.t, cfg.curve);
   const variance = cfg.variance > 0 ? rng.int(-cfg.variance, cfg.variance) : 0;
   const archetypeOffset = enemyLevelOffset(archetype);
-  const unclamped = Math.round(base + progressLevels) + variance + archetypeOffset + bonus;
+  const party = scale.party ?? 0;
+  const unclamped = Math.round(base + progressLevels) + party + variance + archetypeOffset + bonus;
   const level = Math.max(cfg.minLevel, Math.min(scale.cap, cfg.maxLevel, unclamped));
-  return { base, progress: progressLevels, variance, archetypeOffset, bonus, unclamped, level };
+  return { base, progress: progressLevels, variance, archetypeOffset, bonus, unclamped, level, ...(party ? { party } : {}) };
 }
 
 type TeamConfig = Content['balance']['trainerTeam'];

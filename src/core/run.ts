@@ -44,6 +44,7 @@ import {
   planWild,
   type TrainerPlan,
   rollLegendaryWild,
+  withPartyStrength,
 } from './encounters';
 import { evolveFully, type EvolutionResult } from './evolution';
 import { changeFriendship } from './friendship';
@@ -1182,7 +1183,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
   const archetype = runArchetype(content, run);
   const theme = getTheme(content, stage.themeId);
   const campaign = getCampaign(content, run.campaignId);
-  const scale = stage.kind === 'league' ? leagueScale(content, run.regionIndex) : levelScale(content, campaign, run.regionIndex, stage.index, node.column);
+  const scale = withPartyStrength(content, stage.kind === 'league' ? leagueScale(content, run.regionIndex) : levelScale(content, campaign, run.regionIndex, stage.index, node.column), run.party.map((p) => p.level));
   // Counts stages from the start of the run (trainer and gym teams grow with it).
   const stageNumber = run.regionIndex * campaign.stagesPerRegion + stage.index;
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
