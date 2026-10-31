@@ -15,7 +15,9 @@ import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
-import { applyStartGrants } from '../core/legacy';
+import { applyStartGrants, startGrants } from '../core/legacy';
+import * as Timeline from '../core/timeline/genesis';
+import { captureOrigin, timelineOutcome } from '../core/timeline/frontRunner';
 import { buyCandyPerk } from '../core/candyShop';
 import { loanProblem, runBankFlags, vaultTake, buyTier, exchange, type ExchangeDirection } from '../core/bank';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
@@ -47,6 +49,10 @@ export class GameSession {
   /** Most recent save failure, shown to the player. Null when saving works. */
   lastSaveError: string | null = null;
   readonly warnings: string[] = [];
+  /** Revisit This Timeline: the genesis of lost runs and every replay's record, saved apart from the profile. */
+  timeline: Timeline.TimelineStore;
+  /** The saved timeline replay found at startup (or why it couldn't be loaded). Lives in its own slot beside the normal run. */
+  savedReplay: LoadResult<RunState>;
   /** What the run that just ended paid out and unlocked (for the run-end screen). */
   lastRunSummary: RunEndSummary | null = null;
   private listeners = new Set<() => void>();
@@ -58,6 +64,15 @@ export class GameSession {
     if (warning) this.warnings.push(warning);
     this.settings = this.saves.loadSettings();
     this.savedRun = this.saves.loadRun();
+    const timeline = this.saves.loadTimeline();
+    this.timeline = timeline.store;
+    if (timeline.warning) this.warnings.push(timeline.warning);
+    this.savedReplay = this.saves.loadReplay();
+  }
+
+  /** True while the run in play is a replayed timeline (it never changes the profile). */
+  get inReplay(): boolean {
+    return !!this.run?.timeline;
   }
 
   onChange(listener: () => void): () => void {
@@ -87,7 +102,7 @@ export class GameSession {
   /** Awards achievements as soon as a run's progress meets them; checked only when a counter moved. */
   private checkLiveAchievements(): void {
     const run = this.run;
-    if (!run) return;
+    if (!run || run.timeline) return;
     const sig = `${run.runId}:${Object.values(run.log.counters).reduce((a, b) => a + b, 0)}:${run.log.speciesCaught.length}:${run.log.speciesSeen.length}:${run.party.length}`;
     if (sig === this.liveSignature) return;
     this.liveSignature = sig;
@@ -101,7 +116,7 @@ export class GameSession {
 
   private persistRun(): void {
     this.checkLiveAchievements();
-    if (this.run) this.checkSave(this.saves.saveRun(this.run));
+    if (this.run) this.checkSave(this.run.timeline ? this.saves.saveReplay(this.run) : this.saves.saveRun(this.run));
     this.changed();
   }
 
@@ -121,8 +136,13 @@ export class GameSession {
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
     // A saved preset can name a loan or Vault item the profile no longer has.
     if (prep) prep = { ...prep, loan: prep.loan && !loanProblem(this.content, this.profile), vaultItem: prep.vaultItem && this.profile.vault.includes(prep.vaultItem) ? prep.vaultItem : null };
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile), candyPerks: this.profile.candyPerks , ownedTrainers: this.profile.unlockedArchetypes });
+    const opts = { seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile), candyPerks: this.profile.candyPerks, ownedTrainers: this.profile.unlockedArchetypes };
+    this.run = Run.createRun(this.content, { ...opts, runId: randomId('run'), pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory });
+    const grants = startGrants(this.content, this.profile, archetypeId);
     applyStartGrants(this.content, this.run, this.profile);
+    // Everything needed to rebuild this run later if it is lost (Revisit This Timeline).
+    this.timeline = Timeline.rememberGenesis(this.timeline, Timeline.captureGenesis(this.run, opts, grants, new Date().toISOString()));
+    this.checkSave(this.saves.saveTimeline(this.timeline));
     this.profile = recordRunStarted(this.profile);
     if (prep?.vaultItem) {
       const profile = structuredClone(this.profile);
@@ -388,13 +408,82 @@ export class GameSession {
    */
   finishRun(): void {
     const run = this.requireRun();
+    if (run.timeline) return this.finishReplay(run);
     const { profile, summary } = finalizeRun(this.content, this.profile, run);
     this.profile = profile;
     if (summary) this.lastRunSummary = summary;
     const profileSave = this.saves.saveProfile(profile);
     this.checkSave(profileSave);
     if (profileSave.ok) this.checkSave(this.saves.clearRun());
+    // Only lost runs can be revisited: a won run's genesis is dropped, a lost one keeps how it ended (its front-runner).
+    if (Timeline.genesisFor(this.timeline, run.runId)) {
+      this.timeline = run.victory ? Timeline.forgetGenesis(this.timeline, run.runId) : Timeline.attachOrigin(this.timeline, run.runId, captureOrigin(this.content, run));
+      this.checkSave(this.saves.saveTimeline(this.timeline));
+    }
     this.refreshSavedRun();
+    this.changed();
+  }
+
+  // ---------- Revisit This Timeline (core/timeline/genesis.ts) ----------
+
+  /** Why this lost run can't be revisited now, or null. */
+  replayProblem(originRunId: string): string | null {
+    return Timeline.replayProblem(this.timeline, this.profile, originRunId);
+  }
+
+  /** Rebuilds a lost run from its genesis and makes it the run in play. The original record is never touched. */
+  startReplay(originRunId: string): RunState {
+    const { store, run } = Timeline.beginReplay(this.content, this.timeline, this.profile, originRunId, new Date().toISOString());
+    this.timeline = store;
+    this.checkSave(this.saves.saveTimeline(store));
+    this.run = run;
+    this.persistRun();
+    this.refreshSavedReplay();
+    return run;
+  }
+
+  refreshSavedReplay(): void {
+    this.savedReplay = this.saves.loadReplay();
+  }
+
+  get canContinueReplay(): boolean {
+    return this.savedReplay.status === 'ok';
+  }
+
+  continueReplay(): RunState {
+    this.refreshSavedReplay();
+    if (this.savedReplay.status !== 'ok') throw new Error('No saved timeline to continue');
+    this.run = Run.prepareLoadedRun(this.content, this.savedReplay.data);
+    if (this.run !== this.savedReplay.data) this.persistRun();
+    if (this.run.phase === 'over') this.finishRun();
+    this.changed();
+    return this.run;
+  }
+
+  /** Walks away from the current timeline: its record says "abandoned", its save is removed, nothing else changes. */
+  abandonReplay(): void {
+    const saved = this.saves.loadReplay();
+    const run = this.run?.timeline ? this.run : saved.status === 'ok' ? saved.data : null;
+    const active = Timeline.activeReplay(this.timeline);
+    const now = new Date().toISOString();
+    if (run) this.timeline = Timeline.endReplay(this.timeline, run, 'abandoned', now);
+    // A damaged or missing replay save still frees the slot.
+    else if (active) this.timeline = { ...this.timeline, replays: this.timeline.replays.map((r) => (r === active ? { ...r, status: 'abandoned' as const, endedAt: now } : r)) };
+    this.checkSave(this.saves.saveTimeline(this.timeline));
+    this.checkSave(this.saves.clearReplay());
+    if (this.run?.timeline) this.run = null;
+    this.refreshSavedReplay();
+    this.changed();
+  }
+
+  /** A replay ended: its result goes to the timeline store only; the profile and the original run stay as they were. */
+  private finishReplay(run: RunState): void {
+    this.timeline = Timeline.endReplay(this.timeline, run, 'finished', new Date().toISOString(), timelineOutcome(this.content, run).id);
+    this.lastRunSummary = null;
+    const saved = this.saves.saveTimeline(this.timeline);
+    this.checkSave(saved);
+    if (saved.ok) this.checkSave(this.saves.clearReplay());
+    this.refreshSavedReplay();
     this.changed();
   }
 

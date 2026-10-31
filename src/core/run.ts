@@ -160,6 +160,7 @@ import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKe
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 import { withTeamTypes } from './rivals/adapt';
 import { markTakeover, takeoverNote, takeoverRival } from './rivals/promotion';
+import { frontRunnerIntro, onFrontRunnerBattle } from './timeline/frontRunner';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
 import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
@@ -1461,7 +1462,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (firstRival) run.battle.firstRival = true;
     if (takeover && takeoverRule) {
       run.battle.rivalId = takeover.id;
-      run.battle.rivalNote = takeoverNote(content, takeover);
+      run.battle.rivalNote = frontRunnerIntro(content, takeover) ?? takeoverNote(content, takeover);
     }
     if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
     if (hunted) run.battle.hunted = true;
@@ -2195,6 +2196,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     const role = classId === GYM_LEADER_CLASS ? 'gymLeadersDefeated' : classId === ELITE_FOUR_CLASS ? 'eliteFourDefeated' : classId === CHAMPION_CLASS ? 'championsDefeated' : null;
     if (role) {
       count(run, role);
+      onFrontRunnerBattle(content, run, battle, 'win');
       const lead = run.party[battle.activeIndex];
       for (const type of lead ? getSpecies(content, lead.speciesId).types : []) count(run, `bossWinsLead.${type}`);
       // Trainer unlock feats: every Pokémon in the party shares a type, or the party is one Pokémon.
