@@ -66,7 +66,8 @@ describe('placing event stops', () => {
     const rests = stops.filter((s) => content.events.get(s.side.eventId!)!.stop === 'rest');
     expect(rests).toHaveLength(content.balance.events.restPerStage);
     expect(stops.length - rests.length).toBeGreaterThanOrEqual(content.balance.events.perStage[0]);
-    expect(stops.length - rests.length).toBeLessThanOrEqual(content.balance.events.perStage[1]);
+    const quotaMax = Object.values(content.balance.events.stopQuotas).reduce((sum, [, hi]) => sum + hi, 0);
+    expect(stops.length - rests.length).toBeLessThanOrEqual(content.balance.events.perStage[1] + quotaMax);
     for (const s of stops) expect(s.node.kind).not.toBe('gym');
     expect(JSON.stringify(newRun('place').stage!.map)).toBe(JSON.stringify(run.stage!.map));
   });
@@ -89,6 +90,56 @@ describe('placing event stops', () => {
     expect(stopIsHidden(content, hidden!, stop.node, stop.side)).toBe(true);
     take(hidden!, 'silph-scope');
     expect(stopIsHidden(content, hidden!, stop.node, stop.side)).toBe(false);
+  });
+});
+
+describe('map stop types (events and map stops plan)', () => {
+  it('gives every stage its quota of special, trade and merchant stops, and sometimes a rare or detour stop', () => {
+    for (const seed of ['q1', 'q2', 'q3', 'q4']) {
+      const stops = eventStops(newRun(seed)).map((s) => content.events.get(s.side.eventId!)!.stop);
+      for (const [type, [lo, hi]] of Object.entries(content.balance.events.stopQuotas)) {
+        const n = stops.filter((t) => t === type).length;
+        expect(n, `${seed} ${type}`).toBeGreaterThanOrEqual(Math.min(lo, 1));
+        expect(n, `${seed} ${type}`).toBeLessThanOrEqual(hi + 2); // the random draw can add more of a type
+      }
+    }
+  });
+
+  it('has the twelve approved events', () => {
+    for (const id of ['mysterious-chest', 'shady-dealer', 'lost-pokemon', 'training-session', 'department-store-sale', 'vitamin-seller', 'fight-or-flight', 'berry-patch', 'wandering-breeder', 'challengers', 'slumbering-snorlax', 'fortune-teller']) expect(content.events.has(id), id).toBe(true);
+  });
+
+  it('a detour chains its battles without healing and pays its win once at the end', () => {
+    let run = atEvent(newRun('detour'), 'side-trail');
+    const started = chooseEvent(content, run, 'test-event', 0);
+    run = started.run;
+    expect(started.battle).toBe(true);
+    // beat the first foe: the second starts at once, nothing is paid yet
+    const lead = createPokemon(content, 'houndoom', 100, run.party[0]!.uid);
+    lead.moves = [{ id: 'flamethrower', pp: 64 }];
+    run.party[0] = lead;
+    let steps = 0;
+    for (let i = 0; i < 200 && run.phase === 'battle'; i++) {
+      run.party[0]!.hp = 1_000_000;
+      run = takeTurn(content, run, { kind: 'move', index: 0 }).run;
+      if (run.phase === 'battle' && run.battle!.event?.step === 1) {
+        steps++;
+        expect(run.eventChain).toBeUndefined();
+        break;
+      }
+    }
+    expect(steps).toBe(1);
+    const end = win(run);
+    expect(end.run.phase).not.toBe('battle');
+    expect(end.run.phase).not.toBe('reward');
+  });
+
+  it('check cards show the attribute and a locked card says what it needs', () => {
+    const run = atEvent(newRun('cards'), 'rare-sighting');
+    const view = eventView(content, run, 'test-event');
+    expect(view.choices[0]!.attribute).toBe('luck');
+    expect(view.choices[0]!.attributeValue).not.toBeNull();
+    expect(view.choices[1]!.locked).toMatch(/Luck/);
   });
 });
 

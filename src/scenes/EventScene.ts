@@ -140,10 +140,15 @@ export class EventScene extends Phaser.Scene {
       const color = c.attribute ? (ATTRIBUTE_COLOR[c.attribute] ?? AERO.rim) : AERO.rim;
       paintGlass(g, -w / 2, -rowH / 2 + 2, w, rowH - 4, { tint: c.locked ? 0x2a2a36 : AERO.glass, rim: c.locked ? 0x5a5a6a : color, radius: 14, alpha: c.locked ? 0.75 : 0.92, glow: false });
       box.add(g);
-      const tag = c.locked ? '🔒' : c.chance !== null ? `${Math.round(c.chance * 100)}%` : '';
+      const tag = c.locked ? '🔒' : c.chance !== null ? `${c.attribute && c.attributeValue !== null ? `${ATTRIBUTE_LABELS[c.attribute as AttributeKey]} ${Math.abs(c.attributeValue)}: ` : ''}${Math.round(c.chance * 100)}%` : '';
+      if (c.attribute) {
+        const badge = this.add.circle(-w / 2 + 14, 0, 9, color, c.locked ? 0.4 : 1).setStrokeStyle(2, 0xffffff, 0.8);
+        box.add(badge);
+        box.add(this.add.text(-w / 2 + 14, 0, ATTRIBUTE_LABELS[c.attribute as AttributeKey]?.[0] ?? '?', textStyle(11, '#181818')).setOrigin(0.5));
+      }
       box.add(this.add.text(-w / 2 + 34, 0, c.label, textStyle(15, c.locked ? COLORS.textMuted : COLORS.textLight, { wordWrap: { width: w - 112 }, maxLines: 2 })).setOrigin(0, 0.5));
       if (tag) box.add(this.add.text(w / 2 - 14, 0, tag, textStyle(14, c.locked ? COLORS.bad : '#f8e8a0')).setOrigin(1, 0.5));
-      const arrow = this.add.text(-w / 2 + 14, 0, '▶', textStyle(14, '#ffffff')).setOrigin(0.5).setVisible(false);
+      const arrow = this.add.text(-w / 2 + 14, 0, '▶', textStyle(14, '#ffffff')).setOrigin(0.5).setVisible(false).setDepth(5);
       box.add(arrow);
       const frame = this.add.graphics().setVisible(false);
       frame.lineStyle(6, AERO.neon, 0.25).strokeRoundedRect(-w / 2 - 3, -rowH / 2 - 1, w + 6, rowH + 2, 17);
@@ -321,7 +326,11 @@ export class EventScene extends Phaser.Scene {
         delay: 600 + i * 160,
         ease: 'Back.easeOut',
         onStart: () => playSfx(this, 'se.exp', 0.3),
-        onComplete: () => !this.calm && this.chipAck(box, cx, cy, good),
+        onComplete: () => {
+          if (this.calm) return;
+          this.chipAck(box, cx, cy, good);
+          if (good) this.flyGain(text, GAME_WIDTH / 2 + cx, 450 + cy);
+        },
       });
     });
     // The money pill counts to the new total once the chips have landed.
@@ -387,6 +396,16 @@ export class EventScene extends Phaser.Scene {
   }
 
   /** A gain gets a ring of sparkles; a loss gives a short shudder. */
+  /** A gain flies from its chip to where it lands: money to the purse, attributes to the bars, Pokémon changes to the party, anything else to the Bag. */
+  private flyGain(text: string, x: number, y: number): void {
+    const toMoney = /₽|money/i.test(text);
+    const toAttr = /(Strength|Intelligence|Speed|Charisma|Luck|Love|Rage|Peace|Good|Evil)\b/.test(text);
+    const toParty = /friendship|level|heal|HP|move|egg/i.test(text);
+    const [tx, ty] = toMoney ? [GAME_WIDTH - 90, 28] : toAttr ? [70, 28] : toParty ? [90, GAME_HEIGHT - 30] : [GAME_WIDTH - 90, GAME_HEIGHT - 30];
+    const orb = this.add.circle(x, y, 7, toMoney ? 0xf8d030 : toAttr ? 0x80d0ff : toParty ? 0xf08098 : 0xa0f0a0, 1).setStrokeStyle(2, 0xffffff, 0.9).setDepth(50);
+    this.tweens.add({ targets: orb, x: tx, y: ty, scale: 0.4, duration: 650, ease: 'Cubic.easeIn', onComplete: () => orb.destroy() });
+  }
+
   private chipAck(box: Phaser.GameObjects.Container, x: number, y: number, good: boolean): void {
     if (!good) {
       this.tweens.add({ targets: box, x: box.x + 4, duration: 50, yoyo: true, repeat: 2 });

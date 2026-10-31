@@ -69,7 +69,7 @@ export const MORE_EVENTS: Json[] = [
     ch('Watch and learn', out('Your team learned a few moves.', fr(5), attr('speed', 2))),
     ch('Battle it', fight('It attacks with a flourish!', wild({ species: ['oricorio'], lv: 2 })), { requires: [fierce] }),
   ]),
-  ev('global-trade', 'Global Trade Station', PR, { rarity: 'uncommon', minStage: 2, cast: ['trainer.worker_m'], effect: 'glint', tint: '#102838' }, 'A trading booth links to trainers around the world.', [
+  ev('global-trade', 'Global Trade Station', PR, { stop: 'trade', rarity: 'uncommon', minStage: 2, cast: ['trainer.worker_m'], effect: 'glint', tint: '#102838' }, 'A trading booth links to trainers around the world.', [
     ch('Trade a Pokémon from this generation for a surprise', out('A Pokémon from far away arrives!', trade('a Generation 1 Pokémon', { generation: 1 }), join({ lv: 1, shiny: 2 }))),
     ch('Trade an item', out('Someone sends a held item back.', lose(), any(...HELD))),
     ch('Just browse', out('You learn about faraway Pokémon.', rp(10))),

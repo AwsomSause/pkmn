@@ -2036,6 +2036,8 @@ export const BalanceSchema = z.object({
     itemRarityWeights: z.record(RaritySchema, z.number().min(0)),
     /** Rest spots (stop "rest") placed on every stage. */
     restPerStage: z.number().int().min(0),
+    /** Stops of an event `stop` type each stage gets before the random draw: [min, max] per type (events.json `stop`). */
+    stopQuotas: z.record(z.string(), z.tuple([z.number().int().min(0), z.number().int().min(0)])).default({}),
     /** Prize money per level of the top Pokémon for an event's trainer (one with no trainer class). */
     trainerMoneyPerLevel: z.number().int().min(0),
     /** Items the Explorer Kit can turn up. */
@@ -2420,6 +2422,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     shinyMultiplier: z.number().min(1).default(1),
     /** The wild Pokémon is one that beat a party member earlier this run (catalog 28). */
     recall: z.boolean().default(false),
+    /** Battles in a row at this stop without healing in between (a detour); `win` pays after the last. */
+    chain: z.number().int().min(1).max(3).default(1),
     win: z.array(EventEffectSchema).default([]),
   }),
   z.object({
@@ -2437,6 +2441,7 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     size: z.number().int().min(1).max(6).default(2),
     types: z.array(TypeNameSchema).default([]),
     levelBonus: z.number().int().default(0),
+    chain: z.number().int().min(1).max(3).default(1),
     win: z.array(EventEffectSchema).default([]),
   }),
 ]);

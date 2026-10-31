@@ -58,7 +58,7 @@ import { masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { layEgg, tickEggs } from './eggs';
-import { addEventStops, eventBattleWon, eventGymPreview } from './events';
+import { addEventStops, continueEventChain, eventBattleWon, eventChainNext, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addItemAttribute, addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, countShiny, discover } from './progress';
@@ -2282,9 +2282,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const leadAsk = !run.victory && battle.outcome === 'win' && !mentorOffer ? planAskLead(content, run) : null;
   if (leadAsk) run.pending.push({ kind: 'askLead', ...leadAsk });
   // An event battle you won pays its own rewards.
-  const eventRewards = outcome === 'win' && battle.event ? eventBattleWon(content, run, battle.event) : [];
+  const chained = outcome === 'win' && !!battle.event && eventChainNext(content, run, battle.event);
+  const eventRewards = outcome === 'win' && battle.event && !chained ? eventBattleWon(content, run, battle.event) : [];
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
-  run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
+  run.afterDecisions = chained ? 'eventChain' : battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
   return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, recap, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
@@ -2319,6 +2320,7 @@ export function continueAfterDecisions(content: Content, run: RunState): void {
     run.phase = 'over';
     return;
   }
+  if (run.afterDecisions === 'eventChain') return continueEventChain(content, run);
   if (run.afterDecisions === 'expedition' && run.expedition) {
     run.expedition.battleResult = 'win';
     run.phase = 'expedition';

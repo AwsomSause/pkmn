@@ -11726,7 +11726,8 @@
       ]
      }
     }
-   ]
+   ],
+   "stop": "trade"
   },
   {
    "id": "pikachu-collector",
@@ -31802,6 +31803,360 @@
      "label": "Leave her to her candle",
      "success": {
       "text": "The flame flickers as you go.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rare-sighting",
+   "name": "A Rare Sighting",
+   "group": "Map stops",
+   "stop": "special",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#1c2a38",
+    "effect": "float"
+   },
+   "intro": "Fresh tracks lead to a Pokémon you have never seen on this route. It has noticed you.",
+   "choices": [
+    {
+     "label": "Approach quietly",
+     "check": "luck",
+     "success": {
+      "text": "It lets you close in, then squares up!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 4,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "luck",
+         "amount": 2
+        }
+       ]
+      }
+     },
+     "failure": {
+      "text": "A twig snaps and it bolts. Gone.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow the tracks (Luck 20+)",
+     "requires": [
+      {
+       "kind": "attribute",
+       "key": "luck",
+       "atLeast": 20
+      }
+     ],
+     "success": {
+      "text": "You cut it off before it can run!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 3,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave it be",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shimmering-grass",
+   "name": "Shimmering Grass",
+   "group": "Map stops",
+   "stop": "rare",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [],
+    "tint": "#1c3a2a",
+    "effect": "sparkle"
+   },
+   "intro": "One patch of grass glitters in the light. Something in it is the wrong colour.",
+   "choices": [
+    {
+     "label": "Wade in",
+     "success": {
+      "text": "A glittering Pokémon leaps out!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 0,
+       "shinyMultiplier": 6,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Search carefully (Intelligence check)",
+     "check": "intelligence",
+     "success": {
+      "text": "You spot it first and get the jump on it.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": -2,
+       "shinyMultiplier": 8,
+       "win": []
+      }
+     },
+     "failure": {
+      "text": "Only dew. Whatever it was has moved on.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "trading-post",
+   "name": "Trading Post",
+   "group": "Map stops",
+   "stop": "trade",
+   "rarity": "common",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#102838",
+    "effect": "glint"
+   },
+   "intro": "A trainer waves a Poké Ball at you. \"Swap with me? Mine is much stronger than it looks.\"",
+   "choices": [
+    {
+     "label": "Accept the swap",
+     "requires": [
+      {
+       "kind": "partySize",
+       "atLeast": 2
+      }
+     ],
+     "chance": 0.65,
+     "success": {
+      "text": "You trade. It evolves in your hands if its kind do that when traded.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "any Pokémon"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [],
+        "levelBonus": 4,
+        "shinyMultiplier": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The ball holds a feeble Pokémon. He is already gone.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "any Pokémon"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [],
+        "levelBonus": -3,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Inspect the offer first (Intelligence 30+)",
+     "requires": [
+      {
+       "kind": "attribute",
+       "key": "intelligence",
+       "atLeast": 30
+      },
+      {
+       "kind": "partySize",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "You read its stats and drive a fair bargain: a strong Pokémon, no tricks.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "any Pokémon"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [],
+        "levelBonus": 6,
+        "shinyMultiplier": 2
+       },
+       {
+        "kind": "research",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Refuse",
+     "success": {
+      "text": "\"Your loss,\" he shrugs.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "side-trail",
+   "name": "The Side Trail",
+   "group": "Map stops",
+   "stop": "detour",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2418",
+    "effect": "shake"
+   },
+   "intro": "A trail forks off the route and rejoins it further on. Trainers wait along it, and no Pokémon Center.",
+   "choices": [
+    {
+     "label": "Short trail (2 battles)",
+     "success": {
+      "text": "The first trainer steps out. You are in for it.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "chain": 2,
+       "name": "Trail Trainer",
+       "size": 2,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "betterDraft",
+         "extra": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Long trail (3 battles, Strength 30+)",
+     "requires": [
+      {
+       "kind": "attribute",
+       "key": "strength",
+       "atLeast": 30
+      }
+     ],
+     "success": {
+      "text": "You head down the hard way.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "chain": 3,
+       "name": "Trail Veteran",
+       "size": 3,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "betterDraft",
+         "extra": 2
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "life-orb",
+          "choice-band",
+          "lucky-punch",
+          "macho-brace",
+          "smoke-ball"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Stay on the road",
+     "success": {
+      "text": "You leave it be and walk on.",
       "effects": []
      }
     }

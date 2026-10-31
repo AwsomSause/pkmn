@@ -75,8 +75,9 @@ export const flag = (key: string, amount = 1): Json => ({ kind: 'flag', key, amo
 export const reveal = (): Json => ({ kind: 'revealStops' });
 
 // ---------- battles ----------
-export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; win?: Json[]; recall?: boolean } = {}): Json => ({
+export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; win?: Json[]; recall?: boolean; chain?: number } = {}): Json => ({
   kind: 'wild',
+  ...(o.chain ? { chain: o.chain } : {}),
   ...(o.recall ? { recall: true } : {}),
   species: o.species ?? [],
   types: o.types ?? [],
@@ -84,8 +85,9 @@ export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shi
   shinyMultiplier: o.shiny ?? 1,
   win: o.win ?? [],
 });
-export const trainer = (name: string, o: { cls?: string; boss?: string; size?: number; types?: string[]; lv?: number; win?: Json[]; ghost?: boolean; retired?: boolean; ally?: string } = {}): Json => ({
+export const trainer = (name: string, o: { cls?: string; boss?: string; size?: number; types?: string[]; lv?: number; win?: Json[]; ghost?: boolean; retired?: boolean; ally?: string; chain?: number } = {}): Json => ({
   kind: 'trainer',
+  ...(o.chain ? { chain: o.chain } : {}),
   name,
   ...(o.cls ? { classId: o.cls } : {}),
   ...(o.boss ? { bossId: o.boss } : {}),
