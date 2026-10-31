@@ -79,7 +79,7 @@ export function openBondMenu(host: FieldMenuHost): void {
   const motion = session.settings.battleAnimations;
   const picker: Picker = new Picker(host.scene, {
     glass: true,
-    title: `Bonds · ${cultureLine(run)}`,
+    title: `Bonds: how your Pokémon feel (${cultureLine(run)})`,
     columns: 2,
     rowHeight: 148,
     rows: run.party.map((mon, i) => bondRow(session.content, run, mon, motion, i)),
