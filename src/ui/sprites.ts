@@ -3,6 +3,7 @@
 // Pokémon art is loaded on demand (ui/lazyAssets.ts): if it isn't loaded yet,
 // the placeholder is shown and swapped for the art when it arrives.
 
+import { spritesAnimate } from './display';
 import Phaser from 'phaser';
 import { pokemonAssetIds } from '../assets/catalog';
 import type { Species } from '../core/contentSchema';
@@ -33,7 +34,7 @@ function atlasSprite(scene: Phaser.Scene, key: string, x: number, y: number, sca
   const frames = scene.textures.get(key).getFrameNames().sort();
   const sprite = scene.add.sprite(x, y, key, frames[0]).setOrigin(0.5, 1).setScale(scale);
   const anim = ensureAtlasAnimation(scene, key);
-  if (anim) sprite.play(anim);
+  if (anim && spritesAnimate()) sprite.play(anim);
   return sprite;
 }
 
@@ -101,7 +102,7 @@ export function pokemonIcon(scene: Phaser.Scene, species: Species, x: number, y:
     const sprite = scene.add.sprite(px, py, key, frames[0]).setScale(scale);
     // Two frames = the pack's bobbing icon; one frame stays still.
     const anim = frames.length > 1 ? ensureAtlasAnimation(scene, key, 3) : null;
-    if (anim) sprite.play(anim);
+    if (anim && spritesAnimate()) sprite.play(anim);
     return sprite;
   };
   if (services().assets.has(key) && scene.textures.exists(key) && scene.textures.get(key).frameTotal > 0) return make(x, y);

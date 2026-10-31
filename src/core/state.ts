@@ -1160,6 +1160,23 @@ export const SettingsSchema = z.object({
   shakeIntensity: z.number().min(0).max(1).default(1),
   /** Skip the drifting ambience particles (clouds, fog and rays stay). */
   reduceParticles: z.boolean().default(false),
+  /** Battle text speed: all at once, a quick typewriter, or a slower one. */
+  textSpeed: z.enum(['instant', 'fast', 'normal']).default('instant'),
+  /** Battle messages move on by themselves after `messageDelay` (otherwise only move and damage lines do). */
+  autoAdvance: z.boolean().default(false),
+  messageDelay: z.enum(['short', 'normal', 'long']).default('normal'),
+  /** Stronger contrast for the whole game screen. */
+  highContrast: z.boolean().default(false),
+  /** Colour-blind help: names the move's type in words next to the coloured art. */
+  typeMarkers: z.boolean().default(false),
+  /** How much of the window the game fills: full, 90% or 80%. */
+  uiScale: z.enum(['full', 'medium', 'small']).default('full'),
+  /** Off keeps menu icons and idle Pokémon still. */
+  spriteAnimations: z.boolean().default(true),
+  /** Floating damage numbers over the Pokémon that was hit. */
+  damageNumbers: z.boolean().default(true),
+  /** The catch screen: every stat and note, or a short summary. */
+  catchDetail: z.enum(['full', 'compact']).default('full'),
   /** How fast battles play: showcase (0.75×, lingering), normal, fast (2×) or quick (3×). Outcomes never depend on it. */
   battleSpeed: z.enum(['showcase', 'normal', 'fast', 'quick']),
   /** How much trainers talk in battle: off, low, normal or high. */
