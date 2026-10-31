@@ -18,7 +18,7 @@ import type { RunEvent } from '../run';
 import { currentEnemy, type RunState } from '../state';
 import { emotionOf } from './emotions';
 import { mentorshipOf } from './mentorship';
-import { nemesisById } from './nemesis';
+import { forgetMorality, nemesisById, rememberedMorality, rivalryBothWays } from './nemesis';
 import type { StoryEffectSpec, StoryTriggerKind } from './schema';
 
 /** The one effect each moment trigger may carry (checked when content loads). */
@@ -88,6 +88,10 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   gatherUnleashed: 'enemyStage',
   fightingBeyondLimits: 'enemyStage',
   lostComposure: 'enemyStage',
+  rivalryGrown: 'enemyStage',
+  studiedStrategy: 'enemyStage',
+  notForgottenKindness: 'enemyStage',
+  notForgottenCruelty: 'enemyStage',
   rememberDefeat: 'flair',
   notOverBetweenUs: 'flair',
   fightingForPride: 'enemyStage',
@@ -336,6 +340,15 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     const stung = feltRival?.memory.lastBattle;
     if (feltRival && stung && stung.result === 'win' && stung.hpLeftShare >= content.story.nemesis.proveShare && rareFoe('somethingToProve', foe.uid)) {
       fire('somethingToProve', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? feltRival.name });
+    }
+    // Rivalry callbacks (left-out 5.3): both sides have won, or it has faced your team often enough to study it.
+    if (feltRival && rivalryBothWays(run, feltRival.id) && rareFoe('rivalryGrown', foe.uid)) fire('rivalryGrown', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? feltRival.name });
+    if (feltRival && feltRival.encounters >= content.story.nemesis.studiedAfter && rareFoe('studiedStrategy', foe.uid)) fire('studiedStrategy', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? feltRival.name });
+    // It Hasn't Forgotten Your Kindness! / Cruelty!: a wild Pokémon of a type you helped or hurt in an event.
+    const moral = battle.kind === 'wild' && !battle.nemesis ? rememberedMorality(run, content.species.get(foe.speciesId)?.types ?? []) : null;
+    if (moral && rareFoe(moral.kind === 'kind' ? 'notForgottenKindness' : 'notForgottenCruelty', foe.uid)) {
+      forgetMorality(run, moral.kind, moral.type);
+      fire(moral.kind === 'kind' ? 'notForgottenKindness' : 'notForgottenCruelty', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId) });
     }
     if (battle.hunted && battle.trainer) fire('hunterHunted', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), group: `${content.trainers.get(battle.trainer.classId)?.name ?? 'trainer'}s` });
     const rival = run.story.rivals.some((r) => r.state === 'contender' || r.state === 'nemesis');
