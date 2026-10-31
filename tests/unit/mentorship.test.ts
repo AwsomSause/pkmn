@@ -60,4 +60,17 @@ describe('Protégé system', () => {
     expect(mentorshipOf(run, rookie.uid)).toBeUndefined();
     expect(run.story.histories[rookie.uid]!.titles).toContain('Former Protégé');
   });
+  it('the mentor hands down a move it relied on when the protégé graduates', () => {
+    const { run, mentor, rookie } = team('mentor-move');
+    answerMentorship(content, run, planMentorship(content, run)!, true);
+    // The mentor leaned on a move the rookie can learn but does not know.
+    const known = new Set(rookie.moves.map((m) => m.id));
+    const species = content.species.get(rookie.speciesId)!;
+    const candidate = species.learnset.map((e) => e.move).find((id) => !known.has(id) && content.moves.get(id)?.supported === true && content.moves.get(id)?.category !== 'status');
+    expect(candidate).toBeTruthy();
+    run.story.histories[mentor.uid]!.moves[candidate!] = 9;
+    rookie.level = mentor.level;
+    graduateMentorships(content, run);
+    expect(run.pending.some((p) => p.kind === 'learnMove' && p.uid === rookie.uid && p.moveId === candidate)).toBe(true);
+  });
 });

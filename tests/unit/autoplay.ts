@@ -97,6 +97,7 @@ export function step(content: Content, run: RunState, smart = false): { run: Run
       if (d.kind === 'learnMove') return { run: resolveDecision(content, run, { kind: 'forgetMove', moveIndex: 0 }).run, turn: null };
       if (d.kind === 'signature') return { run: resolveDecision(content, run, { kind: 'signature', optionIndex: 0 }).run, turn: null };
       if (d.kind === 'mentorship') return { run: resolveDecision(content, run, { kind: 'mentor', accept: false }).run, turn: null };
+      if (d.kind === 'askLead') return { run: resolveDecision(content, run, { kind: 'askLead', accept: false }).run, turn: null };
       if (d.kind !== 'caught') return { run: resolveDecision(content, run, { kind: 'skipMove' }).run, turn: null };
       if (run.party.length < partyCapacity(content, run)) {
         try {

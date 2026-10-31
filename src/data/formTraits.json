@@ -1,0 +1,23 @@
+{
+  "note": "Form-specific passive traits (catalog 80). A Delta form keeps its base species' abilities and gains one more normal ability that fits its new primary type, so old Pokémon keep slot 0 and base art and evolutions are untouched. Edit the table to change a trait; every id must be an ability in abilities.json.",
+  "deltaTypeAbility": {
+    "normal": "run-away",
+    "fire": "flash-fire",
+    "water": "water-absorb",
+    "electric": "volt-absorb",
+    "grass": "sap-sipper",
+    "ice": "ice-body",
+    "fighting": "inner-focus",
+    "poison": "poison-point",
+    "ground": "sand-veil",
+    "flying": "keen-eye",
+    "psychic": "synchronize",
+    "bug": "swarm",
+    "rock": "sturdy",
+    "ghost": "cursed-body",
+    "dragon": "multiscale",
+    "dark": "pressure",
+    "steel": "clear-body",
+    "fairy": "cute-charm"
+  }
+}

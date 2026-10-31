@@ -42,7 +42,10 @@ describe('which ability a Pokémon has', () => {
     for (const s of content.species.values()) expect(s.abilities.normal.length + (s.abilities.hidden ? 1 : 0), s.id).toBeGreaterThan(0);
     expect(content.species.get('bruticate')!.abilities).toEqual(content.species.get('raticate')!.abilities);
     const delta = [...content.species.values()].find((s) => s.tags.includes('delta'))!;
-    expect(delta.abilities).toEqual(content.species.get(delta.form!.base)!.abilities);
+    // A Delta form keeps its base abilities first and may gain one that fits its type (data/formTraits.json).
+    const base = content.species.get(delta.form!.base)!.abilities;
+    expect(delta.abilities.hidden).toEqual(base.hidden);
+    expect(delta.abilities.normal.slice(0, base.normal.length)).toEqual(base.normal);
   });
 
   it('is rolled from the key, not from a random stream, and hidden abilities are rare', () => {

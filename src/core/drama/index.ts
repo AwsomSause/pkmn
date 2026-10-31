@@ -25,7 +25,7 @@ export * from './schema';
 export type DramaKind =
   | 'battleStart' | 'enemyMove' | 'enemyCrit' | 'enemyHurt' | 'enemyFaint' | 'playerFaint'
   | 'enemySwitch' | 'enemyLow' | 'playerHabit' | 'battleEnd'
-  | 'enemyStatus' | 'foeStatus' | 'foeMiss' | 'enemyMiss' | 'playerMove';
+  | 'enemyStatus' | 'foeStatus' | 'foeMiss' | 'enemyMiss' | 'playerMove' | 'enemyEvolveReady';
 
 /** Something that really happened in the battle, with a stable id. */
 export interface DramaEvent {
@@ -111,6 +111,12 @@ export function deriveDramaEvents(content: Content, run: RunState, prior: Battle
       default:
     }
   });
+  // The ace can evolve but its moment has not come yet: the trainer feels it first (once per Pokémon).
+  const ace = currentEnemy(battle);
+  const state = battle.drama;
+  if (!battle.outcome && ace.hp > 0 && state.evolvable.includes(ace.uid) && !state.evolved.includes(ace.uid) && turn <= 2 && ace.hp / Math.max(1, calcStats(content, ace).hp) > 0.5 && !state.seen.includes(`evolveReady:${ace.uid}`)) {
+    add('enemyEvolveReady', events.length - 1, { uid: ace.uid });
+  }
   if (battle.outcome) add('battleEnd', events.length - 1, { outcome: battle.outcome });
   return out;
 }
@@ -264,6 +270,9 @@ function classify(content: Content, battle: BattleState, state: BattleState['dra
       return { category: 'foeKo', tier: 'tactical' };
     case 'enemySwitch':
       return { category: 'switch', tier: 'tactical' };
+    case 'enemyEvolveReady':
+      state.seen.push(`evolveReady:${ev.data.uid}`);
+      return { category: 'evolveReady', tier: 'major' };
     case 'battleEnd':
       if (ev.data.outcome === 'win') return { category: 'defeat', tier: 'climactic' };
       if (ev.data.outcome === 'lose') return { category: 'victory', tier: 'climactic' };

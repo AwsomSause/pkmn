@@ -57,6 +57,8 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   wildAmbush: 'enemyStage',
   wildKin: 'flair',
   chemistryPerfect: 'statStage',
+  overdriveExhaustion: 'statStage',
+  notUntilOver: 'flair',
   chemistryCover: 'statStage',
   chemistryDuo: 'statStage',
   chemistryTested: 'statStage',
@@ -402,7 +404,10 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     const go = (trigger: StoryTriggerKind) => {
       const before = out.length;
       fire(trigger, 'player', lead.uid, lastAt, names);
-      if (out.length > before) flags[flagKey('eo', lead.uid)] = true;
+      if (out.length > before) {
+        flags[flagKey('eo', lead.uid)] = true;
+        flags[flagKey('eoTurn', lead.uid)] = prior.turn;
+      }
     };
     const justice = events.some((e) => e.type === 'faint' && e.side === 'enemy') && run.story.events.some((k) => k.type === 'knockout' && k.data.side === 'player' && k.actors[1] === (events.find((e) => e.type === 'faint' && e.side === 'enemy') as { uid?: string } | undefined)?.uid);
     const status = events.some((e) => e.type === 'status' && e.side === 'player') && Boolean(lead.status);
@@ -417,6 +422,14 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     // Emotional clash: a Brave lead hurt while a Kind teammate watches.
     else if (em === 'bravery' && lead.hp <= max * 0.5 && run.party.some((m) => m.uid !== lead.uid && m.hp > 0 && emotionOf(content, run, m.uid)?.id === 'kindness')) go('emotionalClash');
   }
+
+  // Not Until It's Over!: the lead wins on its last breath with the rest of a team of three or more down.
+  if (lead && battle.outcome === 'win' && lead.hp > 0 && lead.hp <= maxHp(content, lead) * 0.15 && run.party.length >= 3 && run.party.every((m) => m.uid === lead.uid || m.hp <= 0)) {
+    fire('notUntilOver', 'player', lead.uid, lastAt, leadNames());
+  }
+  // Emotional drawback: four turns after an emotional burst the Pokémon is spent (-1 Speed for the rest of the battle).
+  const burstTurn = lead ? flags[flagKey('eoTurn', lead.uid)] : undefined;
+  if (lead && lead.hp > 0 && typeof burstTurn === 'number' && prior.turn >= burstTurn + 4) fire('overdriveExhaustion', 'player', lead.uid, lastAt, leadNames());
 
   // The Teacher Has One Last Lesson / They Have Different Ways of Fighting.
   for (const rel of run.story.relationships) {
