@@ -8,7 +8,7 @@ import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { drawPanel, Menu, type MenuOption } from '../ui/widgets';
 import { ArenaBackdrop, drawLogo, ShowcaseMon } from '../ui/showcase';
-import { loadAssets } from '../ui/lazyAssets';
+import { loadAssets, queueAssets } from '../ui/lazyAssets';
 import { pokemonAssetIds } from '../assets/catalog';
 import { BATTLE_UI_LABELS, BATTLE_UI_STYLES } from '../ui/battleUiStyles';
 import { sceneForRun } from './routing';
@@ -19,6 +19,10 @@ export class MainMenuScene extends Phaser.Scene {
 
   constructor() {
     super('MainMenu');
+  }
+
+  preload(): void {
+    queueAssets(this, ['ui.optionsbg']);
   }
 
   create(data?: { focus?: number; page?: 'settings' }): void {
@@ -43,8 +47,13 @@ export class MainMenuScene extends Phaser.Scene {
     pick();
     this.time.addEvent({ delay: 6500, loop: true, callback: pick });
 
-    drawLogo(this, 48, 18, 60, 0, session.settings.battleAnimations);
-    this.add.text(64, 158, 'Raid. Collect. Rise.', textStyle(16, COLORS.textMuted));
+    if (this.page === 'settings' && this.textures.exists('ui.optionsbg')) {
+      // The UIE Options screen (its own "Options" title bar) replaces the logo while settings are open.
+      this.add.image(0, 0, 'ui.optionsbg').setOrigin(0).setDisplaySize(GAME_WIDTH, GAME_HEIGHT).setDepth(-19).setAlpha(0.94).setName('options-bg');
+    } else {
+      drawLogo(this, 48, 18, 60, 0, session.settings.battleAnimations);
+      this.add.text(64, 158, 'Raid. Collect. Rise.', textStyle(16, COLORS.textMuted));
+    }
 
     drawPanel(this, 48, 186, 400, 300, { alpha: 0.95 });
 
