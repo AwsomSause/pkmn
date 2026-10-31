@@ -23,6 +23,7 @@ import { addItem } from './items';
 import { makeDoubles } from './battle/doubles';
 import { championTeam, retiredTeam } from './story/championDefense';
 import { oldFoe } from './story/promises';
+import { featuredRival, rivalBeaten, rivalFightTeam, rivalPath } from './rivals/living';
 import { openFeud, settleFeud } from './story/feud';
 import { noteEventMorality } from './story/nemesis';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
@@ -87,6 +88,10 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return run.story.rivals.some((r) => r.encounters >= c.atLeast);
     case 'rivalAlly':
       return run.story.rivals.some((r) => r.state === 'ally');
+    case 'rivalPath':
+      return rivalPath(run) === c.path;
+    case 'rivalBeaten':
+      return rivalBeaten(run);
     case 'crisis':
       return crisisLevel(run) >= c.atLeast && crisisLevel(run) <= c.atMost;
     case 'aid':
@@ -183,6 +188,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs a Pokémon with friendship ${c.atLeast}`;
     case 'rivalAlly':
       return 'Needs a rival who has become a friend';
+    case 'rivalPath':
+      return c.path === 'friend' ? 'Needs a rival who is becoming a friend' : c.path === 'rival' ? 'Needs a rival who sees you as an adversary' : 'Needs a rival who has not decided about you';
+    case 'rivalBeaten':
+      return 'Needs a rival you beat last time';
     case 'rivalMet':
       return `Needs a rival you have fought ${c.atLeast} time${c.atLeast === 1 ? '' : 's'}`;
     case 'partyTag':
@@ -564,6 +573,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return 'allies gathered';
     case 'flag':
       return '';
+    case 'moment':
+      return '';
     case 'relic':
       return `the ${e.name}`;
     case 'feud':
@@ -760,6 +771,9 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, 
     case 'flag':
       run.story.flags[`ev:${e.key}`] = Number(run.story.flags[`ev:${e.key}`] ?? 0) + e.amount;
       return '';
+    case 'moment':
+      emit(content, run, 'storyMoment', { actors: [], data: { def: 'rival-living', suppressed: false }, importance: e.importance, text: e.text });
+      return '';
     case 'relic': {
       if (run.story.flags[`relic:${e.id}`]) return '';
       run.story.flags[`relic:${e.id}`] = true;
@@ -864,14 +878,19 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
   } else {
     const boss = b.bossId ? content.bosses.get(b.bossId) : undefined;
     const ghost = b.retired ? retiredTeam(run.story) : b.ghost ? championTeam(run.story) : [];
-    const authored = ghost.length > 0 ? 'rival-ghost-team' : boss ? 'event-boss-signature' : null;
-    const team = ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
+    const authored = ghost.length > 0 || (b.rival && featuredRival(run)) ? 'rival-ghost-team' : boss ? 'event-boss-signature' : null;
+    const rival = b.rival ? featuredRival(run) : null;
+    const rivalTeam = rival && ghost.length === 0 ? rivalFightTeam(content, rival) : [];
+    const team = rivalTeam.length > 0 ? rivalTeam.slice(0, b.size).map((id, i) => {
+      const level = Math.min(cap, Math.max(1, base + (i === Math.min(b.size, rivalTeam.length) - 1 ? 1 : 0)));
+      return newMon(content, run, id, level, 'e');
+    }) : ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
       const level = Math.min(cap, Math.max(1, base + (i === b.size - 1 ? 1 : 0)));
       const speciesId = boss ? boss.signature[i % boss.signature.length]! : pickSpecies(content, run, [], b.types, rng);
       return newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
     });
     if (authored) for (const mon of team) auditEncounter(content, 'event', mon, authored);
-    run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: b.name, leaderId: null });
+    run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: rival ? rival.name : b.name, leaderId: null });
     if (b.ally && content.species.has(b.ally) && team.length >= 2) {
       // A temporary ally joins the party for this fight only (finishBattle sends it home).
       const ally = newMon(content, run, b.ally, Math.max(1, base), 'p');

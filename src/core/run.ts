@@ -159,6 +159,7 @@ import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 import { withTeamTypes } from './rivals/adapt';
+import { finaleAssistRival } from './rivals/living';
 import { markTakeover, takeoverNote, takeoverRival } from './rivals/promotion';
 import { frontRunnerIntro, onFrontRunnerBattle } from './timeline/frontRunner';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
@@ -1469,6 +1470,14 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     }
     if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
     if (hunted) run.battle.hunted = true;
+    // Living Rival: a friend (or a rescued rival) arrives to help in the final boss (clear rules in rivals/living.ts).
+    if (plan.classId === CHAMPION_CLASS && isFinalBoss(content, run)) {
+      const assist = finaleAssistRival(content, run, Math.max(...team.map((m) => m.level)));
+      if (assist) {
+        run.battle.finaleAssist = assist;
+        run.battle.rivalNote = [run.battle.rivalNote, `${assist.name} burst through the doors: "Not without me!"`].filter(Boolean).join(' ');
+      }
+    }
     if (plan.memoryNote && !hunted && !nemesis) run.battle.memoryNote = plan.memoryNote;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
     const doublesCfg = content.balance.doubles;

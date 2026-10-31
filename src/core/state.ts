@@ -603,6 +603,8 @@ export const BattleStateSchema = z.object({
     })
     .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
+  /** Living Rival: a rival who arrived to help in the final boss (core/rivals/living.ts); strikes the boss at the end of a turn. */
+  finaleAssist: z.object({ id: z.string(), name: z.string(), speciesId: z.string(), level: z.number().int().min(1), strikesLeft: z.number().int().min(0) }).optional(),
   /** A temporary ally (event battle): its uid. It fights beside you in a double battle and leaves the party when the battle ends. */
   loaner: z.string().optional(),
   /** How each enemy's level was worked out (shown in the debug panel). */

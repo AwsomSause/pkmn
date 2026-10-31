@@ -2291,6 +2291,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('rivalMet'), atLeast: z.number().int().min(1) }),
   /** A rival whose rivalry with you ended as friends (state ally). */
   z.object({ kind: z.literal('rivalAlly') }),
+  /** Living Rival: which way the relationship leans (friend / rival / between; core/rivals/living.ts). */
+  z.object({ kind: z.literal('rivalPath'), path: z.enum(['friend', 'rival', 'between']) }),
+  /** Living Rival: a rival you beat in your last meeting (it has something to prove). */
+  z.object({ kind: z.literal('rivalBeaten') }),
   /** Event Director: a party member with a species tag (legendary, mythical, delta, zform...). */
   z.object({ kind: z.literal('partyTag'), tag: z.enum(SPECIES_TAGS) }),
   /** The Pokémon you started with (still in the party) has this type, species or species tag: starter-tagged events. */
@@ -2400,6 +2404,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('gauntlet'), rivals: z.number().int().min(1).max(6) }),
   /** World-state callback (catalog 75): adds to a named story flag that later events can read. */
   z.object({ kind: z.literal('flag'), key: z.string().regex(/^[a-z][a-z0-9-]*$/), amount: z.number().int().default(1) }),
+  /** Living Rival: writes a line to the run's Chronicle / journal (a photo, a promise, a letter). */
+  z.object({ kind: z.literal('moment'), text: z.string().min(1), importance: z.number().int().min(1).max(100).default(60) }),
   /** A run-defining relic: its modifiers (an upside and a downside) join the run for good. Taken once per id. */
   z.object({ kind: z.literal('relic'), id: z.string(), name: z.string(), effects: z.array(ArchetypeModifierSchema).min(1).max(3) }),
   /** Rival feud: settle the open feud (back the first or second rival, stay out, or exploit it). */
@@ -2435,6 +2441,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     ghost: z.boolean().default(false),
     /** The team is the newest run that did not win (core/story/championDefense.ts). */
     retired: z.boolean().default(false),
+    /** The team is a rival you have met (the likeliest by relationship path), at its latest roster; the trainer takes its name. */
+    rival: z.boolean().default(false),
     /** A species that fights beside you as a temporary ally (a double battle; needs two or more foes). */
     ally: z.string().optional(),
     name: z.string(),

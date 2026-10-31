@@ -78,6 +78,7 @@ import {
 import { genderOf, oppositeGender, sameGender } from '../gender';
 import * as Held from './held';
 import { rivalStrikeDamage } from '../raid/rivalAlly';
+import { finaleStrikeDamage } from '../rivals/living';
 import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
@@ -702,6 +703,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   for (const c of [playerC, enemy]) syncForms(ctx, c, events, true);
   endTurnStates(ctx, playerC, enemy, events);
   const raidTimeout = battle.raid ? raidEndOfTurn(ctx, playerC, enemy, events) : false;
+  finaleAssistStrike(ctx, playerC, enemy, events);
   if (battle.totem && !battle.outcome) {
     totemPhases(ctx, enemy, events);
     totemFieldEffect(ctx, enemy, [playerC], events);
@@ -757,6 +759,21 @@ export function applyHype(ctx: BattleContext, events: BattleEvent[]): void {
       battle.hype = 0;
       battle.hypeTurns = meter.turns;
     }
+  }
+}
+
+/** Living Rival: the rival who arrived in the final boss strikes it (never lethal, at most three times). */
+function finaleAssistStrike(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const assist = battle.finaleAssist;
+  if (!assist || assist.strikesLeft <= 0 || battle.outcome || player.mon.hp <= 0 || enemy.mon.hp <= 1) return;
+  const hit = finaleStrikeDamage(content, assist, enemy.mon);
+  assist.strikesLeft -= 1;
+  events.push({ type: 'raid', tone: 'info', text: `${assist.name}'s ${getSpecies(content, assist.speciesId).name} strikes the boss!` });
+  const amount = Math.min(enemy.mon.hp - 1, absorbHit(content, battle, enemy.mon, hit.amount));
+  if (amount > 0) {
+    enemy.mon.hp -= amount;
+    events.push({ type: 'damage', side: 'enemy', amount, hpAfter: enemy.mon.hp, effectiveness: hit.effectiveness, crit: false });
   }
 }
 
