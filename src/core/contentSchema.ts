@@ -1678,6 +1678,27 @@ export const TrainerAiSchema = z.object({
   priorityKoBonus: z.number().min(1).default(1),
   /** Danger switch: a smart trainer whose Pokémon would be KO'd by the player's best move swaps to a teammate that would lose at most this share of its HP (0 = off). */
   dangerSwitch: z.number().min(0).max(1).default(0),
+  /** The rest of the Advanced AI port (core/battle/aai.ts, docs/plans/aai-coverage.md): one switch per behaviour, all off by default. */
+  aai: z
+    .object({
+      /** Abilities and items that change a hit (Soundproof, Thick Fat, Multiscale, Disguise, Sturdy, Focus Sash...) and status moves that fail (Magic Bounce, Prankster on Dark). */
+      abilityReads: z.boolean().default(false),
+      /** Avoid recoil, crash and Rocky Helmet damage that would knock out a weak user. */
+      recoil: z.boolean().default(false),
+      /** Taunt, Encore, Disable, Heal Block, Torment, Knock Off, Trick only when they do something. */
+      disruption: z.boolean().default(false),
+      /** Pain Split, Destiny Bond, Substitute, Memento/Healing Wish/Final Gambit, hazard removal at the right time. */
+      specialMoves: z.boolean().default(false),
+      /** Hazards while the foe has reserves (never past the cap), screens and Tailwind when not up. */
+      sideMoves: z.boolean().default(false),
+      /** No set-up when the foe's next hit would KO; Roar/Haze-style moves against a boosted foe. */
+      setupSafety: z.boolean().default(false),
+      /** No status into a Substitute, Safeguard, Misty/Electric Terrain or a Guts-style ability. */
+      statusTiming: z.boolean().default(false),
+      /** No Protect twice in a row. */
+      repetition: z.boolean().default(false),
+    })
+    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false }),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;

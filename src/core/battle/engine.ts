@@ -31,6 +31,7 @@ import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
 import { freshSos, rollSos } from './sos';
+import { aaiDamageFactor, aaiSpecialAttack, aaiStatusValue, aaiTacticFactor, aaiSurvivesKo, type AaiView } from './aai';
 import { currentEnemy, freshExtra, freshHeldState, freshSideEffects, freshStages, freshTransform, freshVolatile, type BattleState, type PokemonInstance, type Stages, type Volatile } from '../state';
 import {
   calcDamage,
@@ -322,6 +323,52 @@ export interface EnemyBrain {
   target: PokemonInstance;
   /** The enemy's own stat stages (it won't keep using a set-up move once boosted). */
   stages: Stages;
+  /** The battle, for the Advanced AI reads (field, hazards, what the foe has used). */
+  battle?: BattleState;
+  /** The side of the Pokémon choosing (default: enemy). */
+  side?: 'enemy' | 'player';
+  /** The player's party (hazards are worth more while it has reserves). */
+  party?: PokemonInstance[];
+  /** Only a damage estimate is wanted (no strategic tweaks). */
+  raw?: boolean;
+}
+
+/** The Advanced AI view of one matchup (core/battle/aai.ts). */
+function aaiView(brain: EnemyBrain, user: PokemonInstance, best: number): AaiView {
+  const { content, target, battle } = brain;
+  const side = brain.side ?? 'enemy';
+  const userStats = calcStats(content, user);
+  const targetStats = calcStats(content, target);
+  const trickRoom = (battle?.field.trickRoom ?? 0) > 0;
+  const enemyLeft = battle ? battle.enemyTeam.filter((m) => m.hp > 0 && m.uid !== currentEnemy(battle).uid).length : 0;
+  const playerLeft = brain.party ? brain.party.filter((m) => m.hp > 0 && m.uid !== (side === 'enemy' ? target.uid : user.uid)).length : 0;
+  let threat: number | undefined;
+  return {
+    content,
+    battle,
+    side,
+    user,
+    target,
+    userAbility: abilityOf(content, user),
+    targetAbility: abilityOf(content, target),
+    userTypes: getSpecies(content, user.speciesId).types,
+    targetTypes: getSpecies(content, target.speciesId).types,
+    userMax: userStats.hp,
+    targetMax: targetStats.hp,
+    userFaster: trickRoom ? userStats.spe < targetStats.spe : userStats.spe > targetStats.spe,
+    stages: brain.stages,
+    best,
+    foeReserves: side === 'enemy' ? playerLeft : enemyLeft,
+    ownReserves: side === 'enemy' ? enemyLeft : playerLeft,
+    threat: () => {
+      if (threat === undefined) {
+        const foeStages = battle ? (side === 'enemy' ? battle.playerStages : battle.enemyStages) : freshStages();
+        const back: EnemyBrain = { content, ai: 1, target: user, stages: foeStages, battle, party: brain.party, side: side === 'enemy' ? 'player' : 'enemy', raw: true };
+        threat = Math.max(0, ...target.moves.filter((m) => m.pp > 0).map((m) => estimateDamage(back, target, m.id)));
+      }
+      return threat;
+    },
+  };
 }
 
 /**
@@ -349,7 +396,7 @@ function damageFromScore(level: number, score: number, accuracy: number): number
 export function estimateDamage(brain: EnemyBrain, user: PokemonInstance, moveId: string): number {
   const move = brain.content.moves.get(moveId);
   if (!move || move.category === 'status') return 0;
-  const score = moveValue({ ...brain, content: { ...brain.content, balance: { ...brain.content.balance, trainerAi: { ...brain.content.balance.trainerAi, koBonus: 1, priorityKoBonus: 1 } } } }, user, moveId);
+  const score = moveValue({ ...brain, raw: true, content: { ...brain.content, balance: { ...brain.content.balance, trainerAi: { ...brain.content.balance.trainerAi, koBonus: 1, priorityKoBonus: 1 } } } }, user, moveId);
   return score > 0 ? damageFromScore(user.level, score, move.accuracy ?? 100) : 0;
 }
 
@@ -372,20 +419,34 @@ export function moveValue(brain: EnemyBrain, user: PokemonInstance, moveId: stri
     const power = (m.effects.fixedDamage === 'level' ? user.level : (m.power ?? 0)) * (m.effects.charge ? 0.5 : 1);
     const ratio = m.category === 'physical' ? userStats.atk / targetStats.def : userStats.spa / targetStats.spd;
     const stab = userSpecies.types.includes(m.type) ? 1.5 : 1;
-    return power * ((m.accuracy ?? 100) / 100) * effectiveness * stab * ratio;
+    const plain = power * ((m.accuracy ?? 100) / 100) * effectiveness * stab * ratio;
+    return plain > 0 ? plain * aaiDamageFactor(view(), m) : plain;
   };
+  let cached: AaiView | undefined;
+  const view = (best = 0) => (cached ??= aaiView(brain, user, best));
+  const bestAttack = () => Math.max(1, ...user.moves.map((m) => content.moves.get(m.id)).filter((m): m is Move => Boolean(m)).map(attackPower));
+  if (move.category !== 'status' && !brain.raw) {
+    const special = aaiSpecialAttack(view(), move, bestAttack());
+    if (special !== null) return special;
+  }
   if (move.category !== 'status') {
-    const score = attackPower(move);
+    const score = attackPower(move) * (brain.raw ? 1 : aaiTacticFactor(view(), move));
     // Finishing blows (Advanced AI "Move Intelligence"): a move that should KO is worth more, a priority KO from the slower side most.
     const cfg = content.balance.trainerAi;
-    if (score > 0 && damageFromScore(user.level, score, move.accuracy ?? 100) >= target.hp) {
+    if (score > 0 && damageFromScore(user.level, score, move.accuracy ?? 100) >= target.hp && !aaiSurvivesKo(view())) {
       return score * cfg.koBonus * (move.priority > 0 && userStats.spe < targetStats.spe ? cfg.priorityKoBonus : 1);
     }
     return score;
   }
   // A status or set-up move is worth about as much as the best attack it makes possible.
-  const best = Math.max(1, ...user.moves.map((m) => content.moves.get(m.id)).filter((m): m is Move => Boolean(m)).map(attackPower));
+  const best = bestAttack();
   const fx = move.effects;
+  if (!brain.raw) {
+    const v = view();
+    v.best = best;
+    const read = aaiStatusValue(v, move);
+    if (read !== null) return read;
+  }
   if (fx.heal) return user.hp / calcStats(content, user).hp < 0.5 ? best : 0;
   if (fx.weather) return best * 0.3;
   if (fx.protect) return best * 0.1;
@@ -510,7 +571,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   const enemyChoice = choiceLock(battle, enemy.mon);
   const enemyChoiceIndex = enemyChoice ? enemy.mon.moves.findIndex((m) => m.id === enemyChoice) : -1;
   let enemyMoveIndex =
-    enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages });
+    enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages, battle, party: ctx.party });
   let enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.
@@ -697,7 +758,7 @@ function raidEndOfTurn(ctx: BattleContext, player: Combatant, enemy: Combatant, 
   }
   // A bonus attack (strictly limited by the raid's `max`).
   if (!timeout && !battle.outcome && player.mon.hp > 0 && enemy.mon.hp > 0 && takeExtraAction(content, battle, enemy.mon)) {
-    const idx = chooseEnemyMove(enemy.mon, ctx.rng, { content, ai: Math.max(battle.ai, 0.7), target: player.mon, stages: battle.enemyStages });
+    const idx = chooseEnemyMove(enemy.mon, ctx.rng, { content, ai: Math.max(battle.ai, 0.7), target: player.mon, stages: battle.enemyStages, battle, party: ctx.party });
     if (idx >= 0) {
       events.push({ type: 'raid', tone: 'warn', text: 'The boss attacks again!' });
       executeMove(ctx, enemy, player, resolveMove(content, enemy.mon, idx), idx, false, events);
@@ -3151,7 +3212,7 @@ function trainerAiTurn(ctx: BattleContext, enemy: Combatant, events: BattleEvent
   const target = ctx.party[battle.activeIndex]!;
   // Danger switch (Advanced AI "Switch Logic"): leave when the player's best move would KO, for a teammate that takes it well.
   if (cfg.dangerSwitch > 0) {
-    const hit = (m: PokemonInstance) => Math.max(0, ...target.moves.filter((x) => x.pp > 0).map((x) => estimateDamage({ content, ai: 1, target: m, stages: battle.playerStages }, target, x.id)));
+    const hit = (m: PokemonInstance) => Math.max(0, ...target.moves.filter((x) => x.pp > 0).map((x) => estimateDamage({ content, ai: 1, target: m, stages: battle.playerStages, battle, party: ctx.party, side: 'player' }, target, x.id)));
     const spare = battle.enemyTeam
       .map((m, i) => ({ m, i, take: hit(m) / Math.max(1, m.hp) }))
       .filter(({ m, i, take }) => i !== battle.enemyIndex && m.hp > 0 && take <= cfg.dangerSwitch)

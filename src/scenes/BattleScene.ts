@@ -1078,7 +1078,7 @@ export class BattleScene extends Phaser.Scene {
               ? ' It will Dynamax!'
               : '';
     // Boss intent (#117): bosses, raids and totems telegraph the move they value most.
-    const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon()) : null;
+    const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon(), this.run.party) : null;
     const shadow = this.activeMon().shadow;
     this.message.setText(`${intent ? `${intent.text}\n` : ''}${shadow ? `Shadow haze · Heart Gauge ${shadow.heart}/100 (hits harder, takes more)\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
