@@ -239,6 +239,17 @@
    "countsForProgress": true
   },
   {
+   "id": "daily-route",
+   "name": "Daily route",
+   "regularRegions": 1,
+   "grandRegion": false,
+   "stagesPerRegion": 4,
+   "columns": 14,
+   "trainerColumns": [[3, 6], [8, 12]],
+   "eliteFourSize": 2,
+   "countsForProgress": false
+  },
+  {
    "id": "quick-route",
    "name": "Quick Route",
    "regularRegions": 9,
