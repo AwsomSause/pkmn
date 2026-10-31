@@ -189,3 +189,51 @@ describe('status timing and repetition', () => {
     expect(moveValue(brain(), user, 'protect')).toBe(0);
   });
 });
+
+describe('field play (batch 2)', () => {
+  const noField = withAai({ fieldPlay: false });
+
+  it('rain boosts Water and weakens Fire in the score', () => {
+    const user = mon('kingdra', 40, 'u', ['surf', 'ember']);
+    const target = mon('snorlax', 40, 't', ['tackle']);
+    const { battle, brain } = fight(user, target);
+    battle.weather = { id: 'rain', turns: 5 };
+    expect(moveValue(brain(), user, 'surf')).toBeCloseTo(moveValue(brain(noField), user, 'surf') * 1.5);
+    expect(moveValue(brain(), user, 'ember')).toBeCloseTo(moveValue(brain(noField), user, 'ember') * 0.5);
+  });
+
+  it('priority moves fail into Psychic Terrain on a grounded target', () => {
+    const user = mon('scizor', 40, 'u', ['bullet-punch', 'x-scissor']);
+    const target = mon('snorlax', 40, 't', ['tackle']);
+    const { battle, brain } = fight(user, target);
+    battle.terrain = { id: 'psychic', turns: 5 };
+    expect(moveValue(brain(), user, 'bullet-punch')).toBe(0);
+  });
+
+  it('Rain Dance only when the rain helps it more than the foe, and not twice', () => {
+    const user = mon('kingdra', 40, 'u', ['rain-dance', 'surf'], abilityIndex('kingdra', 'swift-swim'));
+    const target = mon('snorlax', 40, 't', ['tackle']);
+    const { battle, brain } = fight(user, target);
+    expect(moveValue(brain(), user, 'rain-dance')).toBeGreaterThan(0);
+    battle.weather = { id: 'rain', turns: 5 };
+    expect(moveValue(brain(), user, 'rain-dance')).toBe(0);
+    battle.weather = null;
+    const fireFoe = mon('arcanine', 40, 't2', ['flamethrower']);
+    const vsFire = fight(mon('arcanine', 40, 'u2', ['rain-dance', 'flamethrower']), fireFoe);
+    vsFire.battle.playerVolatile.movesUsed = ['flamethrower'];
+    expect(moveValue(vsFire.brain(), vsFire.battle.enemyTeam[0]!, 'rain-dance')).toBeGreaterThan(0); // hurts the foe's Fire as much as its own: base value only
+    const swimmer = fight(mon('arcanine', 40, 'u3', ['rain-dance', 'flamethrower']), mon('kingdra', 40, 't3', ['surf'], abilityIndex('kingdra', 'swift-swim')));
+    expect(moveValue(swimmer.brain(), swimmer.battle.enemyTeam[0]!, 'rain-dance')).toBe(0);
+  });
+
+  it('Trick Room only for the slower side', () => {
+    const slow = mon('snorlax', 40, 'u', ['trick-room', 'body-slam']);
+    const fast = mon('jolteon', 40, 't', ['thunderbolt']);
+    const a = fight(slow, fast);
+    expect(moveValue(a.brain(), slow, 'trick-room')).toBeGreaterThan(0);
+    a.battle.field.trickRoom = 4;
+    expect(moveValue(a.brain(), slow, 'trick-room')).toBe(0);
+    const b = fight(mon('jolteon', 40, 'u2', ['trick-room', 'thunderbolt']), mon('snorlax', 40, 't2', ['tackle']));
+    expect(moveValue(b.brain(), b.battle.enemyTeam[0]!, 'trick-room')).toBe(0);
+  });
+});

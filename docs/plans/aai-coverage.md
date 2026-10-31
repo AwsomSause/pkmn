@@ -19,8 +19,8 @@ Statuses: BUILT, PART (some of the script), BATCH n (planned), EXISTS (the game 
 | 11 | 2_Move_Intelligence/Special_Moves.rb | BUILT | Pain Split, Destiny Bond, Substitute, Memento / Healing Wish / Lunar Dance, Final Gambit, Endeavor, hazard removal |
 | 12 | 2_Move_Intelligence/Disruption_Moves.rb | BUILT | Taunt, Encore, Disable, Heal Block, Torment, Knock Off, Trick / Switcheroo, Thief |
 | 13 | 3_Combat_Mechanics/Recoil_Tracking.rb | BUILT | recoil, Mind Blown-style HP cost, crash on miss, at low HP |
-| 14 | 3_Combat_Mechanics/Weather_Terrain_Wars.rb | BATCH 2 | |
-| 15 | 3_Combat_Mechanics/Field_Effects.rb | PART | Misty/Electric Terrain status blocks; weather/terrain damage and Trick Room in batch 2 |
+| 14 | 3_Combat_Mechanics/Weather_Terrain_Wars.rb | BUILT | a weather or terrain move only when it helps the user more than the foe (boosted attack types, Swift Swim-style abilities, Sand/Snow typing), never when already up (`aai.fieldPlay`) |
+| 15 | 3_Combat_Mechanics/Field_Effects.rb | BUILT | rain/sun damage (Utility Umbrella aware), Electric/Grassy/Psychic Terrain boosts, Misty Terrain vs Dragon, Grassy Terrain vs Earthquake, Psychic Terrain blocks priority, Misty/Electric Terrain status blocks, Trick Room only for the slower side. Gravity: kept at the engine's base value |
 | 16 | 3_Combat_Mechanics/Advanced_Abilities.rb | PART | Soundproof, Bulletproof, Wind Rider, Earth Eater, Well-Baked Body, Thick Fat, Heatproof, Water Bubble, Purifying Salt, Dry Skin, Fluffy, Ice Scales, Fur Coat, Multiscale, Shadow Shield, Filter/Solid Rock/Prism Armor, Disguise/Ice Face, Mold Breaker; Volt Absorb-style and Levitate/Wonder Guard existed |
 | 17 | 4_Battle_Strategy/Threat_Assessment.rb | BATCH 3 | |
 | 18 | 4_Battle_Strategy/Team_Preview_Intelligence.rb | BATCH 3 | |
@@ -33,9 +33,9 @@ Statuses: BUILT, PART (some of the script), BATCH n (planned), EXISTS (the game 
 | 25 | 4_Battle_Strategy/Advanced_Items.rb | BATCH 3 | |
 | 26 | 4_Battle_Strategy/Strategic_Awareness.rb | BATCH 3 | |
 | 27 | 5_Format_Specific/Pivot_Moves.rb | BATCH 3 | |
-| 28 | 5_Format_Specific/Priority_Tiers.rb | PART | priority KO from the slower side (Z8); batch 2 |
+| 28 | 5_Format_Specific/Priority_Tiers.rb | BUILT | priority KO from the slower side (Z8); a slower user picks off a target under 25% with priority; no priority into Psychic Terrain |
 | 29 | 5_Format_Specific/Doubles_Coordination.rb | EXISTS | doubles AI picks best move and target, avoids hitting its partner (`battle/doubles.ts`) |
-| 30 | 5_Format_Specific/Speed_Tiers.rb | BATCH 2 | |
+| 30 | 5_Format_Specific/Speed_Tiers.rb | BUILT | speed order (Trick Room aware) in `aaiView`; Thunder Wave worth more when slower, less when faster; Tailwind when slower; Trick Room |
 | 31 | 5_Format_Specific/Doubles_Strategy.rb | EXISTS | as row 29 |
 | 32 | 6_Meta_Mechanics/Mega_Intelligence.rb | BATCH 3 | |
 | 33 | 6_Meta_Mechanics/Terastallization_Intelligence.rb | BATCH 3 | |
