@@ -15,7 +15,7 @@ import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
-import { buyTier, exchange, type ExchangeDirection } from '../core/bank';
+import { loanProblem, runBankFlags, vaultTake, buyTier, exchange, type ExchangeDirection } from '../core/bank';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
 import type { DramaLine } from '../core/drama';
@@ -90,8 +90,15 @@ export class GameSession {
    * `prep` carries the Preparation Desk's choices (and its campaign) and is remembered for next time.
    */
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: this.profile.licenses });
+    // A saved preset can name a loan or Vault item the profile no longer has.
+    if (prep) prep = { ...prep, loan: prep.loan && !loanProblem(this.content, this.profile), vaultItem: prep.vaultItem && this.profile.vault.includes(prep.vaultItem) ? prep.vaultItem : null };
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile) , ownedTrainers: this.profile.unlockedArchetypes });
     this.profile = recordRunStarted(this.profile);
+    if (prep?.vaultItem) {
+      const profile = structuredClone(this.profile);
+      vaultTake(profile, prep.vaultItem);
+      this.profile = profile;
+    }
     if (prep) this.profile = { ...this.profile, lastPrep: { ...prep, name: 'Last run', archetypeId } };
     this.checkSave(this.saves.saveProfile(this.profile));
     this.persistRun();

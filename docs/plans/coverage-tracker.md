@@ -36,7 +36,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | DONE (the 2 Overdrive events are built, limited) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
-| Trainers.md perks | PART: 180 of 220 trainers built (A to Kurt by this thread, Z backwards by the Raids thread); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
+| Trainers.md perks | DONE: all 220 trainers built (A to Kurt by one thread, Z backwards by the Raids thread); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | PART (M10 visual slices 1-21 built; see visual-coverage.md) |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
@@ -56,7 +56,7 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 | Raid modifiers: weather field, terrain, elemental surge, healing restriction, rotating weaknesses | DONE (`modifiers` in raids.json; 8 raids use them) |
 | Raid cheers (Offense / Defense / Healing, 3 per raid) and bosses with 5-6 moves (`extraMoves`) | DONE |
 | Raid capture jingles (4) on the boss-joins card; Dens + Adventures header art on den and expedition screens | DONE (Counter cheer, other Dens/Adventures art not used) |
-| Victory rewards: money, items, extra draft choices, boss joins, Mega resources (tier 5–6: Mega Stones for party Pokémon that can use one, plus a Mega Ring if you have none), rare-encounter tokens (tier 4–6: the next 1–2 wild encounters weight rare x3, Legendary x2; raids and Totems never use a token up) | DONE; crafting materials TODO (needs a crafting system) |
+| Victory rewards: money, items, extra draft choices, boss joins, Mega resources (tier 5–6: Mega Stones for party Pokémon that can use one, plus a Mega Ring if you have none), rare-encounter tokens (tier 4–6: the next 1–2 wild encounters weight rare x3, Legendary x2; raids and Totems never use a token up) | DONE; crafting materials DONE (`core/crafting.ts`: materials drop by raid tier, the Workshop uses them) |
 | Tiers 1, 2, 3, 4, 5, 6/Apex (8 raids, one fully featured Apex) | DONE |
 | Discover (den on the map), Prepare (preview: tier, mechanics, rewards, cost), Battle, Resolve, Progress (run raid record) | DONE, incl. unlocking tiers across runs: tiers 1–3 open from the first run (`raids.json` `openTiers`); winning a tier N raid (any run, kept as the profile best counter `raidBestTier`) opens tier N+1, and in-run wins open the next tier at once. Dens in regions whose tiers are still closed hold the highest open tier. The Raid Observatory shows the open tiers |
 | Safeguards: encounter level cap, no double reward/cost (den used on entry, battle cleared once), saved mid-raid (run v12), failure never ends the run, config validated at load, visual shield/phase/timer/charge | DONE |
@@ -128,11 +128,11 @@ Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-ov
 | Section | Items | Status |
 |---|---|---|
 | §1 Original Hyper moments (Toughened It Out, Hung In There, Felt a Bond, Pushed Back Up, Heated Rivalry, This Trainer Will Return, Riled Up, A Past Pokémon Wants to Join) | 8 | DONE |
-| §1 Evolved Early, Mega Evolved from Determination, This Enemy Will Return | 3 | PART: Mega/evolution covered by §4 moments and the Determination Evolution memory; "Enemy Will Return" needs nemesis (rivals threads) |
+| §1 Evolved Early, Mega Evolved from Determination, This Enemy Will Return | 3 | DONE: Mega/evolution covered by §4 moments and the Determination Evolution memory; "This Enemy Will Return…" is told when a nemesis forms or slips away (`core/story/nemesis.ts`) |
 | §2 Seven Emotions: tags, current emotion dot, Story screen; 7 Emotional Overdrives (once per battle each: Determination/Bravery/Justice +1 Attack, Kindness +1 Defense, Patience +1 Sp. Atk, Perseverance +1 Sp. Def, Integrity cures a fresh status), rare dual emotion (Determination + Kindness: heal 15%), emotional clash | 7 + 2 | DONE (limited: no drawbacks/exhaustion, no signature achievement events such as "Not Until It's Over", Kindness peaceful encounters TODO) |
 | §3 Survival/recovery/transformation: Second Wind, Hasn't Given Up, Remembered Training, Broke Through Limits, Something Awakened, Mastered the Power Within (Signature Move Awakening), Instincts Took Over, Refused Its Weakness, Turned Pain Into Power, Evolved Beyond Expectations | 10 | DONE (`core/story/moments.ts`; limited: Refused Its Weakness is +1 Defense, Remembered Training is +1 Attack when a boss-finishing move is reused) |
 | §3 Bond/friendship/party (10): Knows You Believe, Make You Proud, Came to Aid, More Than Teammates, Understand Each Other (bond pair with 2+ trades), Won't Let Friend Fight Alone (bond partner under 25% HP), Wants to Prove Itself (rookie leads beside an ace), Feels Left Out (benched with 0-1 fights; +5 friendship, limited: no "ask to lead" screen), Recognizes an Old Friend (past Pokémon), Refuse to Lose (Friendly Competition) | 10 | DONE (limited as noted) |
-| §3 Rivalries/grudges/returning enemies | 12 | TODO here; the rivals threads own rivalry/nemesis (some covered by rival slices) |
+| §3 Rivalries/grudges/returning enemies | 12 | PART: 7 done with the nemesis system (It Remembers That Defeat!, This Isn't Over Between Us!, Fighting for Its Pride, Its Anger Is Becoming Dangerous!, It Has Something to Prove!, The Hunter Has Become the Hunted!, This Enemy Will Return…); rival ones by the rivals slices; Grown Stronger, Studied Your Strategy, Kindness, Cruelty are left-out plan 5.3 |
 | §3 Enemy Overdrive (10): Unshaken, Pure Instinct, Learned From Your Attacks, Protecting Its Trainer, Partner's Fall, Will Not Let Trainer Down, Riled Up, Gathering Everything (two set-up turns = telegraphed charge; next attack +2 Attack), Lost Its Composure (a status on it breaks the charge, Defense -1), Fighting Beyond Limits (boss survives a half-health hit) | 10 | DONE |
 | §4 Hyper evolutions: Determination Evolution (memory), Mega Overdrive, All of Its Heart, A Giant Resolve, True Colors (7 emotion lines), Signature Move Awakening | 6 | DONE |
 | §5 Unusual events | 6 | DONE: 3 first-turn banners (Something Different, Waiting for This Battle, Something Watching) + 3 map "?" events (Doesn't Want to Fight, It Saw What You Did, This Place Remembers; `tools/events/overdrive.ts`). Limited: This Place Remembers fires anywhere; It Saw What You Did reads the Good/Evil meter |
@@ -140,7 +140,7 @@ Source: `Overdrive Hyper Techno Supreme Z (text).md` (copy: `docs/plans/hyper-ov
 | §7 Event generator (the 14-field definition, priority queue, scopes) | 1 | DONE (story.json definitions + queue); no separate generator UI |
 | §8 Fairness rules (per-battle budget, cooldowns, no stacked buffs) | 1 | DONE (major-cue budget, one combat effect per queue) |
 | §9 Phase 1 core / Phase 2 advanced | 2 | Phase 1 DONE; Phase 2 PART (this table) |
-| Techno §1 Rivalry, §2 Nemesis | — | owned by the rivals threads |
+| Techno §1 Rivalry, §2 Nemesis | — | §1 owned by the rivals threads; §2 DONE: `core/story/nemesis.ts` (Incident → Return → Reckoning, 6 archetypes, 30% roll, counter-move, Reckoning reward + Nemesis Slayer title). Limited: no Nemesis Raids, no "interrupts a rare encounter / steals a reward" or "spared" causes (no flee or spare action exists) |
 | Techno §3 Raids | — | owned by the Raids/Blueprint thread |
 | Techno §4 Protégé: accept/decline screen, 6 paths, mentorship ends on evolution/catching up; Looks Up, Learned Something Today, Student Surpassed Teacher, Teacher's Last Lesson, Different Ways, Student Becomes Teacher (`core/story/mentorship.ts`) | 6 paths + 8 stories | PART: DONE incl. Carried Its Mentor's Legacy (the protégé's Hall of Fame card names its mentor); left: mastery sharing, mentor-taught move variants (limited: paths shape story text, not stats) |
 | Techno §6.1 Legacy System: Legacy Card per Pokémon (Run Ace/Mentor/Protégé/Survivor tags, signature memory, greatest moments), 8 earned titles from real history (Iron Will, Boss Slayer, Rival Breaker, Guardian, Veteran, Tested by Fire, Grown on the Road, plus the last title), run epitaph in the chronicle; shown on the Story screen | 1 | DONE: Legacy Cards show in the Hall of Fame (Hub Events → Hall of Fame) |
@@ -168,7 +168,7 @@ Source: `Implementation Plan Electric (text).md` (copy: `docs/plans/electric-pla
 | Section | Status |
 |---|---|
 | §1 Core Game Event Bus (domain events, effect ledger) | DONE (M8.9-0) |
-| §2A Rivalry / §2B Nemesis | rivals threads |
+| §2A Rivalry / §2B Nemesis | rivals threads; §2B nemesis DONE (`core/story/nemesis.ts`) |
 | §2C Dynamic Event Director | DONE: common/uncommon/rare/epic tiers, eligibility from party, friendship, attributes, items, earlier events, bonds, rivals, species tags and the region's focus (5 new condition kinds), 2-4 options with their odds shown, no repeats, every choice and gamble remembered in the chronicle; 5 new Director events incl. the researcher who recognises a rare form (limited: sacrifice-style events and permanent discoveries beyond Research Points) |
 | §2D Bond & Protégé | Protégé PART (above); Bond via rival bonds/Overdrive bond moments |
 | §2E Raid & World Crisis | Raids thread |

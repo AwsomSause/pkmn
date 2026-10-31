@@ -48,7 +48,7 @@ import { evolveFully, type EvolutionResult } from './evolution';
 import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
-import { runLicenses, survivalEntry } from './bank';
+import { bankShopEntries, runLicenses } from './bank';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
@@ -131,7 +131,7 @@ import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { rivalBond } from './drama/bond';
-import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
+import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
@@ -147,6 +147,9 @@ import { simulateRivalWorld } from './rivals/world';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
+import { withTeamTypes } from './rivals/adapt';
+import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
+import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
 import { planReunion, reunionPokemon } from './story/reunion';
 
@@ -176,6 +179,8 @@ export interface NewRunOptions {
   raidTierUnlocked?: number;
   /** The Bank licenses the profile owns (core/bank.ts runLicenses keeps the three that act inside a run). */
   licenses?: string[];
+  /** The account's unlocked trainers; map events that recruit one of them stop appearing (itemCounters `owned:<id>`). */
+  ownedTrainers?: readonly string[];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -217,6 +222,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     usedLeaders: [],
     materials: {},
     badges: [],
+    ...(opts.ownedTrainers?.length ? { itemCounters: Object.fromEntries(opts.ownedTrainers.map((id) => [`owned:${id}`, 1])) } : {}),
     campaignId: campaign.id,
     regionOrder,
     regionIndex: 0,
@@ -278,6 +284,8 @@ function restoreAfterWipe(content: Content, run: RunState): RunState | null {
   const maxWipes = getMode(run.rules.modeId)?.maxWipes;
   if (adventure && maxWipes !== undefined && run.rules.wipes >= maxWipes) return null;
   const back = structuredClone(run.checkpoint) as unknown as RunState;
+  // A nemesis made (or made stronger) by the wipe is remembered after it.
+  back.story.nemeses = structuredClone(run.story.nemeses);
   back.rules = { ...run.rules, wipes: run.rules.wipes + 1, deathBlockUsed: run.rules.deathBlockUsed || block };
   if (adventure) back.money = Math.floor(back.money * (1 - (getMode(run.rules.modeId)?.wipeMoneyLoss ?? 0)));
   healParty(content, back);
@@ -1150,11 +1158,18 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const opened = legendary ? { speciesId, level: plan.level } : openingWild(content, run, speciesId, plan.level, `wild:${node.id}`);
     speciesId = opened.speciesId;
     // The gentle opening caps the wild level after the difficulty bonus too, so Nightmare's first fight is not a level 9 against a level 5 starter.
-    const enemy = newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : content.balance.difficulty.maxLevel);
-    enemy.shiny = plan.shiny;
+    // A wild nemesis takes this encounter instead (built from the planned level, so no roll changes).
+    const nemesis = legendary ? null : dueNemesis(content, run, 'wild');
+    const back = nemesis ? nemesisMember(content, nemesis, opened.level) : null;
+    const enemy = back
+      ? newMon(content, run, back.member.speciesId, back.member.level, 'e', content.balance.difficulty.maxLevel)
+      : newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : content.balance.difficulty.maxLevel);
+    if (back) enemy.moves = back.member.moves!.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
+    enemy.shiny = back ? false : plan.shiny;
     if (plan.shiny) countShiny(run, speciesId);
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
+    if (nemesis && back) beginNemesisBattle(content, run, nemesis, back.change, null);
     const setup = wildBattleSetup(content, run, mods);
     if (setup.drop) run.itemCounters = { ...run.itemCounters, 'pinap-drop': 1 };
     if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
@@ -1210,7 +1225,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     }
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
     const gauntlet = rule && !back ? gauntletRival(content, run) : null;
-    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run)) : null;
+    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run, content)) : null;
     if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
     let trainingIndex = -1;
@@ -1227,8 +1242,22 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       run.story.flags[RIVAL_SEEN_ANY] = scheduleKey(run);
       rivalBack.away = 0;
     }
+    // Nemesis system: a nemesis takes the first ordinary trainer slot of a later stage (its Return, then its Reckoning).
+    const nemesis = rule && !back && !rivalBack ? dueNemesis(content, run, 'trainer') : null;
+    let nemesisSetup: { change: string | null; partner: Nemesis | null } | null = null;
+    if (nemesis) {
+      const r = nemesisTrainerPlan(content, run, nemesis, plan);
+      plan = r.plan;
+      nemesisSetup = r;
+    }
+    // The Hunter Has Become the Hunted!: a class you keep beating sends a team built to beat your lead (once per region).
+    const hunted = rule && !back && !rivalBack && !nemesis && isHunted(content, run, plan.classId);
+    if (hunted) {
+      plan = withTeamTypes(content, plan, counterTypes(content, getSpecies(content, run.party[activeIndex]!.speciesId).types));
+      markHunted(run);
+    }
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
-    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival ? perkItem(content, run, 'rival') : null;
+    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival && !nemesis && !hunted ? perkItem(content, run, 'rival') : null;
     let isRival = false;
     if (rsvp && !usedThisStage(run, rsvp)) {
       isRival = true;
@@ -1250,11 +1279,13 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
     if (firstRival) run.battle.firstRival = true;
+    if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
+    if (hunted) run.battle.hunted = true;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
     const doublesCfg = content.balance.doubles;
     // Bosses known for double battles (Tate & Liza) always fight two at a time.
     if (plan.leaderId && doublesCfg.bossIds.includes(plan.leaderId) && canBeDoubles(run.party, team)) makeDoubles(run.battle, run.party);
-    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
+    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && !nemesis && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
       if (new Rng(hashSeed(`${run.seed}::doubles::${run.regionIndex}::${stage.index}::${node.id}`)).chance(doublesCfg.chance)) makeDoubles(run.battle, run.party);
     }
     if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
@@ -1367,8 +1398,7 @@ export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'arch
     .slice(0, earlyStockCount(content, run) + shopEarlyStockPerk(runPerks(content, run)));
   // Rocket Boss Giovanni's Black Market sells everything, locked stock at a markup (shopPrice).
   const black = blackMarketMarkup(runPerks(content, run)) !== null;
-  const survival = survivalEntry(content, run.licenses);
-  const stock = survival && !content.shop.some((e) => e.item === survival.item) ? [...content.shop, survival] : content.shop;
+  const stock = [...content.shop, ...bankShopEntries(content, run.licenses).filter((x) => !content.shop.some((e) => e.item === x.item))];
   return stock.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
 }
 
@@ -1435,7 +1465,7 @@ export function sellItem(content: Content, current: RunState, itemId: string): {
 /** Buys one of an item at the shop. */
 export function buyItem(content: Content, current: RunState, itemId: string): { run: RunState; message: string } {
   assertPhase(current, 'shop');
-  const entry = content.shop.find((e) => e.item === itemId) ?? (survivalEntry(content, current.licenses)?.item === itemId ? survivalEntry(content, current.licenses) : undefined);
+  const entry = content.shop.find((e) => e.item === itemId) ?? bankShopEntries(content, current.licenses).find((e) => e.item === itemId);
   if (!entry) throw new Error(`The shop doesn't sell "${itemId}"`);
   const item = getItem(content, itemId);
   if (ownsKeepsake(content, current.inventory, itemId)) throw new Error(`You already have the ${item.name}.`);
@@ -1482,6 +1512,8 @@ export interface BattleEndResult {
   /** Shadow Pokémon purified by this battle (names). */
   shadowPurified: string[];
   evolutions: (EvolutionResult & { uid: string })[];
+  /** Moves devoted Pokémon learned from their bond after this win. */
+  bondTaught?: { uid: string; moveId: string }[];
   /** The gym leader's id when this win beat a gym leader. */
   badge: string | null;
   /** The region's id when this win beat its champion. */
@@ -1878,12 +1910,13 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
 
   const evolutions: BattleEndResult['evolutions'] = [];
   for (const mon of noEvolution(run.rules) ? [] : run.party) {
-    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers))) {
+    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers), bondEvolves(content, run, mon))) {
       evolutions.push({ ...evo, uid: mon.uid });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
   }
   count(run, 'evolutions', evolutions.length);
+  const bondTaught = battle.outcome === 'win' ? bondLessons(content, run, battle.participants) : [];
   // The caught Pokémon's decision comes first.
   run.pending = [...caughtPending, ...run.pending];
   // A trainer's signature mechanic (Rival's Answer): choose after the battle.
@@ -2015,7 +2048,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**

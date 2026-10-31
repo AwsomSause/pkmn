@@ -183,7 +183,7 @@ export function standardRule(content: Content): DraftRule {
 /** The choices a brand-new player gets: the full campaign, the starting pool, the standard draft, no token. */
 export function defaultPrep(content: Content): RunPrep {
   const pool = [...content.starterPools.values()].find((p) => p.unlockedByDefault)!;
-  return { campaignId: 'full', poolId: pool.id, draftRuleId: standardRule(content).id, typeFocus: null, tokenId: null, directive: null, license: null };
+  return { campaignId: 'full', poolId: pool.id, draftRuleId: standardRule(content).id, typeFocus: null, tokenId: null, directive: null, license: null, loan: false, vaultItem: null };
 }
 
 export interface ResolvedPrep {
@@ -323,7 +323,9 @@ export function startingResources(content: Content, archetype: Archetype, prep: 
   add(archetype.startingItems);
   const token = prep.tokenId ? content.prepTokens.get(prep.tokenId) : undefined;
   if (token) add(token.items);
-  return { money: content.balance.money.startingMoney + (token?.money ?? 0), items };
+  if (prep.vaultItem) add({ [prep.vaultItem]: 1 });
+  const loan = prep.loan ? content.balance.bank.loan.money : 0;
+  return { money: content.balance.money.startingMoney + (token?.money ?? 0) + loan, items };
 }
 
 export function itemsText(content: Content, items: Record<string, number>): string {
@@ -351,6 +353,8 @@ export function buildSummary(content: Content, archetypeId: string, prep: RunPre
     `Preparation: ${token ? `${token.name}, ${token.description.charAt(0).toLowerCase()}${token.description.slice(1)}` : 'none'}`,
     `Start with: ₽${res.money}; ${itemsText(content, res.items) || 'an empty Bag'}`,
     ...(prep.directive ? [directiveText(content, prep.directive)] : []),
+    ...(prep.loan ? [`Bank loan: +₽${content.balance.bank.loan.money}; finish with ${content.balance.bank.loan.badges}+ badges or the Bank takes ${content.balance.bank.loan.penalty} credits.`] : []),
+    ...(prep.vaultItem ? [`From the Vault: ${content.items.get(prep.vaultItem)?.name ?? prep.vaultItem}`] : []),
   ];
   if (attributes) lines.push(`Attributes: ${attributesLine(readAttributes(content, attributes))}`);
   return lines;

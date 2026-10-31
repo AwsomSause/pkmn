@@ -25,6 +25,12 @@ export interface SosBattle {
   lastAnswered: boolean | null;
 }
 
+/** Adrenaline Orb: calls come this much more often and a second call may be answered. */
+export const ORB_CALL_BONUS = 2;
+export const ORB_MAX_ANSWERED = 2;
+/** Chain bonus: each answered call before this one makes the next friend a level stronger (the caller's chain). */
+export const chainBonus = (answered: number): number => Math.min(3, answered);
+
 export const freshSos = (): SosBattle => ({ answered: 0, callerUid: null, allyUid: null, lastTurnCalled: 0, lastAnswered: null });
 
 export const sosEntry = (speciesId: string): SosEntry | null => TABLE[speciesId] ?? null;
@@ -35,6 +41,8 @@ export interface SosInput {
   maxHp: number;
   /** The player's active Pokémon has Intimidate, Unnerve or Pressure. */
   scary: boolean;
+  /** The player's active Pokémon carries an Adrenaline Orb effect. */
+  orb?: boolean;
 }
 
 export type SosOutcome = { kind: 'none' } | { kind: 'failed' } | { kind: 'answered'; species: string; level: number };
@@ -45,10 +53,10 @@ export function rollSos(i: SosInput): SosOutcome {
   const entry = sosEntry(caller.speciesId);
   if (!entry || battle.kind !== 'wild' || battle.raid || battle.totem || battle.doubles) return { kind: 'none' };
   const sos = battle.sos ?? freshSos();
-  if (sos.allyUid || sos.answered >= 1 || caller.hp <= 0 || caller.status) return { kind: 'none' };
+  if (sos.allyUid || sos.answered >= (i.orb ? ORB_MAX_ANSWERED : 1) || caller.hp <= 0 || caller.status) return { kind: 'none' };
   const rng = new Rng(hashSeed(`sos::${caller.uid}::${battle.turn}`));
   const share = caller.hp / i.maxHp;
-  const callRate = entry.rate * (share <= 0.25 ? 5 : share <= 0.5 ? 3 : 1);
+  const callRate = entry.rate * (share <= 0.25 ? 5 : share <= 0.5 ? 3 : 1) * (i.orb ? ORB_CALL_BONUS : 1);
   if (rng.int(0, 99) >= callRate) return { kind: 'none' };
   let answer = entry.rate * 4;
   if (i.scary) answer *= 1.2;
@@ -57,5 +65,5 @@ export function rollSos(i: SosInput): SosOutcome {
   const roll = rng.int(0, 99);
   if (roll >= Math.round(answer)) return { kind: 'failed' };
   const pool = entry.allies && entry.allies.length > 0 ? entry.allies : [caller.speciesId];
-  return { kind: 'answered', species: rng.pick(pool), level: Math.max(2, caller.level - rng.int(1, 5)) };
+  return { kind: 'answered', species: rng.pick(pool), level: Math.max(2, caller.level - rng.int(1, 5) + chainBonus(sos.answered)) };
 }
