@@ -19,3 +19,6 @@ Added 22 scripts (26 moves): psychic (confusion, extrasensory, psychic-noise), l
 
 ## Slice 4 (draft-generated)
 24 more scripts via the generator (24 moves): confuse-ray, fury-swipes, nasty-plot, rollout, air-slash, zen-headbutt, rock-slide, discharge, swift, leech-seed, mud-slap, growth, hypnosis, night-slash, metal-claw, calm-mind, recover, toxic, light-screen, safeguard, curse, rain-dance, shadow-ball, close-combat. Total 83 moves.
+
+## Slice 5 (draft-generated)
+25 more scripts via the generator (25 moves): counter, dragon-breath, flamethrower, outrage, play-rough, dragon-pulse, aerial-ace, charge, earth-power, razor-leaf, spark, bubble, roost, thunder-wave, uproar, bug-bite, hex, rock-throw, sweet-scent, baby-doll-eyes, bubble-beam, iron-head, stomp, gust, moonblast. Total 108 moves (80 scripts).
