@@ -52,7 +52,10 @@
     "rivalryFormed": 55,
     "trainerVowedReturn": 50,
     "feeling": 55,
-    "runEnded": 90
+    "runEnded": 90,
+    "nemesisFormed": 75,
+    "nemesisReturned": 60,
+    "nemesisSettled": 90
   },
   "emotions": {
     "window": 10,
@@ -3149,6 +3152,294 @@
       "eligibilityTags": [],
       "emotions": [],
       "variants": {}
+    },
+    {
+      "id": "remember-defeat",
+      "displayName": "It Remembers That Defeat!",
+      "messagePool": [
+        "{name} remembers beating you. It wants to do it again!",
+        "{name} has not forgotten its last win over your team!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "rememberDefeat"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Faced {name} again, the nemesis that beat it"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff5a6e",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "not-over-between-us",
+      "displayName": "This Isn't Over Between Us!",
+      "messagePool": [
+        "{trainer}'s {name} glares back as it is recalled. This isn't over!",
+        "{name} barely lost, and it knows it. This isn't over between you!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "notOverBetweenUs"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Barely beat {trainer}'s {name}, which swore it isn't over"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff7a3d",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "fighting-for-pride",
+      "displayName": "The Enemy Is Fighting for Its Pride!",
+      "messagePool": [
+        "{name} is the last one standing. It fights for its pride!",
+        "{trainer} is down to {name}, and it refuses to fall quietly!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "fightingForPride"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "spa",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Faced {name} fighting for its trainer's pride"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffb347",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "anger-dangerous",
+      "displayName": "Its Anger Is Becoming Dangerous!",
+      "messagePool": [
+        "{name} has taken hit after hit. Its anger is becoming dangerous!",
+        "{name} is seething. Its next attack will hit hard!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "angerDangerous"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 55,
+        "text": "Kept hitting {name} until its anger boiled over"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff3b3b",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "something-to-prove",
+      "displayName": "It Has Something to Prove!",
+      "messagePool": [
+        "{trainer} has not forgotten that last loss. {name} has something to prove!",
+        "After how the last battle ended, {trainer} came back with a new plan!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "somethingToProve"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "spe",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Faced {trainer}, back with something to prove"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff9f43",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "hunter-hunted",
+      "displayName": "The Hunter Has Become the Hunted!",
+      "messagePool": [
+        "You have beaten too many {group}. This one came ready for you!",
+        "Word spread about you among the {group}. The hunter has become the hunted!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "hunterHunted"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "The {group} sent a counter-team after you"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#c94bff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "enemy-will-return",
+      "displayName": "This Enemy Will Return…",
+      "messagePool": [
+        "{name} slips away. This enemy will return…",
+        "{name} will remember this. It will be back…"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "enemyWillReturn"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Made an enemy of {name}, which will return"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#7a5cff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "nemesis-reckoning",
+      "displayName": "The Reckoning!",
+      "messagePool": [
+        "{name} settled the score with {enemy}, your nemesis!",
+        "It is over at last. {name} beat {enemy} for good!"
+      ],
+      "category": "legacy",
+      "triggerConditions": {
+        "trigger": "nemesisReckoning"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 90,
+        "text": "Settled the score with {enemy}, its nemesis"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd447",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "flavour",
+      "eligibilityTags": [],
+      "emotions": [
+        "justice"
+      ],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -3344,6 +3635,14 @@
           "champion-mvp"
         ]
       }
+    },
+    {
+      "title": "Nemesis Slayer",
+      "needs": {
+        "anyMoment": [
+          "nemesis-reckoning"
+        ]
+      }
     }
   ],
   "grandEnemy": {
@@ -3375,7 +3674,8 @@
       "grandGrudge",
       "rivalRespect",
       "promiseKept",
-      "crisisAid"
+      "crisisAid",
+      "nemesisReckoning"
     ]
   },
   "gauntlet": {
@@ -3499,6 +3799,61 @@
         "field": {
           "weather": "rain"
         }
+      }
+    ]
+  },
+  "nemesis": {
+    "enabled": true,
+    "maxActive": 2,
+    "perRegion": 1,
+    "levelBonus": 2,
+    "fallenAcePenalty": 2,
+    "lowHpShare": 0.25,
+    "multiKo": 2,
+    "angerHits": 3,
+    "proveShare": 0.6,
+    "huntedAfter": 3,
+    "reward": {
+      "money": 1500,
+      "itemId": "full-restore",
+      "quantity": 1
+    },
+    "archetypes": [
+      {
+        "id": "survivor",
+        "name": "The Survivor",
+        "stat": "def",
+        "line": "{name} broke free and got away last time. It came back tougher, its guard up."
+      },
+      {
+        "id": "avenger",
+        "name": "The Avenger",
+        "stat": "atk",
+        "line": "{name} has not forgotten the partner your team knocked out. It came back for revenge."
+      },
+      {
+        "id": "stalker",
+        "name": "The Stalker",
+        "stat": "spe",
+        "line": "{name} has been following your trail. It strikes first and fast."
+      },
+      {
+        "id": "fallenAce",
+        "name": "The Fallen Ace",
+        "stat": "spa",
+        "line": "{name}, once a champion's pride, is weaker now, but more dangerous than ever."
+      },
+      {
+        "id": "unfinished",
+        "name": "Unfinished Business",
+        "stat": "atk",
+        "line": "{name} never finished what it started with you. It came back to end it."
+      },
+      {
+        "id": "nemesisOfNemesis",
+        "name": "The Nemesis of the Nemesis",
+        "stat": "spe",
+        "line": "{name} arrived too. Neither nemesis will let the other have you!"
       }
     ]
   }
