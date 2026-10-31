@@ -177,6 +177,12 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
         }
       }
     }
+    const us = script.userShake;
+    if (us && user.active) {
+      const since = t - us.at;
+      if (since >= 0 && since < us.ms && settings.shakeIntensity > 0) user.x = startUser.x + (Math.floor(since / 25) % 2 ? -1 : 1) * us.amp * EBDX_SCALE * settings.shakeIntensity;
+      else if (since >= us.ms) user.x = startUser.x;
+    }
     if (!settings.muted) {
       script.sfx.forEach((f, i) => {
         if (played.has(i) || t < f.at) return;
