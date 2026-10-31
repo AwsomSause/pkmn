@@ -150,6 +150,29 @@ export function addRunAttribute(content: Content, run: RunState, key: AttributeK
   return effectiveAttributes(content, run)[key];
 }
 
+/**
+ * An attribute boost from a bought or rewarded item. The first few boosts to one attribute in a run
+ * are full size; repeats diminish (balance.attributeItemFalloff). Returns the new effective value.
+ */
+export function addItemAttribute(content: Content, run: RunState, key: AttributeKey, amount: number): number {
+  const { afterBoosts, factor } = content.balance.attributeItemFalloff;
+  const counter = `attr:${key}`;
+  const used = run.itemCounters?.[counter] ?? 0;
+  run.itemCounters = { ...run.itemCounters, [counter]: used + 1 };
+  const scaled = used < afterBoosts ? amount : Math.sign(amount) * Math.max(1, Math.round(Math.abs(amount) * factor));
+  return addRunAttribute(content, run, key, scaled);
+}
+
+/** "2/4" toward the next permanent point of an attribute, one entry per growth rule that gives points. */
+export function growthProgress(content: Content, profile: Profile, key: AttributeKey): string[] {
+  return content.balance.attributeGrowth
+    .filter((g) => g.attribute === key)
+    .map((g) => {
+      const total = g.counter ? (profile.counters[g.counter] ?? 0) : profile[g.set!].length;
+      return `${total % g.per}/${g.per}`;
+    });
+}
+
 export const ATTRIBUTE_LABELS: Record<AttributeKey, string> = {
   strength: 'Strength',
   intelligence: 'Intelligence',
