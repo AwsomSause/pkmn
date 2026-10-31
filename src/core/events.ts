@@ -9,6 +9,7 @@
 // one seeded by the stop. No existing stream is touched, so adding events
 // changes no other roll, and choosing again after a reload gives the same result.
 
+import { emotionOf } from './story/emotions';
 import { featuredMapEvents, runGameEventIds } from './gameEvents';
 import { eventChanceScale } from './rules';
 import { getArchetype, runPerks } from './archetypes';
@@ -50,7 +51,7 @@ export function stageNumber(content: Content, run: RunState): number {
   return run.regionIndex * getCampaign(content, run.campaignId).stagesPerRegion + (run.stage?.index ?? 0) + 1;
 }
 
-function conditionMet(content: Content, run: RunState, c: EventCondition): boolean {
+export function conditionMet(content: Content, run: RunState, c: EventCondition): boolean {
   switch (c.kind) {
     case 'money':
       return run.money >= c.atLeast;
@@ -64,6 +65,8 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
     }
     case 'item':
       return (run.inventory[c.id] ?? 0) > 0 || (run.passives?.[c.id] ?? 0) > 0;
+    case 'emotion':
+      return run.party.some((m) => emotionOf(content, run, m.uid)?.id === c.id);
     case 'partyType':
       return run.party.some((m) => content.species.get(m.speciesId)?.types.includes(c.type));
     case 'partySpecies':
@@ -162,6 +165,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs a ${c.type.charAt(0).toUpperCase()}${c.type.slice(1)}-type in your party`;
     case 'partySpecies':
       return `Needs ${content.species.get(c.species)?.name ?? c.species} in your party`;
+    case 'emotion':
+      return `Needs a ${c.id.charAt(0).toUpperCase()}${c.id.slice(1)} Pokémon in your party`;
     case 'eventSeen':
       return `Needs an earlier delivery`;
     case 'noTrainerTag':
@@ -222,6 +227,8 @@ export function eligibleEvents(content: Content, run: RunState): EventDef[] {
       e.minStage <= n &&
       // An event pack's own stops (e.g. Spooky) only appear in runs started while it is on (or a trainer who brings them).
       (!e.gameEvent || packs.has(e.gameEvent)) &&
+      // A mode's own stops (Spooky Mode's clues, boss and finale) only appear in runs of that mode.
+      (!e.mode || run.rules.modeId === e.mode) &&
       !(run.itemCounters?.[`event-seen:${e.id}`]) &&
       !recruitsOwned(run, e) &&
       e.requires.every((c) => conditionMet(content, run, c)),
@@ -239,7 +246,7 @@ function pickEvent(content: Content, run: RunState, rng: Rng, taken: Set<string>
       weight:
         (cfg.rarityWeights[e.rarity] ?? 0) *
         (theme && e.types.some((t) => theme.types.includes(t)) ? cfg.themeWeight : 1) *
-        (featured.has(e.id) || e.gameEvent ? cfg.gameEventWeight : 1),
+        (featured.has(e.id) || e.gameEvent || e.mode ? cfg.gameEventWeight : 1),
     }))
     .filter((p) => p.weight > 0);
   if (pool.length === 0) return null;
@@ -268,7 +275,8 @@ export function addEventStops(content: Content, run: RunState): void {
   const open = new Set(eligibleEvents(content, run).map((e) => e.id));
   // A run milestone (catalog 99) is offered at the middle stage of every region.
   const milestone = (run.stage?.index ?? 0) === 2 ? ['milestone-dawn', 'milestone-crossroads', 'milestone-summit', 'milestone-embers'].find((id) => open.has(id)) : undefined;
-  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone].filter((id): id is string => !!id && open.has(id));
+  const modeStops = [...open].filter((id) => content.events.get(id)!.modeStop);
+  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone, ...modeStops].filter((id): id is string => !!id && open.has(id));
   for (const id of forced) {
     taken.add(id);
     place(id, false);

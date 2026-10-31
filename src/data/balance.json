@@ -239,6 +239,17 @@
    "countsForProgress": true
   },
   {
+   "id": "daily-route",
+   "name": "Daily route",
+   "regularRegions": 1,
+   "grandRegion": false,
+   "stagesPerRegion": 4,
+   "columns": 14,
+   "trainerColumns": [[3, 6], [8, 12]],
+   "eliteFourSize": 2,
+   "countsForProgress": false
+  },
+  {
    "id": "quick-route",
    "name": "Quick Route",
    "regularRegions": 9,
@@ -503,6 +514,13 @@
    "cilan",
    "chili",
    "cress"
+  ]
+ },
+ "modeShops": {
+  "spooky": [
+   { "item": "reaper-cloth", "price": 2200, "minBadges": 0 },
+   { "item": "scroll-of-darkness", "price": 1800, "minBadges": 0 },
+   { "item": "soothe-bell", "price": 1200, "minBadges": 0 }
   ]
  },
  "shopSale": {

@@ -184,6 +184,43 @@ describe('Emotional Overdrives', () => {
     expect(titles(cues)).toContain('Determination and Kindness');
     expect(lead.hp).toBeGreaterThan(1);
   });
+  it('Kindness burst leaves the Pokémon spent four turns later (-1 Speed)', async () => {
+    const { run, lead } = setup('eo-spent');
+    const { createPokemon } = await import('../../src/core/pokemon');
+    const buddy = createPokemon(content, 'rattata', 10, 'buddy');
+    buddy.hp = 1;
+    run.party.push(buddy);
+    await tag(run, lead.uid, 'kindness');
+    run.battle!.turn = 1;
+    recordBattleTurn(content, structuredClone(run), run, []);
+    expect(run.battle!.playerStages.def).toBe(1);
+    run.battle!.turn = 3;
+    expect(titles(recordBattleTurn(content, structuredClone(run), run, []))).not.toContain('Spent!');
+    run.battle!.turn = 5;
+    const cues = recordBattleTurn(content, structuredClone(run), run, []);
+    expect(titles(cues)).toContain('Spent!');
+    expect(run.battle!.playerStages.spe).toBe(-1);
+    run.battle!.turn = 8;
+    recordBattleTurn(content, structuredClone(run), run, []);
+    expect(run.battle!.playerStages.spe).toBe(-1);
+  });
+  it("Not Until It's Over: a last-breath win with the team down earns a memory and a title", async () => {
+    const { run, lead } = setup('eo-over');
+    const { createPokemon } = await import('../../src/core/pokemon');
+    for (const id of ['b1', 'b2']) {
+      const m = createPokemon(content, 'rattata', 10, id);
+      m.hp = 0;
+      run.party.push(m);
+    }
+    lead.hp = 1;
+    run.battle!.outcome = 'win';
+    const cues = recordBattleTurn(content, structuredClone(run), run, []);
+    expect(titles(cues)).toContain("Not Until It's Over!");
+    const { awardLegacyTitles } = await import('../../src/core/story/legacy');
+    run.story.histories[lead.uid]!.hyper['not-until-over'] = 1;
+    awardLegacyTitles(content, run);
+    expect(run.story.histories[lead.uid]!.titles).toContain('Never Down');
+  });
 });
 
 describe('last §3 events', () => {

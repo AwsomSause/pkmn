@@ -16,6 +16,7 @@ import type { Content } from '../core/contentSchema';
 import { calcStats, getSpecies, MAX_PP_UPS, maxPp } from '../core/pokemon';
 import type { DecisionChoice } from '../core/run';
 import { pathName, type MentorPath } from '../core/story/mentorship';
+import { askLeadText } from '../core/story/askLead';
 
 const PATH_BLURB: Record<MentorPath, string> = {
   guardian: 'protecting allies and standing firm under pressure',
@@ -97,6 +98,7 @@ export class DecisionScene extends Phaser.Scene {
     else if (decision.kind === 'teachMove') this.buildTeachMove(decision.uid, decision.itemName, decision.moveIds);
     else if (decision.kind === 'signature') this.buildSignature(decision.title, decision.options);
     else if (decision.kind === 'mentorship') this.buildMentorship(decision.mentorUid, decision.proteUid, decision.path);
+    else if (decision.kind === 'askLead') this.buildAskLead(decision.uid, decision.reason);
     else this.buildPpUp(decision.uid, decision.itemName, decision.ups);
   }
 
@@ -254,6 +256,31 @@ export class DecisionScene extends Phaser.Scene {
   }
 
   // ---------- a veteran offers to mentor a teammate ----------
+
+  private buildAskLead(uid: string, reason: 'leftOut' | 'campfire'): void {
+    const { session } = services();
+    const content = session.content;
+    const run = session.run!;
+    const mon = run.party.find((p) => p.uid === uid);
+    if (!mon) {
+      this.resolve({ kind: 'askLead', accept: false });
+      return;
+    }
+    const sp = getSpecies(content, mon.speciesId);
+    pokemonVisual(this, sp, 'front', 150, 330, 3, mon.shiny);
+    this.add.text(300, 60, askLeadText(content, run, { uid, reason }), textStyle(28, COLORS.textLight, { wordWrap: { width: 640 } }));
+    this.add.text(300, 190, 'Letting it lead puts it first in the party and grows its friendship. It will fight at the front next battle.', textStyle(18, '#a69cb4', { wordWrap: { width: 640 } }));
+    drawPanel(this, 300, 270, 620, 150);
+    this.menu = new Menu(this, {
+      x: 316,
+      y: 284,
+      options: [{ label: `Let ${sp.name} lead` }, { label: 'Not now' }],
+      itemHeight: 56,
+      itemWidth: 580,
+      fontSize: 26,
+      onSelect: (i) => this.resolve({ kind: 'askLead', accept: i === 0 }),
+    });
+  }
 
   private buildMentorship(mentorUid: string, proteUid: string, path: MentorPath): void {
     const { session } = services();

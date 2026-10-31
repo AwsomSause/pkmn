@@ -1,0 +1,1 @@
+- Healing stop FX, layered map backdrop and summary Growth/Story pages (left-out 6.4), plus the visual final report (6.5): `docs/quality/VISUAL_FINAL_REPORT.md`. Summary now has four pages (Info, Moves, Growth, Story); `growthInfo` in `ui/summaryLook.ts` is tested.

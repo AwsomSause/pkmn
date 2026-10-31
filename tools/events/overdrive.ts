@@ -1,7 +1,7 @@
 // The unusual events of the Overdrive blueprint (§5) that need a choice: the
 // ones without a choice are first-turn banners (core/story/moments.ts).
 
-import { $, BERRIES, HEALING, TREASURE, any, att, ch, ev, evil, fierce, fight, fr, good, has, heal, isEvil, isGood, item, join, leave, lose, out, party, peace, reveal, rp, trainer, wild, attr, type Json } from './dsl.ts';
+import { $, BERRIES, HEALING, TREASURE, any, att, ch, ev, evil, feels, fierce, fight, fr, good, has, heal, isEvil, isGood, item, join, leave, lose, out, party, peace, reveal, rp, trainer, wild, attr, type Json } from './dsl.ts';
 
 const O = 'Overdrive unusual events';
 
@@ -11,6 +11,11 @@ export const OVERDRIVE_EVENTS: Json[] = [
     ch('Back away slowly', out('You retreat. It watches you go, calmer.', peace(5), fr(5, 'party'))),
     ch('Offer a berry', out('It eats the berry and relaxes. It leaves you a small gift.', lose(), any(...HEALING), good(5)), { requires: [has('oran-berry')] }),
     ch('Investigate quietly', out('You find its hidden nest and learn something about its kind.', rp(10), attr('intelligence', 3)), { check: 'intelligence', fail: out('It startles and bolts into the grass.') }),
+  ]),
+  ev('a-quiet-hello', 'A Quiet Hello…', O, { rarity: 'rare', stop: 'wild', cast: [], effect: 'hearts', tint: '#2a3a2f' }, 'A wild Pokémon watches your team from a distance. It is not afraid, and it is not angry. It is waiting to see what you do.', [
+    ch('Let your kind Pokémon approach', out('It sniffs the air, lets your Pokémon come close, and the two sit together for a long while. It leaves a gift before it goes.', good(5), fr(8, 'party'), rp(10), any(...HEALING)), { requires: [feels('kindness')] }),
+    ch('Wait quietly', out('You sit still. It comes a little closer, then wanders away, calmer.', peace(3), fr(3, 'party'))),
+    ch('Chase it off', fight('It bolts, then turns and fights!', wild({ lv: 2, win: [any(...TREASURE)] }), attr('ragePeace', 3)), { requires: [fierce] }),
   ]),
   ev('it-saw-what-you-did', 'It Saw What You Did…', O, { rarity: 'rare', cast: [], effect: 'glint', tint: '#2a2038' }, 'A Pokémon at the edge of the path has been watching you for a long time. It saw how you treated others on this road.', [
     ch('Meet its gaze, kindly', out('It remembers your kindness and shows you a hidden cache.', good(5), any(...TREASURE), rp(10)), { requires: [isGood(10)] }),

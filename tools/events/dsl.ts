@@ -105,6 +105,7 @@ export const isEvil = (atLeast: number): Json => ({ kind: 'meter', key: 'goodEvi
 export const isRage = (atLeast: number): Json => ({ kind: 'meter', key: 'ragePeace', side: 'positive', atLeast });
 export const isPeace = (atLeast: number): Json => ({ kind: 'meter', key: 'ragePeace', side: 'negative', atLeast });
 export const has = (id: string): Json => ({ kind: 'item', id });
+export const feels = (id: string): Json => ({ kind: 'emotion', id });
 export const ptype = (type: string): Json => ({ kind: 'partyType', type });
 /** Aggressive choices N (tag "pacifist") won't make. */
 export const fierce: Json = { kind: 'noTrainerTag', tag: 'pacifist' };

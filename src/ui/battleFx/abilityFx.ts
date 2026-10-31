@@ -34,7 +34,7 @@ const col = (hex: string) => Phaser.Display.Color.HexStringToColor(hex).color;
 
 /** A ring that grows (or shrinks inward) and fades. */
 export function ring(t: FxTools, x: number, y: number, from: number, to: number, ms: number, delay = 0): void {
-  const g = t.scene.add.circle(x, y, from).setStrokeStyle(4, col(t.plan.color), 0.9).setFillStyle(col(t.plan.color), 0.12).setAlpha(0);
+  const g = t.scene.add.circle(x, y, from).setStrokeStyle(5, col(t.plan.color), 0.95).setFillStyle(col(t.plan.color), 0.22).setAlpha(0);
   t.field.add(g);
   t.scene.tweens.add({ targets: g, alpha: { from: 0.9, to: 0 }, radius: to, delay, duration: ms, ease: 'Sine.easeOut', onStart: () => g.setAlpha(0.9), onComplete: () => g.destroy() });
 }
@@ -47,10 +47,10 @@ export function sparks(t: FxTools, mode: 'out' | 'up' | 'in', count = 8): void {
     // Fixed angles, not random: the same cue always looks the same.
     const a = (i / count) * Math.PI * 2;
     const r = 70;
-    const s = t.scene.add.text(mode === 'in' ? x + Math.cos(a) * r : x, mode === 'in' ? y + Math.sin(a) * r : y, t.plan.glyph || '•', textStyle(22, t.plan.color, { stroke: '#181818', strokeThickness: 3 })).setOrigin(0.5).setAlpha(0);
+    const s = t.scene.add.star(mode === 'in' ? x + Math.cos(a) * r : x, mode === 'in' ? y + Math.sin(a) * r : y, 5, 8, 18, col(t.plan.color), 1).setStrokeStyle(2, 0xffffff, 0.9).setAlpha(0);
     t.field.add(s);
     const to = mode === 'out' ? { x: x + Math.cos(a) * r, y: y + Math.sin(a) * r } : mode === 'up' ? { x: x + (i - count / 2) * 12, y: y - 70 - (i % 3) * 14 } : { x, y };
-    t.scene.tweens.add({ targets: s, x: to.x, y: to.y, alpha: { from: 1, to: 0 }, scale: { from: 0.6, to: 1.3 }, delay: i * 40, duration: 520, ease: 'Sine.easeOut', onStart: () => s.setAlpha(1), onComplete: () => s.destroy() });
+    t.scene.tweens.add({ targets: s, x: to.x, y: to.y, alpha: { from: 1, to: 0, ease: 'Quad.easeIn' }, scale: { from: 0.6, to: 1.3 }, delay: i * 40, duration: 700, ease: 'Sine.easeOut', onStart: () => s.setAlpha(1), onComplete: () => s.destroy() });
   }
 }
 

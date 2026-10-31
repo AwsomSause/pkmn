@@ -20266,6 +20266,119 @@
    ]
   },
   {
+   "id": "a-quiet-hello",
+   "name": "A Quiet Hello…",
+   "group": "Overdrive unusual events",
+   "rarity": "rare",
+   "stop": "wild",
+   "scene": {
+    "cast": [],
+    "tint": "#2a3a2f",
+    "effect": "hearts"
+   },
+   "intro": "A wild Pokémon watches your team from a distance. It is not afraid, and it is not angry. It is waiting to see what you do.",
+   "choices": [
+    {
+     "label": "Let your kind Pokémon approach",
+     "requires": [
+      {
+       "kind": "emotion",
+       "id": "kindness"
+      }
+     ],
+     "success": {
+      "text": "It sniffs the air, lets your Pokémon come close, and the two sit together for a long while. It leaves a gift before it goes.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "super-potion",
+         "hyper-potion",
+         "full-heal",
+         "revive"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wait quietly",
+     "success": {
+      "text": "You sit still. It comes a little closer, then wanders away, calmer.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -3
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Chase it off",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It bolts, then turns and fights!",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 3
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
    "id": "it-saw-what-you-did",
    "name": "It Saw What You Did…",
    "group": "Overdrive unusual events",
@@ -30904,6 +31017,316 @@
      "label": "Walk on",
      "success": {
       "text": "You wave and keep going.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-hollow-lantern",
+   "name": "The Hollow Lantern",
+   "group": "Spooky Mode",
+   "rarity": "uncommon",
+   "types": [
+    "ghost"
+   ],
+   "minStage": 1,
+   "requires": [],
+   "mode": "spooky",
+   "modeStop": false,
+   "scene": {
+    "cast": [],
+    "tint": "#1c1830",
+    "effect": "sparkle"
+   },
+   "intro": "A lantern hangs in the air with no hand holding it. A name is scratched on its glass.",
+   "choices": [
+    {
+     "label": "Read the name",
+     "success": {
+      "text": "The name belongs to a keeper who never left. You write it down.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "spooky-clue",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it swinging",
+     "success": {
+      "text": "You walk on. Behind you, the lantern goes dark.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-whispering-grave",
+   "name": "The Whispering Grave",
+   "group": "Spooky Mode",
+   "rarity": "uncommon",
+   "types": [
+    "ghost"
+   ],
+   "minStage": 2,
+   "requires": [],
+   "mode": "spooky",
+   "modeStop": false,
+   "scene": {
+    "cast": [],
+    "tint": "#1c1830",
+    "effect": "sparkle"
+   },
+   "intro": "A grave in the grass whispers, almost too soft to hear.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "chance": 0.7,
+     "success": {
+      "text": "It tells you where the keeper sleeps.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "spooky-clue",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The whisper turns into a scream. Your team shakes it off, but it hurts.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave an offering",
+     "success": {
+      "text": "The whisper fades kindly. Something warm stays with your team.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-pale-visitor",
+   "name": "The Pale Visitor",
+   "group": "Spooky Mode",
+   "rarity": "uncommon",
+   "types": [
+    "ghost"
+   ],
+   "minStage": 3,
+   "requires": [],
+   "mode": "spooky",
+   "modeStop": false,
+   "scene": {
+    "cast": [],
+    "tint": "#1c1830",
+    "effect": "sparkle"
+   },
+   "intro": "A pale figure sits at a roadside table set for two.",
+   "choices": [
+    {
+     "label": "Sit and listen",
+     "success": {
+      "text": "She talks about the Hollow Mirror, and where it hangs.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "spooky-clue",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline politely",
+     "success": {
+      "text": "She nods, as if she expected it.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-hexed-keeper",
+   "name": "The Hexed Keeper",
+   "group": "Spooky Mode",
+   "rarity": "rare",
+   "types": [
+    "ghost"
+   ],
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "spooky-clue",
+     "atLeast": 2,
+     "atMost": 99
+    }
+   ],
+   "mode": "spooky",
+   "modeStop": true,
+   "scene": {
+    "cast": [],
+    "tint": "#120d1c",
+    "effect": "fire"
+   },
+   "intro": "The keeper stands at the end of the lane. He is not sorry, only tired.",
+   "choices": [
+    {
+     "label": "Face the keeper",
+     "success": {
+      "text": "He raises his lantern. His Pokémon rise with it.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "hex-maniac",
+       "name": "The Hexed Keeper",
+       "size": 3,
+       "types": [
+        "ghost",
+        "dark"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventBossesWon",
+         "amount": 1
+        },
+        {
+         "kind": "flag",
+         "key": "spooky-keeper",
+         "amount": 1
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Turn back",
+     "success": {
+      "text": "The lane is still there when you look again.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-hollow-mirror",
+   "name": "The Hollow Mirror",
+   "group": "Spooky Mode",
+   "rarity": "rare",
+   "types": [
+    "ghost"
+   ],
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "spooky-clue",
+     "atLeast": 3,
+     "atMost": 99
+    },
+    {
+     "kind": "flag",
+     "key": "spooky-keeper",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "mode": "spooky",
+   "modeStop": true,
+   "scene": {
+    "cast": [],
+    "tint": "#0c0814",
+    "effect": "sparkle"
+   },
+   "intro": "The mirror shows your team, and one more shape behind them.",
+   "choices": [
+    {
+     "label": "Step through",
+     "success": {
+      "text": "The shape steps out of the glass.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "hex-maniac",
+       "name": "The Mirror Witch",
+       "size": 4,
+       "types": [
+        "ghost",
+        "psychic"
+       ],
+       "levelBonus": 4,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventFinalesWon",
+         "amount": 1
+        },
+        {
+         "kind": "join",
+         "shadow": false,
+         "species": [],
+         "types": [
+          "ghost"
+         ],
+         "levelBonus": 0,
+         "shinyMultiplier": 1
+        },
+        {
+         "kind": "research",
+         "amount": 120
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Cover the mirror",
+     "success": {
+      "text": "You cover it. It will wait.",
       "effects": []
      }
     }

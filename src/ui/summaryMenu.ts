@@ -1,11 +1,11 @@
 // The Pokémon summary (Visual Bible V4 "party/detail: tabs, moves with
-// type/category, memories"): two glass pages per Pokémon side by side. Left
-// and right flip between "Info & stats" and "Moves & story"; up and down go
-// to the next Pokémon. Type and category labels are Essentials art, the
+// type/category, memories"): four glass pages per Pokémon, two to a row: Info & stats,
+// Moves, Growth (evolution, forms, mastery) and Story (this run's record); the arrows
+// turn the pages. Type and category labels are Essentials art, the
 // gender marks and stat arrows Enhanced Battle UI's. Read-only.
 
 import type Phaser from 'phaser';
-import type { PokemonInstance, RunState } from '../core/state';
+import type { PokemonInstance, Profile, RunState } from '../core/state';
 import type { Content } from '../core/contentSchema';
 import { genderSign } from '../core/gender';
 import { getSpecies, lookSpecies } from '../core/pokemon';
@@ -13,7 +13,7 @@ import { services } from '../game/services';
 import { AERO, categoryIcon, typeLabel, type MotionLevel } from './aero';
 import { Picker, type PickerRow } from './partyPanel';
 import { itemVisual, pokemonIcon } from './sprites';
-import { BASE_STAT_SCALE, summaryInfo } from './summaryLook';
+import { BASE_STAT_SCALE, growthInfo, summaryInfo } from './summaryLook';
 import { textStyle } from './theme';
 import type { FieldMenuHost } from './fieldMenus';
 
@@ -99,10 +99,37 @@ function movesPage(content: Content, run: RunState | null, mon: PokemonInstance)
         box.add(scene.add.text(w - 14, y + 4, `PP ${m.pp}`, textStyle(15, '#bfe9ff')).setOrigin(1, 0));
         box.add(scene.add.text(178, y + 26, `Power ${m.power} · Accuracy ${m.accuracy}`, textStyle(13, '#d0e4f4')));
       });
-      header(scene, box, 14, 236, 'This run');
+    },
+  };
+}
+
+function storyPage(content: Content, run: RunState | null, mon: PokemonInstance): PickerRow {
+  const info = summaryInfo(content, run, mon);
+  return {
+    problem: null,
+    hint: 'Its record, titles and most memorable moments this run.',
+    draw: (scene, box, w) => {
+      header(scene, box, 14, 8, 'This run');
       const lines = [info.record, info.titles.length ? `Titles: ${info.titles.join(', ')}` : null, ...info.memories.map((t) => `• ${t}`)].filter((t): t is string => Boolean(t));
       if (lines.length === 0) lines.push('No story yet: it will remember its battles here.');
-      box.add(scene.add.text(14, 258, lines.join('\n'), textStyle(13, '#e8f6ff', { wordWrap: { width: w - 28 }, lineSpacing: 2, maxLines: 7 })));
+      box.add(scene.add.text(14, 32, lines.join('\n'), textStyle(16, '#e8f6ff', { wordWrap: { width: w - 28 }, lineSpacing: 4, maxLines: 12 })));
+    },
+  };
+}
+
+function growthPage(content: Content, profile: Profile | null, mon: PokemonInstance): PickerRow {
+  const info = growthInfo(content, profile, mon);
+  return {
+    problem: null,
+    hint: 'How it can evolve, which battle forms it can take, and its mastery.',
+    draw: (scene, box, w) => {
+      const wrap = { wordWrap: { width: w - 28 }, lineSpacing: 3 };
+      header(scene, box, 14, 8, 'Evolution');
+      box.add(scene.add.text(14, 32, info.evolutions.map((t) => `→ ${t}`).join('\n'), textStyle(17, '#ffffff', wrap)));
+      header(scene, box, 14, 130, 'Forms');
+      box.add(scene.add.text(14, 154, info.forms.length > 0 ? info.forms.map((t) => `★ ${t}`).join('\n') : 'No Mega form.', textStyle(16, info.forms.length > 0 ? '#ffe9a8' : '#9fb4c8', wrap)));
+      header(scene, box, 14, 236, 'Mastery');
+      box.add(scene.add.text(14, 260, `${info.mastery.rank}${info.mastery.next ? `\nNext, ${info.mastery.next}` : '  (top rank)'}`, textStyle(15, '#e8f6ff', { ...wrap, maxLines: 5 })));
     },
   };
 }
@@ -112,10 +139,10 @@ export function openSummaryMenu(host: FieldMenuHost, start = 0): void {
   const { session } = services();
   const run = session.run!;
   const motion = session.settings.battleAnimations;
-  const rows = run.party.flatMap((mon, i) => [infoPage(session.content, run, mon, motion, i), movesPage(session.content, run, mon)]);
+  const rows = run.party.flatMap((mon, i) => [infoPage(session.content, run, mon, motion, i), movesPage(session.content, run, mon), growthPage(session.content, session.profile, mon), storyPage(session.content, run, mon)]);
   const picker: Picker = new Picker(host.scene, {
     glass: true,
-    title: 'Summary: Left/Right page, Up/Down Pokémon',
+    title: 'Summary: arrows turn pages',
     columns: 2,
     rowHeight: ROW_H,
     rows,

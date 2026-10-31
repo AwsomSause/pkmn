@@ -27,7 +27,8 @@ import { Picker, type PickerRow } from '../ui/partyPanel';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { Menu } from '../ui/widgets';
 import { glassPanel as drawPanel } from '../ui/aero';
-import { dailyClaimKey, dailySeed, getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
+import { dailySetup } from '../core/daily';
+import { dailyClaimKey, getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
 import { isClaimed } from '../core/quests';
 
 export interface RunPrepData {
@@ -138,6 +139,7 @@ export class RunPrepScene extends Phaser.Scene {
     for (const l of buildSummary(content, this.archetypeId, this.prep, profile.attributes)) line(l, 17, l.startsWith('  −') ? '#f0a0a0' : l.startsWith('  +') ? '#a0e0a0' : COLORS.textLight);
     y += 6;
     for (const l of rulesLines(this.rules)) line(l, 15, '#c8e0f0');
+    if (getMode(this.rules.modeId)?.dailySeed) for (const l of dailySetup(content, new Date().toISOString(), this.prep, this.rules).lines) line(l, 15, '#f0e0a0');
     y += 6;
     line(`${rule.description}`, 15, '#d8d0e0');
     const locked = [
@@ -280,15 +282,18 @@ export class RunPrepScene extends Phaser.Scene {
     const { session } = services();
     let seed = this.seed ?? undefined;
     let rules = this.rules;
+    let prep = this.prep;
     if (getMode(rules.modeId)?.dailySeed) {
       // Daily Run: the date is the seed; the day's account rewards pay once.
       const today = new Date().toISOString();
-      seed = dailySeed(today);
+      const daily = dailySetup(session.content, today, this.prep, rules);
+      seed = daily.seed;
+      prep = daily.prep;
       const key = dailyClaimKey(today);
-      rules = { ...rules, noRewards: isClaimed(session.profile, key) };
+      rules = { ...daily.rules, noRewards: isClaimed(session.profile, key) };
       if (!rules.noRewards) session.claimOnce(key);
     }
-    session.newRun(this.archetypeId, seed, undefined, this.prep, rules);
+    session.newRun(this.archetypeId, seed, undefined, prep, rules);
     this.scene.start('StarterSelect');
   }
 

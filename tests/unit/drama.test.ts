@@ -520,3 +520,17 @@ describe('battle recap (catalog 14)', () => {
     expect(mon.hp).toBeGreaterThan(0);
   });
 });
+
+describe('evolution-eligible event (2.1)', () => {
+  it('the trainer feels an evolution coming once, before it happens', () => {
+    const run = trainerRun('Joey', 0.5);
+    const enemy = run.battle!.enemyTeam[0]!;
+    run.battle!.drama.evolvable.push(enemy.uid);
+    run.battle!.turn = 1;
+    const first = planDrama(content, run, structuredClone(run.battle!), [move('enemy', 'tackle')]);
+    expect(first.some((l) => l.category === 'evolveReady')).toBe(true);
+    run.battle!.turn = 2;
+    const second = planDrama(content, run, structuredClone(run.battle!), [move('enemy', 'tackle')]);
+    expect(second.some((l) => l.category === 'evolveReady')).toBe(false);
+  });
+});

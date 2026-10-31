@@ -1,0 +1,9 @@
+{
+  "note": "Scene effects as data (catalog 140, 81): colours, burst tints and lines for presentation moments, so the scene has no per-family switch. Presentation only; nothing here changes a rule or a roll.",
+  "formIntro": {
+    "delta": { "tint": "0x9fe8ff", "line": "A strange, shifted aura surrounds {name}!" },
+    "zform": { "tint": "0xffd75e", "line": "{name} crackles with Z-Power!" },
+    "spooky": { "tint": "0xb48cff", "line": "A chill falls over the field as {name} appears..." },
+    "regional": { "tint": "0x9be88a", "line": "{name} looks unlike the ones you know." }
+  }
+}
