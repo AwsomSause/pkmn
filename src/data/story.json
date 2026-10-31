@@ -3440,6 +3440,154 @@
         "justice"
       ],
       "variants": {}
+    },
+    {
+      "id": "rivalry-grown",
+      "displayName": "The Rivalry Has Only Grown Stronger!",
+      "messagePool": [
+        "You've each beaten the other. {trainer}'s {name} is stronger for it!",
+        "Win for win, loss for loss: the rivalry with {trainer} has only grown stronger!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "rivalryGrown"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Met {trainer} again, the rivalry stronger than ever"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ff6a3d",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "studied-strategy",
+      "displayName": "It Has Studied Your Strategy!",
+      "messagePool": [
+        "{trainer} has faced your team enough times to study it. {name} is ready!",
+        "{trainer} knows how you fight now, and {name} braces for it!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "studiedStrategy"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "Faced {trainer}, who had studied the team"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#4fa3ff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "not-forgotten-kindness",
+      "displayName": "It Hasn't Forgotten Your Kindness!",
+      "messagePool": [
+        "{name} remembers your kindness. It doesn't want to hurt you…",
+        "{name} hesitates. It hasn't forgotten what you did for its kind."
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "notForgottenKindness"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": -1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "A wild {name} remembered its kindness"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#7bea9c",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
+    },
+    {
+      "id": "not-forgotten-cruelty",
+      "displayName": "It Hasn't Forgotten Your Cruelty!",
+      "messagePool": [
+        "{name} remembers what you did. It attacks without mercy!",
+        "{name} hasn't forgotten your cruelty. It wants payback!"
+      ],
+      "category": "enemy",
+      "triggerConditions": {
+        "trigger": "notForgottenCruelty"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "enemyStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 60,
+        "text": "A wild {name} remembered its cruelty"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#b0213b",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [],
+      "variants": {}
     }
   ],
   "awakening": {
@@ -3855,6 +4003,8 @@
         "stat": "spe",
         "line": "{name} arrived too. Neither nemesis will let the other have you!"
       }
-    ]
+    ],
+    "moralityAt": 3,
+    "studiedAfter": 3
   }
 }

@@ -22,6 +22,7 @@ import { addItem } from './items';
 import { championTeam } from './story/championDefense';
 import { oldFoe } from './story/promises';
 import { openFeud, settleFeud } from './story/feud';
+import { noteEventMorality } from './story/nemesis';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
@@ -426,6 +427,8 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   run.story.flags[risky ? 'choices:risky' : 'choices:safe'] = Number(run.story.flags[risky ? 'choices:risky' : 'choices:safe'] ?? 0) + 1;
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'event-choice', suppressed: false }, importance: risky ? 55 : 40, text: `${event.name}: ${choice.label}${risky ? (success ? ' (the gamble paid off)' : ' (the gamble failed)') : ''}` });
   emit(content, run, 'eventChoice', { data: { event: event.id, choice: choiceIndex, risky, success } });
+  // Kindness and cruelty are remembered by the event's Pokémon types (It Hasn't Forgotten…).
+  noteEventMorality(content, run, event.types ?? [], outcome.effects);
   const changes: string[] = [];
   // Prop Case: a Contest stop's Charisma counts twice.
   const contest = event.stop === 'contest' && hasPerk(content, run, 'doubleContest');
