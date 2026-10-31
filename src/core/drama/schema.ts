@@ -11,6 +11,7 @@ export type Voice = (typeof VOICES)[number];
 export const DIALOGUE_CATEGORIES = [
   'opening', 'command', 'declaration', 'reactionCrit', 'reactionHurt', 'ownKo', 'foeKo', 'switch',
   'desperation', 'taunt', 'defeat', 'victory', 'callbackWon', 'callbackLost',
+  'status', 'statusInflict', 'miss', 'foeMiss', 'survived', 'encourage',
 ] as const;
 export type DialogueCategory = (typeof DIALOGUE_CATEGORIES)[number];
 

@@ -1293,6 +1293,12 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const bonus = perksOf(activePerks(content, run), 'rival')[0]!.perk.levelBonus;
       plan = { ...plan, name: `Rival ${plan.name}`, members: plan.members.map((m) => ({ ...m, level: m.level + bonus })) };
     }
+    // A boss's ace may start a stage lower and evolve in the middle of the fight (Battle Drama P5, now for gym, Elite Four and champion too).
+    if (content.balance.bossEvolution && plan.leaderId && !rivalBack && !nemesis && !hunted && trainingIndex < 0) {
+      const trained = withTrainingEvolution(content, plan.members);
+      plan = { ...plan, members: trained.members };
+      trainingIndex = trained.index;
+    }
     const team = plan.members.map((m, i) => {
       const uid = nextUid(run, 'e');
       // Difficulty raises every enemy; Single Region Dex swaps ordinary trainers' species for ones from the locked generation (bosses keep theirs).
