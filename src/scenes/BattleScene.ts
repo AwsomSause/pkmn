@@ -24,6 +24,8 @@ import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type BattleState, type PokemonInstance, type RunState } from '../core/state';
 import { isBossClass } from '../core/trainerPerks';
 import { arenaFor, getTheme } from '../core/themes';
+import { pickUieArena } from '../core/arenaStyle';
+import { uieArenaId } from '../assets/catalog';
 import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
 import { cheerProblem, getRaid } from '../core/raid/raid';
@@ -180,6 +182,8 @@ export class BattleScene extends Phaser.Scene {
     const { content } = session;
     const run = session.run;
     const enemies = (run?.battle?.enemyTeam ?? []).flatMap((m) => content.species.get(m.speciesId) ?? []);
+    const uie = this.uieArena();
+    if (uie) queueAssets(this, [uie, `${uie}.player`, `${uie}.enemy`]);
     preloadPokemon(this, partySpecies(), { back: true, shiny: true, icon: true, cry: true });
     preloadPokemon(this, enemies, { front: true, shiny: true, cry: true });
     // A wild Pokémon may call a friend (SOS): have its art ready.
@@ -241,7 +245,8 @@ export class BattleScene extends Phaser.Scene {
     const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
     const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
     const raidArena = this.raidArena(battle);
-    const bg = raidArena ?? (arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
+    const uie = raidArena ? null : this.uieArena();
+    const bg = raidArena ?? (uie && this.textures.exists(uie) ? uie : arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
     this.field = this.add.container(0, 0);
     if (assets.has(bg)) this.field.add(this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE));
     else this.field.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0));
@@ -719,6 +724,26 @@ export class BattleScene extends Phaser.Scene {
     box.container.addAt(g, 0);
     box.danger = g;
     if (this.motion === 'full') this.tweens.add({ targets: g, alpha: 0.25, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  }
+
+  /** The UIE battleback for this fight (league halls, evening/night fields, distortion), or null for the type's own arena. */
+  private uieArena(): string | null {
+    const { session } = services();
+    const run = session.run;
+    const battle = run?.battle;
+    if (!run || !battle || battle.raid || battle.totem) return null;
+    const boss = this.boss();
+    const foe = battle.enemyTeam[battle.enemyIndex];
+    const type = boss ? boss.types[0] : run.stage ? getTheme(session.content, run.stage.themeId).types[0] : undefined;
+    if (!type) return null;
+    const name = pickUieArena({
+      seed: run.seed,
+      stageIndex: run.stage?.index ?? 0,
+      type,
+      boss: boss ? { role: boss.role, eliteIndex: Math.max(0, run.stage?.eliteFour.indexOf(battle.trainer?.leaderId ?? '') ?? 0), final: isFinalBoss(session.content, run) } : null,
+      shadowFoe: Boolean(foe?.shadow),
+    });
+    return name ? uieArenaId(name) : null;
   }
 
   /** Raids and Totems fight in the Raid Battles pack's arenas (weaker raids in the Ultra one, stronger in Max, the hardest in Tera). */
