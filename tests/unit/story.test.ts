@@ -83,6 +83,9 @@ describe('story foundation: random streams', () => {
     ...structuredClone(RAW_CONTENT),
     // The nemesis system (left-out plan 1.3) came later too.
     story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [], nemesis: { ...(RAW_CONTENT.story as { nemesis: object }).nemesis, enabled: false } },
+    // The custom regions (left-out plan 1.7) change the region order an old seed draws.
+    regions: (RAW_CONTENT.regions as { custom?: boolean }[]).filter((r) => !r.custom),
+    runPrep: { ...(RAW_CONTENT.runPrep as object), starterPools: (RAW_CONTENT.runPrep as { starterPools: { filter?: { region?: string } }[] }).starterPools.filter((p) => !['torren', 'frontier-isles', 'trial-archipelago'].includes(p.filter?.region ?? '')) },
     itemCatalog: catalog.filter((e) => !eventItem(e) && e.id !== 'adrenaline-orb'),
     // The draft deals (bundles, bargains, a risk) join the reward pool, which would change old seeds' drafts.
     rewards: (RAW_CONTENT.rewards as { id: string }[]).filter((r) => !r.id.startsWith('deal-')),

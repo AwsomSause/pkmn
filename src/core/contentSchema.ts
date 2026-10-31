@@ -1571,6 +1571,8 @@ export const RegionSchema = z.object({
   champions: z.array(z.string()),
   /** The Grand Region always comes last. */
   grand: z.boolean().default(false),
+  /** One of the game's own regions (D6), not one from the main series. */
+  custom: z.boolean().default(false),
   /** The generations of Pokémon native to this region (empty = every generation is native). */
   generations: z.array(z.number().int().min(1).max(9)).default([]),
 });
