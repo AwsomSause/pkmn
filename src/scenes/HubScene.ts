@@ -11,7 +11,7 @@ import { STANDARD_CHOICE } from '../core/rules';
 import { decodeSeedCode, encodeSeedCode } from '../core/seedCode';
 import { contractBoard, contractDone, contractRewardText } from '../core/contracts';
 import Phaser from 'phaser';
-import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
+import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthProgress, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
@@ -1504,7 +1504,7 @@ export class HubScene extends Phaser.Scene {
       const [lo, hi] = attributeRange(content, k);
       return {
         problem: null,
-        hint: `Grows: ${growthText(content, k)}.  At the maximum: ${attributeEffectText(content, k, isMeter(k) && a[k] < 0 ? lo : hi)}.`,
+        hint: `Grows: ${growthText(content, k)} (now ${growthProgress(content, session.profile, k).join(', ')} toward the next point).  At the maximum: ${attributeEffectText(content, k, isMeter(k) && a[k] < 0 ? lo : hi)}.`,
         draw: (scene, box, w, h) => {
           box.add(scene.add.text(12, 6, ATTRIBUTE_LABELS[k], textStyle(19)));
           box.add(scene.add.text(12, 30, a[k] === 0 ? 'No effect yet' : attributeEffectText(content, k, a[k]), textStyle(14, COLORS.textMuted)));

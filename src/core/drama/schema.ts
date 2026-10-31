@@ -33,6 +33,12 @@ export const DramaDataSchema = z.object({
   }),
   voices: z.record(z.string(), z.string()),
   lines: z.object(Object.fromEntries(DIALOGUE_CATEGORIES.map((c) => [c, VoiceLines])) as Record<DialogueCategory, typeof VoiceLines>),
+  /** Extra lines picked by bond, rival arc and your trainer's favoured type: tag -> category -> lines. */
+  flavor: z.record(z.string(), z.record(z.string(), z.array(z.string().min(1)).min(1))).default({}),
+  /** What the trainer says once the battle is over, from what you really did ({move}, {foe}). */
+  afterBattle: z.object({ win: z.array(z.string().min(1)).min(1), lose: z.array(z.string().min(1)).min(1) }),
+  /** Your own Pokémon's declarations ({name}, {move}). */
+  playerDeclarations: z.object({ lastStand: z.array(z.string().min(1)).min(1), finisher: z.array(z.string().min(1)).min(1), bold: z.array(z.string().min(1)).min(1) }),
 });
 export const DRAMA = DramaDataSchema.parse(dramaJson);
 
@@ -60,6 +66,12 @@ export const DramaBattleSchema = z.object({
   /** What each Pokémon felt this battle, and the emotions already turned into a turning point. */
   feelings: z.record(z.string(), z.record(z.string(), z.number().int().min(0))).default({}),
   turned: z.array(z.string()).default([]),
+  /** Battle recap tally (catalog 14): damage dealt per Pokémon, narrowest survival, biggest hit. Optional: older saves have none. */
+  recap: z.object({
+    dealt: z.record(z.string(), z.number()).default({}),
+    low: z.object({ uid: z.string(), share: z.number() }).nullable().default(null),
+    bigHit: z.object({ uid: z.string(), moveId: z.string(), amount: z.number() }).nullable().default(null),
+  }).optional(),
 });
 export type DramaBattle = z.infer<typeof DramaBattleSchema>;
 export const freshDrama = (): DramaBattle => DramaBattleSchema.parse({});

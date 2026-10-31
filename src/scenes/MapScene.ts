@@ -12,6 +12,7 @@ import { SERVICES } from '../core/services/schema';
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
 import { pinnedObjective } from '../core/objectives';
+import { regionDim } from '../ui/battleFx/transitions';
 import { regionIdentity } from '../core/presentation/regionIdentity';
 import { FRAME_ASSET_IDS, headerBar } from '../ui/frames';
 import { currentColumn, findNode } from '../core/map';
@@ -160,7 +161,7 @@ export class MapScene extends Phaser.Scene {
       if (this.motion === 'full' && back.displayWidth > GAME_WIDTH) {
         this.tweens.add({ targets: back, x: GAME_WIDTH - back.displayWidth, duration: 40_000, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
       }
-      this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x06152a, 0.58).setOrigin(0).setDepth(-55);
+      this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, regionDim(identity.sky), 0.58).setOrigin(0).setDepth(-55);
     }
     // The stage's types drift over it (leaves, embers, bubbles...), like the battle arena.
     const air = this.add.container(0, 0).setDepth(-50);

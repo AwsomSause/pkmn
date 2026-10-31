@@ -1761,6 +1761,8 @@ export const BalanceSchema = z.object({
   sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
+  /** Repeat attribute boosts from items diminish: after this many full-size boosts to one attribute in a run, each is scaled by `factor` (at least 1 point). */
+  attributeItemFalloff: z.object({ afterBoosts: z.number().int().min(0), factor: z.number().min(0).max(1) }).default({ afterBoosts: 2, factor: 0.5 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),
@@ -2004,6 +2006,8 @@ export const BalanceSchema = z.object({
   wildMaxBaseStats: z.number().int().positive(),
   /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
   levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
+  /** Boss teams past level 100 (core/bossBands.ts), chosen by the team's top level. */
+  bossBands: z.array(z.object({ minLevel: z.number().int().min(101), training: z.number().int().min(0), ai: z.number().min(0).max(1), signatureSwaps: z.number().int().min(0), items: z.array(z.string()) })).default([]),
   /** Combat Threat Rating (core/threat.ts) and the Encounter Director (core/encounterDirector.ts). 100 = all-70 base stats with a 60-power same-type attack. */
   threat: z.object({
     setupBonus: z.number().min(0),

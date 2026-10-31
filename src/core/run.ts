@@ -60,7 +60,7 @@ import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsks
 import { layEgg, tickEggs } from './eggs';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
-import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
+import { addItemAttribute, addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, countShiny, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
@@ -134,7 +134,9 @@ import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { styleTrick } from './rivals/tricks';
+import { dueNarrativeDefeat, foreshadowNote, getNarrativeDef, narrativeWon, recordNarrativeDefeat } from './rivals/narrativeDefeat';
 import { rivalBond } from './drama/bond';
+import { recapLines } from './drama/recap';
 import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
@@ -1132,6 +1134,26 @@ function claimTotemRewards(content: Content, run: RunState, battle: BattleState)
   return { items, draftExtra: def.rewards.draftExtra, money };
 }
 
+/**
+ * NARRATIVE_DEFEAT (M12): the rival won a battle the story needed the player to lose. The run goes on as if the fight were won:
+ * the node counts as done, but no prize, EXP, badge, win counters, defeat record or protection item is touched, and
+ * nobody is harmed (the party is healed). Only the story and rival layers record the loss.
+ */
+function narrativeDefeatEnd(content: Content, run: RunState, def: NonNullable<ReturnType<typeof getNarrativeDef>>): void {
+  const battle = run.battle!;
+  recordNarrativeDefeat(content, run, def, battle.rivalId);
+  healParty(content, run);
+  count(run, 'narrativeDefeats');
+  run.hype = 0;
+  run.battle = null;
+  delete run.recorder;
+  run.encountersCompleted += 1;
+  count(run, 'encountersCompleted');
+  tickEggs(content, run, 'battle');
+  run.afterDecisions = 'map';
+  continueAfterDecisions(content, run);
+}
+
 /** A lost or timed-out raid: no rewards, the party is back on its feet, and the run goes on. */
 function failRaid(content: Content, run: RunState): void {
   const battle = run.battle!;
@@ -1333,6 +1355,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run, content)) : null;
     if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
+    let narrativeDef: ReturnType<typeof dueNarrativeDefeat> = null;
     let trainingIndex = -1;
     if (rule && rivalBack) {
       const ret = rivalReturn(content, run, rivalBack, plan, rule.effect);
@@ -1341,6 +1364,15 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       trainingIndex = trained.index;
       const finale = finalRivalLine(content, run, rivalBack.id, ultimateRival(run)?.id === rivalBack.id);
       rivalNote = finale ? [ret.note, finale].filter(Boolean).join(' ') : ret.note;
+      // Narrative defeat (M12): this meeting is the one the player is meant to lose; the meeting before hints at it.
+      narrativeDef = dueNarrativeDefeat(run, rivalBack, !plan.leaderId);
+      if (narrativeDef) {
+        plan = { ...plan, members: plan.members.map((m) => ({ ...m, level: m.level + narrativeDef!.levelBonus })) };
+        rivalNote = [rivalNote, narrativeDef.introLine].filter(Boolean).join(' ');
+      } else {
+        const hint = foreshadowNote(run, rivalBack);
+        if (hint) rivalNote = [rivalNote, hint].filter(Boolean).join(' ');
+      }
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
       run.story.flags[rivalSeenFlag(rivalBack.id)] = scheduleKey(run);
@@ -1407,6 +1439,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
       if (rivalNote) run.battle.rivalNote = rivalNote;
+      if (narrativeDef) run.battle.narrative = { id: narrativeDef.id };
     }
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.
@@ -1600,7 +1633,7 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   afterPurchase(content, run, priceMultiplierFromItems(content, current) === 0);
   if (item.effect.kind === 'attribute') {
     // Attribute items work as soon as they're bought.
-    const value = addRunAttribute(content, run, item.effect.attribute, item.effect.amount);
+    const value = addItemAttribute(content, run, item.effect.attribute, item.effect.amount);
     return { run, message: `You bought a ${item.name} for ₽${price}: ${attributeText(item.effect.attribute, value)}.` };
   }
   addItem(run.inventory, itemId, 1);
@@ -1635,6 +1668,8 @@ export interface BattleEndResult {
   evolutions: (EvolutionResult & { uid: string })[];
   /** Moves devoted Pokémon learned from their bond after this win. */
   bondTaught?: { uid: string; moveId: string }[];
+  /** Recap lines after a big trainer win (MVP, narrowest survival, turning point). */
+  recap?: string[];
   /** The gym leader's id when this win beat a gym leader. */
   badge: string | null;
   /** The region's id when this win beat its champion. */
@@ -1663,6 +1698,8 @@ export interface TurnResult {
   raidFailed?: boolean;
   /** The whole party fainted but the rules sent the run back to its checkpoint. */
   wiped?: boolean;
+  /** A narrative rival defeat (M12): the battle was lost for the story, the party is healed and the run goes on. Never a game over. */
+  narrativeDefeat?: { id: string; defeatLine: string; victoryLine: string };
   /** What the trainer says during the turn (presentation only). */
   drama: DramaLine[];
 }
@@ -1815,6 +1852,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
     return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
+  }
+  if (battle.outcome === 'lose' && battle.narrative && getNarrativeDef(battle.narrative.id)) {
+    const def = getNarrativeDef(battle.narrative.id)!;
+    narrativeDefeatEnd(content, run, def);
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end: null, defeated: false, cues, drama, narrativeDefeat: { id: def.id, defeatLine: def.defeatLine, victoryLine: def.victoryLine } };
   }
   if (battle.outcome === 'lose') {
     const enemy = currentEnemy(battle);
@@ -2041,6 +2084,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
   count(run, 'evolutions', evolutions.length);
   const bondTaught = battle.outcome === 'win' ? bondLessons(content, run, battle.participants) : [];
+  const recap = battle.outcome === 'win' && battle.kind === 'trainer' && (battle.ai >= 0.5 || battle.trainer?.leaderId || battle.rivalId) ? recapLines(content, run, battle) : [];
   // The caught Pokémon's decision comes first.
   run.pending = [...caughtPending, ...run.pending];
   // A trainer's signature mechanic (Rival's Answer): choose after the battle.
@@ -2081,6 +2125,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // Bloom Mail: one more choice in the draft after a trainer win. Dowsing Machine: one more in each stage's first draft.
   let extraChoices = raidWin?.draftExtra ?? 0;
   if (battle.firstRival) run.story.flags[FIRST_RIVAL_FLAG] = 'met';
+  if (battle.narrative) narrativeWon(run, battle.narrative.id);
   // RSVP Mail: beating the rival gives the gym leader's odds and one more choice.
   if (outcome === 'win' && battle.rival) {
     run.itemCounters = { ...run.itemCounters, 'better-draft': 1 };
@@ -2172,7 +2217,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, recap, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**

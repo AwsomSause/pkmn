@@ -10,6 +10,7 @@ import { getBoss, levelCap, type BossRole } from './regions';
 import { isUsableMove } from './pokemon';
 import { eliteLevelOffset, isLegendaryLike, wildWeightPerk } from './trainerPerks';
 import { auditEncounter, directSpecies } from './encounterDirector';
+import { applyBossBand } from './bossBands';
 import { baseStatTotal, pickThemeSpecies, RIVAL_CLASS, trainerClassesFor } from './themes';
 
 export type EnemyLevelBreakdown = LevelBreakdown;
@@ -149,6 +150,8 @@ export interface PlannedMember {
   moves?: string[];
   /** Bosses only: extra vitamin-style stacks per stat. */
   training?: Partial<Record<StatName, number>>;
+  /** Bosses past level 100 only (bossBands.ts): held items (item id → copies). */
+  held?: Record<string, number>;
 }
 
 export interface TrainerPlan {
@@ -168,6 +171,7 @@ export function createPlannedPokemon(content: Content, member: PlannedMember, ui
   const moves = (member.moves ?? []).filter((id) => content.moves.has(id));
   if (moves.length > 0) mon.moves = moves.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
   for (const [stat, stacks] of Object.entries(member.training ?? {})) mon.vitamins[stat as StatName] = stacks;
+  if (member.held) mon.held = { ...member.held };
   mon.hp = maxHp(content, mon);
   return mon;
 }
@@ -277,14 +281,17 @@ function planBoss(content: Content, archetype: Archetype, role: BossRole, bossId
   const team: BossTeam = boss.teams[role][bossTeamIndex(role, number)]!;
   const { aceBonus } = content.balance.difficulty;
   const levelInfo: EnemyLevelBreakdown[] = [];
-  const members = remixedMembers(boss, role, bossTeamIndex(role, number), remix, `${role}:${bossId}:${number}`).map((m, i) => {
+  const authored = remixedMembers(boss, role, bossTeamIndex(role, number), remix, `${role}:${bossId}:${number}`).map((m, i) => {
     const info = enemyLevel(content, archetype, scale, bonus + (i === team.members.length - 1 ? aceBonus : 0), rng);
     levelInfo.push(info);
-    return { speciesId: m.speciesId, level: info.level, moves: m.moves, training: m.training };
+    return { speciesId: m.speciesId, level: info.level, moves: m.moves, training: m.training } as PlannedMember;
   });
+  // Past level 100 the team is upgraded for its band (stronger species, moves, items, training, AI).
+  const banded = applyBossBand(content, authored, boss.signature, team.ai);
+  const members = banded.members;
   // Authored teams are checked against the role's threat budget and logged, never re-rolled (Balancing Phase 8).
   members.forEach((m, i) => auditEncounter(content, role, createPlannedPokemon(content, m, `audit:${bossId}:${i}`), 'authored-boss-team'));
-  return { classId, name: boss.name, leaderId: bossId, members, levelInfo, ai: team.ai };
+  return { classId, name: boss.name, leaderId: bossId, members, levelInfo, ai: banded.ai };
 }
 
 /** The gym leader's team for the run's `stageNumber`-th stage (0-based). */

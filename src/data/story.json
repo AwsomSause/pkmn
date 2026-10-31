@@ -2787,6 +2787,158 @@
       "variants": {}
     },
     {
+      "id": "cover-partners",
+      "displayName": "Cover Partners!",
+      "messagePool": [
+        "{name} and {other} cover each other's backs!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "chemistryCover"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "def",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Covered {other}'s back"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "competitive-duo",
+      "displayName": "Competitive Duo!",
+      "messagePool": [
+        "{name} and {other} race to out-do each other!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "chemistryDuo"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "spe",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Pushed {other} to be faster"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "battle-tested-pair",
+      "displayName": "Battle-Tested!",
+      "messagePool": [
+        "{name} and {other} have been through too much to flinch!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "chemistryTested"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "spd",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Stood firm beside {other}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "bravery"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "unlikely-friends",
+      "displayName": "Unlikely Friends!",
+      "messagePool": [
+        "{name} and {other} could not be more different, and it works!"
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "chemistryUnlikely"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "spa",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 70,
+        "text": "Surprised everyone alongside {other}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3ff",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
+      "variants": {}
+    },
+    {
       "id": "perfect-timing",
       "displayName": "Perfect Timing!",
       "messagePool": [

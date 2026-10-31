@@ -209,3 +209,25 @@ describe('Candy Shop', () => {
     for (const perk of content.balance.candyShop) for (const id of Object.keys(perk.items)) expect(content.items.has(id), id).toBe(true);
   });
 });
+
+import { addItemAttribute, growthProgress } from '../../src/core/attributes';
+
+describe('attribute item falloff and growth progress', () => {
+  it('repeat boosts from items diminish after the free ones', () => {
+    const run = createRun(content, { runId: 'f', seed: 'f', archetypeId: 'red' });
+    const { afterBoosts } = content.balance.attributeItemFalloff;
+    const before = run.attributeModifiers.charisma ?? 0;
+    for (let i = 0; i < afterBoosts; i++) addItemAttribute(content, run, 'charisma', 4);
+    expect(run.attributeModifiers.charisma).toBe(before + 4 * afterBoosts);
+    addItemAttribute(content, run, 'charisma', 4);
+    expect(run.attributeModifiers.charisma).toBe(before + 4 * afterBoosts + 2);
+    addItemAttribute(content, run, 'charisma', 1);
+    expect(run.attributeModifiers.charisma).toBe(before + 4 * afterBoosts + 3);
+  });
+  it('shows progress toward the next permanent point', () => {
+    const profile = createProfile(content, 'p');
+    const g = content.balance.attributeGrowth.find((x) => x.counter)!;
+    profile.counters[g.counter!] = g.per + 1;
+    expect(growthProgress(content, profile, g.attribute)).toContain(`1/${g.per}`);
+  });
+});

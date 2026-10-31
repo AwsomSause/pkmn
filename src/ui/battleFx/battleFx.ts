@@ -10,12 +10,13 @@
 
 import Phaser from 'phaser';
 import { MASTERY_VFX, type MoveRank } from '../../core/moveMastery';
-import { animAssetIds } from '../../assets/catalog';
+import { animAssetIds, ebdxAssetIds } from '../../assets/catalog';
 import type { Side } from '../../core/battle/engine';
 import { CompactAnimSchema, type CompactAnim } from '../../core/presentation/animFormat';
 import type { Cue } from '../../core/presentation/cues';
 import type { FamilyId } from '../../core/presentation/families';
-import { moveAnims } from '../../data/presentation';
+import { scriptAssets, type ScriptAnim } from '../../core/presentation/scriptAnim';
+import { ebdxAnims, moveAnims } from '../../data/presentation';
 import { services } from '../../game/services';
 import { typeSoundFor } from '../../core/presentation/typeSound';
 import { playSfx } from '../audio';
@@ -26,6 +27,7 @@ import { resolveAnim, type AnimPlan } from '../../core/presentation/animRegistry
 import '../../core/presentation/abilityAnims';
 import { playAbilityAnim, playTextAnim } from './abilityFx';
 import { playAnim, type PlayHandle } from './animPlayer';
+import { playScript } from './scriptPlayer';
 import { playFamily } from './familyFx';
 
 /** How long to wait for a move's files the first time before playing the fallback instead. */
@@ -90,8 +92,9 @@ export class BattleFx {
   }
 
   /** Starts loading animations that are likely to play soon (the moves on the field). */
-  prefetch(animNames: readonly string[]): void {
+  prefetch(animNames: readonly string[], scriptNames: readonly string[] = []): void {
     if (this.settings.battleAnimations !== 'full') return;
+    for (const name of scriptNames) void this.readyScript(name);
     for (const name of animNames) void this.load(name).catch(() => null);
   }
 
@@ -127,7 +130,7 @@ export class BattleFx {
       case 'telegraph':
         return this.telegraph(cue.side, cue.color, cue.style);
       case 'moveAnim':
-        await this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family, cue.moveType);
+        await this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family, cue.moveType, cue.script);
         if (cue.user === 'player' && cue.moveId && !this.skipping) this.masteryFlourish(cue.target, this.opts.mastery?.(cue.moveId) ?? 'none');
         return;
       case 'pulse':
@@ -243,10 +246,32 @@ export class BattleFx {
     return (await this.ready(name)) ?? (alt && !this.skipping ? this.ready(alt) : null);
   }
 
-  private async moveAnim(user: Side, target: Side, name: string, color: string, alt?: string, family?: FamilyId, moveType?: string): Promise<void> {
+  /** Loads a scripted EBDX animation's pictures and sounds; null when it can't load in time. */
+  private async readyScript(name: string): Promise<ScriptAnim | null> {
+    const script = ebdxAnims().scripts[name];
+    if (!script) return null;
+    const { images, sounds } = scriptAssets({ source: '', scripts: { [name]: script }, moves: {} });
+    const ids = [...images.map(ebdxAssetIds.image), ...(this.settings.muted ? [] : sounds.map(ebdxAssetIds.sound))];
+    const timeout = new Promise<null>((resolve) => this.scene.time.delayedCall(LOAD_TIMEOUT_MS, () => resolve(null)));
+    const loaded = loadAssets(this.scene, ids).then(() => script).catch(() => null);
+    return Promise.race([loaded, timeout]);
+  }
+
+  private async moveAnim(user: Side, target: Side, name: string, color: string, alt?: string, family?: FamilyId, moveType?: string, scriptName?: string): Promise<void> {
     const userVisual = this.opts.sprite(user);
     const targetVisual = this.opts.sprite(target);
     if (!userVisual || !targetVisual || this.skipping) return;
+    const script = scriptName ? await this.readyScript(scriptName) : null;
+    if (script && scriptName && !this.skipping && this.scene.sys.isActive()) {
+      this.current = playScript(
+        { scene: this.scene, field: this.opts.field, backgroundIndex: this.opts.backgroundIndex(), user: userVisual, target: targetVisual, userIsPlayer: user === 'player' },
+        scriptName,
+        script,
+      );
+      await this.current.done;
+      this.current = null;
+      return;
+    }
     const anim = await this.readyFirst(name, alt);
     if (this.skipping || !this.scene.sys.isActive()) return;
     if (!anim) this.typeSound(moveType);
