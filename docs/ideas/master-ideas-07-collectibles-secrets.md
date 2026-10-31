@@ -20,9 +20,7 @@ Legend and fields as in file 01. Design only.
 
 **CS-008 Feather Collection** — Birds shed feathers on maps; collect all to craft something. *Trigger:* nodes. *Feel:* gather. *Rarity:* Uncommon. *Cx:* S. *Deps:* crafting. *Balance:* small.
 
-**CS-009 Music Box Tracks** — Unlock music tracks via discoveries. *Trigger:* events. *Feel:* reward. *Rarity:* Uncommon. *Cx:* S. *Deps:* audio. *Balance:* none.
 
-**CS-010 Recipe Book** — Collect recipes from NPCs; cooking becomes a Hub activity. *Trigger:* NPC. *Feel:* homely. *Rarity:* Common. *Cx:* M. *Deps:* crafting. *Balance:* small.
 
 ## B. Hidden things in the world
 
@@ -62,7 +60,6 @@ Legend and fields as in file 01. Design only.
 
 **CS-027 Pokédex Description Easter Eggs** — Hidden entries rewrite when you hold specific items. *Trigger:* item. *Feel:* secret lore. *Rarity:* Rare. *Cx:* S. *Deps:* Pokédex. *Balance:* none.
 
-**CS-028 Retro Mode Toggle** — Hidden toggle swaps UI to a Game Boy palette. *Trigger:* secret. *Feel:* nostalgia. *Rarity:* Rare. *Cx:* M. *Deps:* UI. *Balance:* none.
 
 **CS-029 Credits Hidden Quest** — Find hidden characters in the credits. *Trigger:* credits. *Feel:* extra play. *Rarity:* Rare. *Cx:* M. *Deps:* credits. *Balance:* none.
 
@@ -82,11 +79,9 @@ Legend and fields as in file 01. Design only.
 
 **CS-036 Cheat Code Inventory** — In-world "cheat codes" from NPCs unlock harmless modifiers. *Trigger:* NPC. *Feel:* fun. *Rarity:* Uncommon. *Cx:* M. *Deps:* mutators. *Balance:* flagged.
 
-**CS-037 Secret Ending Branch** — A final fork reached via hidden requirements. *Trigger:* secret. *Feel:* prestige. *Rarity:* Extremely rare. *Cx:* L. *Deps:* ending. *Balance:* none.
 
 **CS-038 Shadow Dex** — A second Pokédex tracking silhouettes, forgotten or mythical species unlocked via secrets. *Trigger:* secret. *Feel:* hunt. *Rarity:* Rare. *Cx:* M. *Deps:* Pokédex. *Balance:* none.
 
-**CS-039 Developer Commentary Mode** — Unlockable commentary bubbles on systems. *Trigger:* unlock. *Feel:* behind scenes. *Rarity:* Rare. *Cx:* M. *Deps:* UI. *Balance:* none.
 
 **CS-040 Pokémon That Rewrite Dex Entries** — Capture unusual specimens that edit entries with lore. *Trigger:* capture. *Feel:* surprise. *Rarity:* Rare. *Cx:* M. *Deps:* Pokédex. *Balance:* none.
 
@@ -106,7 +101,6 @@ Legend and fields as in file 01. Design only.
 
 **CS-047 Smuggler's Stash** — Hidden stash maps; reward depends on moral choice. *Trigger:* event. *Feel:* moral. *Rarity:* Rare. *Cx:* M. *Deps:* events. *Balance:* tuned.
 
-**CS-048 Time Capsule Nodes** — Nodes where earlier runs left items. *Trigger:* Legacy. *Feel:* gifts from past. *Rarity:* Rare. *Cx:* M. *Deps:* Legacy. *Balance:* low.
 
 **CS-049 Seed Pouches** — Collect rare seeds to plant in the Hub garden. *Trigger:* nodes. *Feel:* nurturing. *Rarity:* Uncommon. *Cx:* M. *Deps:* Hub. *Balance:* low.
 
@@ -118,7 +112,6 @@ Legend and fields as in file 01. Design only.
 
 **CS-052 Weeping Statue** — Statue cries when you carry a specific item; reveals a reward. *Trigger:* item. *Feel:* mystery. *Rarity:* Extremely rare. *Cx:* S. *Deps:* none. *Balance:* tuned.
 
-**CS-053 Mimic Chests** — Chests that are Pokémon (Mimikyu, Ditto) ambushing you. *Trigger:* chest. *Feel:* classic joke. *Rarity:* Uncommon. *Cx:* M. *Deps:* loot. *Balance:* risk.
 
 **CS-054 Ghost Merchant** — A ghost merchant sells items from other runs. *Trigger:* rare. *Feel:* eerie. *Rarity:* Rare. *Cx:* M. *Deps:* Legacy. *Balance:* tuned.
 
@@ -144,7 +137,6 @@ Legend and fields as in file 01. Design only.
 
 **CS-064 Species Mastery Seals** — Seals for full mastery of a species. *Trigger:* mastery. *Feel:* prestige. *Rarity:* Long-term. *Cx:* S. *Deps:* mastery. *Balance:* none.
 
-**CS-065 Type Stamp Rally** — Stamp rally of type badges across regions. *Trigger:* nodes. *Feel:* road trip. *Rarity:* Common. *Cx:* M. *Deps:* map. *Balance:* small.
 
 **CS-066 Lost Property Office** — Items lost in earlier runs end up in a lost property office. *Trigger:* Hub. *Feel:* continuity. *Rarity:* Long-term. *Cx:* M. *Deps:* Legacy. *Balance:* low.
 

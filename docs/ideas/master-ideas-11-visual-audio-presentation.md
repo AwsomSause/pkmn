@@ -6,7 +6,6 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-001 Bubble UI Language** — Menus built from glossy bubble panels that squash and bounce when opened, like Aero glass droplets. *Trigger:* any menu. *Feel:* cohesive tactile identity. *Rarity:* Always. *Cx:* M. *Deps:* UI kit. *Balance:* none.
 
-**VA-002 Wii Channel Tiles** — The Hub main menu as a grid of channel tiles that wiggle on hover and show live previews. *Trigger:* Hub. *Feel:* nostalgic delight. *Rarity:* Always. *Cx:* M. *Deps:* Hub UI. *Balance:* none.
 
 **VA-003 Springy Cursor** — Menu cursor overshoots and settles with squash and stretch. *Trigger:* nav. *Feel:* juicy. *Rarity:* Always. *Cx:* S. *Deps:* UI. *Balance:* none.
 
@@ -32,7 +31,6 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-013 Ability Cut-Ins** — Ability activation shows a character cut-in banner with the Pokémon portrait. *Trigger:* ability. *Feel:* dramatic. *Rarity:* Common. *Cx:* M. *Deps:* anim abilities. *Balance:* skippable.
 
-**VA-014 Weather Layers** — Real layered particles for weather with depth. *Trigger:* weather. *Feel:* immersive. *Rarity:* Always. *Cx:* M. *Deps:* weather. *Balance:* low-end mode.
 
 **VA-015 Shadow Casting** — Pokémon cast dynamic shadows from the sun. *Trigger:* battle. *Feel:* grounded. *Rarity:* Always. *Cx:* M. *Deps:* renderer. *Balance:* none.
 
@@ -88,7 +86,6 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-039 Low-HP Heartbeat Layer** — Optional heartbeat layer. *Trigger:* low HP. *Feel:* tension. *Rarity:* Setting. *Cx:* S. *Deps:* audio. *Balance:* toggle.
 
-**VA-040 Victory Fanfare Variations** — Fanfares vary by margin of victory. *Trigger:* win. *Feel:* reactive. *Rarity:* Always. *Cx:* M. *Deps:* audio. *Balance:* none.
 
 ## E. Typography, text and speech
 
@@ -102,7 +99,6 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-045 Title Card Typography Per Act** — Act titles use distinct lettering. *Trigger:* act. *Feel:* cinematic. *Rarity:* Always. *Cx:* S. *Deps:* fonts. *Balance:* none.
 
-**VA-046 Subtitles For Cries** — Cries get onomatopoeia captions in comic style. *Trigger:* cries. *Feel:* comic. *Rarity:* Setting. *Cx:* S. *Deps:* audio. *Balance:* toggle.
 
 **VA-047 Newspaper Layouts** — Newspaper UI for news events. *Trigger:* Hub. *Feel:* period. *Rarity:* Always. *Cx:* M. *Deps:* UI. *Balance:* none.
 
@@ -118,7 +114,6 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-052 Slow Motion Beat** — Dramatic slow motion at key KOs. *Trigger:* KO. *Feel:* punch. *Rarity:* Rare. *Cx:* S. *Deps:* animations. *Balance:* skip.
 
-**VA-053 Split-Screen Rival Entrances** — Split-screen intros for rival battles. *Trigger:* rival. *Feel:* anime. *Rarity:* Rival. *Cx:* M. *Deps:* animations. *Balance:* skip.
 
 **VA-054 Comic Panel Flashbacks** — Flashbacks rendered as comic panels. *Trigger:* story. *Feel:* stylish. *Rarity:* Common. *Cx:* M. *Deps:* assets. *Balance:* skip.
 
@@ -126,11 +121,9 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-056 Montage Generator** — Auto montages for training and travel. *Trigger:* rest. *Feel:* anime. *Rarity:* Common. *Cx:* L. *Deps:* animation. *Balance:* skip.
 
-**VA-057 Ending Credits Highlight Reel** — Credits include your run's highlight reel. *Trigger:* ending. *Feel:* personal. *Rarity:* Always. *Cx:* L. *Deps:* recap. *Balance:* none.
 
 **VA-058 Title Screen Remixes** — Title music/visual reflect progress. *Trigger:* launch. *Feel:* reward. *Rarity:* Always. *Cx:* M. *Deps:* title. *Balance:* none.
 
-**VA-059 Screen Shake Library** — Tuned shakes per event strength. *Trigger:* hits. *Feel:* weight. *Rarity:* Always. *Cx:* S. *Deps:* animations. *Balance:* setting.
 
 **VA-060 Fireworks For Milestones** — Fireworks at big milestones. *Trigger:* milestone. *Feel:* celebration. *Rarity:* Rare. *Cx:* S. *Deps:* particles. *Balance:* none.
 
@@ -152,7 +145,6 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-068 Pokémon Portraits In Dialogue** — Expressive portraits for speaking Pokémon. *Trigger:* dialogue. *Feel:* expressive. *Rarity:* Always. *Cx:* L. *Deps:* assets. *Balance:* none.
 
-**VA-069 Shiny Sparkle Cadence** — Shinies sparkle at set intervals. *Trigger:* shiny. *Feel:* joy. *Rarity:* Rare. *Cx:* S. *Deps:* particles. *Balance:* none.
 
 **VA-070 Scale-Aware Animations** — Large Pokémon animate slower and heavier. *Trigger:* battle. *Feel:* weight. *Rarity:* Always. *Cx:* M. *Deps:* animation. *Balance:* none.
 
@@ -166,7 +158,6 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-074 Retro Ad Generator** — Make a 2000s-style ad of your team. *Trigger:* menu. *Feel:* funny. *Rarity:* Always. *Cx:* L. *Deps:* promo style. *Balance:* none.
 
-**VA-075 Wallpaper Export** — Export team wallpapers. *Trigger:* menu. *Feel:* nice. *Rarity:* Always. *Cx:* M. *Deps:* assets. *Balance:* none.
 
 **VA-076 Box Art Selector** — Choose alternate box art for your save. *Trigger:* Hub. *Feel:* collectible. *Rarity:* Always. *Cx:* S. *Deps:* promo. *Balance:* none.
 
@@ -174,6 +165,5 @@ Legend and fields as in file 01. Design only. Style direction: flowy, bouncy, an
 
 **VA-078 Concept Art Gallery** — Unlockable gallery with notes. *Trigger:* unlock. *Feel:* reward. *Rarity:* Long-term. *Cx:* S. *Deps:* assets. *Balance:* none.
 
-**VA-079 Loading Screen Lore Cards** — Loading cards with lore and tips. *Trigger:* loading. *Feel:* useful. *Rarity:* Always. *Cx:* S. *Deps:* text. *Balance:* none.
 
 **VA-080 Credits Roll With Pokémon Parade** — Credits show your Pokémon dancing in procession. *Trigger:* credits. *Feel:* joy. *Rarity:* Always. *Cx:* M. *Deps:* credits. *Balance:* none.

@@ -22,7 +22,6 @@ Legend and fields as in file 01. Design only. Aimed at "tell your friends" momen
 
 **UE-009 The Doppelgänger** — A wild copy of your lead appears with a mirror personality. *Trigger:* roll. *Feel:* creepy. *Rarity:* Rare. *Cx:* M. *Deps:* encounters. *Balance:* tuned.
 
-**UE-010 Fossil Revival Gone Wrong** — A freshly revived fossil panics and rampages. *Trigger:* fossil. *Feel:* cinematic. *Rarity:* Rare. *Cx:* M. *Deps:* fossils. *Balance:* tuned.
 
 ## B. Memorable human moments
 
@@ -36,7 +35,6 @@ Legend and fields as in file 01. Design only. Aimed at "tell your friends" momen
 
 **UE-015 The Persistent Salesman** — A salesman follows for three nodes trying to sell a terrible item; purchase pays off hilariously. *Trigger:* roll. *Feel:* running joke. *Rarity:* Uncommon. *Cx:* M. *Deps:* shops. *Balance:* tuned.
 
-**UE-016 Cooking Contest** — Enter a cooking contest with your Pokémon's help. *Trigger:* town. *Feel:* silly. *Rarity:* Uncommon. *Cx:* L. *Deps:* crafting. *Balance:* tuned.
 
 **UE-017 Haunted Inn** — A night at an inn where each Pokémon wakes to a different scare. *Trigger:* inn. *Feel:* anecdotal. *Rarity:* Rare. *Cx:* L. *Deps:* rest. *Balance:* tuned.
 
@@ -92,7 +90,6 @@ Legend and fields as in file 01. Design only. Aimed at "tell your friends" momen
 
 ## E. Emergent play opportunities
 
-**UE-041 Item Combos** — Hidden interaction of two items creates something new (Lure plus Honey). *Trigger:* items. *Feel:* experimentation. *Rarity:* Uncommon. *Cx:* M. *Deps:* crafting. *Balance:* tuned.
 
 **UE-042 Weather Manipulation Tricks** — Combine weather moves for rare terrain effects. *Trigger:* battle. *Feel:* mastery. *Rarity:* Rare. *Cx:* M. *Deps:* weather. *Balance:* tuned.
 
@@ -150,7 +147,6 @@ Legend and fields as in file 01. Design only. Aimed at "tell your friends" momen
 
 **UE-067 Tiny Giant** — A giant trainer with a tiny Pokémon. *Trigger:* trainer gen. *Feel:* gag. *Rarity:* Rare. *Cx:* S. *Deps:* trainers. *Balance:* normal.
 
-**UE-068 Time Loop Day** — The same node repeats thrice with variation. *Trigger:* roll. *Feel:* puzzle. *Rarity:* Extremely rare. *Cx:* L. *Deps:* events. *Balance:* tuned.
 
 **UE-069 Pokémon Who Won't Stop Talking** — A chatterbox Pokémon spoils plans; dialogue puzzle. *Trigger:* roll. *Feel:* comedic. *Rarity:* Rare. *Cx:* M. *Deps:* dialogue. *Balance:* low.
 
@@ -160,7 +156,6 @@ Legend and fields as in file 01. Design only. Aimed at "tell your friends" momen
 
 **UE-071 Three-Node Mystery** — Clues over three nodes lead to a culprit reveal. *Trigger:* roll. *Feel:* detective. *Rarity:* Rare. *Cx:* L. *Deps:* event chains. *Balance:* tuned.
 
-**UE-072 Heist** — Plan a heist with your Pokémon roles. *Trigger:* event. *Feel:* caper. *Rarity:* Rare. *Cx:* L. *Deps:* roles. *Balance:* tuned.
 
 **UE-073 Road Trip** — Travel with an NPC companion who changes the run's tone. *Trigger:* event. *Feel:* character. *Rarity:* Rare. *Cx:* L. *Deps:* companions. *Balance:* tuned.
 

@@ -34,7 +34,6 @@ Legend and fields as in file 01. Design only. Aims to turn run state into story 
 
 **NR-014 Vows** — Take vows (never fight a kid) for narrative power. *Trigger:* start. *Feel:* roleplay. *Rarity:* Common. *Cx:* M. *Deps:* challenge flags. *Balance:* tuned.
 
-**NR-015 Letters To Future Self** — Write letters read in later runs. *Trigger:* run end. *Feel:* touching. *Rarity:* Setting. *Cx:* S. *Deps:* save. *Balance:* none.
 
 **NR-016 Epitaph Writing** — Write epitaphs for fallen Pokémon. *Trigger:* faint. *Feel:* ritual. *Rarity:* Setting. *Cx:* S. *Deps:* memorial. *Balance:* none.
 
@@ -98,7 +97,6 @@ Legend and fields as in file 01. Design only. Aims to turn run state into story 
 
 **NR-043 Story From Rival's Eyes** — Playable interludes as the rival. *Trigger:* act break. *Feel:* perspective. *Rarity:* Rare. *Cx:* L. *Deps:* rival. *Balance:* none.
 
-**NR-044 Dream Sequences As Mini-Stories** — Playable surreal dreams reveal subconscious. *Trigger:* sleep. *Feel:* odd. *Rarity:* Rare. *Cx:* L. *Deps:* dreams. *Balance:* none.
 
 **NR-045 Time-Skip Interludes** — Interludes jump years with changes. *Trigger:* Legacy. *Feel:* epic. *Rarity:* Rare. *Cx:* L. *Deps:* Legacy. *Balance:* none.
 
@@ -110,7 +108,6 @@ Legend and fields as in file 01. Design only. Aims to turn run state into story 
 
 **NR-049 The Choose-Your-Ending Hub** — Final choice from earned ending options. *Trigger:* end. *Feel:* agency. *Rarity:* Always. *Cx:* L. *Deps:* endings. *Balance:* none.
 
-**NR-050 Post-Credits Teasers** — Teasers for next-run hooks. *Trigger:* credits. *Feel:* anticipation. *Rarity:* Always. *Cx:* S. *Deps:* credits. *Balance:* none.
 
 ## F. Emotional beats
 
@@ -158,7 +155,6 @@ Legend and fields as in file 01. Design only. Aims to turn run state into story 
 
 ## H. Tools for writers
 
-**NR-071 Narrative Debug Overlay** — Dev overlay showing story state. *Trigger:* dev. *Feel:* tooling. *Rarity:* Dev. *Cx:* M. *Deps:* director. *Balance:* none.
 
 **NR-072 Story Beat Coverage Report** — Report which beats appeared in sample runs. *Trigger:* dev. *Feel:* quality. *Rarity:* Dev. *Cx:* M. *Deps:* bot walker. *Balance:* none.
 
@@ -176,4 +172,3 @@ Legend and fields as in file 01. Design only. Aims to turn run state into story 
 
 **NR-079 Reaction Matrix** — Matrix of event type by character reaction ensuring coverage. *Trigger:* dev. *Feel:* completeness. *Rarity:* Dev. *Cx:* M. *Deps:* dialogue. *Balance:* none.
 
-**NR-080 Story Replay Viewer** — Viewer shows a run as an illustrated story. *Trigger:* menu. *Feel:* shareable. *Rarity:* Always. *Cx:* L. *Deps:* replay. *Balance:* none.

@@ -14,7 +14,6 @@ Legend and fields as in file 01. Design only. Builds on the Living Rival, Bond, 
 
 **RL-005 Love Triangles** — Three party members tangle in affection; handling it affects morale (silly and sweet, not romantic for humans). *Trigger:* high chemistry. *Feel:* funny. *Rarity:* Rare. *Cx:* L. *Deps:* chemistry. *Balance:* flavour.
 
-**RL-006 Pair Moves Unlocked By Friendship** — Best friends unlock a unique pair move. *Trigger:* chemistry max. *Feel:* reward. *Rarity:* Rare. *Cx:* L. *Deps:* doubles. *Balance:* limited.
 
 **RL-007 Estranged Friends** — A fight (mid-run event) splits friends; they won't share a battle until you mediate. *Trigger:* event. *Feel:* heartache. *Rarity:* Uncommon. *Cx:* L. *Deps:* events. *Balance:* resolvable.
 

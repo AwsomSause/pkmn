@@ -22,7 +22,6 @@ Legend and fields as in file 01. Design only. All randomness must use named seed
 
 **PG-009 Procedural Landmarks** — Unique named landmarks generated from name parts with mini-events attached. *Trigger:* map gen. *Feel:* memorable places. *Rarity:* Common. *Cx:* M. *Deps:* text. *Balance:* none.
 
-**PG-010 Run Length Variants** — Short, standard and epic run lengths with scaled content. *Trigger:* run start. *Feel:* flexibility. *Rarity:* Always. *Cx:* M. *Deps:* run structure. *Balance:* scaling.
 
 ## B. Procedural Pokémon and encounters
 
@@ -78,9 +77,7 @@ Legend and fields as in file 01. Design only. All randomness must use named seed
 
 **PG-034 Market Events** — Price swings from events (berry blight). *Trigger:* world event. *Feel:* economy alive. *Rarity:* Common. *Cx:* M. *Deps:* economy. *Balance:* bounded.
 
-**PG-035 Mystery Boxes** — Boxes with weighted outcomes shown as odds. *Trigger:* loot. *Feel:* thrill. *Rarity:* Common. *Cx:* S. *Deps:* items. *Balance:* transparent.
 
-**PG-036 Seeded Daily Shop** — Daily shop seeded by date; share with friends. *Trigger:* date. *Feel:* community. *Rarity:* Daily. *Cx:* M. *Deps:* seeds. *Balance:* none.
 
 **PG-037 Rune Crafting** — Combine runes randomly to form effects; discovered recipes persist. *Trigger:* crafting. *Feel:* experimentation. *Rarity:* Common. *Cx:* L. *Deps:* crafting. *Balance:* limited.
 
@@ -96,11 +93,9 @@ Legend and fields as in file 01. Design only. All randomness must use named seed
 
 **PG-042 Rubber-Band Gifts** — After heavy losses a kind NPC may appear; after dominance a challenger. *Trigger:* state. *Feel:* fair. *Rarity:* Common. *Cx:* M. *Deps:* director. *Balance:* subtle.
 
-**PG-043 Weighted Chaos Dial** — Settings dial from Calm to Wild, scaling event randomness. *Trigger:* setting. *Feel:* control. *Rarity:* Setting. *Cx:* M. *Deps:* settings. *Balance:* tests.
 
 **PG-044 Fair Seeds** — Seeds validated for solvability by simulated bots. *Trigger:* seed gen. *Feel:* trust. *Rarity:* Always. *Cx:* L. *Deps:* bot walker. *Balance:* internal.
 
-**PG-045 Challenge Seeds Of The Week** — Weekly handpicked seeds with story hooks. *Trigger:* week. *Feel:* shared goal. *Rarity:* Weekly. *Cx:* M. *Deps:* weekly events. *Balance:* none.
 
 **PG-046 Curated Randomness** — Hand-authored events woven into procedural ones for a quality floor. *Trigger:* gen. *Feel:* polish. *Rarity:* Always. *Cx:* M. *Deps:* events. *Balance:* none.
 

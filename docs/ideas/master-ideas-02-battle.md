@@ -12,7 +12,6 @@ Legend and fields as in file 01. Cx = S/M/L/XL. Design only.
 
 **BT-004 Telegraphed Enemy Intent** — Elite foes show an icon of their next move category (attack, setup, support) one turn ahead. *Trigger:* elite/boss. *Feel:* Slay-the-Spire clarity. *Rarity:* Boss. *Cx:* M. *Deps:* AI. *Balance:* AI sometimes lies when smart.
 
-**BT-005 Bluff Move** — Use a move as a feint: costs the turn but plants doubt, making the enemy AI waste a turn on a defensive reply 40% of the time. *Trigger:* player option. *Feel:* mind games. *Rarity:* Always. *Cx:* M. *Deps:* AI. *Balance:* AI trained to ignore after 2 uses.
 
 **BT-006 Rhythm Turns** — Every third turn is a "Beat Turn" where moves hit +10% harder; rhythm shown by a visible metronome. *Trigger:* turn counter. *Feel:* pace and anticipation. *Rarity:* Always. *Cx:* M. *Deps:* engine. *Balance:* symmetric for both sides.
 
@@ -22,7 +21,6 @@ Legend and fields as in file 01. Cx = S/M/L/XL. Design only.
 
 **BT-009 Reserve Interrupt** — Bench Pokémon with high bond may interrupt once per battle to take a hit meant for the active one. *Trigger:* active Pokémon about to KO. *Feel:* heroic subs. *Rarity:* Rare. *Cx:* L. *Deps:* Bond. *Balance:* once per battle.
 
-**BT-010 Terrain Grid Moves** — Some moves rewrite a single "tile" under a Pokémon (Spikes tile, Mist tile) rather than the whole field. *Trigger:* move. *Feel:* spatial. *Rarity:* Move-based. *Cx:* XL. *Deps:* field effects. *Balance:* tiles decay in 3 turns.
 
 ## B. Moves with new rules
 
@@ -80,7 +78,6 @@ Legend and fields as in file 01. Cx = S/M/L/XL. Design only.
 
 **BT-035 Wild Herd Response** — Wild Pokémon in groups protect weak members; attacking the herd leader draws all. *Trigger:* group encounter. *Feel:* ecosystem. *Rarity:* Uncommon. *Cx:* L. *Deps:* encounters. *Balance:* scales.
 
-**BT-036 Boss Phase Interludes** — Between boss phases a short non-combat beat (dialogue, environment shift) where players choose a one-time prep action. *Trigger:* phase change. *Feel:* cinematic. *Rarity:* Boss. *Cx:* M. *Deps:* boss phases. *Balance:* one action.
 
 **BT-037 Enemy Ace Reveal** — Opponent hides its ace until the last turn then flips a dramatic reveal with its own intro. *Trigger:* trainer. *Feel:* showmanship. *Rarity:* Common. *Cx:* M. *Deps:* animations. *Balance:* none.
 
@@ -110,7 +107,6 @@ Legend and fields as in file 01. Cx = S/M/L/XL. Design only.
 
 **BT-049 Fog of War Battles** — Fog hides enemy HP bars and moves until a scout move or spotter Pokémon reveals them. *Trigger:* swamp. *Feel:* tension. *Rarity:* Uncommon. *Cx:* L. *Deps:* UI. *Balance:* accessibility toggle.
 
-**BT-050 Boss Arena Phases** — The arena visibly transforms across boss phases (ice thaws, lava rises) with actual field effects. *Trigger:* boss phase. *Feel:* spectacle. *Rarity:* Boss. *Cx:* L. *Deps:* boss, field effects. *Balance:* telegraphed.
 
 ## F. Presentation and spectacle
 
@@ -128,9 +124,7 @@ Legend and fields as in file 01. Cx = S/M/L/XL. Design only.
 
 **BT-057 Victory Pose Replay** — After a win the winner's best move replays in 0.5x on a small corner screen. *Trigger:* victory. *Feel:* highlight reel. *Rarity:* Common. *Cx:* M. *Deps:* recap. *Balance:* skippable.
 
-**BT-058 Announcer Commentary** — Optional announcer lines ("A bold swap!") reflecting battle state, in text bubbles. *Trigger:* turn events. *Feel:* esports. *Rarity:* Setting. *Cx:* M. *Deps:* dialogue. *Balance:* toggle.
 
-**BT-059 Soundtrack Layers** — Battle music adds stems as tension rises (low HP adds strings, boss phase adds choir). *Trigger:* state. *Feel:* alive music. *Rarity:* Always. *Cx:* L. *Deps:* audio. *Balance:* none.
 
 **BT-060 Screen Lighting States** — Dynamic lighting for weather/time: lightning flashes, sunset glare on the battle scene. *Trigger:* state. *Feel:* atmosphere. *Rarity:* Always. *Cx:* M. *Deps:* shaders. *Balance:* accessibility flash cap.
 
@@ -148,7 +142,6 @@ Legend and fields as in file 01. Cx = S/M/L/XL. Design only.
 
 **BT-066 Capture Duels** — Catching a tough Pokémon requires a mini battle objective (keep it above 20%, not KO). *Trigger:* rare capture. *Feel:* skill-based. *Rarity:* Uncommon. *Cx:* M. *Deps:* capture. *Balance:* clear rules.
 
-**BT-067 Mirror Matches** — Fight a shadow copy of your own team shaped by your habits (used moves, items). *Trigger:* rare event. *Feel:* self-confrontation. *Rarity:* Rare. *Cx:* L. *Deps:* run history. *Balance:* tuned.
 
 **BT-068 Escort Battles** — Protect an NPC trainer's Pokémon from KO while defeating foes. *Trigger:* event. *Feel:* variety. *Rarity:* Uncommon. *Cx:* L. *Deps:* doubles. *Balance:* simple fail state.
 
@@ -158,7 +151,6 @@ Legend and fields as in file 01. Cx = S/M/L/XL. Design only.
 
 ## H. Items, moves and utility in combat
 
-**BT-071 Battle Items As Gestures** — Use items by dragging to targets; Potions heal, Whistles distract. *Trigger:* UI. *Feel:* tactile. *Rarity:* Always. *Cx:* M. *Deps:* UI. *Balance:* none.
 
 **BT-072 Coach Commands** — Limited-use trainer commands (Hustle, Hold, Watch Out) that apply short buffs. *Trigger:* player. *Feel:* trainer identity. *Rarity:* Always. *Cx:* L. *Deps:* trainer identity. *Balance:* cooldown.
 

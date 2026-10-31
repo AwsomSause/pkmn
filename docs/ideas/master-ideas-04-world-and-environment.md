@@ -42,7 +42,6 @@ Legend and fields as in file 01. Design only.
 
 **WD-018 Animal Tracks** — Footprints on maps hint at which wild Pokémon is nearby; read them to choose encounters. *Trigger:* node. *Feel:* detective. *Rarity:* Common. *Cx:* M. *Deps:* encounter preview. *Balance:* accuracy 80%.
 
-**WD-019 Weather Fronts** — Visible fronts move across the map; plan routes around them. *Trigger:* map. *Feel:* strategic. *Rarity:* Always. *Cx:* L. *Deps:* weather. *Balance:* telegraphed.
 
 **WD-020 Moon Phases** — Lunar phases affect Pokémon (Clefairy dance at full moon); calendar-aware. *Trigger:* date. *Feel:* mystic. *Rarity:* Always. *Cx:* M. *Deps:* weekly events. *Balance:* small.
 
@@ -78,7 +77,6 @@ Legend and fields as in file 01. Design only.
 
 **WD-034 Day-Night Shop Hours** — Shops open at fixed hours with different stock at night. *Trigger:* clock. *Feel:* routine. *Rarity:* Always. *Cx:* M. *Deps:* time. *Balance:* none.
 
-**WD-035 Radio Broadcasts** — A diegetic radio plays news about your runs, rival stats and weather. *Trigger:* ambient. *Feel:* world voice. *Rarity:* Always. *Cx:* M. *Deps:* dialogue. *Balance:* none.
 
 **WD-036 Newspaper Hub** — Hub newspaper with headlines generated from your run and world events. *Trigger:* Hub. *Feel:* world reacts. *Rarity:* Always. *Cx:* M. *Deps:* Hub. *Balance:* none.
 
@@ -146,7 +144,6 @@ Legend and fields as in file 01. Design only.
 
 **WD-065 Map Cartographer** — Hire a cartographer who sells you better map hints. *Trigger:* town. *Feel:* utility. *Rarity:* Common. *Cx:* S. *Deps:* map. *Balance:* cost.
 
-**WD-066 Lore Fragments** — Collectible fragments piece together an overarching mystery about the League. *Trigger:* exploring. *Feel:* mystery. *Rarity:* Rare. *Cx:* M. *Deps:* collection. *Balance:* none.
 
 **WD-067 Different Eras Mode** — Choose era (Ancient, Modern, Future) with distinct art and rules. *Trigger:* mode. *Feel:* replay. *Rarity:* Mode. *Cx:* XL. *Deps:* assets. *Balance:* experimental.
 

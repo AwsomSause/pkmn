@@ -4,7 +4,6 @@ Legend and fields as in file 01. Design only. Most of these are small; several a
 
 ## A. Information and clarity
 
-**QL-001 Damage Range Preview** — Hovering a move shows min/max damage range as a bar over the foe HP without using gameplay RNG. *Trigger:* hover. *Feel:* informed decisions. *Rarity:* Always. *Cx:* M. *Deps:* engine calc. *Balance:* setting to hide for purists.
 
 **QL-002 Turn Order Ribbon** — A ribbon at the top shows the exact upcoming order with speed ties flagged. *Trigger:* always. *Feel:* clarity. *Rarity:* Always. *Cx:* M. *Deps:* engine. *Balance:* none.
 
@@ -28,49 +27,37 @@ Legend and fields as in file 01. Design only. Most of these are small; several a
 
 **QL-011 One-Tap Repeat** — Repeat last action for all turns of a trivial wild battle with an auto setting. *Trigger:* wild battle. *Feel:* fast. *Rarity:* Setting. *Cx:* M. *Deps:* engine. *Balance:* disabled vs bosses.
 
-**QL-012 Fast Forward Toggles** — 2x/4x animation speed with sensible text pacing. *Trigger:* setting. *Feel:* respect for time. *Rarity:* Always. *Cx:* M. *Deps:* animations. *Balance:* none.
 
-**QL-013 Undo Last Menu Action** — Undo a misclick in menus (not in battle outcomes). *Trigger:* menu. *Feel:* forgiving. *Rarity:* Always. *Cx:* M. *Deps:* UI. *Balance:* none.
 
 **QL-014 Rebindable Everything** — Full keyboard, gamepad and touch rebinds with presets. *Trigger:* settings. *Feel:* inclusive. *Rarity:* Always. *Cx:* M. *Deps:* input. *Balance:* none.
 
-**QL-015 Radial Move Menu** — Radial menu option for gamepads. *Trigger:* setting. *Feel:* ergonomics. *Rarity:* Setting. *Cx:* M. *Deps:* UI. *Balance:* none.
 
-**QL-016 Hold-To-Confirm Risky Actions** — Hold to confirm releasing a Pokémon. *Trigger:* risky action. *Feel:* safe. *Rarity:* Always. *Cx:* S. *Deps:* UI. *Balance:* none.
 
-**QL-017 Quick Swap Hotkeys** — Number keys swap to party slots. *Trigger:* battle. *Feel:* pro. *Rarity:* Always. *Cx:* S. *Deps:* input. *Balance:* none.
 
 **QL-018 Smart Defaults** — Menus remember last choice per context. *Trigger:* menus. *Feel:* speed. *Rarity:* Always. *Cx:* S. *Deps:* UI. *Balance:* none.
 
 **QL-019 Batch Item Use** — Use multiple identical items in one action. *Trigger:* items. *Feel:* convenience. *Rarity:* Always. *Cx:* S. *Deps:* items. *Balance:* none.
 
-**QL-020 Search Everywhere** — Global search for Pokémon, items, moves with filters. *Trigger:* hotkey. *Feel:* power. *Rarity:* Always. *Cx:* M. *Deps:* data. *Balance:* none.
 
 ## C. Accessibility
 
-**QL-021 Colourblind Type Icons** — Type colors always accompanied by shapes and letters. *Trigger:* always. *Feel:* inclusive. *Rarity:* Always. *Cx:* M. *Deps:* UI. *Balance:* none.
 
-**QL-022 Dyslexia-Friendly Font** — Option for a dyslexia-friendly font and extra spacing. *Trigger:* setting. *Feel:* inclusive. *Rarity:* Setting. *Cx:* S. *Deps:* fonts. *Balance:* none.
 
 **QL-023 Full Screen Reader Support** — Menus labelled for screen readers with announced battle events. *Trigger:* setting. *Feel:* inclusive. *Rarity:* Setting. *Cx:* L. *Deps:* DOM overlay. *Balance:* none.
 
-**QL-024 Photosensitivity Safe Mode** — Strips flashes, shakes and rapid strobes. *Trigger:* setting. *Feel:* safe. *Rarity:* Setting. *Cx:* M. *Deps:* animation registry. *Balance:* none.
 
 **QL-025 Text Size And Contrast** — Scalable text, high-contrast themes. *Trigger:* setting. *Feel:* readable. *Rarity:* Setting. *Cx:* M. *Deps:* UI. *Balance:* none.
 
-**QL-026 One-Handed Mode** — Layout for single-hand play. *Trigger:* setting. *Feel:* inclusive. *Rarity:* Setting. *Cx:* M. *Deps:* input. *Balance:* none.
 
 **QL-027 Audio Cues For Everything** — Sound cues for status, low HP, super-effective. *Trigger:* setting. *Feel:* inclusive. *Rarity:* Setting. *Cx:* M. *Deps:* audio. *Balance:* none.
 
 **QL-028 Captions For Cries And Sounds** — Visual captions for audio events. *Trigger:* setting. *Feel:* inclusive. *Rarity:* Setting. *Cx:* M. *Deps:* audio. *Balance:* none.
 
-**QL-029 Reduced Motion Modes** — Per-effect motion levels (camera, shakes, particles). *Trigger:* setting. *Feel:* comfort. *Rarity:* Setting. *Cx:* M. *Deps:* animation registry. *Balance:* none.
 
 **QL-030 Timing Assist** — Slowed or untimed minigames. *Trigger:* setting. *Feel:* inclusive. *Rarity:* Setting. *Cx:* M. *Deps:* minigames. *Balance:* none.
 
 ## D. Management and organisation
 
-**QL-031 Team Presets** — Save and load party formations. *Trigger:* Hub. *Feel:* convenient. *Rarity:* Always. *Cx:* M. *Deps:* party. *Balance:* none.
 
 **QL-032 Tags And Notes** — Tag Pokémon and items with notes. *Trigger:* UI. *Feel:* organisation. *Rarity:* Always. *Cx:* S. *Deps:* save. *Balance:* none.
 
@@ -86,15 +73,12 @@ Legend and fields as in file 01. Design only. Most of these are small; several a
 
 **QL-038 Release Confirmation With Memories** — Release prompt shows the Pokémon's history to confirm. *Trigger:* release. *Feel:* meaningful. *Rarity:* Always. *Cx:* S. *Deps:* history. *Balance:* none.
 
-**QL-039 Box Wallpapers And Themes** — Customise storage. *Trigger:* Hub. *Feel:* personal. *Rarity:* Common. *Cx:* S. *Deps:* assets. *Balance:* none.
 
-**QL-040 Drag-And-Drop Everything** — Drag to reorder, equip, sell. *Trigger:* UI. *Feel:* tactile. *Rarity:* Always. *Cx:* M. *Deps:* UI. *Balance:* none.
 
 ## E. Onboarding and teaching
 
 **QL-041 Contextual Tutorials** — Short tips appear the first time a mechanic matters. *Trigger:* first use. *Feel:* gentle. *Rarity:* Always. *Cx:* M. *Deps:* UI. *Balance:* dismiss.
 
-**QL-042 Practice Dojo** — Hub dojo to test moves and mechanics freely. *Trigger:* Hub. *Feel:* safe sandbox. *Rarity:* Always. *Cx:* L. *Deps:* engine. *Balance:* none.
 
 **QL-043 Glossary Links** — Tap any keyword to open a glossary. *Trigger:* tap. *Feel:* helpful. *Rarity:* Always. *Cx:* S. *Deps:* UI. *Balance:* none.
 
@@ -114,11 +98,8 @@ Legend and fields as in file 01. Design only. Most of these are small; several a
 
 ## F. Save, safety and performance
 
-**QL-051 Autosave Slots With Timestamps** — Multiple rolling autosaves. *Trigger:* auto. *Feel:* safe. *Rarity:* Always. *Cx:* M. *Deps:* save. *Balance:* none.
 
-**QL-052 Export And Import Saves** — Easy backup file. *Trigger:* menu. *Feel:* trust. *Rarity:* Always. *Cx:* M. *Deps:* save. *Balance:* none.
 
-**QL-053 Cloud Save Option** — Optional cloud sync. *Trigger:* setting. *Feel:* convenience. *Rarity:* Setting. *Cx:* XL. *Deps:* backend. *Balance:* none.
 
 **QL-054 Low-End Device Mode** — Reduces effects for older phones. *Trigger:* setting. *Feel:* inclusive. *Rarity:* Setting. *Cx:* M. *Deps:* renderer. *Balance:* none.
 
@@ -148,9 +129,7 @@ Legend and fields as in file 01. Design only. Most of these are small; several a
 
 **QL-066 Content Filters For Dark Events** — Skip heavy themes. *Trigger:* setting. *Feel:* safe. *Rarity:* Setting. *Cx:* M. *Deps:* events. *Balance:* none.
 
-**QL-067 Streamer Mode** — Hides names and shows overlays. *Trigger:* setting. *Feel:* creator friendly. *Rarity:* Setting. *Cx:* S. *Deps:* UI. *Balance:* none.
 
-**QL-068 Photo Mode** — Free camera, filters, stickers. *Trigger:* menu. *Feel:* creative. *Rarity:* Always. *Cx:* L. *Deps:* camera. *Balance:* none.
 
 **QL-069 Idle Animations Pause** — Idle anims pause when unfocused. *Trigger:* focus. *Feel:* polite. *Rarity:* Always. *Cx:* S. *Deps:* renderer. *Balance:* none.
 
@@ -170,7 +149,6 @@ Legend and fields as in file 01. Design only. Most of these are small; several a
 
 **QL-076 Odds Calculator** — Catch odds shown on request. *Trigger:* catch. *Feel:* informed. *Rarity:* Setting. *Cx:* S. *Deps:* catch. *Balance:* none.
 
-**QL-077 Bug Report Button** — One click bug report with state. *Trigger:* menu. *Feel:* helpful. *Rarity:* Always. *Cx:* S. *Deps:* logging. *Balance:* none.
 
 **QL-078 Replay Validity Checker** — Verify saves replay determinism. *Trigger:* dev menu. *Feel:* trust. *Rarity:* Dev. *Cx:* M. *Deps:* determinism. *Balance:* none.
 

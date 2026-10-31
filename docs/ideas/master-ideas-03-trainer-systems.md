@@ -6,9 +6,7 @@ Legend and fields as in file 01. Design only.
 
 **TR-001 Trainer Credo** — At run start pick a credo (Underdog, Collector, Duelist, Caretaker, Gambler) that rewrites one rule: Caretaker heals bond faster but gets fewer items; Gambler gets bigger odds both ways. *Trigger:* run start. *Feel:* a build identity beyond starter. *Rarity:* Always. *Cx:* L. *Deps:* trainer identity, starter sets. *Balance:* equal power across credos.
 
-**TR-002 Field Skills Tree** — Trainer earns skill points from badges: Tracking (reveal nodes), Haggling (shop prices), First Aid (rest heal), Taming (catch rate). One tree, short, sharp. *Trigger:* badge. *Feel:* choices matter. *Rarity:* Always. *Cx:* L. *Deps:* mastery. *Balance:* avoid mandatory picks.
 
-**TR-003 Trainer Titles** — Titles earned from play style (Iron Nurse, Berry Baron, The Retreater) show on the card and shift NPC greetings. *Trigger:* thresholds. *Feel:* identity from behavior. *Rarity:* Long-term. *Cx:* M. *Deps:* stats, dialogue. *Balance:* cosmetic.
 
 **TR-004 Trainer Fatigue** — The trainer has Stamina; long streaks without rest reduce command accuracy ("Trainer shouts hoarse"). *Trigger:* battles in a row. *Feel:* human limits. *Rarity:* Common. *Cx:* M. *Deps:* rest. *Balance:* mild.
 
@@ -58,11 +56,9 @@ Legend and fields as in file 01. Design only.
 
 **TR-025 Heirlooms** — Items passed down between runs keep a history log (this scarf survived 3 bosses). *Trigger:* run end. *Feel:* attachments. *Rarity:* Rare. *Cx:* M. *Deps:* item history. *Balance:* modest.
 
-**TR-026 Prestige Resets** — After completing the game at max rank you may prestige: harder world, new cosmetic crowns. *Trigger:* completion. *Feel:* endgame. *Rarity:* Endgame. *Cx:* L. *Deps:* difficulty. *Balance:* tuned.
 
 **TR-027 Training Grounds Hub** — A Hub location where trainer skills are practiced offline (aim, bluff) for tiny permanent buffs. *Trigger:* Hub. *Feel:* grind with meaning. *Rarity:* Always. *Cx:* L. *Deps:* Hub. *Balance:* cap.
 
-**TR-028 Scars of Defeat** — Run losses leave marks (a limp, a nervous tic) that appear in the next run as cosmetic flavour plus a small lesson buff. *Trigger:* defeat. *Feel:* continuity. *Rarity:* Common. *Cx:* M. *Deps:* Legacy. *Balance:* tiny.
 
 **TR-029 Seasonal Trainer Rank Ladders** — Weekly ladders ranking local runs by challenge metrics. *Trigger:* week. *Feel:* goal. *Rarity:* Weekly. *Cx:* M. *Deps:* weekly events. *Balance:* offline.
 
@@ -92,7 +88,6 @@ Legend and fields as in file 01. Design only.
 
 ## E. Resource and economy ties
 
-**TR-041 Sponsor Deals** — Sponsors offer money for featuring their item on a Pokémon; refusing sours them. *Trigger:* event. *Feel:* funny mercantile. *Rarity:* Uncommon. *Cx:* M. *Deps:* economy. *Balance:* modest.
 
 **TR-042 Debt System** — Borrow cash from a lender NPC; interest grows; debt collectors appear in later nodes. *Trigger:* event. *Feel:* tension. *Rarity:* Rare. *Cx:* L. *Deps:* economy. *Balance:* opt-in.
 
@@ -168,7 +163,6 @@ Legend and fields as in file 01. Design only.
 
 **TR-075 Switch-Place Events** — Swap roles with your rival for a node; play their party. *Trigger:* event. *Feel:* perspective. *Rarity:* Rare. *Cx:* L. *Deps:* rival. *Balance:* temp.
 
-**TR-076 Time Capsule** — Bury an item at run start; recover in a later run (distant). *Trigger:* run start. *Feel:* anticipation. *Rarity:* Long-term. *Cx:* M. *Deps:* Legacy. *Balance:* modest.
 
 **TR-077 Professor Assistant Missions** — Professor sends research assignments tied to species; completion unlocks forms. *Trigger:* Hub. *Feel:* purpose. *Rarity:* Always. *Cx:* L. *Deps:* quests. *Balance:* none.
 

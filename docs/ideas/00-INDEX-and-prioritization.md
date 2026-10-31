@@ -1,31 +1,34 @@
 # Master Idea Library: Index and Prioritization (initiative 1 of 9)
 
-1,045 ideas in 13 files. Design only: nothing here is approved or built. IDs are permanent (prefix + 3 digits) so Kice can approve or reject by ID, for example "approve PB-041, reject TR-017".
+1,014 distinct ideas in 14 files (counted after an overlap check against `ideas/*.md`; 101 near-duplicates of older-list ideas were moved to `master-ideas-99-overlaps-with-older-lists.md`, and 70 new ones added as file 14). Design only: nothing here is approved or built. IDs are permanent (prefix + 3 digits) so Kice can approve or reject by ID, for example "approve PB-041, reject TR-017".
 
 | File | Prefix | Count | Area |
 |---|---|---|---|
-| 01 | PB | 80 | Pokémon individuality and behavior |
-| 02 | BT | 85 | Battle mechanics and combat presentation |
-| 03 | TR | 80 | Trainer systems and progression |
-| 04 | WD | 80 | World-building and environmental storytelling |
-| 05 | PG | 80 | Randomized content and procedural generation |
-| 06 | RL | 80 | Relationships, rivalries, friendship, chemistry |
-| 07 | CS | 80 | Collectibles, discoveries, secrets, Easter eggs |
-| 08 | UE | 80 | Unusual encounters, memorable moments, emergent play |
-| 09 | LP | 80 | Long-term progression and replayability |
-| 10 | QL | 80 | Quality of life and accessibility |
-| 11 | VA | 80 | Visual, audio and presentation |
-| 12 | SC | 80 | Social, competitive and community |
-| 13 | NR | 80 | Narrative depth and player-driven storytelling |
+| 01 | PB | 77 | Pokémon individuality and behavior |
+| 02 | BT | 77 | Battle mechanics and combat presentation |
+| 03 | TR | 74 | Trainer systems and progression |
+| 04 | WD | 77 | World-building and environmental storytelling |
+| 05 | PG | 75 | Randomized content and procedural generation |
+| 06 | RL | 79 | Relationships, rivalries, friendship, chemistry |
+| 07 | CS | 72 | Collectibles, discoveries, secrets, Easter eggs |
+| 08 | UE | 75 | Unusual encounters, memorable moments, emergent play |
+| 09 | LP | 74 | Long-term progression and replayability |
+| 10 | QL | 58 | Quality of life and accessibility |
+| 11 | VA | 70 | Visual, audio and presentation |
+| 12 | SC | 61 | Social, competitive and community |
+| 13 | NR | 75 | Narrative depth and player-driven storytelling |
+| 14 | XN | 70 | Additional distinct ideas added after the overlap check |
+| 99 | n/a | 101 (not counted) | Entries that restate older-list ideas, moved out |
 
 Per-idea fields: name, what it is and how it works, Trigger, Feel (player-facing and why memorable), Rarity, Cx (S/M/L/XL), Deps (existing systems), Balance (concerns).
 
 ## How this relates to existing material
+- Overlap check done (keyword match of every entry against all older lists, then manual review). IDs in the tiers below that now live in file 99 are still good priorities, but build them from the older list entry. Remaining themes that look similar inside this library are intentionally kept when the mechanics differ.
 - The older one-line lists in `ideas/general-ideas.md`, `mechanics.md`, `features.md`, `systems.md`, `interactions.md`, `dialogue.md`, `run-events.md` and `game-events.md` are not repeated here as such. This library is the richer, ID'd set; a consolidation pass should merge near-duplicates with the older lists (flagged below).
 - Builds on shipped systems: Bond, Living Rival, Nemesis, Legacy, Hall of Fame, Species Mastery, Trainer Evolutions, quests, eggs, weekly and holiday events, animation registry.
 - Initiatives 2 to 9 (run events, whole-game events, mechanics, features, interactions, dialogue, systems, ads) get their own libraries. Where an idea here is really one of those (for example UE-xxx run events), the dedicated thread may expand it; the ID stays here as the source.
 
-## Known overlaps to merge in a consolidation pass
+## Remaining similar clusters inside the library (distinct enough to keep, review together)
 - Mood and morale: PB-041, RL-051, TR-004, BT-026.
 - Chemistry and pair perks: TR-037, RL-001, RL-006, BT-013, PB-066.
 - Letters and journals: TR-052, TR-065, NR-011, NR-015, PG-025.

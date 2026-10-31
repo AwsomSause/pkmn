@@ -6,21 +6,15 @@ Legend and fields as in file 01. Design only. The game is a static browser build
 
 **SC-001 Run Codes** — Every run exports a compact code others can replay or inspect. *Trigger:* run end. *Feel:* easy sharing. *Rarity:* Always. *Cx:* M. *Deps:* seeds, determinism. *Balance:* none.
 
-**SC-002 Team Share Strings** — Copy a team as text for friends to import as a challenge. *Trigger:* menu. *Feel:* community. *Rarity:* Always. *Cx:* S. *Deps:* save. *Balance:* import validated.
 
-**SC-003 Replay Files** — Export deterministic replays viewable by anyone. *Trigger:* run end. *Feel:* showcase. *Rarity:* Always. *Cx:* L. *Deps:* determinism. *Balance:* none.
 
-**SC-004 Ghost Teams** — Import a friend's team as a ghost opponent. *Trigger:* menu. *Feel:* friendly rivalry. *Rarity:* Always. *Cx:* M. *Deps:* team share. *Balance:* tuned.
 
 **SC-005 Postcard Exchange** — Send in-game postcards via links that unlock cosmetics. *Trigger:* menu. *Feel:* delight. *Rarity:* Always. *Cx:* M. *Deps:* links. *Balance:* none.
 
-**SC-006 Seed Of The Day Boards** — Shared seed with local score boards via QR. *Trigger:* date. *Feel:* friendly compete. *Rarity:* Daily. *Cx:* M. *Deps:* seeds. *Balance:* none.
 
-**SC-007 Mod Pack Support** — Load data packs (trainers, species) with validation. *Trigger:* menu. *Feel:* community content. *Rarity:* Always. *Cx:* XL. *Deps:* Zod data. *Balance:* flagged.
 
 **SC-008 Event Pack Sharing** — Share custom events as JSON. *Trigger:* menu. *Feel:* creative. *Rarity:* Always. *Cx:* L. *Deps:* event schema. *Balance:* sandboxed.
 
-**SC-009 Trainer Card Links** — Link that renders your trainer card. *Trigger:* menu. *Feel:* identity. *Rarity:* Always. *Cx:* M. *Deps:* trainer card. *Balance:* none.
 
 **SC-010 Print-And-Play Export** — Printable boss cards. *Trigger:* menu. *Feel:* offline fun. *Rarity:* Always. *Cx:* M. *Deps:* assets. *Balance:* none.
 
@@ -34,7 +28,6 @@ Legend and fields as in file 01. Design only. The game is a static browser build
 
 **SC-014 Scoring Rulesets** — Alternate scoring (style points, speed, purity). *Trigger:* mode. *Feel:* variety. *Rarity:* Mode. *Cx:* M. *Deps:* stats. *Balance:* tuned.
 
-**SC-015 Tournament Bracket Generator** — Local bracket manager for friends. *Trigger:* menu. *Feel:* community. *Rarity:* Always. *Cx:* M. *Deps:* UI. *Balance:* none.
 
 **SC-016 Banned Pick Votes** — Vote on bans before a duel. *Trigger:* mode. *Feel:* metagame. *Rarity:* Mode. *Cx:* M. *Deps:* draft. *Balance:* none.
 
@@ -44,7 +37,6 @@ Legend and fields as in file 01. Design only. The game is a static browser build
 
 **SC-019 Co-op Run** — Two players share a run via turn handoffs. *Trigger:* mode. *Feel:* friends. *Rarity:* Mode. *Cx:* XL. *Deps:* netcode. *Balance:* tuned.
 
-**SC-020 Boss Rush Leaderboards** — Local boss rush with records. *Trigger:* mode. *Feel:* chase. *Rarity:* Mode. *Cx:* M. *Deps:* bosses. *Balance:* tuned.
 
 ## C. Community creation
 
@@ -78,7 +70,6 @@ Legend and fields as in file 01. Design only. The game is a static browser build
 
 **SC-034 Gift Boxes** — Send gifts that arrive at specific nodes. *Trigger:* menu. *Feel:* delight. *Rarity:* Always. *Cx:* L. *Deps:* backend. *Balance:* tuned.
 
-**SC-035 Emote Wheel** — Emotes in co-op and replays. *Trigger:* input. *Feel:* social. *Rarity:* Always. *Cx:* S. *Deps:* UI. *Balance:* none.
 
 **SC-036 Shared Pokédex Goals** — Community goal progress tracked on a global dex (opt-in). *Trigger:* menu. *Feel:* togetherness. *Rarity:* Always. *Cx:* XL. *Deps:* backend. *Balance:* none.
 
@@ -94,23 +85,17 @@ Legend and fields as in file 01. Design only. The game is a static browser build
 
 **SC-041 Overlay Data** — Export live run data for stream overlays. *Trigger:* setting. *Feel:* creator friendly. *Rarity:* Setting. *Cx:* M. *Deps:* state. *Balance:* none.
 
-**SC-042 Chat Voting Integration** — Streamers let chat vote on event choices. *Trigger:* setting. *Feel:* engaging. *Rarity:* Setting. *Cx:* L. *Deps:* events. *Balance:* none.
 
-**SC-043 Highlight Clips** — Auto-trim clips of big moments. *Trigger:* run. *Feel:* shareable. *Rarity:* Always. *Cx:* L. *Deps:* recap. *Balance:* none.
 
-**SC-044 Safe Music Mode** — Music setting safe for streaming. *Trigger:* setting. *Feel:* thoughtful. *Rarity:* Setting. *Cx:* S. *Deps:* audio. *Balance:* none.
 
 **SC-045 Challenge Of The Streamer** — Streamer-set challenges importable by viewers. *Trigger:* menu. *Feel:* community. *Rarity:* Always. *Cx:* M. *Deps:* challenge packs. *Balance:* none.
 
-**SC-046 Press Kit Page** — Auto-generated press page. *Trigger:* menu. *Feel:* professional. *Rarity:* Always. *Cx:* S. *Deps:* promo. *Balance:* none.
 
-**SC-047 Speedrun Timer** — Built-in splits and rules. *Trigger:* setting. *Feel:* community. *Rarity:* Setting. *Cx:* M. *Deps:* timers. *Balance:* none.
 
 **SC-048 Lore Discord Bot Export** — Export lore digest for community channels. *Trigger:* menu. *Feel:* engaging. *Rarity:* Always. *Cx:* M. *Deps:* docs. *Balance:* none.
 
 **SC-049 Viewer Naming** — Viewer names put on NPCs. *Trigger:* setting. *Feel:* inclusive. *Rarity:* Setting. *Cx:* M. *Deps:* overlay. *Balance:* filter.
 
-**SC-050 Challenge Bingo Cards** — Share bingo cards for community. *Trigger:* menu. *Feel:* fun. *Rarity:* Always. *Cx:* M. *Deps:* bingo. *Balance:* none.
 
 ## F. Cooperative and group fun (local)
 
@@ -130,13 +115,11 @@ Legend and fields as in file 01. Design only. The game is a static browser build
 
 **SC-058 Quiz Night** — Trivia events with game lore. *Trigger:* Hub. *Feel:* fun. *Rarity:* Always. *Cx:* M. *Deps:* lore. *Balance:* none.
 
-**SC-059 Photo Contests** — Weekly themes. *Trigger:* week. *Feel:* creative. *Rarity:* Weekly. *Cx:* L. *Deps:* photo mode. *Balance:* moderated.
 
 **SC-060 Story Relay** — Players pass a run narration around. *Trigger:* mode. *Feel:* quirky. *Rarity:* Mode. *Cx:* M. *Deps:* journal. *Balance:* none.
 
 ## G. Trade and economy between players
 
-**SC-061 Trade Codes** — Trade Pokémon with a code. *Trigger:* menu. *Feel:* classic. *Rarity:* Always. *Cx:* M. *Deps:* save validation. *Balance:* tuned.
 
 **SC-062 Heirloom Exchange** — Exchange cosmetic heirlooms. *Trigger:* menu. *Feel:* collecting. *Rarity:* Always. *Cx:* M. *Deps:* heirlooms. *Balance:* none.
 
@@ -170,10 +153,8 @@ Legend and fields as in file 01. Design only. The game is a static browser build
 
 **SC-076 Code Of Conduct And Moderation Tools** — Reporting and filters. *Trigger:* backend. *Feel:* safe. *Rarity:* Always. *Cx:* L. *Deps:* backend. *Balance:* none.
 
-**SC-077 Community Hall Of Fame** — Best community runs honoured. *Trigger:* season. *Feel:* prestige. *Rarity:* Seasonal. *Cx:* L. *Deps:* backend. *Balance:* none.
 
 **SC-078 Local Meetup Kits** — Kits for hosting local events. *Trigger:* menu. *Feel:* community. *Rarity:* Always. *Cx:* S. *Deps:* docs. *Balance:* none.
 
-**SC-079 Easter Egg Hunts Across Community** — Community-solved ARGs. *Trigger:* seasons. *Feel:* epic. *Rarity:* Rare. *Cx:* M. *Deps:* puzzles. *Balance:* none.
 
 **SC-080 Open Design Doc** — Public living design doc with proposals. *Trigger:* web. *Feel:* transparency. *Rarity:* Always. *Cx:* S. *Deps:* docs. *Balance:* none.

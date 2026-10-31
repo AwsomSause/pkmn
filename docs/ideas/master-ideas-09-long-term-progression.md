@@ -18,7 +18,6 @@ Legend and fields as in file 01. Design only. Complements Legacy, Mastery, Hall 
 
 **LP-007 Prestige Worlds** — Beating the game opens harder worlds with new rules each. *Trigger:* clear. *Feel:* endgame. *Rarity:* Long-term. *Cx:* L. *Deps:* difficulty. *Balance:* tuned.
 
-**LP-008 Daily Quest Chain** — Daily quests chaining into weekly goals. *Trigger:* date. *Feel:* habit. *Rarity:* Daily. *Cx:* M. *Deps:* quests. *Balance:* opt.
 
 **LP-009 Species Roadmaps** — Each species has a personal progression with unlockable forms and moves via mastery. *Trigger:* mastery. *Feel:* attachments. *Rarity:* Long-term. *Cx:* L. *Deps:* Species Mastery. *Balance:* tuned.
 
@@ -40,7 +39,6 @@ Legend and fields as in file 01. Design only. Complements Legacy, Mastery, Hall 
 
 **LP-017 Replay With Constraints** — Replay a seed with constraints to compare scores. *Trigger:* menu. *Feel:* mastery. *Rarity:* Mode. *Cx:* M. *Deps:* seeds. *Balance:* none.
 
-**LP-018 New Game Plus Memory** — NG+ keeps knowledge but not items; world changes slightly. *Trigger:* clear. *Feel:* meaningful. *Rarity:* Long-term. *Cx:* L. *Deps:* Legacy. *Balance:* tuned.
 
 **LP-019 Random Region Order** — Region order shuffles per run. *Trigger:* run. *Feel:* freshness. *Rarity:* Always. *Cx:* M. *Deps:* map. *Balance:* tuned.
 
@@ -114,7 +112,6 @@ Legend and fields as in file 01. Design only. Complements Legacy, Mastery, Hall 
 
 ## F. Endgame and postgame
 
-**LP-051 Infinite Tower** — A tower with scaling floors and modifiers, leaderboard local. *Trigger:* postgame. *Feel:* endless. *Rarity:* Postgame. *Cx:* L. *Deps:* endless mode. *Balance:* scaling.
 
 **LP-052 Champion's Duties** — As champion take duties (defend, judge, mentor). *Trigger:* postgame. *Feel:* role play. *Rarity:* Postgame. *Cx:* L. *Deps:* champion. *Balance:* tuned.
 
@@ -128,7 +125,6 @@ Legend and fields as in file 01. Design only. Complements Legacy, Mastery, Hall 
 
 **LP-057 World Boss Weeks** — Rotating huge bosses with rewards. *Trigger:* week. *Feel:* events. *Rarity:* Weekly. *Cx:* L. *Deps:* bosses. *Balance:* tuned.
 
-**LP-058 Legacy Museum Exhibits** — Exhibits curated automatically. *Trigger:* Hub. *Feel:* pride. *Rarity:* Always. *Cx:* M. *Deps:* Hub. *Balance:* none.
 
 **LP-059 Post-Ending Epilogues** — Epilogues evolve with each clear. *Trigger:* clear. *Feel:* reward. *Rarity:* Long-term. *Cx:* M. *Deps:* ending. *Balance:* none.
 
@@ -138,7 +134,6 @@ Legend and fields as in file 01. Design only. Complements Legacy, Mastery, Hall 
 
 **LP-061 Short Run Mode** — Tight 20-minute runs for busy days. *Trigger:* mode. *Feel:* accessibility. *Rarity:* Mode. *Cx:* M. *Deps:* run structure. *Balance:* scaled rewards.
 
-**LP-062 Pause And Resume Stories** — Save-and-quit with a recap "previously on...". *Trigger:* resume. *Feel:* polish. *Rarity:* Always. *Cx:* M. *Deps:* save. *Balance:* none.
 
 **LP-063 Streak Forgiveness** — Streak systems forgive missed days. *Trigger:* date. *Feel:* kind. *Rarity:* Always. *Cx:* S. *Deps:* daily. *Balance:* none.
 
@@ -164,7 +159,6 @@ Legend and fields as in file 01. Design only. Complements Legacy, Mastery, Hall 
 
 **LP-073 Secret Bosses** — Bosses unlocked after specific long conditions. *Trigger:* long-term. *Feel:* mythic. *Rarity:* Extremely rare. *Cx:* L. *Deps:* bosses. *Balance:* tuned.
 
-**LP-074 Self-Rival** — A rival that is your own best past run. *Trigger:* Legacy. *Feel:* meta. *Rarity:* Rare. *Cx:* L. *Deps:* replays. *Balance:* tuned.
 
 **LP-075 Developer Milestone Messages** — Messages at big play milestones. *Trigger:* counters. *Feel:* warm. *Rarity:* Extremely rare. *Cx:* S. *Deps:* stats. *Balance:* none.
 

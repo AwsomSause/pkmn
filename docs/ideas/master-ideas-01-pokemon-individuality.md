@@ -112,7 +112,6 @@ Legend: Cx = implementation complexity S/M/L/XL. Fields per idea: what it is and
 
 ## E. Physical state and appearance
 
-**PB-051 Scars and Battle Marks** — Pokémon who survive at 1 HP or take heavy status gain a small cosmetic scar sprite overlay and a +2% defence vs that source. *Trigger:* survival at 1 HP. *Feel:* history shows. *Rarity:* Rare. *Cx:* M. *Deps:* sprite overlays. *Balance:* tiny.
 
 **PB-052 Weather-Worn Coat** — After long exposure to a biome, a Pokémon's sprite gains a tint (dusty, snowy, mossy) that fades slowly. *Trigger:* repeated biome. *Feel:* visual journey. *Rarity:* Common. *Cx:* M. *Deps:* palette swap. *Balance:* cosmetic.
 
@@ -136,7 +135,6 @@ Legend: Cx = implementation complexity S/M/L/XL. Fields per idea: what it is and
 
 **PB-061 Party Tricks** — Pokémon learn one non-battle trick through bond (juggle, play dead, bow). Used in events to solve prompts or bribe merchants. *Trigger:* bond milestones. *Feel:* expressive tool. *Rarity:* Uncommon. *Cx:* L. *Deps:* event conditions. *Balance:* tricks are situational.
 
-**PB-062 Talent Trees Lite** — Each Pokémon gets 3 rare "talents" (Early Riser, Crisis Calm, Berry Nose) from personality; each is a single-line behaviour modifier. *Trigger:* at catch. *Feel:* variety within species. *Rarity:* Always. *Cx:* L. *Deps:* abilities, nature. *Balance:* talents low-impact.
 
 **PB-063 Dream Diary** — At rest, a sleeping Pokémon dreams: a short procedural vignette, sometimes foreshadowing a real event. *Trigger:* rest. *Feel:* mystery. *Rarity:* Uncommon. *Cx:* M. *Deps:* event director, text pools. *Balance:* foreshadow accuracy 60%.
 
@@ -148,7 +146,6 @@ Legend: Cx = implementation complexity S/M/L/XL. Fields per idea: what it is and
 
 **PB-067 Language Learning** — Pokémon pick up phrases from NPCs; later they repeat them at wrong times ("Gym Leader's catchphrase"). *Trigger:* listening to NPCs. *Feel:* comedic. *Rarity:* Rare. *Cx:* M. *Deps:* dialogue. *Balance:* flavour.
 
-**PB-068 Hide And Seek** — Small Pokémon sometimes hide on the camp screen; finding them yields a small bond. *Trigger:* camp. *Feel:* tiny game. *Rarity:* Common. *Cx:* S. *Deps:* camp screen. *Balance:* bond cap.
 
 **PB-069 Training Regimens** — Assign a regimen (run, lift, meditate) at rest; Pokémon succeed or complain by nature, shifting EV-like growth slightly. *Trigger:* rest. *Feel:* agency. *Rarity:* Common. *Cx:* L. *Deps:* EV system. *Balance:* capped.
 
