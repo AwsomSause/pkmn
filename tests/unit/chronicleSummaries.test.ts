@@ -75,3 +75,20 @@ describe('Feels Left Out / Campfire: ask to lead (2.3)', () => {
     expect(planAskLead(content, run)).toBeNull();
   });
 });
+
+import { conditionText, conditionMet } from '../../src/core/events';
+
+describe('Kindness peaceful encounter (2.3)', () => {
+  it('A Quiet Hello offers the gentle choice only to a party with a Kindness Pokémon', async () => {
+    const ev = content.events.get('a-quiet-hello')!;
+    expect(ev).toBeTruthy();
+    const gentle = ev.choices.find((c) => c.requires?.some((r) => r.kind === 'emotion'))!;
+    const cond = gentle.requires!.find((r) => r.kind === 'emotion')!;
+    const run = fresh();
+    expect(conditionMet(content, run, cond)).toBe(false);
+    expect(conditionText(content, cond)).toBe('Needs a Kindness Pokémon in your party');
+    const { emit } = await import('../../src/core/story/record');
+    emit(content, run, 'storyMoment', { actors: [run.party[0]!.uid], data: { def: 'x', suppressed: false }, importance: 90, text: 'test', emotions: ['kindness'] });
+    expect(conditionMet(content, run, cond)).toBe(true);
+  });
+});

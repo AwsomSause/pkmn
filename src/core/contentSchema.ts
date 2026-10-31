@@ -2191,6 +2191,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('partyType'), type: TypeNameSchema }),
   /** A species in the party. */
   z.object({ kind: z.literal('partySpecies'), species: z.string() }),
+  /** A party member whose current emotion is this one (Overdrive emotions: kindness, bravery...). */
+  z.object({ kind: z.literal('emotion'), id: z.enum(['determination', 'bravery', 'justice', 'kindness', 'patience', 'integrity', 'perseverance']) }),
   /** An event that has already been played this run. */
   z.object({ kind: z.literal('eventSeen'), id: z.string() }),
   /** The trainer must not carry this tag (N is "pacifist": no aggressive choices). */
