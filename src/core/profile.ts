@@ -9,6 +9,8 @@ import { campaignCounts } from './rules';
 import { archiveParty } from './story/reunion';
 import { addRunToCodex } from './story/codex';
 import { recordLegacyRun } from './legacyRuns';
+import { recordHeirloom } from './memories/heirloom';
+import { claimPast } from './memories/past';
 import { ATTRIBUTE_NAMES, type Profile, type RunState } from './state';
 
 const FINALIZED_HISTORY = 50;
@@ -51,6 +53,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     gameEvents: {},
     momentCodex: {},
     legacyRuns: [],
+    memories: { heirlooms: [], claimed: [], cameos: [] },
   };
 }
 
@@ -91,7 +94,9 @@ export function finalizeRun(
   archiveParty(content, next, run);
   archiveRivals(next, run);
   addRunToCodex(next, run);
-  recordLegacyRun(content, next, run, now, genesis);
+  const legacyRecord = recordLegacyRun(content, next, run, now, genesis);
+  recordHeirloom(content, next, legacyRecord);
+  claimPast(next, run);
   next.finalizedRunIds = [...next.finalizedRunIds, run.runId].slice(-FINALIZED_HISTORY);
   return { profile: next, applied: true, summary };
 }

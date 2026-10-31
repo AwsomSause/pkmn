@@ -4,6 +4,8 @@
 
 import type { Content } from '../contentSchema';
 import { addItem } from '../items';
+import { applyHeirloom } from '../memories/heirloom';
+import type { Heirloom } from '../memories/schema';
 import { createRun, type NewRunOptions } from '../run';
 import { RUN_RULES } from '../rules';
 import type { Profile, RunState } from '../state';
@@ -18,7 +20,7 @@ export const GENESIS_KEEP = 20;
 type GenesisOptions = Omit<NewRunOptions, 'runId' | 'pastPokemon' | 'rivalArchive' | 'runHistory'>;
 
 /** Captures a freshly created run's genesis. Call right after `createRun` and the start grants, with the same options. */
-export function captureGenesis(run: RunState, opts: GenesisOptions, grants: RunGenesis['grants'], now: string): RunGenesis {
+export function captureGenesis(run: RunState, opts: GenesisOptions, grants: RunGenesis['grants'], now: string, heirloom: Heirloom | null = null): RunGenesis {
   return RunGenesisSchema.parse(structuredClone({
     runId: run.runId,
     seed: opts.seed,
@@ -36,6 +38,8 @@ export function captureGenesis(run: RunState, opts: GenesisOptions, grants: RunG
     legacyRival: run.legacyRival,
     reunion: run.reunion ?? null,
     storyFlags: run.story.flags,
+    past: run.past,
+    heirloom,
     grants,
     ruleVersion: RUN_RULES.ruleVersion,
     startedAt: now,
@@ -69,6 +73,8 @@ export function reconstructRun(content: Content, g: RunGenesis, replayId: string
   run.story.flags = structuredClone(g.storyFlags) as RunState['story']['flags'];
   run.money += g.grants.money;
   for (const [id, n] of Object.entries(g.grants.items)) addItem(run.inventory, id, n);
+  if (g.past) run.past = structuredClone(g.past);
+  if (g.heirloom) applyHeirloom(content, run, { memories: { heirlooms: [structuredClone(g.heirloom)], claimed: [], cameos: [] } });
   run.timeline = { replayId, originRunId: g.runId, attempt };
   return run;
 }

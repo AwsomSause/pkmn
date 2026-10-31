@@ -34832,6 +34832,90 @@
    ]
   },
   {
+   "id": "archive-gauntlet-entry",
+   "name": "The Archive Gauntlet",
+   "group": "Memories",
+   "stop": "tower",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "pastTeams",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1f2a3a",
+    "effect": "flicker"
+   },
+   "intro": "A dusty archive hall. Frames on the wall show the teams you have raised in earlier journeys, and one by one they begin to glow. The curator smiles: \"Your own past would like a word.\"",
+   "choices": [
+    {
+     "label": "Face your old teams",
+     "success": {
+      "text": "The frames go dark, one by one. Three of your old teams will meet you on the next stops, each as strong as the stage you are on. Beat them all for a purse.",
+      "effects": [
+       {
+        "kind": "pastGauntlet",
+        "teams": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave the archive undisturbed.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "lost-and-found-desk",
+   "name": "The Lost-and-Found Desk",
+   "group": "Memories",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "keepsake"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2a1f",
+    "effect": "glint"
+   },
+   "intro": "A clerk behind a cluttered desk looks up. \"Something turned up that has your journey written all over it. It has been waiting since before you got here.\"",
+   "choices": [
+    {
+     "label": "Claim it",
+     "success": {
+      "text": "The clerk slides it across the desk with a tag that tells where it came from.",
+      "effects": [
+       {
+        "kind": "recoverKeepsake"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it on the desk. It will keep waiting.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "starving-wild",
    "name": "A Starving Poochyena",
    "group": "Emergent Stories",

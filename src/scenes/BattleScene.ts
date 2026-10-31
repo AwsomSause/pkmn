@@ -1010,6 +1010,7 @@ export class BattleScene extends Phaser.Scene {
           await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
           if (battle.rivalNote) await this.say(battle.rivalNote);
           if (battle.nemesisNote) await this.say(battle.nemesisNote);
+          if (battle.memory?.note) await this.say(battle.memory.note);
           if (battle.memoryNote) await this.say(battle.memoryNote);
           await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}!`);
         }
