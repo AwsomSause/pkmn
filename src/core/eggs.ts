@@ -1,4 +1,5 @@
 import type { Content } from './contentSchema';
+import { NATURE_IDS } from './natures';
 import { rollShiny } from './encounters';
 import { eggMoveOptions, familyId, teachEggMove } from './mastery';
 import { maxHp } from './pokemon';
@@ -53,6 +54,12 @@ export function hatchEgg(content: Content, run: RunState, egg: Egg): PokemonInst
   mon.hatched = true;
   mon.friendship = Math.max(mon.friendship, HATCH_FRIENDSHIP);
   for (const id of egg.eggMoves) teachEggMove(content, mon, id, egg.eggMoves);
+  // Legacy Descendant (core/memories/heirloom.ts): the one trait its ancestor passed on.
+  if (egg.lineage) {
+    mon.lineage = egg.lineage;
+    if (egg.lineage.nature && (NATURE_IDS as readonly string[]).includes(egg.lineage.nature)) mon.nature = egg.lineage.nature as (typeof NATURE_IDS)[number];
+    if (egg.lineage.moveId) teachEggMove(content, mon, egg.lineage.moveId, [...egg.eggMoves, egg.lineage.moveId]);
+  }
   mon.hp = maxHp(content, mon);
   return mon;
 }

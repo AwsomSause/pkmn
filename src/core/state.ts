@@ -6,6 +6,7 @@ import { NATURE_IDS } from './natures';
 import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
 import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
+import { LineageSchema, BattleReplaySchema, MemoriesSchema, PastDigestSchema, WorldMemorySchema } from './memories/schema';
 import { STREAM_NAMES, type StreamName } from './rng';
 import { ArchivedRivalSchema, StoryStateSchema } from './story/schema';
 import { PartyLifeStateSchema, createPartyLife } from './partyLife/schema';
@@ -67,6 +68,8 @@ export const PokemonInstanceSchema = z.object({
   perkHp: z.number().int().optional(),
   /** Hatched from an Egg this run (core/eggs.ts; Elm's perk gives these more experience). */
   hatched: z.boolean().optional(),
+  /** Legacy Descendant (core/memories/heirloom.ts): the ancestor from an earlier run this Pokémon descends from. */
+  lineage: LineageSchema.optional(),
   /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
   boosts: z.array(BattleBoostSchema).optional(),
   /** The type it becomes when it Terastallizes (M8.5); unset = its current first type. */
@@ -643,6 +646,8 @@ export const BattleStateSchema = z.object({
   hunted: z.boolean().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
   fishing: z.boolean().optional(),
+  /** Memories: this trainer is a Ghost from a failed run, a team from the Previous-Run Gauntlet, or an Echo of a skipped branch (core/memories). */
+  memory: z.object({ kind: z.enum(['ghost', 'gauntlet', 'echo']), id: z.string(), note: z.string() }).optional(),
   /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
   raid: RaidBattleSchema.optional(),
   /** A battle an event started: no reward draft after it, and `win` effects if you win (events.json). */
@@ -902,6 +907,8 @@ export const EggSchema = z.object({
   eggMoves: z.array(z.string()),
   /** Where it came from, for the party screen ("Egg Nest", "Mystery Egg"). */
   source: z.string(),
+  /** Legacy Descendant: the ancestor it descends from (core/memories/heirloom.ts). */
+  lineage: LineageSchema.optional(),
 });
 export type Egg = z.infer<typeof EggSchema>;
 
@@ -948,6 +955,8 @@ export const RunStateSchema = z.object({
   pending: z.array(PendingDecisionSchema),
   /** Eggs waiting to hatch (core/eggs.ts). */
   eggs: z.array(EggSchema).default([]),
+  /** What this run knows of the player's earlier runs (core/memories/past.ts); null for runs started without history. */
+  past: PastDigestSchema.nullable().default(null),
   /** Where the run goes once all pending decisions are made. */
   afterDecisions: z.enum(['reward', 'map', 'expedition', 'eventChain']),
   /** An event detour with more battles to come: the next one starts after any decisions (core/events.ts continueEventChain). */
@@ -1203,6 +1212,10 @@ export const LegacyRunSchema = z.object({
   /** The map, stage by stage. */
   journal: z.array(z.string()),
   epitaph: z.string().nullable(),
+  /** Battle Replay: concise turn-by-turn records of the run's big battles (core/memories/replay.ts). */
+  replays: z.array(BattleReplaySchema).default([]),
+  /** The world's memory at the end: skipped branches and delayed consequences still waiting, villain operations (core/memories/world.ts). */
+  world: WorldMemorySchema.nullable().default(null),
   /**
    * Everything the run began with (core/timeline/schema.ts RunGenesisSchema, plus how it ended as `origin`), so Revisit
    * This Timeline rebuilds a lost run from this record. Kept loose here (the timeline module parses it) to avoid an
@@ -1307,6 +1320,8 @@ export const ProfileSchema = z.object({
   momentCodex: z.record(z.string(), z.number().int().min(0)).default({}),
   /** Legacy runs (core/legacyRuns.ts): every finished run's immutable record, newest first (profile v14). */
   legacyRuns: z.array(LegacyRunSchema).default([]),
+  /** Heirlooms, Lost-and-Found claims and cameos seen across runs (core/memories). */
+  memories: MemoriesSchema.default({ heirlooms: [], claimed: [], cameos: [] }),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 

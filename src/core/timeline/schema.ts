@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { PastPokemonSchema, ProfileSchema, RunPrepSchema, RunStateSchema } from '../state';
 import { RivalSchema } from '../story/schema';
+import { HeirloomSchema, PastDigestSchema } from '../memories/schema';
 
 /** How a lost run ended, saved when it ended: where the player got to and the rival who mattered most (it becomes the replay's front-runner). */
 export const TimelineOriginSchema = z.object({
@@ -43,6 +44,9 @@ export const RunGenesisSchema = z.object({
   legacyRival: RunStateSchema.shape.legacyRival,
   reunion: z.object({ mon: PastPokemonSchema, afterEncounters: z.number().int().min(1), done: z.boolean() }).nullable().default(null),
   storyFlags: z.record(z.string(), z.unknown()).default({}),
+  /** Memories: what the run knew of earlier runs and the heirloom it started with, so a replay meets the same ghosts and keepsakes. */
+  past: PastDigestSchema.nullable().default(null),
+  heirloom: HeirloomSchema.nullable().default(null),
   /** The Trainer Network parcel added after creation (core/legacy.ts startGrants). */
   grants: z.object({ money: z.number().int(), items: z.record(z.string(), z.number().int()) }),
   ruleVersion: z.number().int(),
