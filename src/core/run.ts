@@ -354,7 +354,9 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   const speciesId = current.starterChoices[choiceIndex];
   if (!speciesId) throw new Error(`Invalid starter choice ${choiceIndex}`);
   const run = structuredClone(current);
-  run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(runArchetype(content, run).modifiers)), 'p')];
+  const special = getSpecies(content, speciesId).tags.some((t) => t === 'legendary' || t === 'mythical');
+  const specimenPenalty = special ? content.balance.specialSpecimen.levelPenalty : 0;
+  run.party = [newMon(content, run, speciesId, Math.max(1, content.balance.starterLevel + startingLevelOffset(runArchetype(content, run).modifiers) - specimenPenalty), 'p')];
   if (wantsTypeLock(run.rules)) run.rules.lockType = getSpecies(content, speciesId).types[0]!;
   run.party[0]!.friendship = content.balance.friendship.starter;
   const perks = runArchetype(content, run).modifiers;
