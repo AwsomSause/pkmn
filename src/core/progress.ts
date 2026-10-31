@@ -23,6 +23,7 @@ import { awardContracts, type ContractPayout } from './contracts';
 import { awardGameEvents, type GameEventPayout } from './gameEvents';
 import { awardModeRewards, type ModeRewardPaid } from './modeRewards';
 import { recordMoveMastery } from './moveMastery';
+import { relationshipCounters } from './relationships';
 import { claimBankMilestones, claimRegionAccounts, loanDue, vaultDeposit } from './bank';
 import { runStamps } from './recap';
 import { recordMastery, type MasteryRankUp } from './mastery';
@@ -267,7 +268,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       const id = key.startsWith('recruit:') ? key.slice('recruit:'.length) : '';
       if (id && content.archetypes.has(id) && !profile.unlockedArchetypes.includes(id)) profile.unlockedArchetypes.push(id);
     }
-    const runCounters = { ...run.log.counters, runsFinished: 1, runsWon: run.victory ? 1 : 0, ...(runQuestDone ? { runQuestsDone: (run.log.counters.runQuestsDone ?? 0) + 1 } : {}) };
+    const runCounters = { ...run.log.counters, ...relationshipCounters(content, run), runsFinished: 1, runsWon: run.victory ? 1 : 0, ...(runQuestDone ? { runQuestsDone: (run.log.counters.runQuestsDone ?? 0) + 1 } : {}) };
     for (const [name, value] of Object.entries(runCounters)) {
       if (value <= 0) continue;
       profile.counters[name] = (profile.counters[name] ?? 0) + value;

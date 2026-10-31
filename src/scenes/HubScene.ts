@@ -3,6 +3,7 @@
 // Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
+import { researchLines } from '../core/trainerResearch';
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
 import { LEGACY, legacySummary, ascend, buyNode, contactProblem, intelLevel, legacyOf, networkSlots, nextPrestige, nodeProblem, nodeStatus, prestigeProblem, prestigeRank, regionBoard, serviceFor, shelfProblem, shelveSeed, toggleContact, trainMove, trainProblem, unshelveSeed } from '../core/legacy';
 import { STANDARD_CHOICE } from '../core/rules';
@@ -1107,7 +1108,7 @@ export class HubScene extends Phaser.Scene {
       const problem = status === 'claimable' ? claimProblem(p, a) : null;
       return {
         problem: status === 'claimable' ? problem : null,
-        hint: archiveHint(a, status, p),
+        hint: `${archiveHint(a, status, p)}  ${researchLines(session.content, p, a).join('  ')}`,
         draw: (scene, box, w, h) => {
           box.add(trainerVisual(scene, a.spriteAssetId, a.name, 34, h / 2 + 4, 0.7));
           box.add(scene.add.text(76, 8, `${a.name}  ${a.title}`, textStyle(20)));
