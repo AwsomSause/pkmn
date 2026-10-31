@@ -10844,7 +10844,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "normal",
-      "pack": "ess-tackle"
+      "pack": "ess-tackle",
+      "script": "tackle"
     },
     "scratch": {
       "anim": "scratch",
@@ -10862,7 +10863,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "normal",
-      "pack": "ess-pound"
+      "pack": "ess-pound",
+      "script": "tackle"
     },
     "quick-attack": {
       "anim": "quick-attack",
@@ -10871,7 +10873,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "quick",
-      "pack": "ess-quick-attack"
+      "pack": "ess-quick-attack",
+      "script": "tackle"
     },
     "headbutt": {
       "anim": "headbutt",
@@ -10897,7 +10900,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-growl"
+      "pack": "ess-growl",
+      "script": "growl"
     },
     "tail-whip": {
       "anim": "tail-whip",
@@ -10985,7 +10989,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "normal",
-      "pack": "ess-ember"
+      "pack": "ess-ember",
+      "script": "ember"
     },
     "fire-fang": {
       "anim": "fire-fang",
@@ -11003,7 +11008,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "normal",
-      "pack": "ess-water-gun"
+      "pack": "ess-water-gun",
+      "script": "water-gun"
     },
     "bubble-beam": {
       "anim": "bubble-beam",
@@ -11047,7 +11053,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-absorb"
+      "pack": "ess-absorb",
+      "script": "absorb"
     },
     "mega-drain": {
       "anim": "mega-drain",
@@ -11056,7 +11063,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "normal",
-      "pack": "ess-mega-drain"
+      "pack": "ess-mega-drain",
+      "script": "mega-drain"
     },
     "sleep-powder": {
       "anim": "sleep-powder",
@@ -11556,7 +11564,8 @@
       "flash": "#f8d030",
       "hitStopMs": 70,
       "telegraph": "normal",
-      "pack": "ess-thunderbolt"
+      "pack": "ess-thunderbolt",
+      "script": "thunderbolt"
     },
     "flame-wheel": {
       "anim": "flame-wheel",
@@ -11918,7 +11927,8 @@
       "flash": null,
       "hitStopMs": 53,
       "telegraph": "quick",
-      "pack": "ess-bullet-punch"
+      "pack": "ess-bullet-punch",
+      "script": "comet-punch"
     },
     "buzzy-buzz": {
       "anim": "buzzy-buzz",
@@ -11950,7 +11960,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 57,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "water-gun"
     },
     "chloroblast": {
       "anim": "chloroblast",
@@ -12165,7 +12176,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 65,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "absorb"
     },
     "drill-peck": {
       "anim": "drill-peck",
@@ -12263,7 +12275,8 @@
       "flash": null,
       "hitStopMs": 0,
       "telegraph": "normal",
-      "pack": "ess-fake-tears"
+      "pack": "ess-fake-tears",
+      "script": "growl"
     },
     "false-surrender": {
       "anim": "false-surrender",
@@ -12389,7 +12402,8 @@
       "flash": null,
       "hitStopMs": 65,
       "telegraph": "normal",
-      "pack": "ess-giga-drain"
+      "pack": "ess-giga-drain",
+      "script": "giga-drain"
     },
     "glaciate": {
       "anim": "glaciate",
@@ -12497,7 +12511,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 65,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "absorb"
     },
     "hydro-pump": {
       "anim": "hydro-pump",
@@ -12648,7 +12663,8 @@
       "flash": null,
       "hitStopMs": 67,
       "telegraph": "normal",
-      "pack": "ess-leech-life"
+      "pack": "ess-leech-life",
+      "script": "absorb"
     },
     "light-of-ruin": {
       "anim": "light-of-ruin",
@@ -12863,7 +12879,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "nuzzle": {
       "anim": "nuzzle",
@@ -12946,7 +12963,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 57,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "tackle"
     },
     "power-gem": {
       "anim": "power-gem",
@@ -13243,7 +13261,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 62,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "comet-punch"
     },
     "steel-wing": {
       "anim": "steel-wing",
@@ -13393,7 +13412,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "torch-song": {
       "anim": "torch-song",
@@ -13632,7 +13652,8 @@
       "flash": null,
       "hitStopMs": 50,
       "telegraph": "normal",
-      "pack": "ess-comet-punch"
+      "pack": "ess-comet-punch",
+      "script": "comet-punch"
     },
     "confuse-ray": {
       "anim": "confuse-ray",
@@ -13952,7 +13973,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "protect": {
       "anim": "protect",
@@ -14283,7 +14305,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "all-out-pummeling": {
       "anim": "bulk-up",
@@ -14342,7 +14365,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "assurance": {
       "anim": "assurance",
@@ -14488,7 +14512,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "comet-punch"
     },
     "bestow": {
       "anim": "bestow",
@@ -14837,7 +14862,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "tackle"
     },
     "crafty-shield": {
       "anim": "crafty-shield",
@@ -15133,7 +15159,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "eruption": {
       "anim": "eruption",
@@ -15298,7 +15325,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 60,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "tackle"
     },
     "floral-healing": {
       "anim": "floral-healing",
@@ -15796,7 +15824,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 50,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "comet-punch"
     },
     "grass-pledge": {
       "anim": "grass-pledge",
@@ -16861,7 +16890,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     },
     "pay-day": {
       "anim": "pay-day",
@@ -17194,7 +17224,8 @@
       "shake": 1,
       "flash": null,
       "hitStopMs": 57,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "comet-punch"
     },
     "razor-wind": {
       "anim": "razor-wind",
@@ -18344,7 +18375,8 @@
       "shake": 2,
       "flash": null,
       "hitStopMs": 63,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "tackle"
     },
     "upper-hand": {
       "anim": "upper-hand",
@@ -18530,7 +18562,8 @@
       "shake": 0,
       "flash": null,
       "hitStopMs": 0,
-      "telegraph": "normal"
+      "telegraph": "normal",
+      "script": "growl"
     }
   },
   "commonPack": {

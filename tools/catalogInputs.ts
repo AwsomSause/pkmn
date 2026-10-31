@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { CatalogInputs, PokemonArt } from '../src/assets/catalog.ts';
 import { animCatalogInputs, parseMoveAnims } from '../src/core/presentation/moveAnims.ts';
+import { parseEbdxAnims, scriptAssets } from '../src/core/presentation/scriptAnim.ts';
 
 const dataDir = join(import.meta.dirname, '..', 'src', 'data');
 const readJson = (file: string): unknown => JSON.parse(readFileSync(join(dataDir, file), 'utf8'));
@@ -26,5 +27,6 @@ export function readCatalogInputs(): CatalogInputs {
     itemAssetIds: [...new Set([...rewards, ...items].map((r) => r.iconAssetId).concat(catalogIcons))],
     backgroundAssetIds: Object.values(themes.arenas),
     battleAnims: animCatalogInputs(parseMoveAnims(readJson('moveAnims.json'))),
+    ebdxAnims: scriptAssets(parseEbdxAnims(readJson('ebdxAnims.json'))),
   };
 }

@@ -46,6 +46,11 @@ export interface RunPrepData {
 type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'loan' | 'vault' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
 const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'license', 'loan', 'vault', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
 
+/** Cuts a menu label so it stays inside the left panel. */
+function fitLabel(text: string, max = 38): string {
+  return text.length > max ? `${text.slice(0, max - 1)}…` : text;
+}
+
 export class RunPrepScene extends Phaser.Scene {
   private menu!: Menu;
   private picker: Picker | null = null;
@@ -112,18 +117,21 @@ export class RunPrepScene extends Phaser.Scene {
     this.menu = new Menu(this, {
       x: 40,
       y: 72,
-      options: ROWS.map((r) => ({ label: labels[r], disabled: r === 'type' && rule.kind !== 'typeFocus' })),
-      itemHeight: 26,
-      fontSize: 18,
+      options: ROWS.map((r) => ({ label: fitLabel(labels[r]), disabled: r === 'type' && rule.kind !== 'typeFocus' })),
+      itemWidth: 370,
+      itemHeight: 22,
+      fontSize: 16,
       onFocus: (i) => (this.focusIndex = i),
       onSelect: (i) => this.select(ROWS[i]!),
       onBack: () => this.scene.start('TrainerSelect'),
     });
 
     // The Run Build Summary on the right.
-    let y = 70;
+    const summary = this.add.container(450, 70);
+    let y = 0;
     const line = (text: string, size = 18, color: string = COLORS.textLight) => {
-      const t = this.add.text(450, y, text, textStyle(size, color, { wordWrap: { width: GAME_WIDTH - 486 } }));
+      const t = this.add.text(0, y, text, textStyle(size, color, { wordWrap: { width: GAME_WIDTH - 486 } }));
+      summary.add(t);
       y += t.height + 5;
     };
     line('Run Build Summary', 24);
@@ -140,6 +148,9 @@ export class RunPrepScene extends Phaser.Scene {
       y += 4;
       line(`Not yet available: ${locked.join(', ')}.`, 14, '#a69cb4');
     }
+    // Shrink the whole summary to fit its panel instead of spilling out of the bottom.
+    const room = 476 - 8 - 70;
+    if (y > room) summary.setScale(room / y);
 
     this.add.text(GAME_WIDTH / 2, 484, notice, textStyle(16, '#f0e0a0', { align: 'center', wordWrap: { width: GAME_WIDTH - 60 } })).setOrigin(0.5, 0);
     this.add.text(16, GAME_HEIGHT - 22, '↑/↓ choose  ·  ←/→ change  ·  Enter select  ·  Esc back to trainers', textStyle(14, '#8a7f96'));

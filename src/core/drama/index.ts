@@ -17,6 +17,8 @@ import { rivalBond } from './bond';
 import { freshRecap, tallyRecap } from './recap';
 import { afterBattleCandidates, favouredType, flavorPool, playerDeclarationCandidates } from './flavor';
 import { pickWitness, libraryCandidates, memoryCallback, recordLibraryEvent, signatureCandidates, type Candidate, type PlanCtx } from './events';
+import { npcWorldLine } from '../rivals/recognition';
+import { aceCandidates } from '../rivals/signatureTeam';
 
 export * from './schema';
 
@@ -168,7 +170,12 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
     state.seen.push(habitFresh.id);
     candidates.push({ ev: { id: habitFresh.id, kind: 'playerHabit', turn, at: habitFresh.at, data: {} }, category: 'taunt', tier: 'tactical' });
   }
-  candidates.push(...signatureCandidates(ctx), ...playerDeclarationCandidates(ctx), ...libraryCandidates(ctx), ...afterBattleCandidates(ctx, dramaEvents));
+  candidates.push(...signatureCandidates(ctx), ...playerDeclarationCandidates(ctx), ...libraryCandidates(ctx), ...afterBattleCandidates(ctx, dramaEvents), ...aceCandidates(ctx));
+  // World recognition: an ordinary trainer sometimes brings up a rival's news or your title before the battle.
+  if (!prior && cls === 'ordinary' && !rival) {
+    const talk = npcWorldLine(content, run, key);
+    if (talk) candidates.push({ ev: { id: `${key}:t${turn}:e-1:worldTalk`, kind: 'battleStart', turn, at: -1, data: {} }, category: 'event', tier: 'tactical', pool: [talk], cue: { event: 'worldTalk' } });
+  }
   if (!prior) {
     const back = memoryCallback(ctx);
     if (back) candidates.push(back);

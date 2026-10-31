@@ -9,6 +9,7 @@
 import { moveFamily, type FamilyId } from './families';
 import type { BattleEvent, Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
+import { abilityAnimId } from './abilityAnims';
 import { animChoice, commonChoice, presentationFor, type MoveAnims } from './moveAnims';
 
 export type AnimationMode = 'full' | 'reduced' | 'off';
@@ -28,7 +29,7 @@ export type Cue =
   /** A marker on the user before its move: its type colour, bigger for strong or priority moves. */
   | { kind: 'telegraph'; side: Side; color: string; style: 'normal' | 'strong' | 'quick' }
   /** Play the move's animation file (with the short fallback if it can't load). */
-  | { kind: 'moveAnim'; user: Side; target: Side; anim: string; alt?: string; color: string; family: FamilyId; moveType?: string; moveId?: string }
+  | { kind: 'moveAnim'; user: Side; target: Side; anim: string; alt?: string; script?: string; color: string; family: FamilyId; moveType?: string; moveId?: string }
   /** The reduced-motion stand-in for a move animation: a soft tint on the target. */
   | { kind: 'pulse'; side: Side; color: string }
   /** A hit landing: freeze, shake, flash, then the HP bar drains. */
@@ -38,7 +39,11 @@ export type Cue =
   | { kind: 'badge'; side: Side; badge: EffectivenessBadge | 'crit' }
   /** Status and healing animations (common-burn, common-health-up …). */
   | { kind: 'commonAnim'; side: Side; anim: string; alt?: string }
-  | { kind: 'statArrows'; side: Side; up: boolean; motion: boolean };
+  | { kind: 'statArrows'; side: Side; up: boolean; motion: boolean }
+  /** An ability triggering: banner with its name plus the category's flourish (registry id `ability.*`). */
+  | { kind: 'abilityAnim'; side: Side; anim: string; label: string }
+  /** The badge's animated words (registry id `text.*`); `miss` has no badge text of its own. */
+  | { kind: 'textAnim'; side: Side; anim: string; label: string };
 
 const other = (side: Side): Side => (side === 'player' ? 'enemy' : 'player');
 
@@ -60,7 +65,7 @@ const NO_CONTACT = new Set(['miss', 'noEffect', 'fail', 'noPp', 'protected', 'av
  */
 export function planCues(
   events: readonly { type: string }[],
-  content: Pick<Content, 'moves'>,
+  content: Pick<Content, 'moves'> & Partial<Pick<Content, 'abilities'>>,
   anims: MoveAnims,
   settings: PresentationSettings,
 ): Cue[][] {
@@ -88,7 +93,7 @@ export function planCues(
         cues.push({ kind: 'telegraph', side: e.side, color, style: look.telegraph });
         if (!connects) break;
         const target = move.target === 'self' ? e.side : other(e.side);
-        if (full) cues.push({ kind: 'moveAnim', user: e.side, target, ...animChoice(look), color, family: moveFamily(move, look), moveType: move.type, moveId: e.moveId });
+        if (full) cues.push({ kind: 'moveAnim', user: e.side, target, ...animChoice(look), ...(look.script ? { script: look.script } : {}), color, family: moveFamily(move, look), moveType: move.type, moveId: e.moveId });
         else cues.push({ kind: 'pulse', side: target, color });
         break;
       }
@@ -123,6 +128,12 @@ export function planCues(
       }
       case 'noEffect':
         cues.push({ kind: 'badge', side: e.side, badge: 'immune' });
+        break;
+      case 'miss':
+        if (animated) cues.push({ kind: 'textAnim', side: e.side, anim: 'text.miss', label: 'MISS' });
+        break;
+      case 'ability':
+        if (animated) cues.push({ kind: 'abilityAnim', side: e.side, anim: abilityAnimId(e.ability), label: content.abilities?.get(e.ability)?.name ?? e.ability });
         break;
       case 'residual':
       case 'recoil':

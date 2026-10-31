@@ -913,6 +913,8 @@ export const ArchetypeSchema = z.object({
   signatureSpecies: z.array(z.string()).default([]),
   /** The trainer's own starter set in the Starter Laboratory. */
   signaturePool: z.string().nullable().default(null),
+  /** A fixed four-move set per signature species, used when that species is picked as the starter (never forced onto other Pokémon). */
+  signatureMovesets: z.record(z.string(), z.array(z.string()).min(1).max(4)).default({}),
   /** Tags events and dialogue can react to (e.g. "pacifist" closes aggressive event choices). */
   eventTags: z.array(z.string()).default([]),
   /** The trainer's signature mechanic (core/signature.ts), if any. */
@@ -1502,6 +1504,14 @@ export const TrainerClassSchema = z.object({
   names: z.array(z.string()).min(1),
   /** The types this class specialises in. A stage only uses classes that share a type with its theme. */
   types: z.array(TypeNameSchema).min(1),
+  /** How this class battles, for flavour and dialogue (it does not change the AI yet). */
+  style: z.enum(['balanced', 'aggressive', 'defensive', 'tricky', 'swarm']).default('balanced'),
+  /** Personality tags dialogue and events can react to. */
+  personality: z.array(z.string()).default([]),
+  /** What they say before and after a battle. */
+  lines: z.object({ intro: z.string(), win: z.string(), lose: z.string() }).optional(),
+  /** Classes outside the original 17 only appear when balance.extraTrainerClasses is on. */
+  extra: z.boolean().default(false),
 });
 export type TrainerClass = z.infer<typeof TrainerClassSchema>;
 
@@ -1767,6 +1777,8 @@ export const BalanceSchema = z.object({
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
   /** Repeat attribute boosts from items diminish: after this many full-size boosts to one attribute in a run, each is scaled by `factor` (at least 1 point). */
+  /** Trainer classes added after the first 17 (5.17) can appear as ordinary trainers. Off keeps old seeds' trainer picks. */
+  extraTrainerClasses: z.boolean().default(true),
   attributeItemFalloff: z.object({ afterBoosts: z.number().int().min(0), factor: z.number().min(0).max(1) }).default({ afterBoosts: 2, factor: 0.5 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),

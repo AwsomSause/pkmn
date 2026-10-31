@@ -136,7 +136,7 @@ export function pickTheme(content: Content, used: readonly string[], rng: Rng): 
 
 /** Trainer classes that fit the theme (sharing a type), or every class if none do. */
 export function trainerClassesFor(content: Content, theme: Theme): TrainerClass[] {
-  const all = [...content.trainers.values()].filter((c) => c.id !== RIVAL_CLASS);
+  const all = [...content.trainers.values()].filter((c) => c.id !== RIVAL_CLASS && (!c.extra || content.balance.extraTrainerClasses));
   const fitting = all.filter((c) => sharesType(c.types, theme.types));
   return fitting.length > 0 ? fitting : all;
 }

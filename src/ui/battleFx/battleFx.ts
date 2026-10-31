@@ -10,19 +10,25 @@
 
 import Phaser from 'phaser';
 import { MASTERY_VFX, type MoveRank } from '../../core/moveMastery';
-import { animAssetIds } from '../../assets/catalog';
+import { animAssetIds, ebdxAssetIds } from '../../assets/catalog';
 import type { Side } from '../../core/battle/engine';
 import { CompactAnimSchema, type CompactAnim } from '../../core/presentation/animFormat';
 import type { Cue } from '../../core/presentation/cues';
 import type { FamilyId } from '../../core/presentation/families';
-import { moveAnims } from '../../data/presentation';
+import { scriptAssets, type ScriptAnim } from '../../core/presentation/scriptAnim';
+import { ebdxAnims, moveAnims } from '../../data/presentation';
 import { services } from '../../game/services';
 import { typeSoundFor } from '../../core/presentation/typeSound';
 import { playSfx } from '../audio';
 import { loadAssets } from '../lazyAssets';
 import type { Visual } from '../sprites';
 import { textStyle } from '../theme';
+import { animSettingsFrom } from '../../core/accessibility';
+import { resolveAnim, type AnimPlan } from '../../core/presentation/animRegistry';
+import '../../core/presentation/abilityAnims';
+import { playAbilityAnim, playTextAnim } from './abilityFx';
 import { playAnim, type PlayHandle } from './animPlayer';
+import { playScript } from './scriptPlayer';
 import { playFamily } from './familyFx';
 
 /** How long to wait for a move's files the first time before playing the fallback instead. */
@@ -87,8 +93,9 @@ export class BattleFx {
   }
 
   /** Starts loading animations that are likely to play soon (the moves on the field). */
-  prefetch(animNames: readonly string[]): void {
+  prefetch(animNames: readonly string[], scriptNames: readonly string[] = []): void {
     if (this.settings.battleAnimations !== 'full') return;
+    for (const name of scriptNames) void this.readyScript(name);
     for (const name of animNames) void this.load(name).catch(() => null);
   }
 
@@ -108,6 +115,11 @@ export class BattleFx {
     }
   }
 
+  /** The registered animation for an id, shaped by the player's motion, intensity, shake and particle settings. */
+  private plan(id: string): AnimPlan | null {
+    return resolveAnim(id, animSettingsFrom(this.settings));
+  }
+
   private wait(ms: number): Promise<void> {
     if (this.skipping || ms <= 0) return Promise.resolve();
     return new Promise((resolve) => this.scene.time.delayedCall(ms, resolve));
@@ -118,7 +130,7 @@ export class BattleFx {
       case 'telegraph':
         return this.telegraph(cue.side, cue.color, cue.style);
       case 'moveAnim':
-        await this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family, cue.moveType);
+        await this.moveAnim(cue.user, cue.target, cue.anim, cue.color, cue.alt, cue.family, cue.moveType, cue.script);
         if (cue.user === 'player' && cue.moveId && !this.skipping) this.masteryFlourish(cue.target, this.opts.mastery?.(cue.moveId) ?? 'none');
         return;
       case 'pulse':
@@ -135,6 +147,17 @@ export class BattleFx {
         return;
       case 'statArrows':
         return this.statArrows(cue.side, cue.up, cue.motion);
+      case 'abilityAnim': {
+        const plan = this.plan(cue.anim);
+        const visual = this.opts.sprite(cue.side);
+        if (!plan || !plan.play || !visual) return;
+        const done = playAbilityAnim(this.tools(cue.side, visual, plan, cue.label));
+        await Promise.race([done, this.wait(plan.ms)]);
+        return;
+      }
+      case 'textAnim':
+        this.textAnim(cue.side, cue.anim, cue.label);
+        return;
     }
   }
 
@@ -223,10 +246,32 @@ export class BattleFx {
     return (await this.ready(name)) ?? (alt && !this.skipping ? this.ready(alt) : null);
   }
 
-  private async moveAnim(user: Side, target: Side, name: string, color: string, alt?: string, family?: FamilyId, moveType?: string): Promise<void> {
+  /** Loads a scripted EBDX animation's pictures and sounds; null when it can't load in time. */
+  private async readyScript(name: string): Promise<ScriptAnim | null> {
+    const script = ebdxAnims().scripts[name];
+    if (!script) return null;
+    const { images, sounds } = scriptAssets({ source: '', scripts: { [name]: script }, moves: {} });
+    const ids = [...images.map(ebdxAssetIds.image), ...(this.settings.muted ? [] : sounds.map(ebdxAssetIds.sound))];
+    const timeout = new Promise<null>((resolve) => this.scene.time.delayedCall(LOAD_TIMEOUT_MS, () => resolve(null)));
+    const loaded = loadAssets(this.scene, ids).then(() => script).catch(() => null);
+    return Promise.race([loaded, timeout]);
+  }
+
+  private async moveAnim(user: Side, target: Side, name: string, color: string, alt?: string, family?: FamilyId, moveType?: string, scriptName?: string): Promise<void> {
     const userVisual = this.opts.sprite(user);
     const targetVisual = this.opts.sprite(target);
     if (!userVisual || !targetVisual || this.skipping) return;
+    const script = scriptName ? await this.readyScript(scriptName) : null;
+    if (script && scriptName && !this.skipping && this.scene.sys.isActive()) {
+      this.current = playScript(
+        { scene: this.scene, field: this.opts.field, backgroundIndex: this.opts.backgroundIndex(), user: userVisual, target: targetVisual, userIsPlayer: user === 'player' },
+        scriptName,
+        script,
+      );
+      await this.current.done;
+      this.current = null;
+      return;
+    }
     const anim = await this.readyFirst(name, alt);
     if (this.skipping || !this.scene.sys.isActive()) return;
     if (!anim) this.typeSound(moveType);
@@ -364,28 +409,20 @@ export class BattleFx {
   }
 
   private badge(side: Side, kind: string): void {
-    const visual = this.opts.sprite(side);
     const look = BADGES[kind];
-    if (!visual || !look) return;
-    const { x, y } = this.top(visual);
+    if (look) this.textAnim(side, `text.${kind}`, look.label);
+  }
+
+  private textAnim(side: Side, anim: string, label: string): void {
+    const plan = this.plan(anim);
+    const visual = this.opts.sprite(side);
+    if (!plan || !plan.play || !visual) return;
     const slot = this.badgeCount[side]++;
-    const text = this.scene.add
-      .text(x + (side === 'enemy' ? -70 : 70), y + 34 + slot * 30, look.label, textStyle(22, look.color, { stroke: '#181818', strokeThickness: 5 }))
-      .setOrigin(0.5);
-    if (this.motion) {
-      text.setScale(0.5);
-      this.scene.tweens.add({ targets: text, scale: 1, duration: 140, ease: 'Back.easeOut' });
-    }
-    this.scene.tweens.add({
-      targets: text,
-      alpha: 0,
-      delay: 900,
-      duration: 300,
-      onComplete: () => {
-        text.destroy();
-        this.badgeCount[side] = Math.max(0, this.badgeCount[side] - 1);
-      },
-    });
+    playTextAnim({ ...this.tools(side, visual, plan, label), at: { ...this.top(visual) }, slot }, () => (this.badgeCount[side] = Math.max(0, this.badgeCount[side] - 1)));
+  }
+
+  private tools(side: Side, visual: Visual, plan: AnimPlan, label: string) {
+    return { scene: this.scene, field: this.opts.field, side, at: this.centre(visual), label, plan, slot: 0, shake: (px: number) => this.shake(px) };
   }
 
   private async statArrows(side: Side, up: boolean, motion: boolean): Promise<void> {

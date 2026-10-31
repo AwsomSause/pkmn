@@ -475,6 +475,10 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       if (m.kind === 'priceMultiplier') for (const id of m.items ?? []) if (!content.items.has(id)) problems.push(`trainer "${a.id}" changes the price of unknown item "${id}"`);
     }
     for (const id of a.signatureSpecies) if (!content.species.has(id)) problems.push(`trainer "${a.id}" has unknown signature species "${id}"`);
+    for (const [id, moves] of Object.entries(a.signatureMovesets)) {
+      if (!a.signatureSpecies.includes(id)) problems.push(`trainer "${a.id}" has a moveset for "${id}", which is not a signature species`);
+      for (const m of moves) if (content.moves.get(m)?.supported !== true) problems.push(`trainer "${a.id}" moveset for "${id}" uses unsupported move "${m}"`);
+    }
     if (a.signaturePool && !content.starterPools.has(a.signaturePool)) problems.push(`trainer "${a.id}" has unknown signature pool "${a.signaturePool}"`);
   }
   if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');

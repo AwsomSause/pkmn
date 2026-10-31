@@ -1,0 +1,71 @@
+{
+  "note": "World recognition of rivals (Expanded Systems §5.1-5.3, §8.3-8.5; core/rivals/recognition.ts, protagonist.ts, signatureTeam.ts, rivalries.ts). Placeholders: {rival} (class and name), {other} (another rival), {badges}, {ace}, {title}. Lines are picked by hashing, never by gameplay RNG.",
+  "npcChance": 0.3,
+  "sightingChance": 0.4,
+  "headlineFame": 4,
+  "posterFame": 12,
+  "farAheadLead": 2,
+  "npc": {
+    "falseProtagonist": ["You're still trying to catch up?", "Wait... aren't you the one who lost?", "{rival} already made their mark here."],
+    "playerBeatRival": ["I heard you finally surpassed {rival}!", "So you're the one who beat {rival}? Word travels fast."],
+    "champion": ["The new Champion, {rival}, is incredible, isn't that right?", "Have you seen {rival}? Champion of the whole region now!"],
+    "candidate": ["{rival} has {badges} badges already. The League is next for them.", "Everyone says {rival} is headed for the Pokémon League."],
+    "gymWin": ["I heard someone defeated the Gym Leader earlier today! {rival}, I think.", "{rival} just walked out of the Gym with a new badge."],
+    "beatRival": ["Apparently {rival} beat another rising Trainer yesterday.", "{rival} took down {other}. What a battle that was!"],
+    "farAhead": ["That Trainer, {rival}? They're already several routes ahead of you.", "{rival} passed through here ages ago."],
+    "ahead": ["{rival} came this way a little while back.", "You just missed {rival}, they were here this morning."],
+    "behind": ["{rival} is somewhere behind you, still training.", "I hear {rival} is struggling to keep up with you."],
+    "narrativeLoss": ["I heard you were defeated by {rival}.", "{rival} is telling everyone how they beat you."]
+  },
+  "titleLines": {
+    "risingStar": ["Hey, you're that Rising Star everyone's talking about!"],
+    "regionalChallenger": ["A Regional Challenger! The Gyms must be nervous."],
+    "peoplesChampion": ["It's the People's Champion! Can I shake your hand?"],
+    "rivalsNightmare": ["You're the one rivals have nightmares about, right?"],
+    "protagonist": ["They say this whole story is about you."],
+    "unwrittenLegend": ["Nobody believes the stories about you. I do."]
+  },
+  "sightings": [
+    { "id": "trainer-saw", "statuses": ["ahead", "equal", "gymChallenger", "gymVictor", "championCandidate"], "text": "A Trainer on the route says they saw {rival} pass through." },
+    { "id": "gym-earlier", "statuses": ["gymVictor"], "text": "The Gym's guide mentions {rival} challenged the Gym earlier and won." },
+    { "id": "gym-failed", "statuses": ["gymChallenger"], "text": "The Gym's guide says {rival} challenged the Gym earlier and lost." },
+    { "id": "discarded-item", "statuses": ["ahead", "equal", "gymVictor", "championCandidate"], "text": "{rival} left something behind on the trail: you found a Super Potion.", "item": { "id": "super-potion", "quantity": 1 } },
+    { "id": "arena-scorch", "statuses": ["ahead", "gymVictor", "championCandidate", "champion"], "text": "Scorch marks and craters fill a clearing. Locals say {rival} fought here yesterday." },
+    { "id": "tournament-board", "statuses": ["ahead", "equal", "championCandidate", "champion"], "text": "{rival}'s name sits near the top of the local tournament board." }
+  ],
+  "environment": {
+    "poster": "A poster in town: {rival}, rising star of the region!",
+    "championPoster": "Posters everywhere: {rival}, your Champion!",
+    "headlineGym": "Headline: {rival} wins another Gym badge ({badges} so far)",
+    "headlineRival": "Headline: {rival} defeats {other} in a heated battle",
+    "headlineLoss": "Headline: {rival} stumbles, but vows to return",
+    "headlinePlayer": "Headline: Newcomer beats {rival}!",
+    "championBoard": "Champion recognition board: {rival}",
+    "leaderboard": "Leaderboard"
+  },
+  "signature": {
+    "aceIntro": ["This one has been with me from the start. Go, {ace}!", "You knew {ace} would come out eventually.", "{ace}! Show them how far we've come!"],
+    "aceDefeat": ["Even {ace}... I need to train harder.", "{ace}, you did everything right. This one's on me.", "Next time {ace} won't fall."]
+  },
+  "rivalries": {
+    "duelChance": 0.3,
+    "obsessedAfter": 2,
+    "teamUpMinLead": 2,
+    "duel": "{rival} and {other} fought in the street. {rival} came out on top",
+    "gymRace": "{rival} and {other} raced for the same Gym; {rival} got there first",
+    "spotlight": "{rival} stole the spotlight from {other} at the regional exhibition",
+    "obsessed": "{rival} has become obsessed with surpassing {other}",
+    "teamUp": "{other} joins forces with you against {rival} and heals your team"
+  },
+  "titles": [
+    { "id": "unwrittenLegend", "name": "The Unwritten Legend" },
+    { "id": "falseProtagonist", "name": "The False Protagonist" },
+    { "id": "protagonist", "name": "The Protagonist" },
+    { "id": "peoplesChampion", "name": "People's Champion" },
+    { "id": "rivalsNightmare", "name": "Rival's Nightmare" },
+    { "id": "regionalChallenger", "name": "Regional Challenger" },
+    { "id": "risingStar", "name": "Rising Star" },
+    { "id": "nobody", "name": "Nobody" }
+  ],
+  "titleRules": { "risingStarVictories": 3, "challengerBadges": 4, "nightmareRivalWins": 4, "peoplesChampionFame": 40 }
+}
