@@ -37,6 +37,8 @@ export const $ = (amount: number): Json => ({ kind: 'money', amount });
 export const item = (id: string, count = 1): Json => ({ kind: 'item', id, count });
 export const any = (...ids: string[]): Json => ({ kind: 'itemFrom', ids });
 export const lose = (id?: string): Json => ({ kind: 'loseItem', ...(id ? { id } : {}) });
+/** A trade: the lowest-level party Pokémon fitting `want` leaves (put before the `join` that replaces it). */
+export const trade = (label: string, want: { species?: string[]; type?: string; tag?: string; stage?: number; minWeight?: number; maxWeight?: number; generation?: number; minLevel?: number; eggGroup?: string; color?: string } = {}): Json => ({ kind: 'tradeAway', want: { label, ...want } });
 export const heal = (share = 1): Json => ({ kind: 'heal', share });
 export const hurt = (share: number): Json => ({ kind: 'damage', share });
 export const cure = (): Json => ({ kind: 'cure' });

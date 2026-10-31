@@ -89,6 +89,9 @@ export const SpeciesSchema = z.object({
   weight: z.number().positive().optional(),
   /** Share of this species that is female (1 = always, 0 = never); null = genderless; missing = an even mix. */
   femaleRatio: z.number().min(0).max(1).nullable().optional(),
+  /** Egg groups and body colour from PokeAPI (npm run data:traits); trade events can ask for them. */
+  eggGroups: z.array(z.string()).default([]),
+  color: z.string().optional(),
   baseExp: z.number().int().positive(),
   growthRate: GrowthRateSchema,
   /**
@@ -976,6 +979,8 @@ export const LicenseSchema = z.object({
   name: z.string().min(1),
   description: z.string(),
   cost: z.number().int().min(0),
+  /** The Bank tier the license needs before it can be bought (core/bank.ts). */
+  tier: z.number().int().min(1).max(5).default(1),
   unlock: RequirementSchema.nullable().default(null),
   unlockText: z.string().default(''),
 });
@@ -1954,6 +1959,22 @@ export const BalanceSchema = z.object({
       perChampion: z.number().int().min(0),
       perRegion: z.number().int().min(0),
     }),
+    /** Bank tiers 2 to 5 (GAME_DESIGN §14.2): they unlock services, never multiply rewards. */
+    tiers: z.array(z.object({ tier: z.number().int().min(2).max(5), name: z.string(), cost: z.number().int().min(0), blurb: z.string() })),
+    /** Tier 2: extra loadout preset slots. */
+    tierPresetBonus: z.number().int().min(0),
+    /** Emergency Reserve license: on a lost run, this share of leftover Poké Dollars also becomes credits. */
+    reserveRate: z.number().min(0).max(1),
+    /** Exchange Counter (tier 3): credits and Research Points swap in fixed lots. */
+    exchange: z.object({ credits: z.number().int().positive(), points: z.number().int().positive(), backPoints: z.number().int().positive(), backCredits: z.number().int().positive() }),
+    /** Scavenger license: chance that money from a map event pays extra, and how much. */
+    scavenger: z.object({ chance: z.number().min(0).max(1), money: z.number().int().positive() }),
+    /** Fortune license: reward families in these categories are drawn `weight` times as often. */
+    fortune: z.object({ categories: z.array(z.string()).min(1), weight: z.number().gt(1).max(3) }),
+    /** Survival license: the defeat-prevention item the shop then stocks, its price and badge gate. */
+    survival: z.object({ item: z.string(), price: z.number().int().positive(), minBadges: z.number().int().min(0) }),
+    /** Savings milestones: lifetime credits that unlock a title (once, via the claim ledger). */
+    milestones: z.array(z.object({ credits: z.number().int().positive(), title: z.string() })),
   }),
   /** Research Points for discoveries (first time ever seen or caught). */
   research: z.object({
@@ -2087,6 +2108,28 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
+/**
+ * What a trade partner asks for: every filter given must match. `label` is the requirement in words
+ * ("a Water-type", "a Pokémon over 100 kg") shown on the locked choice.
+ */
+export const TradeWantSchema = z.object({
+  label: z.string().min(1),
+  species: z.array(z.string()).default([]),
+  type: TypeNameSchema.optional(),
+  tag: z.enum(SPECIES_TAGS).optional(),
+  /** 1 = has no pre-evolution; 3 = last of a three-stage line. */
+  stage: z.number().int().min(1).max(3).optional(),
+  minWeight: z.number().positive().optional(),
+  maxWeight: z.number().positive().optional(),
+  generation: z.number().int().min(1).max(9).optional(),
+  minLevel: z.number().int().min(1).max(100).optional(),
+  /** PokeAPI egg group id ("monster", "water1", "field"...). */
+  eggGroup: z.string().optional(),
+  /** PokeAPI body colour ("red", "yellow"...). */
+  color: z.string().optional(),
+});
+export type TradeWant = z.infer<typeof TradeWantSchema>;
+
 /** One thing an outcome does. `share` is a fraction of max HP. */
 export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('money'), amount: z.number().int() }),
@@ -2095,6 +2138,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('itemFrom'), ids: z.array(z.string()).min(1), count: z.number().int().positive().default(1) }),
   /** A random item from the Bag is lost (never a key item). */
   z.object({ kind: z.literal('loseItem'), id: z.string().optional() }),
+  /** A trade: the lowest-level party Pokémon that fits `want` leaves with the partner. The choice stays locked without one (and while only one Pokémon is left). */
+  z.object({ kind: z.literal('tradeAway'), want: TradeWantSchema }),
   /** A healing spot, shop or fishing spot opens beside this node. */
   z.object({ kind: z.literal('addStop'), stop: z.enum(['heal', 'shop', 'fish']) }),
   /** A ferry: jump to a node next to the gym (SS Ticket). */

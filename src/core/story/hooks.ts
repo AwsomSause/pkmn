@@ -73,6 +73,10 @@ export function recordRewardTaken(content: Content, run: RunState, rewardId: str
   emit(content, run, 'rewardTaken', { data: { rewardId } });
 }
 
+export function recordTraded(content: Content, run: RunState, given: PokemonInstance, gotSpeciesId: string): void {
+  emit(content, run, 'traded', { actors: [given.uid], data: { gave: given.speciesId, got: gotSpeciesId }, text: `Traded ${name(content, given.speciesId)} for ${name(content, gotSpeciesId)}` });
+}
+
 export function recordReleased(content: Content, run: RunState, mon: PokemonInstance): void {
   emit(content, run, 'released', { actors: [mon.uid], data: { speciesId: mon.speciesId, level: mon.level } });
 }
@@ -502,6 +506,10 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
     }
   }
   const role = trainer?.leaderId ? BOSS_ROLES[trainer.classId] : undefined;
+  if (trainer && !role && result === 'lose') {
+    // An ordinary trainer walks away unbeaten.
+    emit(content, run, 'trainerEscaped', { where, actors: fought, data: { name: trainer.name, classId: trainer.classId }, text: `${trainer.name} left the fight unbeaten` });
+  }
   if (!trainer || !role) return;
   if (result === 'win') {
     emit(content, run, 'bossBeaten', {

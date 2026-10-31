@@ -14,7 +14,7 @@ import { eventChanceScale } from './rules';
 import { getArchetype, runPerks } from './archetypes';
 import { ATTRIBUTE_LABELS, addRunAttribute, effectiveAttributes, runAttributeEffects } from './attributes';
 import { createBattle } from './battle/engine';
-import type { Content, EventBattle, EventChoice, EventCondition, EventDef, EventEffect, EventOutcome, TypeName } from './contentSchema';
+import type { Content, EventBattle, EventChoice, EventCondition, EventDef, EventEffect, EventOutcome, TradeWant, TypeName } from './contentSchema';
 import { enemyLevel, evolvedFormAt, levelScale, rollShiny } from './encounters';
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
@@ -26,6 +26,7 @@ import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
+import { scavengerBonus } from './bank';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, countShiny, discover } from './progress';
 import { eggStatus, layEgg } from './eggs';
@@ -98,6 +99,44 @@ function conditionMet(content: Content, run: RunState, c: EventCondition): boole
     case 'focus':
       return regionFocus(run, run.regionIndex) === c.focus;
   }
+}
+
+/** The party Pokémon a trade partner would accept, lowest level first. */
+export function tradeCandidates(content: Content, run: RunState, want: TradeWant): RunState['party'] {
+  return run.party
+    .filter((m) => {
+      const sp = content.species.get(m.speciesId);
+      if (!sp) return false;
+      return (
+        (want.species.length === 0 || want.species.includes(m.speciesId)) &&
+        (!want.type || sp.types.includes(want.type)) &&
+        (!want.tag || sp.tags.includes(want.tag)) &&
+        (!want.stage || sp.evolutionStage === want.stage) &&
+        (!want.minWeight || (sp.weight ?? 50) >= want.minWeight) &&
+        (!want.maxWeight || (sp.weight ?? 50) <= want.maxWeight) &&
+        (!want.generation || sp.generation === want.generation) &&
+        (!want.minLevel || m.level >= want.minLevel) &&
+        (!want.eggGroup || sp.eggGroups.includes(want.eggGroup)) &&
+        (!want.color || sp.color === want.color)
+      );
+    })
+    .sort((a, b) => a.level - b.level);
+}
+
+function tradePicksOf(content: Content, run: RunState, choice: EventChoice): { uid: string; label: string }[] | null {
+  const e = choice.success.effects.find((f) => f.kind === 'tradeAway');
+  if (!e || e.kind !== 'tradeAway') return null;
+  return tradeCandidates(content, run, e.want).map((m) => ({ uid: m.uid, label: `${content.species.get(m.speciesId)?.name ?? m.speciesId} Lv${m.level}` }));
+}
+
+/** Why a choice's trade cannot happen yet, in words (null when it can or the choice has no trade). */
+function tradeMissing(content: Content, run: RunState, choice: EventChoice): string | null {
+  for (const e of choice.success.effects) {
+    if (e.kind !== 'tradeAway') continue;
+    if (run.party.length < 2) return 'Needs 2 Pokémon in your party';
+    if (tradeCandidates(content, run, e.want).length === 0) return `Needs ${e.want.label} in your party`;
+  }
+  return null;
 }
 
 /** A requirement in words, for a locked choice. */
@@ -270,6 +309,8 @@ export interface ChoiceView {
   cost: string | null;
   /** What kind of uncertainty it carries, in words ("Depends on your Luck · a setback if it fails"). */
   risk: string;
+  /** For a trade: the party Pokémon the partner would take (the player picks one), else null. */
+  tradePicks: { uid: string; label: string }[] | null;
 }
 
 export interface EventView {
@@ -301,7 +342,7 @@ function outcomeWords(content: Content, o: EventOutcome): string {
   return parts.filter(Boolean).join(', ') || 'nothing';
 }
 
-const HARMFUL = new Set(['damage', 'status', 'loseItem']);
+const HARMFUL = new Set(['damage', 'status', 'loseItem', 'tradeAway']);
 function harmful(e: EventEffect): boolean {
   return HARMFUL.has(e.kind) || (e.kind === 'money' && e.amount < 0) || (e.kind === 'crisis' && e.amount > 0);
 }
@@ -328,10 +369,11 @@ export function eventView(content: Content, run: RunState, sideId: string): Even
   const event = content.events.get(side.eventId!)!;
   const insight = hasPerk(content, run, 'eventInsight');
   const choices = event.choices.map((c) => {
-    const missing = c.requires.find((r) => !conditionMet(content, run, r));
+    const unmet = c.requires.find((r) => !conditionMet(content, run, r));
+    const missing = unmet ? conditionText(content, unmet) : tradeMissing(content, run, c);
     const chance = choiceChance(content, run, c);
     const preview = insight ? `${outcomeWords(content, c.success)}${c.failure ? ` · if it fails: ${outcomeWords(content, c.failure)}` : ''}` : null;
-    return { label: c.label, locked: missing ? conditionText(content, missing) : null, chance, attribute: c.check ?? null, preview, ...choiceRisk(content, c) };
+    return { label: c.label, locked: missing, tradePicks: tradePicksOf(content, run, c), chance, attribute: c.check ?? null, preview, ...choiceRisk(content, c) };
   });
   return { event, choices };
 }
@@ -347,7 +389,7 @@ export interface EventResult {
 }
 
 /** Makes a choice at an event stop. The stop is used up; a battle outcome starts the battle. */
-export function chooseEvent(content: Content, current: RunState, sideId: string, choiceIndex: number): EventResult {
+export function chooseEvent(content: Content, current: RunState, sideId: string, choiceIndex: number, tradeUid?: string): EventResult {
   if (current.phase !== 'map') throw new Error(`Action needs phase "map" but run is in "${current.phase}"`);
   const { node, side } = findSide(current, sideId);
   if (side.used) throw new Error('This event is over');
@@ -356,6 +398,9 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   if (!choice) throw new Error(`No choice ${choiceIndex}`);
   const missing = choice.requires.find((r) => !conditionMet(content, current, r));
   if (missing) throw new Error(conditionText(content, missing));
+  const noTrade = tradeMissing(content, current, choice);
+  if (noTrade) throw new Error(noTrade);
+  if (tradeUid !== undefined && !tradePicksOf(content, current, choice)?.some((p) => p.uid === tradeUid)) throw new Error('That Pokémon does not fit the trade');
   const run = structuredClone(current);
   const runSide = run.stage!.map.nodes.find((n) => n.id === node.id)!.sides.find((s) => s.id === sideId)!;
   runSide.used = true;
@@ -373,12 +418,13 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   const risky = chance !== null;
   run.story.flags[risky ? 'choices:risky' : 'choices:safe'] = Number(run.story.flags[risky ? 'choices:risky' : 'choices:safe'] ?? 0) + 1;
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'event-choice', suppressed: false }, importance: risky ? 55 : 40, text: `${event.name}: ${choice.label}${risky ? (success ? ' (the gamble paid off)' : ' (the gamble failed)') : ''}` });
+  emit(content, run, 'eventChoice', { data: { event: event.id, choice: choiceIndex, risky, success } });
   const changes: string[] = [];
   // Prop Case: a Contest stop's Charisma counts twice.
   const contest = event.stop === 'contest' && hasPerk(content, run, 'doubleContest');
   for (const effect of outcome.effects) {
     const doubled = contest && effect.kind === 'attribute' && effect.key === 'charisma' ? { ...effect, amount: effect.amount * 2 } : effect;
-    const words = applyEffect(content, run, doubled, rng);
+    const words = applyEffect(content, run, doubled, rng, tradeUid);
     if (words) changes.push(words);
   }
   // Explorer Kit: every finished event stop turns up one more item.
@@ -425,6 +471,8 @@ function effectWords(content: Content, e: EventEffect): string {
       return `one of ${e.ids.map((id) => itemName(content, id)).join(' / ')}`;
     case 'loseItem':
       return e.id ? `use a ${itemName(content, e.id)}` : 'lose an item';
+    case 'tradeAway':
+      return `trade away ${e.want.label}`;
     case 'heal':
       return e.share >= 1 ? 'full heal' : `heal ${Math.round(e.share * 100)}%`;
     case 'damage':
@@ -542,10 +590,11 @@ export function isGiftable(content: Content, id: string): boolean {
 }
 
 /** Applies one effect (mutates `run`) and says what changed, or '' when nothing did. */
-function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng): string {
+function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, tradeUid?: string): string {
   switch (e.kind) {
     case 'money': {
-      const amount = Math.max(-run.money, e.amount);
+      const bonus = e.amount > 0 ? scavengerBonus(content, run.licenses, rng) : 0;
+      const amount = Math.max(-run.money, e.amount + bonus);
       run.money += amount;
       if (amount > 0) count(run, 'moneyEarned', amount);
       return amount === 0 ? '' : amount > 0 ? `+₽${amount}` : `−₽${-amount}`;
@@ -564,6 +613,13 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       run.inventory[id]! -= 1;
       if (run.inventory[id] === 0) delete run.inventory[id];
       return `Lost a ${itemName(content, id)}`;
+    }
+    case 'tradeAway': {
+      const fits = tradeCandidates(content, run, e.want);
+      const mon = fits.find((m) => m.uid === tradeUid) ?? fits[0];
+      if (!mon || run.party.length < 2) return '';
+      run.party.splice(run.party.indexOf(mon), 1);
+      return `Traded away ${content.species.get(mon.speciesId)?.name ?? mon.speciesId}`;
     }
     case 'heal': {
       if (e.share >= 1) healParty(content, run);

@@ -3,6 +3,7 @@
 // Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
+import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
 import { contractBoard, contractDone, contractRewardText } from '../core/contracts';
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
@@ -22,14 +23,14 @@ import { playMusic, playSfx } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
-import { preloadPokemon } from '../ui/lazyAssets';
+import { preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showcase';
 import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'events' | 'fame' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'card' | 'events' | 'fame' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -42,6 +43,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'quests', label: 'Trainer Quests', blurb: 'Each trainer\'s five-step quest line, done across runs (Enter for the steps).' },
   { room: 'mastery', label: 'Species Mastery', blurb: 'Every Pokémon you met, its mastery rank, and what each rank unlocks (Enter).' },
   { room: 'research', label: 'Research Room', blurb: 'Pokédex and form collection sets with Research Point milestones (Enter).' },
+  { room: 'card', label: 'Trainer Card', blurb: 'Your card: title, frame, runs, wins and badges.' },
   { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
   { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, the Contract Board, objectives and rewards (Enter)." },
   { room: 'fame', label: 'Hall of Fame', blurb: 'Champion teams, unusual wins, rare Pokémon, records and Legacy Cards (Enter).' },
@@ -171,6 +173,7 @@ export class HubScene extends Phaser.Scene {
     const all = [...session.content.species.values()].filter((sp) => !sp.id.includes('-') && services().assets.has(pokemonAssetIds(sp.assets).front));
     this.tileMons = Phaser.Utils.Array.Shuffle(all).slice(0, TILES.length);
     preloadPokemon(this, this.tileMons, { front: true });
+    queueAssets(this, ['ui.trainercard']);
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
@@ -403,6 +406,7 @@ export class HubScene extends Phaser.Scene {
         y = this.line(y, `Candies: ${p.candies}`, 16);
         const last = p.lastPayout;
         y = last ? this.line(y + 4, `Last run paid ${last.total} credits`, 16, COLORS.gold) : this.line(y + 4, 'No runs paid out yet.', 16, COLORS.textMuted);
+        y = this.line(y, `Bank tier: ${bankTier(p)} of ${BANK_MAX_TIER}`, 16, COLORS.gold);
         y = this.line(y, `Licenses: ${p.licenses.length} of ${session.content.licenses.size} owned`, 16);
         break;
       }
@@ -457,6 +461,32 @@ export class HubScene extends Phaser.Scene {
         y = this.line(y, `Evolved ${t.evolved}`, 16, COLORS.textMuted);
         y = this.line(y, `Shinies found ${t.shinies} · ${t.shinySpecies} species`, 16, COLORS.textMuted);
         for (const m of topMoves(p)) y = this.line(y, `${session.content.moves.get(m.moveId)?.name ?? m.moveId}: ${m.uses} uses${m.rank === 'none' ? '' : ` (${m.rank})`}`, 14, COLORS.textMuted);
+        break;
+      }
+      case 'card': {
+        y = this.line(y, 'Trainer Card', 22);
+        const frame = getFrame(p.cardFrame);
+        const scale = 270 / 620;
+        if (this.textures.exists('ui.trainercard')) {
+          const art = this.add.image(32, y, 'ui.trainercard').setOrigin(0).setScale(scale);
+          this.detail.add(art);
+          const pad = 0.5;
+          const border = this.add.graphics();
+          border.lineStyle(2, Phaser.Display.Color.HexStringToColor(frame.color).color, 1).strokeRoundedRect(32 - pad, y - pad, 620 * scale + pad * 2, 356 * scale + pad * 2, 6);
+          this.detail.add(border);
+          const label = (row: number, text: string): void => {
+            this.detail.add(this.add.text(32 + 38 * scale, y + (92 + row * 48) * scale, text, textStyle(11, '#ffffff')).setShadow(1, 1, '#103050', 0, false, true));
+          };
+          label(0, p.activeTitle ?? 'Trainer');
+          label(1, `Runs ${p.stats.runsEnded}`);
+          label(2, `Wins ${p.stats.battlesWon}`);
+          label(3, `Best ${p.stats.bestEncounters} encounters`);
+          const badges = Math.min(8, p.best.badges ?? 0);
+          for (let i = 0; i < badges; i++) this.detail.add(this.add.circle(32 + (40 + i * 44) * scale, y + 316 * scale, 5, 0xf8d848).setStrokeStyle(1, 0x805800));
+          y += 356 * scale + 8;
+        }
+        y = this.line(y, `Frame: ${frame.name}`, 14, frame.color);
+        this.line(y, 'Change title and frame in the Wardrobe.', 14, COLORS.textMuted);
         break;
       }
       case 'wardrobe': {
@@ -535,6 +565,8 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'wardrobe':
         this.openWardrobe();
+        break;
+      case 'card':
         break;
       case 'events':
         this.openEventHall();
@@ -1071,8 +1103,28 @@ export class HubScene extends Phaser.Scene {
   private openLicenses(): void {
     const { session } = services();
     const p = session.profile;
-    const licenses = [...session.content.licenses.values()];
-    const rows: PickerRow[] = licenses.map((l) => {
+    const { content } = session;
+    const licenses = [...content.licenses.values()].sort((a, b) => a.tier - b.tier);
+    const x = content.balance.bank.exchange;
+    const next = nextTier(content, p);
+    // First the Bank's own services (tier, Exchange Counter), then the licenses.
+    const bankServices: { label: string; sub: string; right: string; problem: string | null; run: () => void; notice: string }[] = [
+      next
+        ? { label: `Bank tier ${bankTier(p)} → ${next.tier}: ${next.name}`, sub: next.blurb, right: `${next.cost} credits`, problem: tierProblem(content, p), run: () => session.buyBankTier(), notice: `The Bank is now tier ${next.tier}: ${next.name}.` }
+        : { label: `Bank tier ${bankTier(p)}: top tier`, sub: 'Every Bank service is open.', right: '', problem: 'The Bank is already at its top tier.', run: () => undefined, notice: '' },
+      { label: 'Exchange Counter: credits → Research', sub: `${x.credits} credits for ${x.points} Research Points.`, right: bankTier(p) >= 3 ? '' : 'Tier 3', problem: exchangeProblem(content, p, 'toPoints'), run: () => session.exchangeAtBank('toPoints'), notice: `Exchanged ${x.credits} credits for ${x.points} Research Points.` },
+      { label: 'Exchange Counter: Research → credits', sub: `${x.backPoints} Research Points for ${x.backCredits} credits.`, right: bankTier(p) >= 3 ? '' : 'Tier 3', problem: exchangeProblem(content, p, 'toCredits'), run: () => session.exchangeAtBank('toCredits'), notice: `Exchanged ${x.backPoints} Research Points for ${x.backCredits} credits.` },
+    ];
+    const serviceRows: PickerRow[] = bankServices.map((s) => ({
+      problem: null,
+      hint: `${s.sub}  ·  ${s.problem ?? 'Enter: do it.'}`,
+      draw: (scene, box, w, _h) => {
+        box.add(scene.add.text(12, 6, s.label, textStyle(20)));
+        box.add(scene.add.text(12, 32, s.sub, textStyle(15, COLORS.textMuted)));
+        if (s.right) box.add(scene.add.text(w - 12, 30, s.right, textStyle(18, COLORS.textMuted)).setOrigin(1, 0.5));
+      },
+    }));
+    const rows: PickerRow[] = [...serviceRows, ...licenses.map((l): PickerRow => {
       const status = licenseStatus(p, l);
       return {
         problem: null,
@@ -1084,14 +1136,25 @@ export class HubScene extends Phaser.Scene {
           if (status !== 'owned') box.add(scene.add.text(w - 12, h / 2, `${l.cost} credits`, textStyle(18, COLORS.textMuted)).setOrigin(1, 0.5));
         },
       };
-    });
+    })];
     this.openPicker({
       title: `Bank licenses  ·  ${p.bankCredits} Bank Credits`,
       rows,
       columns: 1,
       rowHeight: 60,
       onSelect: (i) => {
-        const l = licenses[i]!;
+        if (i < bankServices.length) {
+          const s = bankServices[i]!;
+          if (s.problem) {
+            playSfx(this, 'ui.error', 0.5);
+            return;
+          }
+          s.run();
+          playSfx(this, 'se.exp', 0.6);
+          this.restart(s.notice, 'bank');
+          return;
+        }
+        const l = licenses[i - bankServices.length]!;
         if (licenseProblem(session.profile, l)) {
           playSfx(this, 'ui.error', 0.5);
           return;

@@ -103,16 +103,17 @@
    "intro": "\"Psst. Trade me one of yours and I'll give you something… stronger.\"",
    "choices": [
     {
-     "label": "Trade for a stronger Pokémon",
-     "requires": [
-      {
-       "kind": "partySize",
-       "atLeast": 2
-      }
-     ],
+     "label": "Trade an unevolved Pokémon for a stronger one",
      "success": {
-      "text": "He hands over a Poké Ball with a wink.",
+      "text": "He takes your Pokémon and hands over a Poké Ball with a wink.",
       "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "an unevolved Pokémon",
+         "stage": 1
+        }
+       },
        {
         "kind": "join",
         "shadow": false,
@@ -169,11 +170,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -605,14 +602,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -620,14 +610,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -1005,11 +988,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -1046,11 +1025,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -1561,11 +1536,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -2875,14 +2846,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -2890,14 +2854,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -3015,11 +2972,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        },
        {
@@ -4665,11 +4618,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -6402,14 +6351,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -7082,11 +7024,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        },
        {
@@ -8196,14 +8134,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -8226,14 +8157,7 @@
          "ids": [
           "oran-berry",
           "sitrus-berry",
-          "lum-berry",
-          "leppa-berry",
-          "chesto-berry",
-          "aspear-berry",
-          "pecha-berry",
-          "rawst-berry",
-          "figy-berry",
-          "aguav-berry"
+          "lum-berry"
          ]
         }
        ]
@@ -11326,14 +11250,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -11341,14 +11258,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -11426,14 +11336,7 @@
          "ids": [
           "oran-berry",
           "sitrus-berry",
-          "lum-berry",
-          "leppa-berry",
-          "chesto-berry",
-          "aspear-berry",
-          "pecha-berry",
-          "rawst-berry",
-          "figy-berry",
-          "aguav-berry"
+          "lum-berry"
          ]
         },
         {
@@ -11441,14 +11344,7 @@
          "ids": [
           "oran-berry",
           "sitrus-berry",
-          "lum-berry",
-          "leppa-berry",
-          "chesto-berry",
-          "aspear-berry",
-          "pecha-berry",
-          "rawst-berry",
-          "figy-berry",
-          "aguav-berry"
+          "lum-berry"
          ]
         },
         {
@@ -11456,14 +11352,7 @@
          "ids": [
           "oran-berry",
           "sitrus-berry",
-          "lum-berry",
-          "leppa-berry",
-          "chesto-berry",
-          "aspear-berry",
-          "pecha-berry",
-          "rawst-berry",
-          "figy-berry",
-          "aguav-berry"
+          "lum-berry"
          ]
         }
        ]
@@ -11780,16 +11669,17 @@
    "intro": "A trading booth links to trainers around the world.",
    "choices": [
     {
-     "label": "Trade for a surprise",
-     "requires": [
-      {
-       "kind": "partySize",
-       "atLeast": 2
-      }
-     ],
+     "label": "Trade a Pokémon from this generation for a surprise",
      "success": {
       "text": "A Pokémon from far away arrives!",
       "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a Generation 1 Pokémon",
+         "generation": 1
+        }
+       },
        {
         "kind": "join",
         "shadow": false,
@@ -11834,6 +11724,253 @@
         "amount": 10
        }
       ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "pikachu-collector",
+   "name": "The Pikachu Collector",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "effect": "hearts"
+   },
+   "intro": "\"I only collect Pikachu and Eevee. Bring me one and I will swap you something rare.\"",
+   "choices": [
+    {
+     "label": "Trade a Pikachu or Eevee",
+     "success": {
+      "text": "He cradles it and hands over a rare Pokémon.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a Pikachu or an Eevee",
+         "species": [
+          "pikachu",
+          "eevee"
+         ]
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [
+         "porygon",
+         "lapras",
+         "aerodactyl"
+        ],
+        "types": [],
+        "levelBonus": 3,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "heavyweight-swap",
+   "name": "The Heavyweight Swap",
+   "group": "PokeRogue-style encounters",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "shake"
+   },
+   "intro": "\"My cart needs a big strong Pokémon, 100 kg or more. I will trade you a sturdy Steel-type for it.\"",
+   "choices": [
+    {
+     "label": "Trade a Pokémon of 100 kg or more",
+     "success": {
+      "text": "The cart rolls on. A sturdy partner joins you.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a Pokémon of 100 kg or more",
+         "minWeight": 100
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "steel"
+        ],
+        "levelBonus": 2,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "water-fan-swap",
+   "name": "The Water Fan",
+   "group": "PokeRogue-style encounters",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.fisherman"
+    ],
+    "effect": "rain"
+   },
+   "intro": "\"Water is life! Trade me a Water-type and I will find you a Dragon.\"",
+   "choices": [
+    {
+     "label": "Trade a Water-type",
+     "success": {
+      "text": "He beams and sends a Dragon your way.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a Water-type",
+         "type": "water"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "dragon"
+        ],
+        "levelBonus": 2,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "red-collector",
+   "name": "The Red Collector",
+   "group": "PokeRogue-style encounters",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#381810",
+    "effect": "fire"
+   },
+   "intro": "\"Red! Everything I own is red. Trade me a red Pokémon and I will warm you up with a Fire-type.\"",
+   "choices": [
+    {
+     "label": "Trade a red Pokémon",
+     "success": {
+      "text": "He grins and hands over a hot-blooded partner.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a red Pokémon",
+         "color": "red"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "fire"
+        ],
+        "levelBonus": 2,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "monster-breeder",
+   "name": "The Monster Breeder",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "rattle"
+   },
+   "intro": "\"I raise only the Monster egg group. Bring me one and I will give you something fierce.\"",
+   "choices": [
+    {
+     "label": "Trade a Monster egg group Pokémon",
+     "success": {
+      "text": "He nods slowly and leads out a fierce Pokémon.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a Pokémon of the Monster egg group",
+         "eggGroup": "monster"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "dragon",
+         "dark"
+        ],
+        "levelBonus": 3,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
      }
     }
    ]
@@ -12291,14 +12428,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -12306,14 +12436,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -12332,14 +12455,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -12347,14 +12463,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -12362,14 +12471,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -12377,14 +12479,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -12392,14 +12487,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -13201,11 +13289,7 @@
           "super-potion",
           "hyper-potion",
           "full-heal",
-          "revive",
-          "max-potion",
-          "big-malasada",
-          "lumiose-galette",
-          "pewter-crunchies"
+          "revive"
          ]
         }
        ]
@@ -13907,11 +13991,7 @@
           "super-potion",
           "hyper-potion",
           "full-heal",
-          "revive",
-          "max-potion",
-          "big-malasada",
-          "lumiose-galette",
-          "pewter-crunchies"
+          "revive"
          ]
         }
        ]
@@ -14479,14 +14559,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -15780,11 +15853,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        },
        {
@@ -15889,11 +15958,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -15960,11 +16025,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        },
        {
@@ -15972,14 +16033,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -16040,11 +16094,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -16666,14 +16716,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -16683,11 +16726,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -18170,14 +18209,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -18185,14 +18217,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -18200,14 +18225,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -19185,11 +19203,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        }
       ]
@@ -19575,11 +19589,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        },
        {
@@ -19916,14 +19926,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -19931,14 +19934,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -20234,11 +20230,7 @@
          "super-potion",
          "hyper-potion",
          "full-heal",
-         "revive",
-         "max-potion",
-         "big-malasada",
-         "lumiose-galette",
-         "pewter-crunchies"
+         "revive"
         ]
        },
        {
@@ -25719,14 +25711,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -25847,14 +25832,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -25862,14 +25840,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -25887,14 +25858,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -26319,14 +26283,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        }
       ]
@@ -26805,14 +26762,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {
@@ -27091,14 +27041,7 @@
         "ids": [
          "oran-berry",
          "sitrus-berry",
-         "lum-berry",
-         "leppa-berry",
-         "chesto-berry",
-         "aspear-berry",
-         "pecha-berry",
-         "rawst-berry",
-         "figy-berry",
-         "aguav-berry"
+         "lum-berry"
         ]
        },
        {

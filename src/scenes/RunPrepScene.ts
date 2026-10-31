@@ -2,6 +2,7 @@
 // the campaign, starter pool, draft rule and one preparation, check the Run
 // Build Summary, save or load a loadout preset, then roll the starters.
 
+import { presetSlotCount } from '../core/bank';
 import { LICENSES, licenseName, type LicenseId } from '../core/license';
 import Phaser from 'phaser';
 import { decodeSeedCode } from '../core/seedCode';
@@ -270,7 +271,7 @@ export class RunPrepScene extends Phaser.Scene {
   private openPresets(mode: 'save' | 'load'): void {
     const { session } = services();
     const { content } = session;
-    const slots = Array.from({ length: content.balance.presetSlots }, (_, i) => presetIn(session.profile, i));
+    const slots = Array.from({ length: presetSlotCount(content, session.profile) }, (_, i) => presetIn(session.profile, i));
     const rows: PickerRow[] = slots.map((preset, i) => ({
       problem: null,
       hint: preset ? presetText(preset) : mode === 'save' ? 'An empty slot.' : 'Nothing saved here yet.',
