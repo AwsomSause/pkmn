@@ -38,6 +38,7 @@ import { noteCodex } from './codex';
 import { noteRivalryLoss, noteRivalryWin } from './rivalryKinds';
 import { nemesisAfterBattle, noteNemesisBreakFree, noteNemesisFaint, noteRivalResult } from './nemesis';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
+import { rivalProgress } from '../rivals/progression';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
 
@@ -490,6 +491,7 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   if (rivalBack && (result === 'win' || result === 'lose')) {
     const hpShare = totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0;
     noteRivalResult(run, rivalBack.id, result === 'win');
+    rivalProgress(content, run, rivalBack, result === 'win' ? 'lostToPlayer' : 'beatPlayer');
     rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId), foes: fought };
     if (result === 'win') {
       const before = rivalBack.state;

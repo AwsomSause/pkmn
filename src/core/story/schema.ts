@@ -48,6 +48,8 @@ export const DOMAIN_EVENT_TYPES = [
   'nemesisFormed',
   'nemesisReturned',
   'nemesisSettled',
+  /** Rival world progression (core/rivals/progression.ts): a rival won or lost off-screen, took a badge or rank, or fought you or another rival. data.rival, data.kind. */
+  'rivalProgress',
   'runEnded',
 ] as const;
 export const DomainEventTypeSchema = z.enum(DOMAIN_EVENT_TYPES);
@@ -239,6 +241,20 @@ export const OffscreenEventSchema = z.object({
 });
 export type OffscreenEvent = z.infer<typeof OffscreenEventSchema>;
 
+/** Rival world progression: stages ahead of you (negative = behind), badges this region, regions it finished, fame and recent milestones. */
+export const RivalWorldRecordSchema = z.object({
+  lead: z.number().int(),
+  badges: z.number().int().min(0),
+  region: z.number().int().min(0),
+  regionsDone: z.number().int().min(0),
+  wins: z.number().int().min(0),
+  defeats: z.number().int().min(0),
+  fame: z.number().int().min(0),
+  /** Newest last: what happened and where ("region.stage"). */
+  milestones: z.array(z.object({ kind: z.string(), at: z.string(), seq: z.number().int().min(0) })),
+});
+export type RivalWorldRecord = z.infer<typeof RivalWorldRecordSchema>;
+
 export const RivalSchema = z.object({
   id: z.string(),
   /** The trainer's class id and name when the rivalry began. */
@@ -273,6 +289,8 @@ export const RivalSchema = z.object({
   /** Arcs it has finished, so a bond or Overdrive arc never repeats. */
   arcsDone: z.array(z.string()).optional(),
   faction: z.string().optional(),
+  /** Where it stands in the world (core/rivals/progression.ts; filled from rivalProgress events, absent until the first one). */
+  world: RivalWorldRecordSchema.optional(),
   /** Past contender (left-out 5.5): it took over a Gym, reached the regional finals, or became Champion. */
   rank: z.enum(['gymLeader', 'finalist', 'champion']).optional(),
   /** What it has learned about you, one telegraphed change per return. */
@@ -308,6 +326,8 @@ export const ArchivedRivalSchema = z.object({
   team: z.array(z.string()).max(6).optional(),
   /** It was that run's Ultimate Rival (shown under Previous Ultimate Rivals). */
   ultimate: z.boolean().optional(),
+  /** How far it got in the world (rival progression), for the Hall of Fame. */
+  world: z.object({ fame: z.number().int().min(0), badges: z.number().int().min(0), regionsDone: z.number().int().min(0), wins: z.number().int().min(0), defeats: z.number().int().min(0), rank: z.string().nullable() }).optional(),
 });
 export type ArchivedRival = z.infer<typeof ArchivedRivalSchema>;
 

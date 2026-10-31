@@ -105,7 +105,7 @@ export function openStoryMenu(host: FieldMenuHost): void {
     const quest = r.quest.length > 0 ? `  Quest: ${r.quest.map((q) => `${q.done ? '✓' : '○'} ${q.text}`).join('; ')}.` : '';
     return {
       problem: null,
-      hint: `${r.summary}  ${r.memory}${r.bonds.length > 0 ? `  Team: ${r.bonds.join('; ')}.` : ''}${quest}`,
+      hint: `World: ${r.world}.  ${r.summary}  ${r.memory}${r.bonds.length > 0 ? `  Team: ${r.bonds.join('; ')}.` : ''}${quest}`,
       draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
         box.add(scene.add.text(14, 8, `${r.ultimate ? `${ULTIMATE_EMBLEM} Ultimate Rival` : '★ Rival'} (${r.state}): ${r.title}`, textStyle(20, '#f0c028', { fixedWidth: w - 28 })));
       },
