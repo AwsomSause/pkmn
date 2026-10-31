@@ -260,8 +260,9 @@
       "status": "supported",
       "progressionEligible": true,
       "checkpoints": false,
-      "blurb": "One shared seed per day (the date). Rewards pay once per day; replays are for practice.",
-      "dailySeed": true
+      "blurb": "One shared run per day: the date sets the seed, a fixed starter set, one daily modifier and a short one-region route to the champion. Rewards pay once per day; replays are for practice.",
+      "dailySeed": true,
+      "campaignId": "daily-route"
     },
     {
       "id": "endless",
