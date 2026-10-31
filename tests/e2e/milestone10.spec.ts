@@ -177,7 +177,7 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   await waitForMenu(page);
   // Knock out the first Pokémon: the ace comes out with its stamp.
   // A move can miss, so attack (first move, Enter twice) until the banner shows.
-  const attackUntil = async (text: string) => {
+  const attackUntil = async (text: string): Promise<boolean> => {
     for (let i = 0; i < 8; i++) {
       await page.keyboard.press('Enter');
       await page.waitForTimeout(300);
@@ -185,18 +185,18 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
       await page.waitForTimeout(800);
       // Wait for the banner; if the command menu comes back first, the move missed: attack again.
       for (let t = 0; t < 150; t++) {
-        if (await showsText(page, text)) return;
+        if (await showsText(page, text)) return true;
         if (!(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu)))) await page.keyboard.press('Enter');
         if (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu))) break;
-        await page.waitForTimeout(100);
+        await page.waitForTimeout(50);
       }
     }
+    return false;
   };
-  await attackUntil('ACE!');
-  expect(await showsText(page, 'ACE!')).toBe(true);
+  // The banner is brief, so assert on what attackUntil saw instead of looking again afterwards.
+  expect(await attackUntil('ACE!')).toBe(true);
   await waitForMenu(page);
-  await attackUntil('VICTORY!');
-  expect(await showsText(page, 'VICTORY!')).toBe(true);
+  expect(await attackUntil('VICTORY!')).toBe(true);
   await page.screenshot({ path: 'test-results/m10-victory.png' });
   // Catalog 91: the boss victory card with its Chronicle stamp follows the stamp.
   const victoryTexts = () =>
