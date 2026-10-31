@@ -145,6 +145,19 @@ describe('choosing at an event', () => {
     expect(end.run.phase).not.toBe('reward');
   });
 
+  it('a temporary ally fights beside you in a double battle and leaves the party afterwards', () => {
+    const run = atEvent(newRun('ally'), 'borrowed-ally');
+    const size = run.party.length;
+    const started = chooseEvent(content, run, 'test-event', 0);
+    const battle = started.run.battle!;
+    expect(battle.doubles).toBeDefined();
+    expect(battle.loaner).toBeDefined();
+    expect(started.run.party).toHaveLength(size + 1);
+    expect(started.run.party[started.run.party.length - 1]!.uid).toBe(battle.loaner);
+    const end = win(started.run);
+    expect(end.run.party).toHaveLength(size);
+  });
+
   it('a held-item gift goes to a Pokémon that can hold it', () => {
     const run = atEvent(newRun('gift'), 'card-key-silph');
     const result = chooseEvent(content, run, 'test-event', 0);

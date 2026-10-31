@@ -135,6 +135,20 @@ describe('Champion defense', () => {
   });
 });
 
+describe('Retired team', () => {
+  it('remembers the newest run that did not win and offers the rematch only then', async () => {
+    const { createRun: make } = await import('../../src/core/run');
+    const { retiredTeam } = await import('../../src/core/story/championDefense');
+    const rec = (victory: boolean, speciesId: string) => ({ victory, party: [{ speciesId, level: 40, shiny: false }] }) as never;
+    const none = make(content, { runId: 'rt-0', seed: 'rt-0', archetypeId: 'red', runHistory: [rec(true, 'pikachu')] });
+    expect(retiredTeam(none.story)).toEqual([]);
+    expect(eligibleEvents(content, { ...none, regionIndex: 3 }).map((e) => e.id)).not.toContain('retired-team');
+    const lost = make(content, { runId: 'rt-1', seed: 'rt-1', archetypeId: 'red', runHistory: [rec(false, 'rattata'), rec(true, 'pikachu'), rec(false, 'charmander')] });
+    expect(retiredTeam(lost.story)).toEqual([{ speciesId: 'rattata', level: 40 }]);
+    expect(eligibleEvents(content, { ...lost, regionIndex: 3 }).map((e) => e.id)).toContain('retired-team');
+  });
+});
+
 describe('Rival feud', () => {
   it('needs two hostile feuding rivals, backing one allies it and angers the other, and each feud settles once', async () => {
     const f = await import('../../src/core/story/feud');
