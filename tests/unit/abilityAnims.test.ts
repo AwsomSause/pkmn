@@ -49,7 +49,7 @@ describe('ability and text animations', () => {
 describe('contact punishers', () => {
   // The engine announces these when they trigger (afterHitAbilities), so the cue planner already animates them.
   it.each(['static', 'flame-body', 'poison-point', 'effect-spore', 'rough-skin', 'iron-barbs', 'cute-charm', 'gooey', 'tangling-hair', 'mummy', 'aftermath', 'cursed-body', 'perish-body', 'wandering-spirit', 'toxic-debris', 'innards-out'])('%s plays the contact animation', (id) => {
-    const cues = planCues([{ type: 'ability', side: 'enemy', ability: id } as never], content, anims, { mode: 'full', intensity: 1 });
+    const cues = planCues([{ type: 'ability', side: 'enemy', ability: id }] as never, content, anims, { mode: 'full', intensity: 1 });
     expect(cues[0]![0]).toMatchObject({ kind: 'abilityAnim', side: 'enemy', anim: 'ability.contact', ability: id });
   });
 });
