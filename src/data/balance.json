@@ -516,6 +516,13 @@
    "cress"
   ]
  },
+ "modeShops": {
+  "spooky": [
+   { "item": "reaper-cloth", "price": 2200, "minBadges": 0 },
+   { "item": "scroll-of-darkness", "price": 1800, "minBadges": 0 },
+   { "item": "soothe-bell", "price": 1200, "minBadges": 0 }
+  ]
+ },
  "shopSale": {
   "everyStages": 3,
   "discount": 0.2

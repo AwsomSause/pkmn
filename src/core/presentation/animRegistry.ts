@@ -19,6 +19,14 @@ export interface AnimDef {
   color: string;
   /** Small icon character shown with the animation. */
   glyph?: string;
+  /** When it plays, in words or the event type ('ability event', 'stat event' …); what the cue planner matches on. */
+  trigger?: string;
+  /** Sound effect id (assets catalog), played with the animation unless muted. */
+  sound?: string;
+  /** Text shown with it, when the cue doesn't supply its own. */
+  text?: string;
+  /** What plays instead when the animation can't (reduced mode or a missing file): another registered id. Default: the calm fade. */
+  fallback?: string;
   /** Moves the screen (shake/zoom): scaled by the shake setting. */
   shakes?: boolean;
   /** Flashes the screen: scaled by the effect-intensity setting. */
@@ -52,6 +60,9 @@ export interface AnimPlan {
   ms: number;
   color: string;
   glyph: string;
+  sound: string | null;
+  text: string;
+  fallback: string | null;
   /** 0–1 multipliers the player already chose. */
   flash: number;
   shake: number;
@@ -89,6 +100,9 @@ export function resolveAnim(id: string, settings: AnimSettings): AnimPlan | null
     ms: Math.round(def.ms * (full ? 1 : 0.5) * (settings.timeScale ?? 1)),
     color: def.color,
     glyph: def.glyph ?? '',
+    sound: on && full ? (def.sound ?? null) : null,
+    text: def.text ?? '',
+    fallback: def.fallback ?? null,
     flash: full && def.flashes ? intensity : 0,
     shake: full && def.shakes ? shake : 0,
     particles: full && !!def.particles && !settings.reduceParticles && intensity > 0,

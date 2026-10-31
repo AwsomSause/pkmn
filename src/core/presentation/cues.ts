@@ -9,7 +9,7 @@
 import { moveFamily, type FamilyId } from './families';
 import type { BattleEvent, Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
-import { abilityAnimId } from './abilityAnims';
+import { abilityAnimId, impliedAbility } from './abilityAnims';
 import { hyperAnimId } from './storyAnims';
 import { animChoice, commonChoice, presentationFor, type MoveAnims } from './moveAnims';
 
@@ -42,7 +42,7 @@ export type Cue =
   | { kind: 'commonAnim'; side: Side; anim: string; alt?: string }
   | { kind: 'statArrows'; side: Side; up: boolean; motion: boolean }
   /** An ability triggering: banner with its name plus the category's flourish (registry id `ability.*`). */
-  | { kind: 'abilityAnim'; side: Side; anim: string; label: string }
+  | { kind: 'abilityAnim'; side: Side; anim: string; label: string; ability: string }
   /** The badge's animated words (registry id `text.*`); `miss` has no badge text of its own. */
   | { kind: 'textAnim'; side: Side; anim: string; label: string }
   /** A Hyper/Overdrive moment or an interaction flourish (registry ids `overdrive.*`, `interaction.*`). */
@@ -58,6 +58,9 @@ const TYPE_HEX: Record<string, string> = {
   dark: '#705848', steel: '#b8b8d0', fairy: '#ee99ac',
 };
 
+const STAT_WORDS: Record<string, string> = { atk: 'ATTACK', def: 'DEFENSE', spa: 'SP. ATK', spd: 'SP. DEF', spe: 'SPEED', acc: 'ACCURACY', eva: 'EVASION' };
+const STATUS_WORDS: Record<string, string> = { brn: 'BURNED!', psn: 'POISONED!', tox: 'BADLY POISONED!', par: 'PARALYZED!', slp: 'ASLEEP!', frz: 'FROZEN!' };
+
 /** Events that mean the move didn't connect, so its animation is skipped. */
 const NO_CONTACT = new Set(['miss', 'noEffect', 'fail', 'noPp', 'protected', 'avoided', 'charge']);
 
@@ -71,6 +74,8 @@ export function planCues(
   content: Pick<Content, 'moves'> & Partial<Pick<Content, 'abilities'>>,
   anims: MoveAnims,
   settings: PresentationSettings,
+  /** The ability each side's Pokémon has, so abilities the engine doesn't announce can still animate. */
+  abilityOf?: (side: Side) => string | null,
 ): Cue[][] {
   const intensity = Math.min(1, Math.max(0, settings.intensity));
   const shakeLevel = Math.min(1, Math.max(0, settings.shake ?? settings.intensity));
@@ -136,7 +141,7 @@ export function planCues(
         if (animated) cues.push({ kind: 'textAnim', side: e.side, anim: 'text.miss', label: 'MISS' });
         break;
       case 'ability':
-        if (animated) cues.push({ kind: 'abilityAnim', side: e.side, anim: abilityAnimId(e.ability), label: content.abilities?.get(e.ability)?.name ?? e.ability });
+        if (animated) cues.push({ kind: 'abilityAnim', side: e.side, anim: abilityAnimId(e.ability), label: content.abilities?.get(e.ability)?.name ?? e.ability, ability: e.ability });
         break;
       case 'hyper':
         if (animated) cues.push({ kind: 'storyAnim', side: e.side, anim: hyperAnimId(e.defId) });
@@ -189,15 +194,24 @@ export function planCues(
         break;
       case 'status':
         if (full && anims.common[`status.${e.status}`]) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, `status.${e.status}`) });
+        if (animated && STATUS_WORDS[e.status]) cues.push({ kind: 'textAnim', side: e.side, anim: 'text.status', label: STATUS_WORDS[e.status]! });
         break;
       case 'cant':
         if (full && (e.reason === 'slp' || e.reason === 'frz' || e.reason === 'par')) cues.push({ kind: 'commonAnim', side: e.side, ...commonChoice(anims, `status.${e.reason}`) });
         break;
       case 'stat':
-        if (animated) cues.push({ kind: 'statArrows', side: e.side, up: e.change > 0, motion: full });
+        if (animated) {
+          cues.push({ kind: 'statArrows', side: e.side, up: e.change > 0, motion: full });
+          const arrows = (e.change > 0 ? '▲' : '▼').repeat(Math.min(3, Math.abs(e.change)));
+          cues.push({ kind: 'textAnim', side: e.side, anim: e.change > 0 ? 'text.statUp' : 'text.statDown', label: `${STAT_WORDS[e.stat] ?? String(e.stat).toUpperCase()} ${arrows}` });
+        }
         break;
       default:
         break;
+    }
+    if (animated && abilityOf) {
+      const implied = impliedAbility(e as { type: string; side?: string }, events[i - 1], abilityOf);
+      if (implied) cues.unshift({ kind: 'abilityAnim', side: implied.side, anim: abilityAnimId(implied.ability), label: content.abilities?.get(implied.ability)?.name ?? implied.ability, ability: implied.ability });
     }
     return cues.filter((c) => c.kind !== 'commonAnim' || c.anim !== '');
   });

@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { modeBattleLine } from '../core/modeObjectives';
 import { isUltimateBattle, ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
 import { buildEpilogue } from '../core/ending';
 import { materialName } from '../core/crafting';
@@ -988,6 +989,8 @@ export class BattleScene extends Phaser.Scene {
     const title = this.trainerTitle();
     if (battle.turn === 1 && !battle.needsSwitch) {
       await this.playIntro();
+      const modeLine = modeBattleLine(this.run.rules.modeId, !!battle.trainer && isBossClass(battle.trainer.classId));
+      if (modeLine) await this.say(modeLine);
       const art = this.trainerArt();
       if (title && art) {
         const trainerSprite = trainerVisual(this, art.assetId, art.label, ENEMY_POS.x, ENEMY_POS.y, 2.5);
@@ -1733,7 +1736,7 @@ export class BattleScene extends Phaser.Scene {
     const content = session.content;
     const { battleAnimations, effectIntensity } = session.settings;
     // What the screen shows for each event; worked out from the finished turn, so it can't change it.
-    const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity, shake: session.settings.shakeIntensity });
+    const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity, shake: session.settings.shakeIntensity }, (side) => (this.shown[side] ? abilityOf(content, this.shown[side]) : null));
 
     for (const [index, e] of events.entries()) {
       // "Charmander used Ember!" goes up before its animation; other messages follow theirs.
