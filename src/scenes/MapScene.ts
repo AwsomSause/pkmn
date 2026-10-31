@@ -17,6 +17,7 @@ import { regionIdentity } from '../core/presentation/regionIdentity';
 import { FRAME_ASSET_IDS, headerBar } from '../ui/frames';
 import { currentColumn, findNode } from '../core/map';
 import { runPerks } from '../core/archetypes';
+import { frontRunner, isFalseProtagonist, rivalTitle, TIMELINE } from '../core/timeline/frontRunner';
 import { boxCapacity } from '../core/trainerPerks';
 import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
 import { expeditionPreview } from '../core/expedition/flow';
@@ -194,6 +195,13 @@ export class MapScene extends Phaser.Scene {
       .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}${wipeStatus(run) ? `  ·  Wipes ${wipeStatus(run)!.wipes}${wipeStatus(run)!.max ? `/${wipeStatus(run)!.max}` : ''}` : ''}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
 
+    // Revisit This Timeline: the False Protagonist's title, and who is ahead of you now.
+    if (isFalseProtagonist(run)) {
+      const fr = frontRunner(run);
+      const ahead = fr?.rank ? `  ·  ${rivalTitle(content, fr)} is ahead (${fr.rank === 'gymLeader' ? 'Gym Leader' : fr.rank === 'finalist' ? 'finalist' : 'Champion'})` : '';
+      const tag = this.add.text(26, 68, `${TIMELINE.title}${ahead}`, textStyle(14, '#ff9fe0', { stroke: '#2a0a2a', strokeThickness: 4 }));
+      if (services().session.settings.battleAnimations === 'full') this.tweens.add({ targets: tag, alpha: 0.55, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
     const pinned = pinnedObjective(content, run);
     if (pinned) this.add.text(GAME_WIDTH - 24, 66, `★ ${pinned.text} (${pinned.current}/${pinned.target})`, textStyle(14, '#f0e0a0')).setOrigin(1, 0);
 

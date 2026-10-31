@@ -14,6 +14,7 @@ import { buildRecap } from '../core/recap';
 import { encodeSeedCode } from '../core/seedCode';
 import { campaignCounts, getMode } from '../core/rules';
 import Phaser from 'phaser';
+import { timelineOutcome, TIMELINE } from '../core/timeline/frontRunner';
 import type { Species } from '../core/contentSchema';
 import { services } from '../game/services';
 import { stopMusic } from '../ui/audio';
@@ -84,7 +85,10 @@ export class GameOverScene extends Phaser.Scene {
     }
     const summary = session.lastRunSummary;
     const lines: string[] = [];
-    if (run?.timeline) lines.push(`Revisited timeline (attempt ${run.timeline.attempt}): kept apart from your profile. The original run is untouched.`);
+    if (run?.timeline) {
+      const end = timelineOutcome(session.content, run);
+      lines.push(`${TIMELINE.title}: ${end.name}`, `   ${end.text}`, `Revisited timeline (attempt ${run.timeline.attempt}): kept apart from your profile. The original run is untouched.`);
+    }
     if (summary) {
       const p = summary.payout;
       lines.push(`+${p.total} Bank Credits`, `   savings ${p.savings} · stipend ${p.stipend} · achievements ${p.achievements}`);
