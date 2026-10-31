@@ -18,6 +18,7 @@ import type { RunEvent } from '../run';
 import { currentEnemy, type RunState } from '../state';
 import { emotionOf } from './emotions';
 import { mentorshipOf } from './mentorship';
+import { nemesisById } from './nemesis';
 import type { StoryEffectSpec, StoryTriggerKind } from './schema';
 
 /** The one effect each moment trigger may carry (checked when content loads). */
@@ -87,6 +88,14 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   gatherUnleashed: 'enemyStage',
   fightingBeyondLimits: 'enemyStage',
   lostComposure: 'enemyStage',
+  rememberDefeat: 'flair',
+  notOverBetweenUs: 'flair',
+  fightingForPride: 'enemyStage',
+  angerDangerous: 'enemyStage',
+  somethingToProve: 'enemyStage',
+  hunterHunted: 'flair',
+  enemyWillReturn: 'flair',
+  nemesisReckoning: 'flair',
 };
 
 export interface Moment {
@@ -154,6 +163,8 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     }
     out.push({ trigger, side, uid, at, names });
   };
+  // The newer enemy moments that change a stat pass the same seeded rarity roll as yours.
+  const rareFoe = (trigger: StoryTriggerKind, uid: string) => (fnv1a(`${run.seed}:rare:${trigger}:${uid}:${run.encountersCompleted}`) % 1000) / 1000 < rarity.momentChance;
   const lead = run.party[battle.activeIndex];
   const leadBefore = before.party[prior.activeIndex];
   const foe = currentEnemy(battle);
@@ -319,6 +330,14 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     // Team Chemistry: Perfect Timing partners open together with a lift.
     const timed = run.party.find((m) => m.uid !== lead.uid && m.hp > 0 && chemistryOf(content, run, lead.uid, m.uid) === 'perfectTiming');
     if (timed) fire('chemistryPerfect', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), other: nameOf(timed.speciesId) });
+    // Nemesis system: a nemesis that beat you before; a rival stung by a decisive loss; a counter-team sent after you.
+    const nem = nemesisById(run, battle.nemesis);
+    if (nem && (nem.wins > 0 || nem.beat.length > 0)) fire('rememberDefeat', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId) });
+    const stung = feltRival?.memory.lastBattle;
+    if (feltRival && stung && stung.result === 'win' && stung.hpLeftShare >= content.story.nemesis.proveShare && rareFoe('somethingToProve', foe.uid)) {
+      fire('somethingToProve', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? feltRival.name });
+    }
+    if (battle.hunted && battle.trainer) fire('hunterHunted', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId), group: `${content.trainers.get(battle.trainer.classId)?.name ?? 'trainer'}s` });
     const rival = run.story.rivals.some((r) => r.state === 'contender' || r.state === 'nemesis');
     if (boss && rival) fire('waitingForBattle', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
     if (mark(`${run.seed}:watch:${run.encountersCompleted}`) % 14 === 0 && run.encountersCompleted > 0) {
@@ -379,6 +398,18 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
       ph.hyper['different-ways'] = 1;
       fire('differentWays', 'player', prote.uid, lastAt, { name: nameOf(prote.speciesId), other: nameOf(mentor.speciesId) });
     }
+  }
+  // The Enemy Is Fighting for Its Pride!: a boss is down to its last Pokémon (of three or more).
+  if (boss && foe.hp > 0 && battle.enemyTeam.length >= 3 && battle.enemyTeam.every((m) => m.uid === foe.uid || m.hp <= 0) && rareFoe('fightingForPride', foe.uid)) {
+    fire('fightingForPride', 'enemy', foe.uid, lastAt, { name: nameOf(foe.speciesId), trainer: battle.trainer?.name ?? 'The boss' });
+  }
+  // Its Anger Is Becoming Dangerous!: an enemy hit in several turns in a row (and still standing) telegraphs a strong attack.
+  if (trainerFight && foe.hp > 0) {
+    const hit = events.some((e) => e.type === 'damage' && e.side === 'enemy' && e.hpAfter > 0);
+    const key = flagKey('anger', foe.uid);
+    const n = hit ? Number(flags[key] ?? 0) + 1 : 0;
+    flags[key] = n;
+    if (n === content.story.nemesis.angerHits && rareFoe('angerDangerous', foe.uid)) fire('angerDangerous', 'enemy', foe.uid, lastAt, { name: nameOf(foe.speciesId) });
   }
   if (trainerFight && foe.hp > 0) {
     const share = foe.hp / maxHp(content, foe);

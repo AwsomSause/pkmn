@@ -79,7 +79,8 @@ describe('story foundation: random streams', () => {
   const eventItemIds = catalog.filter(eventItem).map((e) => `"${e.id}"`);
   const noHyper = buildContent({
     ...structuredClone(RAW_CONTENT),
-    story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [] },
+    // The nemesis system (left-out plan 1.3) came later too.
+    story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [], nemesis: { ...(RAW_CONTENT.story as { nemesis: object }).nemesis, enabled: false } },
     itemCatalog: catalog.filter((e) => !eventItem(e) && e.id !== 'adrenaline-orb'),
     // The draft deals (bundles, bargains, a risk) join the reward pool, which would change old seeds' drafts.
     rewards: (RAW_CONTENT.rewards as { id: string }[]).filter((r) => !r.id.startsWith('deal-')),

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { content } from './helpers';
-import { buyTier, claimBankMilestones, exchange, presetSlotCount, scavengerBonus, survivalEntry, fortuneBias, tierProblem } from '../../src/core/bank';
+import { buyTier, claimBankMilestones, exchange, presetSlotCount, scavengerBonus, bankShopEntries, claimRegionAccounts, vaultDeposit, vaultTake, loanDue, runBankFlags, fortuneBias, tierProblem } from '../../src/core/bank';
 import { buyLicense, licenseProblem } from '../../src/core/runPrep';
 import { createProfile } from '../../src/core/profile';
 import { shopStock } from '../../src/core/run';
@@ -60,7 +60,7 @@ describe('licenses inside a run', () => {
     const stock = (licenses: string[], badges: string[]) => shopStock(content, { ...base, badges, licenses } as never).map((e) => e.item);
     expect(stock([], ['a', 'b'])).not.toContain('last-stand-charm');
     expect(stock(['survival'], ['a', 'b'])).toContain('last-stand-charm');
-    expect(survivalEntry(content, [])).toBeNull();
+    expect(bankShopEntries(content, [])).toEqual([]);
   });
   it('Scavenger pays extra only on a lucky roll; Fortune leans the draft', () => {
     expect(scavengerBonus(content, [], { chance: () => true })).toBe(0);
@@ -68,5 +68,35 @@ describe('licenses inside a run', () => {
     expect(scavengerBonus(content, ['scavenger'], { chance: () => true })).toBe(content.balance.bank.scavenger.money);
     expect(fortuneBias(content, ['fortune'])?.weight).toBeGreaterThan(1);
     expect(fortuneBias(content, [])).toBeNull();
+  });
+});
+
+describe('Regional Accounts, Vault and loans', () => {
+  it('a cleared region opens its account once; tier 4 adds its item to the shop', () => {
+    const p = rich({ bankTier: 4 });
+    expect(claimRegionAccounts(content, p, ['kanto', 'nowhere'], 'now')).toEqual(['kanto']);
+    expect(claimRegionAccounts(content, p, ['kanto'], 'now')).toEqual([]);
+    expect(runBankFlags(p)).toContain('region:kanto');
+    expect(runBankFlags({ ...p, bankTier: 3 })).not.toContain('region:kanto');
+    expect(bankShopEntries(content, ['region:kanto']).map((e) => e.item)).toEqual([content.balance.bank.regional.kanto!.item]);
+  });
+  it('the Vault keeps one rare held item at tier 5, up to its slots, and gives it back once', () => {
+    const run = { inventory: { 'last-stand-charm': 1, 'poke-ball': 5, 'focus-sash': 1 } };
+    expect(vaultDeposit(content, rich({ bankTier: 4 }), run)).toBeNull();
+    const p = rich({ bankTier: 5 });
+    expect(vaultDeposit(content, p, run)).toBe('focus-sash');
+    vaultDeposit(content, p, run);
+    vaultDeposit(content, p, run);
+    expect(vaultDeposit(content, p, run)).toBeNull();
+    expect(p.vault).toHaveLength(content.balance.bank.vault.slots);
+    expect(vaultTake(p, 'focus-sash')).toBe(true);
+    expect(vaultTake(p, 'nothing')).toBe(false);
+  });
+  it('an unpaid loan costs credits, a repaid one nothing', () => {
+    const l = content.balance.bank.loan;
+    const prep = { loan: true } as never;
+    expect(loanDue(content, { prep, badges: [] })).toBe(l.penalty);
+    expect(loanDue(content, { prep, badges: Array(l.badges).fill('b') })).toBe(0);
+    expect(loanDue(content, { prep: { loan: false } as never, badges: [] })).toBe(0);
   });
 });

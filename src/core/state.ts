@@ -605,6 +605,11 @@ export const BattleStateSchema = z.object({
   /** A rival back for its rematch (Living Rivalry Engine): its id, and what it changed about its team. */
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),
+  /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
+  nemesis: z.string().optional(),
+  nemesisNote: z.string().optional(),
+  /** "The Hunter Has Become the Hunted!": an ordinary trainer whose class you beat too often, with a counter-team. */
+  hunted: z.boolean().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
   fishing: z.boolean().optional(),
   /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
@@ -742,6 +747,10 @@ export const RunPrepSchema = z.object({
   directive: TypeNameSchema.nullable(),
   /** The Field License (Untitled doc §10): one exploration hint for the run, or none. */
   license: z.enum(['boss', 'shop', 'weakness']).nullable().default(null),
+  /** A Bank loan (core/bank.ts): extra starting money, repaid by reaching enough badges. */
+  loan: z.boolean().default(false),
+  /** An item taken out of the Collector's Vault to start this run with. */
+  vaultItem: z.string().nullable().default(null),
 });
 export type RunPrep = z.infer<typeof RunPrepSchema>;
 
@@ -1072,6 +1081,8 @@ export const ProfileSchema = z.object({
   lifetimeBankCredits: z.number().int().min(0),
   /** The Bank tier (1 to 5, core/bank.ts): higher tiers open services, not bigger payouts. */
   bankTier: z.number().int().min(1).max(5).default(1),
+  /** Items kept in the Collector's Vault (Bank tier 5). */
+  vault: z.array(z.string()).default([]),
   runHistory: z.array(RunRecordSchema),
   /** What the last finished run paid out (shown on the run-end screen and in the Bank). */
   lastPayout: PayoutSchema.nullable(),

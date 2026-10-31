@@ -407,6 +407,7 @@ export class HubScene extends Phaser.Scene {
         const last = p.lastPayout;
         y = last ? this.line(y + 4, `Last run paid ${last.total} credits`, 16, COLORS.gold) : this.line(y + 4, 'No runs paid out yet.', 16, COLORS.textMuted);
         y = this.line(y, `Bank tier: ${bankTier(p)} of ${BANK_MAX_TIER}`, 16, COLORS.gold);
+        if (bankTier(p) >= 5) y = this.line(y, `Vault: ${p.vault.length ? p.vault.map((id) => session.content.items.get(id)?.name ?? id).join(', ') : 'empty'}`, 16);
         y = this.line(y, `Licenses: ${p.licenses.length} of ${session.content.licenses.size} owned`, 16);
         break;
       }

@@ -44,6 +44,10 @@ export const DOMAIN_EVENT_TYPES = [
   'trainerVowedReturn',
   /** A Pokémon found a feeling in battle (Emotional Turning Point). */
   'feeling',
+  /** Nemesis system (Techno §2): an enemy became a nemesis, came back, or was settled. */
+  'nemesisFormed',
+  'nemesisReturned',
+  'nemesisSettled',
   'runEnded',
 ] as const;
 export const DomainEventTypeSchema = z.enum(DOMAIN_EVENT_TYPES);
@@ -173,6 +177,41 @@ export type EnemyProfile = z.infer<typeof EnemyProfileSchema>;
 
 export const ChronicleEntrySchema = MemorySchema.extend({ actors: z.array(z.string()) });
 export type ChronicleEntry = z.infer<typeof ChronicleEntrySchema>;
+
+/** Nemesis archetypes (Techno §2 "What makes a nemesis different?"). */
+export const NEMESIS_ARCHETYPES = ['survivor', 'avenger', 'stalker', 'fallenAce', 'unfinished', 'nemesisOfNemesis'] as const;
+export const NemesisArchetypeSchema = z.enum(NEMESIS_ARCHETYPES);
+export type NemesisArchetype = z.infer<typeof NemesisArchetypeSchema>;
+
+/** An enemy with a history of hurting your team: Incident, then Return, then Reckoning (core/story/nemesis.ts). */
+export const NemesisSchema = z.object({
+  id: z.string(),
+  /** The species it was at the Incident (it may have evolved when it comes back). */
+  speciesId: z.string(),
+  level: z.number().int().min(1),
+  source: z.enum(['wild', 'trainer', 'boss']),
+  /** The trainer it fought for (a boss keeps its leader id so it is drawn as itself). */
+  trainer: z.object({ classId: z.string(), name: z.string(), leaderId: z.string().nullable() }).nullable(),
+  archetype: NemesisArchetypeSchema,
+  /** Why it matters: it beat you, knocked out your starter or several Pokémon, broke free and got away, avenged a partner, or a boss barely lost. */
+  cause: z.enum(['defeat', 'starterKo', 'multiKo', 'escaped', 'avenged', 'narrowBoss']),
+  /** Waiting for its Return, waiting for the Reckoning, or settled. */
+  phase: z.enum(['return', 'reckoning', 'settled']),
+  formedAt: WhereSchema,
+  /** The stage it was last met in (it never comes back in the same stage). */
+  lastMet: z.object({ region: z.number().int().min(0), stage: z.number().int().min(0) }),
+  /** Your species it knocked out, and the types of the Pokémon that fought it last (its counter-move answers them). */
+  beat: z.array(z.string()),
+  foeTypes: z.array(z.string()),
+  /** Times it beat your whole team. */
+  wins: z.number().int().min(0),
+  /** What changed each time it came back (shown when it returns). */
+  changes: z.array(z.string()),
+  /** The other nemesis that joined its Reckoning (the Nemesis of the Nemesis). */
+  partner: z.string().nullable(),
+  settledAs: z.enum(['beaten', 'caught']).nullable(),
+});
+export type Nemesis = z.infer<typeof NemesisSchema>;
 
 /** The story layer's part of a saved run. */
 // ---------- rivals (src/core/rivals) ----------
@@ -306,6 +345,8 @@ export const StoryStateSchema = z.object({
   flags: z.record(z.string(), z.union([z.boolean(), z.number(), z.string()])),
   /** Major (cinematic) moments shown in the current battle, for the per-battle budget. */
   majorCuesThisBattle: z.number().int().min(0),
+  /** Nemeses made this run (run v25). */
+  nemeses: z.array(NemesisSchema).default([]),
 });
 export type StoryState = z.infer<typeof StoryStateSchema>;
 
@@ -386,7 +427,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['starterDestiny', 'sacrificeStand', 'lastStand', 'comebackRevenge', 'promiseKept', 'wildAmbush', 'wildKin', 'chemistryPerfect', 'rivalResentment', 'rivalFear', 'rivalRespect', 'grandOmen', 'grandShadow', 'grandGrudge', 'crisisLoom', 'crisisAid', 'championRespect', 'championRecall', 'eliteForce', 'eliteWall', 'eliteMind', 'eliteTempo', 'toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays', 'overdriveDetermination', 'overdriveBravery', 'overdriveJustice', 'overdriveKindness', 'overdrivePatience', 'overdriveIntegrity', 'overdrivePerseverance', 'dualEmotion', 'emotionalClash', 'understandEachOther', 'wontLetFriendFight', 'wantsToProve', 'feelsLeftOut', 'gatheringEverything', 'gatherUnleashed', 'fightingBeyondLimits', 'lostComposure'] as const;
+export const STORY_TRIGGERS = ['starterDestiny', 'sacrificeStand', 'lastStand', 'comebackRevenge', 'promiseKept', 'wildAmbush', 'wildKin', 'chemistryPerfect', 'rivalResentment', 'rivalFear', 'rivalRespect', 'grandOmen', 'grandShadow', 'grandGrudge', 'crisisLoom', 'crisisAid', 'championRespect', 'championRecall', 'eliteForce', 'eliteWall', 'eliteMind', 'eliteTempo', 'toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays', 'overdriveDetermination', 'overdriveBravery', 'overdriveJustice', 'overdriveKindness', 'overdrivePatience', 'overdriveIntegrity', 'overdrivePerseverance', 'dualEmotion', 'emotionalClash', 'understandEachOther', 'wontLetFriendFight', 'wantsToProve', 'feelsLeftOut', 'gatheringEverything', 'gatherUnleashed', 'fightingBeyondLimits', 'lostComposure', 'rememberDefeat', 'notOverBetweenUs', 'fightingForPride', 'angerDangerous', 'somethingToProve', 'hunterHunted', 'enemyWillReturn', 'nemesisReckoning'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -521,6 +562,26 @@ export const StoryConfigSchema = z.object({
     chance: z.number().min(0).max(1),
     minRegion: z.number().int().min(0),
     list: z.array(z.object({ id: z.string(), name: z.string(), description: z.string(), counterplay: z.string(), field: z.object({ gravity: z.number().int().min(1).optional(), trickRoom: z.number().int().min(1).optional(), weather: z.enum(['rain', 'sun', 'sand', 'snow', 'hail']).optional(), terrain: z.enum(['electric', 'grassy', 'misty', 'psychic']).optional() }) })).min(1),
+  }),
+  /**
+   * Nemesis system (Techno §2): how many may be open at once and formed per region, the level change when one comes back,
+   * when a boss win counts as narrow, how many knockouts make one, the Reckoning reward, Overdrive-moment thresholds
+   * and each archetype's telegraphed stat. Forming one passes the moment rarity roll (`rarity.momentChance`).
+   */
+  nemesis: z.object({
+    /** Off: no nemesis forms and no counter-team is sent (the old-seed story check turns it off). */
+    enabled: z.boolean(),
+    maxActive: z.number().int().min(1),
+    perRegion: z.number().int().min(1),
+    levelBonus: z.number().int().min(0),
+    fallenAcePenalty: z.number().int().min(0),
+    lowHpShare: z.number().gt(0).max(1),
+    multiKo: z.number().int().min(2),
+    angerHits: z.number().int().min(2),
+    proveShare: z.number().min(0).max(1),
+    huntedAfter: z.number().int().min(2),
+    reward: z.object({ money: z.number().int().min(0), itemId: z.string(), quantity: z.number().int().positive() }),
+    archetypes: z.array(z.object({ id: NemesisArchetypeSchema, name: z.string(), stat: BoostStatSchema, line: z.string() })).min(NEMESIS_ARCHETYPES.length),
   }),
   gauntlet: z.object({ money: z.number().int().positive(), grandRivals: z.number().int().min(1).max(6) }),
   grandEnemy: z.object({ name: z.string(), title: z.string(), contactFrom: z.number().min(0).max(1), escalationFrom: z.number().min(0).max(1), grudgeAfter: z.number().int().min(0), influenceRare: z.number().gt(1).max(2), huntClues: z.number().int().min(1).max(10), huntTitle: z.string() }),

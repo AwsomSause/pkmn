@@ -2,7 +2,7 @@
 // the campaign, starter pool, draft rule and one preparation, check the Run
 // Build Summary, save or load a loadout preset, then roll the starters.
 
-import { presetSlotCount } from '../core/bank';
+import { loanProblem, presetSlotCount } from '../core/bank';
 import { LICENSES, licenseName, type LicenseId } from '../core/license';
 import Phaser from 'phaser';
 import { decodeSeedCode } from '../core/seedCode';
@@ -42,8 +42,8 @@ export interface RunPrepData {
   modCursor?: number;
 }
 
-type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
-const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'license', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
+type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'loan' | 'vault' | 'mode' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
+const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'license', 'loan', 'vault', 'mode', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
 
 export class RunPrepScene extends Phaser.Scene {
   private menu!: Menu;
@@ -98,6 +98,8 @@ export class RunPrepScene extends Phaser.Scene {
       token: `Preparation: ${token?.name ?? 'none'}`,
       directive: `Research Directive: ${this.prep.directive ? capitalise(this.prep.directive) : 'none'}`,
       license: `Field License: ${this.prep.license ? licenseName(this.prep.license) : 'none'}`,
+      loan: `Bank loan: ${this.prep.loan ? `ON (+₽${content.balance.bank.loan.money})` : 'off'}`,
+      vault: `Vault item: ${this.prep.vaultItem ? content.items.get(this.prep.vaultItem)?.name ?? this.prep.vaultItem : 'none'}`,
       mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
       difficulty: `Difficulty: ${getDifficulty(this.rules.difficultyId)?.name}`,
       modifier: `◂ ${RUN_RULES.modifiers[this.modCursor]?.name} ▸ ${this.rules.modifierIds.includes(RUN_RULES.modifiers[this.modCursor]!.id) ? 'ON' : 'off'}`,
@@ -197,6 +199,16 @@ export class RunPrepScene extends Phaser.Scene {
       case 'license':
         // None, then each license: one exploration hint for the whole run.
         return this.refresh({ license: next<LicenseId | null>([null, ...LICENSES.map((l) => l.id)], this.prep.license) });
+      case 'loan': {
+        const problem = loanProblem(content, profile);
+        if (problem) return this.refresh({}, { notice: problem });
+        const l = content.balance.bank.loan;
+        return this.refresh({ loan: !this.prep.loan }, { notice: this.prep.loan ? undefined : `Loan: +₽${l.money} now; finish with ${l.badges}+ badges or lose ${l.penalty} credits.` });
+      }
+      case 'vault': {
+        if (profile.vault.length === 0) return this.refresh({}, { notice: 'The Collector\'s Vault is empty (Bank tier 5 keeps a rare held item from each finished run).' });
+        return this.refresh({ vaultItem: next<string | null>([null, ...new Set(profile.vault)], this.prep.vaultItem) });
+      }
       case 'mode': {
         const ids = RUN_RULES.modes.filter((m) => m.status === 'supported').map((m) => m.id);
         return this.refresh({}, { rules: { ...this.rules, modeId: next(ids, this.rules.modeId) } });

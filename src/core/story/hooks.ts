@@ -34,6 +34,7 @@ import { graduateMentorships } from './mentorship';
 import { awardLegacyTitles, recordEpitaph } from './legacy';
 import { noteStruggle, recordChampionMemory } from './highHype';
 import { clearMomentFlags, detectMoments } from './moments';
+import { nemesisAfterBattle, noteNemesisBreakFree, noteNemesisFaint } from './nemesis';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
@@ -223,9 +224,13 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
           emotions: avenged ? ['justice'] : undefined,
         });
         if (e.side === 'enemy' && by) noteFinisher(by, i);
+        noteNemesisFaint(run, e.side, e.uid, by);
         if (avenged && by) advanceChains(content, run, 'avenged', by);
         break;
       }
+      case 'ball':
+        if (!e.caught && active.enemy) noteNemesisBreakFree(run, active.enemy);
+        break;
       case 'levelUp':
         emit(content, run, 'levelUp', { where, actors: [e.uid], data: { level: e.level } });
         break;
@@ -254,6 +259,12 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
   if (lead && !battle.outcome) noteLowHpTurn(run, lead.uid, lead.hp > 0 && lead.hp <= maxHp(content, lead) * cfg.lowHpShare);
 
   if (battle.outcome === 'win') trainerVow(content, run, triggers, events.length - 1, where);
+  if (battle.outcome) {
+    for (const m of nemesisAfterBattle(content, run, where)) {
+      const def = content.story.definitions.find((d) => d.triggerConditions.trigger === m.trigger);
+      if (def) triggers.push({ ...makeTrigger(run, def, events.length - 1, triggers.length, m.names, null, m.uid), side: m.side, combat: false });
+    }
+  }
   for (const m of detectMoments(content, before, run, events)) {
     const def = content.story.definitions.find((d) => d.triggerConditions.trigger === m.trigger)!;
     triggers.push({ ...makeTrigger(run, def, m.at, triggers.length, m.names, null, m.uid), side: m.side, combat: false });
