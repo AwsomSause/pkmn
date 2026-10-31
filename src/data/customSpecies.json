@@ -96,7 +96,12 @@
    "sprite": "custom/bulbasaur-delta",
    "icon": "7/774",
    "cry": "1"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "ivysaur-delta",
@@ -195,7 +200,12 @@
    "sprite": "custom/ivysaur-delta",
    "icon": "7/774",
    "cry": "2"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "venusaur-delta",
@@ -293,7 +303,12 @@
    "sprite": "custom/venusaur-delta",
    "icon": "7/774",
    "cry": "3"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "venusaur-delta-mega",
@@ -391,7 +406,12 @@
    "sprite": "custom/venusaur-delta-mega",
    "icon": "7/774",
    "cry": "3"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "charmander-delta",
@@ -482,7 +502,12 @@
    "sprite": "custom/charmander-delta",
    "icon": "7/774",
    "cry": "4"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "red"
  },
  {
   "id": "charmeleon-delta",
@@ -573,7 +598,12 @@
    "sprite": "custom/charmeleon-delta",
    "icon": "7/774",
    "cry": "5"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "red"
  },
  {
   "id": "charizard-delta",
@@ -663,7 +693,12 @@
    "sprite": "custom/charizard-delta",
    "icon": "7/774",
    "cry": "6"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "red"
  },
  {
   "id": "charizard-delta-mega",
@@ -753,7 +788,12 @@
    "sprite": "custom/charizard-delta-mega",
    "icon": "7/774",
    "cry": "6"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "red"
  },
  {
   "id": "squirtle-delta",
@@ -852,7 +892,12 @@
    "sprite": "custom/squirtle-delta",
    "icon": "7/774",
    "cry": "7"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "wartortle-delta",
@@ -951,7 +996,12 @@
    "sprite": "custom/wartortle-delta",
    "icon": "7/774",
    "cry": "8"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "blastoise-delta",
@@ -1045,7 +1095,12 @@
    "sprite": "custom/blastoise-delta",
    "icon": "7/774",
    "cry": "9"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "blastoise-delta-mega",
@@ -1139,7 +1194,12 @@
    "sprite": "custom/blastoise-delta-mega",
    "icon": "7/774",
    "cry": "9"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "pawniard-delta",
@@ -1278,7 +1338,11 @@
    "sprite": "custom/pawniard-delta",
    "icon": "7/774",
    "cry": "624"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "red"
  },
  {
   "id": "bisharp-delta",
@@ -1404,7 +1468,11 @@
    "sprite": "custom/bisharp-delta",
    "icon": "7/774",
    "cry": "625"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "red"
  },
  {
   "id": "bisharp-delta-mega",
@@ -1530,7 +1598,11 @@
    "sprite": "custom/bisharp-delta-mega",
    "icon": "7/774",
    "cry": "625"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "red"
  },
  {
   "id": "ralts-delta",
@@ -1633,7 +1705,12 @@
    "sprite": "custom/ralts-delta",
    "icon": "7/774",
    "cry": "280"
-  }
+  },
+  "eggGroups": [
+   "humanshape",
+   "indeterminate"
+  ],
+  "color": "white"
  },
  {
   "id": "kirlia-delta",
@@ -1740,7 +1817,12 @@
    "sprite": "custom/kirlia-delta",
    "icon": "7/774",
    "cry": "281"
-  }
+  },
+  "eggGroups": [
+   "humanshape",
+   "indeterminate"
+  ],
+  "color": "white"
  },
  {
   "id": "gardevoir-delta",
@@ -1850,7 +1932,12 @@
    "sprite": "custom/gardevoir-delta",
    "icon": "7/774",
    "cry": "282"
-  }
+  },
+  "eggGroups": [
+   "humanshape",
+   "indeterminate"
+  ],
+  "color": "white"
  },
  {
   "id": "gardevoir-delta-mega",
@@ -1960,7 +2047,12 @@
    "sprite": "custom/gardevoir-delta-mega",
    "icon": "7/774",
    "cry": "282"
-  }
+  },
+  "eggGroups": [
+   "humanshape",
+   "indeterminate"
+  ],
+  "color": "white"
  },
  {
   "id": "gallade-delta",
@@ -2070,7 +2162,12 @@
    "sprite": "custom/gallade-delta",
    "icon": "7/774",
    "cry": "475"
-  }
+  },
+  "eggGroups": [
+   "humanshape",
+   "indeterminate"
+  ],
+  "color": "white"
  },
  {
   "id": "gallade-delta-mega",
@@ -2180,7 +2277,12 @@
    "sprite": "custom/gallade-delta-mega",
    "icon": "7/774",
    "cry": "475"
-  }
+  },
+  "eggGroups": [
+   "humanshape",
+   "indeterminate"
+  ],
+  "color": "white"
  },
  {
   "id": "sunkern-delta",
@@ -2287,7 +2389,11 @@
    "sprite": "custom/sunkern-delta",
    "icon": "7/774",
    "cry": "191"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "yellow"
  },
  {
   "id": "sunflora-delta",
@@ -2393,7 +2499,11 @@
    "sprite": "custom/sunflora-delta",
    "icon": "7/774",
    "cry": "192"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "yellow"
  },
  {
   "id": "sunflora-delta-mega",
@@ -2499,7 +2609,11 @@
    "sprite": "custom/sunflora-delta-mega",
    "icon": "7/774",
    "cry": "192"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "yellow"
  },
  {
   "id": "bergmite-delta",
@@ -2613,7 +2727,12 @@
    "sprite": "custom/bergmite-delta",
    "icon": "7/774",
    "cry": "712"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "avalugg-delta",
@@ -2723,7 +2842,12 @@
    "sprite": "custom/avalugg-delta",
    "icon": "7/774",
    "cry": "713"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "scyther-delta",
@@ -2838,7 +2962,11 @@
    "sprite": "custom/scyther-delta",
    "icon": "7/774",
    "cry": "123"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "green"
  },
  {
   "id": "scizor-delta",
@@ -2952,7 +3080,11 @@
    "sprite": "custom/scizor-delta",
    "icon": "7/774",
    "cry": "212"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "red"
  },
  {
   "id": "scizor-delta-mega",
@@ -3066,7 +3198,11 @@
    "sprite": "custom/scizor-delta-mega",
    "icon": "7/774",
    "cry": "212"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "red"
  },
  {
   "id": "scraggy-delta",
@@ -3172,7 +3308,12 @@
    "sprite": "custom/scraggy-delta",
    "icon": "7/774",
    "cry": "559"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "dragon"
+  ],
+  "color": "yellow"
  },
  {
   "id": "scrafty-delta",
@@ -3273,7 +3414,12 @@
    "sprite": "custom/scrafty-delta",
    "icon": "7/774",
    "cry": "560"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "dragon"
+  ],
+  "color": "red"
  },
  {
   "id": "combee-delta",
@@ -3356,7 +3502,11 @@
    "sprite": "custom/combee-delta",
    "icon": "7/774",
    "cry": "415"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "yellow"
  },
  {
   "id": "vespiquen-delta",
@@ -3462,7 +3612,11 @@
    "sprite": "custom/vespiquen-delta",
    "icon": "7/774",
    "cry": "416"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "yellow"
  },
  {
   "id": "koffing-delta",
@@ -3565,7 +3719,11 @@
    "sprite": "custom/koffing-delta",
    "icon": "7/774",
    "cry": "109"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "weezing-delta",
@@ -3667,7 +3825,11 @@
    "sprite": "custom/weezing-delta",
    "icon": "7/774",
    "cry": "110"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "purrloin-delta",
@@ -3782,7 +3944,11 @@
    "sprite": "custom/purrloin-delta",
    "icon": "7/774",
    "cry": "509"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "purple"
  },
  {
   "id": "liepard-delta",
@@ -3896,7 +4062,11 @@
    "sprite": "custom/liepard-delta",
    "icon": "7/774",
    "cry": "510"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "purple"
  },
  {
   "id": "phantump-delta",
@@ -3994,7 +4164,12 @@
    "sprite": "custom/phantump-delta",
    "icon": "7/774",
    "cry": "708"
-  }
+  },
+  "eggGroups": [
+   "plant",
+   "indeterminate"
+  ],
+  "color": "brown"
  },
  {
   "id": "trevenant-delta",
@@ -4092,7 +4267,12 @@
    "sprite": "custom/trevenant-delta",
    "icon": "7/774",
    "cry": "709"
-  }
+  },
+  "eggGroups": [
+   "plant",
+   "indeterminate"
+  ],
+  "color": "brown"
  },
  {
   "id": "snorunt-delta",
@@ -4190,7 +4370,12 @@
    "sprite": "custom/snorunt-delta",
    "icon": "7/774",
    "cry": "361"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "mineral"
+  ],
+  "color": "gray"
  },
  {
   "id": "glalie-delta",
@@ -4288,7 +4473,12 @@
    "sprite": "custom/glalie-delta",
    "icon": "7/774",
    "cry": "362"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "mineral"
+  ],
+  "color": "gray"
  },
  {
   "id": "glalie-delta-mega",
@@ -4386,7 +4576,12 @@
    "sprite": "custom/glalie-delta-mega",
    "icon": "7/774",
    "cry": "362"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "mineral"
+  ],
+  "color": "gray"
  },
  {
   "id": "froslass-delta",
@@ -4483,7 +4678,12 @@
    "sprite": "custom/froslass-delta",
    "icon": "7/774",
    "cry": "478"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "mineral"
+  ],
+  "color": "white"
  },
  {
   "id": "froslass-delta-mega",
@@ -4593,7 +4793,12 @@
    "sprite": "custom/froslass-delta-mega",
    "icon": "7/774",
    "cry": "478"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "mineral"
+  ],
+  "color": "white"
  },
  {
   "id": "shinx-delta",
@@ -4688,7 +4893,11 @@
    "sprite": "custom/shinx-delta",
    "icon": "7/774",
    "cry": "403"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "blue"
  },
  {
   "id": "luxio-delta",
@@ -4783,7 +4992,11 @@
    "sprite": "custom/luxio-delta",
    "icon": "7/774",
    "cry": "404"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "blue"
  },
  {
   "id": "luxray-delta",
@@ -4877,7 +5090,11 @@
    "sprite": "custom/luxray-delta",
    "icon": "7/774",
    "cry": "405"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "blue"
  },
  {
   "id": "noibat-delta",
@@ -4988,7 +5205,12 @@
    "sprite": "custom/noibat-delta",
    "icon": "7/774",
    "cry": "714"
-  }
+  },
+  "eggGroups": [
+   "flying",
+   "dragon"
+  ],
+  "color": "purple"
  },
  {
   "id": "noivern-delta",
@@ -5106,7 +5328,12 @@
    "sprite": "custom/noivern-delta",
    "icon": "7/774",
    "cry": "715"
-  }
+  },
+  "eggGroups": [
+   "flying",
+   "dragon"
+  ],
+  "color": "purple"
  },
  {
   "id": "budew-delta",
@@ -5198,7 +5425,11 @@
    "sprite": "custom/budew-delta",
    "icon": "7/774",
    "cry": "406"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "green"
  },
  {
   "id": "roselia-delta",
@@ -5297,7 +5528,12 @@
    "sprite": "custom/roselia-delta",
    "icon": "7/774",
    "cry": "315"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "roserade-delta",
@@ -5399,7 +5635,12 @@
    "sprite": "custom/roserade-delta",
    "icon": "7/774",
    "cry": "407"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "drifloon-delta",
@@ -5498,7 +5739,11 @@
    "sprite": "custom/drifloon-delta",
    "icon": "7/774",
    "cry": "425"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "drifblim-delta",
@@ -5600,7 +5845,11 @@
    "sprite": "custom/drifblim-delta",
    "icon": "7/774",
    "cry": "426"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "grimer-delta",
@@ -5734,7 +5983,11 @@
    "sprite": "custom/grimer-delta",
    "icon": "7/774",
    "cry": "88"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "muk-delta",
@@ -5843,7 +6096,11 @@
    "sprite": "custom/muk-delta",
    "icon": "7/774",
    "cry": "89"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "wooper-delta",
@@ -5962,7 +6219,12 @@
    "sprite": "custom/wooper-delta",
    "icon": "7/774",
    "cry": "194"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "ground"
+  ],
+  "color": "blue"
  },
  {
   "id": "quagsire-delta",
@@ -6076,7 +6338,12 @@
    "sprite": "custom/quagsire-delta",
    "icon": "7/774",
    "cry": "195"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "ground"
+  ],
+  "color": "blue"
  },
  {
   "id": "munchlax-delta",
@@ -6195,7 +6462,11 @@
    "sprite": "custom/munchlax-delta",
    "icon": "7/774",
    "cry": "446"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "black"
  },
  {
   "id": "snorlax-delta",
@@ -6304,7 +6575,11 @@
    "sprite": "custom/snorlax-delta",
    "icon": "7/774",
    "cry": "143"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "black"
  },
  {
   "id": "misdreavus-delta",
@@ -6403,7 +6678,11 @@
    "sprite": "custom/misdreavus-delta",
    "icon": "7/774",
    "cry": "200"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "gray"
  },
  {
   "id": "mismagius-delta",
@@ -6505,7 +6784,11 @@
    "sprite": "custom/mismagius-delta",
    "icon": "7/774",
    "cry": "429"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "cyndaquil-delta",
@@ -6607,7 +6890,11 @@
    "sprite": "custom/cyndaquil-delta",
    "icon": "7/774",
    "cry": "155"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "quilava-delta",
@@ -6710,7 +6997,11 @@
    "sprite": "custom/quilava-delta",
    "icon": "7/774",
    "cry": "156"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "typhlosion-delta",
@@ -6812,7 +7103,11 @@
    "sprite": "custom/typhlosion-delta",
    "icon": "7/774",
    "cry": "157"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "typhlosion-delta-mega",
@@ -6914,7 +7209,11 @@
    "sprite": "custom/typhlosion-delta-mega",
    "icon": "7/774",
    "cry": "157"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "typhlosion-delta-mega-active",
@@ -7016,7 +7315,11 @@
    "sprite": "custom/typhlosion-delta-mega-active",
    "icon": "7/774",
    "cry": "157"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "treecko-delta",
@@ -7115,7 +7418,12 @@
    "sprite": "custom/treecko-delta",
    "icon": "7/774",
    "cry": "252"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "green"
  },
  {
   "id": "grovyle-delta",
@@ -7222,7 +7530,12 @@
    "sprite": "custom/grovyle-delta",
    "icon": "7/774",
    "cry": "253"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "green"
  },
  {
   "id": "sceptile-delta",
@@ -7328,7 +7641,12 @@
    "sprite": "custom/sceptile-delta",
    "icon": "7/774",
    "cry": "254"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "green"
  },
  {
   "id": "torchic-delta",
@@ -7418,7 +7736,11 @@
    "sprite": "custom/torchic-delta",
    "icon": "7/774",
    "cry": "255"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "red"
  },
  {
   "id": "combusken-delta",
@@ -7516,7 +7838,11 @@
    "sprite": "custom/combusken-delta",
    "icon": "7/774",
    "cry": "256"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "red"
  },
  {
   "id": "blaziken-delta",
@@ -7622,7 +7948,11 @@
    "sprite": "custom/blaziken-delta",
    "icon": "7/774",
    "cry": "257"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "red"
  },
  {
   "id": "turtwig-delta",
@@ -7713,7 +8043,12 @@
    "sprite": "custom/turtwig-delta",
    "icon": "7/774",
    "cry": "387"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "grotle-delta",
@@ -7804,7 +8139,12 @@
    "sprite": "custom/grotle-delta",
    "icon": "7/774",
    "cry": "388"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "torterra-delta",
@@ -7898,7 +8238,12 @@
    "sprite": "custom/torterra-delta",
    "icon": "7/774",
    "cry": "389"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "snivy-delta",
@@ -8000,7 +8345,12 @@
    "sprite": "custom/snivy-delta",
    "icon": "7/774",
    "cry": "495"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "servine-delta",
@@ -8102,7 +8452,12 @@
    "sprite": "custom/servine-delta",
    "icon": "7/774",
    "cry": "496"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "serperior-delta",
@@ -8200,7 +8555,12 @@
    "sprite": "custom/serperior-delta",
    "icon": "7/774",
    "cry": "497"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "froakie-delta",
@@ -8298,7 +8658,11 @@
    "sprite": "custom/froakie-delta",
    "icon": "7/774",
    "cry": "656"
-  }
+  },
+  "eggGroups": [
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "frogadier-delta",
@@ -8396,7 +8760,11 @@
    "sprite": "custom/frogadier-delta",
    "icon": "7/774",
    "cry": "657"
-  }
+  },
+  "eggGroups": [
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "greninja-delta",
@@ -8510,7 +8878,11 @@
    "sprite": "custom/greninja-delta",
    "icon": "7/774",
    "cry": "658"
-  }
+  },
+  "eggGroups": [
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "pidgey-delta",
@@ -8605,7 +8977,11 @@
    "sprite": "custom/pidgey-delta",
    "icon": "7/774",
    "cry": "16"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "pidgeotto-delta",
@@ -8700,7 +9076,11 @@
    "sprite": "custom/pidgeotto-delta",
    "icon": "7/774",
    "cry": "17"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "pidgeot-delta",
@@ -8790,7 +9170,11 @@
    "sprite": "custom/pidgeot-delta",
    "icon": "7/774",
    "cry": "18"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "pidgeot-delta-mega",
@@ -8880,7 +9264,11 @@
    "sprite": "custom/pidgeot-delta-mega",
    "icon": "7/774",
    "cry": "18"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "diglett-delta",
@@ -8979,7 +9367,11 @@
    "sprite": "custom/diglett-delta",
    "icon": "7/774",
    "cry": "50"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "dugtrio-delta",
@@ -9089,7 +9481,11 @@
    "sprite": "custom/dugtrio-delta",
    "icon": "7/774",
    "cry": "51"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "growlithe-delta",
@@ -9204,7 +9600,11 @@
    "sprite": "custom/growlithe-delta",
    "icon": "7/774",
    "cry": "58"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "arcanine-delta",
@@ -9290,7 +9690,11 @@
    "sprite": "custom/arcanine-delta",
    "icon": "7/774",
    "cry": "59"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "geodude-delta",
@@ -9397,7 +9801,11 @@
    "sprite": "custom/geodude-delta",
    "icon": "7/774",
    "cry": "74"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "brown"
  },
  {
   "id": "graveler-delta",
@@ -9504,7 +9912,11 @@
    "sprite": "custom/graveler-delta",
    "icon": "7/774",
    "cry": "75"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "brown"
  },
  {
   "id": "golem-delta",
@@ -9614,7 +10026,11 @@
    "sprite": "custom/golem-delta",
    "icon": "7/774",
    "cry": "76"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "brown"
  },
  {
   "id": "tentacool-delta",
@@ -9725,7 +10141,11 @@
    "sprite": "custom/tentacool-delta",
    "icon": "7/774",
    "cry": "72"
-  }
+  },
+  "eggGroups": [
+   "water3"
+  ],
+  "color": "blue"
  },
  {
   "id": "tentacruel-delta",
@@ -9835,7 +10255,11 @@
    "sprite": "custom/tentacruel-delta",
    "icon": "7/774",
    "cry": "73"
-  }
+  },
+  "eggGroups": [
+   "water3"
+  ],
+  "color": "blue"
  },
  {
   "id": "doduo-delta",
@@ -9933,7 +10357,11 @@
    "sprite": "custom/doduo-delta",
    "icon": "7/774",
    "cry": "84"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "dodrio-delta",
@@ -10026,7 +10454,11 @@
    "sprite": "custom/dodrio-delta",
    "icon": "7/774",
    "cry": "85"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "tangela-delta",
@@ -10144,7 +10576,11 @@
    "sprite": "custom/tangela-delta",
    "icon": "7/774",
    "cry": "114"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "blue"
  },
  {
   "id": "tangrowth-delta",
@@ -10262,7 +10698,11 @@
    "sprite": "custom/tangrowth-delta",
    "icon": "7/774",
    "cry": "465"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "blue"
  },
  {
   "id": "ditto-delta",
@@ -10339,7 +10779,11 @@
    "sprite": "custom/ditto-delta",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "kabuto-delta",
@@ -10430,7 +10874,12 @@
    "sprite": "custom/kabuto-delta",
    "icon": "7/774",
    "cry": "140"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "water3"
+  ],
+  "color": "brown"
  },
  {
   "id": "kabutops-delta",
@@ -10528,7 +10977,12 @@
    "sprite": "custom/kabutops-delta",
    "icon": "7/774",
    "cry": "141"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "water3"
+  ],
+  "color": "brown"
  },
  {
   "id": "dratini-delta",
@@ -10627,7 +11081,12 @@
    "sprite": "custom/dratini-delta",
    "icon": "7/774",
    "cry": "147"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "dragon"
+  ],
+  "color": "blue"
  },
  {
   "id": "dragonair-delta",
@@ -10726,7 +11185,12 @@
    "sprite": "custom/dragonair-delta",
    "icon": "7/774",
    "cry": "148"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "dragon"
+  ],
+  "color": "blue"
  },
  {
   "id": "dragonite-delta",
@@ -10836,7 +11300,12 @@
    "sprite": "custom/dragonite-delta",
    "icon": "7/774",
    "cry": "149"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "dragon"
+  ],
+  "color": "brown"
  },
  {
   "id": "hoothoot-delta",
@@ -10947,7 +11416,11 @@
    "sprite": "custom/hoothoot-delta",
    "icon": "7/774",
    "cry": "163"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "noctowl-delta",
@@ -11057,7 +11530,11 @@
    "sprite": "custom/noctowl-delta",
    "icon": "7/774",
    "cry": "164"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "chinchou-delta",
@@ -11164,7 +11641,11 @@
    "sprite": "custom/chinchou-delta",
    "icon": "7/774",
    "cry": "170"
-  }
+  },
+  "eggGroups": [
+   "water2"
+  ],
+  "color": "blue"
  },
  {
   "id": "lanturn-delta",
@@ -11282,7 +11763,11 @@
    "sprite": "custom/lanturn-delta",
    "icon": "7/774",
    "cry": "171"
-  }
+  },
+  "eggGroups": [
+   "water2"
+  ],
+  "color": "blue"
  },
  {
   "id": "pichu-delta",
@@ -11378,7 +11863,11 @@
    "sprite": "custom/pichu-delta",
    "icon": "7/774",
    "cry": "172"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "yellow"
  },
  {
   "id": "pikachu-delta",
@@ -11493,7 +11982,12 @@
    "sprite": "custom/pikachu-delta",
    "icon": "7/774",
    "cry": "25"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "fairy"
+  ],
+  "color": "yellow"
  },
  {
   "id": "raichu-delta",
@@ -11575,7 +12069,12 @@
    "sprite": "custom/raichu-delta",
    "icon": "7/774",
    "cry": "26"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "fairy"
+  ],
+  "color": "yellow"
  },
  {
   "id": "aipom-delta",
@@ -11698,7 +12197,11 @@
    "sprite": "custom/aipom-delta",
    "icon": "7/774",
    "cry": "190"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "purple"
  },
  {
   "id": "ambipom-delta",
@@ -11816,7 +12319,11 @@
    "sprite": "custom/ambipom-delta",
    "icon": "7/774",
    "cry": "424"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "purple"
  },
  {
   "id": "yanma-delta",
@@ -11923,7 +12430,11 @@
    "sprite": "custom/yanma-delta",
    "icon": "7/774",
    "cry": "193"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "red"
  },
  {
   "id": "yanmega-delta",
@@ -12033,7 +12544,11 @@
    "sprite": "custom/yanmega-delta",
    "icon": "7/774",
    "cry": "469"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "green"
  },
  {
   "id": "girafarig-delta",
@@ -12143,7 +12658,11 @@
    "sprite": "custom/girafarig-delta",
    "icon": "7/774",
    "cry": "203"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "girafarig-delta-mega",
@@ -12253,7 +12772,11 @@
    "sprite": "custom/girafarig-delta-mega",
    "icon": "7/774",
    "cry": "203"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "dunsparce-delta",
@@ -12371,7 +12894,11 @@
    "sprite": "custom/dunsparce-delta",
    "icon": "7/774",
    "cry": "206"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "shuckle-delta",
@@ -12513,7 +13040,11 @@
    "sprite": "custom/shuckle-delta",
    "icon": "7/774",
    "cry": "213"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "yellow"
  },
  {
   "id": "remoraid-delta",
@@ -12607,7 +13138,12 @@
    "sprite": "custom/remoraid-delta",
    "icon": "7/774",
    "cry": "223"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "water2"
+  ],
+  "color": "gray"
  },
  {
   "id": "octillery-delta",
@@ -12708,7 +13244,12 @@
    "sprite": "custom/octillery-delta",
    "icon": "7/774",
    "cry": "224"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "water2"
+  ],
+  "color": "red"
  },
  {
   "id": "elekid-delta",
@@ -12807,7 +13348,11 @@
    "sprite": "custom/elekid-delta",
    "icon": "7/774",
    "cry": "239"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "yellow"
  },
  {
   "id": "electabuzz-delta",
@@ -12905,7 +13450,11 @@
    "sprite": "custom/electabuzz-delta",
    "icon": "7/774",
    "cry": "125"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "yellow"
  },
  {
   "id": "electivire-delta",
@@ -13015,7 +13564,11 @@
    "sprite": "custom/electivire-delta",
    "icon": "7/774",
    "cry": "466"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "yellow"
  },
  {
   "id": "magby-delta",
@@ -13114,7 +13667,11 @@
    "sprite": "custom/magby-delta",
    "icon": "7/774",
    "cry": "240"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "red"
  },
  {
   "id": "magmar-delta",
@@ -13212,7 +13769,11 @@
    "sprite": "custom/magmar-delta",
    "icon": "7/774",
    "cry": "126"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "red"
  },
  {
   "id": "magmortar-delta",
@@ -13314,7 +13875,11 @@
    "sprite": "custom/magmortar-delta",
    "icon": "7/774",
    "cry": "467"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "red"
  },
  {
   "id": "lotad-delta",
@@ -13409,7 +13974,12 @@
    "sprite": "custom/lotad-delta",
    "icon": "7/774",
    "cry": "270"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "lombre-delta",
@@ -13504,7 +14074,12 @@
    "sprite": "custom/lombre-delta",
    "icon": "7/774",
    "cry": "271"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "ludicolo-delta",
@@ -13582,7 +14157,12 @@
    "sprite": "custom/ludicolo-delta",
    "icon": "7/774",
    "cry": "272"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "seedot-delta",
@@ -13664,7 +14244,12 @@
    "sprite": "custom/seedot-delta",
    "icon": "7/774",
    "cry": "273"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "plant"
+  ],
+  "color": "brown"
  },
  {
   "id": "nuzleaf-delta",
@@ -13754,7 +14339,12 @@
    "sprite": "custom/nuzleaf-delta",
    "icon": "7/774",
    "cry": "274"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "plant"
+  ],
+  "color": "brown"
  },
  {
   "id": "shiftry-delta",
@@ -13831,7 +14421,12 @@
    "sprite": "custom/shiftry-delta",
    "icon": "7/774",
    "cry": "275"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "plant"
+  ],
+  "color": "brown"
  },
  {
   "id": "sableye-delta",
@@ -13949,7 +14544,11 @@
    "sprite": "custom/sableye-delta",
    "icon": "7/774",
    "cry": "302"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "purple"
  },
  {
   "id": "sableye-delta-mega",
@@ -14067,7 +14666,11 @@
    "sprite": "custom/sableye-delta-mega",
    "icon": "7/774",
    "cry": "302"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "purple"
  },
  {
   "id": "mawile-delta",
@@ -14169,7 +14772,12 @@
    "sprite": "custom/mawile-delta",
    "icon": "7/774",
    "cry": "303"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "fairy"
+  ],
+  "color": "black"
  },
  {
   "id": "mawile-delta-mega",
@@ -14271,7 +14879,12 @@
    "sprite": "custom/mawile-delta-mega",
    "icon": "7/774",
    "cry": "303"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "fairy"
+  ],
+  "color": "black"
  },
  {
   "id": "aron-delta",
@@ -14386,7 +14999,11 @@
    "sprite": "custom/aron-delta",
    "icon": "7/774",
    "cry": "304"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "gray"
  },
  {
   "id": "lairon-delta",
@@ -14501,7 +15118,11 @@
    "sprite": "custom/lairon-delta",
    "icon": "7/774",
    "cry": "305"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "gray"
  },
  {
   "id": "aggron-delta",
@@ -14615,7 +15236,11 @@
    "sprite": "custom/aggron-delta",
    "icon": "7/774",
    "cry": "306"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "gray"
  },
  {
   "id": "meditite-delta",
@@ -14725,7 +15350,11 @@
    "sprite": "custom/meditite-delta",
    "icon": "7/774",
    "cry": "307"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "blue"
  },
  {
   "id": "medicham-delta",
@@ -14847,7 +15476,11 @@
    "sprite": "custom/medicham-delta",
    "icon": "7/774",
    "cry": "308"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "red"
  },
  {
   "id": "medicham-delta-mega",
@@ -14969,7 +15602,11 @@
    "sprite": "custom/medicham-delta-mega",
    "icon": "7/774",
    "cry": "308"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "red"
  },
  {
   "id": "numel-delta",
@@ -15071,7 +15708,11 @@
    "sprite": "custom/numel-delta",
    "icon": "7/774",
    "cry": "322"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "camerupt-delta",
@@ -15168,7 +15809,11 @@
    "sprite": "custom/camerupt-delta",
    "icon": "7/774",
    "cry": "323"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "red"
  },
  {
   "id": "camerupt-delta-mega",
@@ -15265,7 +15910,11 @@
    "sprite": "custom/camerupt-delta-mega",
    "icon": "7/774",
    "cry": "323"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "red"
  },
  {
   "id": "plusle-delta",
@@ -15387,7 +16036,11 @@
    "sprite": "custom/plusle-delta",
    "icon": "7/774",
    "cry": "311"
-  }
+  },
+  "eggGroups": [
+   "fairy"
+  ],
+  "color": "yellow"
  },
  {
   "id": "minun-delta",
@@ -15509,7 +16162,11 @@
    "sprite": "custom/minun-delta",
    "icon": "7/774",
    "cry": "312"
-  }
+  },
+  "eggGroups": [
+   "fairy"
+  ],
+  "color": "yellow"
  },
  {
   "id": "wailmer-delta",
@@ -15616,7 +16273,12 @@
    "sprite": "custom/wailmer-delta",
    "icon": "7/774",
    "cry": "320"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "water2"
+  ],
+  "color": "blue"
  },
  {
   "id": "wailord-delta",
@@ -15718,7 +16380,12 @@
    "sprite": "custom/wailord-delta",
    "icon": "7/774",
    "cry": "321"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "water2"
+  ],
+  "color": "blue"
  },
  {
   "id": "feebas-delta",
@@ -15780,7 +16447,12 @@
    "sprite": "custom/feebas-delta",
    "icon": "7/774",
    "cry": "349"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "dragon"
+  ],
+  "color": "brown"
  },
  {
   "id": "milotic-delta",
@@ -15889,7 +16561,12 @@
    "sprite": "custom/milotic-delta",
    "icon": "7/774",
    "cry": "350"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "dragon"
+  ],
+  "color": "pink"
  },
  {
   "id": "milotic-delta-mega",
@@ -15998,7 +16675,12 @@
    "sprite": "custom/milotic-delta-mega",
    "icon": "7/774",
    "cry": "350"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "dragon"
+  ],
+  "color": "pink"
  },
  {
   "id": "clamperl-delta",
@@ -16072,7 +16754,11 @@
    "sprite": "custom/clamperl-delta",
    "icon": "7/774",
    "cry": "366"
-  }
+  },
+  "eggGroups": [
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "huntail-delta",
@@ -16166,7 +16852,11 @@
    "sprite": "custom/huntail-delta",
    "icon": "7/774",
    "cry": "367"
-  }
+  },
+  "eggGroups": [
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "gorebyss-delta",
@@ -16264,7 +16954,11 @@
    "sprite": "custom/gorebyss-delta",
    "icon": "7/774",
    "cry": "368"
-  }
+  },
+  "eggGroups": [
+   "water1"
+  ],
+  "color": "pink"
  },
  {
   "id": "beldum-delta-spider",
@@ -16343,7 +17037,11 @@
    "sprite": "custom/beldum-delta-spider",
    "icon": "7/774",
    "cry": "374"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "metang-delta-spider",
@@ -16442,7 +17140,11 @@
    "sprite": "custom/metang-delta-spider",
    "icon": "7/774",
    "cry": "375"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "metagross-delta-spider",
@@ -16540,7 +17242,11 @@
    "sprite": "custom/metagross-delta-spider",
    "icon": "7/774",
    "cry": "376"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "metagross-delta-spider-mega",
@@ -16638,7 +17344,11 @@
    "sprite": "custom/metagross-delta-spider-mega",
    "icon": "7/774",
    "cry": "376"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "beldum-delta-ruin",
@@ -16721,7 +17431,11 @@
    "sprite": "custom/beldum-delta-ruin",
    "icon": "7/774",
    "cry": "374"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "metang-delta-ruin",
@@ -16820,7 +17534,11 @@
    "sprite": "custom/metang-delta-ruin",
    "icon": "7/774",
    "cry": "375"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "metagross-delta-ruin",
@@ -16918,7 +17636,11 @@
    "sprite": "custom/metagross-delta-ruin",
    "icon": "7/774",
    "cry": "376"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "metagross-delta-ruin-mega",
@@ -17016,7 +17738,11 @@
    "sprite": "custom/metagross-delta-ruin-mega",
    "icon": "7/774",
    "cry": "376"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "metagross-delta-ruin-crystal",
@@ -17126,7 +17852,11 @@
    "sprite": "custom/metagross-delta-ruin-crystal",
    "icon": "7/774",
    "cry": "376"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "blue"
  },
  {
   "id": "buneary-delta",
@@ -17252,7 +17982,12 @@
    "sprite": "custom/buneary-delta",
    "icon": "7/774",
    "cry": "427"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "lopunny-delta",
@@ -17389,7 +18124,12 @@
    "sprite": "custom/lopunny-delta",
    "icon": "7/774",
    "cry": "428"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "lopunny-delta-mega",
@@ -17527,7 +18267,12 @@
    "sprite": "custom/lopunny-delta-mega",
    "icon": "7/774",
    "cry": "428"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "riolu-delta",
@@ -17622,7 +18367,11 @@
    "sprite": "custom/riolu-delta",
    "icon": "7/774",
    "cry": "447"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "blue"
  },
  {
   "id": "lucario-delta",
@@ -17744,7 +18493,12 @@
    "sprite": "custom/lucario-delta",
    "icon": "7/774",
    "cry": "448"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "humanshape"
+  ],
+  "color": "blue"
  },
  {
   "id": "lucario-delta-mega",
@@ -17866,7 +18620,12 @@
    "sprite": "custom/lucario-delta-mega",
    "icon": "7/774",
    "cry": "448"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "humanshape"
+  ],
+  "color": "blue"
  },
  {
   "id": "croagunk-delta",
@@ -17972,7 +18731,11 @@
    "sprite": "custom/croagunk-delta",
    "icon": "7/774",
    "cry": "453"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "blue"
  },
  {
   "id": "toxicroak-delta",
@@ -18073,7 +18836,11 @@
    "sprite": "custom/toxicroak-delta",
    "icon": "7/774",
    "cry": "454"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "blue"
  },
  {
   "id": "venipede-delta",
@@ -18172,7 +18939,11 @@
    "sprite": "custom/venipede-delta",
    "icon": "7/774",
    "cry": "543"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "red"
  },
  {
   "id": "whirlipede-delta",
@@ -18279,7 +19050,11 @@
    "sprite": "custom/whirlipede-delta",
    "icon": "7/774",
    "cry": "544"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "gray"
  },
  {
   "id": "scolipede-delta",
@@ -18389,7 +19164,11 @@
    "sprite": "custom/scolipede-delta",
    "icon": "7/774",
    "cry": "545"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "red"
  },
  {
   "id": "petilil-delta-water",
@@ -18496,7 +19275,11 @@
    "sprite": "custom/petilil-delta-water",
    "icon": "7/774",
    "cry": "548"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "lilligant-delta-water",
@@ -18566,7 +19349,11 @@
    "sprite": "custom/lilligant-delta-water",
    "icon": "7/774",
    "cry": "549"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "petilil-delta-fairy",
@@ -18673,7 +19460,11 @@
    "sprite": "custom/petilil-delta-fairy",
    "icon": "7/774",
    "cry": "548"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "lilligant-delta-fairy",
@@ -18743,7 +19534,11 @@
    "sprite": "custom/lilligant-delta-fairy",
    "icon": "7/774",
    "cry": "549"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "solosis-delta",
@@ -18862,7 +19657,11 @@
    "sprite": "custom/solosis-delta",
    "icon": "7/774",
    "cry": "577"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "green"
  },
  {
   "id": "duosion-delta",
@@ -18981,7 +19780,11 @@
    "sprite": "custom/duosion-delta",
    "icon": "7/774",
    "cry": "578"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "green"
  },
  {
   "id": "reuniclus-delta",
@@ -19087,7 +19890,11 @@
    "sprite": "custom/reuniclus-delta",
    "icon": "7/774",
    "cry": "579"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "green"
  },
  {
   "id": "darumaka-delta",
@@ -19194,7 +20001,11 @@
    "sprite": "custom/darumaka-delta",
    "icon": "7/774",
    "cry": "554"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "red"
  },
  {
   "id": "darmanitan-delta",
@@ -19300,7 +20111,11 @@
    "sprite": "custom/darmanitan-delta",
    "icon": "7/774",
    "cry": "555"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "red"
  },
  {
   "id": "maractus-delta",
@@ -19417,7 +20232,11 @@
    "sprite": "custom/maractus-delta",
    "icon": "7/774",
    "cry": "556"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "dwebble-delta-berry",
@@ -19528,7 +20347,12 @@
    "sprite": "custom/dwebble-delta-berry",
    "icon": "7/774",
    "cry": "557"
-  }
+  },
+  "eggGroups": [
+   "bug",
+   "mineral"
+  ],
+  "color": "red"
  },
  {
   "id": "crustle-delta-berry",
@@ -19630,7 +20454,12 @@
    "sprite": "custom/crustle-delta-berry",
    "icon": "7/774",
    "cry": "558"
-  }
+  },
+  "eggGroups": [
+   "bug",
+   "mineral"
+  ],
+  "color": "red"
  },
  {
   "id": "dwebble-delta-cake",
@@ -19733,7 +20562,12 @@
    "sprite": "custom/dwebble-delta-cake",
    "icon": "7/774",
    "cry": "557"
-  }
+  },
+  "eggGroups": [
+   "bug",
+   "mineral"
+  ],
+  "color": "red"
  },
  {
   "id": "crustle-delta-cake",
@@ -19839,7 +20673,12 @@
    "sprite": "custom/crustle-delta-cake",
    "icon": "7/774",
    "cry": "558"
-  }
+  },
+  "eggGroups": [
+   "bug",
+   "mineral"
+  ],
+  "color": "red"
  },
  {
   "id": "yamask-delta",
@@ -19954,7 +20793,12 @@
    "sprite": "custom/yamask-delta",
    "icon": "7/774",
    "cry": "562"
-  }
+  },
+  "eggGroups": [
+   "mineral",
+   "indeterminate"
+  ],
+  "color": "black"
  },
  {
   "id": "cofagrigus-delta",
@@ -20068,7 +20912,12 @@
    "sprite": "custom/cofagrigus-delta",
    "icon": "7/774",
    "cry": "563"
-  }
+  },
+  "eggGroups": [
+   "mineral",
+   "indeterminate"
+  ],
+  "color": "yellow"
  },
  {
   "id": "emolga-delta",
@@ -20170,7 +21019,11 @@
    "sprite": "custom/emolga-delta",
    "icon": "7/774",
    "cry": "587"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "white"
  },
  {
   "id": "emolga-delta-fired",
@@ -20272,7 +21125,11 @@
    "sprite": "custom/emolga-delta-fired",
    "icon": "7/774",
    "cry": "587"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "white"
  },
  {
   "id": "karrablast-delta",
@@ -20374,7 +21231,11 @@
    "sprite": "custom/karrablast-delta",
    "icon": "7/774",
    "cry": "588"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "blue"
  },
  {
   "id": "escavalier-delta",
@@ -20479,7 +21340,11 @@
    "sprite": "custom/escavalier-delta",
    "icon": "7/774",
    "cry": "589"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "gray"
  },
  {
   "id": "foongus-delta",
@@ -20582,7 +21447,11 @@
    "sprite": "custom/foongus-delta",
    "icon": "7/774",
    "cry": "590"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "white"
  },
  {
   "id": "amoonguss-delta",
@@ -20680,7 +21549,11 @@
    "sprite": "custom/amoonguss-delta",
    "icon": "7/774",
    "cry": "591"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "white"
  },
  {
   "id": "litwick-delta",
@@ -20791,7 +21664,11 @@
    "sprite": "custom/litwick-delta",
    "icon": "7/774",
    "cry": "607"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "white"
  },
  {
   "id": "lampent-delta",
@@ -20902,7 +21779,11 @@
    "sprite": "custom/lampent-delta",
    "icon": "7/774",
    "cry": "608"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "black"
  },
  {
   "id": "chandelure-delta",
@@ -20984,7 +21865,11 @@
    "sprite": "custom/chandelure-delta",
    "icon": "7/774",
    "cry": "609"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "black"
  },
  {
   "id": "axew-delta",
@@ -21090,7 +21975,12 @@
    "sprite": "custom/axew-delta",
    "icon": "7/774",
    "cry": "610"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "green"
  },
  {
   "id": "fraxure-delta",
@@ -21196,7 +22086,12 @@
    "sprite": "custom/fraxure-delta",
    "icon": "7/774",
    "cry": "611"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "green"
  },
  {
   "id": "haxorus-delta",
@@ -21306,7 +22201,12 @@
    "sprite": "custom/haxorus-delta",
    "icon": "7/774",
    "cry": "612"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "dragon"
+  ],
+  "color": "yellow"
  },
  {
   "id": "golett-delta",
@@ -21409,7 +22309,11 @@
    "sprite": "custom/golett-delta",
    "icon": "7/774",
    "cry": "622"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "green"
  },
  {
   "id": "golurk-delta",
@@ -21515,7 +22419,11 @@
    "sprite": "custom/golurk-delta",
    "icon": "7/774",
    "cry": "623"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "green"
  },
  {
   "id": "heatmor-delta",
@@ -21625,7 +22533,11 @@
    "sprite": "custom/heatmor-delta",
    "icon": "7/774",
    "cry": "631"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "red"
  },
  {
   "id": "deino-delta",
@@ -21732,7 +22644,11 @@
    "sprite": "custom/deino-delta",
    "icon": "7/774",
    "cry": "633"
-  }
+  },
+  "eggGroups": [
+   "dragon"
+  ],
+  "color": "blue"
  },
  {
   "id": "zweilous-delta",
@@ -21843,7 +22759,11 @@
    "sprite": "custom/zweilous-delta",
    "icon": "7/774",
    "cry": "634"
-  }
+  },
+  "eggGroups": [
+   "dragon"
+  ],
+  "color": "blue"
  },
  {
   "id": "hydreigon-delta",
@@ -21961,7 +22881,11 @@
    "sprite": "custom/hydreigon-delta",
    "icon": "7/774",
    "cry": "635"
-  }
+  },
+  "eggGroups": [
+   "dragon"
+  ],
+  "color": "blue"
  },
  {
   "id": "larvesta-delta",
@@ -22052,7 +22976,11 @@
    "sprite": "custom/larvesta-delta",
    "icon": "7/774",
    "cry": "636"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "white"
  },
  {
   "id": "volcarona-delta",
@@ -22166,7 +23094,11 @@
    "sprite": "custom/volcarona-delta",
    "icon": "7/774",
    "cry": "637"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "white"
  },
  {
   "id": "volcarona-delta-armor",
@@ -22280,7 +23212,11 @@
    "sprite": "custom/volcarona-delta-armor",
    "icon": "7/774",
    "cry": "637"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "white"
  },
  {
   "id": "amaura-delta",
@@ -22395,7 +23331,11 @@
    "sprite": "custom/amaura-delta",
    "icon": "7/774",
    "cry": "698"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "blue"
  },
  {
   "id": "aurorus-delta",
@@ -22509,7 +23449,11 @@
    "sprite": "custom/aurorus-delta",
    "icon": "7/774",
    "cry": "699"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "blue"
  },
  {
   "id": "goomy-delta",
@@ -22596,7 +23540,11 @@
    "sprite": "custom/goomy-delta",
    "icon": "7/774",
    "cry": "704"
-  }
+  },
+  "eggGroups": [
+   "dragon"
+  ],
+  "color": "purple"
  },
  {
   "id": "sliggoo-delta",
@@ -22683,7 +23631,11 @@
    "sprite": "custom/sliggoo-delta",
    "icon": "7/774",
    "cry": "705"
-  }
+  },
+  "eggGroups": [
+   "dragon"
+  ],
+  "color": "purple"
  },
  {
   "id": "goodra-delta",
@@ -22781,7 +23733,11 @@
    "sprite": "custom/goodra-delta",
    "icon": "7/774",
    "cry": "706"
-  }
+  },
+  "eggGroups": [
+   "dragon"
+  ],
+  "color": "purple"
  },
  {
   "id": "regirock-delta",
@@ -22879,7 +23835,11 @@
    "sprite": "custom/regirock-delta",
    "icon": "7/774",
    "cry": "377"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "brown"
  },
  {
   "id": "regice-delta",
@@ -22985,7 +23945,11 @@
    "sprite": "custom/regice-delta",
    "icon": "7/774",
    "cry": "378"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "blue"
  },
  {
   "id": "registeel-delta",
@@ -23087,7 +24051,11 @@
    "sprite": "custom/registeel-delta",
    "icon": "7/774",
    "cry": "379"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "meloetta-delta",
@@ -23198,7 +24166,11 @@
    "sprite": "custom/meloetta-delta",
    "icon": "7/774",
    "cry": "648"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "white"
  },
  {
   "id": "meloetta-delta-magician",
@@ -23309,7 +24281,11 @@
    "sprite": "custom/meloetta-delta-magician",
    "icon": "7/774",
    "cry": "648"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "white"
  },
  {
   "id": "hoopa-delta",
@@ -23423,7 +24399,11 @@
    "sprite": "custom/hoopa-delta",
    "icon": "7/774",
    "cry": "720"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "purple"
  },
  {
   "id": "hoopa-delta-unleashed",
@@ -23538,7 +24518,11 @@
    "sprite": "custom/hoopa-delta-unleashed",
    "icon": "7/774",
    "cry": "720"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-fighting",
@@ -23631,7 +24615,11 @@
    "sprite": "custom/ditto-delta-fighting",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-flying",
@@ -23724,7 +24712,11 @@
    "sprite": "custom/ditto-delta-flying",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-poison",
@@ -23817,7 +24809,11 @@
    "sprite": "custom/ditto-delta-poison",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-ground",
@@ -23906,7 +24902,11 @@
    "sprite": "custom/ditto-delta-ground",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-rock",
@@ -23999,7 +24999,11 @@
    "sprite": "custom/ditto-delta-rock",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-bug",
@@ -24088,7 +25092,11 @@
    "sprite": "custom/ditto-delta-bug",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-ghost",
@@ -24177,7 +25185,11 @@
    "sprite": "custom/ditto-delta-ghost",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-steel",
@@ -24266,7 +25278,11 @@
    "sprite": "custom/ditto-delta-steel",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-fire",
@@ -24355,7 +25371,11 @@
    "sprite": "custom/ditto-delta-fire",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-water",
@@ -24432,7 +25452,11 @@
    "sprite": "custom/ditto-delta-water",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-grass",
@@ -24529,7 +25553,11 @@
    "sprite": "custom/ditto-delta-grass",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-electric",
@@ -24618,7 +25646,11 @@
    "sprite": "custom/ditto-delta-electric",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-psychic",
@@ -24707,7 +25739,11 @@
    "sprite": "custom/ditto-delta-psychic",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-ice",
@@ -24796,7 +25832,11 @@
    "sprite": "custom/ditto-delta-ice",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-dragon",
@@ -24885,7 +25925,11 @@
    "sprite": "custom/ditto-delta-dragon",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-dark",
@@ -24974,7 +26018,11 @@
    "sprite": "custom/ditto-delta-dark",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "ditto-delta-fairy",
@@ -25063,7 +26111,11 @@
    "sprite": "custom/ditto-delta-fairy",
    "icon": "7/774",
    "cry": "132"
-  }
+  },
+  "eggGroups": [
+   "ditto"
+  ],
+  "color": "purple"
  },
  {
   "id": "liepard-delta-shadow",
@@ -25173,7 +26225,11 @@
    "sprite": "custom/liepard-delta-shadow",
    "icon": "7/774",
    "cry": "510"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "purple"
  },
  {
   "id": "muk-delta-water",
@@ -25299,7 +26355,11 @@
    "sprite": "custom/muk-delta-water",
    "icon": "7/774",
    "cry": "89"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "muk-delta-grass",
@@ -25429,7 +26489,11 @@
    "sprite": "custom/muk-delta-grass",
    "icon": "7/774",
    "cry": "89"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "muk-delta-fire",
@@ -25551,7 +26615,11 @@
    "sprite": "custom/muk-delta-fire",
    "icon": "7/774",
    "cry": "89"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "muk-delta-dark",
@@ -25673,7 +26741,11 @@
    "sprite": "custom/muk-delta-dark",
    "icon": "7/774",
    "cry": "89"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "muk-delta-fairy",
@@ -25795,7 +26867,11 @@
    "sprite": "custom/muk-delta-fairy",
    "icon": "7/774",
    "cry": "89"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "muk-delta-bug",
@@ -25917,7 +26993,11 @@
    "sprite": "custom/muk-delta-bug",
    "icon": "7/774",
    "cry": "89"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "snorlax-delta-summer",
@@ -26031,7 +27111,11 @@
    "sprite": "custom/snorlax-delta-summer",
    "icon": "7/774",
    "cry": "143"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "black"
  },
  {
   "id": "snorlax-delta-autumn",
@@ -26153,7 +27237,11 @@
    "sprite": "custom/snorlax-delta-autumn",
    "icon": "7/774",
    "cry": "143"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "black"
  },
  {
   "id": "snorlax-delta-winter",
@@ -26275,7 +27363,11 @@
    "sprite": "custom/snorlax-delta-winter",
    "icon": "7/774",
    "cry": "143"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "black"
  },
  {
   "id": "snorlax-delta-blossom",
@@ -26397,7 +27489,11 @@
    "sprite": "custom/snorlax-delta-blossom",
    "icon": "7/774",
    "cry": "143"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "black"
  },
  {
   "id": "elgyem-delta",
@@ -26519,7 +27615,11 @@
   "form": {
    "kind": "alternate",
    "base": "elgyem"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "blue"
  },
  {
   "id": "abra-z",
@@ -26590,7 +27690,11 @@
    "sprite": "custom/abra-z",
    "icon": "7/774",
    "cry": "63"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "kadabra-z",
@@ -26729,7 +27833,11 @@
    "sprite": "custom/kadabra-z",
    "icon": "7/774",
    "cry": "64"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "alakazam-z",
@@ -26871,7 +27979,11 @@
    "sprite": "custom/alakazam-z",
    "icon": "7/774",
    "cry": "65"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "alakazam-z-mega",
@@ -27013,7 +28125,11 @@
    "sprite": "custom/alakazam-z-mega",
    "icon": "7/774",
    "cry": "65-mega"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "gastly-z",
@@ -27152,7 +28268,11 @@
    "sprite": "custom/gastly-z",
    "icon": "7/774",
    "cry": "92"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "haunter-z",
@@ -27295,7 +28415,11 @@
    "sprite": "custom/haunter-z",
    "icon": "7/774",
    "cry": "93"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "gengar-z",
@@ -27449,7 +28573,11 @@
    "sprite": "custom/gengar-z",
    "icon": "7/774",
    "cry": "94"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "gengar-z-mega",
@@ -27603,7 +28731,11 @@
    "sprite": "custom/gengar-z-mega",
    "icon": "7/774",
    "cry": "94-mega"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "onix-z",
@@ -27754,7 +28886,11 @@
    "sprite": "custom/onix-z",
    "icon": "7/774",
    "cry": "95"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "gray"
  },
  {
   "id": "steelix-z",
@@ -27920,7 +29056,11 @@
    "sprite": "custom/steelix-z",
    "icon": "7/774",
    "cry": "208"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "gray"
  },
  {
   "id": "steelix-z-mega",
@@ -28086,7 +29226,11 @@
    "sprite": "custom/steelix-z-mega",
    "icon": "7/774",
    "cry": "208-mega"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "gray"
  },
  {
   "id": "tangela-z",
@@ -28237,7 +29381,11 @@
    "sprite": "custom/tangela-z",
    "icon": "7/774",
    "cry": "114"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "blue"
  },
  {
   "id": "tangrowth-z",
@@ -28383,7 +29531,11 @@
    "sprite": "custom/tangrowth-z",
    "icon": "7/774",
    "cry": "465"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "blue"
  },
  {
   "id": "voltorb-z",
@@ -28518,7 +29670,11 @@
    "sprite": "custom/voltorb-z",
    "icon": "7/774",
    "cry": "100"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "red"
  },
  {
   "id": "electrode-z",
@@ -28652,7 +29808,11 @@
    "sprite": "custom/electrode-z",
    "icon": "7/774",
    "cry": "101"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "red"
  },
  {
   "id": "diglett-z",
@@ -28775,7 +29935,11 @@
    "sprite": "custom/diglett-z",
    "icon": "7/774",
    "cry": "50"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "dugtrio-z",
@@ -28913,7 +30077,11 @@
    "sprite": "custom/dugtrio-z",
    "icon": "7/774",
    "cry": "51"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "piplup-z",
@@ -29027,7 +30195,12 @@
    "sprite": "custom/piplup-z",
    "icon": "7/774",
    "cry": "393"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "ground"
+  ],
+  "color": "blue"
  },
  {
   "id": "prinplup-z",
@@ -29153,7 +30326,12 @@
    "sprite": "custom/prinplup-z",
    "icon": "7/774",
    "cry": "394"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "ground"
+  ],
+  "color": "blue"
  },
  {
   "id": "empoleon-z",
@@ -29275,7 +30453,12 @@
    "sprite": "custom/empoleon-z",
    "icon": "7/774",
    "cry": "395"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "ground"
+  ],
+  "color": "blue"
  },
  {
   "id": "bruticate",
@@ -29653,7 +30836,11 @@
    "sprite": "custom/electivire-z",
    "icon": "custom/electivire-z",
    "cry": "466"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "yellow"
  },
  {
   "id": "granbull-z",
@@ -29787,7 +30974,12 @@
    "sprite": "custom/granbull-z",
    "icon": "custom/granbull-z",
    "cry": "210"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "fairy"
+  ],
+  "color": "purple"
  },
  {
   "id": "linoone-z",
@@ -29929,7 +31121,11 @@
    "sprite": "custom/linoone-z",
    "icon": "custom/linoone-z",
    "cry": "264"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "white"
  },
  {
   "id": "marowak-z",
@@ -30059,7 +31255,11 @@
    "sprite": "custom/marowak-z",
    "icon": "custom/marowak-z",
    "cry": "105"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "brown"
  },
  {
   "id": "noctowl-z",
@@ -30189,7 +31389,11 @@
    "sprite": "custom/noctowl-z",
    "icon": "custom/noctowl-z",
    "cry": "164"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "brown"
  },
  {
   "id": "parasect-z",
@@ -30307,7 +31511,12 @@
    "sprite": "custom/parasect-z",
    "icon": "custom/parasect-z",
    "cry": "47"
-  }
+  },
+  "eggGroups": [
+   "bug",
+   "plant"
+  ],
+  "color": "red"
  },
  {
   "id": "rhyperior-z",
@@ -30445,7 +31654,12 @@
    "sprite": "custom/rhyperior-z",
    "icon": "custom/rhyperior-z",
    "cry": "464"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "ground"
+  ],
+  "color": "gray"
  },
  {
   "id": "sandslash-z",
@@ -30587,7 +31801,11 @@
    "sprite": "custom/sandslash-z",
    "icon": "custom/sandslash-z",
    "cry": "28"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "sharpedo-z",
@@ -30705,7 +31923,11 @@
    "sprite": "custom/sharpedo-z",
    "icon": "custom/sharpedo-z",
    "cry": "319"
-  }
+  },
+  "eggGroups": [
+   "water2"
+  ],
+  "color": "blue"
  },
  {
   "id": "skarmory-z",
@@ -30815,7 +32037,11 @@
    "sprite": "custom/skarmory-z",
    "icon": "custom/skarmory-z",
    "cry": "227"
-  }
+  },
+  "eggGroups": [
+   "flying"
+  ],
+  "color": "gray"
  },
  {
   "id": "sudowoodo-z",
@@ -30965,7 +32191,11 @@
    "sprite": "custom/sudowoodo-z",
    "icon": "custom/sudowoodo-z",
    "cry": "185"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "brown"
  },
  {
   "id": "tentacruel-z",
@@ -31083,7 +32313,11 @@
    "sprite": "custom/tentacruel-z",
    "icon": "custom/tentacruel-z",
    "cry": "73"
-  }
+  },
+  "eggGroups": [
+   "water3"
+  ],
+  "color": "blue"
  },
  {
   "id": "dragonite-z-mega",
@@ -31213,7 +32447,12 @@
    "sprite": "custom/dragonite-z-mega",
    "icon": "custom/dragonite-z-mega",
    "cry": "149"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "dragon"
+  ],
+  "color": "brown"
  },
  {
   "id": "litwick-spooky",
@@ -31332,7 +32571,11 @@
    "sprite": "custom/litwick-spooky",
    "icon": "custom/litwick-spooky",
    "cry": "607"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "white"
  },
  {
   "id": "lampent-spooky",
@@ -31451,7 +32694,11 @@
    "sprite": "custom/lampent-spooky",
    "icon": "custom/lampent-spooky",
    "cry": "608"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "black"
  },
  {
   "id": "chandelure-spooky",
@@ -31565,7 +32812,11 @@
    "sprite": "custom/chandelure-spooky",
    "icon": "custom/chandelure-spooky",
    "cry": "609"
-  }
+  },
+  "eggGroups": [
+   "indeterminate"
+  ],
+  "color": "black"
  },
  {
   "id": "timburr-spooky",
@@ -31688,7 +32939,11 @@
    "sprite": "custom/timburr-spooky",
    "icon": "custom/timburr-spooky",
    "cry": "532"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "gray"
  },
  {
   "id": "gurdurr-spooky",
@@ -31811,7 +33066,11 @@
    "sprite": "custom/gurdurr-spooky",
    "icon": "custom/gurdurr-spooky",
    "cry": "533"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "gray"
  },
  {
   "id": "conkeldurr-spooky",
@@ -31929,7 +33188,11 @@
    "sprite": "custom/conkeldurr-spooky",
    "icon": "custom/conkeldurr-spooky",
    "cry": "534"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "emolga-spooky",
@@ -32043,7 +33306,11 @@
    "sprite": "custom/emolga-spooky",
    "icon": "custom/emolga-spooky",
    "cry": "587"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "white"
  },
  {
   "id": "snorunt-spooky",
@@ -32166,7 +33433,12 @@
    "sprite": "custom/snorunt-spooky",
    "icon": "custom/snorunt-spooky",
    "cry": "361"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "mineral"
+  ],
+  "color": "gray"
  },
  {
   "id": "glalie-spooky",
@@ -32296,7 +33568,12 @@
    "sprite": "custom/glalie-spooky",
    "icon": "custom/glalie-spooky",
    "cry": "362"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "mineral"
+  ],
+  "color": "gray"
  },
  {
   "id": "ponyta-spooky",
@@ -32427,7 +33704,11 @@
    "sprite": "custom/ponyta-spooky",
    "icon": "custom/ponyta-spooky",
    "cry": "77"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "rapidash-spooky",
@@ -32569,7 +33850,11 @@
    "sprite": "custom/rapidash-spooky",
    "icon": "custom/rapidash-spooky",
    "cry": "78"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "sinistea-spooky",
@@ -32672,7 +33957,12 @@
    "sprite": "custom/sinistea-spooky",
    "icon": "custom/sinistea-spooky",
    "cry": "854"
-  }
+  },
+  "eggGroups": [
+   "mineral",
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "polteageist-spooky",
@@ -32786,7 +34076,12 @@
    "sprite": "custom/polteageist-spooky",
    "icon": "custom/polteageist-spooky",
    "cry": "855"
-  }
+  },
+  "eggGroups": [
+   "mineral",
+   "indeterminate"
+  ],
+  "color": "purple"
  },
  {
   "id": "tangela-spooky",
@@ -32937,7 +34232,11 @@
    "sprite": "custom/tangela-spooky",
    "icon": "custom/tangela-spooky",
    "cry": "114"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "blue"
  },
  {
   "id": "tangrowth-spooky",
@@ -33083,7 +34382,11 @@
    "sprite": "custom/tangrowth-spooky",
    "icon": "custom/tangrowth-spooky",
    "cry": "465"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "blue"
  },
  {
   "id": "amoonguss-z-mega",
@@ -33201,7 +34504,11 @@
   "form": {
    "kind": "mega",
    "base": "amoonguss"
-  }
+  },
+  "eggGroups": [
+   "plant"
+  ],
+  "color": "white"
  },
  {
   "id": "azumarill-z-mega",
@@ -33319,7 +34626,12 @@
   "form": {
    "kind": "mega",
    "base": "azumarill"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "fairy"
+  ],
+  "color": "blue"
  },
  {
   "id": "butterfree-z-mega",
@@ -33437,7 +34749,11 @@
   "form": {
    "kind": "mega",
    "base": "butterfree"
-  }
+  },
+  "eggGroups": [
+   "bug"
+  ],
+  "color": "white"
  },
  {
   "id": "conkeldurr-z-mega",
@@ -33547,7 +34863,11 @@
   "form": {
    "kind": "mega",
    "base": "conkeldurr"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "brown"
  },
  {
   "id": "darkrai-z-mega",
@@ -33678,7 +34998,11 @@
   "form": {
    "kind": "mega",
    "base": "darkrai"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "black"
  },
  {
   "id": "dugtrio-z-mega",
@@ -33816,7 +35140,11 @@
   "form": {
    "kind": "mega",
    "base": "dugtrio"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "electivire-z-mega",
@@ -33954,7 +35282,11 @@
   "form": {
    "kind": "mega",
    "base": "electivire"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "yellow"
  },
  {
   "id": "excadrill-z-mega",
@@ -34064,7 +35396,11 @@
   "form": {
    "kind": "mega",
    "base": "excadrill"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "gray"
  },
  {
   "id": "feraligatr-z-mega",
@@ -34182,7 +35518,12 @@
   "form": {
    "kind": "mega",
    "base": "feraligatr"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "flygon-z-mega",
@@ -34344,7 +35685,12 @@
   "form": {
    "kind": "mega",
    "base": "flygon"
-  }
+  },
+  "eggGroups": [
+   "bug",
+   "dragon"
+  ],
+  "color": "green"
  },
  {
   "id": "golem-z-mega",
@@ -34490,7 +35836,11 @@
   "form": {
    "kind": "mega",
    "base": "golem"
-  }
+  },
+  "eggGroups": [
+   "mineral"
+  ],
+  "color": "brown"
  },
  {
   "id": "jumpluff-z-mega",
@@ -34624,7 +35974,12 @@
   "form": {
    "kind": "mega",
    "base": "jumpluff"
-  }
+  },
+  "eggGroups": [
+   "fairy",
+   "plant"
+  ],
+  "color": "blue"
  },
  {
   "id": "kabutops-z-mega",
@@ -34770,7 +36125,12 @@
   "form": {
    "kind": "mega",
    "base": "kabutops"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "water3"
+  ],
+  "color": "brown"
  },
  {
   "id": "magmortar-z-mega",
@@ -34900,7 +36260,11 @@
   "form": {
    "kind": "mega",
    "base": "magmortar"
-  }
+  },
+  "eggGroups": [
+   "humanshape"
+  ],
+  "color": "red"
  },
  {
   "id": "meganium-z-mega",
@@ -35030,7 +36394,12 @@
   "form": {
    "kind": "mega",
    "base": "meganium"
-  }
+  },
+  "eggGroups": [
+   "monster",
+   "plant"
+  ],
+  "color": "green"
  },
  {
   "id": "milotic-z-mega",
@@ -35172,7 +36541,12 @@
   "form": {
    "kind": "mega",
    "base": "milotic"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "dragon"
+  ],
+  "color": "pink"
  },
  {
   "id": "omastar-z-mega",
@@ -35306,7 +36680,12 @@
   "form": {
    "kind": "mega",
    "base": "omastar"
-  }
+  },
+  "eggGroups": [
+   "water1",
+   "water3"
+  ],
+  "color": "blue"
  },
  {
   "id": "poliwrath-z-mega",
@@ -35428,7 +36807,11 @@
   "form": {
    "kind": "mega",
    "base": "poliwrath"
-  }
+  },
+  "eggGroups": [
+   "water1"
+  ],
+  "color": "blue"
  },
  {
   "id": "pyroar-z-mega",
@@ -35542,7 +36925,11 @@
   "form": {
    "kind": "mega",
    "base": "pyroar"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "shiftry-z-mega",
@@ -35704,7 +37091,12 @@
   "form": {
    "kind": "mega",
    "base": "shiftry"
-  }
+  },
+  "eggGroups": [
+   "ground",
+   "plant"
+  ],
+  "color": "brown"
  },
  {
   "id": "snorlax-z-mega",
@@ -35902,7 +37294,11 @@
   "form": {
    "kind": "mega",
    "base": "snorlax"
-  }
+  },
+  "eggGroups": [
+   "monster"
+  ],
+  "color": "black"
  },
  {
   "id": "torkoal-z-mega",
@@ -36032,7 +37428,11 @@
   "form": {
    "kind": "mega",
    "base": "torkoal"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "brown"
  },
  {
   "id": "typhlosion-z-mega",
@@ -36154,7 +37554,11 @@
   "form": {
    "kind": "mega",
    "base": "typhlosion"
-  }
+  },
+  "eggGroups": [
+   "ground"
+  ],
+  "color": "yellow"
  },
  {
   "id": "whimsicott-z-mega",
@@ -36280,7 +37684,12 @@
   "form": {
    "kind": "mega",
    "base": "whimsicott"
-  }
+  },
+  "eggGroups": [
+   "plant",
+   "fairy"
+  ],
+  "color": "green"
  },
  {
   "id": "silvally-fighting",
@@ -36438,7 +37847,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-flying",
@@ -36596,7 +38009,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-poison",
@@ -36754,7 +38171,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-ground",
@@ -36912,7 +38333,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-rock",
@@ -37070,7 +38495,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-bug",
@@ -37228,7 +38657,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-ghost",
@@ -37386,7 +38819,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-steel",
@@ -37544,7 +38981,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-fire",
@@ -37702,7 +39143,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-water",
@@ -37860,7 +39305,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-grass",
@@ -38018,7 +39467,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-electric",
@@ -38176,7 +39629,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-psychic",
@@ -38334,7 +39791,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-ice",
@@ -38492,7 +39953,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-dragon",
@@ -38650,7 +40115,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-dark",
@@ -38808,7 +40277,11 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  },
  {
   "id": "silvally-fairy",
@@ -38966,6 +40439,10 @@
   "form": {
    "kind": "alternate",
    "base": "silvally"
-  }
+  },
+  "eggGroups": [
+   "no-eggs"
+  ],
+  "color": "gray"
  }
 ]

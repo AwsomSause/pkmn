@@ -244,3 +244,25 @@ describe('trade events', () => {
     expect(choiceOf(run, 'water-fan-swap').locked).toBe('Needs 2 Pokémon in your party');
   });
 });
+
+describe('trade picks and species traits', () => {
+  it('lets the player pick which fitting Pokémon goes', () => {
+    const run = atEvent(newRun('trade-pick'), 'water-fan-swap');
+    run.party = [createPokemon(content, 'squirtle', 12, 'a'), createPokemon(content, 'psyduck', 7, 'c')];
+    const view = eventView(content, run, 'test-event').choices[0]!;
+    expect(view.tradePicks!.map((p) => p.uid)).toEqual(['c', 'a']);
+    const result = chooseEvent(content, run, 'test-event', 0, 'a');
+    expect(result.run.party.map((m) => m.speciesId)).toEqual(['psyduck']);
+    expect(() => chooseEvent(content, run, 'test-event', 0, 'nope')).toThrow(/does not fit/);
+  });
+
+  it('asks for egg groups and colours', () => {
+    expect(content.species.get('pikachu')!.eggGroups).toContain('fairy');
+    expect(content.species.get('pikachu')!.color).toBe('yellow');
+    const run = atEvent(newRun('trade-color'), 'red-collector');
+    run.party = [createPokemon(content, 'bulbasaur', 5, 'a'), createPokemon(content, 'squirtle', 5, 'b')];
+    expect(eventView(content, run, 'test-event').choices[0]!.locked).toBe('Needs a red Pokémon in your party');
+    run.party.push(createPokemon(content, 'charmander', 5, 'c'));
+    expect(eventView(content, run, 'test-event').choices[0]!.locked).toBeNull();
+  });
+});

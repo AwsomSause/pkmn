@@ -11878,6 +11878,104 @@
    ]
   },
   {
+   "id": "red-collector",
+   "name": "The Red Collector",
+   "group": "PokeRogue-style encounters",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#381810",
+    "effect": "fire"
+   },
+   "intro": "\"Red! Everything I own is red. Trade me a red Pokémon and I will warm you up with a Fire-type.\"",
+   "choices": [
+    {
+     "label": "Trade a red Pokémon",
+     "success": {
+      "text": "He grins and hands over a hot-blooded partner.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a red Pokémon",
+         "color": "red"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "fire"
+        ],
+        "levelBonus": 2,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "monster-breeder",
+   "name": "The Monster Breeder",
+   "group": "PokeRogue-style encounters",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "effect": "rattle"
+   },
+   "intro": "\"I raise only the Monster egg group. Bring me one and I will give you something fierce.\"",
+   "choices": [
+    {
+     "label": "Trade a Monster egg group Pokémon",
+     "success": {
+      "text": "He nods slowly and leads out a fierce Pokémon.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a Pokémon of the Monster egg group",
+         "eggGroup": "monster"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "dragon",
+         "dark"
+        ],
+        "levelBonus": 3,
+        "shinyMultiplier": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "fun-and-games",
    "name": "Fun and Games!",
    "group": "PokeRogue-style encounters",
