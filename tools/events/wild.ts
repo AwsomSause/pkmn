@@ -48,7 +48,7 @@ export const SHADOW_EVENTS: Json[] = [
     ch('Back away', leave('The haze fades behind you.')),
   ]),
   ev('shadow-sanctuary', 'The Shadow Sanctuary', SH, { rarity: 'rare', minStage: 3, requires: [seen('shadow-sighting')], effect: 'flicker', tint: '#120820' }, 'A ruined hut hides a caged Pokémon wrapped in the same dark haze. A tired caretaker keeps watch.', [
-    ch('Break the cage open', fight('The shadowed Pokémon lashes out, scared and strong!', wild({ types: ['dark', 'ghost', 'poison'], lv: 3, win: [item('rare-candy')] }), good(2)), { check: 'strength', fail: out('The lock holds and the caretaker shoos you away.', hurt(0.05)) }),
+    ch('Break the cage open', fight('The shadowed Pokémon lashes out, scared and strong!', wild({ types: ['dark', 'ghost', 'poison'], lv: 3, shadow: true, win: [item('rare-candy')] }), good(2)), { check: 'strength', fail: out('The lock holds and the caretaker shoos you away.', hurt(0.05)) }),
     ch('Help the caretaker', out('Together you calm it. It chooses to follow you, still shaded.', good(3), join({ types: ['dark', 'ghost', 'poison'], lv: -1, shadow: true }))),
     ch('Leave them to it', leave('You close the door softly.')),
   ]),
