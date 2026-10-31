@@ -164,7 +164,7 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bgm.credits', kind: 'audio', category: 'music', path: 'audio/bgm/credits.mp3' },
   // Map, Hub, shop, event and boss songs from the packs (ORAS tracks from the UIE .rar; B2W2 PWT and Low HP Battle from the EBDX zip).
   // Re-encoded to 80 kbps mp3, loaded when the screen or battle opens (`playMusicLazy`, `bossTrack`).
-  ...['map', 'hub', 'shop', 'event', 'battle_leader', 'battle_elite', 'battle_rival', 'victory_elite'].map(
+  ...['map', 'map_bike', 'map_surf', 'hub', 'shop', 'event', 'battle_leader', 'battle_elite', 'battle_rival', 'victory_elite'].map(
     (n): AssetEntry => ({ id: `bgm.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/${n}.mp3`, lazy: true }),
   ),
   // Jingles (UIE "ME" folder): item, key item, badge, new Pokémon, evolution, healing, save, TM, berry, forgotten move.

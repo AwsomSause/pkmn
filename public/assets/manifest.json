@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T00:26:12.505Z",
+  "generatedAt": "2026-10-31T00:29:49.278Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -1117,6 +1117,20 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/map.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.map_bike",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/map_bike.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.map_surf",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/map_surf.mp3",
       "lazy": true
     },
     {

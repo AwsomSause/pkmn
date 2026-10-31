@@ -28,7 +28,8 @@ import { blindMap } from '../core/rules';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
-import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
+import { playMusic, playSfx, playSfxLazy, playMusicLazy } from '../ui/audio';
+import { mapTrack } from '../core/presentation/battleMusic';
 import { openBondMenu } from '../ui/bondMenu';
 import { openSummaryMenu } from '../ui/summaryMenu';
 import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
@@ -144,7 +145,7 @@ export class MapScene extends Phaser.Scene {
     this.index = 0;
     this.picker = null;
     this.busy = false;
-    playMusicLazy(this, 'bgm.map');
+    playMusicLazy(this, mapTrack(region.id));
 
     // ---------- backdrop: the stage's own arena, dimmed ----------
     const arena = league ? undefined : arenaFor(content, theme);
@@ -612,7 +613,7 @@ export class MapScene extends Phaser.Scene {
         }
         const message = session.visitSide(option.side.id);
         if (option.side.kind === 'heal') {
-          playSfx(this, 'se.level_up', 0.6);
+          playSfxLazy(this, 'me.heal');
           this.scene.restart({ notice: message, focus: 0 });
         } else {
           this.busy = true;
