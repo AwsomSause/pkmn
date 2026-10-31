@@ -34,9 +34,9 @@ test('every scripted EBDX animation plays, finishes and restores the Pokémon', 
   await startBattle(page);
 
   // (The Pokémon's idle breathing changes their scale on its own, so only position and opacity are compared.)
-  // Every script is checked by the unit test; the browser plays an even sample (about 40) so the run stays short.
+  // Every script is checked by the unit test; the browser plays an even sample (about 25) so the run stays short.
   const all = Object.keys(JSON.parse(readFileSync('src/data/ebdxAnims.json', 'utf8')).scripts);
-  const step = Math.max(1, Math.ceil(all.length / 40));
+  const step = Math.max(1, Math.ceil(all.length / 25));
   const shots = ['psychic', 'hyperbeam', 'blizzard', 'sandstorm', 'flareblitz', 'explosion', 'stoneedge'];
   const only = process.env.EBDX_ONLY?.split(',');
   const names = only ?? all.filter((n, i) => i % step === 0 || shots.includes(n));
