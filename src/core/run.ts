@@ -2033,6 +2033,11 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
 /** After a win or a catch: prize money, evolutions, then decisions or the reward draft. */
 function finishBattle(content: Content, run: RunState): BattleEndResult {
   const battle = run.battle!;
+  // A temporary ally goes home: no experience, no catch-up, and it never stays in the party.
+  if (battle.loaner) {
+    run.party = run.party.filter((m) => m.uid !== battle.loaner);
+    battle.participants = battle.participants.filter((u) => u !== battle.loaner);
+  }
   const archetype = runArchetype(content, run);
   let base: number;
   const topLevel = Math.max(...battle.enemyTeam.map((m) => m.level));

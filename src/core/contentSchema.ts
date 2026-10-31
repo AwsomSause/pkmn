@@ -2420,6 +2420,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     ghost: z.boolean().default(false),
     /** The team is the newest run that did not win (core/story/championDefense.ts). */
     retired: z.boolean().default(false),
+    /** A species that fights beside you as a temporary ally (a double battle; needs two or more foes). */
+    ally: z.string().optional(),
     name: z.string(),
     size: z.number().int().min(1).max(6).default(2),
     types: z.array(TypeNameSchema).default([]),

@@ -24193,6 +24193,69 @@
    ]
   },
   {
+   "id": "borrowed-ally",
+   "name": "Two on One",
+   "group": "Allies",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#1f2418",
+    "effect": "glint"
+   },
+   "intro": "A burly traveller is being cornered by a pair of rough trainers. He sees you coming and grins. \"Take my partner! Two of us can turn this around.\"",
+   "choices": [
+    {
+     "label": "Fight beside the partner",
+     "success": {
+      "text": "The traveller's Lucario leaps in beside your team.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rough Pair",
+       "ally": "lucario",
+       "size": 2,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 900
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 40
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "rival-gauntlet-entry",
    "name": "The Rival Gauntlet",
    "group": "Rival Tournament",

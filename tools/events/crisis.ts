@@ -85,6 +85,11 @@ export const CHAMPION_EVENTS: Json[] = [
       ch('Give them the rematch', fight('The retired team takes the field.', trainer('Retired Team', { size: 6, retired: true, win: [$(2000), any(...TREASURE), rp(80), good(2)] }))),
       ch('Let them rest', out('You nod to the old team. They have earned their quiet.', rp(10))),
     ]),
+  ev('borrowed-ally', 'Two on One', 'Allies', { rarity: 'uncommon', minStage: 2, cast: ['trainer.hiker'], effect: 'glint', tint: '#1f2418' },
+    'A burly traveller is being cornered by a pair of rough trainers. He sees you coming and grins. "Take my partner! Two of us can turn this around."', [
+      ch('Fight beside the partner', fight('The traveller\'s Lucario leaps in beside your team.', trainer('Rough Pair', { size: 2, ally: 'lucario', win: [$(900), any(...TREASURE), rp(40)] }))),
+      ch('Walk on', leave()),
+    ]),
 ];
 
 const feud = (choice: string): Json => ({ kind: 'feud', choice });

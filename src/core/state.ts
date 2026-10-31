@@ -603,6 +603,8 @@ export const BattleStateSchema = z.object({
     })
     .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
+  /** A temporary ally (event battle): its uid. It fights beside you in a double battle and leaves the party when the battle ends. */
+  loaner: z.string().optional(),
   /** How each enemy's level was worked out (shown in the debug panel). */
   levelInfo: z.array(LevelBreakdownSchema).default([]),
   /** 0–1: the chance each turn that the enemy picks its best move (bosses), otherwise a random one. */

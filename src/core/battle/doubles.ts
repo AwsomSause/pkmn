@@ -1010,7 +1010,7 @@ function settle(ctx: BattleContext, field: Field, events: BattleEvent[]): void {
   const d = battle.doubles!;
   faintCheck(ctx, field, events);
   const enemyLeft = battle.enemyTeam.some((m) => m.hp > 0);
-  const playerLeft = ctx.party.some((m) => m.hp > 0);
+  const playerLeft = ctx.party.some((m) => m.hp > 0 && m.uid !== battle.loaner);
   if (!enemyLeft) {
     battle.outcome = !playerLeft && ctx.doubleKoLoser === 'player' ? 'lose' : 'win';
     return;

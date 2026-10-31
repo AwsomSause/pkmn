@@ -20,6 +20,7 @@ import { curveLevel, enemyLevel, evolvedFormAt, levelScale, rollShiny, withParty
 import { changeFriendship } from './friendship';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
+import { makeDoubles } from './battle/doubles';
 import { championTeam, retiredTeam } from './story/championDefense';
 import { oldFoe } from './story/promises';
 import { openFeud, settleFeud } from './story/feud';
@@ -847,6 +848,15 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     });
     if (authored) for (const mon of team) auditEncounter(content, 'event', mon, authored);
     run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: b.name, leaderId: null });
+    if (b.ally && content.species.has(b.ally) && team.length >= 2) {
+      // A temporary ally joins the party for this fight only (finishBattle sends it home).
+      const ally = newMon(content, run, b.ally, Math.max(1, base), 'p');
+      run.party.push(ally);
+      makeDoubles(run.battle, run.party);
+      run.battle.doubles!.player.index = run.party.length - 1;
+      run.battle.participants = [run.party[activeIndex]!.uid, ally.uid];
+      run.battle.loaner = ally.uid;
+    }
   }
   run.battle.event = event;
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
