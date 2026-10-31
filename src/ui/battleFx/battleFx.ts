@@ -25,7 +25,7 @@ import type { Visual } from '../sprites';
 import { textStyle } from '../theme';
 import { animSettingsFrom } from '../../core/accessibility';
 import { resolveAnim, type AnimPlan } from '../../core/presentation/animRegistry';
-import '../../core/presentation/abilityAnims';
+import { abilityPackAnim } from '../../core/presentation/abilityAnims';
 import { playAbilityAnim, playTextAnim } from './abilityFx';
 import { playAnim, type PlayHandle } from './animPlayer';
 import { playScript } from './scriptPlayer';
@@ -151,8 +151,11 @@ export class BattleFx {
         const plan = this.plan(cue.anim);
         const visual = this.opts.sprite(cue.side);
         if (!plan || !plan.play || !visual) return;
-        const done = playAbilityAnim(this.tools(cue.side, visual, plan, cue.label));
-        await Promise.race([done, this.wait(plan.ms)]);
+        const pack = plan.reduced ? null : abilityPackAnim(cue.ability);
+        const packSide: Side = pack?.onFoe ? (cue.side === 'player' ? 'enemy' : 'player') : cue.side;
+        const parts = [playAbilityAnim({ ...this.tools(cue.side, visual, plan, cue.label), ability: cue.ability, foe: this.opts.sprite(cue.side === 'player' ? 'enemy' : 'player') })];
+        if (pack) parts.push(this.commonAnim(packSide, pack.name).catch(() => undefined));
+        await Promise.race([Promise.all(parts), this.wait(plan.ms)]);
         return;
       }
       case 'textAnim':
@@ -422,7 +425,7 @@ export class BattleFx {
   }
 
   private tools(side: Side, visual: Visual, plan: AnimPlan, label: string) {
-    return { scene: this.scene, field: this.opts.field, side, at: this.centre(visual), label, plan, slot: 0, shake: (px: number) => this.shake(px) };
+    return { scene: this.scene, field: this.opts.field, side, at: this.centre(visual), label, plan, slot: 0, visual, shake: (px: number) => this.shake(px) };
   }
 
   private async statArrows(side: Side, up: boolean, motion: boolean): Promise<void> {
