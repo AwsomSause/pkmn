@@ -1839,6 +1839,8 @@ export const BalanceSchema = z.object({
   extraTrainerClasses: z.boolean().default(true),
   /** Legendary and mythical starters (Special Specimen pools): they start this many levels lower, and only the standard draft rule can be used with them. */
   specialSpecimen: z.object({ levelPenalty: z.number().int().min(0) }).default({ levelPenalty: 3 }),
+  /** Extra stock the shop carries in a mode (key: the mode id). */
+  modeShops: z.record(z.string(), z.array(z.object({ item: z.string(), price: z.number().int().positive(), minBadges: z.number().int().min(0) }))).default({}),
   attributeItemFalloff: z.object({ afterBoosts: z.number().int().min(0), factor: z.number().min(0).max(1) }).default({ afterBoosts: 2, factor: 0.5 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
@@ -2521,6 +2523,10 @@ export const EventDefSchema = z.object({
   keyItem: z.string().optional(),
   /** Only appears in a run started while this game event (gameEvents.json) was on, e.g. the Spooky pack. */
   gameEvent: z.string().nullable().default(null),
+  /** Only appears in runs of this mode (runRules.json), and is likelier there. */
+  mode: z.string().nullable().default(null),
+  /** With `mode`: always gets a stop on a stage where it is eligible, so a mode's objectives can't be missed by luck. */
+  modeStop: z.boolean().default(false),
   scene: EventSceneSchema.default({ cast: [], effect: 'none' }),
   intro: z.string(),
   choices: z.array(EventChoiceSchema).min(1).max(4),

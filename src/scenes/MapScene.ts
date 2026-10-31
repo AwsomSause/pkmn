@@ -7,6 +7,7 @@
 // pillar with a bigger token, and the champion stands in turning gold rays
 // (Visual Bible: "a deliberate escalation from normal stages").
 
+import { modeObjectives, objectivesLine } from '../core/modeObjectives';
 import { fieldHintId, licenseName, licenseNote } from '../core/license';
 import { SERVICES } from '../core/services/schema';
 import { stopIsHidden } from '../core/events';
@@ -193,6 +194,8 @@ export class MapScene extends Phaser.Scene {
     this.add
       .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}${wipeStatus(run) ? `  ·  Wipes ${wipeStatus(run)!.wipes}${wipeStatus(run)!.max ? `/${wipeStatus(run)!.max}` : ''}` : ''}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
+    const objectives = modeObjectives(run);
+    if (objectives.length > 0) this.add.text(GAME_WIDTH - 24, 68, objectivesLine(objectives), textStyle(14, '#f0e0a0')).setOrigin(1, 0);
 
     const pinned = pinnedObjective(content, run);
     if (pinned) this.add.text(GAME_WIDTH - 24, 66, `★ ${pinned.text} (${pinned.current}/${pinned.target})`, textStyle(14, '#f0e0a0')).setOrigin(1, 0);
