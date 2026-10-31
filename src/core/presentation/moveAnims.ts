@@ -22,6 +22,8 @@ export const MovePresentationSchema = z.object({
   chargeAnim: z.string().optional(),
   /** The director's Essentials pack animation for this move, played first (tools/import-essentials-anims.ts). */
   pack: z.string().optional(),
+  /** The scripted EBDX animation for this move (src/data/ebdxAnims.json), played before everything else. */
+  script: z.string().optional(),
 });
 export type MovePresentation = z.infer<typeof MovePresentationSchema>;
 

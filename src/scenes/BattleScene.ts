@@ -609,7 +609,10 @@ export class BattleScene extends Phaser.Scene {
   private prefetchMoves(mon: PokemonInstance): void {
     prefetchCinematics(this);
     const data = moveAnims();
-    this.fx.prefetch(mon.moves.map((m) => animChoice(presentationFor(data, m.id)).anim));
+    this.fx.prefetch(
+      mon.moves.map((m) => animChoice(presentationFor(data, m.id)).anim),
+      mon.moves.flatMap((m) => presentationFor(data, m.id).script ?? []),
+    );
   }
 
   /**
