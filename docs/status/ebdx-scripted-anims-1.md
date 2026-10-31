@@ -8,3 +8,6 @@ Slice 1 ported 7 scripts covering 17 moves: tackle (tackle, pound, quick-attack,
 - Presentation only: the particle spread is a hash (`scatter`), never gameplay RNG. Skip/stop restores both Pokémon. Honors effect and shake intensity, mute and SFX volume.
 - Not carried over: EBDX camera moves (vector zoom/pan), per-frame sprite tone overlays beyond a target flash, and background dimming of the arena.
 - Next: more shared archetypes (growl/stat waves, swords-dance, double-team, psychic, charge, punch/kick strikes), each unlocks many moves.
+
+## Slice 2
+Added growl (veil + user shake; 10 moves: growl, parting-shot, tickle, noble-roar, entrainment, yawn, after-you, fake-tears, assist, play-nice) and comet-punch (starburst hits; 6 moves: comet-punch, bullet-punch, grass-knot, rapid-spin, steamroller, belly-drum). Total 33 moves. EBDX plays the user's cry for Growl; ours has no cry hook here yet.

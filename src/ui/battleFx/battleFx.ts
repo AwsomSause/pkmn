@@ -23,6 +23,9 @@ import { playSfx } from '../audio';
 import { loadAssets } from '../lazyAssets';
 import type { Visual } from '../sprites';
 import { textStyle } from '../theme';
+import { resolveAnim, type AnimPlan } from '../../core/presentation/animRegistry';
+import '../../core/presentation/abilityAnims';
+import { playAbilityAnim, playTextAnim } from './abilityFx';
 import { playAnim, type PlayHandle } from './animPlayer';
 import { playScript } from './scriptPlayer';
 import { playFamily } from './familyFx';
@@ -111,6 +114,12 @@ export class BattleFx {
     }
   }
 
+  /** The registered animation for an id, shaped by the player's motion, intensity, shake and particle settings. */
+  private plan(id: string): AnimPlan | null {
+    const s = this.settings;
+    return resolveAnim(id, { mode: s.battleAnimations, intensity: s.effectIntensity, shake: s.shakeIntensity, reduceParticles: s.reduceParticles });
+  }
+
   private wait(ms: number): Promise<void> {
     if (this.skipping || ms <= 0) return Promise.resolve();
     return new Promise((resolve) => this.scene.time.delayedCall(ms, resolve));
@@ -138,6 +147,17 @@ export class BattleFx {
         return;
       case 'statArrows':
         return this.statArrows(cue.side, cue.up, cue.motion);
+      case 'abilityAnim': {
+        const plan = this.plan(cue.anim);
+        const visual = this.opts.sprite(cue.side);
+        if (!plan || !plan.play || !visual) return;
+        const done = playAbilityAnim(this.tools(cue.side, visual, plan, cue.label));
+        await Promise.race([done, this.wait(plan.ms)]);
+        return;
+      }
+      case 'textAnim':
+        this.textAnim(cue.side, cue.anim, cue.label);
+        return;
     }
   }
 
@@ -389,28 +409,20 @@ export class BattleFx {
   }
 
   private badge(side: Side, kind: string): void {
-    const visual = this.opts.sprite(side);
     const look = BADGES[kind];
-    if (!visual || !look) return;
-    const { x, y } = this.top(visual);
+    if (look) this.textAnim(side, `text.${kind}`, look.label);
+  }
+
+  private textAnim(side: Side, anim: string, label: string): void {
+    const plan = this.plan(anim);
+    const visual = this.opts.sprite(side);
+    if (!plan || !plan.play || !visual) return;
     const slot = this.badgeCount[side]++;
-    const text = this.scene.add
-      .text(x + (side === 'enemy' ? -70 : 70), y + 34 + slot * 30, look.label, textStyle(22, look.color, { stroke: '#181818', strokeThickness: 5 }))
-      .setOrigin(0.5);
-    if (this.motion) {
-      text.setScale(0.5);
-      this.scene.tweens.add({ targets: text, scale: 1, duration: 140, ease: 'Back.easeOut' });
-    }
-    this.scene.tweens.add({
-      targets: text,
-      alpha: 0,
-      delay: 900,
-      duration: 300,
-      onComplete: () => {
-        text.destroy();
-        this.badgeCount[side] = Math.max(0, this.badgeCount[side] - 1);
-      },
-    });
+    playTextAnim({ ...this.tools(side, visual, plan, label), at: { ...this.top(visual) }, slot }, () => (this.badgeCount[side] = Math.max(0, this.badgeCount[side] - 1)));
+  }
+
+  private tools(side: Side, visual: Visual, plan: AnimPlan, label: string) {
+    return { scene: this.scene, field: this.opts.field, side, at: this.centre(visual), label, plan, slot: 0, shake: (px: number) => this.shake(px) };
   }
 
   private async statArrows(side: Side, up: boolean, motion: boolean): Promise<void> {
