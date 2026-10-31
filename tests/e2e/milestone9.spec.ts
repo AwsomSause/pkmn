@@ -93,23 +93,25 @@ test('when a pack animation can\'t load, the PokeRogue one plays instead', async
 test('animation settings cycle on the title screen and turn animations off', async ({ page }) => {
   await page.goto('/?seed=m9-settings');
   await waitForScene(page, 'MainMenu');
-  // Continue (disabled), Hub (focused), Settings; then the Settings page: Sound, Music, Effects volume, Animations.
+  // Continue (disabled), Hub (focused), Settings; then Animations & Effects (4th category); then Battle motion (2nd row).
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
-  await waitForScene(page, 'MainMenu');
+  await waitForScene(page, 'Settings');
   for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
-  await waitForScene(page, 'MainMenu');
-  expect(await page.evaluate(() => (window as any).__pkr.session.settings.battleAnimations)).toBe('reduced');
+  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
-  await waitForScene(page, 'MainMenu');
-  expect(await page.evaluate(() => (window as any).__pkr.session.settings.battleAnimations)).toBe('off');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.session.settings.battleAnimations)).toBe('reduced');
+  await page.keyboard.press('Enter');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.session.settings.battleAnimations)).toBe('off');
   await page.screenshot({ path: 'test-results/m9-settings.png' });
 
   // With animations off, no animation file is ever requested.
   const animRequests: string[] = [];
   page.on('request', (r) => r.url().includes('/battle-anims/') && animRequests.push(r.url()));
-  await page.keyboard.press('Escape'); // back to the main page
+  await page.keyboard.press('Escape'); // category list
+  await page.keyboard.press('Escape'); // settings home
+  await page.keyboard.press('Escape'); // title screen
   await waitForScene(page, 'MainMenu');
   await startBattle(page);
   await waitForMenu(page);
