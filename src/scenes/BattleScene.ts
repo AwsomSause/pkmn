@@ -1576,6 +1576,12 @@ export class BattleScene extends Phaser.Scene {
       this.scene.start(sceneForRun(result.run));
       return;
     }
+    if (result.clubLost) {
+      await this.say('The match is over. The club patches your team up: no hard feelings.');
+      await exitWipe(this, this.motion, this.wipeMask());
+      this.scene.start(sceneForRun(result.run));
+      return;
+    }
     if (this.role === 'rival' && (result.narrativeDefeat || result.wiped || result.defeated)) await this.fx.flourish('enemy', 'rival.win', ENEMY_POS);
     if (result.narrativeDefeat) {
       // The story loss: a heavy shake (skipped when battle animations are off), then the rival's words.

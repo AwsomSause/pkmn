@@ -10,6 +10,7 @@
 import { modeObjectives, objectivesLine } from '../core/modeObjectives';
 import { fieldHintId, licenseName, licenseNote } from '../core/license';
 import { SERVICES } from '../core/services/schema';
+import type { PlazaSectionId } from '../core/plaza/flow';
 import { stopIsHidden } from '../core/events';
 import Phaser from 'phaser';
 import { pinnedObjective } from '../core/objectives';
@@ -77,8 +78,9 @@ const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
   expedition: { color: 0x38b878, glyph: 'E' },
   minigame: { color: 0x58c0e8, glyph: 'G' },
   service: { color: 0xa878e0, glyph: 'S' },
+  plaza: { color: 0xf0c040, glyph: 'P' },
 };
-const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition', minigame: 'Minigame', service: 'Service' };
+const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition', minigame: 'Minigame', service: 'Service', plaza: 'Plaza' };
 /** A hidden event stop: a grey "?" until you reach it. */
 const HIDDEN_STYLE = { color: 0x6b5a73, glyph: '?' };
 
@@ -551,13 +553,14 @@ export class MapScene extends Phaser.Scene {
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
         const risk = n.harder ? `  ·  Risk: high (+${lo}–${hi} enemy levels, better rewards)` : boss ? '  ·  Risk: boss' : '';
-        const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'service' ? (SERVICES.services.find((x) => x.id === s.serviceId)?.name ?? 'service') : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : 'shop'));
+        const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'service' ? (SERVICES.services.find((x) => x.id === s.serviceId)?.name ?? 'service') : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : s.kind === 'plaza' ? 'Trainer Plaza' : 'shop'));
         const seen = this.previewText(n);
         const route = routeKind(services().session.run!, n);
         const anomaly = stageAnomaly(services().session.content, services().session.run!);
         return `${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
+        if (option.side.kind === 'plaza') return 'Trainer Plaza: the middle of the stage. Stalls, traders, a Battle Club, errands and gossip. Rest, shop and plan before you go on.';
         if (option.side.kind === 'service') {
           const def = SERVICES.services.find((x) => x.id === option.side.serviceId);
           return `${def?.name ?? 'Service'}: ${def?.blurb ?? ''}`;
@@ -656,6 +659,10 @@ export class MapScene extends Phaser.Scene {
         }
         if (option.side.kind === 'service') {
           this.openService(option.side.id);
+          break;
+        }
+        if (option.side.kind === 'plaza') {
+          this.openPlaza(option.side.id);
           break;
         }
         if (option.side.kind === 'minigame') {
@@ -972,6 +979,92 @@ export class MapScene extends Phaser.Scene {
       onBack: () => {
         picker.close();
         this.picker = null;
+      },
+    });
+    this.picker = picker;
+  }
+
+  /** The Trainer Plaza: a list of areas; each opens its own list of things to do. */
+  private openPlaza(sideId: string, notice?: string): void {
+    const { session } = services();
+    const view = session.plazaView(sideId);
+    const head = `${view.event.name}: ${view.event.text}\n${view.atmosphere}${view.alleyHint ? `\n${view.alleyHint}` : ''}${view.errandsOpen > 0 ? `\nErrands open: ${view.errandsOpen}.` : ''}${notice ? `\n${notice}` : ''}`;
+    const picker: Picker = new Picker(this, {
+      glass: true,
+      title: `Trainer Plaza  ·  ${view.repTitle} (${view.rep})  ·  ₽${view.money}`,
+      columns: 1,
+      rowHeight: 64,
+      rows: [
+        { problem: head, draw: (scene, box, w) => box.add(scene.add.text(16, 8, head.split('\n')[0]!, textStyle(16, '#f0e0a0', { wordWrap: { width: w - 32 } }))) },
+        ...view.sections.map((sec) => ({
+          problem: sec.count === 0 ? 'Nothing here right now.' : null,
+          hint: sec.blurb,
+          draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+            box.add(scene.add.text(16, 6, `${sec.title}   (${sec.count})`, textStyle(22)));
+            box.add(scene.add.text(16, 34, sec.blurb, textStyle(15, '#d8d0e0', { wordWrap: { width: w - 32 } })));
+          },
+        })),
+      ],
+      onSelect: (i) => {
+        picker.close();
+        this.picker = null;
+        playSfx(this, 'ui.select');
+        this.openPlazaSection(sideId, view.sections[i - 1]!.id);
+      },
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+        this.scene.restart({ notice: notice ?? 'You leave the plaza.', focus: 0 });
+      },
+    });
+    this.picker = picker;
+  }
+
+  private openPlazaSection(sideId: string, section: PlazaSectionId, notice?: string): void {
+    const { session } = services();
+    const view = session.plazaSection(sideId, section);
+    const money = session.run!.money;
+    const notes = [...(notice ? [`» ${notice}`] : []), ...view.notes];
+    const rows = view.options;
+    const picker: Picker = new Picker(this, {
+      glass: true,
+      title: `Trainer Plaza  ·  ₽${money}`,
+      columns: 1,
+      rowHeight: 78,
+      rows: [
+        ...notes.map((note) => ({ problem: note, draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => box.add(scene.add.text(16, 6, note, textStyle(15, '#f0e0a0', { wordWrap: { width: w - 32 } }))) })),
+        ...rows.map((row) => ({
+          problem: row.problem,
+          hint: row.text,
+          draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+            box.add(scene.add.text(16, 6, `${row.title}${row.cost > 0 ? `   ₽${row.cost}` : ''}`, textStyle(20, '#ffffff', { wordWrap: { width: w - 32 } })));
+            box.add(scene.add.text(16, 34, row.text, textStyle(14, '#d8d0e0', { wordWrap: { width: w - 32 } })));
+          },
+        })),
+      ],
+      onSelect: (i) => {
+        const row = rows[i - notes.length]!;
+        picker.close();
+        this.picker = null;
+        playSfx(this, 'ui.select');
+        let result;
+        try {
+          result = session.usePlaza(sideId, section, row.id);
+        } catch (err) {
+          playSfx(this, 'ui.error', 0.5);
+          return this.openPlazaSection(sideId, section, String(err instanceof Error ? err.message : err));
+        }
+        if (result.battle || session.run!.phase !== 'map') {
+          this.busy = true;
+          this.scene.start(sceneForRun(session.run!));
+          return;
+        }
+        this.openPlazaSection(sideId, section, result.message);
+      },
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+        this.openPlaza(sideId, notice);
       },
     });
     this.picker = picker;
