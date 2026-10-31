@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T00:17:36.156Z",
+  "generatedAt": "2026-10-31T00:26:12.505Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -1113,6 +1113,302 @@
       "path": "audio/bgm/credits.mp3"
     },
     {
+      "id": "bgm.map",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/map.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.hub",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/hub.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.shop",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/shop.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.event",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/event.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.battle_leader",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/battle_leader.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.battle_elite",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/battle_elite.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.battle_rival",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/battle_rival.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.victory_elite",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/victory_elite.mp3",
+      "lazy": true
+    },
+    {
+      "id": "me.item_get",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/item_get.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.key_item",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/key_item.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.badge",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/badge.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.pkmn_get",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/pkmn_get.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.evo_start",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/evo_start.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.evo_success",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/evo_success.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.heal",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/heal.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.save",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/save.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.tm_get",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/tm_get.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.berry",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/berry.ogg",
+      "lazy": true
+    },
+    {
+      "id": "me.forget_move",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/me/forget_move.ogg",
+      "lazy": true
+    },
+    {
+      "id": "ui.cancel",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_cancel.ogg"
+    },
+    {
+      "id": "ui.menu_open",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_menu_open.ogg"
+    },
+    {
+      "id": "ui.menu_close",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_menu_close.ogg"
+    },
+    {
+      "id": "ui.party_switch",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_party_switch.ogg"
+    },
+    {
+      "id": "ui.save_choice",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_save_choice.ogg"
+    },
+    {
+      "id": "ui.ability",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_ability.ogg"
+    },
+    {
+      "id": "ui.item",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_item.ogg"
+    },
+    {
+      "id": "ui.flee",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_flee.ogg"
+    },
+    {
+      "id": "ui.recall",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_recall.ogg"
+    },
+    {
+      "id": "ui.use_item",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_use_item.ogg"
+    },
+    {
+      "id": "ui.buy",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_buy.ogg"
+    },
+    {
+      "id": "ui.pc_open",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_pc_open.ogg"
+    },
+    {
+      "id": "ui.pc_close",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_pc_close.ogg"
+    },
+    {
+      "id": "ui.exclaim",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_exclaim.ogg"
+    },
+    {
+      "id": "ui.vs_flash",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_vs_flash.ogg"
+    },
+    {
+      "id": "ui.vs_sword",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_vs_sword.ogg"
+    },
+    {
+      "id": "ui.page",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_page.ogg"
+    },
+    {
+      "id": "ui.door",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_door.ogg"
+    },
+    {
+      "id": "ui.poison_step",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/se/ui_poison_step.ogg"
+    },
+    {
+      "id": "se.stat_up",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/battle_anims/ess-up.m4a",
+      "lazy": true
+    },
+    {
+      "id": "se.stat_down",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/battle_anims/ess-take-down.m4a",
+      "lazy": true
+    },
+    {
+      "id": "se.brn",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/battle_anims/prsfx-burn.m4a",
+      "lazy": true
+    },
+    {
+      "id": "se.psn",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/battle_anims/ess-poison.m4a",
+      "lazy": true
+    },
+    {
+      "id": "se.par",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/battle_anims/ess-paralyze1.m4a",
+      "lazy": true
+    },
+    {
+      "id": "se.slp",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/battle_anims/ess-sleep.m4a",
+      "lazy": true
+    },
+    {
+      "id": "se.frz",
+      "kind": "audio",
+      "category": "sound",
+      "path": "audio/battle_anims/prsfx-freeze-dry1.m4a",
+      "lazy": true
+    },
+    {
       "id": "se.ball_throw",
       "kind": "audio",
       "category": "sound",
@@ -1188,13 +1484,13 @@
       "id": "ui.select",
       "kind": "audio",
       "category": "sound",
-      "path": "audio/ui/select.wav"
+      "path": "audio/se/ui_decision.ogg"
     },
     {
       "id": "ui.error",
       "kind": "audio",
       "category": "sound",
-      "path": "audio/ui/error.wav"
+      "path": "audio/se/ui_buzzer.ogg"
     },
     {
       "id": "font.main",
