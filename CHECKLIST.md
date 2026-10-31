@@ -203,7 +203,7 @@ Plan: `/mnt/project-files/plans/starter-sets-quests-mastery-plan.md` (Kice's ans
 ### Known limits in slice 5
 - "Battles" counts battles the Pokémon fought in (you win every battle of a run except a losing last one). Gold's "never fainted" is per run (a boss win in a run where it never fainted), not per stage; Master needs it in the party at the end of a run that cleared a region.
 - Each run credits every species the Pokémon was (Charmander that became Charizard counts for both). Runs before profile v9 don't count.
-- Egg moves come from the family's first stage; ones the engine can't run are listed as "found, not active yet" and never used. Many species' egg moves are not supported yet (e.g. Bulbasaur, Charmander), so those families get no egg move until the moves are built.
+- Egg moves come from the family's first stage; ones the engine can't run are listed as "found, not active yet" and never used. Nearly every move is supported now, so almost every family has an egg move (87 Z/Max rows stay disabled on purpose).
 - The Master "signature move" is the strongest move it joins with, awakened (Signature Move Awakening). No form licenses yet.
 - The Mastered set can't use Type Focus (its types depend on your profile). Sprite borders and badges are not drawn yet; the rank colour shows instead.
 

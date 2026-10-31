@@ -36,7 +36,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | DONE (the 2 Overdrive events are built, limited) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
-| Trainers.md perks | PART: 180 of 220 trainers built (A to Kurt by this thread, Z backwards by the Raids thread); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
+| Trainers.md perks | DONE: all 220 trainers built (A to Kurt by one thread, Z backwards by the Raids thread); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | PART (M10 visual slices 1-21 built; see visual-coverage.md) |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
@@ -56,7 +56,7 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 | Raid modifiers: weather field, terrain, elemental surge, healing restriction, rotating weaknesses | DONE (`modifiers` in raids.json; 8 raids use them) |
 | Raid cheers (Offense / Defense / Healing, 3 per raid) and bosses with 5-6 moves (`extraMoves`) | DONE |
 | Raid capture jingles (4) on the boss-joins card; Dens + Adventures header art on den and expedition screens | DONE (Counter cheer, other Dens/Adventures art not used) |
-| Victory rewards: money, items, extra draft choices, boss joins, Mega resources (tier 5–6: Mega Stones for party Pokémon that can use one, plus a Mega Ring if you have none), rare-encounter tokens (tier 4–6: the next 1–2 wild encounters weight rare x3, Legendary x2; raids and Totems never use a token up) | DONE; crafting materials TODO (needs a crafting system) |
+| Victory rewards: money, items, extra draft choices, boss joins, Mega resources (tier 5–6: Mega Stones for party Pokémon that can use one, plus a Mega Ring if you have none), rare-encounter tokens (tier 4–6: the next 1–2 wild encounters weight rare x3, Legendary x2; raids and Totems never use a token up) | DONE; crafting materials DONE (`core/crafting.ts`: materials drop by raid tier, the Workshop uses them) |
 | Tiers 1, 2, 3, 4, 5, 6/Apex (8 raids, one fully featured Apex) | DONE |
 | Discover (den on the map), Prepare (preview: tier, mechanics, rewards, cost), Battle, Resolve, Progress (run raid record) | DONE, incl. unlocking tiers across runs: tiers 1–3 open from the first run (`raids.json` `openTiers`); winning a tier N raid (any run, kept as the profile best counter `raidBestTier`) opens tier N+1, and in-run wins open the next tier at once. Dens in regions whose tiers are still closed hold the highest open tier. The Raid Observatory shows the open tiers |
 | Safeguards: encounter level cap, no double reward/cost (den used on entry, battle cleared once), saved mid-raid (run v12), failure never ends the run, config validated at load, visual shield/phase/timer/charge | DONE |

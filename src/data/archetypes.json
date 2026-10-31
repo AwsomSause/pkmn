@@ -6067,7 +6067,7 @@
   },
   {
     "id": "spr-hgss-ethan",
-    "name": "Spr_HGSS_Ethan",
+    "name": "Ethan (HGSS)",
     "title": "The Specialist",
     "description": "Starter Pokémon gain 15% EXP — Pokémon take 5% more damage.",
     "pros": [
@@ -6110,7 +6110,7 @@
   },
   {
     "id": "spr-hgss-silver",
-    "name": "Spr_HGSS_Silver",
+    "name": "Silver (HGSS)",
     "title": "The Specialist",
     "description": "Pokémon deal 20% more damage against higher-level enemies — Pokémon gain 15% less EXP.",
     "pros": [
@@ -6147,7 +6147,7 @@
   },
   {
     "id": "spr-pt-barry",
-    "name": "Spr_Pt_Barry",
+    "name": "Barry (Platinum)",
     "title": "The Specialist",
     "description": "Pokémon gain 20% Speed and EXP — Shop prices increase by 20%.",
     "pros": [
@@ -6189,7 +6189,7 @@
   },
   {
     "id": "spr-pt-dawn",
-    "name": "Spr_Pt_Dawn",
+    "name": "Dawn (Platinum)",
     "title": "The Specialist",
     "description": "Starter Pokémon gain 20% EXP — Non-starters gain 10% less EXP.",
     "pros": [
@@ -6232,7 +6232,7 @@
   },
   {
     "id": "spr-pt-looker",
-    "name": "Spr_Pt_Looker",
+    "name": "Looker (Platinum)",
     "title": "The Specialist",
     "description": "Hidden items and bonus rewards appear 20% more often — Pokémon deal 10% less damage.",
     "pros": [
@@ -6276,7 +6276,7 @@
   },
   {
     "id": "spr-pt-lucas",
-    "name": "Spr_Pt_Lucas",
+    "name": "Lucas (Platinum)",
     "title": "The Specialist",
     "description": "Pokémon gain 15% EXP — Shop prices increase by 10%.",
     "pros": [

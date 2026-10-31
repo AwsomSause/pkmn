@@ -199,6 +199,12 @@ function eventPacks(content: Content, run: RunState): Set<string> {
   return new Set([...runGameEventIds(run), ...own]);
 }
 
+/** An event whose only recruit is a trainer the player already owns (or is playing). */
+function recruitsOwned(run: RunState, e: EventDef): boolean {
+  const ids = e.choices.flatMap((c) => [c.success, c.failure ?? c.success].flatMap((o) => [...o.effects, ...(o.battle?.win ?? [])])).flatMap((x) => (x.kind === 'recruit' ? [x.trainer] : []));
+  return ids.length > 0 && ids.every((id) => id === run.archetypeId || (run.itemCounters?.[`owned:${id}`] ?? 0) > 0);
+}
+
 /** Events that can appear on the current stage (key-item events only while the key item is held). */
 export function eligibleEvents(content: Content, run: RunState): EventDef[] {
   const n = stageNumber(content, run);
@@ -211,6 +217,7 @@ export function eligibleEvents(content: Content, run: RunState): EventDef[] {
       // An event pack's own stops (e.g. Spooky) only appear in runs started while it is on (or a trainer who brings them).
       (!e.gameEvent || packs.has(e.gameEvent)) &&
       !(run.itemCounters?.[`event-seen:${e.id}`]) &&
+      !recruitsOwned(run, e) &&
       e.requires.every((c) => conditionMet(content, run, c)),
   );
 }
