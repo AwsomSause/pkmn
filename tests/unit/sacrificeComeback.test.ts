@@ -97,6 +97,21 @@ describe('Team chemistry', () => {
     expect(turn(run)).toContain('Perfect Timing!');
     expect(chemistryOf(content, run, lead.uid, lead.uid)).toBeNull();
   });
+  it('the other four labels lift the lead on its first turn', () => {
+    const cases: [string, (a: ReturnType<typeof setup>['run'], l: string, b: string) => void, string][] = [
+      ['competitive', (r, l) => { r.story.histories[l]!.hyper['friendly-competition'] = 1; }, 'Competitive Duo!'],
+      ['tested', (r, l, b) => { r.story.histories[l]!.bossesBeaten = 2; r.story.histories[b]!.bossesBeaten = 2; r.story.histories[l]!.survivedFatal = 1; }, 'Battle-Tested!'],
+    ];
+    for (const [id, prep, text] of cases) {
+      const { run, lead } = setup(`chem-${id}`);
+      const buddy = createPokemon(content, 'rattata', 10, 'buddy');
+      run.party.push(buddy);
+      openHistory(content, run, buddy.uid, buddy.speciesId, 'caught');
+      prep(run, lead.uid, buddy.uid);
+      run.battle!.turn = 1;
+      expect(turn(run)).toContain(text);
+    }
+  });
 });
 
 describe('Retirement and reunion', () => {
