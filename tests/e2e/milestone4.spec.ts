@@ -118,6 +118,7 @@ test('beating the last champion shows the victory screen', async ({ page }) => {
         mon.moves[0] = { id: 'tackle', pp: 35 }; // a lead that only knows status moves can't finish the champion
         index = 0;
       }
+      mon.moves[Math.max(0, index)].pp = 35; // the league has many Pokémon; the move must not run dry
       session.takeTurn({ kind: 'move', index: Math.max(0, index) });
     }
     while (session.run.phase === 'decision') session.resolveDecision({ kind: 'skipMove' });
