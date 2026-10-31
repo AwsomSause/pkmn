@@ -691,7 +691,10 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   for (const c of [playerC, enemy]) syncForms(ctx, c, events, true);
   endTurnStates(ctx, playerC, enemy, events);
   const raidTimeout = battle.raid ? raidEndOfTurn(ctx, playerC, enemy, events) : false;
-  if (battle.totem && !battle.outcome) totemPhases(ctx, enemy, events);
+  if (battle.totem && !battle.outcome) {
+    totemPhases(ctx, enemy, events);
+    totemFieldEffect(ctx, enemy, [playerC], events);
+  }
 
   // Held items at the end of the turn (Leftovers, Orbs, berries), then battle boosts count down.
   if (!anyFainted(playerC, enemy)) {
@@ -885,6 +888,18 @@ function totemPhases(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]
     t.phasesDone.push(i);
     applyBossPhase(ctx, enemy, phase, events);
   });
+}
+
+/** The Totem's territory spreads its status: each of your Pokémon without one may catch it (battle stream, once per Pokémon per turn). */
+function totemFieldEffect(ctx: BattleContext, source: Combatant, targets: Combatant[], events: BattleEvent[]): void {
+  const t = ctx.battle.totem;
+  if (!t || ctx.battle.outcome) return;
+  const fx = getTotem(ctx.content, t.id).fieldEffect;
+  if (!fx) return;
+  for (const target of targets) {
+    if (target.mon.hp <= 0 || target.mon.status || !ctx.rng.chance(fx.chance)) continue;
+    if (tryInflictStatus(ctx, source, target, fx.status, undefined, events, false)) events.push({ type: 'raid', tone: 'warn', text: fx.text });
+  }
 }
 
 /** Clears a stuck two-turn or lock-in move (its move slot is gone), keeping the other conditions. */
@@ -4894,6 +4909,9 @@ function championsAura(ctx: BattleContext, events: BattleEvent[]): void {
 
 /** Engine steps the double-battle turn (battle/doubles.ts) drives. Not meant for other callers. */
 export const doublesSteps = {
+  totemAura,
+  totemPhases,
+  totemFieldEffect,
   executeMove,
   runMove,
   resolveMove,

@@ -3,6 +3,7 @@
 // wild Pokémon appear, which trainer classes show up, and which gym leader
 // waits at the end. Themes and gym leaders never repeat within a run (D6).
 
+import { gatePool } from './availability';
 import { isSpecialForm } from './specialForms';
 import type { Boss, Content, Species, Theme, TrainerClass, TypeName } from './contentSchema';
 import { isUsableMove } from './pokemon';
@@ -72,12 +73,12 @@ export function typeRarityWeight(content: Content, types: readonly TypeName[]): 
   return avg * combo;
 }
 
-export function themePool(content: Content, theme: Theme, regionId?: string): PoolEntry[] {
-  return typesPool(content, theme.types, regionId);
+export function themePool(content: Content, theme: Theme, regionId?: string, level?: number): PoolEntry[] {
+  return typesPool(content, theme.types, regionId, level);
 }
 
-/** Like themePool, for any list of types (an Elite Four member's speciality, for example). */
-export function typesPool(content: Content, types: readonly TypeName[], regionId?: string): PoolEntry[] {
+/** Like themePool, for any list of types (an Elite Four member's speciality, for example). With `level`, species not unlocked yet by the spreadsheet are left out (core/availability.ts). */
+export function typesPool(content: Content, types: readonly TypeName[], regionId?: string, level?: number): PoolEntry[] {
   const { dualTypeWeight, nativeWeight, minThemePool, wildPool } = content.balance;
   const pool: PoolEntry[] = wildEligibleSpecies(content)
     .filter((s) => sharesType(s.types, types))
@@ -88,15 +89,15 @@ export function typesPool(content: Content, types: readonly TypeName[], regionId
   if (pool.length < minThemePool) {
     for (const id of wildPool) if (!pool.some((p) => p.speciesId === id)) pool.push({ speciesId: id, weight: 1 });
   }
-  return pool;
+  return level === undefined ? pool : gatePool(content, pool, level).pool;
 }
 
 /** Picks a species from the theme, preferring ones that share a type with `prefer` (e.g. a trainer's speciality). */
 /** The scripted first rival's class: never picked as an ordinary trainer. */
 export const RIVAL_CLASS = 'rival';
 
-export function pickThemeSpecies(content: Content, theme: Theme, rng: Rng, prefer?: readonly TypeName[], regionId?: string, weightMod?: (speciesId: string) => number): string {
-  const pool = themePool(content, theme, regionId);
+export function pickThemeSpecies(content: Content, theme: Theme, rng: Rng, prefer?: readonly TypeName[], regionId?: string, weightMod?: (speciesId: string) => number, level?: number): string {
+  const pool = themePool(content, theme, regionId, level);
   return pickFromPool(content, weightMod ? pool.map((p) => ({ ...p, weight: p.weight * weightMod(p.speciesId) })) : pool, rng, prefer);
 }
 

@@ -478,5 +478,103 @@
   "reward": {
    "bankCredits": 200
   }
+ },
+ {
+  "id": "totems-1",
+  "name": "Territory Tamer",
+  "description": "Beat a Totem Pokémon.",
+  "category": "battle",
+  "chain": "totems",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "totemsWon",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 100
+  }
+ },
+ {
+  "id": "totems-10",
+  "name": "Totem Hunter",
+  "description": "Beat 10 Totem Pokémon.",
+  "category": "battle",
+  "chain": "totems",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "totemsWon",
+   "atLeast": 10
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "totems-50",
+  "name": "Totem Legend",
+  "description": "Beat 50 Totem Pokémon.",
+  "category": "battle",
+  "chain": "totems",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "totemsWon",
+   "atLeast": 50
+  },
+  "reward": {
+   "bankCredits": 1000,
+   "title": "Totem Legend"
+  }
+ },
+ {
+  "id": "raids-1",
+  "name": "Raid Rookie",
+  "description": "Win a raid.",
+  "category": "battle",
+  "chain": "raids",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "raidsWon",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 100
+  }
+ },
+ {
+  "id": "raids-10",
+  "name": "Raid Regular",
+  "description": "Win 10 raids.",
+  "category": "battle",
+  "chain": "raids",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "raidsWon",
+   "atLeast": 10
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "raids-50",
+  "name": "Raid Master",
+  "description": "Win 50 raids.",
+  "category": "battle",
+  "chain": "raids",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "raidsWon",
+   "atLeast": 50
+  },
+  "reward": {
+   "bankCredits": 1000,
+   "title": "Raid Master"
+  }
  }
 ]

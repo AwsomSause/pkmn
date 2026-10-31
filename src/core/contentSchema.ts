@@ -1966,6 +1966,11 @@ export const BalanceSchema = z.object({
   wildMaxBaseStats: z.number().int().positive(),
   /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
   levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
+  /** Spreadsheet availability (core/availability.ts): a species unlocks at its sheet minimum level minus levelSlack; rarityWeights scale the odds of unlocked ones. */
+  availability: z.object({
+    levelSlack: z.number().int().min(0),
+    rarityWeights: z.object({ common: z.number().positive(), uncommon: z.number().positive(), rare: z.number().positive(), veryRare: z.number().positive(), legendary: z.number().positive(), mythical: z.number().positive() }),
+  }),
   /** The gentle opening: for the first `encounters` fights of a run, wild Pokémon above `maxBaseStats` are swapped for weaker ones and are `levelOffset` levels lower (never below `minLevel`). */
   opening: z.object({ encounters: z.number().int().min(0), maxBaseStats: z.number().int().positive(), levelOffset: z.number().int().min(0), minLevel: z.number().int().min(1), softMovesUntilLevel: z.number().int().min(0), maxLevel: z.number().int().min(1) }),
   /** Chance that a wild encounter is a Legendary, Mythical or Ultra Beast (trainer perks scale it). */

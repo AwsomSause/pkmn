@@ -640,6 +640,254 @@
       },
       "unlocks": null,
       "failureKeep": 0.35
+    },
+    {
+      "id": "hollow-of-masks",
+      "name": "Hollow of Masks",
+      "tier": 3,
+      "blurb": "Your own team walks a mossy hollow to a Mimikyu Totem and its Gengar ally.",
+      "nodes": {
+        "min": 5,
+        "max": 7
+      },
+      "partyMode": "own",
+      "nodeWeights": {
+        "wild": 3,
+        "trainer": 3,
+        "elite": 1,
+        "rest": 2,
+        "cache": 2,
+        "research": 1,
+        "mystery": 1,
+        "recruit": 0,
+        "megaEnergy": 2,
+        "totem": 0,
+        "raid": 0
+      },
+      "finale": {
+        "kind": "totem",
+        "totemId": "totem-mimikyu"
+      },
+      "rentals": [
+        "growlithe",
+        "machop",
+        "geodude",
+        "abra",
+        "pikachu",
+        "eevee"
+      ],
+      "restHeal": 0.35,
+      "cache": [
+        {
+          "item": "super-potion",
+          "chance": 1
+        },
+        {
+          "item": "ether",
+          "chance": 0.5
+        }
+      ],
+      "megaCost": 3,
+      "researchGoal": 3,
+      "rewards": {
+        "moneyPerLevel": 90,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "megaStones": 1,
+        "researchBonusItem": null
+      },
+      "unlocks": null,
+      "failureKeep": 0.25
+    },
+    {
+      "id": "dune-trek",
+      "name": "Dune Trek",
+      "tier": 4,
+      "blurb": "A long trek across burning dunes ends in a sandstorm raid.",
+      "nodes": {
+        "min": 5,
+        "max": 7
+      },
+      "partyMode": "own",
+      "nodeWeights": {
+        "wild": 3,
+        "trainer": 3,
+        "elite": 1,
+        "rest": 2,
+        "cache": 2,
+        "research": 1,
+        "mystery": 1,
+        "recruit": 0,
+        "megaEnergy": 2,
+        "totem": 0,
+        "raid": 0
+      },
+      "finale": {
+        "kind": "raid",
+        "raidId": "sandstorm-tyranitar"
+      },
+      "rentals": [
+        "growlithe",
+        "machop",
+        "geodude",
+        "abra",
+        "pikachu",
+        "eevee"
+      ],
+      "restHeal": 0.35,
+      "cache": [
+        {
+          "item": "super-potion",
+          "chance": 1
+        },
+        {
+          "item": "ether",
+          "chance": 0.5
+        }
+      ],
+      "megaCost": 3,
+      "researchGoal": 3,
+      "rewards": {
+        "moneyPerLevel": 90,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "megaStones": 1,
+        "researchBonusItem": null
+      },
+      "unlocks": null,
+      "failureKeep": 0.25
+    },
+    {
+      "id": "sky-ascent",
+      "name": "Sky Ascent",
+      "tier": 4,
+      "blurb": "Borrowed Pokémon climb a cloud stair to a draconic raid.",
+      "nodes": {
+        "min": 5,
+        "max": 7
+      },
+      "partyMode": "rental",
+      "nodeWeights": {
+        "wild": 3,
+        "trainer": 3,
+        "elite": 1,
+        "rest": 2,
+        "cache": 2,
+        "research": 1,
+        "mystery": 1,
+        "recruit": 0,
+        "megaEnergy": 2,
+        "totem": 0,
+        "raid": 0
+      },
+      "finale": {
+        "kind": "raid",
+        "raidId": "dragon-ascent"
+      },
+      "rentals": [
+        "growlithe",
+        "machop",
+        "geodude",
+        "abra",
+        "pikachu",
+        "eevee"
+      ],
+      "restHeal": 0.35,
+      "cache": [
+        {
+          "item": "super-potion",
+          "chance": 1
+        },
+        {
+          "item": "ether",
+          "chance": 0.5
+        }
+      ],
+      "megaCost": 4,
+      "researchGoal": 3,
+      "rewards": {
+        "moneyPerLevel": 90,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "megaStones": 1,
+        "researchBonusItem": null
+      },
+      "unlocks": null,
+      "failureKeep": 0.25
+    },
+    {
+      "id": "scale-summit",
+      "name": "Scale Summit",
+      "tier": 4,
+      "blurb": "Your own team scales a stormy peak to Kommo-o and Hakamo-o.",
+      "nodes": {
+        "min": 5,
+        "max": 7
+      },
+      "partyMode": "own",
+      "nodeWeights": {
+        "wild": 3,
+        "trainer": 3,
+        "elite": 1,
+        "rest": 2,
+        "cache": 2,
+        "research": 1,
+        "mystery": 1,
+        "recruit": 0,
+        "megaEnergy": 2,
+        "totem": 0,
+        "raid": 0
+      },
+      "finale": {
+        "kind": "totem",
+        "totemId": "totem-kommo-o"
+      },
+      "rentals": [
+        "growlithe",
+        "machop",
+        "geodude",
+        "abra",
+        "pikachu",
+        "eevee"
+      ],
+      "restHeal": 0.35,
+      "cache": [
+        {
+          "item": "super-potion",
+          "chance": 1
+        },
+        {
+          "item": "ether",
+          "chance": 0.5
+        }
+      ],
+      "megaCost": 4,
+      "researchGoal": 3,
+      "rewards": {
+        "moneyPerLevel": 90,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          }
+        ],
+        "megaStones": 1,
+        "researchBonusItem": null
+      },
+      "unlocks": null,
+      "failureKeep": 0.25
     }
   ]
 }
