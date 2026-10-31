@@ -16,6 +16,8 @@ import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMov
 import { runPerks } from '../core/archetypes';
 import { abilityOf, calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { formIntro } from '../core/presentation/sceneEffects';
+import { finalRivalArenaTheme } from '../core/story/highHype';
+import { ultimateRival } from '../core/rivals/ultimate';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
@@ -251,9 +253,11 @@ export class BattleScene extends Phaser.Scene {
     // members and champions with a speciality fight in their own type's arena.
     const boss = this.boss();
     const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
-    const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
+    // The Final Rival fights in the arena of the stage where you first met (rebuilt from the run's stage themes).
+    const metTheme = finalRivalArenaTheme(session.content, run, battle.rivalId, ultimateRival(run)?.id === battle.rivalId);
+    const arena = bossType ? session.content.arenas[bossType] : metTheme ? arenaFor(session.content, getTheme(session.content, metTheme)) : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
     const raidArena = this.raidArena(battle);
-    const uie = raidArena ? null : this.uieArena();
+    const uie = raidArena || metTheme ? null : this.uieArena();
     const bg = raidArena ?? (uie && this.textures.exists(uie) ? uie : arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
     this.field = this.add.container(0, 0);
     const backLayers: Phaser.GameObjects.Image[] = [];

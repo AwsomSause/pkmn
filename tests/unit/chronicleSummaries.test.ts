@@ -92,3 +92,18 @@ describe('Kindness peaceful encounter (2.3)', () => {
     expect(conditionMet(content, run, cond)).toBe(true);
   });
 });
+
+import { finalRivalArenaTheme } from '../../src/core/story/highHype';
+
+describe('Final Rival first-meeting arena (2.3)', () => {
+  it('only the defining rival in the last region gets the arena of the stage where you first met', () => {
+    const run = fresh();
+    run.usedThemes = ['t0', 't1', 't2'];
+    run.story.rivals.push({ id: 'r1', origin: { eventId: 'x', where: { region: 0, stage: 1, level: null, node: null, battle: null, turn: null }, path: 'p' } } as never);
+    expect(finalRivalArenaTheme(content, run, 'r1', true)).toBeNull();
+    run.regionIndex = run.regionOrder.length - 1;
+    expect(finalRivalArenaTheme(content, run, 'r1', false)).toBeNull();
+    expect(finalRivalArenaTheme(content, run, 'r1', true)).toBe('t1');
+    expect(finalRivalArenaTheme(content, run, 'nobody', true)).toBeNull();
+  });
+});
