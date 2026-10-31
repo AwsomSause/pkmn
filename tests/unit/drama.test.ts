@@ -475,3 +475,30 @@ describe('boss aces can evolve mid-battle (left-out 2.1)', () => {
     expect(trainable).toBeGreaterThan(0);
   });
 });
+
+describe('left-out 2.1: flavour, after-battle words and your own declarations', () => {
+  it('has flavour, after-battle and declaration lines in the data', () => {
+    expect(Object.keys(DRAMA.flavor).length).toBeGreaterThan(3);
+    expect(DRAMA.afterBattle.win.length).toBeGreaterThan(0);
+    expect(DRAMA.playerDeclarations.lastStand.length).toBeGreaterThan(0);
+  });
+  it('the trainer remarks on the move you leaned on once the battle ends', () => {
+    const run = trainerRun('Joey', 0.5);
+    run.battle!.drama.playerMoves = { tackle: 3 };
+    run.battle!.outcome = 'win';
+    const end = planDrama(content, run, structuredClone(run.battle!), []);
+    expect(end.map((l) => l.category)).toEqual(['defeat', 'defeat']);
+    expect(end[1]!.text).not.toContain('{');
+  });
+  it('your Pokémon declares a strong move on its last stand', () => {
+    const run = trainerRun();
+    const mon = run.party[0]!;
+    mon.hp = 1;
+    const prior = structuredClone(run.battle!);
+    const lines = planDrama(content, run, prior, [move('player', 'hyper-beam')]);
+    const mine = lines.find((l) => l.speaker === 'You');
+    expect(mine?.cue?.style).toBe('lastStand');
+    expect(mine?.text).not.toContain('{');
+    expect(planDrama(content, run, prior, [move('player', 'hyper-beam')]).some((l) => l.speaker === 'You')).toBe(false);
+  });
+});
