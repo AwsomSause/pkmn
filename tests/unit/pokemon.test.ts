@@ -27,6 +27,38 @@ describe('Pokémon stats and experience', () => {
     expect(levelFromXp('medium-fast', 1000)).toBe(10);
   });
 
+  it('levels above 100 cost more EXP each level and stay continuous at 100 (D14)', () => {
+    for (const rate of ['fast', 'medium-fast', 'medium-slow', 'slow', 'erratic', 'fluctuating'] as const) {
+      let prevStep = 0;
+      for (let n = 2; n <= 1000; n++) {
+        const step = xpForLevel(rate, n) - xpForLevel(rate, n - 1);
+        expect(step).toBeGreaterThan(0);
+        if (n > 101) expect(step).toBeGreaterThanOrEqual(prevStep);
+        prevStep = step;
+      }
+      expect(levelFromXp(rate, xpForLevel(rate, 437), 1000)).toBe(437);
+      expect(levelFromXp(rate, xpForLevel(rate, 437) - 1, 1000)).toBe(436);
+      expect(levelFromXp(rate, Number.MAX_SAFE_INTEGER, 1000)).toBe(1000);
+    }
+    // Level 101 costs 0.4 × level 100's cost × 1.01.
+    expect(xpForLevel('medium-fast', 101) - xpForLevel('medium-fast', 100)).toBe(Math.floor((0.4 * 29_701 * 101) / 100));
+    // Without a higher max level, the old cap of 100 holds.
+    expect(levelFromXp('medium-fast', xpForLevel('medium-fast', 300))).toBe(100);
+  });
+
+  it('a Pokémon above 100 has stats from the same formula and gains levels up to the cap', () => {
+    const big = { ...content, balance: { ...content.balance, difficulty: { ...content.balance.difficulty, maxLevel: 1000 } } };
+    const mon = createPokemon(big, 'machop', 100, 'p1');
+    const hp100 = calcStats(big, mon).hp;
+    const res = gainXp(big, mon, xpForLevel('medium-slow', 250) - mon.xp, 200);
+    expect(res.newLevel).toBe(200);
+    expect(calcStats(big, mon).hp).toBeGreaterThan(hp100 * 1.9);
+    expect(Number.isFinite(calcStats(big, mon).atk)).toBe(true);
+    // The live data still stops at its maxLevel.
+    const capped = createPokemon(content, 'machop', 100, 'p2');
+    expect(gainXp(content, capped, 1e9, 500).newLevel).toBe(content.balance.difficulty.maxLevel);
+  });
+
   it('starts with the last four moves learned by its level', () => {
     // Bulbasaur learns tackle 1, growl 2, vine-whip 8, poison-powder 14, sleep-powder 16, take-down 17.
     const mon = createPokemon(content, 'bulbasaur', 17, 'p1');

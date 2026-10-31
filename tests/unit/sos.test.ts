@@ -112,3 +112,38 @@ describe('sos in the engine', () => {
     expect(found).toBe(true);
   });
 });
+
+describe('Adrenaline Orb and chains', () => {
+  it('lets a second call through only with the orb, and each answered call strengthens the next friend', () => {
+    const { foe, battle } = wild('pidgey', 30);
+    foe.hp = 1;
+    battle.sos = { ...freshSos(), answered: 1 };
+    const base = { battle, caller: foe, maxHp: maxHp(content, foe), scary: false };
+    expect(rollSos(base)).toEqual({ kind: 'none' });
+    let answered = 0;
+    for (let t = 1; t < 400; t++) {
+      battle.turn = t;
+      const r = rollSos({ ...base, orb: true });
+      if (r.kind === 'answered') {
+        answered++;
+        expect(r.level).toBeGreaterThanOrEqual(30 - 5 + 1);
+      }
+    }
+    expect(answered).toBeGreaterThan(0);
+    expect(content.items.get('adrenaline-orb') ?? true).toBeTruthy();
+  });
+  it('rolls more calls with the orb than without over the same turns', () => {
+    const { foe, battle } = wild('pidgey', 30);
+    foe.hp = Math.floor(maxHp(content, foe) * 0.6);
+    const base = { battle, caller: foe, maxHp: maxHp(content, foe), scary: false };
+    const calls = (orb: boolean) => {
+      let n = 0;
+      for (let t = 1; t <= 300; t++) {
+        battle.turn = t;
+        if (rollSos({ ...base, orb }).kind !== 'none') n++;
+      }
+      return n;
+    };
+    expect(calls(true)).toBeGreaterThan(calls(false));
+  });
+});

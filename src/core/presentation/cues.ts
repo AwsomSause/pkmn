@@ -66,6 +66,8 @@ export function planCues(
   const full = settings.mode === 'full';
   const animated = settings.mode !== 'off';
   let current: { moveId: string; side: Side } | null = null;
+  // A multi-hit move shows each badge once, not on every hit.
+  let badged = new Set<string>();
 
   return events.map((raw, i) => {
     const e = raw as BattleEvent;
@@ -73,6 +75,7 @@ export function planCues(
     switch (e.type) {
       case 'move': {
         current = { moveId: e.moveId, side: e.side };
+        badged = new Set();
         const move = content.moves.get(e.moveId);
         if (!move || !animated) break;
         const look = presentationFor(anims, e.moveId);
@@ -105,9 +108,14 @@ export function planCues(
           });
         }
         cues.push({ kind: 'number', side: e.side, amount: e.amount, tone: crit ? 'crit' : eff > 1 ? 'super' : eff < 1 ? 'weak' : 'damage', motion: full });
-        if (crit) cues.push({ kind: 'badge', side: e.side, badge: 'crit' });
-        if (eff > 1) cues.push({ kind: 'badge', side: e.side, badge: 'super' });
-        else if (eff < 1) cues.push({ kind: 'badge', side: e.side, badge: 'weak' });
+        const badge = (kind: 'crit' | 'super' | 'weak') => {
+          if (badged.has(`${e.side}:${kind}`)) return;
+          badged.add(`${e.side}:${kind}`);
+          cues.push({ kind: 'badge', side: e.side, badge: kind });
+        };
+        if (crit) badge('crit');
+        if (eff > 1) badge('super');
+        else if (eff < 1) badge('weak');
         break;
       }
       case 'noEffect':

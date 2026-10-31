@@ -215,3 +215,25 @@ export function enemyCombo(content: Content, run: RunState, prevIndex: number): 
   battle.enemyStages[stat] = Math.min(6, battle.enemyStages[stat] + 1);
   return { type: 'combo', side: 'enemy', from: prev.uid, to: next.uid, stat };
 }
+
+// ---------- evolving and learning outside battle ----------
+
+/** A devoted Pokémon whose friendship is nearly there counts as ready for a friendship evolution. */
+export function bondEvolves(content: Content, run: RunState, mon: PokemonInstance): boolean {
+  if (bondMood(bondOf(run, mon.uid)) !== 'devoted') return false;
+  return mon.friendship >= content.balance.friendship.evolveAt * BOND_RULES.evolve.minFriendshipShare;
+}
+
+/** After a win: devoted Pokémon that fought and have a free slot learn the move they were ready for. Returns what was learned. */
+export function bondLessons(content: Content, run: RunState, fought: readonly string[]): { uid: string; moveId: string }[] {
+  const out: { uid: string; moveId: string }[] = [];
+  for (const mon of run.party) {
+    if (out.length >= BOND_RULES.lesson.maxPerBattle * run.party.length || mon.hp <= 0 || !fought.includes(mon.uid) || mon.moves.length >= 4) continue;
+    if (bondMood(bondOf(run, mon.uid)) !== 'devoted') continue;
+    const pick = revealableMove(content, mon);
+    if (!pick || pick.replaces) continue;
+    mon.moves.push({ id: pick.moveId, pp: content.moves.get(pick.moveId)!.pp });
+    out.push({ uid: mon.uid, moveId: pick.moveId });
+  }
+  return out;
+}

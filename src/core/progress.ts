@@ -23,7 +23,7 @@ import { awardContracts, type ContractPayout } from './contracts';
 import { awardGameEvents, type GameEventPayout } from './gameEvents';
 import { awardModeRewards, type ModeRewardPaid } from './modeRewards';
 import { recordMoveMastery } from './moveMastery';
-import { claimBankMilestones } from './bank';
+import { claimBankMilestones, claimRegionAccounts, loanDue, vaultDeposit } from './bank';
 import { runStamps } from './recap';
 import { recordMastery, type MasteryRankUp } from './mastery';
 import { addTrainerCounters, awardQuestSteps, questTrainer, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
@@ -199,7 +199,11 @@ export function runPayout(content: Content, run: RunState, licenses: readonly st
     stipend.perEliteFour * (c.eliteFourDefeated ?? 0) +
     stipend.perChampion * (c.championsDefeated ?? 0) +
     stipend.perRegion * run.regionsCleared.length;
-  return { savings, stipend: Math.floor(earned) };
+  // An unpaid Bank loan is taken from the stipend first, then the savings; a payout never goes below zero.
+  const due = loanDue(content, run);
+  const stipendKept = Math.max(0, Math.floor(earned) - due);
+  const savingsKept = Math.max(0, savings - Math.max(0, due - Math.floor(earned)));
+  return { savings: savingsKept, stipend: stipendKept };
 }
 
 export interface RunEndSummary {
@@ -308,6 +312,10 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
   profile.lifetimeBankCredits += base.savings + base.stipend;
   const achievements = counts ? awardAchievements(content, profile, now) : [];
   claimBankMilestones(content, profile, now);
+  if (counts) {
+    claimRegionAccounts(content, profile, run.regionsCleared, now);
+    vaultDeposit(content, profile, run);
+  }
   const achievementCredits = achievements.reduce((sum, a) => sum + a.reward.bankCredits, 0);
   const payout: Payout = { ...base, achievements: achievementCredits, total: profile.bankCredits - creditsBefore };
   profile.lastPayout = payout;
