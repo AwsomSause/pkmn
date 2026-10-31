@@ -8,7 +8,7 @@ import { findNode, nextChoices } from '../../src/core/map';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { chooseStarter, chooseNode, createRun } from '../../src/core/run';
 import { StageStateSchema, type RunState } from '../../src/core/state';
-import { advanceRoamers, applyFrontWeather, forecast, foggedAt, frontAt, isFogged, placeCamp, roamerOn, scoutAhead, sightRange, spawnRoamers, stageFronts, stageHasCamp, visibleColumn } from '../../src/core/world';
+import { advanceRoamers, applyFrontWeather, convoyStep, healConvoy, forecast, foggedAt, frontAt, isFogged, placeCamp, roamerOn, scoutAhead, sightRange, spawnRoamers, stageFronts, stageHasCamp, visibleColumn } from '../../src/core/world';
 import { content } from './helpers';
 
 const withWorld = (patch: Partial<Content['balance']['world']>): Content => ({ ...content, balance: { ...content.balance, world: { ...content.balance.world, ...patch } } });
@@ -327,6 +327,55 @@ describe('limited-time events', () => {
     run.stage!.map.nodes.forEach((n) => (n.sides = []));
     addEventStops(content, run);
     expect(eventStops(run).some((s) => s.side.eventId === 'plasma-op-2')).toBe(true);
+  });
+});
+
+describe('convoy mode', () => {
+  const escort = (c: Content = content): RunState => {
+    const run = atEvent(newRun(c), 'convoy-lost-researcher');
+    return chooseEvent(c, run, 'test-event', 0).run;
+  };
+
+  it('an escort event starts a convoy, and not a second one', () => {
+    const run = escort();
+    expect(run.stage!.convoy).toEqual({ name: 'the researcher', hp: 4, maxHp: 4 });
+    expect(eligibleEvents(content, run).some((e) => e.id === 'convoy-lost-researcher')).toBe(false);
+  });
+
+  it('battle nodes strike it by a seeded roll, guards soften the blow, and 0 health loses it', () => {
+    const hard = withWorld({ convoyHitChance: 1, convoyHit: [2, 2], convoyGuardAbilities: [] });
+    const run = escort(hard);
+    const node = run.stage!.map.nodes.find((n) => n.kind === 'wild')!;
+    convoyStep(hard, run, node);
+    expect(run.stage!.convoy!.hp).toBe(2);
+    const twin = escort(hard);
+    convoyStep(hard, twin, node);
+    expect(twin.stage!.convoy).toEqual(run.stage!.convoy);
+    convoyStep(hard, run, node);
+    expect(run.stage!.convoy).toBeNull();
+    expect(run.story.flags['ev:convoy-lost']).toBe(1);
+  });
+
+  it('a living escort is delivered at the gym for money; nothing happens with no escort', () => {
+    const run = escort();
+    run.stage!.convoy!.hp = 3;
+    const money = run.money;
+    convoyStep(content, run, run.stage!.map.nodes.find((n) => n.kind === 'gym')!);
+    expect(run.money).toBe(money + content.balance.world.convoyReward + 3 * content.balance.world.convoyRewardPerHp);
+    expect(run.story.flags['ev:convoy-delivered']).toBe(1);
+    expect(run.stage!.convoy).toBeNull();
+    const none = newRun();
+    convoyStep(content, none, none.stage!.map.nodes[0]!);
+    expect(none.stage!.convoy).toBeNull();
+  });
+
+  it('healing stops at full health, and an old stage loads with no convoy', () => {
+    const run = escort();
+    run.stage!.convoy!.hp = 1;
+    healConvoy(run, 9);
+    expect(run.stage!.convoy!.hp).toBe(4);
+    const { convoy: _c, ...old } = JSON.parse(JSON.stringify(run.stage));
+    expect(StageStateSchema.parse(old).convoy).toBeNull();
   });
 });
 

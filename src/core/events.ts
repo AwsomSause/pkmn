@@ -51,7 +51,7 @@ import { focusIs, MYSTERY_EXTRA_STOPS, regionFocus } from './campaign/focus';
 import { emit } from './story/record';
 import { recordBattleStarted } from './story/hooks';
 import { getTheme, typesPool } from './themes';
-import { anyRoaming, endRoamer, partyHasAbility, placeCamp, scoutAhead, CAMP_EVENT_ID } from './world';
+import { anyRoaming, endRoamer, healConvoy, startConvoy, partyHasAbility, placeCamp, scoutAhead, CAMP_EVENT_ID } from './world';
 
 // ---------- placing event stops ----------
 
@@ -93,6 +93,8 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return partyHasAbility(content, run, c.abilities);
     case 'roaming':
       return anyRoaming(run);
+    case 'convoy':
+      return !!run.stage?.convoy === c.active;
     case 'friendship':
       return run.party.some((m) => m.friendship >= c.atLeast);
     case 'rivalMet':
@@ -249,6 +251,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs ${c.label} in your party`;
     case 'roaming':
       return 'Needs a Legendary roaming this map';
+    case 'convoy':
+      return c.active ? 'Needs an escort under your care' : 'Needs no escort under your care';
     case 'pastTeams':
       return `Needs ${c.atLeast} teams from past runs`;
     case 'keepsake':
@@ -620,6 +624,10 @@ export function effectWords(content: Content, e: EventEffect): string {
       return 'a new place opens here';
     case 'front':
       return `a ${e.weather} front is coming`;
+    case 'convoy':
+      return `you escort ${e.name} to the gym`;
+    case 'convoyHeal':
+      return 'the escort recovers';
     case 'formChange':
       return 'a Pokémon changes form';
     case 'crisis':
@@ -908,6 +916,12 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       stage.extraFronts.push({ weather: e.weather, from, to: Math.min(stage.map.columns - 1, from + e.columns - 1) });
       return effectWords(content, e);
     }
+    case 'convoy':
+      startConvoy(run, e.name, e.hp);
+      return effectWords(content, e);
+    case 'convoyHeal':
+      healConvoy(run, e.amount);
+      return effectWords(content, e);
     case 'skipAhead': {
       // The ferry lands beside the gym: one of the nodes leading into it counts as reached.
       const stage = run.stage!;

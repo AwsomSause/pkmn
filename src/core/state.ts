@@ -765,6 +765,8 @@ export const StageStateSchema = z.object({
   extraFronts: z.array(z.object({ weather: WeatherSchema, from: z.number().int().min(1), to: z.number().int().min(1) })).default([]),
   /** Roaming Legendaries on this map: where each is now and whether it is still roaming. */
   roamers: z.array(z.object({ species: z.string(), nodeId: z.string().nullable(), status: z.enum(['roaming', 'done', 'gone']) })).default([]),
+  /** Convoy Mode: the escort under your care this stage (null = none). It is delivered at the gym, or lost at 0 health. */
+  convoy: z.object({ name: z.string(), hp: z.number().int().min(0), maxHp: z.number().int().min(1) }).nullable().default(null),
 });
 export type StageState = z.infer<typeof StageStateSchema>;
 

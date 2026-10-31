@@ -1855,6 +1855,12 @@ export const WorldBalanceSchema = z.object({
   /** Checkpoint camps: one every `campEvery` stages, near these columns. */
   campEvery: z.number().int().min(1),
   campColumns: z.tuple([z.number().int().min(1), z.number().int().min(1)]),
+  /** Convoy Mode: the chance a battle node strikes the escort, the damage range, abilities that soften a strike by 1, and the delivery reward. */
+  convoyHitChance: z.number().min(0).max(1),
+  convoyHit: z.tuple([z.number().int().min(1), z.number().int().min(1)]),
+  convoyGuardAbilities: z.array(z.string()),
+  convoyReward: z.number().int().min(0),
+  convoyRewardPerHp: z.number().int().min(0),
 });
 export type WorldBalance = z.infer<typeof WorldBalanceSchema>;
 
@@ -2369,6 +2375,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('partyAbility'), abilities: z.array(z.string()).min(1), label: z.string().min(1) }),
   /** Exploration: a roaming Legendary is on this stage's map right now. */
   z.object({ kind: z.literal('roaming') }),
+  /** Convoy Mode: an escort is (or is not) under your care this stage. */
+  z.object({ kind: z.literal('convoy'), active: z.boolean().default(true) }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
@@ -2477,6 +2485,10 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('addEventFrom'), ids: z.array(z.string().min(1)).min(1) }),
   /** Exploration: a front of this weather rolls in over the columns ahead (it hits the routes it covers). */
   z.object({ kind: z.literal('front'), weather: WeatherSchema, columns: z.number().int().min(1).max(8).default(3) }),
+  /** Convoy Mode: take an escort (a named person or group with this much health) to the gym. */
+  z.object({ kind: z.literal('convoy'), name: z.string().min(1), hp: z.number().int().min(1).max(9).default(4) }),
+  /** Convoy Mode: the escort recovers this much health. */
+  z.object({ kind: z.literal('convoyHeal'), amount: z.number().int().min(1).max(9) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
 

@@ -61,7 +61,7 @@ import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { layEgg, tickEggs } from './eggs';
 import { addEventStops, continueEventChain, eventBattleWon, eventChainNext, eventGymPreview } from './events';
-import { advanceRoamers, applyFrontWeather, spawnRoamers } from './world';
+import { advanceRoamers, convoyStep, applyFrontWeather, spawnRoamers } from './world';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addItemAttribute, addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, countShiny, discover } from './progress';
@@ -489,7 +489,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   noteJournal(content, run);
   run.usedThemes.push(theme.id);
   run.usedLeaders.push(leader.id);
-  run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [], scoutedTo: 0, extraFronts: [], roamers: [] };
+  run.stage = { kind: 'stage', index, themeId: theme.id, leaderId: leader.id, eliteFour: [], map, current: null, visited: [], scoutedTo: 0, extraFronts: [], roamers: [], convoy: null };
   startStageEffects(run);
   hatchEggs(content, run);
   simulateRivalWorld(content, run);
@@ -540,6 +540,7 @@ function enterLeague(content: Content, run: RunState): void {
     current: null,
     visited: [],
     scoutedTo: 0,
+    convoy: null,
     extraFronts: [],
     roamers: [],
   };
@@ -654,6 +655,8 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   addBridgeStops(content, run, nodeId);
   // Roaming Legendaries move on as you do.
   advanceRoamers(content, run, node);
+  // An escort is struck on the way to a battle, and delivered (or lost) at the gym.
+  convoyStep(content, run, node);
   recordRouteChosen(content, run, nodeId, node.harder, node.kind);
   // The Mach Bike rides past a wild Pokémon: no battle, but the reward draft still comes.
   if (mode === 'machBike' && node.kind === 'wild') {

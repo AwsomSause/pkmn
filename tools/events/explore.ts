@@ -5,7 +5,7 @@
 // Rival events (Rival Clash, Rival Gauntlet) belong to the rival work.
 
 import { readFileSync } from 'node:fs';
-import { $, ability, any, att, ch, cure, egg, ev, ferry, fight, flag, flagIs, fr, front, good, gym, has, heal, hurt, item, join, leave, lose, out, ptype, reveal, room, roomFrom, rp, scout, trainer, wild, type Json, HELD, TREASURE, VITAMINS, BERRIES, SNACKS, HEALING } from './dsl.ts';
+import { $, ability, any, att, ch, convoy, convoyHeal, cure, egg, ev, ferry, fight, flag, escorting, flagIs, fr, front, good, gym, has, heal, hurt, item, join, leave, lose, out, ptype, reveal, room, roomFrom, rp, scout, trainer, wild, type Json, HELD, TREASURE, VITAMINS, BERRIES, SNACKS, HEALING } from './dsl.ts';
 
 const balance = JSON.parse(readFileSync(new URL('../../src/data/balance.json', import.meta.url), 'utf8')) as { world: { roamers: { species: string; name: string; gameEvent: string | null }[] } };
 const clue = (amount = 1): Json => ({ kind: 'count', counter: 'eventClues', amount });
@@ -31,7 +31,7 @@ const roamerEvents = (): Json[] =>
 export const CAMP_EVENTS: Json[] = [
   ev('camp-checkpoint', 'Checkpoint Camp', 'Checkpoint Camps', { stop: 'camp', rarity: 'common', minStage: 1, effect: 'sparkle', tint: '#1c2a1c' },
     'A tidy camp with a firepit and a tent. Other travelers have left it clean. There is time for one thing before you move on.', [
-      ch('Make camp (full rest)', out('Everyone sleeps. In the morning, all of you are whole again.', heal(1), cure(), fr(3, 'party'))),
+      ch('Make camp (full rest)', out('Everyone sleeps, and anyone in your care too. In the morning, all of you are whole again.', heal(1), cure(), convoyHeal(4), fr(3, 'party'))),
       ch('Plan the route', out('You spread a map and study the road ahead.', scout(6), gym(), rp(15))),
       ch('Sit by the fire', out('Stories, a song, and someone\'s joke you will remember. Everyone feels closer.', heal(0.3), fr(9, 'party'), rp(30), good(1))),
       ch('Resupply', out('The camp keeps a small store for travelers.', any(...HEALING), any(...BERRIES), item('poke-ball', 3))),
@@ -379,6 +379,26 @@ export const PLASMA_OPERATION_EVENTS: Json[] = [
   ]),
 ];
 
+// ---------- Convoy Mode (§5) ----------
+const CV = 'Convoy';
+const escortEvent = (id: string, name: string, who: string, hp: number, intro: string, thanks: string, cast: string[]): Json =>
+  ev(id, name, CV, { rarity: 'uncommon', minStage: 2, effect: 'none', tint: '#1c2430', requires: [escorting(false)], cast }, intro, [
+    ch('Escort them to the gym', out(thanks, convoy(who, hp))),
+    ch('Wish them luck and go on', out('You point out the safest road and leave them to it.', rp(10))),
+  ]);
+export const CONVOY_EVENTS: Json[] = [
+  escortEvent('convoy-lost-researcher', 'A Researcher Needs an Escort', 'the researcher', 4, 'A researcher with a heavy pack is staring at the road. "It is not safe alone. If you would take me as far as the gym, I can pay."', '"Stay close. I will pay at the gym." Wild Pokémon may strike at them on the way, and a party with a guarding ability keeps them safer.', ['trainer.hiker']),
+  escortEvent('convoy-merchant-cart', 'The Merchant\'s Cart', 'the merchant\'s cart', 5, 'A merchant\'s cart has lost its guards. "Five stout planks and a lot of stock. Take us to the gym and the cut is yours."', 'The cart rolls on behind you. It can take a few hits, but not many.', ['trainer.hiker']),
+  escortEvent('convoy-lost-children', 'Children on the Road', 'the lost children', 3, 'Three children, all dust and scraped knees, say their town is past the gym. They will not wait at the roadside.', 'They fall in line behind your party. They are fragile, so keep them out of trouble.', ['trainer.youngster_m']),
+  escortEvent('convoy-wounded-ranger', 'A Wounded Ranger', 'the wounded ranger', 3, 'A ranger sits against a tree, her Pokémon hurt. "Get me to the gym. They have a healer."', 'She leans on you as you go. Her Pokémon limps beside her.', ['trainer.snow_worker_m']),
+  ev('convoy-shelter', 'A Shelter by the Road', CV, { rarity: 'common', minStage: 2, effect: 'sparkle', tint: '#1c2a1c' },
+    'A roadside shelter with a roof and a well. A good place to stop with someone in your care.', [
+      ch('Tend the escort', out('Water, bandages, and an hour out of the wind. Your charge looks much better.', convoyHeal(3), rp(10)), { requires: [escorting()] }),
+      ch('Rest the party', out('You post a watch and sleep. Anyone in your care rests too.', heal(0.5), convoyHeal(1))),
+      ch('Press on', out('The road will not wait.', rp(20))),
+    ]),
+];
+
 export const EXPLORE_EVENTS: Json[] = [
   ...roamerEvents(),
   ...CAMP_EVENTS,
@@ -391,4 +411,5 @@ export const EXPLORE_EVENTS: Json[] = [
   ...BEAST_EVENTS,
   ...CAMPFIRE_EVENTS,
   ...PLASMA_OPERATION_EVENTS,
+  ...CONVOY_EVENTS,
 ];

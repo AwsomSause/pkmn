@@ -38791,7 +38791,7 @@
     {
      "label": "Make camp (full rest)",
      "success": {
-      "text": "Everyone sleeps. In the morning, all of you are whole again.",
+      "text": "Everyone sleeps, and anyone in your care too. In the morning, all of you are whole again.",
       "effects": [
        {
         "kind": "heal",
@@ -38799,6 +38799,10 @@
        },
        {
         "kind": "cure"
+       },
+       {
+        "kind": "convoyHeal",
+        "amount": 4
        },
        {
         "kind": "friendship",
@@ -44632,6 +44636,263 @@
         }
        ]
       }
+     }
+    }
+   ]
+  },
+  {
+   "id": "convoy-lost-researcher",
+   "name": "A Researcher Needs an Escort",
+   "group": "Convoy",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "convoy",
+     "active": false
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#1c2430",
+    "effect": "none"
+   },
+   "intro": "A researcher with a heavy pack is staring at the road. \"It is not safe alone. If you would take me as far as the gym, I can pay.\"",
+   "choices": [
+    {
+     "label": "Escort them to the gym",
+     "success": {
+      "text": "\"Stay close. I will pay at the gym.\" Wild Pokémon may strike at them on the way, and a party with a guarding ability keeps them safer.",
+      "effects": [
+       {
+        "kind": "convoy",
+        "name": "the researcher",
+        "hp": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wish them luck and go on",
+     "success": {
+      "text": "You point out the safest road and leave them to it.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "convoy-merchant-cart",
+   "name": "The Merchant's Cart",
+   "group": "Convoy",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "convoy",
+     "active": false
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#1c2430",
+    "effect": "none"
+   },
+   "intro": "A merchant's cart has lost its guards. \"Five stout planks and a lot of stock. Take us to the gym and the cut is yours.\"",
+   "choices": [
+    {
+     "label": "Escort them to the gym",
+     "success": {
+      "text": "The cart rolls on behind you. It can take a few hits, but not many.",
+      "effects": [
+       {
+        "kind": "convoy",
+        "name": "the merchant's cart",
+        "hp": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wish them luck and go on",
+     "success": {
+      "text": "You point out the safest road and leave them to it.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "convoy-lost-children",
+   "name": "Children on the Road",
+   "group": "Convoy",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "convoy",
+     "active": false
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#1c2430",
+    "effect": "none"
+   },
+   "intro": "Three children, all dust and scraped knees, say their town is past the gym. They will not wait at the roadside.",
+   "choices": [
+    {
+     "label": "Escort them to the gym",
+     "success": {
+      "text": "They fall in line behind your party. They are fragile, so keep them out of trouble.",
+      "effects": [
+       {
+        "kind": "convoy",
+        "name": "the lost children",
+        "hp": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wish them luck and go on",
+     "success": {
+      "text": "You point out the safest road and leave them to it.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "convoy-wounded-ranger",
+   "name": "A Wounded Ranger",
+   "group": "Convoy",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "convoy",
+     "active": false
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.snow_worker_m"
+    ],
+    "tint": "#1c2430",
+    "effect": "none"
+   },
+   "intro": "A ranger sits against a tree, her Pokémon hurt. \"Get me to the gym. They have a healer.\"",
+   "choices": [
+    {
+     "label": "Escort them to the gym",
+     "success": {
+      "text": "She leans on you as you go. Her Pokémon limps beside her.",
+      "effects": [
+       {
+        "kind": "convoy",
+        "name": "the wounded ranger",
+        "hp": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wish them luck and go on",
+     "success": {
+      "text": "You point out the safest road and leave them to it.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "convoy-shelter",
+   "name": "A Shelter by the Road",
+   "group": "Convoy",
+   "rarity": "common",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#1c2a1c",
+    "effect": "sparkle"
+   },
+   "intro": "A roadside shelter with a roof and a well. A good place to stop with someone in your care.",
+   "choices": [
+    {
+     "label": "Tend the escort",
+     "requires": [
+      {
+       "kind": "convoy",
+       "active": true
+      }
+     ],
+     "success": {
+      "text": "Water, bandages, and an hour out of the wind. Your charge looks much better.",
+      "effects": [
+       {
+        "kind": "convoyHeal",
+        "amount": 3
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Rest the party",
+     "success": {
+      "text": "You post a watch and sleep. Anyone in your care rests too.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "convoyHeal",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Press on",
+     "success": {
+      "text": "The road will not wait.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
      }
     }
    ]
