@@ -52,6 +52,11 @@ export function leagueScale(content: Content, regionIndex: number): LevelScale {
  *   5. bonus    = node bonus (trainer, gym leader, Elite Four, champion, harder route)
  *   6. level    = round(base + progress) + variance + offset + bonus, clamped to [minLevel, the region's level cap]
  */
+/** The curve's level at `scale` before variance and bonuses (used to gate pools rolled before each level, like fishing). */
+export function curveLevel(content: Content, scale: LevelScale): number {
+  return Math.round(scale.start + (scale.end - scale.start) * Math.pow(scale.t, content.balance.difficulty.curve));
+}
+
 export function enemyLevel(content: Content, archetype: Archetype, scale: LevelScale, bonus: number, rng: Rng): EnemyLevelBreakdown {
   const cfg = content.balance.difficulty;
   const base = scale.start;
@@ -129,7 +134,7 @@ export function pickFittingSpecies(content: Content, level: number, rng: Rng, dr
 
 export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string, shinyMultiplier = 1): WildPlan {
   const levelInfo = enemyLevel(content, archetype, scale, bonus, rng);
-  const speciesId = pickFittingSpecies(content, levelInfo.level, rng, () => pickThemeSpecies(content, theme, rng, undefined, regionId, wildWeightMod(content, archetype)));
+  const speciesId = pickFittingSpecies(content, levelInfo.level, rng, () => pickThemeSpecies(content, theme, rng, undefined, regionId, wildWeightMod(content, archetype), curveLevel(content, scale)));
   return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng, shinyMultiplier) };
 }
 
@@ -191,7 +196,7 @@ export function planTrainer(content: Content, archetype: Archetype, theme: Theme
   const trainerClass = rng.pick(trainerClassesFor(content, theme));
   const name = rng.pick(trainerClass.names);
   const size = teamSize(content.balance.trainerTeam, stageNumber, rng);
-  const team = buildTeam(content, archetype, scale, size, content.balance.difficulty.trainerBonus, 0, () => pickThemeSpecies(content, theme, rng, trainerClass.types, regionId), rng);
+  const team = buildTeam(content, archetype, scale, size, content.balance.difficulty.trainerBonus, 0, () => pickThemeSpecies(content, theme, rng, trainerClass.types, regionId, undefined, curveLevel(content, scale)), rng);
   return { classId: trainerClass.id, name, leaderId: null, ai: 0, ...team };
 }
 

@@ -24,6 +24,7 @@ import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevel
 import { bossMechanics, revertTransformations } from './battle/transform';
 import { RARITIES, TYPE_NAMES, type AttributeKey, type Content, type TypeName } from './contentSchema';
 import {
+  curveLevel,
   bossTeamSpecies,
   candiesForRelease,
   CHAMPION_CLASS,
@@ -870,9 +871,9 @@ export function fishingOffer(content: Content, run: RunState, sideId: string): {
   const stage = run.stage!;
   const rod = fishingRod(content, run) ?? { choices: 1, rare: false };
   const rng = new Rng(hashSeed(`${run.seed}::fishing::${stageKey(run)}::${node.id}::${sideId}`));
-  const pool = typesPool(content, ['water'], run.regionOrder[run.regionIndex]).map((p) => ({ item: p.speciesId, weight: p.weight }));
-  const bst = (id: string) => Object.values(getSpecies(content, id).baseStats).reduce((a, b) => a + b, 0);
   const scale = levelScale(content, getCampaign(content, run.campaignId), run.regionIndex, stage.index, node.column);
+  const pool = typesPool(content, ['water'], run.regionOrder[run.regionIndex], curveLevel(content, scale)).map((p) => ({ item: p.speciesId, weight: p.weight }));
+  const bst = (id: string) => Object.values(getSpecies(content, id).baseStats).reduce((a, b) => a + b, 0);
   const archetype = runArchetype(content, run);
   const shinyChance = runAttributeEffects(content, run).shinyChance;
   const out: { speciesId: string; level: number; shiny: boolean }[] = [];
