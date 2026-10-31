@@ -443,6 +443,10 @@ export function statusMoveAccuracyPerk(perks: Perks | undefined): number {
   return product(perks, 'statusMoveAccuracy');
 }
 
+export function shopEarlyRareStockPerk(perks: Perks | undefined): number {
+  return sum(perks, 'shopEarlyRareStock', (m) => m.count);
+}
+
 export function shopEarlyStockPerk(perks: Perks | undefined): number {
   return sum(perks, 'shopEarlyStock', (m) => m.count);
 }

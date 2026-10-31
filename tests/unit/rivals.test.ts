@@ -113,7 +113,7 @@ describe('rivals in saves', () => {
     expect(loaded.status).toBe('ok');
     if (loaded.status !== 'ok') return;
     expect(loaded.migratedFrom).toBe(12);
-    expect(loaded.data.raids).toEqual({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6 });
+    expect(loaded.data.raids).toEqual({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: 6 });
   });
 
   it('a version 11 run keeps its rivals and gains empty bonds', () => {
