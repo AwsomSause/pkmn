@@ -402,7 +402,9 @@ export class GameSession {
   /** Party scenes (core/partyLife): the scene waiting on the map, rolled once per transition and saved. */
   ensureScene(): PartyScene | null {
     const current = this.requireRun();
-    if (current.partyLife?.rolledFor && current.partyLife.scene) return current.partyLife.scene;
+    if (current.partyLife?.scene) return current.partyLife.scene;
+    // Browser tests drive the map with key presses a scene would swallow; they put scenes there themselves.
+    if (typeof navigator !== 'undefined' && navigator.webdriver) return null;
     const run = structuredClone(current);
     const scene = PartyLife.ensureScene(this.content, run);
     if (run.partyLife.rolledFor !== current.partyLife?.rolledFor) {
