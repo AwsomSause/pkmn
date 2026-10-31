@@ -7,6 +7,7 @@
 import Phaser from 'phaser';
 import type { AnimPlan } from '../../core/presentation/animRegistry';
 import '../../core/presentation/storyAnims';
+import '../../core/presentation/spectacleAnims';
 import type { Visual } from '../sprites';
 import { textStyle } from '../theme';
 import { flash, ring, sparks, type FxTools } from './abilityFx';
@@ -140,6 +141,65 @@ export async function playStoryAnim(t: StoryTools): Promise<void> {
       flash(t, 0.3);
       t.shake(Math.round(6 * t.plan.shake));
       tremble(t, 5, 6);
+      break;
+    case 'bond.survive':
+      // Held on at 1 HP: a flash, the Pokémon shakes, a golden ring closes in and heartbeat sparks rise.
+      flash(t, 0.5);
+      t.shake(Math.round(7 * t.plan.shake));
+      tremble(t, 6, 6);
+      ring(t, x, y, 160, 30, 600);
+      ring(t, x, y, 160, 50, 600, 140);
+      sparks(t, 'up', 10);
+      bounce(t, 1.08, 200);
+      break;
+    case 'bond.protect':
+      // A shield ring blooms round the Pokémon and the hit is turned aside.
+      flash(t, 0.25);
+      ring(t, x, y, 30, 120, 500);
+      sparks(t, 'out', 8);
+      bounce(t, 1.05, 160);
+      break;
+    case 'bond.enter':
+      // The revenge entrance: a red burst and a hard bounce as it charges in.
+      flash(t, 0.4);
+      ring(t, x, y, 20, 150, 650);
+      ring(t, x, y, 20, 150, 650, 160);
+      sparks(t, 'out', 12);
+      t.shake(Math.round(6 * t.plan.shake));
+      bounce(t, 1.14, 220);
+      break;
+    case 'bond.signature':
+      flash(t, 0.2);
+      sparks(t, 'in', 8);
+      ring(t, x, y, 110, 30, 600);
+      bounce(t, 1.06, 200);
+      break;
+    case 'drama.brace':
+      ring(t, x, y, 70, 40, 450);
+      sparks(t, 'in', 6);
+      break;
+    case 'drama.guardup':
+      ring(t, x, y, 20, 100, 500);
+      ring(t, x, y, 20, 100, 500, 140);
+      break;
+    case 'drama.guardbreak':
+      // The guard shatters: a bright flash, a burst of shards and a heavy shake.
+      flash(t, 0.55);
+      ring(t, x, y, 20, 170, 600);
+      sparks(t, 'out', 14);
+      t.shake(Math.round(8 * t.plan.shake));
+      tremble(t, 7, 6);
+      break;
+    case 'drama.rally':
+      flash(t, 0.4);
+      ring(t, x, y, 20, 140, 600);
+      sparks(t, 'up', 10);
+      t.shake(Math.round(5 * t.plan.shake));
+      bounce(t, 1.1, 180);
+      break;
+    case 'drama.momentum':
+      ring(t, x, y, 10, 90, 500);
+      sparks(t, 'up', 8);
       break;
     case 'interaction.enter':
       ring(t, x, y, 10, 70, 450);

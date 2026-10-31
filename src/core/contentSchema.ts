@@ -4,6 +4,7 @@
 
 import { NATURE_IDS } from './natures';
 import { z } from 'zod';
+import { SpectacleConfigSchema } from './battle/spectacleConfig';
 import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
 import type { TotemFile } from './totem/schema';
@@ -1843,6 +1844,8 @@ export const BalanceSchema = z.object({
   /** Rival battle styles (berserker, revenge-striker, last-stand) do something in the fight (Living Rivalry §3). */
   styleTricks: z.boolean().default(true),
   sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
+  /** Battle Drama spectacle (APPROVED §7): Last Stand, Perfect Counter, Momentum, Guard Break, Revenge Moment, boss phases, Boss Revenge Rematch (core/battle/spectacle.ts). */
+  spectacle: SpectacleConfigSchema,
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
   /** Repeat attribute boosts from items diminish: after this many full-size boosts to one attribute in a run, each is scaled by `factor` (at least 1 point). */

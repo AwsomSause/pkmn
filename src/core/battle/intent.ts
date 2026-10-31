@@ -16,8 +16,8 @@ export interface EnemyIntent {
   text: string;
 }
 
-export function hasTelegraphedIntent(battle: Pick<BattleState, 'trainer' | 'raid' | 'totem'>): boolean {
-  return Boolean(battle.raid || battle.totem || (battle.trainer && isBossClass(battle.trainer.classId)));
+export function hasTelegraphedIntent(battle: Pick<BattleState, 'trainer' | 'raid' | 'totem' | 'spectacle'>): boolean {
+  return Boolean(battle.raid || battle.totem || battle.spectacle?.rematch || (battle.trainer && isBossClass(battle.trainer.classId)));
 }
 
 export function enemyIntent(content: Content, battle: BattleState, target: PokemonInstance, party?: PokemonInstance[]): EnemyIntent | null {

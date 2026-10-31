@@ -167,6 +167,9 @@ import { withTeamTypes } from './rivals/adapt';
 import { finaleAssistRival } from './rivals/living';
 import { markTakeover, takeoverNote, takeoverRival } from './rivals/promotion';
 import { frontRunnerIntro, onFrontRunnerBattle } from './timeline/frontRunner';
+import { beginBossRematch, bossRematchPlan, dueBossRematch, recordBossDefeat, type BossRecord } from './story/bossRematch';
+import { bondScoreOf } from './battle/spectacle';
+import { freshSpectacle } from './battle/spectacle';
 import { memoryPick } from './memories/encounters';
 import { noteReplayTurn, sealReplay } from './memories/replay';
 import { noteSkips, worldStageStart } from './memories/world';
@@ -1459,8 +1462,11 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       plan = withTeamTypes(content, plan, counterTypes(content, getSpecies(content, run.party[activeIndex]!.speciesId).types));
       markHunted(run);
     }
+    // Boss Revenge Rematch: a boss you beat in an earlier region takes the first ordinary trainer slot, stronger and informed.
+    const bossBack: BossRecord | null = rule && !back && !rivalBack && !nemesis && !hunted ? dueBossRematch(content, run) : null;
+    if (bossBack) plan = bossRematchPlan(content, run, archetype, bossBack, stageNumber, scale, plan).plan;
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
-    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival && !nemesis && !hunted && !memoryHit ? perkItem(content, run, 'rival') : null;
+    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival && !nemesis && !hunted && !memoryHit && !bossBack ? perkItem(content, run, 'rival') : null;
     let isRival = false;
     if (rsvp && !usedThisStage(run, rsvp)) {
       isRival = true;
@@ -1492,6 +1498,8 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       run.battle.rivalId = takeover.id;
       run.battle.rivalNote = frontRunnerIntro(content, takeover) ?? takeoverNote(content, takeover);
     }
+    if (bossBack) beginBossRematch(run, bossBack);
+    else if (node.kind === 'champion' && isFinalBoss(content, run)) run.battle.spectacle = { ...freshSpectacle(), final: true };
     if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
     if (hunted) run.battle.hunted = true;
     if (memoryHit) run.battle.memory = memoryHit.memory;
@@ -1508,7 +1516,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const doublesCfg = content.balance.doubles;
     // Bosses known for double battles (Tate & Liza) always fight two at a time.
     if (plan.leaderId && doublesCfg.bossIds.includes(plan.leaderId) && canBeDoubles(run.party, team)) makeDoubles(run.battle, run.party);
-    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && !nemesis && !memoryHit && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
+    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && !nemesis && !memoryHit && !bossBack && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
       if (new Rng(hashSeed(`${run.seed}::doubles::${run.regionIndex}::${stage.index}::${node.id}`)).chance(doublesCfg.chance)) makeDoubles(run.battle, run.party);
     }
     if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
@@ -1820,6 +1828,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     hyper: hyperRng ? buildHyperContext(content, run, hyperRng) : undefined,
     teamItems: run.passives,
     noBattleItems: noBattleItems(run.rules),
+    bondScore: (uid) => bondScoreOf(run.story.histories[uid]?.bond),
   };
 }
 
@@ -2298,6 +2307,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     const role = classId === GYM_LEADER_CLASS ? 'gymLeadersDefeated' : classId === ELITE_FOUR_CLASS ? 'eliteFourDefeated' : classId === CHAMPION_CLASS ? 'championsDefeated' : null;
     if (role) {
       count(run, role);
+      recordBossDefeat(content, run, battle);
       onFrontRunnerBattle(content, run, battle, 'win');
       const lead = run.party[battle.activeIndex];
       for (const type of lead ? getSpecies(content, lead.speciesId).types : []) count(run, `bossWinsLead.${type}`);

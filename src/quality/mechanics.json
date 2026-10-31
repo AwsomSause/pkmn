@@ -480,5 +480,31 @@
   "tests": [
    "tests/unit/eggs.test.ts"
   ]
+ },
+ {
+  "id": "battle-spectacle",
+  "name": "Battle Drama spectacle: Last Stand, Perfect Counter (Brace), Momentum Meter and Rally, Guard Break, Revenge Moment, boss phases",
+  "status": "supported",
+  "code": [
+   "src/core/battle/spectacle.ts",
+   "src/core/battle/spectacleConfig.ts",
+   "src/core/presentation/spectacleAnims.ts"
+  ],
+  "tests": [
+   "tests/unit/spectacle.test.ts"
+  ],
+  "note": "Single battles only (off in doubles); the Guard is off for raids and Totems, which have their own shield and phases."
+ },
+ {
+  "id": "boss-revenge-rematch",
+  "name": "Boss Revenge Rematch: a beaten boss returns in a later region, stronger and informed",
+  "status": "supported",
+  "code": [
+   "src/core/story/bossRematch.ts"
+  ],
+  "tests": [
+   "tests/unit/spectacle.test.ts"
+  ],
+  "note": "Takes the first ordinary trainer slot once per region on a seeded roll; it is a normal trainer (no second badge) that fights with boss rules."
  }
 ]
