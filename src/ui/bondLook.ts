@@ -4,6 +4,7 @@ import { bondMood, bondOf, BOND_RULES, practicedPair } from '../core/bond';
 import type { BondKey } from '../core/bond';
 import type { PokemonInstance, RunState } from '../core/state';
 import type { Content } from '../core/contentSchema';
+import { personalityOf, relationLines } from '../core/partyLife';
 
 /** The bars, in the order shown, with their colour and plain-language label. */
 export const BOND_BARS: { key: BondKey; label: string; color: number }[] = [
@@ -27,8 +28,11 @@ export function bondHint(content: Content, run: RunState, mon: PokemonInstance):
   const bond = bondOf(run, mon.uid);
   const mood = MOOD_LOOK[bondMood(bond)];
   const partners = run.party.filter((m) => m.uid !== mon.uid && practicedPair(run, mon.uid, m.uid)).map((m) => content.species.get(m.speciesId)?.name ?? m.speciesId);
-  const parts = [mood.hint];
+  const me = personalityOf(run, mon);
+  const parts = [mood.hint, `${me.label}: ${me.blurb} It ${me.quirk}.`];
   if (partners.length > 0) parts.push(`Practiced partner: ${partners.join(', ')}.`);
+  const friends = relationLines(content, run, mon).slice(0, 3);
+  if (friends.length > 0) parts.push(friends.join('; ') + '.');
   if (bond.sharedHistory > 0) parts.push(`${bond.sharedHistory} moment${bond.sharedHistory === 1 ? '' : 's'} together.`);
   if (bond.autonomy >= BOND_RULES.refuse.minAutonomy && bond.trust <= BOND_RULES.refuse.maxTrust) parts.push('Careful: it may refuse a move that would faint it.');
   return parts.join('  ');

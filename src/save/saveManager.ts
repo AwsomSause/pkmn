@@ -8,6 +8,7 @@ import { validateLeagueMap, validateStageMap } from '../core/map';
 import { createProfile } from '../core/profile';
 import { hashSeed } from '../core/rng';
 import { createStoryState } from '../core/story/record';
+import { createPartyLife } from '../core/partyLife/schema';
 import { legacyRunFromHistory } from '../core/legacyRuns';
 import {
   ProfileSchema,
@@ -277,6 +278,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v26 (Shadow and Blissful): optional `blissful` on a Pokémon and `snagged` on a battle; older runs have neither.
     25: (data) => data as Json,
+    // v27 (party personality & chemistry): runs started before it have no pair chemistry, grudges or scrapbook yet.
+    26: (data) => ({ ...(data as Json), partyLife: createPartyLife() }),
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.

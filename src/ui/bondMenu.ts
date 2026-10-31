@@ -6,6 +6,7 @@
 import type Phaser from 'phaser';
 import { bondMood, bondOf } from '../core/bond';
 import { partyRoles } from '../core/partyRoles';
+import { cultureLine } from './partyLifeUi';
 import { BOND_BARS, MOOD_LOOK, bondHint } from './bondLook';
 import type { PokemonInstance, RunState } from '../core/state';
 import type { Content } from '../core/contentSchema';
@@ -78,7 +79,7 @@ export function openBondMenu(host: FieldMenuHost): void {
   const motion = session.settings.battleAnimations;
   const picker: Picker = new Picker(host.scene, {
     glass: true,
-    title: 'Bonds: how your Pokémon feel about you',
+    title: `Bonds · ${cultureLine(run)}`,
     columns: 2,
     rowHeight: 148,
     rows: run.party.map((mon, i) => bondRow(session.content, run, mon, motion, i)),
