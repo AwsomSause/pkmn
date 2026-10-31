@@ -157,6 +157,9 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'ui.bag.main', kind: 'image', category: 'ui', path: 'images/packs/uie/bag/bag_1.png', lazy: true },
   // Pokédex seen/caught marks (UIE pack Graphics/Custom UI/Dex), used in the Research Room rows.
   ...['seen', 'caught'].map((n): AssetEntry => ({ id: `ui.dex.${n}`, kind: 'image', category: 'ui', path: `images/packs/uie/dex/${n}.png`, lazy: true })),
+  // Party status badges (7 rows of 16 px: SLP PSN BRN PAR FRZ FNT PKRS) and held-item mark, from the UIE pack Custom UI/Party.
+  { id: 'ui.party.statuses', kind: 'image', category: 'ui', path: 'images/packs/uie/party/statuses.png', lazy: true },
+  { id: 'ui.party.icon_item', kind: 'image', category: 'ui', path: 'images/packs/uie/party/icon_item.png', lazy: true },
   // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
   ...['fade_down', 'fade_up', 'stripes', 'stairs', 'stairs2', 'tiles', 'ripple', 'spread', 'swirl', 'hex', 'computer', 'computer_close'].map(
     (m): AssetEntry => ({ id: `fx.wipe.${m}`, kind: 'image', category: 'ui', path: `images/packs/uie/transitions/${m}.png`, lazy: true }),
