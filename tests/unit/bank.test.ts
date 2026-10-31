@@ -160,3 +160,52 @@ describe('Trainer Research', () => {
     expect(researchLines(content, { ...p, trainerCounters: { red: { runsFinished: 6 } } }, red).some((l) => l.startsWith('Story'))).toBe(true);
   });
 });
+
+import { awardLiveAchievements, applyRunToProfile } from '../../src/core/progress';
+describe('achievements mid-run', () => {
+  it('pay as soon as the run meets them, and never again at run end', () => {
+    const run = chooseStarter(content, createRun(content, { runId: 'live', seed: 'live', archetypeId: 'red' }), 0);
+    run.log.counters.battlesWon = 1;
+    const p = createProfile(content, 'p');
+    const earned = awardLiveAchievements(content, p, run, '2026-10-31T00:00:00Z');
+    expect(earned.map((a) => a.id)).toContain('first-steps');
+    expect(p.achievements['first-steps']).toBeTruthy();
+    expect(p.bankCredits).toBeGreaterThanOrEqual(100);
+    expect(awardLiveAchievements(content, p, run, '2026-10-31T00:00:00Z')).toEqual([]);
+    const end = applyRunToProfile(content, structuredClone(p), run, '2026-10-31T01:00:00Z');
+    expect(end.achievements.map((a) => a.id)).not.toContain('first-steps');
+  });
+});
+
+import { endRunEarly, wipeStatus } from '../../src/core/run';
+describe('Adventure end run', () => {
+  it('shows the wipe count and ends the run on purpose; other modes cannot', () => {
+    const adv = chooseStarter(content, createRun(content, { runId: 'adv', seed: 'adv', archetypeId: 'red', rules: { modeId: 'adventure', difficultyId: 'standard', modifierIds: [], deathBlock: false } }), 0);
+    expect(wipeStatus(adv)).toEqual({ wipes: 0, max: 8 });
+    const over = endRunEarly(adv);
+    expect(over.phase).toBe('over');
+    expect(over.victory).toBe(false);
+    const std = chooseStarter(content, createRun(content, { runId: 's', seed: 's', archetypeId: 'red' }), 0);
+    expect(wipeStatus(std)).toBeNull();
+    expect(() => endRunEarly(std)).toThrow(/Adventure/);
+  });
+});
+
+import { buyCandyPerk, candyPerkProblem, candyStart } from '../../src/core/candyShop';
+describe('Candy Shop', () => {
+  it('sells each perk once for candies and adds it to every run start', () => {
+    const p = rich({ candies: 100 });
+    const bought = buyCandyPerk(content, p, 'pantry');
+    expect(bought.candies).toBe(100 - content.balance.candyShop.find((x) => x.id === 'pantry')!.cost);
+    expect(candyPerkProblem(content, bought, 'pantry')).toMatch(/already own/);
+    expect(candyPerkProblem(content, rich({ candies: 0 }), 'lucky-coin')).toMatch(/need/);
+    const start = candyStart(content, ['pantry', 'lucky-coin']);
+    expect(start.items.potion).toBe(3);
+    expect(start.money).toBe(500);
+    const base = startingResources(content, content.archetypes.get('red')!, defaultPrep(content));
+    const withPerks = startingResources(content, content.archetypes.get('red')!, defaultPrep(content), ['pantry', 'lucky-coin']);
+    expect(withPerks.money).toBe(base.money + 500);
+    expect(withPerks.items.potion).toBe((base.items.potion ?? 0) + 3);
+    for (const perk of content.balance.candyShop) for (const id of Object.keys(perk.items)) expect(content.items.has(id), id).toBe(true);
+  });
+});

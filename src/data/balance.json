@@ -329,6 +329,13 @@
    { "credits": 6000, "title": "Magnate" }
   ]
  },
+ "candyShop": [
+  { "id": "satchel", "name": "Super Satchel", "description": "Every run starts with 3 Super Potions.", "cost": 30, "items": { "super-potion": 3 } },
+  { "id": "pantry", "name": "Pocket Pantry", "description": "Every run starts with 3 Potions.", "cost": 15, "items": { "potion": 3 } },
+  { "id": "ball-belt", "name": "Ball Belt", "description": "Every run starts with 5 Poké Balls.", "cost": 15, "items": { "poke-ball": 5 } },
+  { "id": "lucky-coin", "name": "Lucky Coin", "description": "Every run starts with ₽500 more.", "cost": 25, "money": 500 },
+  { "id": "revive-kit", "name": "Revive Kit", "description": "Every run starts with a Revive.", "cost": 60, "items": { "revive": 1 } }
+ ],
  "research": {
   "perSpeciesSeen": 5,
   "perSpeciesCaught": 10,

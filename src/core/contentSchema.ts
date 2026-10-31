@@ -2063,6 +2063,15 @@ export const BalanceSchema = z.object({
     /** Savings milestones: lifetime credits that unlock a title (once, via the claim ledger). */
     milestones: z.array(z.object({ credits: z.number().int().positive(), title: z.string() })),
   }),
+  /** The Candy Shop (D7): permanent starting perks bought once with candies. */
+  candyShop: z.array(z.object({
+    id: z.string().min(1),
+    name: z.string().min(1),
+    description: z.string(),
+    cost: z.number().int().positive(),
+    money: z.number().int().min(0).default(0),
+    items: z.record(z.string(), z.number().int().positive()).default({}),
+  })),
   /** Research Points for discoveries (first time ever seen or caught). */
   research: z.object({
     perSpeciesSeen: z.number().int().min(0),

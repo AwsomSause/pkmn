@@ -33,6 +33,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     lifetimeBankCredits: 0,
     bankTier: 1,
     vault: [],
+    candyPerks: [],
     runHistory: [],
     lastPayout: null,
     unlockedPools: [],
