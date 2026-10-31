@@ -2181,6 +2181,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('friendship'), atLeast: z.number().int().min(1).max(255) }),
   /** Event Director: a rival you have fought at least this many times. */
   z.object({ kind: z.literal('rivalMet'), atLeast: z.number().int().min(1) }),
+  /** A rival whose rivalry with you ended as friends (state ally). */
+  z.object({ kind: z.literal('rivalAlly') }),
   /** Event Director: a party member with a species tag (legendary, mythical, delta, zform...). */
   z.object({ kind: z.literal('partyTag'), tag: z.enum(SPECIES_TAGS) }),
   /** Event Director: two of your Pokémon share an open bond. */

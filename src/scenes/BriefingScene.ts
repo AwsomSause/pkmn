@@ -16,7 +16,7 @@ import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { Menu } from '../ui/widgets';
-import { glassPanel as drawPanel } from '../ui/aero';
+import { glassPanel as drawPanel, slideIn } from '../ui/aero';
 import { sceneForRun } from './routing';
 
 export class BriefingScene extends Phaser.Scene {
@@ -39,7 +39,7 @@ export class BriefingScene extends Phaser.Scene {
     const lead = run.party[0]!;
 
     this.add.text(GAME_WIDTH / 2, 30, 'Campaign briefing', textStyle(40, COLORS.textLight)).setOrigin(0.5);
-    drawPanel(this, 24, 64, GAME_WIDTH - 48, 370, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    slideIn(this, drawPanel(this, 24, 64, GAME_WIDTH - 48, 370, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true }), 0, 18, session.settings.battleAnimations);
 
     // The lines are collected first, then laid out in the largest font that fits the panel.
     const rows: [string, string][] = [];

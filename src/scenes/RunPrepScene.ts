@@ -25,7 +25,8 @@ import { playSfx } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { Menu } from '../ui/widgets';
+import { glassPanel as drawPanel } from '../ui/aero';
 import { dailyClaimKey, dailySeed, getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
 import { isClaimed } from '../core/quests';
 
