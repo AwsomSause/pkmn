@@ -1782,7 +1782,10 @@ export const BalanceSchema = z.object({
     benchXpPercent: z.number().min(0).max(100),
     variance: z.number().int().min(0),
     minLevel: z.number().int().min(1),
-    maxLevel: z.number().int().max(100),
+    /** The highest level in the game (D14; at most 1000). */
+    maxLevel: z.number().int().max(1000),
+    /** Above level 100 each level costs this × (the cost of level 100) × level / 100 EXP (pokemon.ts xpForLevel). */
+    highLevelXp: z.number().positive().default(0.4),
     trainerBonus: z.number().int().min(0),
     gymBonus: z.number().int().min(0),
     /** Extra levels on the gym leader's last Pokémon. */

@@ -505,7 +505,7 @@ function shiftLevel(content: Content, run: RunState, mon: PokemonInstance, level
     return;
   }
   mon.level = Math.max(1, mon.level + levels);
-  mon.xp = xpForLevel(getSpecies(content, mon.speciesId).growthRate, mon.level);
+  mon.xp = xpForLevel(getSpecies(content, mon.speciesId).growthRate, mon.level, content.balance.difficulty.highLevelXp);
   mon.hp = Math.min(mon.hp, maxHp(content, mon));
 }
 
@@ -1149,7 +1149,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const opened = legendary ? { speciesId, level: plan.level } : openingWild(content, run, speciesId, plan.level, `wild:${node.id}`);
     speciesId = opened.speciesId;
     // The gentle opening caps the wild level after the difficulty bonus too, so Nightmare's first fight is not a level 9 against a level 5 starter.
-    const enemy = newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : 100);
+    const enemy = newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : content.balance.difficulty.maxLevel);
     enemy.shiny = plan.shiny;
     if (plan.shiny) countShiny(run, speciesId);
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
@@ -1239,7 +1239,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const uid = nextUid(run, 'e');
       // Difficulty raises every enemy; Single Region Dex swaps ordinary trainers' species for ones from the locked generation (bosses keep theirs).
       const speciesId = plan.leaderId ? m.speciesId : lockSpecies(content, run, m.speciesId, `${node.id}:${i}`);
-      const level = Math.max(1, Math.min(100, m.level + run.rules.enemyLevelBonus));
+      const level = Math.max(1, Math.min(content.balance.difficulty.maxLevel, m.level + run.rules.enemyLevelBonus));
       return createPlannedPokemon(content, { ...m, speciesId, level }, uid, `${run.seed}:${uid}`);
     });
     run.battle = createBattle('trainer', team, activeIndex, activeUid, { classId: plan.classId, name: plan.name, leaderId: plan.leaderId });

@@ -651,9 +651,10 @@ export class BattleScene extends Phaser.Scene {
     }
     if (box.xpBar) {
       const species = getSpecies(content, mon.speciesId);
-      const lo = xpForLevel(species.growthRate, mon.level);
-      const hi = xpForLevel(species.growthRate, mon.level + 1);
-      void box.xpBar.set(mon.level >= 100 ? 1 : (mon.xp - lo) / Math.max(1, hi - lo), animate);
+      const { maxLevel, highLevelXp } = content.balance.difficulty;
+      const lo = xpForLevel(species.growthRate, mon.level, highLevelXp);
+      const hi = xpForLevel(species.growthRate, mon.level + 1, highLevelXp);
+      void box.xpBar.set(mon.level >= maxLevel ? 1 : (mon.xp - lo) / Math.max(1, hi - lo), animate);
     }
     if (box.teamText) {
       const battle = this.run.battle;

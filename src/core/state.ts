@@ -38,7 +38,7 @@ export type Status = z.infer<typeof StatusSchema>;
 export const PokemonInstanceSchema = z.object({
   uid: z.string(),
   speciesId: z.string(),
-  level: z.number().int().min(1).max(100),
+  level: z.number().int().min(1).max(1000),
   /** Total experience points (the level is derived from growth rate). */
   xp: z.number().int().min(0),
   hp: z.number().int().min(0),
@@ -781,7 +781,7 @@ export type RunPhase = z.infer<typeof RunPhaseSchema>;
 /** A Pokémon kept from a finished run, that may come back in a later one (core/story/reunion.ts). */
 export const PastPokemonSchema = z.object({
   speciesId: z.string(),
-  level: z.number().int().min(1).max(100),
+  level: z.number().int().min(1).max(1000),
   shiny: z.boolean(),
   abilitySlot: z.number().int().min(-1),
   moves: z.array(z.string()).min(1).max(4),
@@ -822,7 +822,7 @@ export const EggSchema = z.object({
   uid: z.string(),
   /** The first stage of its line; what hatches. */
   speciesId: z.string(),
-  level: z.number().int().min(1).max(100),
+  level: z.number().int().min(1).max(1000),
   left: z.number().int().min(0),
   unit: z.enum(['battle', 'stage']),
   /** Rolled when the Egg was found, so reloading never changes it. */
