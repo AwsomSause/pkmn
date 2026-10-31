@@ -26,6 +26,15 @@ describe('release gate: saves', () => {
     }
   });
 
+  it('v8 settings gain every animation switch, on', () => {
+    const storage = new MemoryStorageProvider();
+    let data: unknown = V1_SETTINGS;
+    for (let from = 1; from < 8; from++) data = MIGRATIONS.settings[from]!(data);
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 8, savedAt: '', data }));
+    const loaded = new SaveManager(storage, content).loadSettings();
+    expect(loaded).toMatchObject({ abilityAnimations: true, rivalAnimations: true, animationSpeed: 'normal', disableAllAnimations: false });
+  });
+
   it('v7 settings keep their one strength for both shake and flashes', () => {
     const storage = new MemoryStorageProvider();
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 7, savedAt: '', data: { ...V1_SETTINGS, battleAnimations: 'full', effectIntensity: 0.25, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero' } }));

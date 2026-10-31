@@ -6,6 +6,8 @@ import catalog from '../../data/rivalCatalog.json';
 import { FEELING_NAMES, rivalFeeling } from './feelings';
 import { bondLines, reputation, signature } from './bonds';
 import { RIVAL_CONFIG, RIVAL_WORLD } from './schema';
+import { rivalStatusLine, rivalWorldView } from './progression';
+import { aceName } from './signatureTeam';
 import { everUltimateFlag, ultimateQuest, ultimateRival, type UltimateQuestStep } from './ultimate';
 
 export interface RivalLine {
@@ -21,11 +23,16 @@ export interface RivalLine {
   state: string;
   /** True for the rival the story follows. */
   ultimate: boolean;
+  /** Its signature ace's current form, once it has one. */
+  signature: string | null;
+  /** Where it stands in the world: "Ahead · 2 badges · fame 9". */
+  world: string;
   /** The Ultimate Rival quest chain, for a rival that is or was the Ultimate Rival (else empty). */
   quest: UltimateQuestStep[];
 }
 
 export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
+  const views = new Map(rivalWorldView(content, run).map((v) => [v.id, v]));
   return run.story.rivals.map((r) => {
     const personality = catalog.personalities.find((p) => p.id === r.archetype);
     const style = catalog.styles.find((s) => s.id === r.style);
@@ -38,9 +45,11 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
       title: `${className} ${r.name}, ${personality?.name ?? r.archetype}`,
       summary: `Fights as ${style?.name ?? r.style}. Strongest trait: ${topTrait[0]} (${topTrait[1]}).`,
       state: `${r.state[0]!.toUpperCase() + r.state.slice(1)}, feels ${FEELING_NAMES[rivalFeeling(r).feeling].toLowerCase()}`,
+      world: rivalStatusLine(views.get(r.id)!),
       ultimate: ultimateRival(run)?.id === r.id,
       quest: run.story.flags[everUltimateFlag(r.id)] ? ultimateQuest(run, r) : [],
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
+      signature: aceName(content, r),
       bonds: [...(r.faction ? [`Faction: ${RIVAL_WORLD.factions.find((f) => f.id === r.faction)?.name ?? r.faction}`] : []), ...(r.sponsor ? [`Sponsored by ${RIVAL_WORLD.sponsors.find((x) => x.id === r.sponsor)?.name ?? r.sponsor}`] : []), ...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
     };
   });

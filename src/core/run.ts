@@ -150,6 +150,9 @@ import { finalRivalLine, tellCampfire } from './story/highHype';
 import { ultimateRival } from './rivals/ultimate';
 import { applyGrandInfluence, endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
+import { noteProtagonistTitle, rivalSighting } from './rivals/recognition';
+import { rivalRivalries, rivalTeamUp } from './rivals/rivalries';
+import { ensureAce, withSignatureAce } from './rivals/signatureTeam';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
@@ -465,6 +468,9 @@ function enterStage(content: Content, run: RunState, index: number): void {
   startStageEffects(run);
   hatchEggs(content, run);
   simulateRivalWorld(content, run);
+  rivalRivalries(content, run);
+  rivalSighting(content, run);
+  noteProtagonistTitle(content, run);
   tellCampfire(content, run);
   tellAct(content, run);
   applyGrandInfluence(content, run);
@@ -1361,7 +1367,9 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let narrativeDef: ReturnType<typeof dueNarrativeDefeat> = null;
     let trainingIndex = -1;
     if (rule && rivalBack) {
+      ensureAce(content, rivalBack);
       const ret = rivalReturn(content, run, rivalBack, plan, rule.effect);
+      ret.plan = withSignatureAce(content, rivalBack, ret.plan);
       const trained = withTrainingEvolution(content, ret.plan.members);
       plan = { ...ret.plan, members: trained.members };
       trainingIndex = trained.index;
@@ -1375,6 +1383,12 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       } else {
         const hint = foreshadowNote(run, rivalBack);
         if (hint) rivalNote = [rivalNote, hint].filter(Boolean).join(' ');
+      }
+      // A rival far ahead of you: an ally or one of its enemies may join forces with you (heals your team, once per pair).
+      const teamUp = narrativeDef ? null : rivalTeamUp(content, run, rivalBack);
+      if (teamUp) {
+        healParty(content, run);
+        rivalNote = [rivalNote, teamUp].filter(Boolean).join(' ');
       }
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
