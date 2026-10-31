@@ -40,6 +40,8 @@ export interface CineOptions {
   /** 1 normal, 2 fast, 3 quick. */
   speed: number;
   intensity: number;
+  /** Shake strength; defaults to `intensity`. */
+  shake?: number;
   /** Shows the new form; may return its sprite (an evolution fades it in from white). */
   onSwap: () => Visual | void;
   depth?: number;
@@ -184,7 +186,7 @@ export function cinematic(scene: Phaser.Scene, o: CineOptions): Beat {
       swap();
       sound('ess-shell-smash', 1);
       whiteFlash(0.85);
-      if (o.intensity > 0) scene.cameras.main.shake(260 / o.speed, 0.01 * o.intensity);
+      if ((o.shake ?? o.intensity) > 0) scene.cameras.main.shake(260 / o.speed, 0.01 * (o.shake ?? o.intensity));
       for (const s of pieces) {
         const len = Math.hypot(s.dx, s.dy) || 1;
         const v = 200 + ((s.i * 53) % 140);
@@ -229,7 +231,7 @@ export function cinematic(scene: Phaser.Scene, o: CineOptions): Beat {
       swap();
       sound(tera ? 'ess-shell-smash' : 'ess-explosion', 0.9);
       whiteFlash(0.7);
-      if (o.intensity > 0) scene.cameras.main.shake(320 / o.speed, 0.012 * o.intensity);
+      if ((o.shake ?? o.intensity) > 0) scene.cameras.main.shake(320 / o.speed, 0.012 * (o.shake ?? o.intensity));
       if (has('pack.dbk.burst')) {
         const b = add(scene.add.image(o.x, o.y, 'pack.dbk.burst').setTint(o.tint).setBlendMode('ADD').setDepth(depth + 3).setScale(0.3));
         tw({ targets: b, scale: 1.8, alpha: 0, duration: 600, ease: 'Cubic.easeOut' });

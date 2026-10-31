@@ -83,11 +83,19 @@ export class MainMenuScene extends Phaser.Scene {
       action: () => this.cycleAnimations(),
     });
     settingsOptions.push({
-      option: { label: `Effects: ${Math.round(session.settings.effectIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
-      action: () => this.cycleIntensity(),
+      option: { label: `Flashes: ${Math.round(session.settings.effectIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
+      action: () => this.cycleIntensity('effectIntensity'),
+    });
+    settingsOptions.push({
+      option: { label: `Screen shake: ${Math.round(session.settings.shakeIntensity * 100)}%`, disabled: session.settings.battleAnimations !== 'full' },
+      action: () => this.cycleIntensity('shakeIntensity'),
+    });
+    settingsOptions.push({
+      option: { label: `Particles: ${session.settings.reduceParticles ? 'Reduced' : 'Full'}` },
+      action: () => this.toggleParticles(),
     });
 
-    const speedLabels = { normal: 'Normal', fast: 'Fast', quick: 'Quick' } as const;
+    const speedLabels = { showcase: 'Showcase', normal: 'Normal', fast: 'Fast', quick: 'Quick' } as const;
     settingsOptions.push({
       option: { label: `Battle speed: ${speedLabels[session.settings.battleSpeed]}` },
       action: () => this.cycleSpeed(),
@@ -205,18 +213,25 @@ export class MainMenuScene extends Phaser.Scene {
   /** Battle speed: normal → fast → quick. */
   private cycleSpeed(): void {
     const { session } = services();
-    const order = ['normal', 'fast', 'quick'] as const;
+    const order = ['normal', 'fast', 'quick', 'showcase'] as const;
     const next = order[(order.indexOf(session.settings.battleSpeed) + 1) % order.length]!;
     session.saveSettings({ ...session.settings, battleSpeed: next , accessibilityProfile: 'custom' });
     this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 
-  /** Strength of screen shake and flashes: 100% → 50% → 25%. */
-  private cycleIntensity(): void {
+  /** Reduced particles: ambience keeps its clouds and fog but drops the drifting specks. */
+  private toggleParticles(): void {
     const { session } = services();
-    const order = [1, 0.5, 0.25];
-    const i = order.findIndex((v) => Math.abs(v - session.settings.effectIntensity) < 0.01);
-    session.saveSettings({ ...session.settings, effectIntensity: order[(i + 1) % order.length]! , accessibilityProfile: 'custom' });
+    session.saveSettings({ ...session.settings, reduceParticles: !session.settings.reduceParticles, accessibilityProfile: 'custom' });
+    this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
+  }
+
+  /** Strength of flashes or of screen shake: 100% → 50% → 25% → 0%. */
+  private cycleIntensity(key: 'effectIntensity' | 'shakeIntensity'): void {
+    const { session } = services();
+    const order = [1, 0.5, 0.25, 0];
+    const i = order.findIndex((v) => Math.abs(v - session.settings[key]) < 0.01);
+    session.saveSettings({ ...session.settings, [key]: order[(i + 1) % order.length]!, accessibilityProfile: 'custom' });
     this.scene.restart({ focus: this.menu.index, page: this.page === 'settings' ? 'settings' : undefined });
   }
 
