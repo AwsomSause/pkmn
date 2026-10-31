@@ -18,6 +18,9 @@ import { chooseStarter, createRun } from '../../src/core/run';
 import { LegacyRunSchema, ProfileSchema, type LegacyRun, type Profile, type RunState } from '../../src/core/state';
 import type { TrainerPlan } from '../../src/core/encounters';
 import { content } from './helpers';
+import { GameSession } from '../../src/game/GameSession';
+import { MemoryStorageProvider } from '../../src/save/storage';
+import { reconstructRun, replayIdFor } from '../../src/core/timeline/genesis';
 
 const NOW = '2026-10-31T05:00:00Z';
 const started = (id: string): RunState => structuredClone(chooseStarter(content, createRun(content, { runId: id, seed: id, archetypeId: 'red' }), 0));
@@ -363,5 +366,20 @@ describe('the persistent world', () => {
     }
     expect(a.story.world).toEqual(b.story.world);
     expect(a.money).toBe(b.money);
+  });
+});
+
+describe('a new run and Revisit This Timeline', () => {
+  it('a rebuilt run meets the same past (digest and heirloom) as the original', () => {
+    const session = new GameSession(content, new MemoryStorageProvider());
+    session.changeProfile(() => chooseHeirloom(profileWith(['rv-a', false], ['rv-b', false]), 'rv-b', 'egg'));
+    const original = structuredClone(session.newRun('red', 'rv-seed'));
+    expect(original.past!.ghosts.length).toBe(2);
+    expect(original.eggs).toHaveLength(1);
+    expect(session.profile.memories.heirlooms.find((h) => h.runId === 'rv-b')!.spent).toBe(true);
+    const g = session.timeline.genesis[0]!;
+    const replay = reconstructRun(content, g, replayIdFor(g.runId, 1), 1);
+    expect(replay.past).toEqual(original.past);
+    expect(replay.eggs).toEqual(original.eggs);
   });
 });
