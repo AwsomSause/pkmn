@@ -12,7 +12,8 @@ import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
 import type { PokemonInstance, RunState } from '../../src/core/state';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, nemesisAfterBattle, nemesisMember, nemesisTrainerPlan, noteNemesisBreakFree, noteNemesisFaint, NEMESIS_STAGE_FLAG } from '../../src/core/story/nemesis';
 import type { Nemesis } from '../../src/core/story/schema';
-import { MIGRATIONS } from '../../src/save/saveManager';
+import { MIGRATIONS, SaveManager } from '../../src/save/saveManager';
+import { MemoryStorageProvider } from '../../src/save/storage';
 import { content, toBattle } from './helpers';
 
 /** Content where every rarity roll passes (the real chance is tested separately). */
@@ -270,6 +271,18 @@ describe('The other Overdrive moments', () => {
 });
 
 describe('Nemesis save', () => {
+  it('a version 24 run loads with no nemeses', () => {
+    const storage = new MemoryStorageProvider();
+    const run = chooseStarter(content, createRun(content, { runId: 'old', seed: 'old', archetypeId: 'red' }), 0);
+    const { nemeses: _n, ...story } = run.story;
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 24, savedAt: '', data: { ...run, story } }));
+    const loaded = new SaveManager(storage, content).loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status !== 'ok') return;
+    expect(loaded.migratedFrom).toBe(24);
+    expect(loaded.data.story.nemeses).toEqual([]);
+  });
+
   it('v24 runs gain an empty nemesis list', () => {
     expect(MIGRATIONS.run[24]!({ story: { seq: 1 } })).toEqual({ story: { seq: 1, nemeses: [] } });
     expect(MIGRATIONS.run[24]!({ x: 1 })).toEqual({ x: 1 });
