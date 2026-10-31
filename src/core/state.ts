@@ -1138,6 +1138,10 @@ export const LegacyRunSchema = z.object({
     team: z.array(z.string()),
     /** Past contender: it took over a Gym, reached the finals, or became Champion (null: none). */
     rank: z.enum(['gymLeader', 'finalist', 'champion']).nullable().default(null),
+    /** Its off-screen journey when the run ended (core/rivals/progression.ts): lead in stages, region, badges, regions done, wins, defeats, fame, milestone kinds oldest first. Null: it had none. */
+    world: z.object({ lead: z.number().int(), region: z.number().int().min(0), badges: z.number().int().min(0), regionsDone: z.number().int().min(0), wins: z.number().int().min(0), defeats: z.number().int().min(0), fame: z.number().int().min(0), milestones: z.array(z.string()) }).nullable().default(null),
+    /** Narrative defeats it handed you (M12): story losses that did not end the run. */
+    narrativeWins: z.number().int().min(0).default(0),
   })),
   nemeses: z.array(z.object({ id: z.string(), speciesId: z.string(), archetype: z.string(), cause: z.string(), settledAs: z.enum(['beaten', 'caught']).nullable() })),
   /** Legendary or mythical species met, and the ones caught. */

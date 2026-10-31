@@ -22,7 +22,7 @@ const LegacyRunsConfigSchema = z.object({
   }),
   rotation: z.object({ size: z.number().int().min(1), rotateMs: z.number().int().positive(), fadeMs: z.number().int().min(0), baseWeight: z.number().positive(), recentBonus: z.number().min(0), recentRuns: z.number().int().min(0), cooldownFactor: z.number().min(0).max(1), memorableScore: z.number() }),
   interactions: z.object({ chance: z.number().min(0).max(1), longRunEncounters: z.number().int(), lines: z.object({ champion: z.string(), rivalEnding: z.string(), samePokemon: z.string(), longRun: z.string() }) }),
-  defeats: z.object({ chance: z.number().min(0).max(1), absentDays: z.number().int().min(1), lines: z.object({ rival: z.string(), close: z.string(), absent: z.string(), different: z.string(), fell: z.string() }) }),
+  defeats: z.object({ chance: z.number().min(0).max(1), absentDays: z.number().int().min(1), lines: z.object({ rival: z.string(), narrative: z.string(), close: z.string(), absent: z.string(), different: z.string(), fell: z.string() }) }),
 });
 export const LEGACY_RUNS = LegacyRunsConfigSchema.parse(cfgJson);
 
@@ -81,6 +81,8 @@ export function buildLegacyRun(content: Content, run: RunState, now: string, his
     resolution: r.arc?.resolution ?? null,
     team: [...r.memory.lastBattle.team],
     rank: r.rank ?? null,
+    world: r.world ? { lead: r.world.lead, region: r.world.region, badges: r.world.badges, regionsDone: r.world.regionsDone, wins: r.world.wins, defeats: r.world.defeats, fame: r.world.fame, milestones: r.world.milestones.map((m) => m.kind) } : null,
+    narrativeWins: r.world?.milestones.filter((m) => m.kind === 'narrativeWin').length ?? 0,
   }));
   const seenLegends = run.log.speciesSeen.filter((id) => isLegendary(content, id));
   const caughtLegends = run.log.speciesCaught.filter((id) => isLegendary(content, id));
@@ -378,7 +380,10 @@ export function legacyInteraction(record: LegacyRun, currentSpecies: readonly st
 export function rememberedDefeat(content: Content, records: readonly LegacyRun[], next: { archetypeId: string; now: string }, roll: number): string | null {
   const cfg = LEGACY_RUNS.defeats;
   const last = records[0];
-  if (!last || last.outcome !== 'defeat' || roll >= cfg.chance) return null;
+  if (!last || roll >= cfg.chance) return null;
+  // A story loss to a rival is remembered differently from a failed run, and a won run still remembers it.
+  const storyWinner = last.rivals.find((r) => r.narrativeWins > 0);
+  if (last.outcome !== 'defeat') return storyWinner ? cfg.lines.narrative.replace('{rival}', storyWinner.name) : null;
   const rival = last.defeatedBy?.trainer ? last.rivals.find((r) => r.name === last.defeatedBy!.trainer) : undefined;
   if (rival) return cfg.lines.rival.replace('{rival}', rival.name);
   const days = (Date.parse(next.now) - Date.parse(last.endedAt)) / 86400000;
@@ -404,6 +409,11 @@ export interface RivalFameEntry {
   relationship: string;
   resolution: 'good' | 'bad' | null;
   encounters: number;
+  /** Its fame and badges in the rival world when the run ended (0 when it had no off-screen journey). */
+  fame: number;
+  badges: number;
+  /** Story losses it handed you (M12). */
+  narrativeWins: number;
   /** You beat it at least once (its last battle with you was your win, or a loss shook it). */
   defeatedByYou: boolean;
   runId: string;
@@ -416,14 +426,14 @@ const TITLE_ORDER = { champion: 0, finalist: 1, gymLeader: 2 } as const;
 export function rivalHallOfFame(records: readonly LegacyRun[], limit = 24): RivalFameEntry[] {
   const entries = records.flatMap((rec) =>
     rec.rivals
-      .filter((r) => r.rank !== null || r.encounters >= 3 || r.state === 'nemesis' || r.state === 'contender')
+      .filter((r) => r.rank !== null || r.encounters >= 3 || r.state === 'nemesis' || r.state === 'contender' || (r.world?.regionsDone ?? 0) > 0)
       .map((r): RivalFameEntry => ({
         name: r.name, classId: r.classId, signature: r.team[0] ?? null, regionId: regionAt(rec), title: r.rank,
-        relationship: r.state, resolution: r.resolution, encounters: r.encounters,
+        relationship: r.state, resolution: r.resolution, encounters: r.encounters, fame: r.world?.fame ?? 0, badges: r.world?.badges ?? 0, narrativeWins: r.narrativeWins,
         defeatedByYou: r.lastResult === 'win' || r.setbacks > 0, runId: rec.runId, endedAt: rec.endedAt,
       })),
   );
   return entries
-    .sort((a, b) => (a.title ? TITLE_ORDER[a.title] : 9) - (b.title ? TITLE_ORDER[b.title] : 9) || b.encounters - a.encounters || b.endedAt.localeCompare(a.endedAt))
+    .sort((a, b) => (a.title ? TITLE_ORDER[a.title] : 9) - (b.title ? TITLE_ORDER[b.title] : 9) || b.fame - a.fame || b.encounters - a.encounters || b.endedAt.localeCompare(a.endedAt))
     .slice(0, limit);
 }

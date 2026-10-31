@@ -170,7 +170,7 @@ export class HallOfFameScene extends Phaser.Scene {
       const region = rv.regionId ? content.regions.get(rv.regionId)?.name ?? rv.regionId : 'an unknown region';
       rows.push({
         problem: null,
-        hint: `${rv.name} · ${rv.title ? `${TITLE[rv.title]} of ${region}` : `rival in ${region}`} · met ${rv.encounters}× · ${rv.relationship}${rv.resolution ? ` (${rv.resolution} ending)` : ''} · ${rv.defeatedByYou ? 'you beat them' : 'you never beat them'} · ${rv.endedAt.slice(0, 10)}`,
+        hint: `${rv.name} · ${rv.title ? `${TITLE[rv.title]} of ${region}` : `rival in ${region}`} · met ${rv.encounters}× · fame ${rv.fame}, ${rv.badges} badges${rv.narrativeWins ? ` · beat you in a story battle ${rv.narrativeWins}×` : ''} · ${rv.relationship}${rv.resolution ? ` (${rv.resolution} ending)` : ''} · ${rv.defeatedByYou ? 'you beat them' : 'you never beat them'} · ${rv.endedAt.slice(0, 10)}`,
         draw: (_scene, box, w) => {
           heading(box, `⚔ Rival Hall of Fame · ${rv.name}${rv.title ? ` · ${TITLE[rv.title]}` : ''}`, '#ff9fb8');
           if (rv.signature) icon(box, rv.signature, 40, 64, 1.8, false, i);

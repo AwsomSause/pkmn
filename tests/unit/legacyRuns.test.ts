@@ -102,7 +102,7 @@ describe('legacy runs', () => {
   });
 
   const rec = (id: string, over: Partial<LegacyRun> = {}): LegacyRun => ({ ...buildLegacyRun(content, started(id), NOW), ...over });
-  const rival = (over: Partial<LegacyRun['rivals'][number]> = {}): LegacyRun['rivals'][number] => ({ id: 'rv', name: 'Gary', classId: 'youngster', archetype: 'a', state: 'active', encounters: 3, setbacks: 0, lastResult: 'win', resolution: null, team: ['pidgey'], rank: null, ...over });
+  const rival = (over: Partial<LegacyRun['rivals'][number]> = {}): LegacyRun['rivals'][number] => ({ id: 'rv', name: 'Gary', classId: 'youngster', archetype: 'a', state: 'active', encounters: 3, setbacks: 0, lastResult: 'win', resolution: null, team: ['pidgey'], rank: null, world: null, narrativeWins: 0, ...over });
 
   it('scores a run by the §1.2 weights', () => {
     const w = LEGACY_RUNS.score;
@@ -153,6 +153,8 @@ describe('legacy runs', () => {
     expect(rememberedDefeat(content, [lost], { ...next, archetypeId: 'someone-else' }, 0)).toBe(lines.different);
     expect(rememberedDefeat(content, [lost], next, 0)).toContain('Onix');
     expect(rememberedDefeat(content, [], next, 0)).toBeNull();
+    // A story loss (M12) is remembered even after a won run.
+    expect(rememberedDefeat(content, [{ ...lost, outcome: 'victory', rivals: [rival({ narrativeWins: 1 })] }], next, 0)).toBe(lines.narrative.replace('{rival}', 'Gary'));
   });
 
   it('the Rival Hall of Fame lists ranked rivals first, then the deepest rivalries', () => {
@@ -162,6 +164,11 @@ describe('legacy runs', () => {
     expect(fame.map((f) => f.name)).toEqual(['Champ', 'Deep']);
     expect(fame[0]).toMatchObject({ title: 'champion', signature: 'pidgey', defeatedByYou: true });
     expect(fame[1]).toMatchObject({ defeatedByYou: false, encounters: 6 });
+    // A rival that cleared regions off-screen makes it in, and fame orders equal titles.
+    const world = { lead: 2, region: 1, badges: 8, regionsDone: 1, wins: 10, defeats: 1, fame: 40, milestones: ['badge', 'narrativeWin'] };
+    const c = rec('h3', { rivals: [rival({ name: 'Far', encounters: 1, world, narrativeWins: 1 })] });
+    expect(rivalHallOfFame([a, c]).map((f) => f.name)).toEqual(['Far', 'Deep']);
+    expect(rivalHallOfFame([c])[0]).toMatchObject({ fame: 40, badges: 8, narrativeWins: 1 });
   });
 
   it('presentation randomness is its own seeded generator', () => {

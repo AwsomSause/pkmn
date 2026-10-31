@@ -60,7 +60,8 @@
    "close": "You almost made it last time.",
    "absent": "I thought you'd given up.",
    "different": "You look different from the last time I saw you.",
-   "fell": "Last time, {species} ended your journey. Not this time?"
+   "fell": "Last time, {species} ended your journey. Not this time?",
+   "narrative": "I heard {rival} beat you, and you kept going anyway."
   }
  }
 }
