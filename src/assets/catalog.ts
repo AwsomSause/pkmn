@@ -47,6 +47,8 @@ export interface CatalogInputs {
   backgroundAssetIds: string[];
   /** Battle animations (src/data/moveAnims.json): animation names, sprite sheet and sound slugs. */
   battleAnims?: { names: string[]; sheets: string[]; backgrounds: string[]; sounds: string[] };
+  /** Scripted EBDX move animations (src/data/ebdxAnims.json): the pictures and sounds they use. */
+  ebdxAnims?: { images: string[]; sounds: string[] };
 }
 
 const atlas = (id: string, category: AssetCategory, base: string): AssetEntry => ({
@@ -302,6 +304,18 @@ export function battleAnimEntries(anims: NonNullable<CatalogInputs['battleAnims'
   ];
 }
 
+export const ebdxAssetIds = {
+  image: (name: string) => `ebdx.move.${name}`,
+  sound: (id: string) => `ebdx.sfx.${id}`,
+};
+
+export function ebdxAnimEntries(input: NonNullable<CatalogInputs['ebdxAnims']>): AssetEntry[] {
+  return [
+    ...input.images.map((n): AssetEntry => ({ id: ebdxAssetIds.image(n), kind: 'image', category: 'animation', path: `images/packs/ebdx/moves/${n}.png`, lazy: true })),
+    ...input.sounds.map((n): AssetEntry => ({ id: ebdxAssetIds.sound(n), kind: 'audio', category: 'animation', path: `audio/ebdx/${n}.m4a`, lazy: true })),
+  ];
+}
+
 /** Every asset the current game data could ask for. */
 export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
   const entries = [
@@ -312,6 +326,7 @@ export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
     ...inputs.backgroundAssetIds.map(backgroundEntry),
     ...inputs.backgroundAssetIds.flatMap(arenaBaseEntries),
     ...(inputs.battleAnims ? battleAnimEntries(inputs.battleAnims) : []),
+    ...(inputs.ebdxAnims ? ebdxAnimEntries(inputs.ebdxAnims) : []),
   ];
   const seen = new Set<string>();
   return entries.filter((e) => (seen.has(e.id) ? false : (seen.add(e.id), true)));

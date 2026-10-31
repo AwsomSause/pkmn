@@ -609,7 +609,10 @@ export class BattleScene extends Phaser.Scene {
   private prefetchMoves(mon: PokemonInstance): void {
     prefetchCinematics(this);
     const data = moveAnims();
-    this.fx.prefetch(mon.moves.map((m) => animChoice(presentationFor(data, m.id)).anim));
+    this.fx.prefetch(
+      mon.moves.map((m) => animChoice(presentationFor(data, m.id)).anim),
+      mon.moves.flatMap((m) => presentationFor(data, m.id).script ?? []),
+    );
   }
 
   /**
@@ -1513,6 +1516,13 @@ export class BattleScene extends Phaser.Scene {
     }
     if (result.raidFailed) {
       await this.say('The fight is over... your Pokémon were pulled back to safety.');
+      await exitWipe(this, this.motion, this.wipeMask());
+      this.scene.start(sceneForRun(result.run));
+      return;
+    }
+    if (result.narrativeDefeat) {
+      await this.say(result.narrativeDefeat.defeatLine);
+      await this.say(result.narrativeDefeat.victoryLine);
       await exitWipe(this, this.motion, this.wipeMask());
       this.scene.start(sceneForRun(result.run));
       return;

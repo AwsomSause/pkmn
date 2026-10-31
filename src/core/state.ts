@@ -619,6 +619,8 @@ export const BattleStateSchema = z.object({
   /** A rival back for its rematch (Living Rivalry Engine): its id, and what it changed about its team. */
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),
+  /** Narrative rival defeat (M12): losing this rival fight is part of the story and does not end the run (rivals/narrativeDefeat.ts). */
+  narrative: z.object({ id: z.string() }).optional(),
   /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
   nemesis: z.string().optional(),
   nemesisNote: z.string().optional(),
