@@ -135,6 +135,7 @@ import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { styleTrick } from './rivals/tricks';
 import { rivalBond } from './drama/bond';
+import { recapLines } from './drama/recap';
 import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
@@ -1636,6 +1637,8 @@ export interface BattleEndResult {
   evolutions: (EvolutionResult & { uid: string })[];
   /** Moves devoted Pokémon learned from their bond after this win. */
   bondTaught?: { uid: string; moveId: string }[];
+  /** Recap lines after a big trainer win (MVP, narrowest survival, turning point). */
+  recap?: string[];
   /** The gym leader's id when this win beat a gym leader. */
   badge: string | null;
   /** The region's id when this win beat its champion. */
@@ -2042,6 +2045,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   }
   count(run, 'evolutions', evolutions.length);
   const bondTaught = battle.outcome === 'win' ? bondLessons(content, run, battle.participants) : [];
+  const recap = battle.outcome === 'win' && battle.kind === 'trainer' && (battle.ai >= 0.5 || battle.trainer?.leaderId || battle.rivalId) ? recapLines(content, run, battle) : [];
   // The caught Pokémon's decision comes first.
   run.pending = [...caughtPending, ...run.pending];
   // A trainer's signature mechanic (Rival's Answer): choose after the battle.
@@ -2173,7 +2177,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, recap, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**

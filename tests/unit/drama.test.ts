@@ -502,3 +502,21 @@ describe('left-out 2.1: flavour, after-battle words and your own declarations', 
     expect(planDrama(content, run, prior, [move('player', 'hyper-beam')]).some((l) => l.speaker === 'You')).toBe(false);
   });
 });
+
+describe('battle recap (catalog 14)', () => {
+  it('tallies MVP, narrowest survival and the turning point once per turn', async () => {
+    const { recapLines } = await import('../../src/core/drama/recap');
+    const run = trainerRun('Joey', 0.5);
+    const mon = run.party[0]!;
+    const hit = (side: 'player' | 'enemy', amount: number, hpAfter: number): BattleEvent => ({ type: 'damage', side, amount, hpAfter, effectiveness: 1, crit: false });
+    const events = [move('player', 'tackle'), hit('enemy', 7, 3), move('enemy', 'tackle'), hit('player', 5, 2)];
+    const prior = structuredClone(run.battle!);
+    planDrama(content, run, prior, events);
+    planDrama(content, run, prior, events);
+    const lines = recapLines(content, run, run.battle!);
+    expect(lines[0]).toContain('dealt 7 damage');
+    expect(lines.some((l) => l.startsWith('Narrowest survival'))).toBe(true);
+    expect(lines.some((l) => l.startsWith('Turning point'))).toBe(true);
+    expect(mon.hp).toBeGreaterThan(0);
+  });
+});

@@ -1,7 +1,7 @@
 import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { UIE_ARENAS } from '../../src/assets/catalog';
-import { pickUieArena, timeOfDay } from '../../src/core/arenaStyle';
+import { FLYER_LIFT, pickUieArena, shadowLook, timeOfDay } from '../../src/core/arenaStyle';
 
 const base = { seed: 'abc', stageIndex: 1, type: 'grass' as const };
 
@@ -27,5 +27,19 @@ describe('arena style', () => {
       if (n) expect(UIE_ARENAS).toContain(n);
     }
     expect(pickUieArena({ seed: 's', stageIndex: 2, type: 'fire' })).toBeNull();
+  });
+});
+
+
+describe('contact shadows', () => {
+  it('shrink and fade as a Pokémon lifts, and flyers always float', () => {
+    const ground = shadowLook(120, 0, false);
+    const hop = shadowLook(120, 60, false);
+    const flyer = shadowLook(120, 0, true);
+    expect(hop.width).toBeLessThan(ground.width);
+    expect(hop.alpha).toBeLessThan(ground.alpha);
+    expect(flyer.dy).toBe(FLYER_LIFT);
+    expect(flyer.width).toBeLessThan(ground.width);
+    expect(shadowLook(10, 900, true).alpha).toBeGreaterThanOrEqual(0.1);
   });
 });

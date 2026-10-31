@@ -66,6 +66,12 @@ export const DramaBattleSchema = z.object({
   /** What each Pokémon felt this battle, and the emotions already turned into a turning point. */
   feelings: z.record(z.string(), z.record(z.string(), z.number().int().min(0))).default({}),
   turned: z.array(z.string()).default([]),
+  /** Battle recap tally (catalog 14): damage dealt per Pokémon, narrowest survival, biggest hit. Optional: older saves have none. */
+  recap: z.object({
+    dealt: z.record(z.string(), z.number()).default({}),
+    low: z.object({ uid: z.string(), share: z.number() }).nullable().default(null),
+    bigHit: z.object({ uid: z.string(), moveId: z.string(), amount: z.number() }).nullable().default(null),
+  }).optional(),
 });
 export type DramaBattle = z.infer<typeof DramaBattleSchema>;
 export const freshDrama = (): DramaBattle => DramaBattleSchema.parse({});

@@ -14,7 +14,7 @@ import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, type PlayerA
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { runPerks } from '../core/archetypes';
-import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
+import { abilityOf, calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
@@ -24,6 +24,7 @@ import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type BattleState, type PokemonInstance, type RunState } from '../core/state';
 import { isBossClass } from '../core/trainerPerks';
 import { arenaFor, getTheme } from '../core/themes';
+import { addContactShadows, addParallax, addVignette, ArenaLight, dressArena, type ShadowTarget } from '../ui/battleFx/arenaLife';
 import { pickUieArena } from '../core/arenaStyle';
 import { uieArenaId } from '../assets/catalog';
 import { services } from '../game/services';
@@ -151,6 +152,8 @@ export class BattleScene extends Phaser.Scene {
   private field!: Phaser.GameObjects.Container;
   /** Index in `field` just above the arena art. */
   private fieldBase = 0;
+  private arenaLight: ArenaLight | null = null;
+  private arenaPhase = 0;
   /** The stage's types, for the ambience and the intro. */
   private arenaTypes: readonly string[] = [];
   /** Raid / Totem status line (shield, phases, ally calls). */
@@ -249,13 +252,18 @@ export class BattleScene extends Phaser.Scene {
     const uie = raidArena ? null : this.uieArena();
     const bg = raidArena ?? (uie && this.textures.exists(uie) ? uie : arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
     this.field = this.add.container(0, 0);
-    if (assets.has(bg)) this.field.add(this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE));
+    const backLayers: Phaser.GameObjects.Image[] = [];
+    const groundLayers: Phaser.GameObjects.Image[] = [];
+    if (assets.has(bg)) this.field.add(backLayers[backLayers.push(this.add.image(0, 0, bg).setOrigin(0).setScale(PIXEL_SCALE)) - 1]!);
     else this.field.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x88c070).setOrigin(0));
     // The ground patches each side stands on.
     for (const side of ['enemy', 'player']) {
       const key = `${bg}.${side}`;
-      if (assets.has(key) && this.textures.exists(key)) this.field.add(this.add.image(0, 0, key).setOrigin(0).setScale(PIXEL_SCALE));
+      if (assets.has(key) && this.textures.exists(key)) this.field.add(groundLayers[groundLayers.push(this.add.image(0, 0, key).setOrigin(0).setScale(PIXEL_SCALE)) - 1]!);
     }
+    addParallax(this, backLayers, groundLayers, this.motion);
+    // League arenas build up with light: gym beams, Elite Four pillars, the champion's sunburst.
+    if (boss) dressArena(this, this.field, this.field.length, boss.role, TYPE_COLORS[boss.types[0] ?? 'normal'] ?? 0xffffff, this.motion);
     // Drifting clouds, bubbles, snow or embers over the arena (EBDX scenery).
     // One preset per type: the stage theme's types (the second adds accents), a specialist's type, or the arena's.
     const stageTypes = bossType ? [bossType] : run.stage ? getTheme(session.content, run.stage.themeId).types : [arenaType(bg)];
@@ -274,7 +282,11 @@ export class BattleScene extends Phaser.Scene {
     if (boss?.role === 'champion') championGlow(this, this.field, this.motion);
     this.weatherLayer = new WeatherLayer(this, this.field, this.motion);
     this.weatherLayer.set(run.battle?.weather?.id ?? null);
+    this.arenaLight = new ArenaLight(this, this.field, this.field.length, this.motion);
+    this.arenaPhase = 0;
+    addContactShadows(this, this.field, () => this.shadowTargets());
     this.fieldBase = this.field.length;
+    addVignette(this);
     this.fx = new BattleFx(this, {
       field: this.field,
       backgroundIndex: () => this.fieldBase,
@@ -352,6 +364,24 @@ export class BattleScene extends Phaser.Scene {
   private spotXY(side: Side): { x: number; y: number } {
     if (!this.duo) return side === 'player' ? PLAYER_POS : ENEMY_POS;
     return DUO_POS[side][this.duo.focus[side]];
+  }
+
+  /** The sprites the contact shadows follow, with the y each stands at (flyers and levitators float). */
+  private shadowTargets(): ShadowTarget[] {
+    const content = services().session.content;
+    const floats = (mon: PokemonInstance | null | undefined) => {
+      if (!mon) return false;
+      const sp = content.species.get(mon.speciesId);
+      return Boolean(sp?.types.includes('flying') || abilityOf(content, mon) === 'levitate');
+    };
+    const list: ShadowTarget[] = [];
+    for (const side of ['player', 'enemy'] as const) {
+      const sprite = side === 'player' ? this.playerSprite : this.enemySprite;
+      list.push({ visual: sprite, homeY: this.spotXY(side).y, flyer: floats(this.shown[side]) });
+      const o = this.duo?.other[side];
+      if (o && this.duo) list.push({ visual: o.sprite, homeY: DUO_POS[side][this.duo.focus[side] === 0 ? 1 : 0].y, flyer: floats(o.mon) });
+    }
+    return list;
   }
 
   /** Follows the engine's focus: the events after this are about `uid` (battle/doubles.ts). */
@@ -555,6 +585,9 @@ export class BattleScene extends Phaser.Scene {
     this.enemySprite = pokemonVisual(this, species, 'front', at.x, at.y, PIXEL_SCALE * grow * (this.duo ? DUO_SCALE.enemy : 1), mon.shiny);
     // The foe stands behind the player's Pokémon.
     this.field.addAt(this.enemySprite, this.fieldBase);
+    // A boss's last Pokémon turns the arena light a warning red.
+    const b = this.run.battle;
+    if (b && this.boss() && b.enemyTeam.length > 1 && b.enemyIndex >= b.enemyTeam.length - 1) this.arenaLight?.set(Math.max(this.arenaPhase, 1), 0xff5030);
     this.prefetchMoves(mon);
     this.liven(this.enemySprite, cry);
     return this.enemySprite;
@@ -1582,6 +1615,7 @@ export class BattleScene extends Phaser.Scene {
       const mon = result.run.party.find((m) => m.uid === t.uid);
       if (mon) await this.say(`Close to you, ${getSpecies(content, mon.speciesId).name} learned ${content.moves.get(t.moveId)!.name}!`);
     }
+    for (const line of end.recap ?? []) await this.say(line);
     await exitWipe(this, this.motion, this.wipeMask());
     this.scene.start(sceneForRun(result.run));
   }
@@ -1860,6 +1894,7 @@ export class BattleScene extends Phaser.Scene {
         await this.playBeat(chargeUp(this, { x: at.x, y: at.y - 80, tint: charge.tint, label: charge.label, motion: this.motion, intensity: effectIntensity }));
       }
       // A raid/totem phase change gets a banner with its written rule.
+      if (e.type === 'raid' && e.tone === 'phase') this.arenaLight?.set(++this.arenaPhase, 0xff4fd8);
       if (e.type === 'raid' && e.tone === 'phase') await this.playBeat(phaseBanner(this, e.text, 0xff4fd8, this.motion));
       // A story moment replaces the event's own line with its own (and a banner when it is a major one).
       const cue = storyCues.find((c) => c.at === index);
