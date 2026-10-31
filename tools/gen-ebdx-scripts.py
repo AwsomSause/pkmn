@@ -68,8 +68,8 @@ def build(name, b):
     layers = []
     for k, img in enumerate(imgs):
         w, h = Image.open(G + img + '.png').size
-        if w >= 400 or img.endswith('_bg') or ('ScrollingSprite' in b and k == 0 and w >= 300):
-            layers.append({'img': img, 'fill': True, 'count': 1, 'start': 0, 'dur': length - 200, 'from': {'at': 'mid'}, 'alpha': 0.55, 'fade': [0.2, 0.75]})
+        if (w >= 400 and h >= 250) or img.endswith('_bg') or ('ScrollingSprite' in b and k == 0 and w >= 300 and h >= 200):
+            layers.append({'img': img, 'fill': True, 'count': 1, 'start': 0, 'dur': length - 200, 'from': {'at': 'mid'}, 'alpha': 0.3, 'fade': [0.2, 0.75]})
             continue
         layer = {'img': img, 'count': n if k == 0 else 6, 'start': 0 if k == 0 else 200, 'stagger': 40 if k == 0 else 60, 'dur': 520 if k == 0 else 420}
         if k == 0 and cellm and int(cellm.group(1)) < w and int(cellm.group(2)) <= h:
