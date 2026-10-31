@@ -18,6 +18,8 @@ export interface PresentationSettings {
   mode: AnimationMode;
   /** 0–1: strength of screen shake and flashes. */
   intensity: number;
+  /** 0–1: strength of screen shake alone; defaults to `intensity`. */
+  shake?: number;
 }
 
 export type EffectivenessBadge = 'super' | 'weak' | 'immune';
@@ -63,6 +65,7 @@ export function planCues(
   settings: PresentationSettings,
 ): Cue[][] {
   const intensity = Math.min(1, Math.max(0, settings.intensity));
+  const shakeLevel = Math.min(1, Math.max(0, settings.shake ?? settings.intensity));
   const full = settings.mode === 'full';
   const animated = settings.mode !== 'off';
   let current: { moveId: string; side: Side } | null = null;
@@ -102,7 +105,7 @@ export function planCues(
             crit,
             effectiveness: eff,
             hitStopMs: full ? Math.round((look?.hitStopMs ?? 60) * (crit ? 1.4 : 1) * (eff > 1 ? 1.2 : 1)) : 0,
-            shake: full ? Math.round(Math.min(4, level) * 3 * intensity) : 0,
+            shake: full ? Math.round(Math.min(4, level) * 3 * shakeLevel) : 0,
             flash: full && (look?.flash || crit) ? (look?.flash ?? '#ffffff') : null,
             flashAlpha: full ? 0.35 * intensity : 0,
           });

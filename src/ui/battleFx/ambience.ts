@@ -10,6 +10,7 @@
 // numbers at all), so nothing here touches gameplay rolls.
 
 import type Phaser from 'phaser';
+import { services } from '../../game/services';
 import type { MotionLevel } from '../aero';
 
 type Flow = 'rise' | 'fall' | 'drift' | 'twinkle';
@@ -103,8 +104,10 @@ export function addAmbience(scene: Phaser.Scene, field: Phaser.GameObjects.Conta
     if (main.fog === 'dark') fog.setTint(0x6050a0);
     if (moving) scene.tweens.add({ targets: fog, tilePositionX: 708, duration: 90_000, repeat: -1 });
   }
-  particles(scene, put, main, main.count, 0, moving);
-  if (accent) particles(scene, put, accent, 4, 50, moving);
+  if (!services().session.settings.reduceParticles) {
+    particles(scene, put, main, main.count, 0, moving);
+    if (accent) particles(scene, put, accent, 4, 50, moving);
+  }
   return objs;
 }
 

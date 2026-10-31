@@ -157,6 +157,9 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'ui.bag.main', kind: 'image', category: 'ui', path: 'images/packs/uie/bag/bag_1.png', lazy: true },
   // Pokédex seen/caught marks (UIE pack Graphics/Custom UI/Dex), used in the Research Room rows.
   ...['seen', 'caught'].map((n): AssetEntry => ({ id: `ui.dex.${n}`, kind: 'image', category: 'ui', path: `images/packs/uie/dex/${n}.png`, lazy: true })),
+  // Load/Save screens (UIE pack Graphics/Custom UI/Load and Save): the title screen's Continue card and the Save data backdrop.
+  { id: 'ui.load.card', kind: 'image', category: 'ui', path: 'images/packs/uie/load/continue_card.png', lazy: true },
+  { id: 'ui.save.bg', kind: 'image', category: 'ui', path: 'images/packs/uie/load/save_background.png', lazy: true },
   // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
   ...['fade_down', 'fade_up', 'stripes', 'stairs', 'stairs2', 'tiles', 'ripple', 'spread', 'swirl', 'hex', 'computer', 'computer_close'].map(
     (m): AssetEntry => ({ id: `fx.wipe.${m}`, kind: 'image', category: 'ui', path: `images/packs/uie/transitions/${m}.png`, lazy: true }),

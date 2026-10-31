@@ -71,3 +71,16 @@ for (const size of SIZES) {
     expect(problems).toEqual([]);
   });
 }
+
+// Release gate (left-out 3.3): the basics a screen reader and keyboard player rely on.
+test('page has a language, a title and a named game canvas, and the menu answers the keyboard', async ({ page }) => {
+  await page.goto('/?debug=1');
+  await waitFor(page, 'MainMenu');
+  expect(await page.getAttribute('html', 'lang')).toBe('en');
+  expect((await page.title()).length).toBeGreaterThan(0);
+  expect(await page.getAttribute('canvas', 'aria-label')).toContain('Pocket Raiders');
+  const before = await page.evaluate(() => (window as any).__pkr.game.scene.getScenes(true)[0].menu?.index ?? 0);
+  await page.keyboard.press('ArrowDown');
+  const after = await page.evaluate(() => (window as any).__pkr.game.scene.getScenes(true)[0].menu?.index ?? 0);
+  expect(after).not.toBe(before);
+});
