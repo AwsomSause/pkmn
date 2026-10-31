@@ -299,6 +299,51 @@
    "researchCost": 300
   },
   {
+   "id": "torren",
+   "name": "Torren",
+   "description": "Every first-stage Pokémon that roams Torren: all generations meet there.",
+   "category": "region",
+   "filter": {
+    "region": "torren"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "three-regions"
+   },
+   "unlockText": "Clear three regions in one run",
+   "researchCost": 300
+  },
+  {
+   "id": "frontier-isles",
+   "name": "Frontier Isles",
+   "description": "Every first-stage Pokémon trained on the Frontier Isles: all generations meet there.",
+   "category": "region",
+   "filter": {
+    "region": "frontier-isles"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "three-regions"
+   },
+   "unlockText": "Clear three regions in one run",
+   "researchCost": 300
+  },
+  {
+   "id": "trial-archipelago",
+   "name": "Trial Archipelago",
+   "description": "Every first-stage Pokémon native to the Trial Archipelago (generations 7 to 9).",
+   "category": "region",
+   "filter": {
+    "region": "trial-archipelago"
+   },
+   "unlock": {
+    "kind": "achievement",
+    "id": "three-regions"
+   },
+   "unlockText": "Clear three regions in one run",
+   "researchCost": 300
+  },
+  {
    "id": "kanto-all",
    "name": "All of Kanto",
    "description": "Every first-stage Pokémon native to Kanto, not just the classics.",

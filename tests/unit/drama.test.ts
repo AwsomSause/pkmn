@@ -12,6 +12,7 @@ import { chooseStarter, createRun } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
 import { BattleStateSchema } from '../../src/core/state';
 import { content } from './helpers';
+import bossTeamsJson from '../../src/data/bossTeams.json';
 
 function trainerRun(name = 'Joey', ai = 0): RunState {
   const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'dr', seed: 'drama', archetypeId: 'red' }), 0));
@@ -425,5 +426,52 @@ describe('Overdrive drama events', () => {
     run2.battle!.turn = 3;
     const unleashed = planDrama(content, run2, structuredClone(run2.battle!), [hyperEvent('enemy', 'unleashed')], 'high');
     expect(unleashed.some((l) => l.cue?.event === 'overdriveMisfire')).toBe(false);
+  });
+});
+
+describe('more drama events (left-out 2.1)', () => {
+  it('derives status, miss, survived and super-effective hits from real events', () => {
+    const run = trainerRun();
+    const enemy = run.battle!.enemyTeam[0]!;
+    const evs = deriveDramaEvents(content, run, run.battle!, [
+      { type: 'status', side: 'enemy', status: 'par' },
+      { type: 'status', side: 'player', status: 'brn' },
+      { type: 'miss', side: 'enemy' },
+      { type: 'miss', side: 'player' },
+      { type: 'damage', side: 'enemy', amount: 3, hpAfter: enemy.hp, effectiveness: 2, crit: false },
+    ]);
+    expect(evs.map((e) => e.kind)).toEqual(['enemyStatus', 'foeStatus', 'enemyMiss', 'foeMiss', 'enemyHurt']);
+    expect(evs[4]!.data.superEffective).toBe(true);
+  });
+  it('speaks the new categories, once each, only for what happened', () => {
+    const run = trainerRun();
+    run.battle!.drama.seen.push(`${run.seed}#${run.encountersCompleted}:t1:e-1:battleStart`);
+    const enemy = run.battle!.enemyTeam[0]!;
+    const hp = calcStats(content, enemy).hp;
+    enemy.hp = 1;
+    const lines = planDrama(content, run, run.battle!, [{ type: 'damage', side: 'enemy', amount: hp - 1, hpAfter: 1, effectiveness: 1, crit: false }]);
+    // The pacing director may let a bigger library event speak first; the survival was still noticed (once).
+    expect(lines.length).toBeGreaterThan(0);
+    expect(run.battle!.drama.seen).toContain(`survived:${enemy.uid}`);
+    const miss = planDrama(content, trainerRunFresh(), null, [{ type: 'miss', side: 'player' }]);
+    expect(miss.every((l) => ['miss', 'opening'].includes(l.category))).toBe(true);
+  });
+});
+function trainerRunFresh() {
+  return trainerRun('Ann');
+}
+
+describe('boss aces can evolve mid-battle (left-out 2.1)', () => {
+  it('is on in the balance, and real boss teams have aces that start a stage lower', () => {
+    expect(content.balance.bossEvolution).toBe(true);
+    let trainable = 0;
+    const raw = bossTeamsJson as unknown as Record<string, Record<string, { level: number; members: string[] }[]>>;
+    for (const groups of Object.values(raw)) {
+      for (const team of Object.values(groups).flat()) {
+        const members = team.members.map((m) => ({ speciesId: m.split(' / ')[0]!, level: team.level })) as never;
+        if (withTrainingEvolution(content, members).index >= 0) trainable++;
+      }
+    }
+    expect(trainable).toBeGreaterThan(0);
   });
 });

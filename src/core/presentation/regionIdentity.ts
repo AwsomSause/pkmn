@@ -25,6 +25,9 @@ const IDENTITY: Record<string, RegionIdentity> = {
   alola: { sky: 0x28b8d8, accent: 0xf8a040, motif: 'Islands', key: 4 },
   galar: { sky: 0x4a6aa8, accent: 0xd03050, motif: 'Stadium', key: -3 },
   paldea: { sky: 0x3a9ad0, accent: 0xf0b020, motif: 'Treasure', key: 1 },
+  torren: { sky: 0x3a2a5a, accent: 0x9a60f0, motif: 'Delta', key: -1 },
+  'frontier-isles': { sky: 0x2a6a8a, accent: 0xf0c040, motif: 'Frontier', key: 6 },
+  'trial-archipelago': { sky: 0x20a8a0, accent: 0xf07050, motif: 'Trials', key: -4 },
   grand: { sky: 0x2a2f6a, accent: 0xf8e080, motif: 'Legend', key: -5 },
 };
 

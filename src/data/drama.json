@@ -331,6 +331,138 @@
         "Hey, I beat you last time! No hard feelings, right?",
         "Round two! I remember you!"
       ]
+    },
+    "status": {
+      "brash": [
+        "A status? Shake it off, {name}!",
+        "That's nothing! Fight through it!"
+      ],
+      "gentle": [
+        "Hang in there, {name}, I'm right here.",
+        "Oh no, {name}! Be strong!"
+      ],
+      "calm": [
+        "A setback. It can be managed.",
+        "Status noted. Adjusting."
+      ],
+      "grim": [
+        "Pain is just information.",
+        "Endure it. Keep fighting."
+      ],
+      "cheerful": [
+        "Whoops, that's a bad one! Still fun though!",
+        "Ha, I did not plan for that!"
+      ]
+    },
+    "statusInflict": {
+      "brash": [
+        "Feel that? That's what I call pressure!",
+        "Not so tough now, are you?"
+      ],
+      "gentle": [
+        "I'm sorry, {foe}, but we have to win.",
+        "Good work, {name}. Keep the pressure gentle but steady."
+      ],
+      "calm": [
+        "Exactly as planned.",
+        "Now your options are narrower."
+      ],
+      "grim": [
+        "Let it eat at you.",
+        "Slowly, then all at once."
+      ],
+      "cheerful": [
+        "Surprise! Did I get you?",
+        "Ooh, that landed nicely!"
+      ]
+    },
+    "miss": {
+      "brash": [
+        "Ha! Too slow!",
+        "Swing and a miss!"
+      ],
+      "gentle": [
+        "Oh, that was close, {name} is fine!",
+        "That's okay, try again!"
+      ],
+      "calm": [
+        "Predictable. It missed.",
+        "I expected that."
+      ],
+      "grim": [
+        "Wasted.",
+        "You are rushing."
+      ],
+      "cheerful": [
+        "Whiff! Don't worry, it happens!",
+        "Almost! Better luck next one!"
+      ]
+    },
+    "foeMiss": {
+      "brash": [
+        "Pfft, I meant to do that!",
+        "Lucky dodge! It won't happen twice!"
+      ],
+      "gentle": [
+        "It's all right, {name}, breathe and try again.",
+        "No harm done, {name}."
+      ],
+      "calm": [
+        "A miscalculation. Noted.",
+        "I will correct for that."
+      ],
+      "grim": [
+        "Again. Do not miss.",
+        "Unacceptable. Focus."
+      ],
+      "cheerful": [
+        "Oops! Even I miss sometimes!",
+        "Yikes, off by a mile!"
+      ]
+    },
+    "survived": {
+      "brash": [
+        "Still standing! I told you, nobody beats us!",
+        "Ha! Barely a scratch!"
+      ],
+      "gentle": [
+        "{name}, you held on! I'm so proud!",
+        "You did it, {name}, just a bit longer!"
+      ],
+      "calm": [
+        "Still alive. Barely. Use it.",
+        "One hit away. I have not lost yet."
+      ],
+      "grim": [
+        "It is not over until I say it is.",
+        "I did not come this far to fall now."
+      ],
+      "cheerful": [
+        "Whoa, that was close! Phew!",
+        "Hang on, hang on, we are still in this!"
+      ]
+    },
+    "encourage": {
+      "brash": [
+        "Walk it off, {name}! That's all you've got?",
+        "That hurt, but we hit back harder!"
+      ],
+      "gentle": [
+        "It's okay, {name}. You're doing great.",
+        "I believe in you, {name}!"
+      ],
+      "calm": [
+        "A bad matchup. We adapt.",
+        "Stay calm, {name}. Look for the opening."
+      ],
+      "grim": [
+        "Pain means you are still fighting.",
+        "Get up. Again."
+      ],
+      "cheerful": [
+        "Ow, that stings! Shake it off!",
+        "You've got this, {name}!"
+      ]
     }
   }
 }
