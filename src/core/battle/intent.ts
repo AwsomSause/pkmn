@@ -20,12 +20,12 @@ export function hasTelegraphedIntent(battle: Pick<BattleState, 'trainer' | 'raid
   return Boolean(battle.raid || battle.totem || (battle.trainer && isBossClass(battle.trainer.classId)));
 }
 
-export function enemyIntent(content: Content, battle: BattleState, target: PokemonInstance): EnemyIntent | null {
+export function enemyIntent(content: Content, battle: BattleState, target: PokemonInstance, party?: PokemonInstance[]): EnemyIntent | null {
   if (!hasTelegraphedIntent(battle) || battle.outcome) return null;
   const foe = currentEnemy(battle);
   const usable = foe.moves.filter((m) => m.pp > 0);
   if (foe.hp <= 0 || usable.length === 0) return null;
-  const brain = { content, ai: Math.max(battle.ai, 0.7), target, stages: battle.enemyStages };
+  const brain = { content, ai: Math.max(battle.ai, 0.7), target, stages: battle.enemyStages, battle, party };
   const best = usable.map((m) => ({ id: m.id, v: moveValue(brain, foe, m.id) })).reduce((a, b) => (b.v > a.v ? b : a));
   const move = content.moves.get(best.id);
   if (!move) return null;
