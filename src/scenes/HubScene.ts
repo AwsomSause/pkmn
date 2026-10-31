@@ -4,6 +4,9 @@
 // here reads and changes the permanent profile only.
 
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
+import { LEGACY, legacySummary, ascend, buyNode, contactProblem, intelLevel, legacyOf, networkSlots, nextPrestige, nodeProblem, nodeStatus, prestigeProblem, prestigeRank, regionBoard, serviceFor, shelfProblem, shelveSeed, toggleContact, trainMove, trainProblem, unshelveSeed } from '../core/legacy';
+import { STANDARD_CHOICE } from '../core/rules';
+import { decodeSeedCode, encodeSeedCode } from '../core/seedCode';
 import { contractBoard, contractDone, contractRewardText } from '../core/contracts';
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthText, isMeter, readAttributes } from '../core/attributes';
@@ -21,6 +24,7 @@ import type { Profile, RunRecord } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
+import { drawHubProps } from '../ui/hubProps';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { loadAssets, preloadPokemon, queueAssets } from '../ui/lazyAssets';
@@ -30,7 +34,7 @@ import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'card' | 'events' | 'fame' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'wardrobe' | 'card' | 'events' | 'fame' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -47,6 +51,13 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
   { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, the Contract Board, objectives and rewards (Enter)." },
   { room: 'fame', label: 'Hall of Fame', blurb: 'Champion teams, unusual wins, rare Pokémon, records and Legacy Cards (Enter).' },
+  { room: 'tree', label: 'Research Tree', blurb: 'Spend Research Points on small start-of-run perks and deeper intel (Enter).' },
+  { room: 'prestige', label: 'Prestige', blurb: 'Rise a rank for a title and more contacts. Nothing you own is ever deleted (Enter).' },
+  { room: 'network', label: 'Trainer Network', blurb: 'Trainers you did not pick still send a small parcel when you start a run (Enter).' },
+  { room: 'museum', label: 'Item Museum', blurb: 'Every item you ever carried through a run, with Research Point milestones.' },
+  { room: 'intel', label: 'Intelligence Board', blurb: 'What you know about each region and its League. Grows with visits and the Tree.' },
+  { room: 'moves', label: 'Move Research', blurb: 'Your moves, their mastery, and training with Research Points (Enter).' },
+  { room: 'seeds', label: 'Seed Shelf', blurb: 'Keep shared seed codes and start a run from one (Enter).' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
 ];
@@ -118,8 +129,8 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['save', 'back'], blurb: 'Save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame'], blurb: "This week's event, holiday events, your past runs and the Hall of Fame." },
-  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
+  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'intel', 'museum', 'seeds'], blurb: "This week's event, your past runs, the Hall of Fame, the Intelligence Board, the Item Museum and the Seed Shelf." },
+  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
 const ROOM_ICON: Partial<Record<Room, string>> = {
@@ -130,6 +141,13 @@ const ROOM_ICON: Partial<Record<Room, string>> = {
   mastery: 'item.master_ribbon',
   research: 'item.scanner',
   wardrobe: 'item.sachet',
+  tree: 'item.dna_splicers',
+  prestige: 'item.master_ribbon',
+  network: 'item.pair_of_tickets',
+  museum: 'item.map',
+  intel: 'item.scanner',
+  moves: 'item.exp_charm',
+  seeds: 'item.mystery_egg',
   events: 'item.calendar',
   save: 'item.map',
   back: 'item.pair_of_tickets',
@@ -202,6 +220,7 @@ export class HubScene extends Phaser.Scene {
       shade.fillStyle(0x0e0b12, 0.75 * (i / 12));
       shade.fillRect(0, 380 + i * 14, GAME_WIDTH, 14);
     }
+    drawHubProps(this, p, session.settings.battleAnimations);
     this.showcase = new ShowcaseMon(this, GAME_WIDTH / 2, 356, PIXEL_SCALE, 250);
 
     drawLogo(this, 20, 8, 34, 0, session.settings.battleAnimations);
@@ -455,6 +474,16 @@ export class HubScene extends Phaser.Scene {
         }
         break;
       }
+      case 'tree':
+      case 'prestige':
+      case 'network':
+      case 'museum':
+      case 'intel':
+      case 'moves':
+      case 'seeds': {
+        for (const l of legacySummary(session.content, p, room)) y = this.line(y, l.text, l.size ?? 16, l.muted ? COLORS.textMuted : COLORS.textLight);
+        break;
+      }
       case 'research': {
         y = this.line(y, 'Research Room', 22);
         const t = researchTotals(session.content, p);
@@ -574,6 +603,15 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'fame':
         this.scene.start('HallOfFame');
+        break;
+      case 'tree':
+      case 'prestige':
+      case 'network':
+      case 'museum':
+      case 'intel':
+      case 'moves':
+      case 'seeds':
+        this.openLegacy(room);
         break;
       case 'save':
         this.openSaveData();
@@ -1175,6 +1213,149 @@ export class HubScene extends Phaser.Scene {
         session.buyLicense(l.id);
         playSfx(this, 'se.exp', 0.6);
         this.restart(`You bought the ${l.name}. ${l.description}`, 'bank');
+      },
+      onBack: () => this.closePicker(),
+    });
+  }
+
+  /** The Legacy & Live rooms (core/legacy.ts): one picker each. Rows with a `run` change the profile; the rest only show. */
+  private openLegacy(room: Room): void {
+    const { session } = services();
+    const { content } = session;
+    const p = session.profile;
+    interface Entry { label: string; sub: string; right?: string; on?: boolean; problem?: string | null; run?: () => string | void; start?: () => void }
+    const entries: Entry[] = [];
+    const now = new Date().toISOString();
+    const apply = (fn: (pr: Profile) => Profile, notice: string): string => {
+      session.changeProfile(fn);
+      return notice;
+    };
+    let title = '';
+    switch (room) {
+      case 'tree':
+        title = `Research Tree  ·  ${p.researchPoints} Research Points`;
+        for (const n of LEGACY.tree.nodes) {
+          const st = nodeStatus(p, n);
+          entries.push({ label: `${LEGACY.tree.branches.find((b) => b.id === n.branch)?.name}: ${n.name}`, sub: n.blurb, right: st === 'owned' ? 'Researched' : `${n.cost} RP`, on: st === 'owned', problem: nodeProblem(p, n), run: () => apply((pr) => buyNode(pr, n.id), `Researched ${n.name}. ${n.blurb}`) });
+        }
+        break;
+      case 'prestige': {
+        const next = nextPrestige(p);
+        title = `Prestige  ·  rank ${prestigeRank(p)} of ${LEGACY.prestige.maxRank}`;
+        entries.push(next
+          ? { label: `Ascend to ${next.title}`, sub: `Costs ${next.cost} Bank Credits and ${next.regionsCleared} regions cleared in total. Keeps everything you own.`, right: `${next.cost} credits`, problem: prestigeProblem(p), run: () => apply((pr) => ascend(pr, now), `You reached ${next.title}! One more Network contact, and deeper Tree nodes open.`) }
+          : { label: 'Top rank reached', sub: 'Nothing more to climb.', on: true });
+        break;
+      }
+      case 'network': {
+        title = `Trainer Network  ·  ${legacyOf(p).contacts.length}/${networkSlots(p)} contacts`;
+        const contacts = legacyOf(p).contacts;
+        const mine = [...content.archetypes.values()].filter((a) => p.unlockedArchetypes.includes(a.id)).sort((a, b) => Number(contacts.includes(b.id)) - Number(contacts.includes(a.id)) || a.name.localeCompare(b.name));
+        for (const a of mine) {
+          const svc = serviceFor(a.id);
+          const on = contacts.includes(a.id);
+          entries.push({ label: `${a.name}: ${svc.name}`, sub: svc.blurb, right: on ? 'ON' : '', on, problem: contactProblem(p, a.id), run: () => apply((pr) => toggleContact(pr, a.id), on ? `${a.name} stops sending parcels.` : `${a.name} will send: ${svc.blurb}`) });
+        }
+        break;
+      }
+      case 'museum': {
+        const seen = legacyOf(p).museum;
+        title = `Item Museum  ·  ${seen.length} items`;
+        const next = LEGACY.museum.milestones.find((m) => seen.length < m.items);
+        entries.push({ label: next ? `Next milestone: ${next.items} items` : 'Every milestone paid', sub: next ? `Pays ${next.research} Research Points once.` : 'The Museum is complete for now.', on: !next });
+        for (const id of seen) entries.push({ label: content.items.get(id)?.name ?? content.catalog.get(id)?.name ?? id, sub: content.items.get(id)?.description ?? content.catalog.get(id)?.description ?? '' });
+        break;
+      }
+      case 'intel':
+        title = `Regional Intelligence Board  ·  intel level ${intelLevel(p)}`;
+        for (const r of content.regions.values()) {
+          const b = regionBoard(content, p, r);
+          entries.push({ label: `${r.name}  ·  visited ${b.visits}, cleared ${b.clears}`, sub: b.lines.join('   ') });
+        }
+        break;
+      case 'moves': {
+        title = `Move Research  ·  ${p.researchPoints} Research Points`;
+        const used = Object.entries(p.moveUses ?? {}).sort((a, b) => b[1] - a[1]);
+        if (used.length === 0) entries.push({ label: 'No moves used yet', sub: 'Use damaging moves in trainer fights; they show up here.' });
+        for (const [id, uses] of used) {
+          const rank = moveRank(uses);
+          entries.push({ label: `${content.moves.get(id)?.name ?? id}: ${uses} uses (${rank})`, sub: `Train: ${LEGACY.training.researchPerLot} RP for ${LEGACY.training.usesPerLot} uses, up to ${LEGACY.training.maxRank}.`, right: rank === 'none' ? '' : rank, problem: trainProblem(content, p, id), run: () => apply((pr) => trainMove(content, pr, id), `Trained ${content.moves.get(id)?.name ?? id}.`) });
+        }
+        break;
+      }
+      case 'seeds': {
+        title = `Seed Shelf  ·  ${legacyOf(p).seedShelf.length}/${LEGACY.seedShelf.slots}`;
+        const last = p.runHistory[0];
+        entries.push({
+          label: 'Keep my last run\'s seed',
+          sub: last ? `Seed ${last.seed} as ${last.archetypeId}, standard rules.` : 'Finish a run first.',
+          problem: last ? shelfProblem(p, encodeSeedCode({ seed: last.seed, archetypeId: last.archetypeId, rules: STANDARD_CHOICE })) : 'Finish a run first.',
+          run: () => apply((pr) => shelveSeed(pr, encodeSeedCode({ seed: last!.seed, archetypeId: last!.archetypeId, rules: STANDARD_CHOICE }), `Run ${last!.seed}`, now), 'Seed kept on the shelf.'),
+        });
+        entries.push({
+          label: 'Paste a seed code',
+          sub: 'Add a code a friend shared (PR1.…).',
+          run: () => {
+            const code = window.prompt('Seed code (PR1.…):', '')?.trim();
+            if (!code) return;
+            const r = decodeSeedCode(code);
+            if (!r.ok) return r.reason;
+            const problem = shelfProblem(session.profile, code);
+            if (problem) return problem;
+            return apply((pr) => shelveSeed(pr, code, `Shared ${r.parts.seed}`, now), 'Seed kept on the shelf.');
+          },
+        });
+        for (const s of legacyOf(p).seedShelf) {
+          const r = decodeSeedCode(s.code);
+          entries.push({
+            label: s.label,
+            sub: r.ok ? `Seed ${r.parts.seed}, trainer ${r.parts.archetypeId}${r.note ? `. ${r.note}` : ''}` : r.reason,
+            right: 'Start',
+            problem: r.ok && p.unlockedArchetypes.includes(r.parts.archetypeId) ? null : r.ok ? 'You have not unlocked this seed\'s trainer yet.' : r.reason,
+            start: () => {
+              if (!r.ok) return;
+              if (window.confirm(`Start a run with ${s.label}? (Cancel offers to remove it.)`)) this.scene.start('RunPrep', { archetypeId: r.parts.archetypeId, seed: r.parts.seed, rules: r.parts.rules, notice: r.note ?? 'Shelf seed loaded.' });
+              else if (window.confirm('Remove it from the shelf?')) {
+                session.changeProfile((pr) => unshelveSeed(pr, s.code));
+                this.restart('Seed removed from the shelf.', 'seeds');
+              }
+            },
+          });
+        }
+        break;
+      }
+      default:
+        return;
+    }
+    const rows: PickerRow[] = entries.map((e) => ({
+      problem: null,
+      hint: e.run || e.start ? `${e.sub}  ·  ${e.problem ?? 'Enter: do it.'}` : e.sub,
+      draw: (scene, box, w, h) => {
+        box.add(scene.add.text(12, 6, e.label, textStyle(18, e.on ? COLORS.good : COLORS.textLight)));
+        box.add(scene.add.text(12, 31, e.sub, textStyle(13, COLORS.textMuted, { wordWrap: { width: w - 150 } })));
+        if (e.right) box.add(scene.add.text(w - 12, h / 2, e.right, textStyle(16, e.problem && !e.on ? COLORS.textMuted : COLORS.gold)).setOrigin(1, 0.5));
+      },
+    }));
+    this.openPicker({
+      title,
+      rows,
+      columns: 1,
+      rowHeight: 56,
+      onSelect: (i) => {
+        const e = entries[i]!;
+        if (e.start) {
+          if (e.problem) playSfx(this, 'ui.error', 0.5);
+          else e.start();
+          return;
+        }
+        if (!e.run || e.problem) {
+          if (e.problem) playSfx(this, 'ui.error', 0.5);
+          return;
+        }
+        const notice = e.run();
+        if (notice === undefined) return;
+        playSfx(this, 'se.exp', 0.6);
+        this.restart(notice, room);
       },
       onBack: () => this.closePicker(),
     });

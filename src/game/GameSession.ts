@@ -15,6 +15,7 @@ import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
+import { applyStartGrants } from '../core/legacy';
 import { loanProblem, runBankFlags, vaultTake, buyTier, exchange, type ExchangeDirection } from '../core/bank';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
@@ -93,6 +94,7 @@ export class GameSession {
     // A saved preset can name a loan or Vault item the profile no longer has.
     if (prep) prep = { ...prep, loan: prep.loan && !loanProblem(this.content, this.profile), vaultItem: prep.vaultItem && this.profile.vault.includes(prep.vaultItem) ? prep.vaultItem : null };
     this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile) , ownedTrainers: this.profile.unlockedArchetypes });
+    applyStartGrants(this.content, this.run, this.profile);
     this.profile = recordRunStarted(this.profile);
     if (prep?.vaultItem) {
       const profile = structuredClone(this.profile);
@@ -390,6 +392,13 @@ export class GameSession {
 
   buyLicense(licenseId: string): void {
     this.profile = buyLicense(this.content, this.profile, licenseId);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  /** Changes the profile through one of the Legacy hub systems (core/legacy.ts: Tree, Prestige, Network, training, Seed Shelf) and saves it. */
+  changeProfile(change: (profile: Profile) => Profile): void {
+    this.profile = change(this.profile);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
   }
