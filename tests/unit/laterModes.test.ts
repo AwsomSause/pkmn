@@ -45,4 +45,16 @@ describe('later modes', () => {
     expect(trainerColumns(trip)).toBeLessThan(trainerColumns(full) / 2);
     expect(rulesCampaign(choice('research-expedition'))).toBe('expedition-route');
   });
+  it('Regional Circuit can run a region the player picks, and a random pick stays the same without a choice', () => {
+    const regular = [...content.regions.values()].filter((r) => !r.grand).map((r) => r.id);
+    for (const id of regular.slice(0, 4)) {
+      const run = createRun(content, { runId: 'rg', seed: 'rg', archetypeId: 'red', rules: { ...choice('regional-circuit'), regionId: id } });
+      expect(run.regionOrder).toEqual([id]);
+      expect(run.rules.regionId).toBe(id);
+    }
+    const free = createRun(content, { runId: 'rg', seed: 'rg', archetypeId: 'red', rules: choice('regional-circuit') });
+    expect(free.rules.regionId).toBeNull();
+    // Other modes ignore a stray choice.
+    expect(makeRules({ ...choice('standard'), regionId: regular[0] }).regionId).toBeNull();
+  });
 });

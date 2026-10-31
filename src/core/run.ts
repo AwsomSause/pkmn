@@ -168,6 +168,8 @@ import { answerAskLead, planAskLead } from './story/askLead';
 import { planReunion, reunionPokemon } from './story/reunion';
 
 export interface NewRunOptions {
+  /** The Daily Run's fixed starter set: replaces the drafted choices (a few lines below the draft). */
+  starterOverride?: string[];
   runId: string;
   seed: string;
   archetypeId: string;
@@ -214,8 +216,8 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   const mastered = masteredStarters(content, opts);
   const draft = withStream(rng, 'starter', (r) => draftStarters(content, r, prep, mastered));
   // Used once here, so its own seed-derived generator needs no saved stream.
-  const starterChoices = withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices, mastered);
-  const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r));
+  const starterChoices = opts.starterOverride?.length ? [...opts.starterOverride] : withSignatureStarter(content, new Rng(hashSeed(`${opts.seed}::signature`)), archetype, prep, draft.choices, mastered);
+  const regionOrder = withStream(rng, 'map', (r) => generateRegionOrder(content, campaign, r, rules.regionId));
   const run: RunState = {
     runId: opts.runId,
     journal: [],
@@ -389,7 +391,7 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
 export function fillRegionOrder(content: Content, run: RunState): void {
   if (run.regionOrder.length > 0) return;
   const campaign = getCampaign(content, run.campaignId);
-  run.regionOrder = withStream(run.rng, 'map', (r) => generateRegionOrder(content, campaign, r));
+  run.regionOrder = withStream(run.rng, 'map', (r) => generateRegionOrder(content, campaign, r, run.rules.regionId));
   run.regionIndex = Math.min(run.regionIndex, run.regionOrder.length - 1);
 }
 

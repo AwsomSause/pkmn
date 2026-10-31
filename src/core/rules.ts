@@ -74,6 +74,8 @@ export interface RulesChoice {
   difficultyId: string;
   modifierIds: readonly string[];
   deathBlock: boolean;
+  /** Regional Circuit: the region to run (null or missing: picked by the seed). */
+  regionId?: string | null;
   /** Set when the account rewards were already paid (a second Daily Run on the same day). */
   noRewards?: boolean;
 }
@@ -135,6 +137,7 @@ export function makeRules(choice: RulesChoice): RunRules {
     enemyLevelBonus: getDifficulty(choice.difficultyId)!.enemyLevelBonus + choice.modifierIds.reduce((n, id) => n + (getModifier(id)?.enemyLevel ?? 0), 0),
     lockType: null,
     lockGeneration: null,
+    regionId: getMode(choice.modeId)?.campaignId === 'regional-circuit' ? choice.regionId ?? null : null,
     loops: 0,
     wipes: 0,
   };

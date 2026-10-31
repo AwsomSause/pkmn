@@ -135,6 +135,7 @@ describe('draft modifiers and tokens', () => {
 });
 
 import { relationshipCounters } from '../../src/core/relationships';
+import { createPokemon } from '../../src/core/pokemon';
 describe('relationship achievements', () => {
   it('the Relationship category has chains, and counters read from the run', () => {
     const rel = [...content.achievements.values()].filter((a) => a.category === 'relationship');
@@ -229,5 +230,36 @@ describe('attribute item falloff and growth progress', () => {
     const g = content.balance.attributeGrowth.find((x) => x.counter)!;
     profile.counters[g.counter!] = g.per + 1;
     expect(growthProgress(content, profile, g.attribute)).toContain(`1/${g.per}`);
+  });
+});
+
+
+describe('hidden achievements from a won run', () => {
+  const base = () => {
+    const run = createRun(content, { runId: 'h', seed: 'h', archetypeId: 'red' });
+    run.victory = true;
+    return run;
+  };
+  it('pay only on a won run, and each has its own rule', () => {
+    const run = base();
+    run.log.counters.moneySpent = content.balance.frugalRunMaxSpent;
+    expect(relationshipCounters(content, run)).toMatchObject({ frugalWins: 1, noHealWins: 1, comebackWins: 0, rainbowWins: 0 });
+    run.log.counters.moneySpent = content.balance.frugalRunMaxSpent + 1;
+    run.log.counters.healStopsUsed = 1;
+    run.rules.wipes = 1;
+    expect(relationshipCounters(content, run)).toMatchObject({ frugalWins: 0, noHealWins: 0, comebackWins: 1 });
+    run.victory = false;
+    expect(relationshipCounters(content, run).frugalWins).toBeUndefined();
+  });
+  it('six different types make a rainbow party', () => {
+    const run = base();
+    const ids = ['charmander', 'squirtle', 'bulbasaur', 'pikachu', 'geodude', 'gastly'];
+    run.party = ids.map((id, i) => createPokemon(content, id, 20, `r${i}`));
+    expect(relationshipCounters(content, run).rainbowWins).toBe(1);
+    run.party[5] = createPokemon(content, 'charmeleon', 20, 'dup');
+    expect(relationshipCounters(content, run).rainbowWins).toBe(0);
+  });
+  it('the four achievements exist, hidden and earnable', () => {
+    for (const id of ['penny-pincher', 'no-turning-back', 'one-of-a-kind', 'wrong-way-right-result']) expect(content.achievements.get(id)?.hidden, id).toBe(true);
   });
 });

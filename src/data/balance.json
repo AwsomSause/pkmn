@@ -545,6 +545,7 @@
    { "item": "soothe-bell", "price": 1200, "minBadges": 0 }
   ]
  },
+ "frugalRunMaxSpent": 300,
  "shopSale": {
   "everyStages": 3,
   "discount": 0.2

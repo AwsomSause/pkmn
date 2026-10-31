@@ -1185,5 +1185,65 @@
    "candies": 0,
    "title": "Z-Ring Veteran"
   }
+ },
+ {
+  "id": "penny-pincher",
+  "name": "Penny Pincher",
+  "description": "Win a run spending almost nothing in shops.",
+  "category": "secret",
+  "hidden": true,
+  "requirement": {
+   "kind": "total",
+   "counter": "frugalWins",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 150
+  }
+ },
+ {
+  "id": "no-turning-back",
+  "name": "No Turning Back",
+  "description": "Win a run without ever resting at a rest stop.",
+  "category": "secret",
+  "hidden": true,
+  "requirement": {
+   "kind": "total",
+   "counter": "noHealWins",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ },
+ {
+  "id": "one-of-a-kind",
+  "name": "One of a Kind",
+  "description": "Win a run with six Pokémon of six different types.",
+  "category": "secret",
+  "hidden": true,
+  "requirement": {
+   "kind": "total",
+   "counter": "rainbowWins",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ },
+ {
+  "id": "wrong-way-right-result",
+  "name": "Wrong Way, Right Result",
+  "description": "Win a run after a wipe.",
+  "category": "secret",
+  "hidden": true,
+  "requirement": {
+   "kind": "total",
+   "counter": "comebackWins",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 150
+  }
  }
 ]

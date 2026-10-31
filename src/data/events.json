@@ -31226,7 +31226,9 @@
    "mode": "spooky",
    "modeStop": false,
    "scene": {
-    "cast": [],
+    "cast": [
+     "boss.npc_channeler"
+    ],
     "tint": "#1c1830",
     "effect": "sparkle"
    },
@@ -31287,7 +31289,9 @@
    "mode": "spooky",
    "modeStop": false,
    "scene": {
-    "cast": [],
+    "cast": [
+     "boss.npc_lady"
+    ],
     "tint": "#1c1830",
     "effect": "sparkle"
    },
@@ -31344,7 +31348,9 @@
    "mode": "spooky",
    "modeStop": true,
    "scene": {
-    "cast": [],
+    "cast": [
+     "boss.npc_ruinmaniac"
+    ],
     "tint": "#120d1c",
     "effect": "fire"
    },
@@ -31419,7 +31425,9 @@
    "mode": "spooky",
    "modeStop": true,
    "scene": {
-    "cast": [],
+    "cast": [
+     "boss.npc_psychic_f"
+    ],
     "tint": "#0c0814",
     "effect": "sparkle"
    },
@@ -31468,6 +31476,332 @@
      "label": "Cover the mirror",
      "success": {
       "text": "You cover it. It will wait.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "starter-ember-shrine",
+   "name": "Ember Shrine",
+   "group": "Starter Stories",
+   "rarity": "uncommon",
+   "types": [
+    "fire"
+   ],
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "starter",
+     "type": "fire"
+    }
+   ],
+   "gameEvent": null,
+   "scene": {
+    "cast": [],
+    "tint": "#301408",
+    "effect": "fire"
+   },
+   "intro": "A small shrine glows where your starter stands. Fire-types have prayed here for a long time.",
+   "choices": [
+    {
+     "label": "Let your starter pray",
+     "success": {
+      "text": "The warmth settles in your starter's chest.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "Your starter looks back once, then follows.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "starter-tide-pool",
+   "name": "The Tide Pool",
+   "group": "Starter Stories",
+   "rarity": "uncommon",
+   "types": [
+    "water"
+   ],
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "starter",
+     "type": "water"
+    }
+   ],
+   "gameEvent": null,
+   "scene": {
+    "cast": [],
+    "tint": "#0e2038",
+    "effect": "sparkle"
+   },
+   "intro": "A still pool reflects your starter. Something below the water is curious about it.",
+   "choices": [
+    {
+     "label": "Wade in together",
+     "success": {
+      "text": "The pool is cool and kind. You both come out refreshed.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "Your starter looks back once, then follows.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "starter-old-orchard",
+   "name": "The Old Orchard",
+   "group": "Starter Stories",
+   "rarity": "uncommon",
+   "types": [
+    "grass"
+   ],
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "starter",
+     "type": "grass"
+    }
+   ],
+   "gameEvent": null,
+   "scene": {
+    "cast": [],
+    "tint": "#14301a",
+    "effect": "sparkle"
+   },
+   "intro": "An orchard where every tree leans toward your starter.",
+   "choices": [
+    {
+     "label": "Share the fruit",
+     "success": {
+      "text": "Sweet and strange. Your starter beams.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "Your starter looks back once, then follows.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "starter-power-hum",
+   "name": "The Power Hum",
+   "group": "Starter Stories",
+   "rarity": "uncommon",
+   "types": [
+    "electric"
+   ],
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "starter",
+     "type": "electric"
+    }
+   ],
+   "gameEvent": null,
+   "scene": {
+    "cast": [],
+    "tint": "#302a08",
+    "effect": "sparkle"
+   },
+   "intro": "A pylon hums in a field. Your starter's fur lifts and sparks.",
+   "choices": [
+    {
+     "label": "Let your starter charge",
+     "success": {
+      "text": "It crackles happily and learns something new.",
+      "effects": [
+       {
+        "kind": "eggMove"
+       },
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "Your starter looks back once, then follows.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "starter-first-pal",
+   "name": "An Old Friend's Nest",
+   "group": "Starter Stories",
+   "rarity": "uncommon",
+   "types": [
+    "normal"
+   ],
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "starter",
+     "species": "eevee"
+    }
+   ],
+   "gameEvent": null,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2218",
+    "effect": "sparkle"
+   },
+   "intro": "A nest where Eevee-kin like your starter once played.",
+   "choices": [
+    {
+     "label": "Leave a gift",
+     "success": {
+      "text": "A soft chirp answers. Your starter will remember this.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 12,
+        "who": "lead"
+       },
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "Your starter looks back once, then follows.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "spooky-medium",
+   "name": "The Medium's Table",
+   "group": "Spooky Mode",
+   "rarity": "uncommon",
+   "types": [
+    "ghost"
+   ],
+   "minStage": 2,
+   "requires": [],
+   "mode": "spooky",
+   "modeStop": false,
+   "scene": {
+    "cast": [
+     "boss.npc_channeler"
+    ],
+    "tint": "#1c1830",
+    "effect": "sparkle"
+   },
+   "intro": "A medium sits behind a candle. She has been expecting you, or someone like you.",
+   "choices": [
+    {
+     "label": "Pay for a reading (₽400)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 400
+      }
+     ],
+     "success": {
+      "text": "The candle leans toward the Hollow Mirror. She smiles.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -400
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "spooky-clue",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy a charm (₽900)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 900
+      }
+     ],
+     "success": {
+      "text": "She presses a cold charm into your palm.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -900
+       },
+       {
+        "kind": "item",
+        "id": "reaper-cloth",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave her to her candle",
+     "success": {
+      "text": "The flame flickers as you go.",
       "effects": []
      }
     }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dailyModifierId, dailySetup } from '../../src/core/daily';
+import { dailyModifierId, dailySetup, dailyStarters } from '../../src/core/daily';
 import { defaultPrep } from '../../src/core/runPrep';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { dailySeed, getMode, makeRules, rulesProblem, rulesCampaign, STANDARD_CHOICE } from '../../src/core/rules';
@@ -32,5 +32,17 @@ describe('Daily Run format', () => {
     expect(run.campaignId).toBe('daily-route');
     expect(run.regionOrder.length).toBe(1);
     expect(chooseStarter(content, run, 0).phase).not.toBe('starter');
+  });
+  it('the day fixes three starters that rotate from day to day and replace the draft', () => {
+    const a = dailyStarters(content, '2026-10-31');
+    expect(a).toHaveLength(content.balance.starterChoices);
+    expect(new Set(a).size).toBe(a.length);
+    expect(dailyStarters(content, '2026-10-31T23:00:00Z')).toEqual(a);
+    const days = new Set(Array.from({ length: 10 }, (_, i) => dailyStarters(content, `2026-11-${String(i + 1).padStart(2, '0')}`).join()));
+    expect(days.size).toBeGreaterThan(5);
+    const setup = dailySetup(content, '2026-10-31', defaultPrep(content), choice);
+    expect(setup.starters).toEqual(a);
+    const run = createRun(content, { runId: 'd', seed: setup.seed, archetypeId: 'red', prep: setup.prep, rules: setup.rules, starterOverride: setup.starters });
+    expect(run.starterChoices).toEqual(a);
   });
 });
