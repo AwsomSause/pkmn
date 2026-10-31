@@ -24,6 +24,7 @@ import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type BattleState, type PokemonInstance, type RunState } from '../core/state';
 import { isBossClass } from '../core/trainerPerks';
 import { arenaFor, getTheme } from '../core/themes';
+import { shinyCatchBurst, targetReticle } from '../ui/battleFx/arenaLife';
 import { addContactShadows, addParallax, addVignette, ArenaLight, dressArena, type ShadowTarget } from '../ui/battleFx/arenaLife';
 import { pickUieArena } from '../core/arenaStyle';
 import { uieArenaId } from '../assets/catalog';
@@ -152,6 +153,8 @@ export class BattleScene extends Phaser.Scene {
   private field!: Phaser.GameObjects.Container;
   /** Index in `field` just above the arena art. */
   private fieldBase = 0;
+  /** The doubles target picker's marker on the highlighted Pokémon. */
+  private reticle: Phaser.GameObjects.Graphics | null = null;
   private arenaLight: ArenaLight | null = null;
   private arenaPhase = 0;
   /** The stage's types, for the ambience and the intro. */
@@ -946,6 +949,9 @@ export class BattleScene extends Phaser.Scene {
   }
 
   private clearMenus(): void {
+    this.tweens.killTweensOf(this.reticle ?? []);
+    this.reticle?.destroy();
+    this.reticle = null;
     this.menu?.destroy();
     this.menu = null;
     this.picker?.close();
@@ -1181,6 +1187,15 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     this.clearMenus();
+    // A reticle follows the highlighted foe (or the partner).
+    const reticle = targetReticle(this, 0xffe070, this.motion);
+    const aim = (i: number) => {
+      const t = choices[i]!.target;
+      const at = DUO_POS[t.side][t.spot];
+      reticle.aimAt(at.x, at.y - 50);
+    };
+    aim(0);
+    this.reticle = reticle;
     this.message.setText(`Use ${move.name} on which Pokémon?`);
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
@@ -1193,6 +1208,7 @@ export class BattleScene extends Phaser.Scene {
       fontSize: 26,
       color: COLORS.textLight,
       glass: { tints: choices.map((c) => mixColor(c.tint, 0x000000, 0.3)), motion: this.motion },
+      onFocus: aim,
       onSelect: (i) => this.submit(action, choices[i]!.target),
       onBack: () => this.showMoveMenu(),
     });
@@ -1981,6 +1997,11 @@ export class BattleScene extends Phaser.Scene {
         for (const [i, colour] of [0xff80c0, 0x80d0ff, 0xa0ff90, 0xffd060].entries()) burstReveal(this, ball.x + (i - 1.5) * 34, ball.y - 24 + (i % 2) * 36, colour, this.motion);
       }
       await tween(this, { targets: ball, alpha: 0.6, duration: 150, yoyo: true });
+      // A shiny catch gets its own gold ring and sparkles.
+      if (this.shown.enemy.shiny) {
+        playSfx(this, 'se.shiny');
+        await shinyCatchBurst(this, ball.x, ball.y, this.motion);
+      }
       await reveal.done;
       return;
     }

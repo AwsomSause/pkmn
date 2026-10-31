@@ -128,3 +128,60 @@ export class ArenaLight {
     this.scene.tweens.add({ targets: this.wash, alpha: up ? alpha + 0.25 : alpha, duration: 220, yoyo: up, ease: 'Quad.easeOut', onComplete: () => this.wash?.setAlpha(alpha) });
   }
 }
+
+/** Brackets and a ring around the Pokémon an attack would hit (doubles target picker). Destroy it when the choice is made. */
+export function targetReticle(scene: Phaser.Scene, color: number, motion: MotionLevel): Phaser.GameObjects.Graphics & { aimAt(x: number, y: number): void } {
+  const g = scene.add.graphics() as Phaser.GameObjects.Graphics & { aimAt(x: number, y: number): void };
+  g.lineStyle(4, color, 0.95);
+  g.strokeCircle(0, 0, 54);
+  for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]] as const) {
+    g.lineStyle(6, 0xffffff, 0.95);
+    g.beginPath();
+    g.moveTo(sx * 64, sy * 40);
+    g.lineTo(sx * 64, sy * 64);
+    g.lineTo(sx * 40, sy * 64);
+    g.strokePath();
+  }
+  g.setDepth(50);
+  g.aimAt = (x: number, y: number) => {
+    scene.tweens.killTweensOf(g);
+    g.setPosition(x, y);
+    if (motion === 'full') {
+      g.setScale(1.5).setAlpha(0.4);
+      scene.tweens.add({ targets: g, scale: 1, alpha: 1, duration: 220, ease: 'Back.easeOut' });
+      scene.tweens.add({ targets: g, rotation: 0.12, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: 240 });
+    } else g.setScale(1).setAlpha(1);
+  };
+  return g;
+}
+
+/** A shiny catch: a gold ring and a spiral of sparkles around the ball. Resolves when it has faded. */
+export function shinyCatchBurst(scene: Phaser.Scene, x: number, y: number, motion: MotionLevel): Promise<void> {
+  if (motion === 'off') return Promise.resolve();
+  const parts: Phaser.GameObjects.GameObject[] = [];
+  const ring = scene.add.circle(x, y, 20, 0xfff0a0, 0).setStrokeStyle(6, 0xfff0a0, 1).setBlendMode(Phaser.BlendModes.ADD).setDepth(60);
+  parts.push(ring);
+  const stars = Array.from({ length: 12 }, (_, i) => {
+    const s = scene.add.text(x, y, i % 2 ? '✦' : '✧', { fontSize: '30px', color: '#fff4a0' }).setOrigin(0.5).setDepth(60);
+    parts.push(s);
+    return { s, a: (i / 12) * Math.PI * 2 };
+  });
+  const dur = motion === 'full' ? 1100 : 500;
+  return new Promise((resolve) => {
+    scene.tweens.add({ targets: ring, radius: 120, alpha: 0, duration: dur, ease: 'Cubic.easeOut' });
+    stars.forEach(({ s, a }, i) => {
+      const far = 90 + (i % 3) * 30;
+      scene.tweens.add({
+        targets: s,
+        x: x + Math.cos(a + 1.2) * far,
+        y: y + Math.sin(a + 1.2) * far - 20,
+        alpha: 0,
+        scale: motion === 'full' ? 1.8 : 1,
+        angle: motion === 'full' ? 180 : 0,
+        duration: dur,
+        ease: 'Cubic.easeOut',
+        onComplete: i === 0 ? () => { parts.forEach((p) => p.destroy()); resolve(); } : undefined,
+      });
+    });
+  });
+}
