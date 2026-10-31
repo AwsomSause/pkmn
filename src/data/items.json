@@ -1487,6 +1487,36 @@
   }
  },
  {
+  "id": "snag-ball",
+  "name": "Snag Ball",
+  "description": "Extremely rare. Takes a Shadow Pokémon from an enemy trainer's team. Never works on ordinary Pokémon, wild Pokémon, gym leaders, Elite Four or champions.",
+  "category": "ball",
+  "iconAssetId": "ball.dusk",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 255,
+   "rule": "snag"
+  }
+ },
+ {
+  "id": "blessing-ball",
+  "name": "Blessing Ball",
+  "description": "Extremely rare. Made to meet a Blissful Pokémon in peace; a blessed Pokémon accepts it only after you have shown kindness. Useless on anything else.",
+  "category": "ball",
+  "iconAssetId": "ball.premier",
+  "usableInBattle": true,
+  "usableOutside": false,
+  "target": "enemy",
+  "effect": {
+   "kind": "catch",
+   "multiplier": 255,
+   "rule": "bless"
+  }
+ },
+ {
   "id": "premier-ball",
   "name": "Premier Ball",
   "description": "A plain white ball, made for celebrations.",

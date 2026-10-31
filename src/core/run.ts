@@ -12,7 +12,9 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
-import { soothePartyAfterBattle } from './shadow';
+import { makeShadow, rollShadowHeart, soothePartyAfterBattle } from './shadow';
+import { advanceShadowWorld, addFlag, gangNotes, gangRaidWon, liberatedHpDiscount, outbreakShadow, placeGangDen } from './shadowWorld/world';
+import { blissfulAfterBattle, blissfulAtRest } from './shadowWorld/blissful';
 import { wildCatchMultiplier } from './wildBehavior';
 import { interruptFlag, interruptingRival } from './rivals/interrupt';
 import { captureMultiplier, getArchetype, runArchetype, runPerks, healingMultiplier, moneyMultiplier, priceMultiplier, shopUnlockOffset, trainerPreviews, typeModifiers, xpMultiplier } from './archetypes';
@@ -114,10 +116,12 @@ import { pickStones } from './expedition/flow';
 import { gainBattleMaterials, RARE_TOKEN_EFFECTS } from './crafting';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { placeServiceStop } from './services/gate';
+import { placePlaza } from './plaza/gate';
+import { noteFoe, plazaClubLost, plazaClubWon } from './plaza/flow';
 import { allyLevel, applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
-import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
+import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState, freshPlaza } from './state';
 import { itemSlotLimit } from './trainerPerks';
 import { applyTrainerTier, readTrainerMemory } from './trainerTiers';
 import { getTheme, pickGymLeader, pickTheme, typesPool, wildEligibleSpecies } from './themes';
@@ -143,6 +147,7 @@ import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealM
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
+import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, quickWinBonus, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { withChampionTeam } from './story/championDefense';
 import { grandGauntlet, gauntletRival, markGauntletFight } from './story/gauntlet';
@@ -159,6 +164,7 @@ import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 import { withTeamTypes } from './rivals/adapt';
+import { finaleAssistRival } from './rivals/living';
 import { markTakeover, takeoverNote, takeoverRival } from './rivals/promotion';
 import { frontRunnerIntro, onFrontRunnerBattle } from './timeline/frontRunner';
 import { memoryPick } from './memories/encounters';
@@ -243,6 +249,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     usedThemes: [],
     usedLeaders: [],
     materials: {},
+    plaza: freshPlaza(),
     badges: [],
     ...(opts.ownedTrainers?.length ? { itemCounters: Object.fromEntries(opts.ownedTrainers.map((id) => [`owned:${id}`, 1])) } : {}),
     campaignId: campaign.id,
@@ -270,6 +277,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], speciesShiny: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
+    partyLife: createPartyLife(),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
@@ -490,14 +498,17 @@ function enterStage(content: Content, run: RunState, index: number): void {
   applyGrandInfluence(content, run);
   growCrisis(content, run);
   grandGauntlet(content, run);
+  advanceShadowWorld(content, run);
   // Rods, and Wave, Tropic and Harbor Mail, add stops to the new map; then the event ("?") stops.
   addItemStops(content, run);
   addEventStops(content, run);
   placeRaidDens(content, run);
+  placeGangDen(content, run);
   placeTotem(content, run);
   placeExpeditionGate(content, run);
   placeMinigameStop(content, run);
   placeServiceStop(run);
+  placePlaza(run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
@@ -973,7 +984,7 @@ export function raidPreview(content: Content, current: RunState, sideId: string)
   const { node, side } = raidDen(current, sideId);
   const def = getRaid(content, side.raidId!);
   const { speciesId, level } = raidBoss(content, current, def, node.id + sideId);
-  const notes = def.grand ? grandNotes(content, current, speciesId) : [];
+  const notes = def.grand ? grandNotes(content, current, speciesId) : gangNotes(content, current, def);
   const returning = Boolean(side.returning);
   if (returning) notes.push('It got away before, and it is back, stronger.');
   return {
@@ -1035,6 +1046,8 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
     const mv = content.moves.get(id);
     if (mv && !boss.moves.some((m) => m.id === id)) boss.moves.push({ id, pp: mv.pp });
   }
+  if (def.gang?.shadowBoss) makeShadow(boss, rollShadowHeart(content, new Rng(hashSeed(`${run.seed}::gang-heart::${def.id}:${run.encountersCompleted}`))));
+  if (def.gang) boss.statBoosts = { ...boss.statBoosts, hp: Math.max(0, (boss.statBoosts?.hp ?? 0) - liberatedHpDiscount(run, def.gang.faction)) };
   boss.hp = maxHp(content, boss);
   if (approach?.startHp) boss.hp = Math.max(1, Math.floor(boss.hp * approach.startHp));
   run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
@@ -1210,7 +1223,7 @@ function failRaid(content: Content, run: RunState): void {
 
 
 /** Raid victory: money, item rolls (a seeded generator), extra draft choices and maybe the boss joining (applies once: the battle is cleared right after). */
-function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
+function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number; notes?: string[] } {
   const def = getRaid(content, battle.raid!.id);
   const boss = currentEnemy(battle);
   const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent * (battle.raid!.rivalFinished ? 0.5 : 1)) / 100);
@@ -1222,6 +1235,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     const joined = structuredClone(boss);
     joined.uid = nextUid(run, 'p');
     delete joined.statBoosts;
+    // A rescued Shadow boss keeps its Heart Gauge: the purification journey starts here.
     joined.hp = maxHp(content, joined);
     joined.status = null;
     count(run, 'pokemonCaught');
@@ -1275,7 +1289,8 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   run.log.counters.raidBestTier = run.raids.bestTier;
   run.raids.done.push(def.id);
   if (def.grand) endGrandBattle(content, run, true, run.party[battle.activeIndex]?.uid);
-  return { items, draftExtra: Math.max(0, def.rewards.draftExtra + battle.raid!.draftDelta), money };
+  const notes = def.gang ? gangRaidWon(content, run, def) : undefined;
+  return { items, draftExtra: Math.max(0, def.rewards.draftExtra + battle.raid!.draftDelta), money, notes };
 }
 
 /**
@@ -1319,6 +1334,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (back) enemy.moves = back.member.moves!.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
     enemy.shiny = back ? false : plan.shiny;
     if (plan.shiny) countShiny(run, speciesId);
+    outbreakShadow(content, run, enemy, node.id);
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
     if (nemesis && back) beginNemesisBattle(content, run, nemesis, back.change, null);
@@ -1479,6 +1495,14 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
     if (hunted) run.battle.hunted = true;
     if (memoryHit) run.battle.memory = memoryHit.memory;
+    // Living Rival: a friend (or a rescued rival) arrives to help in the final boss (clear rules in rivals/living.ts).
+    if (plan.classId === CHAMPION_CLASS && isFinalBoss(content, run)) {
+      const assist = finaleAssistRival(content, run, Math.max(...team.map((m) => m.level)));
+      if (assist) {
+        run.battle.finaleAssist = assist;
+        run.battle.rivalNote = [run.battle.rivalNote, `${assist.name} burst through the doors: "Not without me!"`].filter(Boolean).join(' ');
+      }
+    }
     if (plan.memoryNote && !hunted && !nemesis) run.battle.memoryNote = plan.memoryNote;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
     const doublesCfg = content.balance.doubles;
@@ -1547,15 +1571,19 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'event') throw new Error('Make a choice at the event (eventView, then chooseEvent)');
   if (side.kind === 'totem') throw new Error('Review the Totem first (totemPreview), then enterTotem');
   if (side.kind === 'service') throw new Error('Use the service menu (serviceView, then useService)');
+  if (side.kind === 'plaza') throw new Error('Use the plaza menu (plazaView, then usePlaza)');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal' && noHealStops(run.rules)) return { run: current, message: 'Your No Rest contract forbids healing stops.' };
   if (side.kind === 'heal') {
     healParty(content, run);
+    partyLifeCamp(run);
     runSide.used = true;
     count(run, 'healStopsUsed');
+    // A Blissful Pokémon's aura calms the Shadow Pokémon resting beside it.
+    const calmed = blissfulAtRest(content, run);
     takeCheckpoint(run);
-    return { run, message: 'Your Pokémon were fully healed!' };
+    return { run, message: `Your Pokémon were fully healed!${calmed.length > 0 ? ` The Blissful aura lifts the haze from ${calmed.join(', ')}!` : ''}` };
   }
   run.phase = 'shop';
   // A Bike Voucher is traded for its bike (or money, if the player already has one).
@@ -1718,6 +1746,11 @@ export interface BattleEndResult {
   caughtSpeciesId: string | null;
   /** Shadow Pokémon purified by this battle (names). */
   shadowPurified: string[];
+  /** Recovery lines as a Shadow Pokémon opens up a stage ("Gastly: It nuzzles…"), snagged names, the Blissful aura's beneficiaries and a gang raid's aftermath. */
+  shadowStages: string[];
+  rescued: string[];
+  blissfulHealed: string[];
+  aftermath: string[];
   evolutions: (EvolutionResult & { uid: string })[];
   /** Moves devoted Pokémon learned from their bond after this win. */
   bondTaught?: { uid: string; moveId: string }[];
@@ -1749,6 +1782,8 @@ export interface TurnResult {
   cues: PresentationCue[];
   /** A raid was lost or timed out: the party is back on its feet and the map is next (the run goes on). */
   raidFailed?: boolean;
+  /** A Battle Club match was lost: a friendly loss, nobody is out. */
+  clubLost?: boolean;
   /** The whole party fainted but the rules sent the run back to its checkpoint. */
   wiped?: boolean;
   /** A narrative rival defeat (M12): the battle was lost for the story, the party is healed and the run goes on. Never a game over. */
@@ -1847,6 +1882,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const enemyCombo_ = enemyCombo(content, run, enemyBefore);
   if (enemyCombo_) engineEvents.push(enemyCombo_);
   updateBondsTurn(run, engineEvents);
+  partyLifeTurn(content, run, engineEvents);
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
   run.rng.hyper = hyperRng.state;
@@ -1874,6 +1910,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   for (const r of reveal) if (r) events.push(r);
   events.push(...trackFeelings(content, current, run, events as BattleEvent[]));
   if (battle.outcome === 'win') bondVictory(run, Object.values(run.story.histories).filter((h) => h.lastBattle === run.encountersCompleted && run.party.some((m) => m.uid === h.uid)).map((h) => h.uid));
+  if (battle.outcome === 'win') partyLifeVictory(content, run);
   const cues = recordBattleTurn(content, current, run, events);
   // Trainer dialogue for what just happened (presentation only: it never changes the battle).
   const drama = planDrama(content, run, current.battle!, events as BattleEvent[], dialogue);
@@ -1908,6 +1945,11 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
     return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
+  }
+  if (battle.outcome === 'lose' && battle.event?.eventId === 'plaza:club') {
+    plazaClubLost(content, run);
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end: null, defeated: false, cues, drama, clubLost: true };
   }
   if (battle.outcome === 'lose' && battle.narrative && getNarrativeDef(battle.narrative.id)) {
     const def = getNarrativeDef(battle.narrative.id)!;
@@ -2140,7 +2182,24 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     voiceJoined = joined.speciesId;
   }
 
+  // Snagged Shadow Pokémon (Snag Ball) join you once the fight is won; a lost fight loses them.
+  const rescued: string[] = [];
+  if (battle.outcome === 'win') {
+    for (const taken of battle.snagged ?? []) {
+      const mon = structuredClone(taken);
+      mon.uid = nextUid(run, 'p');
+      count(run, 'pokemonCaught');
+      discover(run, mon.speciesId, true);
+      addFlag(run, 'snagged');
+      addFlag(run, 'rescued');
+      caughtPending.push({ kind: 'caught', mon });
+      rescued.push(speciesName(content, mon.speciesId));
+    }
+  }
+
   let shadowPurified: string[] = [];
+  const shadowStages: string[] = [];
+  let blissfulHealed: string[] = [];
   if (battle.outcome === 'win') {
     if (battle.rivalId) count(run, 'rivalBattlesWon');
     const { perBattleWon, perBossWon } = content.balance.friendship;
@@ -2150,7 +2209,10 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
       if (mon.hp > 0 && battle.participants.includes(mon.uid)) changeFriendship(content, mon, boss ? perBossWon : perBattleWon, gainMultiplier);
     }
     // Shadow Pokémon that fought are soothed; at 0 the haze lifts.
-    shadowPurified = soothePartyAfterBattle(content, run, battle.participants);
+    shadowPurified = soothePartyAfterBattle(content, run, battle.participants, shadowStages);
+    // Freeing a Pokémon from the haze is a kindness the world remembers.
+    if (shadowPurified.length > 0) addFlag(run, 'kindness', shadowPurified.length);
+    blissfulHealed = blissfulAfterBattle(content, run);
   }
 
   const evolutions: BattleEndResult['evolutions'] = [];
@@ -2245,6 +2307,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
       if (run.party.length === 1) count(run, 'bossWinsSolo');
     } else {
       count(run, battle.kind === 'wild' ? 'wildDefeated' : 'trainersDefeated');
+      if (battle.kind === 'trainer' && battle.trainer && !battle.trainer.leaderId && !battle.event && !battle.rival) noteFoe(run, battle.trainer.name, battle.trainer.classId);
     }
   }
   // Encore! Hype carries between battles and resets after a boss battle.
@@ -2296,11 +2359,11 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   if (leadAsk) run.pending.push({ kind: 'askLead', ...leadAsk });
   // An event battle you won pays its own rewards.
   const chained = outcome === 'win' && !!battle.event && eventChainNext(content, run, battle.event);
-  const eventRewards = outcome === 'win' && battle.event && !chained ? eventBattleWon(content, run, battle.event) : [];
+  const eventRewards = outcome === 'win' && battle.event && !chained ? (battle.event.eventId === 'plaza:club' ? plazaClubWon(content, run) : eventBattleWon(content, run, battle.event)) : [];
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = chained ? 'eventChain' : battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, recap, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, shadowStages, rescued, blissfulHealed, aftermath: (raidWin as { notes?: string[] } | null)?.notes ?? [], evolutions, bondTaught, recap, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**

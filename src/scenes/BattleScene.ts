@@ -16,6 +16,7 @@ import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primaryS
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { runPerks } from '../core/archetypes';
 import { abilityOf, calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
+import { heartStage } from '../core/shadow';
 import { formIntro } from '../core/presentation/sceneEffects';
 import { finalRivalArenaTheme } from '../core/story/highHype';
 import { ultimateRival } from '../core/rivals/ultimate';
@@ -1022,6 +1023,12 @@ export class BattleScene extends Phaser.Scene {
         this.showSprite('enemy', this.shown.enemy);
         await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
         await this.say(battle.nemesis ? `Your nemesis, ${this.speciesName(this.shown.enemy)}, appeared!` : `A wild ${this.speciesName(this.shown.enemy)} appeared!`);
+        // Shadow and Blissful foes announce themselves (a dark haze / soft motes) before the fight.
+        if (this.shown.enemy.blissful) {
+          const aura = services().session.content.shadowWorld.auras.find((x) => x.id === this.shown.enemy!.blissful!.aura);
+          await burstReveal(this, ENEMY_POS.x, ENEMY_POS.y - 60, Number.parseInt((aura?.color ?? '#ffe9a8').slice(1), 16), this.motion).done;
+          await this.say('It glows with a soft, serene light. It does not seem to want a fight.');
+        } else if (this.shown.enemy.shadow) await this.say('A dark aura clings to it, and its eyes are empty.');
         if (battle.nemesisNote) await this.say(battle.nemesisNote);
       }
       if (this.shown.enemy.shiny) await this.shinySparkle();
@@ -1280,7 +1287,7 @@ export class BattleScene extends Phaser.Scene {
     // Boss intent (#117): bosses, raids and totems telegraph the move they value most.
     const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon(), this.run.party) : null;
     const shadow = this.activeMon().shadow;
-    this.message.setText(`${intent ? `${intent.text}\n` : ''}${shadow ? `Shadow haze · Heart Gauge ${shadow.heart}/100 (hits harder, takes more)\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
+    this.message.setText(`${intent ? `${intent.text}\n` : ''}${shadow ? `Shadow haze · ${heartStage(content, shadow.heart)} · Heart Gauge ${shadow.heart}/100 (hits harder, takes more)\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
     const label = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z', dynamax: 'Max' })[c.kind];
     const onLabel = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
@@ -1570,6 +1577,12 @@ export class BattleScene extends Phaser.Scene {
       this.scene.start(sceneForRun(result.run));
       return;
     }
+    if (result.clubLost) {
+      await this.say('The match is over. The club patches your team up: no hard feelings.');
+      await exitWipe(this, this.motion, this.wipeMask());
+      this.scene.start(sceneForRun(result.run));
+      return;
+    }
     if (this.role === 'rival' && (result.narrativeDefeat || result.wiped || result.defeated)) await this.fx.flourish('enemy', 'rival.win', ENEMY_POS);
     if (result.narrativeDefeat) {
       // The story loss: a heavy shake (skipped when battle animations are off), then the rival's words.
@@ -1627,7 +1640,11 @@ export class BattleScene extends Phaser.Scene {
     const mats = Object.entries(end.materials ?? {});
     if (mats.length > 0) await this.say(`Materials: ${mats.map(([id, n]) => `${n} ${materialName(id)}`).join(', ')}.`);
     for (const reward of end.eventRewards) await this.say(`Event prize: ${reward}!`);
+    for (const n of end.rescued ?? []) await this.say(`You snagged ${n} out of enemy hands. It flinches from you; show it care.`);
+    for (const line of end.shadowStages ?? []) await this.say(line);
     for (const n of end.shadowPurified) await this.say(`The Shadow haze lifts from ${n}! It is purified!`);
+    if ((end.blissfulHealed ?? []).length > 0) await this.say(`A soft Blissful light mends ${end.blissfulHealed.join(', ')}.`);
+    for (const line of end.aftermath ?? []) await this.say(line);
     if (end.voiceJoined) await this.say(`${content.species.get(end.voiceJoined)?.name ?? 'The Pokémon'} heard your voice. It wants to come with you!`);
     if (end.badge) {
       playSfxLazy(this, 'me.badge');

@@ -16,7 +16,7 @@
 // after a hit (Static, Rough Skin), at the end of the turn (Speed Boost) and
 // when switching out (Regenerator).
 
-import { shadowDamageMultiplier } from '../shadow';
+import { shadowDamageMultiplier, shadowResists } from '../shadow';
 import { championsAuraStages, firstStrikeBonus } from '../trainerEvolution';
 import { freshDrama } from '../drama/schema';
 import type { Perks, TypeModifiers } from '../archetypes';
@@ -78,6 +78,7 @@ import {
 import { genderOf, oppositeGender, sameGender } from '../gender';
 import * as Held from './held';
 import { rivalStrikeDamage } from '../raid/rivalAlly';
+import { finaleStrikeDamage } from '../rivals/living';
 import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
@@ -598,8 +599,15 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   } else if (action.kind === 'cheer') {
     useCheer(ctx, action.cheer, events);
   } else if (action.kind === 'item') {
+    const snaggedBefore = battle.snagged?.length ?? 0;
     useItemInBattle(ctx, action.itemId, action.targetIndex, events);
     if (battle.outcome === 'caught') {
+      battle.turn += 1;
+      return events;
+    }
+    // A snagged Pokémon leaves the field at once: the trainer sends the next one, or the fight is won.
+    if ((battle.snagged?.length ?? 0) > snaggedBefore) {
+      settleFaints(ctx, events);
       battle.turn += 1;
       return events;
     }
@@ -666,10 +674,15 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
         : [{ user: enemy, target: playerC, move: enemyMove, slot: enemyMoveIndex }, { user: playerC, target: enemy, move: playerMove, slot: action.index }];
     actions.forEach((a, index) => {
       if (anyFainted(playerC, enemy) || a.user.mon.hp <= 0) return;
-      if (a.user.side === 'enemy' && (enemyActed || loseFreeTurn(battle, events))) return;
+      if (a.user.side === 'enemy' && (enemyActed || loseFreeTurn(battle, events) || blissfulCalm(ctx, enemy, events))) return;
+      // A Sealed Shadow Pokémon sometimes ignores its trainer (it trusts no one yet).
+      if (a.user.side === 'player' && a.user.mon.shadow && shadowResists(content, a.user.mon, rng.int(0, 99))) {
+        events.push({ type: 'raid', tone: 'info', text: `${getSpecies(content, a.user.mon.speciesId).name} is lost in the haze and ignores your command!` });
+        return;
+      }
       actWithRage(ctx, a.user, enemy, events, () => executeMove(ctx, a.user, a.target, a.move, a.slot, index === 0, events));
     });
-  } else if (!enemyActed && !loseFreeTurn(battle, events)) {
+  } else if (!enemyActed && !loseFreeTurn(battle, events) && !blissfulCalm(ctx, enemy, events)) {
     actWithRage(ctx, enemy, enemy, events, () => executeMove(ctx, enemy, playerC, enemyMove, enemyMoveIndex, false, events));
   }
   recordFaints(ctx, playerC, enemy, events);
@@ -702,6 +715,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   for (const c of [playerC, enemy]) syncForms(ctx, c, events, true);
   endTurnStates(ctx, playerC, enemy, events);
   const raidTimeout = battle.raid ? raidEndOfTurn(ctx, playerC, enemy, events) : false;
+  finaleAssistStrike(ctx, playerC, enemy, events);
   if (battle.totem && !battle.outcome) {
     totemPhases(ctx, enemy, events);
     totemFieldEffect(ctx, enemy, [playerC], events);
@@ -757,6 +771,21 @@ export function applyHype(ctx: BattleContext, events: BattleEvent[]): void {
       battle.hype = 0;
       battle.hypeTurns = meter.turns;
     }
+  }
+}
+
+/** Living Rival: the rival who arrived in the final boss strikes it (never lethal, at most three times). */
+function finaleAssistStrike(ctx: BattleContext, player: Combatant, enemy: Combatant, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const assist = battle.finaleAssist;
+  if (!assist || assist.strikesLeft <= 0 || battle.outcome || player.mon.hp <= 0 || enemy.mon.hp <= 1) return;
+  const hit = finaleStrikeDamage(content, assist, enemy.mon);
+  assist.strikesLeft -= 1;
+  events.push({ type: 'raid', tone: 'info', text: `${assist.name}'s ${getSpecies(content, assist.speciesId).name} strikes the boss!` });
+  const amount = Math.min(enemy.mon.hp - 1, absorbHit(content, battle, enemy.mon, hit.amount));
+  if (amount > 0) {
+    enemy.mon.hp -= amount;
+    events.push({ type: 'damage', side: 'enemy', amount, hpAfter: enemy.mon.hp, effectiveness: hit.effectiveness, crit: false });
   }
 }
 
@@ -1018,6 +1047,8 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
   const noHeal = raidItemProblem(ctx.content, ctx.battle, item.category === 'healing' || item.category === 'revive');
   if (noHeal) return noHeal;
   if (item.effect.kind === 'catch') {
+    const special = ballRuleProblem(ctx, item.effect.rule);
+    if (special !== undefined) return special;
     if (ctx.battle.kind !== 'wild') return "You can't catch another trainer's Pokémon!";
     if (ctx.battle.totem) return "A Totem can't be caught mid-fight. Beat it and something rare may follow!";
     if (ctx.battle.raid) return "A raid boss can't be caught mid-fight. Beat it and it may join you!";
@@ -1034,6 +1065,35 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
   if (!target) return 'Choose a Pokémon to use it on.';
   if (item.effect.kind === 'urge') return urgeProblem(ctx, item.effect.what, target, targetIndex!);
   return itemUseProblem(ctx.content, item, target);
+}
+
+/**
+ * Snag Ball and Blessing Ball rules (APPROVED.md §12-13). Returns undefined for any other ball (the usual rules apply),
+ * null when the ball may be used, or the reason it cannot. A Blissful Pokémon only accepts a Blessing Ball.
+ */
+function ballRuleProblem(ctx: Pick<BattleContext, 'battle'>, rule: Extract<ItemEffect, { kind: 'catch' }>['rule']): string | null | undefined {
+  const { battle } = ctx;
+  const foe = (battle.enemyTeam as BattleState['enemyTeam'] | undefined)?.[battle.enemyIndex];
+  if (!foe) return undefined;
+  if (rule === 'snag') {
+    if (battle.kind !== 'trainer') return 'A Snag Ball only works on a Shadow Pokémon held by an enemy trainer.';
+    if (battle.narrative || battle.trainer?.leaderId || battle.doubles) return "This trainer's Pokémon are protected: a Snag Ball can't take them.";
+    return foe.shadow ? null : 'It only works on a Shadow Pokémon. Ordinary trainers keep their Pokémon.';
+  }
+  if (rule === 'bless') {
+    if (battle.kind !== 'wild' || battle.raid || battle.totem) return 'A Blessing Ball is only for meeting a Blissful Pokémon in the wild.';
+    return foe.blissful ? null : 'Nothing here answers to a Blessing Ball.';
+  }
+  if (battle.kind === 'wild' && foe.blissful && !battle.raid) return 'It is too gentle to be caught with a ball made for battle. Only a Blessing Ball will do.';
+  return undefined;
+}
+
+/** A Blissful wild Pokémon is calm: it watches you instead of attacking. */
+function blissfulCalm(ctx: BattleContext, enemy: Combatant, events: BattleEvent[]): boolean {
+  const { battle } = ctx;
+  if (battle.kind !== 'wild' || battle.raid || !enemy.mon.blissful || enemy.mon.hp <= 0) return false;
+  events.push({ type: 'raid', tone: 'info', text: `${getSpecies(ctx.content, enemy.mon.speciesId).name} watches you calmly. Its blessing hums in the air.` });
+  return true;
 }
 
 const isBerryItem = (content: Content, id: string) => content.catalog.get(id)?.family.startsWith('Berries') === true;
@@ -1053,6 +1113,16 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
   const { content, battle } = ctx;
   const item = getItem(content, itemId);
   consumeItem(ctx.inventory, itemId);
+  if (item.effect.kind === 'catch' && item.effect.rule === 'snag') {
+    // Snagging never fails. The Pokémon leaves the trainer's team and joins you when the battle is won.
+    const foe = currentEnemy(battle);
+    const taken = structuredClone(foe);
+    taken.hp = Math.max(1, foe.hp);
+    (battle.snagged ??= []).push(taken);
+    foe.hp = 0;
+    events.push({ type: 'ball', itemId, shakes: 3, caught: true });
+    return;
+  }
   if (item.effect.kind === 'catch') {
     const enemy = currentEnemy(battle);
     const species = getSpecies(content, enemy.speciesId);

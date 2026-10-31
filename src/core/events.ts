@@ -23,6 +23,7 @@ import { addItem } from './items';
 import { makeDoubles } from './battle/doubles';
 import { championTeam, retiredTeam } from './story/championDefense';
 import { oldFoe } from './story/promises';
+import { featuredRival, rivalBeaten, rivalFightTeam, rivalPath } from './rivals/living';
 import { openFeud, settleFeud } from './story/feud';
 import { noteEventMorality } from './story/nemesis';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
@@ -36,6 +37,9 @@ import { scavengerBonus } from './bank';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, countShiny, discover } from './progress';
 import { eggStatus, layEgg } from './eggs';
+import { makeShadow, rollShadowHeart } from './shadow';
+import { addFlag } from './shadowWorld/world';
+import { grantBlessing, makeBlissful } from './shadowWorld/blissful';
 import { eggMoveOptions, familyId, teachEggMove } from './mastery';
 import { getCampaign, levelCap, runLevelCap } from './regions';
 import { auditEncounter, auditSpecies, directSpecies, type EncounterSource } from './encounterDirector';
@@ -90,6 +94,10 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return run.story.rivals.some((r) => r.encounters >= c.atLeast);
     case 'rivalAlly':
       return run.story.rivals.some((r) => r.state === 'ally');
+    case 'rivalPath':
+      return rivalPath(run) === c.path;
+    case 'rivalBeaten':
+      return rivalBeaten(run);
     case 'crisis':
       return crisisLevel(run) >= c.atLeast && crisisLevel(run) <= c.atMost;
     case 'aid':
@@ -98,6 +106,10 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return tournamentRound(run) === c.round;
     case 'flag':
       return Number(run.story.flags[`ev:${c.key}`] ?? 0) >= c.atLeast && Number(run.story.flags[`ev:${c.key}`] ?? 0) <= c.atMost;
+    case 'partyBlissful':
+      return run.party.some((m) => m.blissful);
+    case 'partyShadow':
+      return run.party.some((m) => m.shadow);
     case 'oldFoe':
       return oldFoe(run) !== null;
     case 'feud':
@@ -190,6 +202,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs a Pokémon with friendship ${c.atLeast}`;
     case 'rivalAlly':
       return 'Needs a rival who has become a friend';
+    case 'rivalPath':
+      return c.path === 'friend' ? 'Needs a rival who is becoming a friend' : c.path === 'rival' ? 'Needs a rival who sees you as an adversary' : 'Needs a rival who has not decided about you';
+    case 'rivalBeaten':
+      return 'Needs a rival you beat last time';
     case 'rivalMet':
       return `Needs a rival you have fought ${c.atLeast} time${c.atLeast === 1 ? '' : 's'}`;
     case 'partyTag':
@@ -208,6 +224,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs the tournament bracket to be at this round';
     case 'flag':
       return 'Needs something you did earlier';
+    case 'partyBlissful':
+      return 'Needs a Blissful Pokémon in your party';
+    case 'partyShadow':
+      return 'Needs a Shadow Pokémon in your party';
     case 'oldFoe':
       return 'Needs a wild Pokémon that once beat you';
     case 'feud':
@@ -522,7 +542,7 @@ function itemName(content: Content, id: string): string {
   return content.catalog.get(id)?.name ?? content.items.get(id)?.name ?? id;
 }
 
-function effectWords(content: Content, e: EventEffect): string {
+export function effectWords(content: Content, e: EventEffect): string {
   switch (e.kind) {
     case 'money':
       return e.amount >= 0 ? `+₽${e.amount}` : `−₽${-e.amount}`;
@@ -553,7 +573,11 @@ function effectWords(content: Content, e: EventEffect): string {
     case 'levels':
       return `${e.who === 'lead' ? 'lead' : 'party'} +${e.amount} level${e.amount === 1 ? '' : 's'}`;
     case 'join':
-      return 'a Pokémon joins';
+      return e.shadow ? 'a Shadow Pokémon is rescued' : e.blissful ? 'a Blissful Pokémon joins' : 'a Pokémon joins';
+    case 'blessing':
+      return content.shadowWorld.blessings.find((b) => b.id === e.id)?.name ?? 'a blessing';
+    case 'awaken':
+      return 'a Pokémon awakens';
     case 'egg':
       return 'you get an Egg';
     case 'eggMove':
@@ -575,6 +599,8 @@ function effectWords(content: Content, e: EventEffect): string {
     case 'aid':
       return 'allies gathered';
     case 'flag':
+      return '';
+    case 'moment':
       return '';
     case 'relic':
       return `the ${e.name}`;
@@ -655,7 +681,7 @@ export function isGiftable(content: Content, id: string): boolean {
 }
 
 /** Applies one effect (mutates `run`) and says what changed, or '' when nothing did. */
-function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, tradeUid?: string): string {
+export function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, tradeUid?: string): string {
   switch (e.kind) {
     case 'money': {
       const bonus = e.amount > 0 ? scavengerBonus(content, run.licenses, rng) : 0;
@@ -731,10 +757,25 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, 
       const mon = newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'p');
       mon.shiny = rollShiny(content, rng, runAttributeEffects(content, run).shinyChance * e.shinyMultiplier);
       if (mon.shiny) countShiny(run, mon.speciesId);
+      // A rescued Shadow Pokémon (hearts roll from a generator of its own so no event roll moves) or a Blissful one.
+      if (e.shadow) {
+        makeShadow(mon, rollShadowHeart(content, new Rng(hashSeed(`${run.seed}::shadow-join::${mon.uid}`))));
+        addFlag(run, 'rescued');
+      }
+      if (e.blissful) makeBlissful(content, mon);
       discover(run, mon.speciesId, true);
       count(run, 'pokemonCaught');
       run.pending.push({ kind: 'caught', mon });
-      return `${content.species.get(mon.speciesId)?.name ?? mon.speciesId} wants to join you!`;
+      return `${content.species.get(mon.speciesId)?.name ?? mon.speciesId} ${e.shadow ? 'was rescued from the haze and' : ''} wants to join you!`.replace('  ', ' ');
+    }
+    case 'blessing':
+      return grantBlessing(content, run, e.id);
+    case 'awaken': {
+      const pick = run.party.filter((m) => m.hp > 0 && !m.shadow && !m.blissful && m.friendship >= 150).sort((a, b) => b.friendship - a.friendship)[0];
+      if (!pick) return '';
+      makeBlissful(content, pick);
+      addFlag(run, 'awakened');
+      return `${content.species.get(pick.speciesId)?.name ?? pick.speciesId} awakens, wrapped in a soft Blissful light!`;
     }
     case 'egg': {
       const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
@@ -774,7 +815,10 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, 
     case 'tournament':
       return setTournament(content, run, e.round);
     case 'flag':
-      run.story.flags[`ev:${e.key}`] = Number(run.story.flags[`ev:${e.key}`] ?? 0) + e.amount;
+      run.story.flags[`ev:${e.key}`] = Math.max(0, Number(run.story.flags[`ev:${e.key}`] ?? 0) + e.amount);
+      return '';
+    case 'moment':
+      emit(content, run, 'storyMoment', { actors: [], data: { def: 'rival-living', suppressed: false }, importance: e.importance, text: e.text });
       return '';
     case 'relic': {
       if (run.story.flags[`relic:${e.id}`]) return '';
@@ -880,18 +924,26 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     const enemy = newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
     enemy.shiny = rollShiny(content, rng, runAttributeEffects(content, run).shinyChance * b.shinyMultiplier);
     if (enemy.shiny) countShiny(run, enemy.speciesId);
+    if (b.shadow) makeShadow(enemy, rollShadowHeart(content, new Rng(hashSeed(`${run.seed}::shadow-foe::${enemy.uid}`))));
+    if (b.blissful) makeBlissful(content, enemy);
     run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
   } else {
     const boss = b.bossId ? content.bosses.get(b.bossId) : undefined;
     const ghost = b.retired ? retiredTeam(run.story) : b.ghost ? championTeam(run.story) : [];
-    const authored = ghost.length > 0 ? 'rival-ghost-team' : boss ? 'event-boss-signature' : null;
-    const team = ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
+    const authored = ghost.length > 0 || (b.rival && featuredRival(run)) ? 'rival-ghost-team' : boss ? 'event-boss-signature' : null;
+    const rival = b.rival ? featuredRival(run) : null;
+    const rivalTeam = rival && ghost.length === 0 ? rivalFightTeam(content, rival) : [];
+    const team = rivalTeam.length > 0 ? rivalTeam.slice(0, b.size).map((id, i) => {
+      const level = Math.min(cap, Math.max(1, base + (i === Math.min(b.size, rivalTeam.length) - 1 ? 1 : 0)));
+      return newMon(content, run, id, level, 'e');
+    }) : ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
       const level = Math.min(cap, Math.max(1, base + (i === b.size - 1 ? 1 : 0)));
       const speciesId = boss ? boss.signature[i % boss.signature.length]! : pickSpecies(content, run, [], b.types, rng);
       return newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
     });
     if (authored) for (const mon of team) auditEncounter(content, 'event', mon, authored);
-    run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: b.name, leaderId: null });
+    team.slice(0, b.shadow).forEach((mon) => makeShadow(mon, rollShadowHeart(content, new Rng(hashSeed(`${run.seed}::shadow-foe::${mon.uid}`)))));
+    run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: rival ? rival.name : b.name, leaderId: null });
     if (b.ally && content.species.has(b.ally) && team.length >= 2) {
       // A temporary ally joins the party for this fight only (finishBattle sends it home).
       const ally = newMon(content, run, b.ally, Math.max(1, base), 'p');
@@ -930,6 +982,12 @@ export function eventChainNext(content: Content, run: RunState, event: EventBatt
   if (!battle || step + 1 >= battle.chain) return false;
   run.eventChain = { eventId: event.eventId, choiceIndex: event.choiceIndex, sideId: event.sideId, success: event.success, step: step + 1 };
   return true;
+}
+
+/** Starts a Battle Club match (core/plaza): an event battle at the plaza's node, with the plaza's own win handling. */
+export function startClubBattle(content: Content, run: RunState, b: EventBattle, rng: Rng, event: EventBattleRef): void {
+  const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
+  startEventBattle(content, run, node, b, rng, event);
 }
 
 /** After an event battle you won: its `win` effects (mutates `run`). Returns the changes in words. */
