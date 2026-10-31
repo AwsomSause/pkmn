@@ -153,6 +153,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'ui.trainercard', kind: 'image', category: 'ui', path: 'images/packs/uie/custom/trainer_card.png', lazy: true },
   // Party list icon boxes (UIE pack Graphics/Custom UI/Party), loaded the first time a party list opens.
   ...['icon_box', 'icon_box_faint'].map((n): AssetEntry => ({ id: `ui.party.${n}`, kind: 'image', category: 'ui', path: `images/packs/uie/party/${n}.png`, lazy: true })),
+  // Bag illustration (UIE pack Graphics/Custom UI/Bag), shown in the Bag menu header.
+  { id: 'ui.bag.main', kind: 'image', category: 'ui', path: 'images/packs/uie/bag/bag_1.png', lazy: true },
   // Pokédex seen/caught marks (UIE pack Graphics/Custom UI/Dex), used in the Research Room rows.
   ...['seen', 'caught'].map((n): AssetEntry => ({ id: `ui.dex.${n}`, kind: 'image', category: 'ui', path: `images/packs/uie/dex/${n}.png`, lazy: true })),
   // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.

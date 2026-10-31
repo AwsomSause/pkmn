@@ -44,6 +44,8 @@ export interface PickerConfig {
   start?: number;
   /** Opt-in Aero look (glass panels, glossy rows). Hub screens leave it off. */
   glass?: boolean;
+  /** A small picture in the header (a lazy asset id); it appears once loaded. */
+  badge?: string;
 }
 
 const LIST_TOP = 82;
@@ -77,6 +79,14 @@ export class Picker {
       this.root.add(band);
     }
     this.root.add(scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5));
+    if (config.badge) {
+      const id = config.badge;
+      const put = (): void => {
+        if (!this.closed) this.root.add(scene.add.image(GAME_WIDTH - 260, 47, id).setDisplaySize(44, 44).setName('picker-badge'));
+      };
+      if (scene.textures.exists(id)) put();
+      else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && put());
+    }
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
     this.root.add(scene.add.text(GAME_WIDTH - 48, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
 
