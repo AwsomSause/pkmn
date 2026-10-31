@@ -65,7 +65,7 @@ export const RunRulesDataSchema = z.object({
     once: z.object({ pool: z.string().optional(), trainer: z.string().optional(), title: z.string().optional(), bankCredits: z.number().int().optional(), text: z.string() }),
     repeat: z.object({ bankCredits: z.number().int().optional(), candies: z.number().int().optional(), text: z.string() }),
   })),
-  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), maxWipes: z.number().int().min(1).optional(), xpScale: z.number().positive().optional(), spookyChance: z.number().min(0).max(1).optional(), campaignId: z.string().optional(), rewardScale: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
+  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), maxWipes: z.number().int().min(1).optional(), xpScale: z.number().positive().optional(), spookyChance: z.number().min(0).max(1).optional(), campaignId: z.string().optional(), bundles: z.array(z.string()).optional(), rewardScale: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
 });
 export const RUN_RULES = RunRulesDataSchema.parse(rulesJson);
 
@@ -116,6 +116,9 @@ export function rewardMultiplier(choice: RulesChoice): number {
   return Math.round(total * 100) / 100;
 }
 
+/** The modifiers a run plays by: the mode's own bundle (Draft Lab's random draft, Research Expedition's scarce supplies...) and the player's. */
+export const modeModifiers = (choice: Pick<RulesChoice, 'modeId' | 'modifierIds'>): string[] => [...new Set([...(getMode(choice.modeId)?.bundles ?? []), ...choice.modifierIds])];
+
 /** The snapshot stored in the run. Throws on a choice that cannot start. */
 export function makeRules(choice: RulesChoice): RunRules {
   const problem = rulesProblem(choice);
@@ -124,7 +127,7 @@ export function makeRules(choice: RulesChoice): RunRules {
     ruleVersion: RUN_RULES.ruleVersion,
     modeId: choice.modeId,
     difficultyId: choice.difficultyId,
-    modifierIds: [...choice.modifierIds],
+    modifierIds: modeModifiers(choice),
     deathBlock: choice.deathBlock,
     deathBlockUsed: false,
     progressionEligible: getMode(choice.modeId)!.progressionEligible && !choice.noRewards,
@@ -164,6 +167,7 @@ export function rulesLines(choice: RulesChoice): string[] {
   const mode = getMode(choice.modeId);
   const difficulty = getDifficulty(choice.difficultyId);
   const lines = [`Mode: ${mode?.name ?? choice.modeId} - ${mode?.blurb ?? ''}`, `Difficulty: ${difficulty?.name ?? choice.difficultyId} - ${difficulty?.blurb ?? ''}`];
+  for (const id of getMode(choice.modeId)?.bundles ?? []) lines.push(`Mode rule: ${getModifier(id)?.name ?? id} - ${getModifier(id)?.blurb ?? ''}`);
   for (const id of choice.modifierIds) lines.push(`Modifier: ${getModifier(id)?.name ?? id} - ${getModifier(id)?.blurb ?? ''}`);
   if (choice.deathBlock) lines.push(`Death-Block on: ${RUN_RULES.deathBlock.rule}`);
   lines.push(mode?.progressionEligible ? `Reward multiplier: x${rewardMultiplier(choice).toFixed(2)}` : 'No Bank Credits, Research Points, candies, unlocks or achievements in this mode.');
