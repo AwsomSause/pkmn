@@ -16,6 +16,10 @@ export interface EventOpts {
   effect?: string;
   /** Only in runs started while this game event (gameEvents.json) is on. */
   gameEvent?: string;
+  /** A follow-up scene: gets a stop on the first later stage where its `requires` hold. */
+  callback?: boolean;
+  /** A secret path: shows as "?" until one of these holds. */
+  secret?: Json[];
 }
 
 export function ev(id: string, name: string, group: string, o: EventOpts, intro: string, choices: Json[]): Json {
@@ -73,6 +77,18 @@ export const better = (extra = 0): Json => ({ kind: 'betterDraft', extra });
 export const gym = (): Json => ({ kind: 'gymPreview' });
 export const flag = (key: string, amount = 1): Json => ({ kind: 'flag', key, amount });
 export const reveal = (): Json => ({ kind: 'revealStops' });
+/** Fog of war: the map shows this many more columns ahead for the rest of the stage. */
+export const scout = (columns: number): Json => ({ kind: 'scout', columns });
+/** Another event stop opens beside this node (the next room of a landmark). */
+export const room = (eventId: string): Json => ({ kind: 'addEvent', eventId });
+/** The next room is one of these, picked at random (a Mystery Dungeon floor). */
+export const roomFrom = (...ids: string[]): Json => ({ kind: 'addEventFrom', ids });
+/** A weather front rolls in over the columns ahead. */
+export const front = (weather: string, columns = 3): Json => ({ kind: 'front', weather, columns });
+/** A story flag condition: at least / at most. */
+export const flagIs = (key: string, atLeast = 1, atMost = 99): Json => ({ kind: 'flag', key, atLeast, atMost });
+/** A party Pokémon with one of these abilities. */
+export const ability = (label: string, ...abilities: string[]): Json => ({ kind: 'partyAbility', abilities, label });
 
 // ---------- battles ----------
 export const wild = (o: { species?: string[]; types?: string[]; lv?: number; shiny?: number; win?: Json[]; recall?: boolean; chain?: number } = {}): Json => ({

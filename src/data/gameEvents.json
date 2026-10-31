@@ -704,6 +704,506 @@
    ]
   },
   {
+   "id": "legendary-beasts-chase",
+   "version": 1,
+   "name": "Legendary Beasts Chase",
+   "kind": "weekly",
+   "description": "Raikou, Entei and Suicune are roaming the region. Follow their trail, and be ready when they turn to face you.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Raikou, Entei and Suicune roam every map from the third stage, moving as you do; tracks and sightings turn up on the road.",
+   "modifiers": [
+    {
+     "kind": "xpMultiplier",
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "beast-clue-thunder",
+    "beast-clue-ash",
+    "beast-clue-ripple",
+    "beast-lookout",
+    "legend-clue-tracks",
+    "legend-clue-song",
+    "lookout-tower"
+   ],
+   "objectives": [
+    {
+     "id": "trail",
+     "text": "Follow 4 trails (clues)",
+     "counter": "eventClues",
+     "atLeast": 4,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "face",
+     "text": "Face a beast",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    },
+    {
+     "id": "hunt",
+     "text": "Face all three",
+     "counter": "eventBossesWon",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 150
+     }
+    },
+    {
+     "id": "badges",
+     "text": "Win 3 gym badges",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 80
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 450,
+    "title": "Beast Tracker",
+    "pool": "rare"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#e0a030",
+    "icon": "item.sun_stone"
+   },
+   "contentTags": [
+    "legendary",
+    "roaming"
+   ]
+  },
+  {
+   "id": "campfire-tales-week",
+   "version": 1,
+   "name": "Campfire Tales",
+   "kind": "weekly",
+   "description": "Storytellers are out and the fires are lit. Every stop is a chance to hear, or tell, a story.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Storytellers, ghost stories and Pokémon memories turn up at camps and on the road; your Pokémon bond faster at rest.",
+   "modifiers": [
+    {
+     "kind": "researchMultiplier",
+     "value": 1.15
+    }
+   ],
+   "mapEvents": [
+    "tale-storyteller",
+    "tale-ghost-story",
+    "tale-pokemon-memory",
+    "tale-world-lore",
+    "tale-festival-night",
+    "camp-checkpoint",
+    "camp-council",
+    "starry-camp"
+   ],
+   "objectives": [
+    {
+     "id": "tales",
+     "text": "Hear 4 tales (clues)",
+     "counter": "eventClues",
+     "atLeast": 4,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "events",
+     "text": "Finish 8 map events",
+     "counter": "eventsCompleted",
+     "atLeast": 8,
+     "reward": {
+      "researchPoints": 70
+     }
+    },
+    {
+     "id": "trainers",
+     "text": "Beat 15 trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 15,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Fireside Keeper",
+    "pool": "research"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#e07830",
+    "icon": "item.fire_stone"
+   },
+   "contentTags": [
+    "stories",
+    "camp"
+   ]
+  },
+  {
+   "id": "plasma-operation",
+   "version": 1,
+   "name": "Team Plasma Liberation Operation",
+   "kind": "weekly",
+   "description": "Team Plasma is taking Pokémon again. Cut their supply routes, free the captives and face the commander.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Three stops follow the operation from the supply route to the holding yard to the commander; what you do early changes the later fights.",
+   "modifiers": [
+    {
+     "kind": "moneyMultiplier",
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "plasma-op-1",
+    "plasma-op-2",
+    "plasma-op-3",
+    "plasma-liberation",
+    "plasma-protest",
+    "plasma-substage-gate"
+   ],
+   "objectives": [
+    {
+     "id": "route",
+     "text": "Disrupt the supply route (a clue)",
+     "counter": "eventClues",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "yard",
+     "text": "Free the holding yard (3 clues)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 70
+     }
+    },
+    {
+     "id": "commander",
+     "text": "Beat the commander",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 120
+     }
+    },
+    {
+     "id": "finale",
+     "text": "End the operation",
+     "counter": "eventFinalesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 400,
+    "title": "Liberator",
+    "pool": "team-plasma"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#c03050",
+    "icon": "item.dusk_stone"
+   },
+   "contentTags": [
+    "villains",
+    "rescue"
+   ]
+  },
+  {
+   "id": "hidden-path-week",
+   "version": 1,
+   "name": "Hidden Path Week",
+   "kind": "weekly",
+   "description": "The secret branches of every route are open for a week. Pokémon with the right ability can find them.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Secret paths show themselves more often; path keepers, signposts and shortcuts turn up on the road.",
+   "modifiers": [
+    {
+     "kind": "xpMultiplier",
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "hidden-path-signpost",
+    "hidden-path-shortcut",
+    "hidden-path-keeper",
+    "secret-levitate-chasm",
+    "secret-keen-eye-ledge",
+    "secret-intimidate-gate",
+    "secret-magnet-vein",
+    "secret-damp-cave",
+    "secret-flash-fire-door",
+    "secret-synchronize-whisper",
+    "secret-pickup-burrow",
+    "secret-arena-tunnel"
+   ],
+   "objectives": [
+    {
+     "id": "paths",
+     "text": "Find 3 hidden paths (clues)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "keeper",
+     "text": "Beat or best a Path Keeper",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "events",
+     "text": "Finish 8 map events",
+     "counter": "eventsCompleted",
+     "atLeast": 8,
+     "reward": {
+      "researchPoints": 70
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Pathfinder",
+    "pool": "rare"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#58b0a0",
+    "icon": "item.scanner"
+   },
+   "contentTags": [
+    "exploration",
+    "secrets"
+   ]
+  },
+  {
+   "id": "mystery-dungeon-week",
+   "version": 1,
+   "name": "Mystery Dungeon Week",
+   "kind": "weekly",
+   "description": "A stair appears on the road that leads down to a dungeon whose rooms change every time. Take what you can and leave before your luck runs out.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "A Mystery Dungeon opens on the road: three floors, new rooms each time, traps, shops, monster houses and a boss.",
+   "modifiers": [
+    {
+     "kind": "xpMultiplier",
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "md-entrance",
+    "md-1-monster-house",
+    "md-1-trap-corridor",
+    "md-1-item-room",
+    "md-2-fork",
+    "md-2-shop",
+    "md-2-sleeping-den",
+    "md-3-boss-door",
+    "md-3-ambush",
+    "md-3-spring"
+   ],
+   "objectives": [
+    {
+     "id": "descend",
+     "text": "Go down 3 floors (clues)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "boss",
+     "text": "Beat the Dungeon Boss or Pack",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    },
+    {
+     "id": "out",
+     "text": "Reach the surface again",
+     "counter": "eventFinalesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 100
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 400,
+    "title": "Dungeon Delver",
+    "pool": "spin-mystery-dungeon"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#6a60c0",
+    "icon": "item.mystery_egg"
+   },
+   "contentTags": [
+    "exploration",
+    "dungeon"
+   ]
+  },
+  {
+   "id": "tower-of-legends",
+   "version": 1,
+   "name": "Tower of Legends",
+   "kind": "weekly",
+   "description": "The Tower of Legends opens its doors to everyone. Five floors, each a different test, and a Legend at the top.",
+   "schedule": {
+    "kind": "weeklyRotation"
+   },
+   "seedRule": "isoWeek",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "The Tower of Legends has a door on every road: five floors that test resources, team, battle and endurance, with a Legendary at the top.",
+   "modifiers": [
+    {
+     "kind": "moneyMultiplier",
+     "value": 1.1
+    }
+   ],
+   "mapEvents": [
+    "tower-week-entrance",
+    "tower-1",
+    "tower-2",
+    "tower-3",
+    "tower-4",
+    "tower-5",
+    "legend-encounter"
+   ],
+   "objectives": [
+    {
+     "id": "climb",
+     "text": "Climb 3 floors (clues)",
+     "counter": "eventClues",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "legend",
+     "text": "Beat the Legend at the top",
+     "counter": "eventBossesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 150
+     }
+    },
+    {
+     "id": "summit",
+     "text": "Reach the summit",
+     "counter": "eventFinalesWon",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 120
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 500,
+    "title": "Legend Climber",
+    "pool": "grand"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 150,
+    "candies": 10
+   },
+   "visualTheme": {
+    "color": "#a070e0",
+    "icon": "item.leaders_crest"
+   },
+   "contentTags": [
+    "legendary",
+    "tower"
+   ]
+  },
+  {
    "id": "spooky-season",
    "version": 1,
    "name": "Spooky Season",

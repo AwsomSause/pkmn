@@ -44,6 +44,7 @@ import { focusIs, MYSTERY_EXTRA_STOPS, regionFocus } from './campaign/focus';
 import { emit } from './story/record';
 import { recordBattleStarted } from './story/hooks';
 import { getTheme, typesPool } from './themes';
+import { anyRoaming, endRoamer, partyHasAbility, placeCamp, scoutAhead, CAMP_EVENT_ID } from './world';
 
 // ---------- placing event stops ----------
 
@@ -81,6 +82,10 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return (run.itemCounters?.[`event-seen:${c.id}`] ?? 0) > 0;
     case 'noTrainerTag':
       return !getArchetype(content, run.archetypeId).eventTags.includes(c.tag);
+    case 'partyAbility':
+      return partyHasAbility(content, run, c.abilities);
+    case 'roaming':
+      return anyRoaming(run);
     case 'friendship':
       return run.party.some((m) => m.friendship >= c.atLeast);
     case 'rivalMet':
@@ -213,6 +218,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs more clues about the Grand-Enemy';
     case 'gauntlet':
       return c.active ? 'Needs a rival gauntlet to be running' : 'Needs no rival gauntlet running';
+    case 'partyAbility':
+      return `Needs ${c.label} in your party`;
+    case 'roaming':
+      return 'Needs a Legendary roaming this map';
   }
 }
 
@@ -236,6 +245,10 @@ export function eligibleEvents(content: Content, run: RunState): EventDef[] {
     (e) =>
       !e.keyItem &&
       e.stop !== 'rest' &&
+      // A roaming Legendary's stop and the camp are placed by core/world.ts, not drawn.
+      e.stop !== 'roamer' &&
+      !e.room &&
+      e.id !== CAMP_EVENT_ID &&
       e.minStage <= n &&
       // An event pack's own stops (e.g. Spooky) only appear in runs started while it is on (or a trainer who brings them).
       (!e.gameEvent || packs.has(e.gameEvent)) &&
@@ -288,7 +301,9 @@ export function addEventStops(content: Content, run: RunState): void {
   // A run milestone (catalog 99) is offered at the middle stage of every region.
   const milestone = (run.stage?.index ?? 0) === 2 ? ['milestone-dawn', 'milestone-crossroads', 'milestone-summit', 'milestone-embers'].find((id) => open.has(id)) : undefined;
   const modeStops = [...open].filter((id) => content.events.get(id)!.modeStop);
-  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone, ...modeStops].filter((id): id is string => !!id && open.has(id));
+  // A follow-up scene (a kindness coming back) gets its stop on the first stage where it is eligible.
+  const callbacks = [...open].filter((id) => content.events.get(id)!.callback);
+  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone, ...modeStops, ...callbacks].filter((id): id is string => !!id && open.has(id));
   for (const id of forced) {
     taken.add(id);
     place(id, false);
@@ -309,8 +324,9 @@ export function addEventStops(content: Content, run: RunState): void {
   for (let i = 0; i < wanted && candidates.length > 0; i++) {
     const e = pickEvent(content, run, rng, taken);
     if (!e) break;
-    place(e.id, rng.chance(cfg.hiddenShare));
+    place(e.id, e.secret.length > 0 || rng.chance(cfg.hiddenShare));
   }
+  placeCamp(content, run);
   // Rest spots (time with your lead Pokémon) come back every stage.
   const rests = [...content.events.values()].filter((e) => e.stop === 'rest' && e.minStage <= stageNumber(content, run));
   for (let i = 0; i < cfg.restPerStage && rests.length > 0 && candidates.length > 0; i++) place(rng.pick(rests).id, false);
@@ -335,6 +351,9 @@ export function bridgeEventStop(content: Content, run: RunState, node: MapNode):
 export function stopIsHidden(content: Content, run: RunState, node: MapNode, side: SideStop): boolean {
   if (!side.hidden) return false;
   if (run.stage?.current === node.id) return false;
+  // A secret path shows itself to a Pokémon that can open it.
+  const secret = side.eventId ? content.events.get(side.eventId)?.secret : undefined;
+  if (secret && secret.length > 0 && secret.some((c) => conditionMet(content, run, c))) return false;
   return !hasPerk(content, run, 'revealEvents');
 }
 
@@ -452,6 +471,8 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   const runSide = run.stage!.map.nodes.find((n) => n.id === node.id)!.sides.find((s) => s.id === sideId)!;
   runSide.used = true;
   delete runSide.hidden;
+  // A roaming Legendary's stop: whatever you do, the chase ends here.
+  if (runSide.roamer) endRoamer(run, runSide.roamer);
   run.itemCounters = { ...run.itemCounters, [`event-seen:${event.id}`]: 1 };
   if (event.keyItem) useUpKeyItem(run, event.keyItem);
   const insight = perkItem(content, run, 'eventInsight');
@@ -556,6 +577,13 @@ function effectWords(content: Content, e: EventEffect): string {
       return e.stop === 'heal' ? 'a healing spot opens here' : e.stop === 'shop' ? 'a shop opens here' : 'a fishing spot opens here';
     case 'skipAhead':
       return 'skip ahead to the gym';
+    case 'scout':
+      return `the map shows ${e.columns} more column${e.columns === 1 ? '' : 's'} ahead`;
+    case 'addEvent':
+    case 'addEventFrom':
+      return 'a new place opens here';
+    case 'front':
+      return `a ${e.weather} front is coming`;
     case 'formChange':
       return 'a Pokémon changes form';
     case 'crisis':
@@ -791,6 +819,29 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, 
     case 'addStop': {
       const here = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
       here.sides.push({ id: `event-stop-${here.sides.length + 1}-${here.id}`, kind: e.stop, used: false });
+      return effectWords(content, e);
+    }
+    case 'scout':
+      scoutAhead(content, run, e.columns);
+      return effectWords(content, e);
+    case 'addEvent': {
+      const here = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
+      here.sides.push({ id: `event-room-${here.sides.length + 1}-${here.id}`, kind: 'event', used: false, eventId: e.eventId });
+      // The room is seen again later even if it was played before.
+      if (run.itemCounters) delete run.itemCounters[`event-seen:${e.eventId}`];
+      return effectWords(content, e);
+    }
+    case 'addEventFrom': {
+      const here = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
+      const eventId = rng.pick(e.ids);
+      here.sides.push({ id: `event-room-${here.sides.length + 1}-${here.id}`, kind: 'event', used: false, eventId });
+      if (run.itemCounters) delete run.itemCounters[`event-seen:${eventId}`];
+      return effectWords(content, e);
+    }
+    case 'front': {
+      const stage = run.stage!;
+      const from = Math.min(stage.map.columns - 1, (stage.map.nodes.find((n) => n.id === stage.current)?.column ?? 0) + 2);
+      stage.extraFronts.push({ weather: e.weather, from, to: Math.min(stage.map.columns - 1, from + e.columns - 1) });
       return effectWords(content, e);
     }
     case 'skipAhead': {

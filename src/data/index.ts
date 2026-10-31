@@ -502,6 +502,12 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (a.signaturePool && !content.starterPools.has(a.signaturePool)) problems.push(`trainer "${a.id}" has unknown signature pool "${a.signaturePool}"`);
   }
   if (![...content.archetypes.values()].some((a) => a.unlockedByDefault)) problems.push('archetypes.json has no starting trainer');
+  // Roaming Legendaries (balance.world): each needs a species and its own stop (event "roamer-<species>").
+  for (const r of content.balance.world.roamers) {
+    if (!content.species.has(r.species)) problems.push(`balance.world roamer "${r.species}" is not a species`);
+    if (content.events.get(`roamer-${r.species}`)?.stop !== 'roamer') problems.push(`balance.world roamer "${r.species}" has no "roamer-${r.species}" event with stop "roamer"`);
+    if (r.gameEvent && !content.gameEvents.has(r.gameEvent)) problems.push(`balance.world roamer "${r.species}" belongs to unknown game event "${r.gameEvent}"`);
+  }
   // Map events: every id they mention must exist.
   const knownItem = (id: string) => content.items.has(id) || content.catalog.has(id);
   for (const e of content.events.values()) {
@@ -513,6 +519,11 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       if (f.kind === 'itemFrom') for (const id of f.ids) if (!knownItem(id)) problems.push(`${where} gives unknown item "${id}"`);
       if (f.kind === 'recruit' && !content.archetypes.has(f.trainer)) problems.push(`${where} recruits unknown trainer "${f.trainer}"`);
       if (f.kind === 'join') for (const id of f.species) if (!content.species.has(id)) problems.push(`${where} offers unknown species "${id}"`);
+      if (f.kind === 'addEvent' && !content.events.has(f.eventId)) problems.push(`${where} opens unknown event "${f.eventId}"`);
+      if (f.kind === 'addEventFrom') for (const id of f.ids) if (!content.events.has(id)) problems.push(`${where} opens unknown event "${id}"`);
+    }
+    for (const r of [...e.requires, ...e.secret, ...e.choices.flatMap((c) => c.requires)]) {
+      if (r.kind === 'partyAbility') for (const id of r.abilities) if (!content.abilities.has(id)) problems.push(`${where} needs unknown ability "${id}"`);
     }
     for (const c of e.choices) {
       for (const o of [c.success, c.failure]) {

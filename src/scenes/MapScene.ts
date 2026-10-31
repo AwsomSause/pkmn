@@ -11,6 +11,7 @@ import { modeObjectives, objectivesLine } from '../core/modeObjectives';
 import { fieldHintId, licenseName, licenseNote } from '../core/license';
 import { SERVICES } from '../core/services/schema';
 import { stopIsHidden } from '../core/events';
+import { forecast, foggedAt, frontAt, isFogged, sightRange, visibleColumn } from '../core/world';
 import Phaser from 'phaser';
 import { pinnedObjective } from '../core/objectives';
 import { regionDim } from '../ui/battleFx/transitions';
@@ -79,6 +80,13 @@ const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
   service: { color: 0xa878e0, glyph: 'S' },
 };
 const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition', minigame: 'Minigame', service: 'Service' };
+/** A node in the fog: a grey token with a "?" until you scout, see further or get close. */
+const FOG_STYLE = { color: 0x56607a, glyph: '?', label: 'Fog' };
+/** A roaming Legendary's stop and a checkpoint camp. */
+const ROAMER_STYLE = { color: 0xf0c030, glyph: '★' };
+const CAMP_STYLE = { color: 0x58a860, glyph: '▲' };
+const FRONT_LABEL: Record<string, string> = { rain: 'Rain', sun: 'Harsh sun', sand: 'Sandstorm', snow: 'Snow', hail: 'Hail' };
+const FRONT_COLOR: Record<string, number> = { rain: 0x4878d0, sun: 0xe8a020, sand: 0xc8a050, snow: 0xe0f0ff, hail: 0x90c0e0 };
 /** A hidden event stop: a grey "?" until you reach it. */
 const HIDDEN_STYLE = { color: 0x6b5a73, glyph: '?' };
 
@@ -225,6 +233,13 @@ export class MapScene extends Phaser.Scene {
     this.add
       .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}${wipeStatus(run) ? `  ·  Wipes ${wipeStatus(run)!.wipes}${wipeStatus(run)!.max ? `/${wipeStatus(run)!.max}` : ''}` : ''}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
+    // Weather forecast: a front ahead, or the one you are in, and fog.
+    const fc = league ? null : forecast(content, run);
+    if (fc) {
+      const where = fc.startsIn === 0 ? `now over levels ${fc.front.from}–${fc.front.to}` : `in ${fc.startsIn} level${fc.startsIn === 1 ? '' : 's'} (levels ${fc.front.from}–${fc.front.to})`;
+      const band = fc.front.band === 'all' ? '' : fc.front.band === 'high' ? ', top route only' : ', lower routes only';
+      this.add.text(GAME_WIDTH / 2, 71, `Forecast: ${FRONT_LABEL[fc.front.weather] ?? fc.front.weather} ${where}${band}`, textStyle(13, '#bfe4ff', { stroke: '#0b2a4a', strokeThickness: 3 })).setOrigin(0.5, 0).setName('forecast');
+    }
     const objectives = modeObjectives(run);
     if (objectives.length > 0) this.add.text(GAME_WIDTH - 24, 68, objectivesLine(objectives), textStyle(14, '#f0e0a0')).setOrigin(1, 0);
 
@@ -315,10 +330,12 @@ export class MapScene extends Phaser.Scene {
       mapLayer.add(this.add.text(x, 402, 'Trainers', textStyle(14, '#f8a850')).setOrigin(0.5));
     }
 
+    const seenColumn = league ? 99 : visibleColumn(content, run);
     for (const n of stage.map.nodes) {
       const { x, y } = pos(n);
       this.nodePos.set(n.id, { x, y });
-      const style = KIND_STYLE[n.kind];
+      const fog = foggedAt(stage, seenColumn, n);
+      const style = fog ? FOG_STYLE : KIND_STYLE[n.kind];
       const visited = stage.visited.includes(n.id);
       const isCurrent = n.id === stage.current;
       const reachable = choiceIds.has(n.id);
@@ -336,7 +353,7 @@ export class MapScene extends Phaser.Scene {
       g.fillCircle(x, y - 2, r - 3);
       g.fillStyle(mixColor(style.color, 0xffffff, 0.35), alpha);
       g.fillEllipse(x, y - r * 0.45, r * 1.1, r * 0.5);
-      if (n.harder) {
+      if (n.harder && !fog) {
         g.lineStyle(5, HARDER_COLOR, dim ? 0.4 : 1);
         g.strokeCircle(x, y, r + 6);
       }
@@ -357,7 +374,7 @@ export class MapScene extends Phaser.Scene {
       }
       // What waits there: a Poké Ball for wild Pokémon, the boss's portrait, or a letter.
       const boss = this.bossFor(n);
-      if (n.kind === 'wild' && this.textures.exists('ball.pb')) {
+      if (!fog && n.kind === 'wild' && this.textures.exists('ball.pb')) {
         mapLayer.add(this.add.image(x, y - 1, 'ball.pb').setScale(2).setAlpha(alpha));
       } else if (boss) {
         const art = trainerVisual(this, boss.spriteAssetId, boss.name, x, y + r - 4, 1);
@@ -367,16 +384,27 @@ export class MapScene extends Phaser.Scene {
       } else {
         mapLayer.add(this.add.text(x, y, style.glyph, textStyle(26, '#ffffff', { stroke: '#181818', strokeThickness: 4 })).setOrigin(0.5).setAlpha(alpha));
       }
-      if (n.harder) mapLayer.add(this.add.text(x + r - 2, y - r + 2, '!', textStyle(22, '#f8f8f8', { stroke: '#5a2890', strokeThickness: 5 })).setOrigin(0.5));
+      if (n.harder && !fog) mapLayer.add(this.add.text(x + r - 2, y - r + 2, '!', textStyle(22, '#f8f8f8', { stroke: '#5a2890', strokeThickness: 5 })).setOrigin(0.5));
       // Itemfinder: the stop hiding an item.
       if (n.id === hidden && !visited) mapLayer.add(this.add.text(x - r + 2, y - r + 2, '✦', textStyle(22, '#f8e070', { stroke: '#181818', strokeThickness: 4 })).setOrigin(0.5));
-      this.drawPreview(mapLayer, n, x, y, r);
+      if (!fog) this.drawPreview(mapLayer, n, x, y, r);
+      // A weather front over this node: a small badge in the front's colour.
+      const front = fog ? null : frontAt(content, run, n);
+      if (front) {
+        const fb = this.add.graphics();
+        fb.fillStyle(0x181818, 1);
+        fb.fillRoundedRect(x - r - 6, y + r - 6, 46, 16, 4);
+        fb.fillStyle(FRONT_COLOR[front.weather] ?? 0xffffff, 1);
+        fb.fillRoundedRect(x - r - 4, y + r - 4, 42, 12, 3);
+        mapLayer.add(fb);
+        mapLayer.add(this.add.text(x - r + 17, y + r + 2, FRONT_LABEL[front.weather] ?? front.weather, textStyle(10, '#101820')).setOrigin(0.5));
+      }
       if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#a69cb4')).setOrigin(0.5, 0));
       if (league && boss) mapLayer.add(this.add.text(x, y + r + 12, n.kind === 'champion' ? `★ ${boss.name} ★` : boss.name, textStyle(n.kind === 'champion' ? 17 : 15, n.kind === 'champion' ? '#ffe080' : COLORS.textLight)).setOrigin(0.5, 0));
       n.sides.forEach((side, i) => {
         const sx = x + NODE_RADIUS + 4 + i * 22;
         const sy = y - NODE_RADIUS - 2;
-        const s = side.kind === 'event' ? (stopIsHidden(content, run, n, side) ? HIDDEN_STYLE : stopStyle(content.events.get(side.eventId ?? '')?.stop)) : SIDE_STYLE[side.kind];
+        const s = fog ? HIDDEN_STYLE : side.roamer ? ROAMER_STYLE : side.eventId === 'camp-checkpoint' ? CAMP_STYLE : side.kind === 'event' ? (stopIsHidden(content, run, n, side) ? HIDDEN_STYLE : stopStyle(content.events.get(side.eventId ?? '')?.stop)) : SIDE_STYLE[side.kind];
         const sg = this.add.graphics();
         sg.fillStyle(0x181818, side.used ? 0.3 : 1);
         sg.fillRect(sx - 11, sy - 11, 22, 22);
@@ -546,6 +574,10 @@ export class MapScene extends Phaser.Scene {
     switch (option.kind) {
       case 'node': {
         const n = option.node;
+        const runNow = services().session.run!;
+        if (isFogged(content, runNow, n)) return `Level ${n.column}: lost in fog. You see ${sightRange(content, runNow)} columns ahead; Intelligence, a keen-eyed or Flying Pokémon and scouting see further.`;
+        const frontHere = frontAt(content, runNow, n);
+        const frontNote = frontHere ? `${FRONT_LABEL[frontHere.weather] ?? frontHere.weather} front: battles here start in ${frontHere.weather}.\n` : '';
         const [lo, hi] = content.balance.difficulty.harderBonus;
         const boss = this.bossFor(n);
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
@@ -555,7 +587,7 @@ export class MapScene extends Phaser.Scene {
         const seen = this.previewText(n);
         const route = routeKind(services().session.run!, n);
         const anomaly = stageAnomaly(services().session.content, services().session.run!);
-        return `${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
+        return `${frontNote}${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
         if (option.side.kind === 'service') {
