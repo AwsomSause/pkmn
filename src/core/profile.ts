@@ -8,6 +8,7 @@ import { getCampaign } from './regions';
 import { campaignCounts } from './rules';
 import { archiveParty } from './story/reunion';
 import { addRunToCodex } from './story/codex';
+import { recordLegacyRun } from './legacyRuns';
 import { ATTRIBUTE_NAMES, type Profile, type RunState } from './state';
 
 const FINALIZED_HISTORY = 50;
@@ -49,6 +50,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     mastery: {},
     gameEvents: {},
     momentCodex: {},
+    legacyRuns: [],
   };
 }
 
@@ -87,6 +89,7 @@ export function finalizeRun(
   archiveParty(content, next, run);
   archiveRivals(next, run);
   addRunToCodex(next, run);
+  recordLegacyRun(content, next, run, now);
   next.finalizedRunIds = [...next.finalizedRunIds, run.runId].slice(-FINALIZED_HISTORY);
   return { profile: next, applied: true, summary };
 }

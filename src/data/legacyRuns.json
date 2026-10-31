@@ -1,0 +1,7 @@
+{
+  "note": "Legacy runs (M9): the immutable record kept for every finished run. Scores and the rotation read these records; nothing here changes a run in progress.",
+  "recordCap": 60,
+  "chronicleKept": 8,
+  "ace": { "perKnockout": 1, "perBossBeaten": 3, "perLevel": 0.2, "starterBonus": 2 },
+  "moments": { "minLowHpStand": 3, "minSurvivedFatal": 1 }
+}
