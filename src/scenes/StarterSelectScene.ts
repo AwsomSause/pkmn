@@ -8,7 +8,8 @@ import { onInputAction } from '../ui/input';
 import { fitHeight } from '../ui/showcase';
 import { pokemonVisual } from '../ui/sprites';
 import { COLORS, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
-import { badge, drawPanel, focusFrame } from '../ui/widgets';
+import { badge, focusFrame } from '../ui/widgets';
+import { glassPanel as drawPanel, slideIn } from '../ui/aero';
 import { preloadPokemon } from '../ui/lazyAssets';
 
 export class StarterSelectScene extends Phaser.Scene {
@@ -49,7 +50,7 @@ export class StarterSelectScene extends Phaser.Scene {
       const preview = createPokemon(content, speciesId, content.balance.starterLevel, 'preview');
       const x = startX + i * (cardW + gap);
       const y = 100;
-      drawPanel(this, x, y, cardW, 400);
+      slideIn(this, drawPanel(this, x, y, cardW, 400), 0, 24 + i * 8, services().session.settings.battleAnimations);
       const highlight = focusFrame(this, x, y, cardW, 400);
       this.cursors.push(highlight);
 

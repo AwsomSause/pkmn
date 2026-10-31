@@ -1,0 +1,1 @@
+- Z6i: Research Room dex sets open a member list (icon, number, name, caught/seen mark); Enter opens a species page on the pack's Pokédex info art (types, front sprite, base stats, note; "???" until seen). Limit: text is placed over the art by eye, not pixel-matched.
