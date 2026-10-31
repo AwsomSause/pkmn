@@ -230,3 +230,15 @@ The rivals' Pokémon already had bonds (`core/rivals/bonds.ts`); yours now do to
 - Untitled Phase G (deterministic simulations): economy, early loss rate, mode multipliers, item rarity and attribute pace are all in `npm run report:economy`. Tuning is owned by the rebalance thread. Still not done in Phase G: viewport/UI pass (visuals thread) and the Playwright sweep.
 - Untitled Phase D, form-family routes: Delta Research, Z-Form Trial and Haunted Detour run-event chains built (events.json). Still not built: egg-born Delta/Z/Spooky forms and Delta/Z trades.
 - Untitled Phase D, form eggs and trades: done (Nursery formegg:* options and Trade Post pool open after the route battle flag).
+
+## Left-out plan 1.5: Legacy & Live hub systems (GAME_DESIGN §14.1, §14.6, §14.8)
+| Item | Status |
+|---|---|
+| Research Tree (10 nodes, Prestige-gated) | DONE |
+| Prestige (5 ranks, never deletes collection) | DONE |
+| Trainer Network (one service per trainer, start parcels) | DONE (limited: parcels only) |
+| Permanent Item Museum (+ RP milestones) | DONE |
+| Regional Intelligence Board | DONE |
+| Move Research room (training up to Silver) | DONE |
+| Hub that grows visually (6 props) | DONE (procedural art) |
+| Shared seeds (Seed Shelf; seed codes existed in Run-Prep) | DONE |

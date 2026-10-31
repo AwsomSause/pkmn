@@ -3,6 +3,9 @@
 import { archiveRivals } from './rivals/legacy';
 import type { Content } from './contentSchema';
 import { applyRunToProfile, type RunEndSummary } from './progress';
+import { recordMuseum, recordRegionIntel } from './legacy';
+import { getCampaign } from './regions';
+import { campaignCounts } from './rules';
 import { archiveParty } from './story/reunion';
 import { ATTRIBUTE_NAMES, type Profile, type RunState } from './state';
 
@@ -72,6 +75,12 @@ export function finalizeRun(
   next.stats.battlesWon += run.log.battlesWon;
   next.stats.bestEncounters = Math.max(next.stats.bestEncounters, run.encountersCompleted);
   const summary = applyRunToProfile(content, next, run, now);
+  // Legacy hub systems: the Item Museum and the Intelligence Board learn from runs that count.
+  if (campaignCounts(getCampaign(content, run.campaignId), run.rules.modeId) && run.rules.progressionEligible) {
+    recordRegionIntel(next, run);
+    const museumResearch = recordMuseum(next, run, now);
+    if (summary) summary.researchPoints += museumResearch;
+  }
   archiveParty(content, next, run);
   archiveRivals(next, run);
   next.finalizedRunIds = [...next.finalizedRunIds, run.runId].slice(-FINALIZED_HISTORY);

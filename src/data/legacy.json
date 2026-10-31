@@ -1,0 +1,72 @@
+{
+  "note": "Legacy & Live hub systems (left-out 1.5, GAME_DESIGN §14.6/§14.8). Nothing here deletes a collection or an achievement; every effect is a small start-of-run grant or a way to see more.",
+  "prestige": {
+    "maxRank": 5,
+    "networkSlotPerRank": 1,
+    "ranks": [
+      { "rank": 1, "title": "Prestige I: Veteran", "cost": 500, "regionsCleared": 3 },
+      { "rank": 2, "title": "Prestige II: Pathfinder", "cost": 1500, "regionsCleared": 9 },
+      { "rank": 3, "title": "Prestige III: Trailblazer", "cost": 4000, "regionsCleared": 18 },
+      { "rank": 4, "title": "Prestige IV: Legend", "cost": 8000, "regionsCleared": 36 },
+      { "rank": 5, "title": "Prestige V: Mythic", "cost": 15000, "regionsCleared": 72 }
+    ]
+  },
+  "tree": {
+    "branches": [
+      { "id": "field", "name": "Field Craft" },
+      { "id": "archive", "name": "Archive" },
+      { "id": "command", "name": "Command" }
+    ],
+    "nodes": [
+      { "id": "field-notes", "branch": "field", "name": "Field Notes", "blurb": "Start every run with ₽100 more.", "cost": 20, "prestige": 0, "requires": null, "effect": { "kind": "money", "amount": 100 } },
+      { "id": "trail-rations", "branch": "field", "name": "Trail Rations", "blurb": "Start with 2 more Potions.", "cost": 40, "prestige": 0, "requires": "field-notes", "effect": { "kind": "item", "item": "potion", "count": 2 } },
+      { "id": "ball-satchel", "branch": "field", "name": "Ball Satchel", "blurb": "Start with 3 more Poké Balls.", "cost": 60, "prestige": 1, "requires": "trail-rations", "effect": { "kind": "item", "item": "poke-ball", "count": 3 } },
+      { "id": "scout-fund", "branch": "field", "name": "Scout Fund", "blurb": "Start every run with ₽250 more.", "cost": 120, "prestige": 2, "requires": "ball-satchel", "effect": { "kind": "money", "amount": 250 } },
+      { "id": "region-notes", "branch": "archive", "name": "Region Notes", "blurb": "The Intelligence Board shows each region's gym leaders from its first visit.", "cost": 25, "prestige": 0, "requires": null, "effect": { "kind": "intel", "level": 1 } },
+      { "id": "league-files", "branch": "archive", "name": "League Files", "blurb": "The Board shows Elite Four and champions after a visit, not a clear.", "cost": 70, "prestige": 1, "requires": "region-notes", "effect": { "kind": "intel", "level": 2 } },
+      { "id": "full-dossier", "branch": "archive", "name": "Full Dossier", "blurb": "The Board shows every region's whole league from the start.", "cost": 150, "prestige": 3, "requires": "league-files", "effect": { "kind": "intel", "level": 3 } },
+      { "id": "pen-pals", "branch": "command", "name": "Pen Pals", "blurb": "One more Trainer Network contact.", "cost": 50, "prestige": 0, "requires": null, "effect": { "kind": "networkSlot", "count": 1 } },
+      { "id": "hot-line", "branch": "command", "name": "Hot Line", "blurb": "One more Trainer Network contact.", "cost": 110, "prestige": 2, "requires": "pen-pals", "effect": { "kind": "networkSlot", "count": 1 } },
+      { "id": "emergency-kit", "branch": "command", "name": "Emergency Kit", "blurb": "Start with a Revive.", "cost": 90, "prestige": 1, "requires": "pen-pals", "effect": { "kind": "item", "item": "revive", "count": 1 } }
+    ]
+  },
+  "network": {
+    "baseSlots": 1,
+    "maxSlots": 5,
+    "services": [
+      { "id": "cash", "name": "Pocket Cash", "blurb": "Sends ₽150 to start your run.", "effect": { "kind": "money", "amount": 150 } },
+      { "id": "potions", "name": "Potion Parcel", "blurb": "Sends 2 Potions.", "effect": { "kind": "item", "item": "potion", "count": 2 } },
+      { "id": "balls", "name": "Ball Crate", "blurb": "Sends 3 Poké Balls.", "effect": { "kind": "item", "item": "poke-ball", "count": 3 } },
+      { "id": "supers", "name": "First-Aid Kit", "blurb": "Sends a Super Potion.", "effect": { "kind": "item", "item": "super-potion", "count": 1 } },
+      { "id": "ethers", "name": "Move Tonic", "blurb": "Sends an Ether.", "effect": { "kind": "item", "item": "ether", "count": 1 } },
+      { "id": "heals", "name": "Full-Heal Pack", "blurb": "Sends a Full Heal.", "effect": { "kind": "item", "item": "full-heal", "count": 1 } },
+      { "id": "greats", "name": "Great Crate", "blurb": "Sends 2 Great Balls.", "effect": { "kind": "item", "item": "great-ball", "count": 2 } },
+      { "id": "hypers", "name": "Hyper Parcel", "blurb": "Sends a Hyper Potion.", "effect": { "kind": "item", "item": "hyper-potion", "count": 1 } }
+    ]
+  },
+  "museum": {
+    "milestones": [
+      { "items": 10, "research": 10 },
+      { "items": 25, "research": 25 },
+      { "items": 50, "research": 50 },
+      { "items": 100, "research": 100 },
+      { "items": 200, "research": 200 }
+    ]
+  },
+  "training": {
+    "usesPerLot": 5,
+    "researchPerLot": 3,
+    "maxRank": "silver"
+  },
+  "hub": {
+    "props": [
+      { "id": "lamps", "name": "Lantern string", "points": 3 },
+      { "id": "plants", "name": "Potted palms", "points": 6 },
+      { "id": "banner", "name": "Region banner", "points": 10 },
+      { "id": "trophy", "name": "Trophy shelf", "points": 15 },
+      { "id": "fountain", "name": "Fountain", "points": 22 },
+      { "id": "stars", "name": "Star ceiling", "points": 30 }
+    ]
+  },
+  "seedShelf": { "slots": 12 }
+}
