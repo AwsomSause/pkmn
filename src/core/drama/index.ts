@@ -14,6 +14,7 @@ import { calcStats } from '../pokemon';
 import type { Rival } from '../story/schema';
 import { DRAMA, VOICES, pickIndex, TIERS, type DialogueCategory, type DialogueFrequency, type Tier, type Voice } from './schema';
 import { rivalBond } from './bond';
+import { afterBattleCandidates, favouredType, flavorPool, playerDeclarationCandidates } from './flavor';
 import { pickWitness, libraryCandidates, memoryCallback, recordLibraryEvent, signatureCandidates, type Candidate, type PlanCtx } from './events';
 
 export * from './schema';
@@ -21,7 +22,7 @@ export * from './schema';
 export type DramaKind =
   | 'battleStart' | 'enemyMove' | 'enemyCrit' | 'enemyHurt' | 'enemyFaint' | 'playerFaint'
   | 'enemySwitch' | 'enemyLow' | 'playerHabit' | 'battleEnd'
-  | 'enemyStatus' | 'foeStatus' | 'foeMiss' | 'enemyMiss';
+  | 'enemyStatus' | 'foeStatus' | 'foeMiss' | 'enemyMiss' | 'playerMove';
 
 /** Something that really happened in the battle, with a stable id. */
 export interface DramaEvent {
@@ -154,7 +155,7 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
     state.seen.push(habitFresh.id);
     candidates.push({ ev: { id: habitFresh.id, kind: 'playerHabit', turn, at: habitFresh.at, data: {} }, category: 'taunt', tier: 'tactical' });
   }
-  candidates.push(...signatureCandidates(ctx), ...libraryCandidates(ctx));
+  candidates.push(...signatureCandidates(ctx), ...playerDeclarationCandidates(ctx), ...libraryCandidates(ctx), ...afterBattleCandidates(ctx, dramaEvents));
   if (!prior) {
     const back = memoryCallback(ctx);
     if (back) candidates.push(back);
@@ -174,9 +175,11 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
       if (thisTurn >= (opening ? 2 : 1)) continue;
       if (c.tier !== 'major' && turn - state.lastLineTurn < DRAMA.config.minGapTurns) continue;
     }
-    const pool = c.pool ?? DRAMA.lines[c.category as DialogueCategory][voice];
-    const prefix = c.def ? `event/${c.def.id}` : (c.category as string);
-    const fresh = pool.map((_, i) => `${prefix}/${c.pool ? '' : voice + '/'}${i}`).filter((id) => !state.recent.includes(id));
+    // Bond, arc and trainer type colour half of the plain lines when a fitting set exists.
+    const flavored = !c.pool && !c.def && pickIndex(`${key}|${c.ev.id}|flavor`, 2) === 0 ? flavorPool(ctx, c.category as DialogueCategory) : null;
+    const pool = c.pool ?? flavored?.lines ?? DRAMA.lines[c.category as DialogueCategory][voice];
+    const prefix = c.def ? `event/${c.def.id}` : flavored ? `flavor/${flavored.tag}/${c.category}` : c.pool ? `pool/${c.ev.id.split(':').pop()}/${c.category}` : (c.category as string);
+    const fresh = pool.map((_, i) => `${prefix}/${c.pool || flavored ? '' : voice + '/'}${i}`).filter((id) => !state.recent.includes(id));
     if (fresh.length === 0) continue;
     const id = fresh[pickIndex(`${key}|${c.ev.id}`, fresh.length)]!;
     const text = fill(pool[Number(id.split('/').pop())]!, {
@@ -185,6 +188,8 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
       move: c.ev.data.moveId ? (content.moves.get(c.ev.data.moveId)?.name ?? 'this') : 'this',
       foeMove: c.vars?.foeMove ?? 'that move',
       trainer: speaker,
+      type: favouredType(ctx),
+      ...c.vars,
     });
     state.recent.push(id);
     if (state.recent.length > DRAMA.config.recentLines) state.recent.shift();

@@ -464,5 +464,126 @@
         "You've got this, {name}!"
       ]
     }
+  },
+  "flavor": {
+    "devoted": {
+      "opening": [
+        "{name}, we do this together, as always.",
+        "Stay close, {name}. We have never lost sight of each other."
+      ],
+      "ownKo": [
+        "{name} gave everything. Rest now, my friend."
+      ],
+      "desperation": [
+        "Hold on, {name}! I am right here with you!"
+      ],
+      "defeat": [
+        "We lost, but we lost side by side. I would not trade that."
+      ],
+      "victory": [
+        "That is what trust does. We did it together."
+      ]
+    },
+    "strained": {
+      "opening": [
+        "Do not make me regret trusting you, {name}.",
+        "Just win, {name}. No more excuses."
+      ],
+      "ownKo": [
+        "Another failure. Get back in the ball."
+      ],
+      "desperation": [
+        "Is that all you have? Move, {name}!"
+      ],
+      "defeat": [
+        "Tch. I should have trained harder."
+      ],
+      "victory": [
+        "Finally. That is how it should always be."
+      ]
+    },
+    "respect": {
+      "opening": [
+        "I have studied your team. Let us see if it was enough.",
+        "A battle worth taking seriously. Begin."
+      ],
+      "ownKo": [
+        "Well fought, {name}. They earned that."
+      ],
+      "defeat": [
+        "You have earned my respect. Do not lose it."
+      ],
+      "victory": [
+        "A good battle. You will be stronger next time."
+      ]
+    },
+    "ally": {
+      "opening": [
+        "I will not hold back, even for a friend!",
+        "Friends or not, {name} is going all out!"
+      ],
+      "defeat": [
+        "Heh, I guess a friend had to be the one to beat me."
+      ],
+      "victory": [
+        "Sorry, friend. We will get stronger together."
+      ]
+    },
+    "nemesis": {
+      "opening": [
+        "I have waited for this, {foe}.",
+        "Every defeat led me back to you."
+      ],
+      "desperation": [
+        "Not now. Not after everything!"
+      ],
+      "defeat": [
+        "This is not the end of it. It never is."
+      ],
+      "victory": [
+        "Remember this day. I will."
+      ]
+    },
+    "specialist": {
+      "opening": [
+        "A {type} specialist, hm? I have prepared for your kind.",
+        "So you favour {type}. Interesting choice."
+      ],
+      "reactionHurt": [
+        "Typical {type} pressure. I can hold."
+      ],
+      "defeat": [
+        "Your {type} focus paid off."
+      ],
+      "victory": [
+        "Your {type} plan was not enough."
+      ]
+    }
+  },
+  "afterBattle": {
+    "win": [
+      "Your {move} decided that. I will remember it.",
+      "You leaned on {move} all battle. It worked. Next time I will counter it.",
+      "Keep that up and {foe} will carry you far. Do not stop now."
+    ],
+    "lose": [
+      "You gave {move} a good try. Train and come back.",
+      "{foe} had heart. Lose today, learn tomorrow.",
+      "Do not be discouraged. Even {move} needs the right moment."
+    ]
+  },
+  "playerDeclarations": {
+    "lastStand": [
+      "{name}, give it everything we have left!",
+      "This is it, {name}. One more push!"
+    ],
+    "finisher": [
+      "The last one, {name}! Finish it!",
+      "Now, {name}! Show them what we trained for!"
+    ],
+    "bold": [
+      "{name}, use {move}! Trust me!",
+      "Go, {name}! {move} with all you have!"
+    ]
   }
 }
