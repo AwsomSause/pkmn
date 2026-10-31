@@ -1,0 +1,1 @@
+- Reward cards say who can use an evolution item or Mega Stone (left-out 6.4, part): `rewardSynergy` names the one party member (or the count) who can evolve / Mega Evolve with it, or says nobody can. Test in `tests/unit/partyRoles.test.ts`. Not yet: healing stop animation, layered map backdrop, summary tab for evolution/form/mastery.

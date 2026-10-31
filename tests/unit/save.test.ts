@@ -1,3 +1,4 @@
+import { DEFAULT_SETTINGS } from '../../src/save/saveManager';
 import { describe, expect, it } from 'vitest';
 import { finalizeRun } from '../../src/core/profile';
 import { chooseStarter, createRun } from '../../src/core/run';
@@ -72,7 +73,7 @@ describe('save manager', () => {
     MIGRATIONS.settings[original] = (data) => ({ ...(data as object), muted: true });
     try {
       storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 1, savedAt: '', data: { musicVolume: 0.1, sfxVolume: 0.2, muted: false } }));
-      expect(saves.loadSettings()).toEqual({ musicVolume: 0.1, sfxVolume: 0.2, muted: true, battleAnimations: 'full', effectIntensity: 1, shakeIntensity: 1, reduceParticles: false, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero' });
+      expect(saves.loadSettings()).toEqual({ ...DEFAULT_SETTINGS, musicVolume: 0.1, sfxVolume: 0.2, muted: true });
     } finally {
       CURRENT_VERSIONS.settings = original;
       delete MIGRATIONS.settings[original];

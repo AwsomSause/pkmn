@@ -27,10 +27,10 @@ Checked with `report-levels` (lead never more than 0 levels behind any stage end
 | **+50 per region (chosen)** | `levelCapStep` 50, `maxLevel` 500, `xpScale` 2 | 50 … 450, Grand 500 | Same early game as today. |
 
 - Grand Region curve and endgame cap: the Grand Region is the last region index, so its cap is the last step (1000 or 500); its league sits at cap − `capMargin` + bonuses, never above the cap.
-- Party-strength correction (`balance.difficulty.partyStrength`): enemy level += clamp(round((party top-3 average − stage-end enemy level) × `factor`), 0, `maxBonus`), applied before the archetype offset (C7), never above the cap. Goes into the Encounter Director's level step so every source gets it.
+- **Built (1.6c).** Party-strength correction (`balance.difficulty.partyStrength`, `encounters.ts withPartyStrength`): enemy level += clamp(round((party top-3 average − curve level − `grace` 3) × `factor` 0.5), 0, `maxBonus` 4), before the archetype offset (C7), never above the cap. Applied to every map battle (wild, trainer, gym, league) and event battles. Threat budgets get `perLevelAbove100` so the budget cap keeps rising past 100 (the rating is level-relative, so without it later regions would draw the same species as level 100).
 - Playtest bot: 500 runs before (`--heal`) and after; compare reach (badges, region), deaths by stage and level gaps.
 
-## Slice 1.7: custom regions
+## Slice 1.7: custom regions (built)
 Built from the 108 bosses no region uses yet (all have sprites and teams in `bossTeams.json`). `regions.json` gains `custom: true` and an optional roster rule; the 9-region campaign then draws 9 of 12 regular regions, so each run sees a different mix (D6). Saved runs keep their stored `regionOrder`.
 
 | Region | Identity | Gym leaders | Elite Four | Champions | Roster rule |

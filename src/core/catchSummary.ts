@@ -1,7 +1,8 @@
 // The "Pokémon Acquired" panel text (Untitled document Phase B). Pure: no UI, no RNG.
 
-import type { Content } from './contentSchema';
-import { abilityOf, calcStats, getSpecies } from './pokemon';
+import { typeEffectiveness } from './battle/damage';
+import { TYPE_NAMES, type Content } from './contentSchema';
+import { abilityOf, calcStats, getSpecies, isUsableMove } from './pokemon';
 import type { PokemonInstance } from './state';
 
 const STAT_LABELS = [
@@ -17,8 +18,37 @@ function statLine(stats: Record<string, number>): string {
   return STAT_LABELS.map(([k, label]) => `${label} ${stats[k]}`).join('  ');
 }
 
+export interface CatchExtras {
+  /** Where it came from ("Caught in Kanto, stage 2"). */
+  source?: string;
+  /** True when the account never caught this species before. */
+  firstDiscovery?: boolean;
+  /** Compact mode (Settings > Catch details): name, types, stats, ability and moves only. */
+  compact?: boolean;
+}
+
+/** Weak and resistant types of a species, as words. */
+function matchups(content: Content, types: readonly import('./contentSchema').TypeName[]): string {
+  const weak: string[] = [];
+  const resist: string[] = [];
+  for (const t of TYPE_NAMES) {
+    const x = typeEffectiveness(content.typeChart, t, types);
+    if (x > 1) weak.push(`${t.toUpperCase()}${x >= 4 ? ' ×4' : ''}`);
+    else if (x < 1) resist.push(`${t.toUpperCase()}${x === 0 ? ' (immune)' : ''}`);
+  }
+  return `Weak to: ${weak.join(', ') || 'nothing'}\nResists: ${resist.join(', ') || 'nothing'}`;
+}
+
+/** One move in full: type, category, power, accuracy, PP, with a warning when the game can't use it yet. */
+function moveLine(content: Content, id: string): string {
+  const m = content.moves.get(id);
+  if (!m) return `${id} (unknown)`;
+  const warn = isUsableMove(content, id) ? '' : '  ⚠ not supported yet, it will do nothing';
+  return `${m.name}  ${m.type.toUpperCase()} ${m.category}  Pow ${m.power ?? '—'}  Acc ${m.accuracy ?? '—'}  PP ${m.pp}${warn}`;
+}
+
 /** What the player sees after a catch: type, all six stats now and base, BST, ability, evolution, moves. */
-export function catchSummary(content: Content, mon: PokemonInstance, compareTo?: PokemonInstance): string[] {
+export function catchSummary(content: Content, mon: PokemonInstance, compareTo?: PokemonInstance, extras: CatchExtras = {}): string[] {
   const species = getSpecies(content, mon.speciesId);
   const stats = calcStats(content, mon);
   const base = species.baseStats;
@@ -30,15 +60,26 @@ export function catchSummary(content: Content, mon: PokemonInstance, compareTo?:
         .map((e) => `${getSpecies(content, e.to).name} (${e.level !== undefined ? `Lv${e.level}` : (content.items.get(e.item!)?.name ?? e.item!)})`)
         .join(', ')
     : 'Does not evolve';
-  const lines = [
-    `${species.name}${mon.shiny ? '  ★ Shiny' : ''}   Lv${mon.level}`,
-    `Type: ${species.types.map((t) => t.toUpperCase()).join(' / ')}`,
-    `Stats: ${statLine(stats as unknown as Record<string, number>)}`,
-    `Base: ${statLine(base as unknown as Record<string, number>)}  (BST ${bst})`,
-    `Ability: ${abilityName}`,
-    `Evolves: ${evo}`,
-    `Moves: ${mon.moves.map((m) => content.moves.get(m.id)?.name ?? m.id).join(', ')}`,
-  ];
+  const lines = extras.compact
+    ? [
+        `${species.name}${mon.shiny ? '  ★ Shiny' : ''}   Lv${mon.level}${extras.firstDiscovery ? '   NEW!' : ''}`,
+        `Type: ${species.types.map((t) => t.toUpperCase()).join(' / ')}   Ability: ${abilityName}`,
+        `Stats: ${statLine(stats as unknown as Record<string, number>)}`,
+        `Moves: ${mon.moves.map((m) => content.moves.get(m.id)?.name ?? m.id).join(', ')}`,
+      ]
+    : [
+        `${species.name}${mon.shiny ? '  ★ Shiny' : ''}   Lv${mon.level}   Dex #${String(species.dex).padStart(4, '0')}${extras.firstDiscovery ? '   ★ First discovery!' : ''}`,
+        ...(extras.source ? [extras.source] : []),
+        `Type: ${species.types.map((t) => t.toUpperCase()).join(' / ')}`,
+        matchups(content, species.types),
+        `Stats: ${statLine(stats as unknown as Record<string, number>)}`,
+        `Base: ${statLine(base as unknown as Record<string, number>)}  (BST ${bst})`,
+        `Ability: ${abilityName}`,
+        `Can have: ${[...species.abilities.normal, ...(species.abilities.hidden ? [`${species.abilities.hidden} (Hidden)`] : [])].map((id) => content.abilities.get(id.replace(' (Hidden)', ''))?.name ?? id).join(', ') || 'unknown'}`,
+        `Evolves: ${evo}`,
+        'Moves:',
+        ...mon.moves.map((m) => `  ${moveLine(content, m.id)}`),
+      ];
   if (compareTo) {
     const other = calcStats(content, compareTo);
     const diff = STAT_LABELS.map(([k, label]) => {
