@@ -29,26 +29,21 @@ test('a party scene shows on the map, resolves once, and lands in the Album', as
     session.run = run;
     game.scene.getScene('Map').scene.restart({});
   });
-  await page.waitForTimeout(1500);
   const picker = () => page.evaluate(() => !!(window as any).__pkr.game.scene.getScene('Map').picker);
-  expect(await picker()).toBe(true);
+  await expect.poll(picker, { timeout: 20_000 }).toBe(true);
   await page.screenshot({ path: 'test-results/party-scene.png' });
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(1500);
-  const state = await page.evaluate(() => {
-    const p = (window as any).__pkr.session.run.partyLife;
-    return { scene: p.scene, book: p.scrapbook.length, recent: p.recent };
-  });
+  const book = () => page.evaluate(() => (window as any).__pkr.session.run.partyLife);
+  await expect.poll(async () => (await book()).scrapbook.length, { timeout: 20_000 }).toBe(1);
+  const state = await book();
   expect(state.scene).toBeNull();
-  expect(state.book).toBe(1);
   expect(state.recent).toContain('talk-question');
   // The Album screen opens.
   await page.evaluate(() => {
     const m = (window as any).__pkr.game.scene.getScene('Map');
     m.activate(m.options.findIndex((o: any) => o.kind === 'scrapbook'));
   });
-  await page.waitForTimeout(800);
-  expect(await picker()).toBe(true);
+  await expect.poll(picker, { timeout: 20_000 }).toBe(true);
   await page.screenshot({ path: 'test-results/party-album.png' });
   expect(errors).toEqual([]);
 });
