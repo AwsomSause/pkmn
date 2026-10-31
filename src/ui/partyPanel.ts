@@ -48,6 +48,8 @@ export interface PickerConfig {
   badge?: string;
   /** A full-screen picture (a lazy asset id) drawn instead of the panel and title band, once loaded. */
   backdrop?: string;
+  /** The backdrop art already carries the title (e.g. the Bag plate), so the title text is left out. */
+  titleInArt?: boolean;
 }
 
 const LIST_TOP = 82;
@@ -83,7 +85,7 @@ export class Picker {
       band.fillStyle(COLORS.accent, 1).fillRect(36, 68, GAME_WIDTH - 72, 2);
       this.root.add(band);
     }
-    this.root.add(scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5));
+    if (!(backdrop && config.titleInArt)) this.root.add(scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5));
     if (config.badge) {
       const id = config.badge;
       const put = (): void => {

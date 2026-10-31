@@ -128,7 +128,7 @@ export class MapScene extends Phaser.Scene {
       if (side.kind === 'fish' && !side.used) shown.push(...fishingOffer(session.content, run!, side.id).flatMap((o) => session.content.species.get(o.speciesId) ?? []));
     }
     preloadPokemon(this, [...partySpecies(), ...shown], { icon: true });
-    queueAssets(this, [...FRAME_ASSET_IDS, 'ui.party.icon_box', 'ui.party.icon_box_faint', 'ui.party.statuses', 'ui.party.icon_item', ...(run?.eggs.length ? ['pack.ebdx.egg'] : [])]);
+    queueAssets(this, [...FRAME_ASSET_IDS, 'ui.party.icon_box', 'ui.party.icon_box_faint', 'ui.party.statuses', 'ui.party.icon_item', 'ui.bag.bg', ...(run?.eggs.length ? ['pack.ebdx.egg'] : [])]);
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {

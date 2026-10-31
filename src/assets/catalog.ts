@@ -155,6 +155,7 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...['icon_box', 'icon_box_faint'].map((n): AssetEntry => ({ id: `ui.party.${n}`, kind: 'image', category: 'ui', path: `images/packs/uie/party/${n}.png`, lazy: true })),
   // Bag illustration (UIE pack Graphics/Custom UI/Bag), shown in the Bag menu header.
   { id: 'ui.bag.main', kind: 'image', category: 'ui', path: 'images/packs/uie/bag/bag_1.png', lazy: true },
+  { id: 'ui.bag.bg', kind: 'image', category: 'ui', path: 'images/packs/uie/bag/bg_bag.png', lazy: true },
   // Pokédex seen/caught marks (UIE pack Graphics/Custom UI/Dex), used in the Research Room rows.
   ...['seen', 'caught'].map((n): AssetEntry => ({ id: `ui.dex.${n}`, kind: 'image', category: 'ui', path: `images/packs/uie/dex/${n}.png`, lazy: true })),
   // Party status badges (7 rows of 16 px: SLP PSN BRN PAR FRZ FNT PKRS) and held-item mark, from the UIE pack Custom UI/Party.
