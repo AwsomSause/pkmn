@@ -503,7 +503,8 @@
    "personality": true,
    "illusion": true,
    "gimmickTiming": true,
-   "gimmickMaxWait": 3
+   "gimmickMaxWait": 3,
+   "prediction": true
   }
  }
 }

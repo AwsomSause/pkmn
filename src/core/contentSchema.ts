@@ -1719,8 +1719,10 @@ export const TrainerAiSchema = z.object({
       gimmickTiming: z.boolean().default(false),
       /** ...but never more than this many turns. */
       gimmickMaxWait: z.number().int().min(0).default(3),
+      /** Guess the player's switch (bad matchup for them): hazards and set-up get a free turn, attacks are also judged on the player's bench. */
+      prediction: z.boolean().default(false),
     })
-    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false, itemReads: false, pivot: false, endgame: false, personality: false, illusion: false, gimmickTiming: false, gimmickMaxWait: 3 }),
+    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false, itemReads: false, pivot: false, endgame: false, personality: false, illusion: false, gimmickTiming: false, gimmickMaxWait: 3, prediction: false }),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;

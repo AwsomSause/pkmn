@@ -361,6 +361,7 @@ function aaiView(brain: EnemyBrain, user: PokemonInstance, best: number): AaiVie
     stages: brain.stages,
     best,
     foeReserves: side === 'enemy' ? playerLeft : enemyLeft,
+    foeBench: side === 'enemy' && brain.party ? brain.party.filter((m) => m.hp > 0 && m.uid !== target.uid) : [],
     ownReserves: side === 'enemy' ? enemyLeft : playerLeft,
     threat: () => {
       if (threat === undefined) {

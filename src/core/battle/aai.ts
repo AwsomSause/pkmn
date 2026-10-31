@@ -31,6 +31,8 @@ export interface AaiView {
   best: number;
   /** Fit Pokémon the target's side still has in reserve (hazards are worth more the more there are). */
   foeReserves: number;
+  /** The player's fit Pokémon on the bench (a trainer sees your party; used to guess a switch). Empty when the user is the player. */
+  foeBench: readonly PokemonInstance[];
   /** Fit teammates the user has in reserve. */
   ownReserves: number;
   /** The most damage the target can do to the user next turn, in HP (lazy; 0 when unknown). */
@@ -170,6 +172,12 @@ export function aaiTacticFactor(v: AaiView, move: Move): number {
     const spiky = v.targetAbility === 'rough-skin' || v.targetAbility === 'iron-barbs' || holds(v.target, 'rocky-helmet');
     if (spiky && move.flags.includes('contact') && userPct <= 0.2) f *= 0.5;
   }
+  // Prediction: when the player is likely to switch, an attack is also judged on what it does to the bench.
+  if (cfg.prediction && aaiPredictsSwitch(v)) {
+    const now = Math.max(0.25, typeEffectiveness(v.content.typeChart, move.type, v.targetTypes));
+    const bench = v.foeBench.map((m) => typeEffectiveness(v.content.typeChart, move.type, v.content.species.get(m.speciesId)?.types ?? [])).reduce((a, b) => a + b, 0) / v.foeBench.length;
+    f *= 0.5 + 0.5 * Math.min(2, bench / now);
+  }
   // Pivot moves: U-turn / Volt Switch carry it out of a bad matchup when it has someone to bring in.
   if (cfg.pivot && move.effects.switchOut === 'switch' && v.ownReserves > 0 && v.threat() >= v.user.hp * 0.5) f *= 1.25;
   // Endgame: a last, slower Pokémon that will be KO'd plays for damage now, not for a two-turn move.
@@ -194,6 +202,19 @@ export function aaiSpecialAttack(v: AaiView, move: Move, best: number): number |
   if (move.effects.userFaint === 'finalGambit') return v.ownReserves > 0 && v.userFaster && v.user.hp >= v.target.hp ? best * 2 : 0;
   if (move.effects.endeavor) return v.target.hp > v.user.hp * 2 ? best * Math.min(2, (v.target.hp - v.user.hp) / Math.max(1, v.target.hp) * 2) : 0;
   return null;
+}
+
+/**
+ * Prediction_System, deterministic: the player is likely to switch out when the trainer's Pokémon has a super-effective
+ * attack on it, the player's moves barely scratch the trainer's Pokémon (under 30% of its HP), and the player has a bench.
+ */
+export function aaiPredictsSwitch(v: AaiView): boolean {
+  if (v.side !== 'enemy' || v.foeBench.length === 0) return false;
+  const se = v.user.moves.some((slot) => {
+    const m = v.content.moves.get(slot.id);
+    return m && m.category !== 'status' && slot.pp > 0 && typeEffectiveness(v.content.typeChart, m.type, v.targetTypes) > 1;
+  });
+  return se && v.threat() < v.user.hp * 0.3;
 }
 
 /** True when a hit that should KO will leave the target at 1 HP instead (Sturdy, an unused Focus Sash, at full HP). */
@@ -231,6 +252,15 @@ export function aaiStatusValue(v: AaiView, move: Move): number | null {
   if (cfg.pivot && fx.switchOut === 'baton') {
     const boost = Object.values(v.stages).reduce((a, n) => a + Math.max(0, n ?? 0), 0);
     return v.ownReserves > 0 && boost >= 2 ? best * 1.2 : 0;
+  }
+  // Prediction: a predicted switch is a free turn for hazards and set-up.
+  if (cfg.prediction && aaiPredictsSwitch(v)) {
+    const hazard = fx.sideMove === 'spikes' || fx.sideMove === 'toxicSpikes' || fx.sideMove === 'stealthRock' || fx.sideMove === 'stickyWeb';
+    const boost = (fx.statChanges ?? []).some((c) => c.target === 'self' && c.stages > 0);
+    if (hazard || boost) {
+      const plain = aaiStatusValue({ ...v, content: { ...v.content, balance: { ...v.content.balance, trainerAi: { ...v.content.balance.trainerAi, aai: { ...cfg, prediction: false } } } } }, move);
+      return plain === 0 ? 0 : (plain ?? best * (hazard ? 0.3 : 0.9)) * 1.5;
+    }
   }
   if (cfg.repetition && fx.protect && userVol?.lastMove && v.content.moves.get(userVol.lastMove)?.effects.protect) return 0;
 
