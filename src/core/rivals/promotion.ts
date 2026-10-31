@@ -19,14 +19,14 @@ const RANK_NAME: Record<RivalRank, string> = { gymLeader: 'took over a Gym', fin
 const takeoverFlag = (rival: Rival) => `takeover:${rival.id}:${rival.rank}`;
 
 /**
- * After an unseen win (rivals/world.ts): a contender (or a rival already ranked) may climb one rank when
+ * After an unseen win (rivals/world.ts): an active rival, nemesis or contender (or a rival already ranked) may climb one rank when
  * its progress allows. Returns the rumour, or null. Only one rival may become Champion per run.
  */
 export function promoteRival(content: Content, run: RunState, rival: Rival, stageKey: string): string | null {
   const cfg = RIVAL_CONFIG.promotion;
   const at = rival.rank ? RIVAL_RANKS.indexOf(rival.rank) + 1 : 0;
   const next = RIVAL_RANKS[at];
-  if (!next || (rival.state !== 'contender' && !rival.rank) || rival.progress < cfg.progress[at]!) return null;
+  if (!next || (!cfg.states.includes(rival.state) && !rival.rank) || rival.progress < cfg.progress[at]!) return null;
   // A ranked rival waits until it has shown up in its new role before it climbs again.
   if (rival.rank && run.story.flags[takeoverFlag(rival)] !== 'done') return null;
   if (next === 'champion' && run.story.rivals.some((r) => r.rank === 'champion')) return null;

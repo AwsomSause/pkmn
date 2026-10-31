@@ -617,6 +617,8 @@ export const BattleStateSchema = z.object({
   /** A rival back for its rematch (Living Rivalry Engine): its id, and what it changed about its team. */
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),
+  /** Narrative rival defeat (M12): losing this rival fight is part of the story and does not end the run (rivals/narrativeDefeat.ts). */
+  narrative: z.object({ id: z.string() }).optional(),
   /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
   nemesis: z.string().optional(),
   nemesisNote: z.string().optional(),
@@ -1170,7 +1172,7 @@ export const SettingsSchema = z.object({
   /** Skip the drifting ambience particles (clouds, fog and rays stay). */
   reduceParticles: z.boolean().default(false),
   /** Battle text speed: all at once, a quick typewriter, or a slower one. */
-  textSpeed: z.enum(['instant', 'fast', 'normal']).default('instant'),
+  textSpeed: z.enum(['instant', 'fast', 'normal', 'slow']).default('instant'),
   /** Battle messages move on by themselves after `messageDelay` (otherwise only move and damage lines do). */
   autoAdvance: z.boolean().default(false),
   messageDelay: z.enum(['short', 'normal', 'long']).default('normal'),
@@ -1199,6 +1201,19 @@ export const SettingsSchema = z.object({
   trainerSortReverse: z.boolean().default(false),
   /** Which battle UI style draws the databoxes (ui/battleUiStyles.ts). */
   battleUi: z.enum(['aero', 'kit', 'kitLong']).default('aero'),
+  /** Animation switches (spec 6.6). Each is remembered while `disableAllAnimations` overrides them (core/accessibility.ts `animationFlags`). */
+  abilityAnimations: z.boolean().default(true),
+  battleTextAnimations: z.boolean().default(true),
+  interactionAnimations: z.boolean().default(true),
+  hyperAnimations: z.boolean().default(true),
+  rivalAnimations: z.boolean().default(true),
+  evolutionAnimations: z.boolean().default(true),
+  battleScreenEffects: z.boolean().default(true),
+  /** How fast animations play and how strong they look. */
+  animationSpeed: z.enum(['slow', 'normal', 'fast']).default('normal'),
+  animationIntensity: z.enum(['reduced', 'normal', 'enhanced']).default('normal'),
+  /** Master switch: turns every animation off without forgetting the individual ones above. */
+  disableAllAnimations: z.boolean().default(false),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

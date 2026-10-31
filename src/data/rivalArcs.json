@@ -1,9 +1,9 @@
 {
- "note": "Character arcs for rivals (Examples §7 A-D). An arc is assigned at birth from personality, style or path, turns after the first fight (or 3 stages), and resolves after 3 fights (or 8 stages): well if the rival is empathetic and resilient, badly otherwise. Arcs with a `trigger` (9 bond arcs, 10 Overdrive arcs) are assigned later, from the rival's Pokémon bonds, when the world moves (arcs.ts `triggeredArc`).",
+ "note": "Character arcs for rivals (Examples §7 A-D). An arc is assigned at birth from personality, style or path, turns after the first fight (or 2 stages), and resolves after 2 fights (or 4 stages; tuned 2026-10-31 from the rival report, since runs rarely last 8 stages): well if the rival is empathetic and resilient, badly otherwise. Arcs with a `trigger` (9 bond arcs, 10 Overdrive arcs) are assigned later, from the rival's Pokémon bonds, when the world moves (arcs.ts `triggeredArc`).",
  "turnEncounters": 1,
- "turnTicks": 3,
- "resolveEncounters": 3,
- "resolveTicks": 8,
+ "turnTicks": 2,
+ "resolveEncounters": 2,
+ "resolveTicks": 4,
  "good": {
   "pride": -8,
   "empathy": 8,

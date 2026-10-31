@@ -40,3 +40,6 @@ Built from the 108 bosses no region uses yet (all have sprites and teams in `bos
 | **Trial Archipelago** | Island trials and their captains | ilima, lana, kiawe, mallow, sophocles, hapu, ryuki, mina | kurt, eusine, wally, colress | gladion, carmine | Gens 7–9 native. |
 
 Exact rosters are checked against `bosses.json` types when the slice lands (a boss with no speciality only takes "any" themes). Each region also gets a presentation identity (palette, map header) from `regionIdentity`, a research-note line and a short arrival line.
+
+## Follow-up: boss teams past level 100 (built)
+`bossTeams.json` was built for levels up to 100. `core/bossBands.ts` upgrades a boss team by band (`balance.bossBands`, chosen by the team's top level: 101, 201, 301, 401): full evolutions, signature swaps for the weakest members, strongest learnable damaging moves, extra training, one held item each, sharper AI. No rolls; teams at 100 and below are untouched, so old seeds are unchanged.

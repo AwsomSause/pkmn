@@ -4,7 +4,7 @@
 // them and applies a small effect through the effect ledger. Counters live in
 // run.story.flags under "m:" keys and are cleared when the battle ends.
 
-import { chemistryOf } from './chemistry';
+import { CHEMISTRY, chemistryOf } from './chemistry';
 import { lossesTo, noteLoss, promiseDoneFlag, promiseOf } from './promises';
 import { openingFor, rivalFeeling } from '../rivals/feelings';
 import { elitePhilosophy } from './elite';
@@ -57,6 +57,10 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   wildAmbush: 'enemyStage',
   wildKin: 'flair',
   chemistryPerfect: 'statStage',
+  chemistryCover: 'statStage',
+  chemistryDuo: 'statStage',
+  chemistryTested: 'statStage',
+  chemistryUnlikely: 'statStage',
   starterDestiny: 'statStage',
   grandOmen: 'flair',
   grandShadow: 'enemyStage',
@@ -341,9 +345,14 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
     if (lead.uid === run.log.starterUid && trainerFight && foe.level >= lead.level + 6) {
       fire('starterDestiny', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), enemy: nameOf(foe.speciesId) });
     }
-    // Team Chemistry: Perfect Timing partners open together with a lift.
-    const timed = run.party.find((m) => m.uid !== lead.uid && m.hp > 0 && chemistryOf(content, run, lead.uid, m.uid) === 'perfectTiming');
-    if (timed) fire('chemistryPerfect', 'player', lead.uid, -1, { name: nameOf(lead.speciesId), other: nameOf(timed.speciesId) });
+    // Team Chemistry: partners with a label open together with a lift (Perfect Timing +Atk, Cover Partners +Def, Competitive Duo +Spe, Battle-Tested +Sp. Def, Unlikely Friends +Sp. Atk).
+    const chemTrigger = { perfectTiming: 'chemistryPerfect', coverPartners: 'chemistryCover', competitiveDuo: 'chemistryDuo', battleTested: 'chemistryTested', unlikelyFriends: 'chemistryUnlikely' } as const;
+    const pairs = run.party
+      .filter((m) => m.uid !== lead.uid && m.hp > 0)
+      .map((m) => ({ m, k: chemistryOf(content, run, lead.uid, m.uid) }))
+      .filter((p): p is { m: typeof p.m; k: NonNullable<typeof p.k> } => p.k !== null)
+      .sort((a, b) => CHEMISTRY.indexOf(a.k) - CHEMISTRY.indexOf(b.k));
+    if (pairs[0]) fire(chemTrigger[pairs[0].k], 'player', lead.uid, -1, { name: nameOf(lead.speciesId), other: nameOf(pairs[0].m.speciesId) });
     // Nemesis system: a nemesis that beat you before; a rival stung by a decisive loss; a counter-team sent after you.
     const nem = nemesisById(run, battle.nemesis);
     if (nem && (nem.wins > 0 || nem.beat.length > 0)) fire('rememberDefeat', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId) });
