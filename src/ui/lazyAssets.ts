@@ -17,8 +17,29 @@ export function isLoaded(scene: Phaser.Scene, entry: AssetEntry): boolean {
   return scene.textures.exists(entry.id);
 }
 
+/**
+ * Two scenes can fetch the same sprite at once (each loader only knows its own queue). Phaser would add the second copy
+ * and log "Texture key already in use", so a single-file load whose key arrived meanwhile just skips its cache step.
+ */
+function skipIfCached(scene: Phaser.Scene, before: Set<Phaser.Loader.File>): void {
+  for (const file of scene.load.list.entries) {
+    if (before.has(file) || !['image', 'spritesheet', 'audio', 'json'].includes(file.type)) continue;
+    const add = file.addToCache.bind(file);
+    const has = () => (file.type === 'audio' ? scene.cache.audio.exists(file.key) : file.type === 'json' ? scene.cache.json.exists(file.key) : scene.textures.exists(file.key));
+    file.addToCache = () => {
+      if (!has()) add();
+    };
+  }
+}
+
 /** Adds one asset to the scene's loader (does not start it). */
 export function queueAsset(scene: Phaser.Scene, entry: AssetEntry): void {
+  const before = new Set(scene.load.list.entries);
+  addToLoader(scene, entry);
+  skipIfCached(scene, before);
+}
+
+function addToLoader(scene: Phaser.Scene, entry: AssetEntry): void {
   switch (entry.kind) {
     case 'atlas': {
       // The packs mix two atlas formats: TexturePacker's ("textures": [...]) and

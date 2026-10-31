@@ -166,6 +166,13 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
     const team = battle.enemyTeam;
     team[0].hp = 1;
     team.push({ ...structuredClone(team[0]), uid: 'm10-ace' });
+    // Record every text the battle scene creates: a stamp banner lives about 1.6 s of game time (less once a key skips it),
+    // so on a slow runner polling for it can miss it. The log cannot.
+    const w = window as any;
+    w.__m10Seen = [];
+    const add = pkr.game.scene.getScene('Battle').add;
+    const orig = add.text.bind(add);
+    add.text = (...a: any[]) => (w.__m10Seen.push(a[2]), orig(...a));
     pkr.game.scene.getScene('Battle').scene.restart();
   });
   await expect.poll(() => showsText(page, 'Gym Leader Brock'), { timeout: 15_000, intervals: [100] }).toBe(true);
@@ -177,6 +184,7 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
   await waitForMenu(page);
   // Knock out the first Pokémon: the ace comes out with its stamp.
   // A move can miss, so attack (first move, Enter twice) until the banner shows.
+  const sawText = (text: string) => page.evaluate((t) => ((window as any).__m10Seen as string[]).includes(t), text);
   const attackUntil = async (text: string): Promise<boolean> => {
     for (let i = 0; i < 8; i++) {
       await page.keyboard.press('Enter');
@@ -185,7 +193,7 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
       await page.waitForTimeout(800);
       // Wait for the banner; if the command menu comes back first, the move missed: attack again.
       for (let t = 0; t < 150; t++) {
-        if (await showsText(page, text)) return true;
+        if (await sawText(text)) return true;
         if (!(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu)))) await page.keyboard.press('Enter');
         if (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu))) break;
         await page.waitForTimeout(50);

@@ -21,6 +21,8 @@ import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 export class RewardScene extends Phaser.Scene {
+  /** False for the first 220 ms of game time, while a held key could still pick a card (tests wait for it). */
+  inputReady = false;
   /** 0..draft-1 are the cards; then the Party and Bag buttons. */
   private index = 0;
   /** A draft item waiting for the card it is used on (Cornn Berry re-roll, Lock Capsule). */
@@ -127,10 +129,10 @@ export class RewardScene extends Phaser.Scene {
     this.focus(data.focus ?? 0, false);
 
     // A key pressed through the battle's last message must not pick a card the moment the screen opens.
-    let ready = false;
-    this.time.delayedCall(220, () => (ready = true));
+    this.inputReady = false;
+    this.time.delayedCall(220, () => (this.inputReady = true));
     onInputAction(this, (action) => {
-      if (!ready && action === 'confirm') return;
+      if (!this.inputReady && action === 'confirm') return;
       if (this.picker) {
         this.picker.handle(action);
         return;

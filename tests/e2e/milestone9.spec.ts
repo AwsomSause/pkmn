@@ -131,11 +131,18 @@ test('a missing animation file falls back to a quick effect and the battle carri
   await startBattle(page);
   const before = await page.evaluate(() => (window as any).__pkr.session.run.battle.turn);
   await waitForMenu(page);
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(200);
-  await page.keyboard.press('Enter');
+  // A menu ignores keys for a moment of game time, which is longer than wall time on a busy runner:
+  // press Enter (Fight, then the first move) whenever a menu is up until the turn has played.
   await expect
-    .poll(async () => (await scene(page)) !== 'Battle' || (await page.evaluate(() => (window as any).__pkr.session.run?.battle?.turn)) > before, { timeout: 20_000 })
+    .poll(
+      async () => {
+        if ((await scene(page)) !== 'Battle') return true;
+        if ((await page.evaluate(() => (window as any).__pkr.session.run?.battle?.turn)) > before) return true;
+        if (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu))) await page.keyboard.press('Enter');
+        return false;
+      },
+      { timeout: 30_000, intervals: [400] },
+    )
     .toBe(true);
   expect(errors).toEqual([]);
 });
