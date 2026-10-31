@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T00:30:03.127Z",
+  "generatedAt": "2026-10-31T00:32:54.919Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -1000,6 +1000,13 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/uie/party/icon_box_faint.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.bag.main",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/bag/bag_1.png",
       "lazy": true
     },
     {
