@@ -20,7 +20,8 @@ export * from './schema';
 
 export type DramaKind =
   | 'battleStart' | 'enemyMove' | 'enemyCrit' | 'enemyHurt' | 'enemyFaint' | 'playerFaint'
-  | 'enemySwitch' | 'enemyLow' | 'playerHabit' | 'battleEnd';
+  | 'enemySwitch' | 'enemyLow' | 'playerHabit' | 'battleEnd'
+  | 'enemyStatus' | 'foeStatus' | 'foeMiss' | 'enemyMiss';
 
 /** Something that really happened in the battle, with a stable id. */
 export interface DramaEvent {
@@ -29,7 +30,7 @@ export interface DramaEvent {
   turn: number;
   /** Index in the turn's event list it follows (-1: before the first). */
   at: number;
-  data: { moveId?: string; uid?: string; outcome?: 'win' | 'lose' | 'caught' };
+  data: { moveId?: string; uid?: string; outcome?: 'win' | 'lose' | 'caught'; superEffective?: boolean; hpShare?: number };
 }
 
 /** One line of trainer dialogue for the screen to show after event `at`. */
@@ -87,8 +88,14 @@ export function deriveDramaEvents(content: Content, run: RunState, prior: Battle
         if (e.side === 'enemy') add('enemyMove', i, { moveId: e.moveId });
         break;
       case 'damage':
-        if (e.side === 'enemy') add('enemyHurt', i);
+        if (e.side === 'enemy') add('enemyHurt', i, { superEffective: e.effectiveness > 1, hpShare: e.hpAfter / Math.max(1, calcStats(content, currentEnemy(battle)).hp) });
         else if (e.crit) add('enemyCrit', i);
+        break;
+      case 'status':
+        add(e.side === 'enemy' ? 'enemyStatus' : 'foeStatus', i);
+        break;
+      case 'miss':
+        add(e.side === 'enemy' ? 'enemyMiss' : 'foeMiss', i);
         break;
       case 'faint':
         add(e.side === 'enemy' ? 'enemyFaint' : 'playerFaint', i, { uid: e.uid });
@@ -211,13 +218,26 @@ function classify(content: Content, battle: BattleState, state: BattleState['dra
       return { category: 'command', tier: 'ambient' };
     case 'enemyCrit':
       return { category: 'reactionCrit', tier: 'ambient' };
+    case 'enemyStatus':
+      return { category: 'status', tier: 'ambient' };
+    case 'foeStatus':
+      return { category: 'statusInflict', tier: 'ambient' };
+    case 'foeMiss':
+      return { category: 'miss', tier: 'ambient' };
+    case 'enemyMiss':
+      return { category: 'foeMiss', tier: 'ambient' };
     case 'enemyHurt': {
+      const left = ev.data.hpShare ?? 1;
+      if (left > 0 && left <= 0.1 && !state.seen.includes(`survived:${enemy.uid}`)) {
+        state.seen.push(`survived:${enemy.uid}`);
+        return { category: 'survived', tier: 'tactical' };
+      }
       const low = enemy.hp / Math.max(1, calcStats(content, enemy).hp) <= DRAMA.config.desperationHpShare && enemy.hp > 0;
       if (low && !state.seen.includes(`low:${enemy.uid}`)) {
         state.seen.push(`low:${enemy.uid}`);
         return { category: 'desperation', tier: 'major' };
       }
-      return { category: 'reactionHurt', tier: 'ambient' };
+      return ev.data.superEffective ? { category: 'encourage', tier: 'ambient' } : { category: 'reactionHurt', tier: 'ambient' };
     }
     case 'enemyFaint':
       return { category: 'ownKo', tier: 'major' };

@@ -1,0 +1,1 @@
+- Zip coverage Z6h: party rows show the UIE status badge (SLP PSN BRN PAR FRZ FNT) and held-item mark (`ui/partyPanel.ts`; art preloaded by the map). Test `tests/e2e/partyBadges.spec.ts`. Falls back to the text tag if the art isn't loaded (e.g. party lists opened in battle). Not used: name bars, EXP bar, mega/mail icons, party grid layout. Presentation only.

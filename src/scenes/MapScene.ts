@@ -22,7 +22,7 @@ import { expeditionPreview } from '../core/expedition/flow';
 import { minigamePreview } from '../core/minigame/flow';
 import { ROUTE_LABELS, routeKind } from '../core/campaign/director';
 import { anomalyLine, stageAnomaly } from '../core/story/anomaly';
-import { fishingOffer, raidPreview, totemPreview, mapActions, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
+import { fishingOffer, raidPreview, totemPreview, mapActions, wipeStatus, mapChoices, mapPreviews, nextGymLeaders, type MapActionKind, type NodePreview } from '../core/run';
 import { bossInfo, currentRegion, getCampaign, runLevelCap } from '../core/regions';
 import { blindMap } from '../core/rules';
 import { arenaFor, getTheme } from '../core/themes';
@@ -36,6 +36,7 @@ import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuH
 import { onInputAction } from '../ui/input';
 import { Picker, speciesRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
+import { showAchievementToasts } from '../ui/achievementToast';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { badge, focusFrame } from '../ui/widgets';
 import { AERO, drawGlass, glassPanel as drawPanel, type MotionLevel } from '../ui/aero';
@@ -88,7 +89,8 @@ type Option =
   | { kind: 'story' }
   | { kind: 'bond' }
   | { kind: 'summary' }
-  | { kind: 'box' };
+  | { kind: 'box' }
+  | { kind: 'endRun' };
 
 export class MapScene extends Phaser.Scene {
   private options: Option[] = [];
@@ -97,6 +99,7 @@ export class MapScene extends Phaser.Scene {
   private picker: Picker | null = null;
   private info: Phaser.GameObjects.Text | null = null;
   private notice: Phaser.GameObjects.Text | null = null;
+  private endArmed = false;
   private busy = false;
   private colSpacing = COL_SPACING;
   private accent: number = COLORS.border;
@@ -125,10 +128,11 @@ export class MapScene extends Phaser.Scene {
       if (side.kind === 'fish' && !side.used) shown.push(...fishingOffer(session.content, run!, side.id).flatMap((o) => session.content.species.get(o.speciesId) ?? []));
     }
     preloadPokemon(this, [...partySpecies(), ...shown], { icon: true });
-    queueAssets(this, [...FRAME_ASSET_IDS, ...(run?.eggs.length ? ['pack.ebdx.egg'] : [])]);
+    queueAssets(this, [...FRAME_ASSET_IDS, 'ui.party.icon_box', 'ui.party.icon_box_faint', 'ui.party.statuses', 'ui.party.icon_item', ...(run?.eggs.length ? ['pack.ebdx.egg'] : [])]);
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
+    this.endArmed = false;
     const { session } = services();
     const run = session.run!;
     const content = session.content;
@@ -185,7 +189,7 @@ export class MapScene extends Phaser.Scene {
       .text(GAME_WIDTH - 24, 14, `${region.name}  ·  ${league ? 'Battle' : 'Level'} ${column}/${stage.map.columns}`, textStyle(24, COLORS.textLight))
       .setOrigin(1, 0);
     this.add
-      .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}`, textStyle(16, '#d8d0e0'))
+      .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}${wipeStatus(run) ? `  ·  Wipes ${wipeStatus(run)!.wipes}${wipeStatus(run)!.max ? `/${wipeStatus(run)!.max}` : ''}` : ''}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
 
     const pinned = pinnedObjective(content, run);
@@ -376,6 +380,7 @@ export class MapScene extends Phaser.Scene {
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
     buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel }, { option: { kind: 'summary' }, label: 'Summary', color: COLORS.panel });
+    if (wipeStatus(services().session.run!)) buttons.push({ option: { kind: 'endRun' }, label: 'End run', color: 0x6a2a38 });
     // Narrower buttons when there are many, so they never run into the info line.
     const bw = buttons.length > 7 ? Math.max(76, Math.floor((GAME_WIDTH - 48) / buttons.length) - 8) : 92;
     let x = GAME_WIDTH - 24 - buttons.length * (bw + 8) + 4;
@@ -394,6 +399,7 @@ export class MapScene extends Phaser.Scene {
       .text(GAME_WIDTH - 24, 506, data.notice ?? (working ? `Working: ${working}` : ''), textStyle(15, '#f0e0a0', { align: 'right', wordWrap: { width: 340 } }))
       .setOrigin(1, 0);
     this.focus(Math.min(data.focus ?? 0, this.options.length - 1), false);
+    showAchievementToasts(this, session.takeAchievementToasts(), this.motion);
 
     onInputAction(this, (action) => {
       if (this.picker) {
@@ -534,6 +540,8 @@ export class MapScene extends Phaser.Scene {
         return 'See how each Pokémon feels about you: trust, affection, sync and more.';
       case 'story':
         return 'Read the story of your run so far, with the feelings each moment left.';
+      case 'endRun':
+        return 'Give up this Adventure run. Press it twice to confirm; what you earned so far still counts.';
       case 'box':
         return 'Store spare Pokémon in the PC, or bring them back into the party.';
     }
@@ -641,6 +649,15 @@ export class MapScene extends Phaser.Scene {
         break;
       case 'box':
         openBoxMenu(this.fieldHost());
+        break;
+      case 'endRun':
+        if (!this.endArmed) {
+          this.endArmed = true;
+          this.notice?.setText('Press End run again to end this Adventure run.');
+          break;
+        }
+        services().session.endRunEarly();
+        this.scene.start('GameOver');
         break;
     }
   }

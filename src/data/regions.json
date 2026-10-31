@@ -247,6 +247,91 @@
   ]
  },
  {
+  "id": "torren",
+  "name": "Torren",
+  "gymLeaders": [
+   "zinnia",
+   "maxie",
+   "archie",
+   "tabitha",
+   "shelly",
+   "plumeria",
+   "guzma",
+   "janine"
+  ],
+  "eliteFour": [
+   "cyrus",
+   "lysandre",
+   "giacomo",
+   "colress"
+  ],
+  "champions": [
+   "volo",
+   "ghetsis"
+  ],
+  "grand": false,
+  "custom": true,
+  "generations": []
+ },
+ {
+  "id": "frontier-isles",
+  "name": "Frontier Isles",
+  "gymLeaders": [
+   "anabel",
+   "thorton",
+   "ingo",
+   "emmet",
+   "riley",
+   "cheryl",
+   "marley",
+   "mira"
+  ],
+  "eliteFour": [
+   "klara",
+   "peony",
+   "lisia",
+   "the-royal"
+  ],
+  "champions": [
+   "palmer",
+   "noland"
+  ],
+  "grand": false,
+  "custom": true,
+  "generations": []
+ },
+ {
+  "id": "trial-archipelago",
+  "name": "Trial Archipelago",
+  "gymLeaders": [
+   "ilima",
+   "lana",
+   "kiawe",
+   "mallow",
+   "sophocles",
+   "hapu",
+   "ryuki",
+   "mina"
+  ],
+  "eliteFour": [
+   "nanu",
+   "kurt",
+   "wally",
+   "eusine"
+  ],
+  "champions": [
+   "lusamine",
+   "gladion"
+  ],
+  "grand": false,
+  "custom": true,
+  "generations": [
+   7,
+   8,
+   9
+  ]
+ },
+ {
   "id": "grand",
   "name": "Grand Region",
   "gymLeaders": [

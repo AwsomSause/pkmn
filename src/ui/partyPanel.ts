@@ -17,7 +17,7 @@ import type { InputAction } from './input';
 import { itemVisual, pokemonIcon } from './sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, STATUS_LABELS, textStyle } from './theme';
 import { Bar, drawPanel, focusFrame, paintWindow } from './widgets';
-import { AERO, drawGlass, paintGlass } from './aero';
+import { AERO, drawGlass, ensureRowFrames, paintGlass } from './aero';
 
 const DEPTH = 100;
 
@@ -238,6 +238,15 @@ export function emotionDot(scene: Phaser.Scene, x: number, y: number, color: str
 }
 
 /** One party row: icon, name, level, HP bar, status, held items and friendship hearts. */
+const BADGE_ROWS: Record<string, number> = { slp: 0, psn: 1, brn: 2, par: 3, frz: 4, fnt: 5 };
+
+/** The UIE status badge for a row (SLP/PSN/BRN/PAR/FRZ/FNT), or null until the art has loaded. */
+function statusBadge(scene: Phaser.Scene, x: number, y: number, key: string): Phaser.GameObjects.Image | null {
+  const row = BADGE_ROWS[key];
+  if (row === undefined || !ensureRowFrames(scene, 'ui.party.statuses', 16)) return null;
+  return scene.add.image(x, y, 'ui.party.statuses', String(row)).setOrigin(0, 0.5).setScale(0.9).setName('status-badge');
+}
+
 /** The UIE icon tile behind a party row's Pokémon icon (blue, or grey when fainted); loads on first use. */
 function iconTile(scene: Phaser.Scene, box: Phaser.GameObjects.Container, fainted: boolean): void {
   const id = fainted ? 'ui.party.icon_box_faint' : 'ui.party.icon_box';
@@ -278,15 +287,21 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
       void bar.set(mon.hp / max, false);
       box.add(scene.add.text(w - 12, 38, `${mon.hp}/${max}`, textStyle(20)).setOrigin(1, 0));
       const status = mon.hp <= 0 ? { label: 'FNT', color: 0x806060 } : mon.status ? STATUS_LABELS[mon.status.id] : null;
-      const tags = [status?.label, opts.tag].filter(Boolean).join('  ');
-      let tagEnd = 72;
+      // The UIE badge stands in for the status word when its art is loaded (the tag text stays for LEAD, etc.).
+      const badge = status ? statusBadge(scene, 72, 66, mon.hp <= 0 ? 'fnt' : mon.status!.id) : null;
+      const tags = [badge ? undefined : status?.label, opts.tag].filter(Boolean).join('  ');
+      let tagEnd = 72 + (badge ? 44 : 0);
+      if (badge) box.add(badge);
       if (tags) {
-        const tagText = scene.add.text(72, 58, tags, textStyle(16, mon.hp <= 0 ? '#c05050' : '#d07020'));
+        const tagText = scene.add.text(tagEnd, 58, tags, textStyle(16, mon.hp <= 0 ? '#c05050' : '#d07020'));
         box.add(tagText);
         tagEnd += tagText.width + 10;
       }
       const count = Object.values(mon.held ?? {}).reduce((a, b) => a + b, 0);
-      if (count) box.add(scene.add.text(tagEnd, 58, `◆ ${count} held`, textStyle(16, '#8fb8e0')));
+      if (count) {
+        if (scene.textures.exists('ui.party.icon_item')) box.add(scene.add.image(tagEnd, 66, 'ui.party.icon_item').setOrigin(0, 0.5).setName('held-icon'));
+        box.add(scene.add.text(tagEnd + (scene.textures.exists('ui.party.icon_item') ? 20 : 0), 58, scene.textures.exists('ui.party.icon_item') ? `${count} held` : `◆ ${count} held`, textStyle(16, '#8fb8e0')));
+      }
       const abilityId = abilityOf(content, mon);
       const abilityName = abilityId ? content.abilities.get(abilityId)?.name : undefined;
       if (abilityName) box.add(scene.add.text(w - 100, 60, abilityName, textStyle(14, '#a69cb4')).setOrigin(1, 0));

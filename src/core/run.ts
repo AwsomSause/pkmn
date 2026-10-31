@@ -181,6 +181,8 @@ export interface NewRunOptions {
   raidTierUnlocked?: number;
   /** The Bank licenses the profile owns (core/bank.ts runLicenses keeps the three that act inside a run). */
   licenses?: string[];
+  /** Candy Shop perks the profile owns (core/candyShop.ts): they add to the starting Bag. */
+  candyPerks?: string[];
   /** The account's unlocked trainers; map events that recruit one of them stop appearing (itemCounters `owned:<id>`). */
   ownedTrainers?: readonly string[];
 }
@@ -188,7 +190,7 @@ export interface NewRunOptions {
 export function createRun(content: Content, opts: NewRunOptions): RunState {
   const archetype = getArchetype(content, opts.archetypeId);
   const prep: RunPrep = { ...(opts.prep ?? { ...defaultPrep(content), campaignId: opts.campaignId ?? 'full' }) };
-  const resources = startingResources(content, archetype, prep);
+  const resources = startingResources(content, archetype, prep, opts.candyPerks);
   const rules = makeRules(opts.rules ?? { modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false });
   const scale = startScale(rules);
   const inventory: Record<string, number> = {};
@@ -295,6 +297,22 @@ function restoreAfterWipe(content: Content, run: RunState): RunState | null {
   back.phase = 'map';
   takeCheckpoint(back);
   return back;
+}
+
+/** Adventure wipes so far and the most the mode allows (null: the mode has no wipe limit or no checkpoints). */
+export function wipeStatus(run: Pick<RunState, 'rules'>): { wipes: number; max: number | null } | null {
+  const mode = getMode(run.rules.modeId);
+  return mode?.checkpoints ? { wipes: run.rules.wipes, max: mode.maxWipes ?? null } : null;
+}
+
+/** Ends an Adventure run on purpose (from the map): the run is over, not won. Other modes can't be ended this way. */
+export function endRunEarly(current: RunState): RunState {
+  assertPhase(current, 'map');
+  if (!wipeStatus(current)) throw new Error('Only Adventure runs can be ended from the map');
+  const run = structuredClone(current);
+  run.phase = 'over';
+  run.victory = false;
+  return run;
 }
 
 function assertPhase(run: RunState, ...phases: RunState['phase'][]): void {
@@ -1292,6 +1310,12 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       markUsedThisStage(run, rsvp);
       const bonus = perksOf(activePerks(content, run), 'rival')[0]!.perk.levelBonus;
       plan = { ...plan, name: `Rival ${plan.name}`, members: plan.members.map((m) => ({ ...m, level: m.level + bonus })) };
+    }
+    // A boss's ace may start a stage lower and evolve in the middle of the fight (Battle Drama P5, now for gym, Elite Four and champion too).
+    if (content.balance.bossEvolution && plan.leaderId && !rivalBack && !nemesis && !hunted && trainingIndex < 0) {
+      const trained = withTrainingEvolution(content, plan.members);
+      plan = { ...plan, members: trained.members };
+      trainingIndex = trained.index;
     }
     const team = plan.members.map((m, i) => {
       const uid = nextUid(run, 'e');
