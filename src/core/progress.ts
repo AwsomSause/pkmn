@@ -306,10 +306,9 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     researchPoints = Math.round(
       (research.perSpeciesSeen * newSpeciesSeen.length +
         research.perSpeciesCaught * newSpeciesCaught.length +
-        research.perShiny * (run.log.counters.shiniesFound ?? 0) +
-        (run.log.counters.labResearch ?? 0)) *
+        research.perShiny * (run.log.counters.shiniesFound ?? 0)) *
         researchMultiplier(getArchetype(content, run.archetypeId)),
-    ) + eventResearch(run);
+    ) + (run.log.counters.labResearch ?? 0) + eventResearch(run);
     researchPoints = scaleReward(Math.round(researchPoints * researchScale(run.rules)), run.rules);
     if (runQuestDone) researchPoints += runQuest.researchPoints;
     if (directive?.done) researchPoints += directive.researchPoints;
