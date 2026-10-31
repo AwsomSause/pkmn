@@ -282,6 +282,36 @@
       "checkpoints": false,
       "blurb": "Spooky forms haunt the wild: about 1 in 4 wild Pokémon is replaced by a Spooky form.",
       "spookyChance": 0.25
+    },
+    {
+      "id": "draft-lab",
+      "name": "Draft Lab",
+      "status": "supported",
+      "progressionEligible": false,
+      "checkpoints": false,
+      "blurb": "A place to experiment: the starter set and draft rule are random every run. No permanent rewards.",
+      "bundles": ["random-draft"]
+    },
+    {
+      "id": "regional-circuit",
+      "name": "Regional Circuit",
+      "status": "supported",
+      "progressionEligible": true,
+      "checkpoints": false,
+      "blurb": "A shorter run through one region picked by the seed: its trainers, its Pokémon, its gyms. Half the usual account rewards.",
+      "campaignId": "regional-circuit",
+      "rewardScale": 0.5
+    },
+    {
+      "id": "research-expedition",
+      "name": "Research Expedition",
+      "status": "supported",
+      "progressionEligible": true,
+      "checkpoints": false,
+      "blurb": "Event-heavy routes with fewer ordinary battles and scarce supplies (half the starting money and items).",
+      "campaignId": "expedition-route",
+      "bundles": ["variant-hunt", "scarce-supplies"],
+      "rewardScale": 0.75
     }
   ],
   "duplicateCompensation": { "researchPoints": 8 },

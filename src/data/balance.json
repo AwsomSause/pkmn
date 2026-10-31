@@ -250,6 +250,28 @@
    "countsForProgress": false
   },
   {
+   "id": "regional-circuit",
+   "name": "Regional Circuit",
+   "regularRegions": 1,
+   "grandRegion": false,
+   "stagesPerRegion": 8,
+   "columns": 20,
+   "trainerColumns": [[4, 9], [11, 17]],
+   "eliteFourSize": 4,
+   "countsForProgress": false
+  },
+  {
+   "id": "expedition-route",
+   "name": "Expedition route",
+   "regularRegions": 3,
+   "grandRegion": false,
+   "stagesPerRegion": 3,
+   "columns": 14,
+   "trainerColumns": [[5, 6], [10, 11]],
+   "eliteFourSize": 4,
+   "countsForProgress": false
+  },
+  {
    "id": "quick-route",
    "name": "Quick Route",
    "regularRegions": 9,
