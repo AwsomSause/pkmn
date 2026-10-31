@@ -450,6 +450,8 @@ export const RaidBattleSchema = z.object({
   cheersLeft: z.number().int().min(0).default(3),
   cheerOffense: z.number().int().min(0).default(0),
   cheerDefense: z.number().int().min(0).default(0),
+  /** Cheer level 1 to 3 (earned by winning raids): stronger and richer cheers. */
+  cheerLevel: z.number().int().min(1).max(3).default(1),
   /** Who earned a raid memory (uids): started the raid, broke a shield, took a charged attack under a Defense cheer, survived a charged attack. */
   lead: z.string().nullable().default(null),
   breaker: z.string().nullable().default(null),

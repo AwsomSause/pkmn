@@ -106,7 +106,7 @@ import {
   wildShinyMultiplier,
   wildSpeciesWithItems,
 } from './mapItems';
-import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { pickStones } from './expedition/flow';
@@ -1017,6 +1017,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   run.battle.ai = 0.6;
   run.battle.raid = freshRaidBattle(def);
   run.battle.raid.lead = run.party[activeIndex]!.uid;
+  run.battle.raid.cheerLevel = cheerLevelFor(run.raids.won);
   const raidState = run.battle.raid;
   if (approach) {
     if (approach.startHp) raidState.pendingShields = raidState.pendingShields.filter((at) => at < approach.startHp!);
