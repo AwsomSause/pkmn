@@ -1,5 +1,6 @@
 // The "Pokémon Acquired" panel text (Untitled document Phase B). Pure: no UI, no RNG.
 
+import { heartStage, temperamentOf } from './shadow';
 import { typeEffectiveness } from './battle/damage';
 import { TYPE_NAMES, type Content } from './contentSchema';
 import { abilityOf, calcStats, getSpecies, isUsableMove } from './pokemon';
@@ -80,6 +81,11 @@ export function catchSummary(content: Content, mon: PokemonInstance, compareTo?:
         'Moves:',
         ...mon.moves.map((m) => `  ${moveLine(content, m.id)}`),
       ];
+  if (mon.shadow) {
+    const t = temperamentOf(content, mon);
+    lines.splice(1, 0, `SHADOW · ${heartStage(content, mon.shadow.heart)} · Heart Gauge ${mon.shadow.heart}/100 · ${t.label}: ${t.story}`);
+  }
+  if (mon.blissful) lines.splice(1, 0, `BLISSFUL · ${content.shadowWorld.auras.find((a) => a.id === mon.blissful!.aura)?.label ?? 'Aura'} aura: mends the party a little after battle and calms Shadow Pokémon at rest`);
   if (compareTo) {
     const other = calcStats(content, compareTo);
     const diff = STAT_LABELS.map(([k, label]) => {
