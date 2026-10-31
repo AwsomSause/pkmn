@@ -9,7 +9,8 @@ import { aeroBackdrop, bounceIn, floatIdle } from '../ui/aero';
 import { onInputAction } from '../ui/input';
 import { playSfx } from '../ui/audio';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { Menu } from '../ui/widgets';
+import { glassPanel as drawPanel } from '../ui/aero';
 import { sceneForRun } from './routing';
 
 const MEDAL_SFX: Record<string, string> = { gold: 'se.shiny', silver: 'se.level_up', bronze: 'se.level_up', none: 'ui.error' };

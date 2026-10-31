@@ -11,7 +11,8 @@ import { playMusic, playSfx } from '../ui/audio';
 import { loadAssets } from '../ui/lazyAssets';
 import { EXPEDITION_TRACK_IDS, expeditionTrack } from '../core/presentation/battleMusic';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
-import { drawPanel, Menu } from '../ui/widgets';
+import { Menu } from '../ui/widgets';
+import { glassPanel as drawPanel, slideIn } from '../ui/aero';
 import { sceneForRun } from './routing';
 
 const GLYPH: Record<string, { glyph: string; color: number }> = {
@@ -42,7 +43,8 @@ export class ExpeditionScene extends Phaser.Scene {
     void loadAssets(this, [song]).then(() => { if (this.scene.isActive()) playMusic(this, song); });
     if (this.textures.exists('ui.raid.adv_header')) this.add.image(GAME_WIDTH / 2, 22, 'ui.raid.adv_header').setDisplaySize(GAME_WIDTH * 0.7, 56).setAlpha(0.5);
     this.add.text(GAME_WIDTH / 2, 22, `${def.name}  ·  Tier ${def.tier}`, textStyle(32, COLORS.textLight)).setOrigin(0.5);
-    drawPanel(this, 16, 48, GAME_WIDTH - 32, 200, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    const route = drawPanel(this, 16, 48, GAME_WIDTH - 32, 200, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    slideIn(this, route, 0, -16, session.settings.battleAnimations);
     this.drawRoute(exp);
     this.add.text(24, 256, this.partyLine(run), textStyle(15, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 48 } }));
     const loot = exp.loot;
