@@ -144,6 +144,7 @@ export function applyTrainerTier(content: Content, plan: TrainerPlan, input: Tie
 
   // Memory: a trainer that remembers you brings back the Pokémon you beat (evolved, stronger) and a move for the type that beat it.
   let counter: string | null = null;
+  let note: string | null = null;
   const remembers = !!memory && cls.remembers && (memory.species !== null || memory.type !== null) && rng.chance(cfg.memory.chance);
   if (remembers && memory!.species && members.length > 0) {
     const lost = getSpecies(content, memory!.species);
@@ -152,8 +153,12 @@ export function applyTrainerTier(content: Content, plan: TrainerPlan, input: Tie
     const level = Math.min(cap, members[i]!.level + cfg.memory.levelBonus);
     const { speciesId } = directSpecies(content, { source: 'trainer', level, cap, draw: () => target });
     members[i] = { ...members[i]!, speciesId, level };
+    note = `${plan.name} hasn't forgotten losing ${lost.name}, and brings back ${getSpecies(content, speciesId).name}!`;
   }
-  if (remembers && memory!.type && cfg.memory.counterTypes > 0) counter = counterTypes(content, [memory!.type as TypeName])[0] ?? null;
+  if (remembers && memory!.type && cfg.memory.counterTypes > 0) {
+    counter = counterTypes(content, [memory!.type as TypeName])[0] ?? null;
+    if (counter) note = [note, `${note ? 'It has' : `${plan.name} has`} trained against ${memory!.type}-type Pokémon.`].join(' ');
+  }
 
   members.forEach((m, i) => {
     const sp = getSpecies(content, m.speciesId);
@@ -190,5 +195,5 @@ export function applyTrainerTier(content: Content, plan: TrainerPlan, input: Tie
     if (stacks > 0) members[i]!.training = { ...(m.training ?? {}), [cls.trainStat as StatName]: stacks };
   });
 
-  return { ...plan, members, ai: Math.max(plan.ai, tier.ai) };
+  return { ...plan, members, ai: Math.max(plan.ai, tier.ai), ...(note ? { memoryNote: note } : {}) };
 }

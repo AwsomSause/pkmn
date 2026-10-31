@@ -1465,6 +1465,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     }
     if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
     if (hunted) run.battle.hunted = true;
+    if (plan.memoryNote && !hunted && !nemesis) run.battle.memoryNote = plan.memoryNote;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).
     const doublesCfg = content.balance.doubles;
     // Bosses known for double battles (Tate & Liza) always fight two at a time.
@@ -1476,7 +1477,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
       if (rivalNote) run.battle.rivalNote = rivalNote;
-      if (narrativeDef) run.battle.narrative = { id: narrativeDef.id };
+      if (narrativeDef) run.battle.narrative = { id: narrativeDef.id, maxTurns: narrativeDef.maxTurns };
     }
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.

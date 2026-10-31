@@ -10,6 +10,7 @@ import { moveFamily, type FamilyId } from './families';
 import type { BattleEvent, Side } from '../battle/engine';
 import type { Content } from '../contentSchema';
 import { abilityAnimId } from './abilityAnims';
+import { hyperAnimId } from './storyAnims';
 import { animChoice, commonChoice, presentationFor, type MoveAnims } from './moveAnims';
 
 export type AnimationMode = 'full' | 'reduced' | 'off';
@@ -43,7 +44,9 @@ export type Cue =
   /** An ability triggering: banner with its name plus the category's flourish (registry id `ability.*`). */
   | { kind: 'abilityAnim'; side: Side; anim: string; label: string }
   /** The badge's animated words (registry id `text.*`); `miss` has no badge text of its own. */
-  | { kind: 'textAnim'; side: Side; anim: string; label: string };
+  | { kind: 'textAnim'; side: Side; anim: string; label: string }
+  /** A Hyper/Overdrive moment or an interaction flourish (registry ids `overdrive.*`, `interaction.*`). */
+  | { kind: 'storyAnim'; side: Side; anim: string };
 
 const other = (side: Side): Side => (side === 'player' ? 'enemy' : 'player');
 
@@ -134,6 +137,15 @@ export function planCues(
         break;
       case 'ability':
         if (animated) cues.push({ kind: 'abilityAnim', side: e.side, anim: abilityAnimId(e.ability), label: content.abilities?.get(e.ability)?.name ?? e.ability });
+        break;
+      case 'hyper':
+        if (animated) cues.push({ kind: 'storyAnim', side: e.side, anim: hyperAnimId(e.defId) });
+        break;
+      case 'switchIn':
+        if (animated) cues.push({ kind: 'storyAnim', side: e.side, anim: 'interaction.enter' });
+        break;
+      case 'item':
+        if (animated) cues.push({ kind: 'storyAnim', side: 'player', anim: 'interaction.item' });
         break;
       case 'residual':
       case 'recoil':

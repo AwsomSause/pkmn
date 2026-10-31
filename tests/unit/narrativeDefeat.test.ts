@@ -14,7 +14,7 @@ const fakeRival = (encounters: number) => ({ id: 'rv1', name: 'Joey', encounters
 
 function narrativeBattle(run: RunState): RunState {
   const r = debugReplaceEnemy(content, toBattle(run), 'growlithe', 60);
-  r.battle!.narrative = { id: DEF.id };
+  r.battle!.narrative = { id: DEF.id, maxTurns: DEF.maxTurns };
   r.battle!.rivalId = 'rv1';
   return r;
 }
@@ -27,6 +27,19 @@ function playOut(run: RunState) {
   }
   return { run: r, last: last! };
 }
+
+describe('the narrative fight cannot be won', () => {
+  it('the rival\'s last Pokémon holds on, and the fight ends as the story loss', () => {
+    // A weak foe against the player: an ordinary battle would be won on the first hit.
+    const run = debugReplaceEnemy(content, toBattle(start('n9')), 'rattata', 1);
+    run.battle!.narrative = { id: DEF.id, maxTurns: 12 };
+    run.battle!.rivalId = 'rv1';
+    const { run: after, last } = playOut(run);
+    expect(last.narrativeDefeat?.id).toBe(DEF.id);
+    expect(after.phase).not.toBe('over');
+    expect(after.log.battlesWon).toBe(0);
+  });
+});
 
 describe('narrative defeat selection', () => {
   it('is due only after enough meetings, once, and respects maxPerRun', () => {
