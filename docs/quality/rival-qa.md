@@ -3,13 +3,13 @@
 Hand checks for the rival system (Rivalry Engine phase 13). Run `npm run report:rivals` first: it must say `Contradictions | 0`.
 Numbers come from `docs/quality/RIVAL_REPORT.md` (40 seeds).
 
-## What the report shows (2026-10-31)
+## What the report shows (2026-10-31, after tuning)
 
-- Every run makes rivals (about 3 each) and fights about 3 rematches.
-- 80% of runs name an Ultimate Rival and 30% finish its quest.
-- **Arcs almost never end** (2 of 115 rivals). Most rivals are still open when the run ends. This is worth tuning next.
-- **No rival won a rank without you** (Gym Leader, finalist, Champion) in 40 seeds. The bot's runs end before a rival's world progress reaches 3. Tune `rivals.json` `promotion` if it should happen more.
-- 8 rivals shared a class and name with another rival in the same run. That's allowed, but it can read as the same person twice.
+- Every run makes rivals (about 3 each) and fights 2 to 3 rematches.
+- About 73% of runs name an Ultimate Rival and 28% finish its quest.
+- Arcs now end more often: 21 of 110 rivals, up from 2 of 115. An arc now resolves after 2 fights or 4 stages (it was 3 fights or 8 stages; runs rarely last 8 stages). The numbers are in `rivalArcs.json`.
+- Rivals now win ranks without you: 14 Gym takeovers in 40 runs. Active rivals and nemeses can climb now, not just contenders, at a 30% chance per unseen win (`rivals.json` `promotion`). Finalist and Champion ranks still need a Gym takeover to happen first, so they stay rare in the bot's short runs.
+- A few rivals share a class and name with another rival in the same run. That's allowed, but it can read as the same person twice.
 
 ## Scenarios
 
