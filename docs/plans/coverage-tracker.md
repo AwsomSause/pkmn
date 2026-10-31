@@ -37,7 +37,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | The Battle Drama Engine (9 phases) | DONE (the 2 Overdrive events are built, limited) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
 | Trainers.md perks | PART: 180 of 220 trainers built (A to Kurt by this thread, Z backwards by the Raids thread); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
-| Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | TODO |
+| Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | PART (M10 visual slices 1-21 built; see visual-coverage.md) |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
 
