@@ -292,3 +292,42 @@ export function isHunted(content: Content, run: RunState, classId: string): bool
 export function markHunted(run: RunState): void {
   run.story.flags[huntedFlag(run.regionIndex)] = true;
 }
+
+// ---------- grudges and rivalry callbacks (left-out plan 5.3, Hyper §3) ----------
+
+const moralFlag = (kind: 'kind' | 'cruel', type: string) => `${kind}:${type}`;
+
+/**
+ * An event choice that moved Good/Evil by `moralityAt` or more is remembered by the Pokémon of the event's types:
+ * a wild one of those types met in a later stage hasn't forgotten your kindness (or your cruelty).
+ */
+export function noteEventMorality(content: Content, run: RunState, types: readonly string[], effects: readonly { kind: string; key?: string; amount?: number }[]): void {
+  const shift = effects.reduce((sum, e) => sum + (e.kind === 'attribute' && e.key === 'goodEvil' ? (e.amount ?? 0) : 0), 0);
+  if (Math.abs(shift) < content.story.nemesis.moralityAt) return;
+  for (const t of types) run.story.flags[moralFlag(shift > 0 ? 'kind' : 'cruel', t)] = stageKey(run);
+}
+
+/** The type a wild foe remembers you by (kindness or cruelty from an earlier stage), used up when told. */
+export function rememberedMorality(run: RunState, types: readonly string[]): { kind: 'kind' | 'cruel'; type: string } | null {
+  for (const kind of ['cruel', 'kind'] as const) {
+    for (const type of types) {
+      const at = run.story.flags[moralFlag(kind, type)];
+      if (typeof at === 'string' && at !== 'done' && at !== stageKey(run)) return { kind, type };
+    }
+  }
+  return null;
+}
+
+export function forgetMorality(run: RunState, kind: 'kind' | 'cruel', type: string): void {
+  run.story.flags[moralFlag(kind, type)] = 'done';
+}
+
+/** Wins and losses against each rival (for "The Rivalry Has Only Grown Stronger!"). */
+export function noteRivalResult(run: RunState, rivalId: string, playerWon: boolean): void {
+  const key = `rival${playerWon ? 'W' : 'L'}:${rivalId}`;
+  run.story.flags[key] = Number(run.story.flags[key] ?? 0) + 1;
+}
+
+export function rivalryBothWays(run: RunState, rivalId: string): boolean {
+  return Number(run.story.flags[`rivalW:${rivalId}`] ?? 0) > 0 && Number(run.story.flags[`rivalL:${rivalId}`] ?? 0) > 0;
+}
