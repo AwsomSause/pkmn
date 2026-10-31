@@ -66,7 +66,7 @@ import type { Move, TypeName } from '../core/contentSchema';
 const MESSAGE_AUTO_ADVANCE_MS = 1400;
 const MESSAGE_DELAYS = { short: 700, normal: 1400, long: 2400 } as const;
 /** Milliseconds per character for the typewriter text speeds. */
-const TEXT_MS = { fast: 12, normal: 28 } as const;
+const TEXT_MS = { fast: 12, normal: 28, slow: 50 } as const;
 /** Battle events whose lines advance on their own; everything else waits for a confirm press. */
 const AUTO_EVENTS = new Set<string>(['move', 'noPp', 'miss', 'damage', 'noEffect', 'fail']);
 // Where the Pokémon stand: on the arena's ground patches (PokeRogue's layout).
@@ -851,7 +851,7 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Shows a message at once, or types it out (Settings > Text speed); the full text is always the message's text. */
-  private typeText(text: string, speed: 'instant' | 'fast' | 'normal'): void {
+  private typeText(text: string, speed: 'instant' | 'fast' | 'normal' | 'slow'): void {
     this.typing?.remove(false);
     this.typing = null;
     this.typingFull = text;
