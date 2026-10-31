@@ -60,6 +60,7 @@ import rulesetJson from './ruleset.json';
 import shopJson from './shop.json';
 import speciesJson from './species.json';
 import customSpeciesJson from './customSpecies.json';
+import formTraitsJson from './formTraits.json';
 import customEvolutionsJson from './customEvolutions.json';
 import themesJson from './themes.json';
 import trainersJson from './trainers.json';
@@ -289,7 +290,12 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   // those of the species they are a form of, or else evolve from.
   for (const s of content.species.values()) {
     const base = content.species.get(s.form?.base ?? s.evolvesFrom ?? '');
-    if (base && s.abilities.normal.length === 0 && s.abilities.hidden === null) s.abilities = base.abilities;
+    if (base && s.abilities.normal.length === 0 && s.abilities.hidden === null) {
+      s.abilities = base.abilities;
+      // Form-specific passive (formTraits.json): a Delta form gains one normal ability that fits its primary type.
+      const extra = s.tags.includes('delta') && s.form?.kind === 'alternate' ? (formTraitsJson.deltaTypeAbility as Record<string, string>)[s.types[0] ?? ''] : undefined;
+      if (extra && !base.abilities.normal.includes(extra) && base.abilities.hidden !== extra) s.abilities = { normal: [...base.abilities.normal, extra], hidden: base.abilities.hidden };
+    }
   }
 
   // Cross-reference checks.

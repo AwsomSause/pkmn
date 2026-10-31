@@ -15,6 +15,7 @@ import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primaryS
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { runPerks } from '../core/archetypes';
 import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
+import { formIntro } from '../core/presentation/sceneEffects';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
@@ -961,6 +962,7 @@ export class BattleScene extends Phaser.Scene {
         if (battle.nemesisNote) await this.say(battle.nemesisNote);
       }
       if (this.shown.enemy.shiny) await this.shinySparkle();
+      await this.formIntroBeat(this.shown.enemy);
       if (this.duo) {
         await this.showDuoSide('player', true);
         const second = this.duo.other.player.mon;
@@ -1039,6 +1041,15 @@ export class BattleScene extends Phaser.Scene {
     await b.done;
     over = true;
     this.advance = null;
+  }
+
+  /** Delta, Z, Spooky and regional forms get a tinted burst and a line from sceneEffects.json (presentation only). */
+  private async formIntroBeat(mon: PokemonInstance): Promise<void> {
+    const { content } = services().session;
+    const intro = formIntro(getSpecies(content, mon.speciesId), this.speciesName(mon));
+    if (!intro) return;
+    await burstReveal(this, ENEMY_POS.x, ENEMY_POS.y - 80, intro.tint, this.motion).done;
+    await this.say(intro.line);
   }
 
   private async shinySparkle(): Promise<void> {

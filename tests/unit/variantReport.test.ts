@@ -47,3 +47,26 @@ describe('form hints in the research log (catalog 34, 79, 78, 110)', () => {
     expect(noteKey('forms:delta:1')).toBe('note:forms:delta:1');
   });
 });
+
+describe('form-specific passives (catalog 80)', () => {
+  it('a Delta form gains a type-fitting ability and keeps its base abilities first', () => {
+    const delta = content.species.get('bulbasaur-delta')!;
+    const base = content.species.get('bulbasaur')!;
+    expect(delta.abilities.normal.slice(0, base.abilities.normal.length)).toEqual(base.abilities.normal);
+    expect(delta.abilities.normal.length).toBeGreaterThan(base.abilities.normal.length);
+    expect(delta.abilities.normal.at(-1)).toBe('cute-charm');
+    for (const a of delta.abilities.normal) expect(content.abilities.has(a)).toBe(true);
+  });
+});
+
+import { formIntro, SCENE_EFFECTS } from '../../src/core/presentation/sceneEffects';
+
+describe('scene effects as data (catalog 140, 81)', () => {
+  it('special forms get their family intro; ordinary species get none', () => {
+    const delta = formIntro(content.species.get('bulbasaur-delta')!, 'Delta Bulbasaur');
+    expect(delta?.family).toBe('delta');
+    expect(delta?.line).toContain('Delta Bulbasaur');
+    expect(formIntro(content.species.get('bulbasaur')!, 'Bulbasaur')).toBeNull();
+    expect(Object.keys(SCENE_EFFECTS.formIntro)).toEqual(expect.arrayContaining(['delta', 'zform', 'spooky']));
+  });
+});

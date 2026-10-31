@@ -463,6 +463,28 @@
         "Ow, that stings! Shake it off!",
         "You've got this, {name}!"
       ]
+    },
+    "evolveReady": {
+      "brash": [
+        "Something is stirring in {name}! Just you wait!",
+        "{name} is almost there... you will regret waiting!"
+      ],
+      "gentle": [
+        "{name}... I can feel it changing. Hold on a little longer.",
+        "Easy, {name}. Your moment is coming."
+      ],
+      "calm": [
+        "Interesting. {name} is nearly ready.",
+        "The change in {name} is close. Noted."
+      ],
+      "grim": [
+        "{name} is on the edge of something. You will not like it.",
+        "Hold on, {name}. Soon."
+      ],
+      "cheerful": [
+        "Whoa, {name} is glowing! Something is happening!",
+        "{name}, you feel it too, right? Almost there!"
+      ]
     }
   },
   "flavor": {
