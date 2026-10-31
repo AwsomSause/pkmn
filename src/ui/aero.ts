@@ -102,8 +102,9 @@ export function floatIdle(scene: Phaser.Scene, target: Phaser.GameObjects.GameOb
  * Idle "breathing" for a battler: a slow stretch of its height, so it never
  * fights move animations that slide it around. Starts after `delay` ms.
  */
+import { spritesAnimate } from './display';
 export function breathe(scene: Phaser.Scene, target: Phaser.GameObjects.GameObject, motion: MotionLevel, delay = 0, period = 1800): void {
-  if (motion !== 'full') return;
+  if (motion !== 'full' || !spritesAnimate()) return;
   const t = target as unknown as { scaleY: number };
   scene.time.delayedCall(delay, () => {
     if (!target.active) return;

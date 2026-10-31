@@ -303,7 +303,7 @@ export type LoadResult<T> =
 
 export type SaveResult = { ok: true } | { ok: false; reason: string };
 
-export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, shakeIntensity: 1, reduceParticles: false, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero' };
+export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, shakeIntensity: 1, reduceParticles: false, textSpeed: 'instant', autoAdvance: false, messageDelay: 'normal', highContrast: false, typeMarkers: false, uiScale: 'full', spriteAnimations: true, damageNumbers: true, catchDetail: 'full', battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero' };
 
 /** True when the browser asks for less motion (then new players start with reduced battle animations). */
 function prefersReducedMotion(): boolean {
@@ -323,6 +323,17 @@ export class SaveManager {
 
   get storageName(): string {
     return this.storage.name;
+  }
+
+  /** When anything was last saved (ISO text), or null when nothing has been. */
+  lastSavedAt(): string | null {
+    try {
+      const raw = this.storage.get(this.key('meta'));
+      const data = raw ? (JSON.parse(raw) as { data?: { lastSaved?: unknown } }).data : undefined;
+      return typeof data?.lastSaved === 'string' ? data.lastSaved : null;
+    } catch {
+      return null;
+    }
   }
 
   key(record: RecordName): string {
