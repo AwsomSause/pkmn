@@ -35,7 +35,8 @@ test('every scripted EBDX animation plays, finishes and restores the Pokémon', 
 
   // (The Pokémon's idle breathing changes their scale on its own, so only position and opacity are compared.)
   // Every script is checked by the unit test; the browser plays an even sample (about 25) so the run stays short.
-  const all = Object.keys(JSON.parse(readFileSync('src/data/ebdxAnims.json', 'utf8')).scripts);
+  const scripts = JSON.parse(readFileSync('src/data/ebdxAnims.json', 'utf8')).scripts as Record<string, { layers: unknown[]; veil?: unknown }>;
+  const all = Object.keys(scripts);
   const step = Math.max(1, Math.ceil(all.length / 25));
   const shots = ['psychic', 'hyperbeam', 'blizzard', 'sandstorm', 'flareblitz', 'explosion', 'stoneedge'];
   const only = process.env.EBDX_ONLY?.split(',');
@@ -50,14 +51,24 @@ test('every scripted EBDX animation plays, finishes and restores the Pokémon', 
       return spots;
     }, name);
     await page.waitForTimeout(Number(process.env.EBDX_SHOT_MS ?? 450));
-    const during = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').fx.opts.field.length - (window as any).__fieldCount);
+    // A slow machine can be between frames here, so sample the field a few times and keep the largest count.
+    const during = await page.evaluate(async () => {
+      const b = (window as any).__pkr.game.scene.getScene('Battle');
+      let most = 0;
+      for (let i = 0; i < 12; i++) {
+        most = Math.max(most, b.fx.opts.field.length - (window as any).__fieldCount);
+        await new Promise((r) => setTimeout(r, 40));
+      }
+      return most;
+    });
     if (shots.includes(name) || only) await page.screenshot({ path: `test-results/ebdx-${name}.png` });
     const after = await page.evaluate(async () => {
       const b = (window as any).__pkr.game.scene.getScene('Battle');
       await (window as any).__run;
       return { spots: ['player', 'enemy'].map((s) => { const v = b.fx.opts.sprite(s); return [v.x, v.y, v.alpha]; }), left: b.fx.opts.field.length - (window as any).__fieldCount };
     });
-    expect(during, `${name} draws pictures`).toBeGreaterThan(0);
+    // Picture-less scripts (veil, hit and sound only) add nothing to the field mid-animation.
+    if (scripts[name]?.layers.length) expect(during, `${name} draws pictures`).toBeGreaterThan(0);
     expect(after.left, `${name} cleans up`).toBe(0);
     expect(after.spots, `${name} restores the Pokémon`).toEqual(before);
   }

@@ -5,6 +5,7 @@
 // run.story.flags under "m:" keys and are cleared when the battle ends.
 
 import { CHEMISTRY, chemistryOf } from './chemistry';
+import { battleLife } from '../partyLife';
 import { lossesTo, noteLoss, promiseDoneFlag, promiseOf } from './promises';
 import { openingFor, rivalFeeling } from '../rivals/feelings';
 import { elitePhilosophy } from './elite';
@@ -56,6 +57,10 @@ export const MOMENT_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['k
   promiseKept: 'flair',
   wildAmbush: 'enemyStage',
   wildKin: 'flair',
+  grudgeFoe: 'flair',
+  oldAcquaintance: 'flair',
+  revengePact: 'statStage',
+  pairSynergy: 'statStage',
   chemistryPerfect: 'statStage',
   overdriveExhaustion: 'statStage',
   notUntilOver: 'flair',
@@ -355,6 +360,14 @@ export function detectMoments(content: Content, before: RunState, run: RunState,
       .filter((p): p is { m: typeof p.m; k: NonNullable<typeof p.k> } => p.k !== null)
       .sort((a, b) => CHEMISTRY.indexOf(a.k) - CHEMISTRY.indexOf(b.k));
     if (pairs[0]) fire(chemTrigger[pairs[0].k], 'player', lead.uid, -1, { name: nameOf(lead.speciesId), other: nameOf(pairs[0].m.speciesId) });
+    // Party Personality & Chemistry: a grudge, an old acquaintance, a revenge pact, and an Inseparable pair's opening.
+    const pl = battleLife(content, run, lead, foe.speciesId);
+    if (pl.grudge) fire('grudgeFoe', 'player', lead.uid, -1, leadNames());
+    else if (pl.recognizes) fire('oldAcquaintance', 'player', lead.uid, -1, leadNames());
+    const pactFor = run.partyLife?.pacts.find((p) => p.uid === lead.uid && p.species === foe.speciesId);
+    if (pl.pact && pactFor) fire('revengePact', 'player', lead.uid, -1, { ...leadNames(), other: nameOf(run.party.find((m) => m.uid === pactFor.forUid)?.speciesId ?? run.box.find((m) => m.uid === pactFor.forUid)?.speciesId ?? lead.speciesId) });
+    const partner = pl.synergy ? run.party.find((m) => m.uid === pl.synergy) : undefined;
+    if (partner) fire('pairSynergy', 'player', lead.uid, -1, { ...leadNames(), other: nameOf(partner.speciesId) });
     // Nemesis system: a nemesis that beat you before; a rival stung by a decisive loss; a counter-team sent after you.
     const nem = nemesisById(run, battle.nemesis);
     if (nem && (nem.wins > 0 || nem.beat.length > 0)) fire('rememberDefeat', 'enemy', foe.uid, -1, { name: nameOf(foe.speciesId) });

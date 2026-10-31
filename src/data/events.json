@@ -27521,7 +27521,8 @@
          "id": "rare-candy",
          "count": 1
         }
-       ]
+       ],
+       "shadow": true
       }
      },
      "failure": {
@@ -32158,6 +32159,2674 @@
      "success": {
       "text": "You leave it be and walk on.",
       "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shadow-outbreak",
+   "name": "Shadow Outbreak",
+   "group": "Shadow Pokémon",
+   "stop": "haunted",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "shadow-outbreak",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1a0c2a",
+    "effect": "fog"
+   },
+   "intro": "Purple haze hangs over the route. Wild Pokémon pace in circles, eyes dull. Something nearby is feeding it.",
+   "choices": [
+    {
+     "label": "Search for the source",
+     "success": {
+      "text": "You find a humming canister and the Pokémon it has hazed!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "dark",
+        "ghost",
+        "poison"
+       ],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "shadow": true,
+       "blissful": false,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "shadow-outbreak",
+         "amount": -1
+        },
+        {
+         "kind": "flag",
+         "key": "kindness",
+         "amount": 1
+        },
+        {
+         "kind": "research",
+         "amount": 15
+        }
+       ]
+      }
+     },
+     "check": "intelligence",
+     "failure": {
+      "text": "The haze thickens and the Pokémon lash out. You retreat with scrapes.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let the Blissful aura settle the haze",
+     "success": {
+      "text": "Soft light spreads from your Blissful Pokémon. The haze thins and the route breathes again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "shadow-outbreak",
+        "amount": -1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "partyBlissful"
+      }
+     ]
+    },
+    {
+     "label": "Avoid the area",
+     "success": {
+      "text": "You take the long way round. The haze stays where it is.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shadow-stronghold",
+   "name": "Hideout Infiltration",
+   "group": "Shadow Pokémon",
+   "stop": "hideout",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "shadow-activity",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#150c22",
+    "effect": "flicker"
+   },
+   "intro": "A faction hideout is wedged into the cliffside: vents, a guarded loading dock and cages stacked behind glass. You can get a look at the guards before you choose.",
+   "choices": [
+    {
+     "label": "Slip in through the vents",
+     "success": {
+      "text": "Quiet and quick. You open a cage and a hazed Pokémon steps out, trembling.",
+      "effects": [
+       {
+        "kind": "join",
+        "shadow": true,
+        "species": [],
+        "types": [
+         "dark",
+         "ghost",
+         "poison"
+        ],
+        "levelBonus": -1,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "flag",
+        "key": "shadow-activity",
+        "amount": -1
+       }
+      ]
+     },
+     "check": "speed",
+     "failure": {
+      "text": "A guard spots you. \"Intruder!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Hideout guards",
+       "size": 3,
+       "shadow": 1,
+       "types": [
+        "dark"
+       ],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "flag",
+         "key": "shadow-activity",
+         "amount": -1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Break in through the front",
+     "success": {
+      "text": "Alarms scream. The whole shift storms out to meet you!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Hideout guards",
+       "size": 4,
+       "shadow": 2,
+       "types": [
+        "dark"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1100
+        },
+        {
+         "kind": "item",
+         "id": "hyper-potion",
+         "count": 1
+        },
+        {
+         "kind": "flag",
+         "key": "shadow-activity",
+         "amount": -1
+        },
+        {
+         "kind": "flag",
+         "key": "kindness",
+         "amount": 1
+        }
+       ]
+      }
+     },
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ]
+    },
+    {
+     "label": "Study the guards' patrol, then leave",
+     "success": {
+      "text": "You learn when they change shifts and which crates move at night.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "shadow-black-market",
+   "name": "Shadow Market",
+   "group": "Shadow Pokémon",
+   "stop": "merchant",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "shadow-activity",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#10101c",
+    "effect": "fog"
+   },
+   "intro": "A hooded dealer sells from a crate behind a barn. \"Information, gear, special supplies. Nothing legal, nothing cheap.\"",
+   "choices": [
+    {
+     "label": "Buy a tip about the factions (₽600)",
+     "success": {
+      "text": "He slides a folded map across. Circled in red: what the hideouts are moving.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -600
+       },
+       {
+        "kind": "revealStops"
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 600
+      }
+     ]
+    },
+    {
+     "label": "Ask about a Snag Ball (₽5000)",
+     "success": {
+      "text": "A battered ball with a black seam. He swears it works.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -5000
+       },
+       {
+        "kind": "item",
+        "id": "snag-ball",
+        "count": 1
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 5000
+      },
+      {
+       "kind": "flag",
+       "key": "snag-ball-sold",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "chance": 0.4,
+     "failure": {
+      "text": "\"Sold out,\" he says, but keeps the money. The crate is empty.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -5000
+       }
+      ]
+     }
+    },
+    {
+     "label": "Report the dealer to the Sanctuary Keepers",
+     "success": {
+      "text": "A keeper thanks you and pays for the tip. Another stall closes.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "shadow-activity",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk away",
+     "success": {
+      "text": "You leave the crate where it is.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shadow-lieutenant",
+   "name": "The Lieutenant Returns",
+   "group": "Shadow Pokémon",
+   "stop": "ambush",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "lieutenant-loose",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#180c1c",
+    "effect": "fog"
+   },
+   "intro": "A figure steps out of the trees, an escaped lieutenant with a fresh team. \"You cost me an operation. I want it back.\"",
+   "choices": [
+    {
+     "label": "Fight them",
+     "success": {
+      "text": "They send out their best!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "The Lieutenant's squad",
+       "size": 4,
+       "shadow": 1,
+       "types": [
+        "dark"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1500
+        },
+        {
+         "kind": "flag",
+         "key": "shadow-activity",
+         "amount": -1
+        },
+        {
+         "kind": "flag",
+         "key": "lieutenant-loose",
+         "amount": -1
+        }
+       ]
+      }
+     },
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ]
+    },
+    {
+     "label": "Bluff your way past",
+     "success": {
+      "text": "They hesitate long enough for you to slip away.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": -1,
+        "who": "party"
+       }
+      ]
+     },
+     "check": "charisma",
+     "failure": {
+      "text": "They see through it and the squad shoves you to the ground.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.12
+       }
+      ]
+     }
+    },
+    {
+     "label": "Turn back",
+     "success": {
+      "text": "You take another road. They will remember.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "sanctuary-found",
+   "name": "The Hidden Sanctuary",
+   "group": "Blissful Pokémon",
+   "stop": "shrine",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "sanctuary-sign",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "sanctuary-found",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#10281e",
+    "effect": "sparkle"
+   },
+   "intro": "Past the last bend the trees open on a quiet glade. Flowers bloom out of season. An old keeper bows. \"We hoped the kind would find us.\"",
+   "choices": [
+    {
+     "label": "Rest in the glade",
+     "success": {
+      "text": "The air itself is gentle. You feel steadied.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "cure"
+       },
+       {
+        "kind": "flag",
+        "key": "sanctuary-found",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "sanctuary-sign",
+        "amount": -1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-hearth"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hear the keeper's story",
+     "success": {
+      "text": "The keeper tells of a gentle light that visits those who protect others. You may meet it, if you stay kind.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "sanctuary-found",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "sanctuary-sign",
+        "amount": -1
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave an offering (₽200)",
+     "success": {
+      "text": "The keeper accepts quietly, and a flower unfolds where you set the coins.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -200
+       },
+       {
+        "kind": "flag",
+        "key": "sanctuary-found",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "sanctuary-sign",
+        "amount": -1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-bloom"
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "blessing-trial",
+   "name": "A Blessing Trial",
+   "group": "Blissful Pokémon",
+   "stop": "shrine",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "sanctuary-found",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "blessing-trial-done",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#16301f",
+    "effect": "sparkle"
+   },
+   "intro": "A mossy arch hums. A keeper explains that no one needs to fight here. The trial asks only what kind of presence you are.",
+   "choices": [
+    {
+     "label": "Coax the withered grove to bloom",
+     "success": {
+      "text": "Green climbs the arch. The grove leans toward you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "blessing-trial-done",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-bloom"
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "grass"
+      }
+     ]
+    },
+    {
+     "label": "Calm the spirit that circles the arch",
+     "success": {
+      "text": "It settles on a Pokémon's shoulder. The arch lights.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "blessing-trial-done",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-clarity"
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "psychic"
+      }
+     ]
+    },
+    {
+     "label": "Hold the wind at the gate",
+     "success": {
+      "text": "You and your team keep the gate open until the wind gives up.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "blessing-trial-done",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-hearth"
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "fighting"
+      }
+     ]
+    },
+    {
+     "label": "Offer what you can spare (₽300)",
+     "success": {
+      "text": "The keeper nods. \"The attempt is the trial.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "flag",
+        "key": "blessing-trial-done",
+        "amount": 1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-wild-grace"
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sanctuary-guardian",
+   "name": "The Guardian's Test",
+   "group": "Blissful Pokémon",
+   "stop": "shrine",
+   "rarity": "epic",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "sanctuary-found",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "kindness",
+     "atLeast": 3
+    },
+    {
+     "kind": "flag",
+     "key": "guardian-gift",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1a3a2a",
+    "effect": "sparkle"
+   },
+   "intro": "A huge Pokémon rises from the glade's pool and studies you. It has watched every kind thing you have done.",
+   "choices": [
+    {
+     "label": "Promise to protect the sanctuary",
+     "success": {
+      "text": "It lowers its head. Something small and warm is left on the grass.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "guardian-gift",
+        "amount": 1
+       },
+       {
+        "kind": "item",
+        "id": "blessing-ball",
+        "count": 1
+       },
+       {
+        "kind": "egg",
+        "species": [],
+        "types": [
+         "fairy",
+         "grass",
+         "psychic"
+        ],
+        "levelBonus": 0,
+        "shinyMultiplier": 1,
+        "left": 3,
+        "unit": "stage"
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "kindness",
+       "atLeast": 3
+      }
+     ]
+    },
+    {
+     "label": "Test your strength against it",
+     "success": {
+      "text": "It accepts, with a calm that unsettles you.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "water",
+        "grass",
+        "psychic"
+       ],
+       "levelBonus": 4,
+       "shinyMultiplier": 1,
+       "shadow": false,
+       "blissful": false,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 30
+        },
+        {
+         "kind": "flag",
+         "key": "guardian-gift",
+         "amount": 1
+        }
+       ]
+      }
+     },
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ]
+    },
+    {
+     "label": "Bow and leave",
+     "success": {
+      "text": "It watches you go, unoffended.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "blissful-encounter",
+   "name": "A Gentle Light",
+   "group": "Blissful Pokémon",
+   "stop": "wild",
+   "rarity": "epic",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "item",
+     "id": "blessing-ball"
+    },
+    {
+     "kind": "flag",
+     "key": "kindness",
+     "atLeast": 3
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#223a30",
+    "effect": "sparkle"
+   },
+   "intro": "Motes drift down the path. A Pokémon wrapped in soft light watches you from a patch of clover. It is not afraid of you, yet.",
+   "choices": [
+    {
+     "label": "Approach with the Blessing Ball ready",
+     "success": {
+      "text": "It lets you come close. It does not attack. Offer the ball when you are ready.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "fairy",
+        "psychic",
+        "grass",
+        "normal"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "shadow": false,
+       "blissful": true,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -2
+        }
+       ]
+      }
+     },
+     "requires": [
+      {
+       "kind": "item",
+       "id": "blessing-ball"
+      }
+     ]
+    },
+    {
+     "label": "Leave it in peace",
+     "success": {
+      "text": "The light follows you a little way, then turns back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sanctuary-attack",
+   "name": "Sanctuary Under Attack",
+   "group": "Blissful Pokémon",
+   "stop": "ambush",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "sanctuary-found",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "shadow-activity",
+     "atLeast": 3
+    },
+    {
+     "kind": "flag",
+     "key": "sanctuary-restored",
+     "atLeast": 0,
+     "atMost": 0
+    },
+    {
+     "kind": "flag",
+     "key": "sanctuary-lost",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1020",
+    "effect": "flicker"
+   },
+   "intro": "Smoke over the glade. Faction raiders are hauling crates toward the pool where the Blissful light gathers.",
+   "choices": [
+    {
+     "label": "Defend the sanctuary",
+     "success": {
+      "text": "The raiders turn on you!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Sanctuary raiders",
+       "size": 4,
+       "shadow": 1,
+       "types": [
+        "dark"
+       ],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "sanctuary-restored",
+         "amount": 1
+        },
+        {
+         "kind": "flag",
+         "key": "shadow-activity",
+         "amount": -2
+        },
+        {
+         "kind": "flag",
+         "key": "kindness",
+         "amount": 2
+        },
+        {
+         "kind": "blessing",
+         "id": "blessing-hearth"
+        },
+        {
+         "kind": "addStop",
+         "stop": "heal"
+        }
+       ]
+      }
+     },
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ]
+    },
+    {
+     "label": "Lure them away from the pool",
+     "success": {
+      "text": "You lead the raiders in circles until the keepers drive them off.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "sanctuary-restored",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       }
+      ]
+     },
+     "check": "intelligence",
+     "failure": {
+      "text": "They catch you and take what they came for.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "sanctuary-lost",
+        "amount": 1
+       },
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Run for help",
+     "success": {
+      "text": "By the time you return, the raiders are gone and so is some of the glade's light.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "sanctuary-lost",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ancient-shrine",
+   "name": "Ancient Shrine",
+   "group": "Blissful Pokémon",
+   "stop": "shrine",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "kindness",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2620",
+    "effect": "glint"
+   },
+   "intro": "A weathered shrine, its stones warm in the shade. A bowl waits for an offering.",
+   "choices": [
+    {
+     "label": "Leave an offering (₽150)",
+     "success": {
+      "text": "The bowl glows. A light settles over the party.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -150
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-wild-grace"
+       }
+      ]
+     },
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 150
+      }
+     ]
+    },
+    {
+     "label": "Sit and listen",
+     "success": {
+      "text": "Quiet for a few breaths. A clear head, nothing more.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-clarity"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Move on",
+     "success": {
+      "text": "The shrine will wait.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hurt-wanderer",
+   "name": "A Hurt Wanderer",
+   "group": "Blissful Pokémon",
+   "stop": "wild",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "kindness",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "escort",
+     "atLeast": 0,
+     "atMost": 0
+    },
+    {
+     "kind": "flag",
+     "key": "escort-done",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c2c28",
+    "effect": "float"
+   },
+   "intro": "A gentle Pokémon limps beside the road, favouring one leg. It looks toward a distant ridge, then at you.",
+   "choices": [
+    {
+     "label": "Carry it toward the ridge",
+     "success": {
+      "text": "It leans against you. The road ahead will be long.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "escort",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it some food and go",
+     "success": {
+      "text": "It sniffs the food. It does not follow.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "wanderer-arrives",
+   "name": "The Wanderer Arrives",
+   "group": "Blissful Pokémon",
+   "stop": "shrine",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "escort",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1a3a2a",
+    "effect": "sparkle"
+   },
+   "intro": "The ridge road ends at a quiet sanctuary. The Pokémon you carried is steady on its feet now, and a keeper hurries out.",
+   "choices": [
+    {
+     "label": "Stay until it is settled",
+     "success": {
+      "text": "It touches its nose to your hand. The keeper gives you something warm to carry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "escort",
+        "amount": -1
+       },
+       {
+        "kind": "flag",
+        "key": "escort-done",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 2
+       },
+       {
+        "kind": "flag",
+        "key": "sanctuary-sign",
+        "amount": 1
+       },
+       {
+        "kind": "join",
+        "species": [],
+        "types": [
+         "fairy",
+         "normal",
+         "psychic"
+        ],
+        "levelBonus": -1,
+        "shinyMultiplier": 1,
+        "blissful": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hand it over and go",
+     "success": {
+      "text": "The keeper thanks you. It watches you out of sight.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "escort",
+        "amount": -1
+       },
+       {
+        "kind": "flag",
+        "key": "escort-done",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "sanctuary-sign",
+        "amount": 1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-bloom"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "blissful-awakening",
+   "name": "A Blissful Awakening",
+   "group": "Blissful Pokémon",
+   "stop": "shrine",
+   "rarity": "epic",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "sanctuary-restored",
+     "atLeast": 1
+    },
+    {
+     "kind": "friendship",
+     "atLeast": 150
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a4030",
+    "effect": "sparkle"
+   },
+   "intro": "The restored sanctuary glows. A light gathers around the Pokémon who has stood with you longest.",
+   "choices": [
+    {
+     "label": "Let it come",
+     "success": {
+      "text": "The light settles. It looks the same, and not at all the same.",
+      "effects": [
+       {
+        "kind": "awaken"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Step between it and the light",
+     "success": {
+      "text": "The light fades. Perhaps another day.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rescued-callback",
+   "name": "A Familiar Face",
+   "group": "Shadow Pokémon",
+   "stop": "wild",
+   "rarity": "uncommon",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "rescued",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c2030",
+    "effect": "float"
+   },
+   "intro": "A Pokémon you helped free earlier steps onto the road with a keeper in tow. It remembers you.",
+   "choices": [
+    {
+     "label": "Accept its thanks",
+     "success": {
+      "text": "It pushes a small bundle toward you.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "hyper-potion",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rescued",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask what it saw",
+     "success": {
+      "text": "It draws a trail in the dust: a hideout, a shipment, a shortcut.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "flag",
+        "key": "rescued",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "two-visitors",
+   "name": "Two Visitors",
+   "group": "Shadow Pokémon",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "kindness",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "shadow-activity",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#20202c",
+    "effect": "fog"
+   },
+   "intro": "A sanctuary keeper and a collector in a good coat have set up on the same crate. They have opinions about your team.",
+   "choices": [
+    {
+     "label": "Side with the keeper",
+     "success": {
+      "text": "The keeper nods. The collector scowls.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-clarity"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hear the collector out",
+     "success": {
+      "text": "\"Strength is strength,\" he says, and sells you a lead.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse both",
+     "success": {
+      "text": "You leave them to argue.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-views",
+   "name": "The Rival's Opinion",
+   "group": "Shadow Pokémon",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "rescued",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#20202c",
+    "effect": "none"
+   },
+   "intro": "Your rival leans on a fence. \"You took a Shadow Pokémon off its trainer? Heroic, or just greedy?\"",
+   "choices": [
+    {
+     "label": "\"Someone had to.\"",
+     "success": {
+      "text": "They think about it. \"I'd have done it faster.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"It's a strong Pokémon.\"",
+     "success": {
+      "text": "\"That's what I thought you'd say.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say nothing",
+     "success": {
+      "text": "They shrug and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "legendary-blessing",
+   "name": "The Legendary Blessing",
+   "group": "Blissful Pokémon",
+   "stop": "shrine",
+   "rarity": "epic",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "sanctuary-restored",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "kindness",
+     "atLeast": 6
+    },
+    {
+     "kind": "flag",
+     "key": "legendary-blessing-done",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a4a3a",
+    "effect": "sparkle"
+   },
+   "intro": "The restored glade is silent. Then the light changes, and something very old is standing at the edge of the pool.",
+   "choices": [
+    {
+     "label": "Stand still and let it look at you",
+     "success": {
+      "text": "It comes close. It is not a fight. Hold out the Blessing Ball when it lets you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "legendary-blessing-done",
+        "amount": 1
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "mesprit",
+        "shaymin",
+        "celebi",
+        "jirachi",
+        "manaphy",
+        "cresselia",
+        "latias"
+       ],
+       "types": [],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "shadow": false,
+       "blissful": true,
+       "win": [
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -3
+        }
+       ]
+      }
+     },
+     "requires": [
+      {
+       "kind": "item",
+       "id": "blessing-ball"
+      }
+     ]
+    },
+    {
+     "label": "Bow and step back",
+     "success": {
+      "text": "It lingers, then goes. The glade will remember.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "legendary-blessing-done",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "kindness",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-rescue",
+   "name": "A Rival in Trouble",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "rival-rescued",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d24",
+    "effect": "rattle"
+   },
+   "intro": "Someone you have fought is cornered at the edge of the road, their Pokémon worn out and a pack of rough trainers closing in. They see you. They do not ask for help.",
+   "choices": [
+    {
+     "label": "Step in and fight (risky)",
+     "success": {
+      "text": "\"Back off. They are with me.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Roadside Gang",
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 2
+        },
+        {
+         "kind": "flag",
+         "key": "rival-rescued",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You stood between your rival and a gang on the road. They have not forgotten it.",
+         "importance": 80
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Stand with them quietly (safe)",
+     "success": {
+      "text": "The gang thinks twice. Your rival says nothing, but walks beside you for a while.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-rescued",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "You helped your rival out of a corner.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You keep walking. You hear them behind you, and then you do not.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-returns-favor",
+   "name": "The Favour Returned",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "rival-rescued",
+     "atLeast": 1,
+     "atMost": 99
+    },
+    {
+     "kind": "flag",
+     "key": "rival-favor",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a30",
+    "effect": "hearts"
+   },
+   "intro": "Your rival is waiting at the healing stop with their arms crossed. \"I do not owe anyone. So do not think this is a favour. It is a debt.\"",
+   "choices": [
+    {
+     "label": "Let them help (safe)",
+     "success": {
+      "text": "They patch your team up and press a bundle into your hands. \"Now we are even. Almost.\"",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-favor",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 600
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival repaid the rescue.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say it is not a debt",
+     "success": {
+      "text": "They look away, pleased and annoyed about it. A rare item ends up in your bag anyway.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-favor",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-bad-day",
+   "name": "A Rival's Bad Day",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2230",
+    "effect": "rain"
+   },
+   "intro": "Your rival is sitting on a wall in the rain, a lost badge case in their lap. They have not noticed you yet.",
+   "choices": [
+    {
+     "label": "Sit beside them (safe)",
+     "success": {
+      "text": "You do not say much. After a while they laugh, once, and say: \"Next time.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "You sat with your rival on a bad day.",
+        "importance": 65
+       }
+      ]
+     }
+    },
+    {
+     "label": "Tease them",
+     "success": {
+      "text": "Their head snaps up. \"You will regret that.\" Every Pokémon in your party feels a little braver.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave them alone",
+     "success": {
+      "text": "Some days are not for company. You walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-photo-friend",
+   "name": "A Photo With a Friend",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1d",
+    "effect": "hearts"
+   },
+   "intro": "A street photographer is setting up. Your rival waves you over before you can say a word. \"Come on. Both of us. Everyone smiling.\"",
+   "choices": [
+    {
+     "label": "Pose together (safe)",
+     "success": {
+      "text": "The photo is crooked and perfect. Both teams crowd into the frame.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: both teams laughing, arms around each other.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline politely",
+     "success": {
+      "text": "They shrug and take a solo picture instead. They look a little smaller in it.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-photo-rival",
+   "name": "A Photo Neither Wants",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "flicker"
+   },
+   "intro": "A photographer wants \"the famous two\" in one shot. Your rival stands exactly one arm span away and does not smile.",
+   "choices": [
+    {
+     "label": "Stare back at them (safe)",
+     "success": {
+      "text": "The photo is terrifying. It sells well.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       },
+       {
+        "kind": "money",
+        "amount": 400
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: neither blinked.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Offer a handshake",
+     "success": {
+      "text": "They take it, hard, and the camera catches that instead. A small thaw.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: a handshake neither of you meant.",
+        "importance": 75
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-photo-between",
+   "name": "A Photo, Awkwardly",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "between"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a38",
+    "effect": "sparkle"
+   },
+   "intro": "A photographer wants you and your rival in one frame. You both stand there, hands in odd places, not sure what you are to each other.",
+   "choices": [
+    {
+     "label": "Lean in",
+     "success": {
+      "text": "You throw an arm around them. They flinch, then relax.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: awkward, close, and kept.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep your distance",
+     "success": {
+      "text": "The picture shows two people looking at different things.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: two people looking at different things.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Skip it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-montage",
+   "name": "A Rival Training Hard",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d18",
+    "effect": "sparkle"
+   },
+   "intro": "Past a fence you see your rival drilling their team at dawn: sprints, dodges, the same move forty times. Their Pokémon are staring at the spot where your team stood.",
+   "choices": [
+    {
+     "label": "Watch from the fence (safe)",
+     "success": {
+      "text": "You learn how they have changed. When you meet again, you will be ready.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You watched your rival train. They are coming back stronger.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spar with them",
+     "success": {
+      "text": "\"Finally. I needed someone who hits back.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Training Partner",
+       "rival": true,
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 1
+        },
+        {
+         "kind": "levels",
+         "amount": 1,
+         "who": "party"
+        },
+        {
+         "kind": "moment",
+         "text": "You sparred with your rival at dawn.",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-promise",
+   "name": "A Promised Rematch",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "rival-promise",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "glint"
+   },
+   "intro": "Your rival points past the next ridge. \"Not here. Not like this. Meet me at the end of the next region, and bring everything. I will be ready.\"",
+   "choices": [
+    {
+     "label": "Promise to be there",
+     "success": {
+      "text": "\"Then it is a promise.\" They do not shake your hand. They nod, once.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-promise",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You promised your rival a rematch at the end of the next region.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say you will see",
+     "success": {
+      "text": "\"Fine. But I will be waiting.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-promise",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline",
+     "success": {
+      "text": "\"Your loss.\" They walk away without looking back.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-promise-kept",
+   "name": "The Promise Kept",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "rival-promise",
+     "atLeast": 1,
+     "atMost": 99
+    },
+    {
+     "kind": "flag",
+     "key": "rival-promise-kept",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "glint"
+   },
+   "intro": "Your rival is standing exactly where they said they would be, team at full strength. \"You came. Good. Everything you have.\"",
+   "choices": [
+    {
+     "label": "Fight them",
+     "success": {
+      "text": "\"This is the match I have been training for.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Promised Rival",
+       "rival": true,
+       "size": 4,
+       "types": [],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2200
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "flag",
+         "key": "rival-promise-kept",
+         "amount": 1
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You kept your promise and beat your rival at the place they named.",
+         "importance": 85
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask for a day",
+     "success": {
+      "text": "They look as if they might argue, then do not. \"Tomorrow, then. I have waited this long.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-promise-kept",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-acknowledges",
+   "name": "They Say It Out Loud",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 3
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a38",
+    "effect": "hearts"
+   },
+   "intro": "Your rival climbs onto a crate in the plaza. \"I want everyone to hear this. I lost. They beat me, and it was not luck. I made the same mistake twice.\"",
+   "choices": [
+    {
+     "label": "Shake their hand (safe)",
+     "success": {
+      "text": "The plaza applauds. They look relieved, as if a weight has gone.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival admitted a defeat in public. It marks a turning point in their story.",
+        "importance": 85
+       }
+      ]
+     }
+    },
+    {
+     "label": "Admit you got lucky",
+     "success": {
+      "text": "\"Do not do that,\" they say, smiling. \"Take the win.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-acknowledges-rival",
+   "name": "Grudging Respect",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 3
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "flicker"
+   },
+   "intro": "Your rival blocks the road, jaw tight. \"You beat me. I saw what I did wrong. I will not make the same mistake. That is not a compliment.\"",
+   "choices": [
+    {
+     "label": "Take it as one (safe)",
+     "success": {
+      "text": "They look as if they might say more, and do not. A rare item changes hands.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival admitted, through gritted teeth, that you were better.",
+        "importance": 85
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say nothing",
+     "success": {
+      "text": "You let the silence say it. They nod, and are gone.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-clash",
+   "name": "Rival Clash",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "championGhost"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#201a38",
+    "effect": "spin"
+   },
+   "intro": "Your rival has borrowed a roster: a team recorded from a finished run, set up as a challenge. Nobody is online and no one is playing it live. It is a recording, and it fights like one.",
+   "choices": [
+    {
+     "label": "Take the clash",
+     "success": {
+      "text": "\"This is the strongest team I could find. Let us see whose is better.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival Clash",
+       "ghost": true,
+       "rival": true,
+       "size": 6,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 3000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 80
+        },
+        {
+         "kind": "flag",
+         "key": "rival-heat",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You beat a recorded team in a Rival Clash.",
+         "importance": 80
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-clash-retired",
+   "name": "Rival Clash: The One That Fell",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "retiredGhost"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#201a38",
+    "effect": "spin"
+   },
+   "intro": "Your rival found a team from a run that ended early and wants to see if you can do what it could not. It is a recording of a past run, not another player live.",
+   "choices": [
+    {
+     "label": "Take the clash",
+     "success": {
+      "text": "\"They almost made it. Show me you can.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival Clash",
+       "retired": true,
+       "rival": true,
+       "size": 6,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2400
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You beat a recorded run in a Rival Clash.",
+         "importance": 80
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-gauntlet-rest",
+   "name": "Between Rivals",
+   "group": "Living Rival",
+   "rarity": "epic",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "gauntlet",
+     "active": true
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "sparkle"
+   },
+   "intro": "A bench between two gauntlet fights. Another rival is already on their way. What do you spend the break on?",
+   "choices": [
+    {
+     "label": "Rest (full recovery)",
+     "success": {
+      "text": "You sleep for an hour. Your team is fully healed.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Train (a level for the team)",
+     "success": {
+      "text": "You use the break to drill. The team comes out a little stronger, but still bruised.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Scout the next rival",
+     "success": {
+      "text": "A scrap of paper tells you what the next opponent is carrying.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 40
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
      }
     }
    ]

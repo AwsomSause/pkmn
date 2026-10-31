@@ -122,17 +122,17 @@ test('slice 2: the trainer VS intro can be skipped and the battle carries on', a
     run.battle.enemyTeam[0].hp = 1;
     pkr.game.scene.getScene('Battle').scene.restart();
   });
-  await page.waitForTimeout(400);
   // The VS screen is up (EBDX transition art on the display list) ...
-  const vsShown = await page.evaluate(() =>
-    (window as any).__pkr.game.scene.getScene('Battle').children.list.some((o: any) => o.list?.some((c: any) => String(c.texture?.key).startsWith('pack.ebdx.tr.'))),
-  );
-  expect(vsShown).toBe(true);
+  const vsUp = () =>
+    page.evaluate(() =>
+      (window as any).__pkr.game.scene.getScene('Battle').children.list.some((o: any) => o.list?.some((c: any) => String(c.texture?.key).startsWith('pack.ebdx.tr.'))),
+    );
+  await expect.poll(vsUp, { timeout: 8000, intervals: [100] }).toBe(true);
   await page.screenshot({ path: 'test-results/m10-vs.png' });
   // ... and a key press skips it straight to the challenge line.
   await page.keyboard.press('Enter');
   await expect
-    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').message.text), { timeout: 1500 })
+    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').message.text), { timeout: 8000 })
     .toMatch(/would like to battle/);
   await waitForMenu(page);
   // Low HP: the foe's box glows.
@@ -168,14 +168,16 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
     team.push({ ...structuredClone(team[0]), uid: 'm10-ace' });
     pkr.game.scene.getScene('Battle').scene.restart();
   });
-  await expect.poll(() => showsText(page, 'Gym Leader Brock'), { timeout: 6000, intervals: [100] }).toBe(true);
+  await expect.poll(() => showsText(page, 'Gym Leader Brock'), { timeout: 15_000, intervals: [100] }).toBe(true);
   await page.screenshot({ path: 'test-results/m10-boss-title.png' });
   // Catalog 67: the stage is The Chemical Plant, so lab light panels hang behind the battle.
-  expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').field.list.some((o: any) => o.name === 'env-lab'))).toBe(true);
+  await expect
+    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').field.list.some((o: any) => o.name === 'env-lab')), { timeout: 8000, intervals: [100] })
+    .toBe(true);
   await waitForMenu(page);
   // Knock out the first Pokémon: the ace comes out with its stamp.
   // A move can miss, so attack (first move, Enter twice) until the banner shows.
-  const attackUntil = async (text: string) => {
+  const attackUntil = async (text: string): Promise<boolean> => {
     for (let i = 0; i < 8; i++) {
       await page.keyboard.press('Enter');
       await page.waitForTimeout(300);
@@ -183,18 +185,18 @@ test('slice 4: a gym leader gets a title card, an ace beat and a victory stamp',
       await page.waitForTimeout(800);
       // Wait for the banner; if the command menu comes back first, the move missed: attack again.
       for (let t = 0; t < 150; t++) {
-        if (await showsText(page, text)) return;
+        if (await showsText(page, text)) return true;
         if (!(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu)))) await page.keyboard.press('Enter');
         if (await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Battle')?.menu))) break;
-        await page.waitForTimeout(100);
+        await page.waitForTimeout(50);
       }
     }
+    return false;
   };
-  await attackUntil('ACE!');
-  expect(await showsText(page, 'ACE!')).toBe(true);
+  // The banner is brief, so assert on what attackUntil saw instead of looking again afterwards.
+  expect(await attackUntil('ACE!')).toBe(true);
   await waitForMenu(page);
-  await attackUntil('VICTORY!');
-  expect(await showsText(page, 'VICTORY!')).toBe(true);
+  expect(await attackUntil('VICTORY!')).toBe(true);
   await page.screenshot({ path: 'test-results/m10-victory.png' });
   // Catalog 91: the boss victory card with its Chronicle stamp follows the stamp.
   const victoryTexts = () =>

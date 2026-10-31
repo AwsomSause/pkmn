@@ -1,0 +1,1884 @@
+{
+ "note": "Party Personality & Chemistry (APPROVED.md sections 1, 9, 10). Authored scenes; no generation.",
+ "stages": [
+  {
+   "id": "acquaintances",
+   "name": "Acquaintances",
+   "at": 0
+  },
+  {
+   "id": "friendly",
+   "name": "Friendly",
+   "at": 12
+  },
+  {
+   "id": "close",
+   "name": "Close",
+   "at": 30
+  },
+  {
+   "id": "inseparable",
+   "name": "Inseparable",
+   "at": 55
+  },
+  {
+   "id": "trusted",
+   "name": "Trusted Partners",
+   "at": 80
+  }
+ ],
+ "rules": {
+  "sceneChance": 0.5,
+  "recentLimit": 10,
+  "pairCooldown": 2,
+  "giftMinAffection": 60,
+  "sulkAfter": 3,
+  "grudgeAfterFaints": 2,
+  "pactMinStage": 2,
+  "pactBattles": 6,
+  "scrapbookLimit": 80,
+  "memoryLimit": 6,
+  "chemCap": 100,
+  "synergyMinStage": 3,
+  "recognizeAfter": 3,
+  "smallWeight": 8,
+  "bigWeight": 30,
+  "tensionTense": 50,
+  "tensionRival": 12,
+  "shared": {
+   "closeCall": 3,
+   "boss": 3,
+   "aid": 4,
+   "evolve": 2
+  }
+ },
+ "quirks": [
+  "hums while it walks",
+  "sneezes when it gets excited",
+  "always sits facing the horizon",
+  "collects shiny pebbles",
+  "sleeps with one eye open",
+  "tilts its head at every sound",
+  "drags its tail through puddles",
+  "shadows you at every stop"
+ ],
+ "envByType": {
+  "water": "beach",
+  "ice": "snow",
+  "fire": "heat",
+  "ground": "heat",
+  "flying": "wind",
+  "ghost": "shrine",
+  "psychic": "shrine",
+  "grass": "forest",
+  "bug": "forest",
+  "rock": "cave",
+  "steel": "cave",
+  "normal": "road",
+  "fighting": "road",
+  "poison": "cave",
+  "electric": "rain",
+  "dragon": "wind",
+  "dark": "cave",
+  "fairy": "forest"
+ },
+ "envWeather": {
+  "beach": "rain",
+  "snow": "snow",
+  "heat": "heat",
+  "wind": "wind",
+  "electric": "rain"
+ },
+ "babies": [
+  "pichu",
+  "togepi",
+  "cleffa",
+  "igglybuff",
+  "azurill",
+  "riolu",
+  "budew",
+  "munchlax",
+  "smoochum",
+  "elekid",
+  "magby",
+  "tyrogue",
+  "wynaut",
+  "happiny"
+ ],
+ "hideRewards": [
+  "oran-berry",
+  "potion",
+  "strawberry-sweet"
+ ],
+ "culture": [
+  {
+   "id": "chaotic",
+   "name": "Chaotic Camp",
+   "traits": [
+    "playful",
+    "curious",
+    "competitive"
+   ],
+   "blurb": "Camp is loud, messy and never boring."
+  },
+  {
+   "id": "disciplined",
+   "name": "Disciplined Crew",
+   "traits": [
+    "patient",
+    "cautious",
+    "proud",
+    "stubborn"
+   ],
+   "blurb": "They train quietly and line up before a boss."
+  },
+  {
+   "id": "family",
+   "name": "Found Family",
+   "traits": [
+    "empathetic",
+    "protective",
+    "anxious"
+   ],
+   "blurb": "They look out for each other before anything else."
+  },
+  {
+   "id": "lone",
+   "name": "Lone Wolves",
+   "traits": [
+    "independent",
+    "brave"
+   ],
+   "blurb": "Each walks its own path, and they still arrive together."
+  }
+ ],
+ "personalities": {
+  "independent": {
+   "label": "Independent",
+   "blurb": "Walks its own path and trusts you slowly.",
+   "gifts": [
+    "sitrus-berry",
+    "potion"
+   ],
+   "weather": {
+    "rain": "{A} wanders out into the rain alone and comes back soaked and smug.",
+    "snow": "{A} trudges through the snow like it picked the trail itself.",
+    "heat": "{A} finds its own patch of shade and refuses to share.",
+    "wind": "{A} leans into the wind as if it were its own idea."
+   },
+   "sulk": "{A} sulks at the edge of the box, pretending it does not mind.",
+   "pose": "arms crossed, looking away just a little",
+   "say": {
+    "boast": "\"I did that alone,\" {A} says. {B} does not argue.",
+    "question": "{A} asks {B} where it learned that, then walks off before the answer.",
+    "concern": "{A} keeps pace beside {B}, saying nothing, which means plenty.",
+    "invite": "{A} nudges {B} and tilts its head toward the trail.",
+    "cheer": "{A} gives {B} a single approving nod.",
+    "apology": "{A} stops beside {B}, huffs, and looks the other way. That is an apology.",
+    "last": "{A} listens to the last thing {B} wanted to say, and does not look away.",
+    "welcome": "{A} circles {B} once. That is a welcome, for {A}."
+   },
+   "warm": [
+    "patient",
+    "empathetic"
+   ],
+   "clash": [
+    "protective",
+    "stubborn"
+   ]
+  },
+  "stubborn": {
+   "label": "Stubborn",
+   "blurb": "Digs in its heels. Loyal once convinced.",
+   "gifts": [
+    "lum-berry",
+    "x-defend"
+   ],
+   "weather": {
+    "rain": "{A} refuses the shelter and stands in the rain on principle.",
+    "snow": "{A} will not budge from the snowbank.",
+    "heat": "{A} plants itself in the heat and says it is fine.",
+    "wind": "{A} braces against the wind and wins."
+   },
+   "sulk": "{A} sits with its back to the party menu, arms folded.",
+   "pose": "feet planted, chin up",
+   "say": {
+    "boast": "{A} announces it was right all along. {B} sighs.",
+    "question": "{A} asks {B} three times if it is sure.",
+    "concern": "{A} stays at {B}'s side and will not be moved.",
+    "invite": "{A} plants itself in front of {B} until they come play.",
+    "cheer": "{A} stamps a victory dance.",
+    "apology": "{A} grumbles something that sounds a lot like sorry.",
+    "last": "{A} refuses to leave until {B}'s last words are heard.",
+    "welcome": "{A} stands firm beside {B}: the newcomer is staying."
+   },
+   "warm": [
+    "patient",
+    "protective"
+   ],
+   "clash": [
+    "stubborn",
+    "independent"
+   ]
+  },
+  "proud": {
+   "label": "Proud",
+   "blurb": "Likes to be seen winning. Hates to be pitied.",
+   "gifts": [
+    "sitrus-berry",
+    "x-attack"
+   ],
+   "weather": {
+    "rain": "{A} shakes the rain off like a champion.",
+    "snow": "{A} poses in the snow for no one in particular.",
+    "heat": "{A} struts through the heat without sweating, it insists.",
+    "wind": "{A} lets the wind catch its best side."
+   },
+   "sulk": "{A} says it was never bothered about the box. Loudly.",
+   "pose": "chest out, best side forward",
+   "say": {
+    "boast": "{A} reminds {B} who landed the finishing blow.",
+    "question": "{A} asks {B} if it saw that. It was clearly talking about itself.",
+    "concern": "{A} straightens {B}'s posture and says it will be fine.",
+    "invite": "{A} dares {B} to a race it plans to win.",
+    "cheer": "{A} takes a bow, then gestures at {B} to bow too.",
+    "apology": "{A} admits, stiffly, that {B} had a point.",
+    "last": "{A} bows its head for {B}, which it rarely does.",
+    "welcome": "{A} welcomes {B} to the best team on the road."
+   },
+   "warm": [
+    "empathetic",
+    "anxious"
+   ],
+   "clash": [
+    "competitive",
+    "proud"
+   ]
+  },
+  "competitive": {
+   "label": "Competitive",
+   "blurb": "Turns everything into a contest, even a nap.",
+   "gifts": [
+    "x-speed",
+    "potion"
+   ],
+   "weather": {
+    "rain": "{A} challenges the raindrops to a race.",
+    "snow": "{A} counts snowflakes it caught faster than anyone.",
+    "heat": "{A} wants to know who sweats least. It is a contest.",
+    "wind": "{A} races the wind and loses, and demands a rematch."
+   },
+   "sulk": "{A} trains hard at the edge of the box to prove a point.",
+   "pose": "one paw raised, already counting wins",
+   "say": {
+    "boast": "{A} counts its knockouts out loud, then counts {B}'s.",
+    "question": "{A} asks {B} how many it got. It already knows its own.",
+    "concern": "{A} says {B} was nearly as good this time.",
+    "invite": "{A} sets up a contest and hands {B} the first turn.",
+    "cheer": "{A} leaps around, then points at {B}: \"Next time you beat me.\"",
+    "apology": "{A} admits {B} was faster, once, just this once.",
+    "last": "{A} says {B} would have wanted to win that last one.",
+    "welcome": "{A} sizes up {B} and grins: good, a rival."
+   },
+   "warm": [
+    "playful",
+    "brave"
+   ],
+   "clash": [
+    "proud",
+    "cautious"
+   ]
+  },
+  "brave": {
+   "label": "Brave",
+   "blurb": "First through the door, last to leave.",
+   "gifts": [
+    "x-attack",
+    "potion"
+   ],
+   "weather": {
+    "rain": "{A} stomps through the puddles at the front of the line.",
+    "snow": "{A} charges ahead and breaks the trail for everyone.",
+    "heat": "{A} takes the sunny side to shield the others.",
+    "wind": "{A} faces straight into the gale."
+   },
+   "sulk": "{A} keeps looking back at you from the box, still ready.",
+   "pose": "shoulders back, eyes forward",
+   "say": {
+    "boast": "{A} puffs up and tells {B} not to worry. {A} has this.",
+    "question": "{A} asks {B} if it is ready to go again.",
+    "concern": "{A} steps in front of {B} before anyone asks.",
+    "invite": "{A} bounces ahead and waves {B} on.",
+    "cheer": "{A} roars the team into a cheer.",
+    "apology": "{A} says it should have stepped in sooner.",
+    "last": "{A} promises {B} it will carry on.",
+    "welcome": "{A} says the newcomer can stand behind it any time."
+   },
+   "warm": [
+    "anxious",
+    "cautious"
+   ],
+   "clash": [
+    "stubborn",
+    "independent"
+   ]
+  },
+  "playful": {
+   "label": "Playful",
+   "blurb": "Everything is a game. Mostly it is right.",
+   "gifts": [
+    "oran-berry",
+    "strawberry-sweet"
+   ],
+   "weather": {
+    "rain": "{A} splashes in every puddle.",
+    "snow": "{A} rolls in the snow and builds a lopsided sculpture.",
+    "heat": "{A} flops in the shade and demands a game of shade tag.",
+    "wind": "{A} chases a leaf the wind keeps stealing."
+   },
+   "sulk": "{A} bounces around in the box, waiting to be picked.",
+   "pose": "mid-leap with a huge grin",
+   "say": {
+    "boast": "{A} tells {B} a tall tale about the last fight. It keeps getting taller.",
+    "question": "{A} asks {B} if it wants to play. It is already running.",
+    "concern": "{A} makes a silly face at {B} until it smiles.",
+    "invite": "{A} tags {B} and runs: \"You are it!\"",
+    "cheer": "{A} turns the whole cheer into a dance.",
+    "apology": "{A} lays a berry at {B}'s feet and grins sheepishly.",
+    "last": "{A} tells {B} one more joke, the way {B} liked.",
+    "welcome": "{A} shows {B} the best napping spot, first thing."
+   },
+   "warm": [
+    "cautious",
+    "protective"
+   ],
+   "clash": [
+    "proud",
+    "patient"
+   ]
+  },
+  "curious": {
+   "label": "Curious",
+   "blurb": "Pokes everything. Remembers all of it.",
+   "gifts": [
+    "oran-berry",
+    "ether"
+   ],
+   "weather": {
+    "rain": "{A} peers at the raindrops, trying to catch one.",
+    "snow": "{A} tastes the snow and writes it down in its head.",
+    "heat": "{A} examines a shimmering rock in the heat.",
+    "wind": "{A} follows a strange smell on the wind."
+   },
+   "sulk": "{A} paws at the box lid, wondering what it is missing.",
+   "pose": "head tilted, one paw out",
+   "say": {
+    "boast": "{A} points out a clue the others missed.",
+    "question": "{A} asks {B} why it fights that way, and means it.",
+    "concern": "{A} asks {B} if there is anything it needs. Truly.",
+    "invite": "{A} drags {B} over to see what it found.",
+    "cheer": "{A} circles the group, asking how the others did.",
+    "apology": "{A} says it did not realise, and asks how to fix it.",
+    "last": "{A} asks {B}'s last question out loud, so it is not lost.",
+    "welcome": "{A} sniffs {B} all over, delighted."
+   },
+   "warm": [
+    "playful",
+    "patient"
+   ],
+   "clash": [
+    "cautious",
+    "proud"
+   ]
+  },
+  "patient": {
+   "label": "Patient",
+   "blurb": "Waits for the right moment. Gives the best advice.",
+   "gifts": [
+    "sitrus-berry",
+    "lum-berry"
+   ],
+   "weather": {
+    "rain": "{A} watches the rain with perfect calm.",
+    "snow": "{A} lets the snow settle on its back and does not move.",
+    "heat": "{A} waits out the heat in the shade, unbothered.",
+    "wind": "{A} waits for the wind to drop."
+   },
+   "sulk": "{A} naps in the box. It will wait.",
+   "pose": "eyes closed, completely at ease",
+   "say": {
+    "boast": "{A} lets {B} tell the story first.",
+    "question": "{A} asks {B} how it is really doing, and waits.",
+    "concern": "{A} sits with {B} until it is ready to talk.",
+    "invite": "{A} saves {B} a seat and waits.",
+    "cheer": "{A} smiles and lets the others have the spotlight.",
+    "apology": "{A} gives {B} space, then comes back with an apology.",
+    "last": "{A} sits quietly with {B}'s last words until dawn.",
+    "welcome": "{A} makes room for {B} and says nothing, which is welcome enough."
+   },
+   "warm": [
+    "stubborn",
+    "anxious"
+   ],
+   "clash": [
+    "competitive",
+    "playful"
+   ]
+  },
+  "cautious": {
+   "label": "Cautious",
+   "blurb": "Checks twice. Rarely wrong.",
+   "gifts": [
+    "oran-berry",
+    "potion"
+   ],
+   "weather": {
+    "rain": "{A} finds the driest ledge and hides.",
+    "snow": "{A} tests the ice before every step.",
+    "heat": "{A} insists on stopping for water.",
+    "wind": "{A} refuses to stand near the cliff edge."
+   },
+   "sulk": "{A} says it is fine in the box. It is checking the lock twice.",
+   "pose": "crouched low, alert",
+   "say": {
+    "boast": "{A} points out that it noticed the danger first.",
+    "question": "{A} asks {B} if it is sure that is safe.",
+    "concern": "{A} checks {B} over for injuries and fusses.",
+    "invite": "{A} asks {B} to stay on the safe side of the trail.",
+    "cheer": "{A} gives a careful cheer, one eye on the road.",
+    "apology": "{A} says it should have warned {B} earlier.",
+    "last": "{A} repeats {B}'s last warning so no one forgets.",
+    "welcome": "{A} looks the newcomer over, slowly, then relaxes a little."
+   },
+   "warm": [
+    "brave",
+    "protective"
+   ],
+   "clash": [
+    "playful",
+    "competitive"
+   ]
+  },
+  "empathetic": {
+   "label": "Empathetic",
+   "blurb": "Feels what its team feels. Notices everything.",
+   "gifts": [
+    "sitrus-berry",
+    "oran-berry"
+   ],
+   "weather": {
+    "rain": "{A} presses close to the shivering ones under the rain.",
+    "snow": "{A} warms the others with its body in the snow.",
+    "heat": "{A} fans the others in the heat.",
+    "wind": "{A} shelters the little ones from the wind."
+   },
+   "sulk": "{A} sends a quiet, wistful look from the box.",
+   "pose": "curled around a teammate, eyes soft",
+   "say": {
+    "boast": "{A} credits {B} for the win and means it.",
+    "question": "{A} asks {B} how it is feeling, and listens.",
+    "concern": "{A} sits close to {B} and does not need to say anything.",
+    "invite": "{A} nudges {B} gently: join us?",
+    "cheer": "{A} cheers for everyone by name.",
+    "apology": "{A} apologises first, even if it was not its fault.",
+    "last": "{A} remembers {B}'s last words and keeps them safe.",
+    "welcome": "{A} offers {B} a berry and a place by the fire."
+   },
+   "warm": [
+    "anxious",
+    "patient"
+   ],
+   "clash": [
+    "competitive",
+    "independent"
+   ]
+  },
+  "protective": {
+   "label": "Protective",
+   "blurb": "Guards its team like a wall.",
+   "gifts": [
+    "sitrus-berry",
+    "x-defend"
+   ],
+   "weather": {
+    "rain": "{A} holds a leaf over the smallest of the group.",
+    "snow": "{A} breaks the snow ahead so others can pass.",
+    "heat": "{A} shields the others from the sun.",
+    "wind": "{A} stands upwind of the party."
+   },
+   "sulk": "{A} keeps one eye on the party from the box, worried.",
+   "pose": "one step ahead, guarding",
+   "say": {
+    "boast": "{A} says it never lost sight of {B} during the fight.",
+    "question": "{A} asks {B} if anyone hurt it. It will deal with them.",
+    "concern": "{A} stays at {B}'s side, alert, until it sleeps.",
+    "invite": "{A} checks the path and then waves {B} through.",
+    "cheer": "{A} stands tall behind the group and cheers.",
+    "apology": "{A} says it should have been faster to shield {B}.",
+    "last": "{A} vows to carry {B}'s last wish forward.",
+    "welcome": "{A} takes the newcomer under its wing, already."
+   },
+   "warm": [
+    "playful",
+    "anxious"
+   ],
+   "clash": [
+    "independent",
+    "competitive"
+   ]
+  },
+  "anxious": {
+   "label": "Anxious",
+   "blurb": "Worries aloud. Rises to the moment more often than it thinks.",
+   "gifts": [
+    "oran-berry",
+    "lum-berry"
+   ],
+   "weather": {
+    "rain": "{A} hides under the nearest leaf and trembles.",
+    "snow": "{A} shivers in the snow and sticks close to the others.",
+    "heat": "{A} fretfully fans itself in the heat.",
+    "wind": "{A} flinches at every gust."
+   },
+   "sulk": "{A} frets in the box: did you forget it?",
+   "pose": "small and tucked in, but trying to smile",
+   "say": {
+    "boast": "{A} timidly admits it was afraid, and that {B} helped.",
+    "question": "{A} asks {B} if the next fight is going to be all right.",
+    "concern": "{A} worries about {B} so much that it forgets to worry about itself.",
+    "invite": "{A} shyly asks {B} to come along.",
+    "cheer": "{A} cheers, a little too quietly, then louder.",
+    "apology": "{A} apologises three times in a row.",
+    "last": "{A} whispers {B}'s last words so they will not be forgotten.",
+    "welcome": "{A} hides behind a teammate, then peeks out at the newcomer."
+   },
+   "warm": [
+    "empathetic",
+    "protective",
+    "brave"
+   ],
+   "clash": [
+    "competitive",
+    "proud"
+   ]
+  }
+ },
+ "vignettes": [
+  {
+   "id": "talk-question",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} wanders over to {B} during the walk.",
+    "{sayA}"
+   ],
+   "caption": "{A} asked {B} a question on the road.",
+   "weight": 10,
+   "voice": "question",
+   "effect": {
+    "chem": 1
+   },
+   "a": {
+    "traits": [
+     "curious",
+     "cautious",
+     "anxious",
+     "empathetic"
+    ]
+   }
+  },
+  {
+   "id": "talk-boast",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} saunters up beside {B}.",
+    "{sayA}",
+    "{B} rolls its eyes, but keeps the pace."
+   ],
+   "caption": "{A} boasted about a past fight to {B}.",
+   "weight": 10,
+   "voice": "boast",
+   "a": {
+    "traits": [
+     "proud",
+     "competitive",
+     "brave",
+     "playful"
+    ]
+   },
+   "choices": [
+    {
+     "label": "Laugh along",
+     "text": "You laugh. {A} swells with pride and {B} cannot help grinning.",
+     "effect": {
+      "chem": 2
+     },
+     "fits": [
+      "playful",
+      "brave"
+     ]
+    },
+    {
+     "label": "Tell {A} to settle",
+     "text": "{A} deflates a little, but {B} is glad.",
+     "effect": {
+      "chem": 1,
+      "tension": 1
+     },
+     "fits": [
+      "patient",
+      "cautious"
+     ]
+    },
+    {
+     "label": "Say nothing",
+     "text": "They sort it out on their own.",
+     "effect": {
+      "chem": 1
+     }
+    }
+   ],
+   "dflt": 2
+  },
+  {
+   "id": "talk-concern",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} slows down to walk beside {B}.",
+    "{sayA}"
+   ],
+   "caption": "{A} checked in on {B} quietly.",
+   "weight": 14,
+   "voice": "concern",
+   "a": {
+    "traits": [
+     "empathetic",
+     "protective",
+     "patient"
+    ]
+   },
+   "b": {
+    "hurt": 0.75
+   },
+   "effect": {
+    "chem": 2,
+    "heal": 0.1
+   }
+  },
+  {
+   "id": "talk-invite",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} bounces up to {B}.",
+    "{sayA}"
+   ],
+   "caption": "{A} invited {B} to play.",
+   "weight": 10,
+   "voice": "invite",
+   "a": {
+    "traits": [
+     "playful",
+     "curious",
+     "brave"
+    ]
+   },
+   "choices": [
+    {
+     "label": "Let them play",
+     "text": "{B} gives in and the two of them tumble down the trail together.",
+     "effect": {
+      "chem": 2
+     },
+     "fits": [
+      "playful",
+      "curious"
+     ]
+    },
+    {
+     "label": "Tell them to save energy",
+     "text": "{A} sulks, then follows along beside you.",
+     "effect": {
+      "chem": 0,
+      "aff": 1
+     }
+    }
+   ],
+   "dflt": 0
+  },
+  {
+   "id": "talk-apology",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} approaches {B} with something to say.",
+    "{sayA}"
+   ],
+   "caption": "{A} apologised to {B}.",
+   "weight": 30,
+   "voice": "apology",
+   "mem": "bicker",
+   "effect": {
+    "chem": 3,
+    "tension": -12
+   },
+   "remember": {
+    "tag": "apology",
+    "text": "{A} apologised to {B} after their squabble"
+   }
+  },
+  {
+   "id": "cheer-up-gift",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} tucks a little berry next to {B} while no one is looking."
+   ],
+   "caption": "{A} left {B} a berry.",
+   "weight": 8,
+   "a": {
+    "traits": [
+     "empathetic",
+     "playful",
+     "patient"
+    ]
+   },
+   "mem": "bicker",
+   "effect": {
+    "chem": 2
+   },
+   "remember": {
+    "tag": "berry",
+    "text": "{A} gave {B} a berry as a peace offering"
+   }
+  },
+  {
+   "id": "callback-berry",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{B} spots a berry on the trail and nudges it toward {A}.",
+    "\"Remember {mem}?\" the look says. {A} laughs."
+   ],
+   "caption": "{B} repaid {A} for the berry.",
+   "weight": 40,
+   "mem": "berry",
+   "effect": {
+    "chem": 2
+   },
+   "remember": {
+    "tag": "in-joke",
+    "text": "{B} repaid {A}'s berry with a berry"
+   }
+  },
+  {
+   "id": "callback-promise",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} stops beside {B} on the trail.",
+    "Neither says it, but both remember: {mem}."
+   ],
+   "caption": "{A} and {B} remembered an old moment.",
+   "weight": 30,
+   "mem": "protect",
+   "effect": {
+    "chem": 3,
+    "aff": 1
+   }
+  },
+  {
+   "id": "callback-joke",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} and {B} share a look. It is the old joke again: {mem}."
+   ],
+   "caption": "{A} and {B} shared an old joke.",
+   "weight": 30,
+   "mem": "in-joke",
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "callback-rival",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} puffs up at {B}. \"Still counting from {mem},\" the glare says."
+   ],
+   "caption": "{A} brought up an old contest with {B}.",
+   "weight": 20,
+   "mem": "contest",
+   "effect": {
+    "chem": 1,
+    "tension": 2
+   }
+  },
+  {
+   "id": "callback-sparring",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} and {B} remember {mem} and decide to go again."
+   ],
+   "caption": "{A} and {B} had a rematch.",
+   "weight": 18,
+   "mem": "practice",
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "play-tag",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} and {B} chase each other in circles around the party.",
+    "Even the most serious of the team ends up smiling."
+   ],
+   "caption": "{A} and {B} played tag.",
+   "weight": 10,
+   "a": {
+    "traits": [
+     "playful",
+     "curious",
+     "brave"
+    ]
+   },
+   "b": {
+    "traits": [
+     "playful",
+     "curious",
+     "brave",
+     "competitive",
+     "proud"
+    ]
+   },
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "play-beach",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "The shore is warm and the water is shallow. {A} splashes {B} and a game begins."
+   ],
+   "caption": "{A} and {B} played at the shore.",
+   "weight": 18,
+   "env": [
+    "beach"
+   ],
+   "a": {
+    "traits": [
+     "playful",
+     "curious",
+     "brave"
+    ]
+   },
+   "effect": {
+    "chem": 3
+   }
+  },
+  {
+   "id": "shelter-rain",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "The rain comes down hard. {A} and {B} duck under the same leaf.",
+    "{weatherA}"
+   ],
+   "caption": "{A} and {B} sheltered from the rain together.",
+   "weight": 18,
+   "env": [
+    "rain"
+   ],
+   "effect": {
+    "chem": 3
+   }
+  },
+  {
+   "id": "warm-snow",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "Cold bites the trail. {A} presses close to {B} for warmth.",
+    "{weatherA}"
+   ],
+   "caption": "{A} warmed {B} in the cold.",
+   "weight": 18,
+   "env": [
+    "snow"
+   ],
+   "a": {
+    "traits": [
+     "empathetic",
+     "protective",
+     "patient",
+     "brave"
+    ]
+   },
+   "effect": {
+    "chem": 3
+   }
+  },
+  {
+   "id": "shrine-quiet",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "A quiet shrine sits beside the path. {A} and {B} stop, bow their heads, and wait together."
+   ],
+   "caption": "{A} and {B} paused at a shrine.",
+   "weight": 18,
+   "env": [
+    "shrine"
+   ],
+   "effect": {
+    "chem": 2,
+    "trust": 1
+   }
+  },
+  {
+   "id": "cave-echo",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "The cave echoes. {A} calls into the dark and {B} calls back. They keep at it for a while."
+   ],
+   "caption": "{A} and {B} played with the cave echo.",
+   "weight": 16,
+   "env": [
+    "cave"
+   ],
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "forest-find",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} and {B} wander off the path together and come back with leaves in their fur and something shiny."
+   ],
+   "caption": "{A} and {B} explored the woods.",
+   "weight": 16,
+   "env": [
+    "forest"
+   ],
+   "a": {
+    "traits": [
+     "curious",
+     "playful",
+     "brave"
+    ]
+   },
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "piggyback",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} hops onto {B}'s back as if it had always belonged there.",
+    "{B} sighs and carries on at the same speed."
+   ],
+   "caption": "{A} rode on {B}.",
+   "weight": 14,
+   "a": {
+    "small": true
+   },
+   "b": {
+    "big": true
+   },
+   "effect": {
+    "chem": 3
+   }
+  },
+  {
+   "id": "shoulder-nap",
+   "ctx": "any",
+   "who": "solo",
+   "text": [
+    "{A} climbs up onto your shoulder, circles twice, and falls asleep.",
+    "You walk carefully for the rest of the route."
+   ],
+   "caption": "{A} fell asleep on your shoulder.",
+   "weight": 12,
+   "a": {
+    "small": true,
+    "affection": 50
+   },
+   "effect": {
+    "aff": 3
+   }
+  },
+  {
+   "id": "hide-seek",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} is gone. {B} looks puzzled. A tiny giggle comes from somewhere nearby.",
+    "Where is it hiding?"
+   ],
+   "caption": "{A} and {B} played hide-and-seek.",
+   "weight": 12,
+   "a": {
+    "traits": [
+     "playful",
+     "curious"
+    ]
+   },
+   "action": "hide",
+   "choices": [
+    {
+     "label": "Look behind the rock",
+     "text": "",
+     "effect": {
+      "chem": 2
+     },
+     "spot": 0
+    },
+    {
+     "label": "Look in the bush",
+     "text": "",
+     "effect": {
+      "chem": 2
+     },
+     "spot": 1
+    },
+    {
+     "label": "Look up in the tree",
+     "text": "",
+     "effect": {
+      "chem": 2
+     },
+     "spot": 2
+    }
+   ],
+   "dflt": 0
+  },
+  {
+   "id": "practice-moves",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} and {B} find a clearing and trade moves in friendly practice.",
+    "Neither is trying to win. Both are trying to learn."
+   ],
+   "caption": "{A} and {B} practiced moves together.",
+   "weight": 16,
+   "stage": [
+    1,
+    5
+   ],
+   "both": {
+    "damaging": true
+   },
+   "effect": {
+    "chem": 2
+   },
+   "remember": {
+    "tag": "practice",
+    "text": "their practice session"
+   }
+  },
+  {
+   "id": "friendly-contest",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} and {B} turn the walk into a contest: who can reach the next signpost first."
+   ],
+   "caption": "{A} and {B} held a friendly contest.",
+   "weight": 22,
+   "rivalry": "friendly",
+   "choices": [
+    {
+     "label": "Cheer on {A}",
+     "text": "{A} wins by a whisker. {B} demands a rematch.",
+     "effect": {
+      "chem": 2,
+      "tension": -1
+     }
+    },
+    {
+     "label": "Cheer on {B}",
+     "text": "{B} edges ahead. {A} grumbles, grinning.",
+     "effect": {
+      "chem": 2,
+      "tension": -1
+     }
+    },
+    {
+     "label": "Call it a draw",
+     "text": "Both pretend they were not racing.",
+     "effect": {
+      "chem": 1,
+      "tension": -3
+     },
+     "fits": [
+      "patient",
+      "empathetic"
+     ]
+    }
+   ],
+   "dflt": 2,
+   "remember": {
+    "tag": "contest",
+    "text": "their running contest"
+   }
+  },
+  {
+   "id": "bicker",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} and {B} are at it again.",
+    "{A} says {B} walks too slowly. {B} says {A} talks too much."
+   ],
+   "caption": "{A} and {B} bickered on the road.",
+   "weight": 20,
+   "affinity": "clash",
+   "stage": [
+    0,
+    3
+   ],
+   "choices": [
+    {
+     "label": "Mediate",
+     "text": "You step between them and they stop. Mostly.",
+     "effect": {
+      "chem": 1,
+      "tension": -4
+     },
+     "fits": [
+      "empathetic",
+      "patient"
+     ]
+    },
+    {
+     "label": "Take {A}'s side",
+     "text": "{A} smirks. {B} stomps off.",
+     "effect": {
+      "chem": -1,
+      "tension": 4
+     }
+    },
+    {
+     "label": "Let them sort it out",
+     "text": "They argue until they run out of breath, then walk on in silence.",
+     "effect": {
+      "chem": 0,
+      "tension": 2
+     },
+     "fits": [
+      "independent",
+      "stubborn"
+     ]
+    }
+   ],
+   "dflt": 2,
+   "remember": {
+    "tag": "bicker",
+    "text": "their last squabble"
+   }
+  },
+  {
+   "id": "rivals-tense",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} and {B} keep score. It is not as friendly as it was."
+   ],
+   "caption": "{A} and {B}'s rivalry soured a little.",
+   "weight": 22,
+   "rivalry": "tense",
+   "choices": [
+    {
+     "label": "Break it up",
+     "text": "You tell them they are on the same team.",
+     "effect": {
+      "tension": -8,
+      "chem": 1
+     },
+     "fits": [
+      "empathetic",
+      "patient"
+     ]
+    },
+    {
+     "label": "Let them compete",
+     "text": "The contest goes on. The air stays thick.",
+     "effect": {
+      "tension": 4
+     }
+    },
+    {
+     "label": "Give them space",
+     "text": "You walk ahead and let them cool off.",
+     "effect": {
+      "tension": -3
+     },
+     "fits": [
+      "independent",
+      "cautious"
+     ]
+    }
+   ],
+   "dflt": 2
+  },
+  {
+   "id": "forget-move",
+   "ctx": "any",
+   "who": "solo",
+   "text": [
+    "{A} looks up at you and shakes its head at one of its moves: {move}.",
+    "It would rather learn something else."
+   ],
+   "caption": "{A} asked to drop a move it disliked.",
+   "weight": 8,
+   "action": "forget",
+   "choices": [
+    {
+     "label": "Keep it",
+     "text": "{A} nods slowly. It will make do.",
+     "effect": {
+      "aff": -1,
+      "trust": 1
+     }
+    },
+    {
+     "label": "Let it forget",
+     "text": "{A} brightens. It is lighter already.",
+     "effect": {
+      "aff": 2,
+      "trust": 2
+     }
+    }
+   ],
+   "dflt": 0
+  },
+  {
+   "id": "gossip-hint",
+   "ctx": "any",
+   "who": "solo",
+   "text": [
+    "{A} perks up and tugs your sleeve. It overheard some trainers on the road.",
+    "\"The next gym leader favours {type}-type Pokémon,\" it relays, in its own way."
+   ],
+   "caption": "{A} overheard a rumour about the next gym.",
+   "weight": 12,
+   "a": {
+    "traits": [
+     "curious",
+     "playful",
+     "cautious"
+    ]
+   },
+   "action": "hint",
+   "effect": {
+    "aff": 1
+   }
+  },
+  {
+   "id": "gift-found",
+   "ctx": "any",
+   "who": "solo",
+   "text": [
+    "{A} trots up to you, proud, with something in its mouth.",
+    "It is a {gift}. For you."
+   ],
+   "caption": "{A} brought you a {gift}.",
+   "weight": 6,
+   "a": {
+    "affection": 60
+   },
+   "action": "gift",
+   "effect": {
+    "aff": 1
+   }
+  },
+  {
+   "id": "weather-rain",
+   "ctx": "any",
+   "who": "solo",
+   "text": [
+    "{weatherA}"
+   ],
+   "caption": "{A} met the rain in its own way.",
+   "weight": 8,
+   "env": [
+    "rain"
+   ],
+   "effect": {
+    "aff": 1
+   }
+  },
+  {
+   "id": "weather-snow",
+   "ctx": "any",
+   "who": "solo",
+   "text": [
+    "{weatherA}"
+   ],
+   "caption": "{A} met the cold in its own way.",
+   "weight": 8,
+   "env": [
+    "snow"
+   ],
+   "effect": {
+    "aff": 1
+   }
+  },
+  {
+   "id": "weather-heat",
+   "ctx": "any",
+   "who": "solo",
+   "text": [
+    "{weatherA}"
+   ],
+   "caption": "{A} met the heat in its own way.",
+   "weight": 8,
+   "env": [
+    "heat"
+   ],
+   "effect": {
+    "aff": 1
+   }
+  },
+  {
+   "id": "weather-wind",
+   "ctx": "any",
+   "who": "solo",
+   "text": [
+    "{weatherA}"
+   ],
+   "caption": "{A} met the wind in its own way.",
+   "weight": 8,
+   "env": [
+    "wind"
+   ],
+   "effect": {
+    "aff": 1
+   }
+  },
+  {
+   "id": "share-berry",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{A} notices {B} is worn out and presses a berry into its paw.",
+    "{sayA}"
+   ],
+   "caption": "{A} shared a berry with {B}.",
+   "weight": 18,
+   "voice": "concern",
+   "a": {
+    "traits": [
+     "empathetic",
+     "protective",
+     "patient",
+     "playful"
+    ]
+   },
+   "b": {
+    "hurt": 0.7
+   },
+   "action": "berry",
+   "effect": {
+    "chem": 2,
+    "heal": 0.2
+   }
+  },
+  {
+   "id": "camp-story-memory",
+   "ctx": "camp",
+   "who": "pair",
+   "text": [
+    "The fire crackles. {A} and {B} settle down together.",
+    "{A} quietly tells the story of {mem}, and {B} listens."
+   ],
+   "caption": "{A} and {B} shared a memory around the fire.",
+   "weight": 30,
+   "mem": "*",
+   "effect": {
+    "chem": 3
+   }
+  },
+  {
+   "id": "camp-story-hearth",
+   "ctx": "camp",
+   "who": "party",
+   "text": [
+    "The fire crackles. One by one the team settles in.",
+    "Each shares a tale, a boast or a yawn. {A} falls asleep first."
+   ],
+   "caption": "The team shared stories by the fire.",
+   "weight": 20,
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "camp-story-rumor",
+   "ctx": "camp",
+   "who": "solo",
+   "text": [
+    "At the fire, {A} listens in on a traveller's tales.",
+    "\"The next gym leader favours {type}-type Pokémon,\" a stranger says."
+   ],
+   "caption": "{A} caught a rumour at the campfire.",
+   "weight": 14,
+   "action": "hint",
+   "a": {
+    "traits": [
+     "curious",
+     "playful",
+     "cautious",
+     "anxious"
+    ]
+   },
+   "effect": {
+    "aff": 1
+   }
+  },
+  {
+   "id": "camp-practice",
+   "ctx": "camp",
+   "who": "pair",
+   "text": [
+    "By the firelight, {A} and {B} practice a move they have been working on."
+   ],
+   "caption": "{A} and {B} trained by the fire.",
+   "weight": 14,
+   "stage": [
+    1,
+    5
+   ],
+   "both": {
+    "damaging": true
+   },
+   "effect": {
+    "chem": 3
+   },
+   "remember": {
+    "tag": "practice",
+    "text": "their training by the fire"
+   }
+  },
+  {
+   "id": "gather-faint",
+   "ctx": "faint",
+   "who": "party",
+   "text": [
+    "{B} lies still. The rest of the team gathers around it.",
+    "{A} stays closest. Nobody says much."
+   ],
+   "caption": "The team gathered around {B}.",
+   "weight": 30,
+   "b": {
+    "fainted": true
+   },
+   "effect": {
+    "chem": 2,
+    "trust": 1
+   }
+  },
+  {
+   "id": "comfort-loss",
+   "ctx": "faint",
+   "who": "pair",
+   "text": [
+    "Later, {A} curls up beside {B} and says nothing for a long while.",
+    "{sayA}"
+   ],
+   "caption": "{A} comforted {B} after it fainted.",
+   "weight": 34,
+   "voice": "concern",
+   "b": {
+    "fainted": true
+   },
+   "effect": {
+    "chem": 3,
+    "aff": 1
+   },
+   "remember": {
+    "tag": "protect",
+    "text": "{A} stayed with {B} after the fall"
+   }
+  },
+  {
+   "id": "last-words",
+   "ctx": "faint",
+   "who": "pair",
+   "text": [
+    "{A} is a Ghost-type. It closes its eyes and listens to the spirit of {B}.",
+    "{sayA}"
+   ],
+   "caption": "{A} heard {B}'s last words.",
+   "weight": 60,
+   "voice": "last",
+   "a": {
+    "ghost": true
+   },
+   "b": {
+    "fainted": true
+   },
+   "action": "spirit",
+   "effect": {
+    "chem": 3,
+    "aff": 2
+   },
+   "remember": {
+    "tag": "protect",
+    "text": "{A} heard {B}'s last words"
+   }
+  },
+  {
+   "id": "revenge-pact",
+   "ctx": "faint",
+   "who": "pact",
+   "text": [
+    "{B} went down to a {foe}. {A} stares at the ground, then forward.",
+    "\"Next time, {foe},\" its eyes say."
+   ],
+   "caption": "{A} vowed to avenge {B} against {foe}.",
+   "weight": 50,
+   "effect": {
+    "chem": 3,
+    "trust": 1
+   },
+   "remember": {
+    "tag": "pact",
+    "text": "{A} swore to face the {foe} for {B}"
+   }
+  },
+  {
+   "id": "debrief-hero",
+   "ctx": "win",
+   "who": "pair",
+   "text": [
+    "After the fight, {A} turns to {B}.",
+    "{A} thanks {B} for covering it during the battle."
+   ],
+   "caption": "{A} thanked {B} after the fight.",
+   "weight": 40,
+   "debrief": "hero",
+   "effect": {
+    "chem": 3
+   },
+   "remember": {
+    "tag": "protect",
+    "text": "{B} covered {A}"
+   }
+  },
+  {
+   "id": "debrief-miss",
+   "ctx": "win",
+   "who": "pair",
+   "text": [
+    "{B} seems down: it did not get much done this time.",
+    "{A} nudges it. \"Next time,\" the nudge says."
+   ],
+   "caption": "{A} encouraged {B} after a rough battle.",
+   "weight": 30,
+   "debrief": "miss",
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "debrief-close",
+   "ctx": "win",
+   "who": "party",
+   "text": [
+    "The team catches its breath. That was close.",
+    "{A} counts bruises, {B} counts blessings."
+   ],
+   "caption": "The team talked through a close call.",
+   "weight": 40,
+   "debrief": "close",
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "debrief-lead",
+   "ctx": "win",
+   "who": "pair",
+   "text": [
+    "{A} and {B} replay the best moment of the fight in their own words."
+   ],
+   "caption": "{A} and {B} traded stories about the fight.",
+   "weight": 14,
+   "debrief": "any",
+   "effect": {
+    "chem": 1
+   }
+  },
+  {
+   "id": "celebrate-pair",
+   "ctx": "boss",
+   "who": "pair",
+   "text": [
+    "The boss is down. {A} leaps up to {B}, and {B} leaps right back.",
+    "{sayA}"
+   ],
+   "caption": "{A} and {B} celebrated the victory.",
+   "weight": 30,
+   "voice": "cheer",
+   "effect": {
+    "chem": 3
+   }
+  },
+  {
+   "id": "celebrate-contest",
+   "ctx": "boss",
+   "who": "pair",
+   "text": [
+    "{A} and {B} both want credit for the win. The celebration turns into a playful contest."
+   ],
+   "caption": "{A} and {B} turned their victory into a contest.",
+   "weight": 34,
+   "rivalry": "friendly",
+   "effect": {
+    "chem": 2,
+    "tension": -1
+   },
+   "remember": {
+    "tag": "contest",
+    "text": "their victory contest"
+   }
+  },
+  {
+   "id": "celebrate-party",
+   "ctx": "boss",
+   "who": "party",
+   "text": [
+    "Cheers, tumbles and tail-wags: the whole team celebrates together.",
+    "{A} is already looking for a snack."
+   ],
+   "caption": "The team celebrated a big win.",
+   "weight": 16,
+   "effect": {
+    "chem": 2
+   }
+  },
+  {
+   "id": "group-hug",
+   "ctx": "prebattle",
+   "who": "party",
+   "text": [
+    "Before the big fight, the team gathers.",
+    "They lean together: a hug, a bump, a pose each in its own way.",
+    "{poses}"
+   ],
+   "caption": "The team huddled before the boss.",
+   "weight": 100,
+   "effect": {
+    "chem": 2,
+    "trust": 1
+   },
+   "action": "photo"
+  },
+  {
+   "id": "evolve-cheer",
+   "ctx": "evolve",
+   "who": "pair",
+   "text": [
+    "{B} has changed, and the others crowd around.",
+    "{sayA}"
+   ],
+   "caption": "{A} cheered for {B}'s evolution.",
+   "weight": 60,
+   "voice": "cheer",
+   "b": {
+    "evolved": true
+   },
+   "effect": {
+    "chem": 3,
+    "aff": 1
+   },
+   "action": "photo"
+  },
+  {
+   "id": "welcome-warm",
+   "ctx": "newcomer",
+   "who": "pair",
+   "text": [
+    "{A} approaches the newcomer, {B}.",
+    "{sayA}"
+   ],
+   "caption": "{A} welcomed {B} to the team.",
+   "weight": 40,
+   "voice": "welcome",
+   "b": {
+    "newcomer": true
+   },
+   "effect": {
+    "chem": 3
+   }
+  },
+  {
+   "id": "welcome-wary",
+   "ctx": "newcomer",
+   "who": "pair",
+   "text": [
+    "{A} eyes the newcomer, {B}, from a distance.",
+    "\"Prove yourself,\" its stance says."
+   ],
+   "caption": "{A} sized up the newcomer {B}.",
+   "weight": 40,
+   "a": {
+    "traits": [
+     "proud",
+     "competitive",
+     "cautious",
+     "independent",
+     "stubborn"
+    ]
+   },
+   "b": {
+    "newcomer": true
+   },
+   "effect": {
+    "chem": 1,
+    "tension": 2
+   }
+  },
+  {
+   "id": "settled-in",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "{B} used to keep to itself. Today it follows {A} down the trail without a second glance."
+   ],
+   "caption": "{B} settled in with {A}.",
+   "weight": 26,
+   "stage": [
+    1,
+    5
+   ],
+   "b": {
+    "recent": true
+   },
+   "effect": {
+    "chem": 2,
+    "aff": 1
+   }
+  },
+  {
+   "id": "sulk-box",
+   "ctx": "sulk",
+   "who": "solo",
+   "text": [
+    "In the PC, {A} sits with its back turned.",
+    "{sulk}"
+   ],
+   "caption": "{A} sulked in the box.",
+   "weight": 40,
+   "action": "reassure",
+   "choices": [
+    {
+     "label": "Promise to take it along",
+     "text": "{A} perks up at once and its bond with you deepens.",
+     "effect": {
+      "aff": 4,
+      "trust": 2,
+      "friendship": 5
+     }
+    },
+    {
+     "label": "Pet it and move on",
+     "text": "{A} leans into your hand for a moment, then sulks again.",
+     "effect": {
+      "aff": 1
+     }
+    }
+   ],
+   "dflt": 1
+  },
+  {
+   "id": "grudge-mutter",
+   "ctx": "grudge",
+   "who": "solo",
+   "text": [
+    "{A} growls at nothing. It has not forgotten the {foe} that dropped it."
+   ],
+   "caption": "{A} stewed over the {foe}.",
+   "weight": 20,
+   "effect": {
+    "aff": 0
+   }
+  },
+  {
+   "id": "grudge-settled",
+   "ctx": "grudge",
+   "who": "solo",
+   "text": [
+    "{A} finally beat a {foe}. It sits taller than before."
+   ],
+   "caption": "{A} settled its score with the {foe}.",
+   "weight": 60,
+   "settled": true,
+   "effect": {
+    "aff": 2,
+    "trust": 1
+   }
+  },
+  {
+   "id": "adopt-baby",
+   "ctx": "any",
+   "who": "pair",
+   "text": [
+    "A tiny, lost baby Pokémon is trailing behind the party. {A} keeps looking back at it.",
+    "{sayA}"
+   ],
+   "caption": "{A} found a lost baby.",
+   "weight": 5,
+   "voice": "concern",
+   "a": {
+    "traits": [
+     "empathetic",
+     "protective",
+     "patient",
+     "playful"
+    ]
+   },
+   "action": "egg",
+   "choices": [
+    {
+     "label": "Take the baby with you",
+     "text": "{A} is overjoyed. A little Egg rests in your bag.",
+     "effect": {
+      "chem": 1,
+      "aff": 3
+     }
+    },
+    {
+     "label": "Leave it to its own",
+     "text": "{A} looks back until the baby is out of sight.",
+     "effect": {
+      "aff": -1
+     }
+    }
+   ],
+   "dflt": 1
+  }
+ ],
+ "milestones": {
+  "friendly": "{A} and {B} are Friendly now: easy company, with a joke or two between them.",
+  "close": "{A} and {B} are Close now. They walk side by side without thinking about it.",
+  "inseparable": "{A} and {B} are Inseparable now. Where one goes, the other follows.",
+  "trusted": "{A} and {B} are Trusted Partners now. Each would carry the other through anything."
+ }
+}
