@@ -26,6 +26,7 @@ import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
+import { scavengerBonus } from './bank';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, countShiny, discover } from './progress';
 import { eggStatus, layEgg } from './eggs';
@@ -592,7 +593,8 @@ export function isGiftable(content: Content, id: string): boolean {
 function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, tradeUid?: string): string {
   switch (e.kind) {
     case 'money': {
-      const amount = Math.max(-run.money, e.amount);
+      const bonus = e.amount > 0 ? scavengerBonus(content, run.licenses, rng) : 0;
+      const amount = Math.max(-run.money, e.amount + bonus);
       run.money += amount;
       if (amount > 0) count(run, 'moneyEarned', amount);
       return amount === 0 ? '' : amount > 0 ? `+₽${amount}` : `−₽${-amount}`;
