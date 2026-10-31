@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-// Revisit This Timeline (M13): a lost run shows up in the Hall of Fame, rebuilds into a replay that is
+// Revisit This Timeline (M13): a lost run shows up in the Legacy Gallery, rebuilds into a replay that is
 // labelled THE FALSE PROTAGONIST on the map, and can be abandoned without touching the original or the profile.
 
 const scene = (page: Page) => page.evaluate(() => (window as any).__pkr?.activeScene() ?? null);
@@ -31,13 +31,14 @@ test('a lost run can be revisited as the False Protagonist, then abandoned safel
     session.run.victory = false;
     session.finishRun();
     session.closeRun();
-    game.scene.getScenes(true)[0].scene.start('HallOfFame');
+    game.scene.getScenes(true)[0].scene.start('LegacyGallery');
     return { profile: localStorage.getItem('pkr.profile'), record: JSON.stringify(session.profile.runHistory[0]) };
   });
-  await expect.poll(() => scene(page), { timeout: 10_000 }).toBe('HallOfFame');
+  await expect.poll(() => scene(page), { timeout: 10_000 }).toBe('LegacyGallery');
+  // Open the lost run; with no moments to relive, Revisit This Timeline is the first row you can pick.
+  await page.keyboard.press('Enter');
   await expect.poll(() => texts(page)).toContain('↺ Revisit This Timeline');
   await page.screenshot({ path: 'test-results/timeline-hall.png' });
-  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect.poll(() => scene(page), { timeout: 10_000 }).toBe('StarterSelect');
   expect(await page.evaluate(() => (window as any).__pkr.session.inReplay)).toBe(true);
@@ -52,14 +53,13 @@ test('a lost run can be revisited as the False Protagonist, then abandoned safel
     await page.setViewportSize(size);
     await page.screenshot({ path: `test-results/timeline-map-${size.width}.png` });
   }
-  // Back to the Hall of Fame: abandon (press twice to confirm).
+  // Back to the Legacy Gallery: abandon (press twice to confirm).
   await page.evaluate(() => {
     const { session, game } = (window as any).__pkr;
     session.closeRun();
-    game.scene.getScenes(true)[0].scene.start('HallOfFame');
+    game.scene.getScenes(true)[0].scene.start('LegacyGallery');
   });
   await expect.poll(() => texts(page)).toContain('✕ Abandon revisited timeline');
-  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect.poll(() => texts(page)).toContain('✕ Press again to abandon this timeline');

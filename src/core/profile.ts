@@ -71,6 +71,8 @@ export function finalizeRun(
   profile: Profile,
   run: RunState,
   now: string = new Date().toISOString(),
+  /** The run's genesis (core/timeline), kept on its legacy record so a lost run can be revisited from it. */
+  genesis: Record<string, unknown> | null = null,
 ): { profile: Profile; applied: boolean; summary: RunEndSummary | null } {
   if (profile.finalizedRunIds.includes(run.runId)) return { profile, applied: false, summary: null };
   const next: Profile = structuredClone(profile);
@@ -89,7 +91,7 @@ export function finalizeRun(
   archiveParty(content, next, run);
   archiveRivals(next, run);
   addRunToCodex(next, run);
-  recordLegacyRun(content, next, run, now);
+  recordLegacyRun(content, next, run, now, genesis);
   next.finalizedRunIds = [...next.finalizedRunIds, run.runId].slice(-FINALIZED_HISTORY);
   return { profile: next, applied: true, summary };
 }

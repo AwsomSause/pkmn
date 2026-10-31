@@ -156,6 +156,7 @@ export function buildLegacyRun(content: Content, run: RunState, now: string, his
     moments,
     journal: [...(history?.journal ?? run.journal)],
     epitaph: history?.epitaph ?? null,
+    genesis: null,
   };
   return record;
 }
@@ -195,14 +196,15 @@ export function legacyRunFromHistory(r: RunRecord): LegacyRun {
     moments: r.defeatedBy ? [{ kind: 'runEnding', text: `The journey ended against ${r.defeatedBy.trainer ? `${r.defeatedBy.trainer}'s ` : 'a wild '}${r.defeatedBy.speciesId} (Lv ${r.defeatedBy.level}).`, speciesId: r.defeatedBy.speciesId, region: null }] : [],
     journal: [...r.journal],
     epitaph: r.epitaph,
+    genesis: null,
   };
 }
 
 /** Adds a finished run's record once (a run id already kept is never rewritten), newest first, trimmed to the cap. */
-export function recordLegacyRun(content: Content, profile: Profile, run: RunState, now: string): LegacyRun | null {
+export function recordLegacyRun(content: Content, profile: Profile, run: RunState, now: string, genesis: Record<string, unknown> | null = null): LegacyRun | null {
   profile.legacyRuns ??= [];
   if (profile.legacyRuns.some((r) => r.runId === run.runId)) return null;
-  const record = deepFreeze(buildLegacyRun(content, run, now, profile.runHistory.find((r) => r.runId === run.runId)));
+  const record = deepFreeze({ ...buildLegacyRun(content, run, now, profile.runHistory.find((r) => r.runId === run.runId)), genesis: genesis ? structuredClone(genesis) : null });
   profile.legacyRuns = [record, ...profile.legacyRuns].slice(0, LEGACY_RUNS.recordCap);
   return record;
 }

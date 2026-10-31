@@ -409,15 +409,21 @@ export class GameSession {
   finishRun(): void {
     const run = this.requireRun();
     if (run.timeline) return this.finishReplay(run);
-    const { profile, summary } = finalizeRun(this.content, this.profile, run);
+    // The run's genesis moves onto its legacy record (with how it ended, for a lost run's front-runner): from then on
+    // Revisit This Timeline reads it there, and the timeline store only holds runs still in play.
+    const g = Timeline.genesisFor(this.timeline, run.runId);
+    const genesis = g ? { ...g, origin: run.victory ? null : captureOrigin(this.content, run) } : null;
+    const { profile, summary } = finalizeRun(this.content, this.profile, run, undefined, genesis);
     this.profile = profile;
     if (summary) this.lastRunSummary = summary;
     const profileSave = this.saves.saveProfile(profile);
     this.checkSave(profileSave);
     if (profileSave.ok) this.checkSave(this.saves.clearRun());
-    // Only lost runs can be revisited: a won run's genesis is dropped, a lost one keeps how it ended (its front-runner).
-    if (Timeline.genesisFor(this.timeline, run.runId)) {
-      this.timeline = run.victory ? Timeline.forgetGenesis(this.timeline, run.runId) : Timeline.attachOrigin(this.timeline, run.runId, captureOrigin(this.content, run));
+    if (g && profileSave.ok && profile.legacyRuns.some((r) => r.runId === run.runId && r.genesis)) {
+      this.timeline = Timeline.forgetGenesis(this.timeline, run.runId);
+      this.checkSave(this.saves.saveTimeline(this.timeline));
+    } else if (g && !run.victory) {
+      this.timeline = Timeline.attachOrigin(this.timeline, run.runId, captureOrigin(this.content, run));
       this.checkSave(this.saves.saveTimeline(this.timeline));
     }
     this.refreshSavedRun();

@@ -5,7 +5,9 @@
 import Phaser from 'phaser';
 import { accomplishments, legacyAce, legacyScore, LEGACY_RUNS } from '../core/legacyRuns';
 import type { LegacyRun } from '../core/state';
+import { activeReplay, genesisNote, startingData } from '../core/timeline/genesis';
 import { services } from '../game/services';
+import { sceneForRun } from './routing';
 import { AERO, drawGlass, type MotionLevel } from '../ui/aero';
 import { onInputAction } from '../ui/input';
 import { preloadPokemon } from '../ui/lazyAssets';
@@ -25,6 +27,8 @@ export class LegacyGalleryScene extends Phaser.Scene {
   private picker: Picker | null = null;
   private relive: { root: Phaser.GameObjects.Container; moments: LegacyRun['moments']; index: number; record: LegacyRun } | null = null;
   private motion: MotionLevel = 'full';
+  /** Abandon asks twice (the first press arms it). */
+  private confirmAbandon = false;
 
   constructor() {
     super('LegacyGallery');
@@ -39,6 +43,7 @@ export class LegacyGalleryScene extends Phaser.Scene {
   create(): void {
     this.motion = services().session.settings.battleAnimations;
     this.relive = null;
+    this.confirmAbandon = false;
     this.showList();
     onInputAction(this, (a) => {
       if (this.relive) {
@@ -74,15 +79,49 @@ export class LegacyGalleryScene extends Phaser.Scene {
     if (shiny) box.add(this.add.text(x + 18, y - 18, '✦', textStyle(14, GOLD, { stroke: '#3a2a00', strokeThickness: 3 })).setOrigin(0.5));
   }
 
-  private open(rows: PickerRow[], title: string, onSelect: (i: number) => void, onBack: () => void, start = 0): void {
+  private open(rows: PickerRow[], title: string, onSelect: (i: number) => void, onBack: () => void, start?: number): void {
     this.picker?.close();
-    this.picker = new Picker(this, { glass: true, title, columns: 1, rowHeight: 96, rows, onSelect, onBack, start });
+    this.picker = new Picker(this, { glass: true, title, columns: 1, rowHeight: 96, rows, onSelect, onBack, ...(start !== undefined ? { start } : {}) });
   }
 
-  /** Every legacy run, newest first. */
-  private showList(start = 0): void {
+  /** Continue or abandon a revisited timeline (M13), when one is in play. Returns the actions by row. */
+  private replayRows(rows: PickerRow[]): Map<number, () => void> {
+    const { session } = services();
+    const actions = new Map<number, () => void>();
+    const live = activeReplay(session.timeline);
+    if (!live) return actions;
+    const origin = session.profile.legacyRuns.find((r) => r.runId === live.originRunId);
+    const label = origin ? `${this.trainer(origin)} · ${origin.endedAt.slice(0, 10)}` : 'a lost run';
+    const heading = (box: Phaser.GameObjects.Container, text: string, color: string) => box.add(this.add.text(14, 30, text, textStyle(20, color, { stroke: '#10203a', strokeThickness: 4 })));
+    if (session.canContinueReplay) {
+      actions.set(rows.length, () => this.scene.start(sceneForRun(session.continueReplay())));
+      rows.push({ problem: null, hint: `Pick up the timeline of ${label} where you left it.`, draw: (_s, box) => heading(box, `↺ Continue revisited timeline · ${label}`, '#9fd8ff') });
+    }
+    const abandonRow = rows.length;
+    actions.set(abandonRow, () => {
+      if (!this.confirmAbandon) {
+        this.confirmAbandon = true;
+        return this.showList(abandonRow);
+      }
+      this.confirmAbandon = false;
+      session.abandonReplay();
+      this.showList();
+    });
+    rows.push({
+      problem: null,
+      hint: this.confirmAbandon ? 'Press again to abandon. The replay ends; the original run and your profile stay exactly as they are.' : 'Walk away from this timeline. The original run is never changed.',
+      draw: (_s, box) => heading(box, this.confirmAbandon ? '✕ Press again to abandon this timeline' : `✕ Abandon revisited timeline · ${label}`, '#ff9f9f'),
+    });
+    return actions;
+  }
+
+  /** Every legacy run, newest first (after the revisited timeline's rows, if one is in play). */
+  private showList(start?: number): void {
     const records = services().session.profile.legacyRuns;
-    const rows: PickerRow[] = records.map((r) => {
+    const rows: PickerRow[] = [];
+    const actions = this.replayRows(rows);
+    const offset = rows.length;
+    rows.push(...records.map((r): PickerRow => {
       const score = legacyScore(this.content, r);
       const memorable = score >= LEGACY_RUNS.rotation.memorableScore;
       const ace = legacyAce(r);
@@ -102,11 +141,17 @@ export class LegacyGalleryScene extends Phaser.Scene {
           box.add(this.add.text(420, 64, accomplishments(this.content, r).join('  ·  '), textStyle(14, '#ffffff', { wordWrap: { width: w - 440 } })));
         },
       };
-    });
-    this.open(rows, records.length ? 'Legacy Gallery' : 'Legacy Gallery: finish a run to see its Trainer here', (i) => this.showRecord(i), () => this.scene.start('Hub', { focus: 3 }), start);
+    }));
+    const onSelect = (i: number) => {
+      const action = actions.get(i);
+      if (action) return action();
+      this.confirmAbandon = false;
+      this.showRecord(i - offset);
+    };
+    this.open(rows, records.length ? 'Legacy Gallery' : 'Legacy Gallery: finish a run to see its Trainer here', onSelect, () => this.scene.start('Hub', { focus: 3 }), start);
   }
 
-  /** One past Trainer, row by row; the first row is Relive the Moment. */
+  /** One past Trainer, row by row; the first row is Relive the Moment, then Revisit This Timeline for a lost run. */
   private showRecord(index: number): void {
     const r = services().session.profile.legacyRuns[index];
     if (!r) return;
@@ -173,7 +218,36 @@ export class LegacyGalleryScene extends Phaser.Scene {
         },
       },
     ];
-    this.open(rows, `${this.trainer(r)} · ${r.endedAt.slice(0, 10)}`, (i) => i === 0 && this.startRelive(r), () => this.showList(index));
+    // Revisit This Timeline (M13): a lost run is rebuilt from this record's starting data; the record never changes.
+    const { session } = services();
+    if (r.outcome === 'defeat') {
+      const start = startingData(session.timeline, session.profile, r.runId);
+      const tries = session.timeline.replays.filter((x) => x.originRunId === r.runId).length;
+      const note = start ? genesisNote(start) : null;
+      rows.splice(1, 0, {
+        problem: session.replayProblem(r.runId),
+        hint: `Revisit This Timeline: same seed, regions, starters and encounters as the run you lost; your rival has moved on. Revisited ${tries} time${tries === 1 ? '' : 's'}.${note ? ` ${note}` : ''}`,
+        draw: (_s, box, w) => {
+          heading(box, '↺ Revisit This Timeline', '#9fd8ff');
+          body(box, 'Play this lost run again as THE FALSE PROTAGONIST. The original record stays exactly as it is.', w);
+        },
+      });
+    }
+    const revisitRow = 1;
+    const onSelect = (i: number) => {
+      if (i === 0) return this.startRelive(r);
+      if (r.outcome === 'defeat' && i === revisitRow && !session.replayProblem(r.runId)) {
+        session.startReplay(r.runId);
+        this.scene.start('StarterSelect');
+      }
+    };
+    this.open(rows, `${this.trainer(r)} · ${r.endedAt.slice(0, 10)}`, onSelect, () => this.showList(index + this.listOffset()));
+  }
+
+  /** How many replay rows sit above the records in the list. */
+  private listOffset(): number {
+    const { session } = services();
+    return activeReplay(session.timeline) ? (session.canContinueReplay ? 2 : 1) : 0;
   }
 
   private startRelive(record: LegacyRun): void {

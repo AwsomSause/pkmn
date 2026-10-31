@@ -1159,6 +1159,12 @@ export const LegacyRunSchema = z.object({
   /** The map, stage by stage. */
   journal: z.array(z.string()),
   epitaph: z.string().nullable(),
+  /**
+   * Everything the run began with (core/timeline/schema.ts RunGenesisSchema, plus how it ended as `origin`), so Revisit
+   * This Timeline rebuilds a lost run from this record. Kept loose here (the timeline module parses it) to avoid an
+   * import cycle. Null for runs that began before timelines were recorded.
+   */
+  genesis: z.record(z.string(), z.unknown()).nullable().default(null),
 });
 export type LegacyRun = z.infer<typeof LegacyRunSchema>;
 
