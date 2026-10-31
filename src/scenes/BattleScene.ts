@@ -477,6 +477,8 @@ export class BattleScene extends Phaser.Scene {
     const trainer = this.run.battle?.trainer;
     if (!trainer) return null;
     const boss = this.boss();
+    // A rival standing in for this boss (left-out 5.5) keeps the role's title with its own name.
+    if (boss && this.run.battle?.rivalId) return `${boss.title.replace(boss.name, '').trim()} ${trainer.name}`.trim();
     if (boss) return boss.title;
     const cls = services().session.content.trainers.get(trainer.classId);
     return cls ? `${cls.name} ${trainer.name}` : trainer.name;
@@ -488,6 +490,9 @@ export class BattleScene extends Phaser.Scene {
     if (!trainer) return null;
     const content = services().session.content;
     const boss = this.boss();
+    const standIn = boss && this.run.battle?.rivalId ? this.run.story.rivals.find((r) => r.id === this.run.battle?.rivalId) : undefined;
+    const standInClass = standIn ? content.trainers.get(standIn.classId) : undefined;
+    if (standInClass) return { assetId: standInClass.spriteAssetId, label: trainer.name };
     if (boss) return { assetId: boss.spriteAssetId, label: boss.name };
     const cls = content.trainers.get(trainer.classId);
     if (cls) return { assetId: cls.spriteAssetId, label: cls.name };
