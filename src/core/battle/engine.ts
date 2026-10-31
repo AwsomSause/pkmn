@@ -82,6 +82,7 @@ import { finaleStrikeDamage } from '../rivals/living';
 import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
+import { addMomentum, cfgOf as spectacleCfg, counterProblem, duePhases, guardDamage, isBossFight, rallyProblem, raiseGuard, rollLastStand, spectacleOf, spectacleRoll as spectacleRollExt, staggered, tickGuard, wearGuard, type SpectacleEvent } from './spectacle';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
 import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveExtras, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
@@ -158,6 +159,8 @@ export type BattleEvent =
   | { type: 'drain'; side: Side; amount: number; hpAfter: number }
   | { type: 'recoil'; side: Side; amount: number; hpAfter: number }
   | { type: 'lastStand'; side: Side; itemId: string }
+  /** Battle Drama spectacle (battle/spectacle.ts): Last Stand, Counter, Guard Break, Rally, Revenge... `text` is the line shown. */
+  | SpectacleEvent
   /**
    * A Hyper moment (story.json definition `defId`): the Pokémon hung on at 1 HP, got back up,
    * shook off its status (`cured`) or dug in. `hpAfter` is its HP after the moment.
@@ -187,7 +190,9 @@ export type BattleEvent =
 
 export type PlayerAction =
   /** `transform`: Mega Evolve (etc.) before moving this turn. */
-  | { kind: 'move'; index: number; transform?: TransformRequest }
+  | { kind: 'move'; index: number; transform?: TransformRequest; /** Spend a full Momentum Meter: this move is a Surge Strike. */ rally?: boolean }
+  /** Brace for the telegraphed attack (Perfect Counter): uses the turn. */
+  | { kind: 'counter' }
   | { kind: 'switch'; partyIndex: number }
   | { kind: 'item'; itemId: string; targetIndex?: number }
   /** A raid cheer (Raid Battles pack): uses the turn, costs one of three cheers. */
@@ -243,6 +248,8 @@ export interface BattleContext {
   attributes?: AttributeEffects;
   /** The player's team items (run.passives): the Plates help every team member. */
   teamItems?: Record<string, number>;
+  /** Bond score (0 to 100) of one of your Pokémon: Last Stand and Revenge need a deep bond. Absent = 0. */
+  bondScore?: (uid: string) => number;
   /** Hyper moments for your Pokémon (none when absent). */
   hyper?: HyperContext;
   /** Set during a turn once a Hyper moment has changed the battle (one per turn). */
@@ -546,6 +553,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     }
     battle.needsSwitch = false;
     resolveEntries(ctx, events);
+    revengeMoment(ctx, events);
     return events;
   }
 
@@ -580,12 +588,15 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     totemCallAlly(ctx, events);
   } else sosCall(ctx, events);
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
+  const spec = spectacleStart(ctx, action, events);
   const enemyForced = forcedMoveId(enemy.vol);
   const enemyForcedIndex = enemyForced ? enemy.mon.moves.findIndex((m) => m.id === enemyForced) : -1;
   const enemyChoice = choiceLock(battle, enemy.mon);
   const enemyChoiceIndex = enemyChoice ? enemy.mon.moves.findIndex((m) => m.id === enemyChoice) : -1;
   let enemyMoveIndex =
     enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages, battle, party: ctx.party });
+  // Guard Break: a staggered boss cannot use its strongest move.
+  if (spec && staggered(spec, enemy.mon.uid) && enemyForcedIndex < 0 && enemyChoiceIndex < 0) enemyMoveIndex = staggerPick(ctx, enemy.mon, enemyMoveIndex);
   let enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.
@@ -728,6 +739,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     pokeFlute(ctx, playerC, events);
     recordFaints(ctx, playerC, enemy, events);
   }
+
+  if (spec) spectacleEndOfTurn(ctx, spec, action, events);
 
   // Hyper moments that come from how the turn went (Hung In There, a bond that shakes off a status).
   if (!battle.outcome && enemy.mon.hp > 0) {
@@ -984,6 +997,13 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
       const problem = transformProblem(ctx, action.transform, action.index);
       if (problem) throw new Error(problem);
     }
+    if (action.rally) {
+      const problem = rallyProblem(ctx.content, ctx.battle) ?? (ctx.content.moves.get(slot.id)?.category === 'status' ? 'A Rally needs an attack' : null);
+      if (problem) throw new Error(problem);
+    }
+  } else if (action.kind === 'counter') {
+    const problem = counterProblem(ctx.content, ctx.battle, telegraphedAttack(ctx) !== null);
+    if (problem) throw new Error(problem);
   } else if (action.kind === 'switch') {
     const problem = switchProblem(ctx, action.partyIndex);
     if (problem) throw new Error(problem);
@@ -1956,7 +1976,7 @@ function takeHp(
   c: Combatant,
   amount: number,
   hit: number | null = null,
-): { lost: number; lastStand: string | null; hyper: HyperEvent | null; knockedDown: boolean } {
+): { lost: number; lastStand: string | null; hyper: HyperEvent | null; knockedDown: boolean; stand?: boolean } {
   // Raids: shields soak the boss's damage; a charged attack hits the player harder.
   let chargedLanded = false;
   if (ctx.battle.raid) {
@@ -1973,6 +1993,7 @@ function takeHp(
   }
   let lost = Math.min(Math.max(0, amount), c.mon.hp);
   let lastStand: string | null = null;
+  let stand = false;
   if (c.vol.bide && lost > 0) c.vol.bide.damage += lost;
   // A fatal hit from a move may be survived by a Hyper moment (decided before the charm).
   if (hit !== null && c.side === 'player' && lost > 0 && lost >= c.mon.hp) {
@@ -1981,6 +2002,15 @@ function takeHp(
       lost = c.mon.hp - (hyper.hpAfter > 0 && !hyper.revived ? hyper.hpAfter : 0);
       c.mon.hp = hyper.hpAfter;
       return { lost, lastStand: null, hyper: hyper.event, knockedDown: hyper.revived };
+    }
+  }
+  // Last Stand: a deeply bonded Pokémon may hold on at 1 HP (rare, once per battle; battle/spectacle.ts).
+  if (hit !== null && c.side === 'player' && lost > 0 && lost >= c.mon.hp) {
+    const last = !ctx.party.some((p) => p.uid !== c.mon.uid && p.hp > 0);
+    if (rollLastStand(ctx.content, { battle: ctx.battle, mon: c.mon, bond: ctx.bondScore?.(c.mon.uid) ?? 0, lastStanding: last })) {
+      spectacleOf(ctx.content, ctx.battle)!.lastStands.push(c.mon.uid);
+      lost = c.mon.hp - 1;
+      stand = true;
     }
   }
   if (c.side === 'player' && lost > 0 && lost >= c.mon.hp && !ctx.battle.lastStandUsed) {
@@ -1999,7 +2029,7 @@ function takeHp(
     ctx.battle.raid.survivor ??= c.mon.uid;
     if (ctx.battle.raid.cheerDefense > 0) ctx.battle.raid.tank ??= c.mon.uid;
   }
-  return { lost, lastStand, hyper: null, knockedDown: false };
+  return { lost, lastStand, hyper: null, knockedDown: false, stand };
 }
 
 type HyperEvent = Extract<BattleEvent, { type: 'hyper' }>;
@@ -2987,6 +3017,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (itemMultiplier !== 1) damage = Math.max(1, Math.floor(damage * itemMultiplier));
       if (target.protected && (move.flags.includes('zmove') || move.flags.includes('max') || userAbility === 'piercing-drill')) damage = Math.max(1, Math.floor(damage / 4));
     }
+    damage = spectacleDamage(ctx, user, target, move, damage, events);
     damage = Held.survive(ctx, target, damage, events as Held.HeldEvent[]);
     if (fx.leaveOne || target.vol.endure) damage = Math.min(damage, target.mon.hp - 1);
     // Sturdy: a hit at full HP leaves it with at least 1 HP.
@@ -3010,7 +3041,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       events.push({ type: 'substituteHit', side: target.side, broke: target.vol.substitute <= 0 });
       return;
     }
-    const { lost, lastStand, hyper, knockedDown } = takeHp(ctx, target, damage, landed);
+    const { lost, lastStand, hyper, knockedDown, stand } = takeHp(ctx, target, damage, landed);
     dealt += lost;
     landed += 1;
     anyCrit ||= crit;
@@ -3023,6 +3054,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     }
     if (lastStand) events.push({ type: 'lastStand', side: target.side, itemId: lastStand });
     if (hyper) events.push(hyper);
+    if (stand) lastStandMoment(ctx, target, events);
+    spectacleAfterHit(ctx, user, target, lost, effectiveness, events);
     if (target.side === 'player' && effectiveness > 1 && target.mon.hp > 0) {
       ctx.battle.hyper.superEffective[target.mon.uid] = (ctx.battle.hyper.superEffective[target.mon.uid] ?? 0) + 1;
     }
@@ -4977,6 +5010,7 @@ function recordFaints(ctx: BattleContext, player: Combatant, enemy: Combatant, e
       }
     }
     events.push({ type: 'faint', side: c.side, uid: c.mon.uid, participants });
+    spectacleFaint(ctx, c.side, c.mon.uid, events);
     if (c.side === 'enemy' && player.mon.uid === ctx.party[ctx.battle.activeIndex]?.uid) friendlyFinish(ctx, player.mon, events);
   }
 }
@@ -5088,3 +5122,158 @@ export const doublesSteps = {
   allyCombatant,
   weatherNow,
 };
+
+
+// ---------- Battle Drama spectacle (APPROVED section 7; rules in battle/spectacle.ts) ----------
+
+const nameOf = (ctx: BattleContext, mon: PokemonInstance): string => getSpecies(ctx.content, mon.speciesId).name;
+const say = (side: Side, kind: SpectacleEvent['kind'], text: string, uid?: string): SpectacleEvent => ({ type: 'spectacle', kind, side, text, ...(uid ? { uid } : {}) });
+
+/** The attack a boss, raid boss or Totem telegraphs this turn (the same pick the screen shows); null when none. */
+export function telegraphedAttack(ctx: Pick<BattleContext, 'content' | 'battle' | 'party'>): string | null {
+  const { battle, content } = ctx;
+  if (battle.outcome || battle.doubles || !(battle.raid || battle.totem || isBossFight(battle))) return null;
+  const foe = currentEnemy(battle);
+  const usable = foe.moves.filter((m) => m.pp > 0);
+  const target = ctx.party[battle.activeIndex];
+  if (foe.hp <= 0 || usable.length === 0 || !target) return null;
+  const brain = { content, ai: Math.max(battle.ai, 0.7), target, stages: battle.enemyStages, battle, party: ctx.party };
+  const best = usable.map((m) => ({ id: m.id, v: moveValue(brain, foe, m.id) })).reduce((a, b) => (b.v > a.v ? b : a));
+  return content.moves.get(best.id)?.category === 'status' ? null : best.id;
+}
+
+/** Start of a turn: the boss's Guard goes up, a Brace or Rally is set. */
+function spectacleStart(ctx: BattleContext, action: PlayerAction, events: BattleEvent[]) {
+  const { battle, content } = ctx;
+  const spec = spectacleOf(content, battle);
+  if (!spec) return null;
+  const foe = currentEnemy(battle);
+  if (raiseGuard(content, battle, spec, foe)) events.push(say('enemy', 'guardUp', `${nameOf(ctx, foe)} took a guarded stance! Wear it down to break through.`, foe.uid));
+  const mine = ctx.party[battle.activeIndex]!;
+  if (action.kind === 'counter') {
+    spec.bracing = telegraphedAttack(ctx);
+    spec.counters += 1;
+    events.push(say('player', 'brace', `${nameOf(ctx, mine)} braces for ${spec.bracing ? content.moves.get(spec.bracing)?.name ?? 'the attack' : 'the attack'}!`, mine.uid));
+  } else if (action.kind === 'move' && action.rally) {
+    spec.momentum = 0;
+    spec.rallies += 1;
+    spec.rallyOn = true;
+    events.push(say('player', 'rally', `Momentum surges! ${nameOf(ctx, mine)} unleashes a Surge Strike!`, mine.uid));
+  }
+  return spec;
+}
+
+/** A staggered boss skips its strongest move: pick the next best one (or keep the choice if it has only one). */
+function staggerPick(ctx: BattleContext, enemy: PokemonInstance, chosen: number): number {
+  const brain = { content: ctx.content, ai: Math.max(ctx.battle.ai, 0.7), target: ctx.party[ctx.battle.activeIndex]!, stages: ctx.battle.enemyStages, battle: ctx.battle, party: ctx.party };
+  const ranked = enemy.moves.map((m, i) => ({ i, v: m.pp > 0 ? moveValue(brain, enemy, m.id) : -Infinity })).filter((m) => m.v > -Infinity).sort((a, b) => b.v - a.v || a.i - b.i);
+  if (ranked.length < 2 || ranked[0]!.i !== chosen) return chosen;
+  return ranked[1]!.i;
+}
+
+/** Damage changes from the Guard, a Rally and a landed Counter (applied to every damaging hit; no random numbers). */
+function spectacleDamage(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, damage: number, events: BattleEvent[]): number {
+  const spec = spectacleOf(ctx.content, ctx.battle);
+  if (!spec || user === target || damage <= 0) return damage;
+  const cfg = spectacleCfg(ctx.content);
+  let out = damage;
+  if (user.side === 'player') {
+    out *= guardDamage(ctx.content, spec, target.mon.uid);
+    if (spec.rallyOn) out *= cfg.momentum.rallyDamage;
+    if (user.mon.awakened?.includes(move.id) && !spec.signed.includes(user.mon.uid) && (ctx.bondScore?.(user.mon.uid) ?? 0) >= cfg.lastStand.minBond) {
+      spec.signed.push(user.mon.uid);
+      events.push(say('player', 'signature', `${nameOf(ctx, user.mon)} pours its bond into ${move.name}!`, user.mon.uid));
+    }
+  } else if (spec.bracing !== null && move.id === spec.bracing) {
+    const taken = Math.max(1, Math.floor(damage * cfg.counter.taken));
+    spec.reflect += Math.floor((damage - taken) * cfg.counter.reflect);
+    if (!spec.countered) {
+      spec.countered = true;
+      events.push(say('player', 'counter', `Perfect Counter! ${nameOf(ctx, target.mon)} turned ${move.name} aside!`, target.mon.uid));
+    }
+    return taken;
+  }
+  return Math.max(1, Math.floor(out));
+}
+
+/** After a hit: super effective hits build Momentum and wear the Guard down; a countered hit reflects its share. */
+function spectacleAfterHit(ctx: BattleContext, user: Combatant, target: Combatant, lost: number, effectiveness: number, events: BattleEvent[]): void {
+  const spec = spectacleOf(ctx.content, ctx.battle);
+  if (!spec || user === target || lost <= 0) return;
+  const cfg = spectacleCfg(ctx.content);
+  if (user.side === 'player') {
+    if (effectiveness > 1 && addMomentum(ctx.content, spec, cfg.momentum.superEffective)) events.push(say('player', 'momentumFull', 'The Momentum Meter is full! Rally is ready!'));
+    if (wearGuard(ctx.content, spec, target.mon.uid, effectiveness > 1)) {
+      events.push(say('enemy', 'guardBreak', `Guard Break! ${nameOf(ctx, target.mon)} is staggered and cannot use its strongest move!`, target.mon.uid));
+    }
+  } else if (spec.reflect > 0 && user.mon.hp > 0) {
+    const amount = Math.min(spec.reflect, user.mon.hp);
+    spec.reflect = 0;
+    user.mon.hp -= amount;
+    events.push({ type: 'damage', side: user.side, amount, hpAfter: user.mon.hp, effectiveness: 1, crit: false });
+  }
+}
+
+/** Last Stand: it held on at 1 HP and rallies (stat boosts from the balance numbers). */
+function lastStandMoment(ctx: BattleContext, target: Combatant, events: BattleEvent[]): void {
+  events.push(say('player', 'lastStand', `${nameOf(ctx, target.mon)} refuses to fall! Last Stand!`, target.mon.uid));
+  for (const [stat, n] of Object.entries(spectacleCfg(ctx.content).lastStand.boost)) applyStageChange(ctx, target, stat as BoostStat, n, events);
+}
+
+/** Revenge Moment: a bonded Pokémon sent out after a teammate fell may answer with a burst of determination. */
+function revengeMoment(ctx: BattleContext, events: BattleEvent[]): void {
+  const spec = spectacleOf(ctx.content, ctx.battle);
+  if (!spec || !spec.fallen) return;
+  const fallen = ctx.party.find((p) => p.uid === spec.fallen);
+  const mon = ctx.party[ctx.battle.activeIndex]!;
+  spec.fallen = null;
+  const cfg = spectacleCfg(ctx.content).revenge;
+  if (!fallen || fallen.uid === mon.uid || (ctx.bondScore?.(mon.uid) ?? 0) < cfg.minBond) return;
+  if (!spectacleRollExt(`revenge::${mon.uid}::${fallen.uid}::${ctx.battle.turn}`, cfg.chance)) return;
+  spec.revenged += 1;
+  events.push(say('player', 'revenge', `${nameOf(ctx, mon)} fights on for ${nameOf(ctx, fallen)}! Revenge Moment!`, mon.uid));
+  const c: Combatant = { side: 'player', mon, stages: ctx.battle.playerStages, vol: ctx.battle.playerVolatile, flinched: false, protected: false };
+  for (const [stat, n] of Object.entries(cfg.boost)) applyStageChange(ctx, c, stat as BoostStat, n, events);
+}
+
+/** Faints feed the meter: your Pokémon falling costs Momentum and marks the Revenge Moment; the foe's falling builds it. */
+function spectacleFaint(ctx: BattleContext, side: Side, uid: string, events: BattleEvent[]): void {
+  const spec = spectacleOf(ctx.content, ctx.battle);
+  if (!spec) return;
+  const cfg = spectacleCfg(ctx.content).momentum;
+  if (side === 'player') {
+    spec.fallen = uid;
+    spec.momentum = Math.floor(spec.momentum * cfg.faintKeeps);
+    spec.streak = 0;
+  } else if (addMomentum(ctx.content, spec, cfg.knockout)) events.push(say('player', 'momentumFull', 'The Momentum Meter is full! Rally is ready!'));
+}
+
+/** End of a turn: counters settle, the attack streak builds Momentum, the stagger runs down, boss phases play. */
+function spectacleEndOfTurn(ctx: BattleContext, spec: NonNullable<BattleState['spectacle']>, action: PlayerAction, events: BattleEvent[]): void {
+  const { content, battle } = ctx;
+  const cfg = spectacleCfg(content);
+  const mine = ctx.party[battle.activeIndex]!;
+  if (action.kind === 'counter') {
+    if (spec.countered) {
+      if (addMomentum(content, spec, cfg.momentum.counter)) events.push(say('player', 'momentumFull', 'The Momentum Meter is full! Rally is ready!'));
+    } else events.push(say('player', 'counterMiss', `${nameOf(ctx, mine)} braced, but the telegraphed attack never came.`, mine.uid));
+  }
+  spec.bracing = null;
+  spec.countered = false;
+  spec.reflect = 0;
+  spec.rallyOn = false;
+  const landed = events.some((e) => e.type === 'damage' && e.side === 'enemy' && e.amount > 0);
+  if (landed && action.kind === 'move') {
+    spec.streak += 1;
+    if (spec.streak >= 2 && addMomentum(content, spec, cfg.momentum.streak)) events.push(say('player', 'momentumFull', 'The Momentum Meter is full! Rally is ready!'));
+  } else spec.streak = 0;
+  const foe = currentEnemy(battle);
+  if (battle.outcome || foe.hp <= 0) return;
+  if (tickGuard(content, spec, foe.uid)) events.push(say('enemy', 'guardRebuilt', `${nameOf(ctx, foe)} steadies itself and raises a weaker guard.`, foe.uid));
+  const enemy: Combatant = { side: 'enemy', mon: foe, stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
+  for (const due of duePhases(content, battle, spec, foe.hp / maxHp(content, foe))) {
+    spec.phases.push(due.index);
+    applyBossPhase(ctx, enemy, due.phase as RaidPhase, events);
+  }
+}
+
