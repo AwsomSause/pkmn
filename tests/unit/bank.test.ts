@@ -100,3 +100,36 @@ describe('Regional Accounts, Vault and loans', () => {
     expect(loanDue(content, { prep: { loan: false } as never, badges: [] })).toBe(0);
   });
 });
+
+import { draftStarters, defaultPrep, withTokenAttribute, startingResources } from '../../src/core/runPrep';
+import { Rng, hashSeed } from '../../src/core/rng';
+import { licenseNote } from '../../src/core/license';
+import { chooseStarter, createRun } from '../../src/core/run';
+
+describe('draft modifiers and tokens', () => {
+  const prepOf = (draftRuleId: string, poolId = 'classic') => ({ ...defaultPrep(content), draftRuleId, poolId });
+  const draft = (rule: string, seed: string, pool?: string) => draftStarters(content, new Rng(hashSeed(seed)), prepOf(rule, pool));
+  it('every new rule drafts three distinct starters, deterministically', () => {
+    for (const rule of ['expanded-research', 'regional-research', 'rare-specimen', 'evolution-specialist']) {
+      for (let i = 0; i < 20; i++) {
+        const a = draft(rule, `s${i}`);
+        expect(new Set(a.choices).size, rule).toBe(content.balance.starterChoices);
+        expect(draft(rule, `s${i}`).choices).toEqual(a.choices);
+      }
+    }
+  });
+  it('Evolution Specialist prefers lines that evolve twice; Regional keeps one home region', () => {
+    const chain = (id: string) => content.species.get(id)!.evolutions.some((e) => content.species.get(e.to)!.evolutions.length > 0);
+    const hit = draft('evolution-specialist', 'x');
+    expect(hit.choices.filter(chain).length).toBeGreaterThanOrEqual(1);
+    expect(draft('regional-research', 'y').note).toBeTruthy();
+  });
+  it('tokens: attribute bonus and first-region intel', () => {
+    const prep = { ...defaultPrep(content), tokenId: 'training-regimen' };
+    expect(withTokenAttribute(content, prep, { strength: 0 }).strength).toBe(1);
+    expect(startingResources(content, content.archetypes.get('red')!, prep).money).toBe(startingResources(content, content.archetypes.get('red')!, defaultPrep(content)).money);
+    const run = chooseStarter(content, createRun(content, { runId: 'r', seed: 'intel', archetypeId: 'red', prep: { ...defaultPrep(content), tokenId: 'scout-report' } }), 0);
+    expect(licenseNote(content, run)).toMatch(/uses .* Pokémon/);
+    expect(licenseNote(content, { ...run, regionIndex: 1 })).toBeNull();
+  });
+});

@@ -49,6 +49,7 @@ import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
 import { bankShopEntries, runLicenses } from './bank';
+import { withTokenAttribute } from './runPrep';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
@@ -243,7 +244,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     mastery: runMasteryPerks(content, opts),
     gameEvents: [...(opts.gameEvents ?? [])],
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
-    attributeModifiers: { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) },
+    attributeModifiers: withTokenAttribute(content, prep, { ...zeroAttributes(), ...startingAttributes(archetype.modifiers) }),
     rng,
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], speciesShiny: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
