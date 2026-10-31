@@ -3,6 +3,7 @@
 
 import { genderSign } from '../core/gender';
 import Phaser from 'phaser';
+import { loadAssets } from './lazyAssets';
 import type { Content, Species } from '../core/contentSchema';
 import { itemCount } from '../core/items';
 import { friendshipHearts } from '../core/friendship';
@@ -222,6 +223,16 @@ export function emotionDot(scene: Phaser.Scene, x: number, y: number, color: str
 }
 
 /** One party row: icon, name, level, HP bar, status, held items and friendship hearts. */
+/** The UIE icon tile behind a party row's Pokémon icon (blue, or grey when fainted); loads on first use. */
+function iconTile(scene: Phaser.Scene, box: Phaser.GameObjects.Container, fainted: boolean): void {
+  const id = fainted ? 'ui.party.icon_box_faint' : 'ui.party.icon_box';
+  const add = (): void => {
+    box.addAt(scene.add.image(34, 36, id).setScale(0.62).setAlpha(0.9).setName('party-icon-tile'), 0);
+  };
+  if (scene.textures.exists(id)) add();
+  else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && box.active && add());
+}
+
 export function partyRow(content: Content, mon: PokemonInstance, problem: string | null, opts: { tag?: string; hint?: string } = {}): PickerRow {
   const holding = heldSummary(content, mon);
   const boosts = mon.boosts?.length ? `${mon.boosts.length} battle boost${mon.boosts.length > 1 ? 's' : ''} ready` : '';
@@ -236,6 +247,7 @@ export function partyRow(content: Content, mon: PokemonInstance, problem: string
     draw: (scene, box, w) => {
       const species = lookSpecies(content, mon);
       const max = calcStats(content, mon).hp;
+      iconTile(scene, box, mon.hp <= 0);
       box.add(pokemonIcon(scene, species, 34, 36, 1.5));
       const shiny = mon.shiny ? ' ★' : '';
       const nameText = scene.add.text(72, 6, `${species.name}${genderSign(content, mon)}${shiny}`, textStyle(26));

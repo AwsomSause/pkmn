@@ -24,6 +24,7 @@ import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevel
 import { bossMechanics, revertTransformations } from './battle/transform';
 import { RARITIES, TYPE_NAMES, type AttributeKey, type Content, type TypeName } from './contentSchema';
 import {
+  curveLevel,
   bossTeamSpecies,
   candiesForRelease,
   CHAMPION_CLASS,
@@ -109,7 +110,7 @@ import { pickStones } from './expedition/flow';
 import { gainBattleMaterials, RARE_TOKEN_EFFECTS } from './crafting';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { placeServiceStop } from './services/gate';
-import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
+import { allyLevel, applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
@@ -878,9 +879,9 @@ export function fishingOffer(content: Content, run: RunState, sideId: string): {
   const stage = run.stage!;
   const rod = fishingRod(content, run) ?? { choices: 1, rare: false };
   const rng = new Rng(hashSeed(`${run.seed}::fishing::${stageKey(run)}::${node.id}::${sideId}`));
-  const pool = typesPool(content, ['water'], run.regionOrder[run.regionIndex]).map((p) => ({ item: p.speciesId, weight: p.weight }));
-  const bst = (id: string) => Object.values(getSpecies(content, id).baseStats).reduce((a, b) => a + b, 0);
   const scale = levelScale(content, getCampaign(content, run.campaignId), run.regionIndex, stage.index, node.column);
+  const pool = typesPool(content, ['water'], run.regionOrder[run.regionIndex], curveLevel(content, scale)).map((p) => ({ item: p.speciesId, weight: p.weight }));
+  const bst = (id: string) => Object.values(getSpecies(content, id).baseStats).reduce((a, b) => a + b, 0);
   const archetype = runArchetype(content, run);
   const shinyChance = runAttributeEffects(content, run).shinyChance;
   const out: { speciesId: string; level: number; shiny: boolean }[] = [];
@@ -990,7 +991,7 @@ export function totemPreview(content: Content, current: RunState, sideId: string
   const { speciesId, level } = totemBoss(content, current, def, node.id + sideId);
   return {
     id: def.id, name: def.name, tier: def.tier, blurb: def.blurb, speciesId, level, aura: def.aura.text,
-    environment: def.environment?.text ?? null, ally: describeAlly(def), phases: def.phases.length, rewards: describeTotemRewards(def),
+    environment: [def.environment?.text, def.fieldEffect?.text].filter(Boolean).join(' ') || null, ally: describeAlly(def), phases: def.phases.length, rewards: describeTotemRewards(def),
   };
 }
 
@@ -1034,6 +1035,14 @@ export function startTotemBattle(content: Content, run: RunState, def: TotemDef,
   run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
   run.battle.ai = 0.6;
   run.battle.totem = freshTotemBattle(def, boss.uid);
+  // True 2v1: the ally stands beside the Totem from the start (a double battle, so you need two Pokémon able to fight).
+  if (def.twoVsOne && def.ally && run.party.filter((p) => p.hp > 0).length >= 2) {
+    const ally = newMon(content, run, def.ally.species, allyLevel(def, boss.level), 'e');
+    run.battle.enemyTeam.push(ally);
+    run.battle.totem.allyUid = ally.uid;
+    run.battle.totem.callsUsed = def.ally.maxCalls;
+    makeDoubles(run.battle, run.party);
+  }
   run.totems.entered += 1;
   discover(run, boss.speciesId, false);
   run.phase = 'battle';
@@ -1049,6 +1058,11 @@ function claimTotemRewards(content: Content, run: RunState, battle: BattleState)
   count(run, 'moneyEarned', money);
   const rng = new Rng(hashSeed(`${run.seed}::totem-reward::${def.id}:${run.encountersCompleted}`));
   const items = def.rewards.items.filter((i) => rng.chance(i.chance)).map((i) => i.item);
+  if (def.rewards.megaStones > 0) {
+    const stones = pickStones(content, run, def.rewards.megaStones, new Rng(hashSeed(`${run.seed}::totem-stones::${def.id}:${run.encountersCompleted}`)));
+    if (stones.length > 0 && itemCount(run.inventory, 'mega-ring') === 0) items.push('mega-ring');
+    items.push(...stones.map((stone) => stone.id));
+  }
   const rare = def.rewards.rareJoin;
   if (rare && rng.chance(rare.chance)) {
     const mon = newMon(content, run, rare.species, Math.max(2, totem.level - 2), 'p');

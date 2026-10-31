@@ -91,7 +91,50 @@ export function aaiDamageFactor(v: AaiView, move: Move): number {
     // Facade doubles while the user has a status problem.
     if (move.id === 'facade' && v.user.status) f *= 2;
   }
+  if (cfg.fieldPlay && v.battle) f *= fieldDamage(v, move);
   return f;
+}
+
+const umbrella = (m: PokemonInstance) => holds(m, 'utility-umbrella');
+/** Weather and terrain on an attack's damage (Weather_Terrain_Wars, Field_Effects). */
+function fieldDamage(v: AaiView, move: Move): number {
+  let f = 1;
+  const w = v.battle?.weather?.id;
+  if ((w === 'rain' || w === 'sun') && !umbrella(v.target)) {
+    const wet = w === 'rain';
+    if (move.type === 'water') f *= wet ? 1.5 : 0.5;
+    if (move.type === 'fire') f *= wet ? 0.5 : 1.5;
+  }
+  const t = v.battle?.terrain?.id;
+  const userDown = grounded(v.userTypes, v.userAbility);
+  const targetDown = grounded(v.targetTypes, v.targetAbility);
+  if (t && userDown && ((t === 'electric' && move.type === 'electric') || (t === 'grassy' && move.type === 'grass') || (t === 'psychic' && move.type === 'psychic'))) f *= 1.3;
+  if (t === 'misty' && targetDown && move.type === 'dragon') f *= 0.5;
+  if (t === 'grassy' && targetDown && ['earthquake', 'bulldoze', 'magnitude'].includes(move.id)) f *= 0.5;
+  if (t === 'psychic' && targetDown && move.priority > 0) return 0;
+  return f;
+}
+
+const WEATHER_ABILITY: Record<string, string> = { 'swift-swim': 'rain', 'rain-dish': 'rain', 'dry-skin': 'rain', hydration: 'rain', chlorophyll: 'sun', 'solar-power': 'sun', 'leaf-guard': 'sun', 'flower-gift': 'sun', 'sand-rush': 'sand', 'sand-force': 'sand', 'sand-veil': 'sand', 'slush-rush': 'snow', 'snow-cloak': 'snow', 'ice-body': 'snow' };
+const TERRAIN_ABILITY: Record<string, string> = { 'surge-surfer': 'electric', 'quark-drive': 'electric', 'hadron-engine': 'electric', 'grass-pelt': 'grassy' };
+const WEATHER_TYPES: Record<string, { up: string[]; down: string[] }> = { rain: { up: ['water'], down: ['fire'] }, sun: { up: ['fire'], down: ['water'] }, sand: { up: ['rock', 'ground', 'steel'], down: [] }, snow: { up: ['ice'], down: [] }, hail: { up: ['ice'], down: [] } };
+const TERRAIN_TYPES: Record<string, string[]> = { electric: ['electric'], grassy: ['grass'], psychic: ['psychic'], misty: ['fairy'] };
+
+/** How much a weather or terrain helps one side: its attacks of the boosted types, its abilities that use it. */
+function fieldGain(moves: readonly Move[], types: readonly TypeName[], ability: string | null, weather: string | null, terrain: string | null): number {
+  let g = 0;
+  const attacks = moves.filter((m) => m.category !== 'status');
+  if (weather) {
+    const wt = WEATHER_TYPES[weather]!;
+    g += attacks.filter((m) => wt.up.includes(m.type)).length - attacks.filter((m) => wt.down.includes(m.type)).length;
+    if (WEATHER_ABILITY[ability ?? ''] === weather) g += 2;
+    if ((weather === 'sand' && types.some((t) => wt.up.includes(t))) || ((weather === 'snow' || weather === 'hail') && types.includes('ice'))) g += 1;
+  }
+  if (terrain) {
+    g += attacks.filter((m) => TERRAIN_TYPES[terrain]!.includes(m.type)).length;
+    if (TERRAIN_ABILITY[ability ?? ''] === terrain) g += 2;
+  }
+  return g;
 }
 
 /** Strategic tweaks for an attack (multiplies its score): recoil at low HP, Knock Off on a holder, Rapid Spin with hazards up. */
@@ -108,6 +151,8 @@ export function aaiTacticFactor(v: AaiView, move: Move): number {
     const spiky = v.targetAbility === 'rough-skin' || v.targetAbility === 'iron-barbs' || holds(v.target, 'rocky-helmet');
     if (spiky && move.flags.includes('contact') && userPct <= 0.2) f *= 0.5;
   }
+  // Priority tiers: a slower user picks off a worn-down target with a priority hit.
+  if (cfg.fieldPlay && move.priority > 0 && !v.userFaster && pct(v.target.hp, v.targetMax) <= 0.25) f *= 1.3;
   if (cfg.disruption && move.effects.itemMove === 'knock' && Object.keys(v.target.held ?? {}).length > 0) f *= 1.5;
   if (cfg.specialMoves && move.effects.clearHazards) f *= hazardsOn(sideOf(v, 'user')) ? 1.5 : 1;
   return f;
@@ -202,6 +247,23 @@ export function aaiStatusValue(v: AaiView, move: Move): number | null {
       return userPct < 0.25 ? best * 0.7 : 0;
     }
     if (fx.clearHazards) return hazardsOn(userSide) ? best * 0.8 : 0;
+  }
+
+  if (cfg.fieldPlay && (fx.weather || fx.terrain)) {
+    if ((fx.weather && v.battle?.weather?.id === fx.weather) || (fx.terrain && v.battle?.terrain?.id === fx.terrain)) return 0;
+    const ownMoves = v.user.moves.map((m) => v.content.moves.get(m.id)).filter((m): m is Move => Boolean(m));
+    const mine = fieldGain(ownMoves, v.userTypes, v.userAbility, fx.weather ?? null, fx.terrain ?? null);
+    const theirs = fieldGain(knownMoves(v), v.targetTypes, v.targetAbility, fx.weather ?? null, fx.terrain ?? null);
+    return Math.max(0, Math.min(1, 0.2 + 0.25 * (mine - theirs))) * best;
+  }
+  if (cfg.fieldPlay && fx.field === 'trickRoom') {
+    const up = (v.battle?.field.trickRoom ?? 0) > 0;
+    // userFaster already counts Trick Room; set it only when it makes a slower user faster, never undo it while it helps.
+    return up ? (v.userFaster ? 0 : best * 0.6) : v.userFaster ? 0 : best * 0.8;
+  }
+  if (cfg.fieldPlay && fx.status?.id === 'par' && hitsFoe && !v.target.status) {
+    const k = v.userFaster ? 0.7 : 1.3;
+    return scaleStatus(v, move, k);
   }
 
   if (cfg.sideMoves && fx.sideMove) {
