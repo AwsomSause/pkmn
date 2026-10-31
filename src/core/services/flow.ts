@@ -20,6 +20,7 @@ import { isHostile } from '../rivals/outcome';
 import { changeFriendship } from '../friendship';
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type Content, type Item, type StatName } from '../contentSchema';
 import type { PokemonInstance, RunState, SideStop } from '../state';
+import { recordTraded } from '../story/hooks';
 import { getService, SERVICES, type ServiceDef } from './schema';
 import { highestOpenTier } from '../raid/raid';
 
@@ -372,6 +373,7 @@ export function useService(content: Content, current: RunState, sideId: string, 
     }
     case 'trade': {
       const next = newMon(content, run, arg!, mon!.level, 'p');
+      recordTraded(content, run, mon!, arg!);
       run.party[run.party.indexOf(mon!)] = next;
       discover(run, arg!, false);
       count(run, 'tradesMade');

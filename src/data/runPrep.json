@@ -6041,6 +6041,34 @@
    "name": "Research License",
    "description": "Opens the Research starter pool in the Starter Laboratory.",
    "cost": 600
+  },
+  {
+   "id": "scavenger",
+   "name": "Scavenger License",
+   "description": "Money from map events sometimes pays extra.",
+   "cost": 500,
+   "tier": 2
+  },
+  {
+   "id": "emergency-reserve",
+   "name": "Emergency Reserve",
+   "description": "When a run is lost, a quarter of your leftover money is saved to the Bank too.",
+   "cost": 700,
+   "tier": 2
+  },
+  {
+   "id": "fortune",
+   "name": "Fortune License",
+   "description": "Reward drafts offer currency and attribute items a little more often.",
+   "cost": 900,
+   "tier": 3
+  },
+  {
+   "id": "survival",
+   "name": "Survival License",
+   "description": "The shop stocks a Last Stand Charm from the second badge.",
+   "cost": 1500,
+   "tier": 4
   }
  ]
 }

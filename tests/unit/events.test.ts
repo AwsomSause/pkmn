@@ -93,6 +93,13 @@ describe('placing event stops', () => {
 });
 
 describe('choosing at an event', () => {
+  it('records an eventChoice story event', () => {
+    const r = chooseEvent(content, atEvent(newRun('choose'), 'pokemon-center'), 'test-event', 0).run;
+    const ev = r.story.events.filter((e) => e.type === 'eventChoice');
+    expect(ev).toHaveLength(1);
+    expect(ev[0]!.data.event).toBe('pokemon-center');
+  });
+
   it('applies the outcome once, and the same seed gives the same result', () => {
     const a = chooseEvent(content, atEvent(newRun('choose'), 'pokemon-center'), 'test-event', 0);
     const b = chooseEvent(content, atEvent(newRun('choose'), 'pokemon-center'), 'test-event', 0);
@@ -242,5 +249,27 @@ describe('trade events', () => {
     const run = atEvent(newRun('trade-last'), 'water-fan-swap');
     run.party = [createPokemon(content, 'squirtle', 5, 'a')];
     expect(choiceOf(run, 'water-fan-swap').locked).toBe('Needs 2 Pokémon in your party');
+  });
+});
+
+describe('trade picks and species traits', () => {
+  it('lets the player pick which fitting Pokémon goes', () => {
+    const run = atEvent(newRun('trade-pick'), 'water-fan-swap');
+    run.party = [createPokemon(content, 'squirtle', 12, 'a'), createPokemon(content, 'psyduck', 7, 'c')];
+    const view = eventView(content, run, 'test-event').choices[0]!;
+    expect(view.tradePicks!.map((p) => p.uid)).toEqual(['c', 'a']);
+    const result = chooseEvent(content, run, 'test-event', 0, 'a');
+    expect(result.run.party.map((m) => m.speciesId)).toEqual(['psyduck']);
+    expect(() => chooseEvent(content, run, 'test-event', 0, 'nope')).toThrow(/does not fit/);
+  });
+
+  it('asks for egg groups and colours', () => {
+    expect(content.species.get('pikachu')!.eggGroups).toContain('fairy');
+    expect(content.species.get('pikachu')!.color).toBe('yellow');
+    const run = atEvent(newRun('trade-color'), 'red-collector');
+    run.party = [createPokemon(content, 'bulbasaur', 5, 'a'), createPokemon(content, 'squirtle', 5, 'b')];
+    expect(eventView(content, run, 'test-event').choices[0]!.locked).toBe('Needs a red Pokémon in your party');
+    run.party.push(createPokemon(content, 'charmander', 5, 'c'));
+    expect(eventView(content, run, 'test-event').choices[0]!.locked).toBeNull();
   });
 });

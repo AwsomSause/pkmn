@@ -26,6 +26,7 @@ import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
+import { scavengerBonus } from './bank';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, countShiny, discover } from './progress';
 import { eggStatus, layEgg } from './eggs';
@@ -114,10 +115,18 @@ export function tradeCandidates(content: Content, run: RunState, want: TradeWant
         (!want.minWeight || (sp.weight ?? 50) >= want.minWeight) &&
         (!want.maxWeight || (sp.weight ?? 50) <= want.maxWeight) &&
         (!want.generation || sp.generation === want.generation) &&
-        (!want.minLevel || m.level >= want.minLevel)
+        (!want.minLevel || m.level >= want.minLevel) &&
+        (!want.eggGroup || sp.eggGroups.includes(want.eggGroup)) &&
+        (!want.color || sp.color === want.color)
       );
     })
     .sort((a, b) => a.level - b.level);
+}
+
+function tradePicksOf(content: Content, run: RunState, choice: EventChoice): { uid: string; label: string }[] | null {
+  const e = choice.success.effects.find((f) => f.kind === 'tradeAway');
+  if (!e || e.kind !== 'tradeAway') return null;
+  return tradeCandidates(content, run, e.want).map((m) => ({ uid: m.uid, label: `${content.species.get(m.speciesId)?.name ?? m.speciesId} Lv${m.level}` }));
 }
 
 /** Why a choice's trade cannot happen yet, in words (null when it can or the choice has no trade). */
@@ -300,6 +309,8 @@ export interface ChoiceView {
   cost: string | null;
   /** What kind of uncertainty it carries, in words ("Depends on your Luck · a setback if it fails"). */
   risk: string;
+  /** For a trade: the party Pokémon the partner would take (the player picks one), else null. */
+  tradePicks: { uid: string; label: string }[] | null;
 }
 
 export interface EventView {
@@ -362,7 +373,7 @@ export function eventView(content: Content, run: RunState, sideId: string): Even
     const missing = unmet ? conditionText(content, unmet) : tradeMissing(content, run, c);
     const chance = choiceChance(content, run, c);
     const preview = insight ? `${outcomeWords(content, c.success)}${c.failure ? ` · if it fails: ${outcomeWords(content, c.failure)}` : ''}` : null;
-    return { label: c.label, locked: missing, chance, attribute: c.check ?? null, preview, ...choiceRisk(content, c) };
+    return { label: c.label, locked: missing, tradePicks: tradePicksOf(content, run, c), chance, attribute: c.check ?? null, preview, ...choiceRisk(content, c) };
   });
   return { event, choices };
 }
@@ -378,7 +389,7 @@ export interface EventResult {
 }
 
 /** Makes a choice at an event stop. The stop is used up; a battle outcome starts the battle. */
-export function chooseEvent(content: Content, current: RunState, sideId: string, choiceIndex: number): EventResult {
+export function chooseEvent(content: Content, current: RunState, sideId: string, choiceIndex: number, tradeUid?: string): EventResult {
   if (current.phase !== 'map') throw new Error(`Action needs phase "map" but run is in "${current.phase}"`);
   const { node, side } = findSide(current, sideId);
   if (side.used) throw new Error('This event is over');
@@ -389,6 +400,7 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   if (missing) throw new Error(conditionText(content, missing));
   const noTrade = tradeMissing(content, current, choice);
   if (noTrade) throw new Error(noTrade);
+  if (tradeUid !== undefined && !tradePicksOf(content, current, choice)?.some((p) => p.uid === tradeUid)) throw new Error('That Pokémon does not fit the trade');
   const run = structuredClone(current);
   const runSide = run.stage!.map.nodes.find((n) => n.id === node.id)!.sides.find((s) => s.id === sideId)!;
   runSide.used = true;
@@ -406,12 +418,13 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   const risky = chance !== null;
   run.story.flags[risky ? 'choices:risky' : 'choices:safe'] = Number(run.story.flags[risky ? 'choices:risky' : 'choices:safe'] ?? 0) + 1;
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'event-choice', suppressed: false }, importance: risky ? 55 : 40, text: `${event.name}: ${choice.label}${risky ? (success ? ' (the gamble paid off)' : ' (the gamble failed)') : ''}` });
+  emit(content, run, 'eventChoice', { data: { event: event.id, choice: choiceIndex, risky, success } });
   const changes: string[] = [];
   // Prop Case: a Contest stop's Charisma counts twice.
   const contest = event.stop === 'contest' && hasPerk(content, run, 'doubleContest');
   for (const effect of outcome.effects) {
     const doubled = contest && effect.kind === 'attribute' && effect.key === 'charisma' ? { ...effect, amount: effect.amount * 2 } : effect;
-    const words = applyEffect(content, run, doubled, rng);
+    const words = applyEffect(content, run, doubled, rng, tradeUid);
     if (words) changes.push(words);
   }
   // Explorer Kit: every finished event stop turns up one more item.
@@ -577,10 +590,11 @@ export function isGiftable(content: Content, id: string): boolean {
 }
 
 /** Applies one effect (mutates `run`) and says what changed, or '' when nothing did. */
-function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng): string {
+function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, tradeUid?: string): string {
   switch (e.kind) {
     case 'money': {
-      const amount = Math.max(-run.money, e.amount);
+      const bonus = e.amount > 0 ? scavengerBonus(content, run.licenses, rng) : 0;
+      const amount = Math.max(-run.money, e.amount + bonus);
       run.money += amount;
       if (amount > 0) count(run, 'moneyEarned', amount);
       return amount === 0 ? '' : amount > 0 ? `+₽${amount}` : `−₽${-amount}`;
@@ -601,7 +615,8 @@ function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng):
       return `Lost a ${itemName(content, id)}`;
     }
     case 'tradeAway': {
-      const mon = tradeCandidates(content, run, e.want)[0];
+      const fits = tradeCandidates(content, run, e.want);
+      const mon = fits.find((m) => m.uid === tradeUid) ?? fits[0];
       if (!mon || run.party.length < 2) return '';
       run.party.splice(run.party.indexOf(mon), 1);
       return `Traded away ${content.species.get(mon.speciesId)?.name ?? mon.speciesId}`;

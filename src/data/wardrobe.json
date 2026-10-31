@@ -10,6 +10,7 @@
   { "id": "spooky", "name": "Spooky", "color": "#ff7a1a", "shimmer": true, "unlock": { "kind": "claim", "key": "event:spooky-season:reward" }, "unlockText": "Finish Spooky Season" },
   { "id": "winter", "name": "Winter Star", "color": "#80c8ff", "shimmer": true, "unlock": { "kind": "claim", "key": "event:winter-festival:reward" }, "unlockText": "Finish the Winter Festival" },
   { "id": "spring", "name": "Spring Bloom", "color": "#90e070", "shimmer": true, "unlock": { "kind": "claim", "key": "event:spring-bloom:reward" }, "unlockText": "Finish Spring Bloom" },
-  { "id": "summer", "name": "Summer Splash", "color": "#30b0f0", "shimmer": true, "unlock": { "kind": "claim", "key": "event:summer-splash:reward" }, "unlockText": "Finish Summer Splash" }
+  { "id": "summer", "name": "Summer Splash", "color": "#30b0f0", "shimmer": true, "unlock": { "kind": "claim", "key": "event:summer-splash:reward" }, "unlockText": "Finish Summer Splash" },
+  { "id": "vault", "name": "Vault Gold", "color": "#f0c850", "shimmer": true, "unlock": { "kind": "claim", "key": "bank:tier:5" }, "unlockText": "Reach Bank tier 5" }
  ]
 }

@@ -23,6 +23,7 @@ import { awardContracts, type ContractPayout } from './contracts';
 import { awardGameEvents, type GameEventPayout } from './gameEvents';
 import { awardModeRewards, type ModeRewardPaid } from './modeRewards';
 import { recordMoveMastery } from './moveMastery';
+import { claimBankMilestones } from './bank';
 import { runStamps } from './recap';
 import { recordMastery, type MasteryRankUp } from './mastery';
 import { addTrainerCounters, awardQuestSteps, questTrainer, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
@@ -185,10 +186,12 @@ export function awardAchievements(content: Content, profile: Profile, now: strin
 }
 
 /** The Bank's payout for a finished run: savings from leftover money plus a stipend for progress. */
-export function runPayout(content: Content, run: RunState): Omit<Payout, 'achievements' | 'total'> {
+export function runPayout(content: Content, run: RunState, licenses: readonly string[] = []): Omit<Payout, 'achievements' | 'total'> {
   const { moneyConversionRate, stipend } = content.balance.bank;
   const c = run.log.counters;
-  const savings = Math.floor(run.money * moneyConversionRate);
+  // The Emergency Reserve license saves a little more of a lost run's money.
+  const reserve = !run.victory && licenses.includes('emergency-reserve') ? content.balance.bank.reserveRate : 0;
+  const savings = Math.floor(run.money * (moneyConversionRate + reserve));
   const earned =
     stipend.perRun +
     stipend.perEncounter * run.encountersCompleted +
@@ -297,13 +300,14 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
 
   const contracts = counts ? awardContracts(profile, { ...run.log.counters, runsWon: run.victory ? 1 : 0 }, new Date(now), now) : [];
 
-  const raw = runPayout(content, run);
+  const raw = runPayout(content, run, profile.licenses);
   // The multiplier fixed at the start (0 for Adventure). It scales savings and the stipend, not achievements.
   const base = run.rules.progressionEligible ? { savings: scaleReward(raw.savings, run.rules), stipend: scaleReward(raw.stipend, run.rules) } : { savings: 0, stipend: 0 };
   const creditsBefore = profile.bankCredits;
   profile.bankCredits += base.savings + base.stipend;
   profile.lifetimeBankCredits += base.savings + base.stipend;
   const achievements = counts ? awardAchievements(content, profile, now) : [];
+  claimBankMilestones(content, profile, now);
   const achievementCredits = achievements.reduce((sum, a) => sum + a.reward.bankCredits, 0);
   const payout: Payout = { ...base, achievements: achievementCredits, total: profile.bankCredits - creditsBefore };
   profile.lastPayout = payout;

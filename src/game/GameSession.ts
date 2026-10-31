@@ -15,6 +15,7 @@ import { makeRandomSeed } from '../core/rng';
 import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
+import { buyTier, exchange, type ExchangeDirection } from '../core/bank';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
 import type { DramaLine } from '../core/drama';
@@ -89,7 +90,7 @@ export class GameSession {
    * `prep` carries the Preparation Desk's choices (and its campaign) and is remembered for next time.
    */
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0 });
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: this.profile.licenses });
     this.profile = recordRunStarted(this.profile);
     if (prep) this.profile = { ...this.profile, lastPrep: { ...prep, name: 'Last run', archetypeId } };
     this.checkSave(this.saves.saveProfile(this.profile));
@@ -156,8 +157,8 @@ export class GameSession {
   }
 
   /** Makes a choice at an event ("?") stop; a battle outcome starts the battle. */
-  chooseEvent(sideId: string, choiceIndex: number): EventResult {
-    const result = chooseEvent(this.content, this.requireRun(), sideId, choiceIndex);
+  chooseEvent(sideId: string, choiceIndex: number, tradeUid?: string): EventResult {
+    const result = chooseEvent(this.content, this.requireRun(), sideId, choiceIndex, tradeUid);
     this.run = result.run;
     this.persistRun();
     return result;
@@ -382,6 +383,20 @@ export class GameSession {
 
   buyLicense(licenseId: string): void {
     this.profile = buyLicense(this.content, this.profile, licenseId);
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  /** Buys the next Bank tier. */
+  buyBankTier(): void {
+    this.profile = buyTier(this.content, this.profile, new Date().toISOString());
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+  }
+
+  /** One lot at the Bank's Exchange Counter. */
+  exchangeAtBank(dir: ExchangeDirection): void {
+    this.profile = exchange(this.content, this.profile, dir);
     this.checkSave(this.saves.saveProfile(this.profile));
     this.changed();
   }
