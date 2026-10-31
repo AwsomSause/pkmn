@@ -1545,6 +1545,11 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (result.narrativeDefeat) {
+      // The story loss: a heavy shake (skipped when battle animations are off), then the rival's words.
+      if (this.motion !== 'off') {
+        this.cameras.main.shake(500, 0.008 * services().session.settings.shakeIntensity);
+        await new Promise<void>((done) => this.time.delayedCall(600, () => done()));
+      }
       await this.say(result.narrativeDefeat.defeatLine);
       await this.say(result.narrativeDefeat.victoryLine);
       await exitWipe(this, this.motion, this.wipeMask());
