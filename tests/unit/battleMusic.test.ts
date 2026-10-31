@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { battleTrack, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
+import { battleTrack, ROLE_TRACK_IDS, VICTORY_TRACKS, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
 import { FIXED_ASSETS } from '../../src/assets/catalog';
 import { buildContent } from '../../src/data';
 
@@ -15,6 +15,25 @@ describe('battle music', () => {
     expect(victoryTrack({ trainer: true, boss: true })).toBe('bgm.victory_leader');
     expect(victoryTrack({ trainer: true, boss: false })).toBe('bgm.victory_trainer');
     expect(victoryTrack({ trainer: false, boss: false })).toBe('bgm.victory_wild');
+  });
+});
+
+describe('boss and rival music', () => {
+  it('each role has its own song; ordinary trainers and wild keep theirs', () => {
+    const base = { raidTrack: null, trainer: true, gbSounds: false };
+    const picks = (['rival', 'gym', 'elite', 'champion', 'final'] as const).map((role) => battleTrack({ ...base, role }));
+    expect(new Set(picks).size).toBe(5);
+    expect(battleTrack({ ...base, role: 'trainer' })).toBe('bgm.battle_trainer');
+    expect(battleTrack({ ...base, trainer: false, role: 'wild' })).toBe('bgm.battle');
+    expect(battleTrack({ raidTrack: 'bgm.raid.max', trainer: true, gbSounds: true, role: 'gym' })).toBe('bgm.raid.max');
+    expect(battleTrack({ ...base, gbSounds: true, role: 'gym' })).toBe('bgm.battle_gb');
+  });
+
+  it('the Elite Four win song is its own; every role and victory song is in the catalog', () => {
+    expect(victoryTrack({ trainer: true, boss: true, role: 'elite' })).toBe('bgm.victory_elite');
+    expect(victoryTrack({ trainer: true, boss: true, role: 'champion' })).toBe('bgm.victory_leader');
+    const ids = new Set(FIXED_ASSETS.map((a) => a.id));
+    for (const id of [...ROLE_TRACK_IDS, ...VICTORY_TRACKS, 'bgm.map', 'bgm.hub', 'bgm.shop', 'bgm.event']) expect(ids.has(id), id).toBe(true);
   });
 });
 

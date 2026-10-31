@@ -35,6 +35,13 @@ export function playCry(scene: Phaser.Scene, species: Species): void {
   else void loadAssets(scene, [id]).then(() => scene.sys.isActive() && playSfx(scene, id, 0.6, detune));
 }
 
+/** Plays a sound that loads on demand (jingles, status sounds), loading it first if this screen didn't. */
+export function playSfxLazy(scene: Phaser.Scene, id: string, volumeScale = 1): void {
+  if (!services().assets.has(id) || services().session.settings.muted) return;
+  if (scene.cache.audio.exists(id)) playSfx(scene, id, volumeScale);
+  else void loadAssets(scene, [id]).then(() => scene.sys.isActive() && playSfx(scene, id, volumeScale));
+}
+
 let currentMusic: { id: string; sound: Phaser.Sound.BaseSound } | null = null;
 
 export function playMusic(scene: Phaser.Scene, id: string): void {
@@ -49,6 +56,14 @@ export function playMusic(scene: Phaser.Scene, id: string): void {
   } catch {
     currentMusic = null;
   }
+}
+
+/** Plays a song that loads on demand; the fallback song runs until it has arrived. */
+export function playMusicLazy(scene: Phaser.Scene, id: string, fallback = 'bgm.menu'): void {
+  if (scene.cache.audio.exists(id)) return playMusic(scene, id);
+  playMusic(scene, fallback);
+  if (!services().assets.has(id)) return;
+  void loadAssets(scene, [id]).then(() => scene.sys.isActive() && playMusic(scene, id));
 }
 
 export function stopMusic(): void {

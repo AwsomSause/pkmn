@@ -28,7 +28,7 @@ import { blindMap } from '../core/rules';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
-import { playMusic, playSfx } from '../ui/audio';
+import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { openBondMenu } from '../ui/bondMenu';
 import { openSummaryMenu } from '../ui/summaryMenu';
 import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
@@ -144,7 +144,7 @@ export class MapScene extends Phaser.Scene {
     this.index = 0;
     this.picker = null;
     this.busy = false;
-    playMusic(this, 'bgm.menu');
+    playMusicLazy(this, 'bgm.map');
 
     // ---------- backdrop: the stage's own arena, dimmed ----------
     const arena = league ? undefined : arenaFor(content, theme);
@@ -540,7 +540,7 @@ export class MapScene extends Phaser.Scene {
 
   private focus(i: number, sound = true): void {
     if (i < 0) return;
-    if (sound && i !== this.index) playSfx(this, 'ui.select', 0.5);
+    if (sound && i !== this.index) playSfx(this, 'ui.cursor', 0.5);
     this.index = i;
     this.cursors.forEach((c, n) => c.setVisible(n === i));
     const option = this.options[i];

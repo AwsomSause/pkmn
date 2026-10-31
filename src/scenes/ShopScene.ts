@@ -8,7 +8,7 @@ import { itemCount } from '../core/items';
 import { mapItemSummary } from '../core/mapItems';
 import { isBlackMarket, sellPrice, shopBadgesNeeded, shopPrice, shopSaleItem, shopStock } from '../core/run';
 import { services } from '../game/services';
-import { playMusic, playSfx } from '../ui/audio';
+import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { itemVisual } from '../ui/sprites';
@@ -33,7 +33,7 @@ export class ShopScene extends Phaser.Scene {
     const run = session.run!;
     const content = session.content;
     const motion = session.settings.battleAnimations;
-    playMusic(this, 'bgm.menu');
+    playMusicLazy(this, 'bgm.shop');
 
     if (data.sell) {
       this.createSell(data.notice);
@@ -87,7 +87,7 @@ export class ShopScene extends Phaser.Scene {
           return;
         }
         const message = session.buyItem(stock[i]!.item);
-        playSfx(this, 'se.exp', 0.6);
+        playSfx(this, 'ui.buy', 0.8);
         this.scene.restart({ notice: message.replace(/^You bought /, 'Bought '), focus: i });
       },
       onBack: () => {
@@ -136,7 +136,7 @@ export class ShopScene extends Phaser.Scene {
       backLabel: 'back',
       onSelect: (i) => {
         const message = session.sellItem(ids[i]!);
-        playSfx(this, 'se.exp', 0.6);
+        playSfx(this, 'ui.buy', 0.8);
         this.scene.restart({ sell: true, notice: message.replace(/^You sold /, 'Sold ') });
       },
       onBack: () => this.scene.restart({}),

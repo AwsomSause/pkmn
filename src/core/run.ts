@@ -131,7 +131,7 @@ import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { rivalBond } from './drama/bond';
-import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
+import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
@@ -179,6 +179,8 @@ export interface NewRunOptions {
   raidTierUnlocked?: number;
   /** The Bank licenses the profile owns (core/bank.ts runLicenses keeps the three that act inside a run). */
   licenses?: string[];
+  /** The account's unlocked trainers; map events that recruit one of them stop appearing (itemCounters `owned:<id>`). */
+  ownedTrainers?: readonly string[];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -220,6 +222,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     usedLeaders: [],
     materials: {},
     badges: [],
+    ...(opts.ownedTrainers?.length ? { itemCounters: Object.fromEntries(opts.ownedTrainers.map((id) => [`owned:${id}`, 1])) } : {}),
     campaignId: campaign.id,
     regionOrder,
     regionIndex: 0,
@@ -1222,7 +1225,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     }
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
     const gauntlet = rule && !back ? gauntletRival(content, run) : null;
-    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run)) : null;
+    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run, content)) : null;
     if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
     let trainingIndex = -1;
@@ -1509,6 +1512,8 @@ export interface BattleEndResult {
   /** Shadow Pokémon purified by this battle (names). */
   shadowPurified: string[];
   evolutions: (EvolutionResult & { uid: string })[];
+  /** Moves devoted Pokémon learned from their bond after this win. */
+  bondTaught?: { uid: string; moveId: string }[];
   /** The gym leader's id when this win beat a gym leader. */
   badge: string | null;
   /** The region's id when this win beat its champion. */
@@ -1905,12 +1910,13 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
 
   const evolutions: BattleEndResult['evolutions'] = [];
   for (const mon of noEvolution(run.rules) ? [] : run.party) {
-    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers))) {
+    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers), bondEvolves(content, run, mon))) {
       evolutions.push({ ...evo, uid: mon.uid });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
   }
   count(run, 'evolutions', evolutions.length);
+  const bondTaught = battle.outcome === 'win' ? bondLessons(content, run, battle.participants) : [];
   // The caught Pokémon's decision comes first.
   run.pending = [...caughtPending, ...run.pending];
   // A trainer's signature mechanic (Rival's Answer): choose after the battle.
@@ -2042,7 +2048,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**

@@ -99,6 +99,15 @@
    "unlockText": "raise 3 species to Silver mastery"
   },
   {
+   "id": "daily-set",
+   "name": "Daily Set",
+   "description": "A bright, sunny pack earned in the Daily Run: Sunkern, Cherubi, Castform, Eevee, Togepi, Pichu and Azurill.",
+   "category": "event",
+   "species": ["sunkern", "cherubi", "castform", "eevee", "togepi", "pichu", "azurill"],
+   "unlock": { "kind": "claim", "key": "daily:fourth-gym" },
+   "unlockText": "Win four gyms in a Daily Run"
+  },
+  {
    "id": "spooky",
    "name": "Spooky Set",
    "description": "The Spooky pack's starters: Spooky Litwick, Timburr, Emolga, Snorunt, Ponyta, Sinistea and Tangela.",
