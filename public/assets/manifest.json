@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T00:15:39.791Z",
+  "generatedAt": "2026-10-31T00:17:16.572Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -946,6 +946,20 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/uie/custom/trainer_card.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.party.icon_box",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/party/icon_box.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.party.icon_box_faint",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/party/icon_box_faint.png",
       "lazy": true
     },
     {
