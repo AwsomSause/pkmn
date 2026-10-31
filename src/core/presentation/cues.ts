@@ -202,7 +202,7 @@ export function planCues(
       case 'stat':
         if (animated) {
           cues.push({ kind: 'statArrows', side: e.side, up: e.change > 0, motion: full });
-          const arrows = (e.change > 0 ? '▲' : '▼').repeat(Math.min(3, Math.abs(e.change)));
+          const arrows = (e.change > 0 ? '+' : '-').repeat(Math.min(3, Math.abs(e.change)));
           cues.push({ kind: 'textAnim', side: e.side, anim: e.change > 0 ? 'text.statUp' : 'text.statDown', label: `${STAT_WORDS[e.stat] ?? String(e.stat).toUpperCase()} ${arrows}` });
         }
         break;
