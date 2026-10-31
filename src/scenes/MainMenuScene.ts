@@ -9,6 +9,7 @@ import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/t
 import { drawPanel, Menu, type MenuOption } from '../ui/widgets';
 import { ArenaBackdrop, drawLogo, ShowcaseMon } from '../ui/showcase';
 import { loadAssets, queueAssets } from '../ui/lazyAssets';
+import { continueCard } from '../ui/loadCard';
 import { pokemonAssetIds } from '../assets/catalog';
 import { BATTLE_UI_LABELS, BATTLE_UI_STYLES } from '../ui/battleUiStyles';
 import { sceneForRun } from './routing';
@@ -22,7 +23,7 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   preload(): void {
-    queueAssets(this, ['ui.optionsbg']);
+    queueAssets(this, ['ui.optionsbg', 'ui.load.card']);
   }
 
   create(data?: { focus?: number; page?: 'settings' }): void {
@@ -38,14 +39,18 @@ export class MainMenuScene extends Phaser.Scene {
       shade.fillStyle(0x0e0b12, 0.6 * (1 - i / 20));
       shade.fillRect(i * 24, 0, 24, GAME_HEIGHT);
     }
+    // With a saved run, the UIE Load card shows it (trainer, stage, party) where the random Pokémon would stand.
+    const card = this.page === 'main' && session.savedRun.status === 'ok' ? continueCard(this, session.content, session.savedRun.data, 470, 130) : null;
     const species = [...session.content.species.values()].filter((sp) => !sp.id.includes('-'));
     const mon = new ShowcaseMon(this, 740, 336, PIXEL_SCALE, 230);
     const pick = () => {
       const sp = Phaser.Utils.Array.GetRandom(species);
       if (sp) void loadAssets(this, [pokemonAssetIds(sp.assets).front]).then(() => this.scene.isActive() && mon.show(sp));
     };
-    pick();
-    this.time.addEvent({ delay: 6500, loop: true, callback: pick });
+    if (!card) {
+      pick();
+      this.time.addEvent({ delay: 6500, loop: true, callback: pick });
+    }
 
     if (this.page === 'settings' && this.textures.exists('ui.optionsbg')) {
       // The UIE Options screen (its own "Options" title bar) replaces the logo while settings are open.
