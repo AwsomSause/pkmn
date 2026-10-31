@@ -34,7 +34,7 @@ describe('release gate: saves', () => {
 
   it('v8 settings gain animation keys, and the master switch keeps the individual ones', () => {
     const storage = new MemoryStorageProvider();
-    storage.set('pkr.settings', envelope('settings', 8, { ...V1_SETTINGS, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal' }));
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 8, savedAt: '', data: { ...V1_SETTINGS, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal' } }));
     const s = new SaveManager(storage, content).loadSettings();
     expect(s).toMatchObject({ abilityAnimations: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false });
     const off = { ...s, rivalAnimations: false, disableAllAnimations: true };
