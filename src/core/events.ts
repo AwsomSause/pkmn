@@ -406,6 +406,7 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   const risky = chance !== null;
   run.story.flags[risky ? 'choices:risky' : 'choices:safe'] = Number(run.story.flags[risky ? 'choices:risky' : 'choices:safe'] ?? 0) + 1;
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'event-choice', suppressed: false }, importance: risky ? 55 : 40, text: `${event.name}: ${choice.label}${risky ? (success ? ' (the gamble paid off)' : ' (the gamble failed)') : ''}` });
+  emit(content, run, 'eventChoice', { data: { event: event.id, choice: choiceIndex, risky, success } });
   const changes: string[] = [];
   // Prop Case: a Contest stop's Charisma counts twice.
   const contest = event.stop === 'contest' && hasPerk(content, run, 'doubleContest');

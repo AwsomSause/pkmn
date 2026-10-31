@@ -93,6 +93,13 @@ describe('placing event stops', () => {
 });
 
 describe('choosing at an event', () => {
+  it('records an eventChoice story event', () => {
+    const r = chooseEvent(content, atEvent(newRun('choose'), 'pokemon-center'), 'test-event', 0).run;
+    const ev = r.story.events.filter((e) => e.type === 'eventChoice');
+    expect(ev).toHaveLength(1);
+    expect(ev[0]!.data.event).toBe('pokemon-center');
+  });
+
   it('applies the outcome once, and the same seed gives the same result', () => {
     const a = chooseEvent(content, atEvent(newRun('choose'), 'pokemon-center'), 'test-event', 0);
     const b = chooseEvent(content, atEvent(newRun('choose'), 'pokemon-center'), 'test-event', 0);
