@@ -25,7 +25,7 @@ import { isBossClass } from '../core/trainerPerks';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
-import { getRaid } from '../core/raid/raid';
+import { cheerProblem, getRaid } from '../core/raid/raid';
 import { playCry, playMusic, playSfx, playSfxLazy } from '../ui/audio';
 import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
 import { regionIdentity } from '../core/presentation/regionIdentity';
@@ -665,9 +665,10 @@ export class BattleScene extends Phaser.Scene {
     }
     if (box.xpBar) {
       const species = getSpecies(content, mon.speciesId);
-      const lo = xpForLevel(species.growthRate, mon.level);
-      const hi = xpForLevel(species.growthRate, mon.level + 1);
-      void box.xpBar.set(mon.level >= 100 ? 1 : (mon.xp - lo) / Math.max(1, hi - lo), animate);
+      const { maxLevel, highLevelXp } = content.balance.difficulty;
+      const lo = xpForLevel(species.growthRate, mon.level, highLevelXp);
+      const hi = xpForLevel(species.growthRate, mon.level + 1, highLevelXp);
+      void box.xpBar.set(mon.level >= maxLevel ? 1 : (mon.xp - lo) / Math.max(1, hi - lo), animate);
     }
     if (box.teamText) {
       const battle = this.run.battle;
@@ -1092,7 +1093,7 @@ export class BattleScene extends Phaser.Scene {
               ? ' It will Dynamax!'
               : '';
     // Boss intent (#117): bosses, raids and totems telegraph the move they value most.
-    const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon()) : null;
+    const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon(), this.run.party) : null;
     const shadow = this.activeMon().shadow;
     this.message.setText(`${intent ? `${intent.text}\n` : ''}${shadow ? `Shadow haze · Heart Gauge ${shadow.heart}/100 (hits harder, takes more)\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
@@ -1100,6 +1101,10 @@ export class BattleScene extends Phaser.Scene {
     const onLabel = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
     const kinds = [...new Set(choices.map(label))];
     if (choices.length > 0) options.push({ label: choice ? `${onLabel(choice)}: ON` : `${kinds.join('/')}: OFF` });
+    // Raid cheers (Raid Battles pack) sit after the transformation toggle.
+    const raid = this.run.battle?.raid;
+    const cheerAt = raid && raid.cheersLeft > 0 && !this.duo ? options.length : -1;
+    if (cheerAt >= 0) options.push({ label: `Cheer ×${raid!.cheersLeft}` });
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
@@ -1111,9 +1116,10 @@ export class BattleScene extends Phaser.Scene {
       fontSize: 30,
       color: COLORS.textLight,
       // Wii-style glossy buttons: Fight red, Bag gold, Pokémon green, transformations neon.
-      glass: { tints: [0xc8303c, 0xc08a10, 0x1f9a52, 0x9a2cc8], motion: this.motion },
+      glass: { tints: [0xc8303c, 0xc08a10, 0x1f9a52, 0x9a2cc8, 0x2c8ad8], motion: this.motion },
       onSelect: (i) => {
-        if (i === 0) this.showMoveMenu();
+        if (i === cheerAt) this.showCheerMenu();
+        else if (i === 0) this.showMoveMenu();
         else if (i === 1) this.openBag();
         else if (i === 2) this.openPartyPicker(false);
         else {
@@ -1124,6 +1130,33 @@ export class BattleScene extends Phaser.Scene {
       },
       // Double battles: back from the second Pokémon's menu goes back to the first's.
       onBack: this.duo && this.cmdSpot === 1 && this.commands[0] ? () => this.promptSpot(0) : undefined,
+    });
+  }
+
+  /** The three raid cheers: Offense, Defense, Healing (each costs one of three cheers and the turn). */
+  private showCheerMenu(): void {
+    const battle = this.run.battle!;
+    const content = services().session.content;
+    const cheers = [
+      { cheer: 'offense', label: 'Go all-out!', tint: 0xc8303c },
+      { cheer: 'defense', label: 'Hang tough!', tint: 0x2c6ad8 },
+      { cheer: 'healing', label: 'Heal up!', tint: 0x1f9a52 },
+    ] as const;
+    this.clearMenus();
+    const blocked = cheers.map((c) => cheerProblem(content, battle, c.cheer));
+    this.message.setText(blocked.find((b) => b) ?? 'Cheer your team on! Offense and Defense last 3 turns; Heal restores some HP.');
+    this.menu = new Menu(this, {
+      x: COMMAND_X + 24,
+      y: MESSAGE_Y + 26,
+      options: cheers.map((c, i) => ({ label: c.label, disabled: blocked[i] !== null })),
+      columns: 2,
+      itemWidth: 170,
+      itemHeight: 50,
+      fontSize: 26,
+      color: COLORS.textLight,
+      glass: { tints: cheers.map((c) => c.tint), motion: this.motion },
+      onSelect: (i) => this.submit({ kind: 'cheer', cheer: cheers[i]!.cheer }),
+      onBack: () => this.showRootMenu(),
     });
   }
 

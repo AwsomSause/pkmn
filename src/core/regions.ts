@@ -36,7 +36,7 @@ export function currentRegion(content: Content, run: RunState): Region {
 
 /**
  * The highest level any Pokémon can reach in a region: levelCapStep × region number
- * (50, 100, ...). Levels above 100 are not decided yet (D14), so it stops at maxLevel.
+ * (50, 100, ...), never above balance.difficulty.maxLevel (D14).
  */
 export function levelCap(content: Content, regionIndex: number): number {
   const { levelCapStep, maxLevel } = content.balance.difficulty;

@@ -803,6 +803,7 @@ export class MapScene extends Phaser.Scene {
           problem: null,
           hint: `${pv.blurb} Aura: ${pv.aura}${pv.environment ? ` ${pv.environment}` : ''}${pv.ally ? ` Ally: ${pv.ally}.` : ''} Rewards: ${pv.rewards.join(', ')}. Losing never ends your run.`,
           draw: (scene, box, w) => {
+            if (scene.textures.exists('ui.raid.den_entry')) box.add(scene.add.image(0, 0, 'ui.raid.den_entry').setOrigin(0).setDisplaySize(w, 150).setAlpha(0.35));
             box.add(scene.add.text(16, 8, `${species.name}  Lv${pv.level}   ·   ${pv.tier} Totem   ·   ${pv.phases} phase${pv.phases === 1 ? '' : 's'}`, textStyle(22)));
             box.add(scene.add.text(16, 42, `Aura: ${pv.aura}${pv.environment ? `  ${pv.environment}` : ''}`, textStyle(16, '#ffd0a0', { wordWrap: { width: w - 32 } })));
             box.add(scene.add.text(16, 88, pv.ally ? `Ally calls: ${pv.ally}` : 'No allies.', textStyle(16, '#a0d0ff', { wordWrap: { width: w - 32 } })));

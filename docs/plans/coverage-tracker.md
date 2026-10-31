@@ -53,7 +53,9 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 | Telegraphed attacks (charged hit, shown in the battle header; breaking a shield cancels it) | DONE |
 | Extra actions per round (one bonus attack under an HP line, strict `max`) | DONE; "more than four moves" TODO |
 | Battle timer (tiers 5–6), warnings at 10 and 5 turns | DONE |
-| Raid modifiers: weather field | DONE; terrain, elemental surge, healing restriction, rotating weaknesses TODO |
+| Raid modifiers: weather field, terrain, elemental surge, healing restriction, rotating weaknesses | DONE (`modifiers` in raids.json; 8 raids use them) |
+| Raid cheers (Offense / Defense / Healing, 3 per raid) and bosses with 5-6 moves (`extraMoves`) | DONE |
+| Raid capture jingles (4) on the boss-joins card; Dens + Adventures header art on den and expedition screens | DONE (Counter cheer, other Dens/Adventures art not used) |
 | Victory rewards: money, items, extra draft choices, boss joins, Mega resources (tier 5–6: Mega Stones for party Pokémon that can use one, plus a Mega Ring if you have none), rare-encounter tokens (tier 4–6: the next 1–2 wild encounters weight rare x3, Legendary x2; raids and Totems never use a token up) | DONE; crafting materials TODO (needs a crafting system) |
 | Tiers 1, 2, 3, 4, 5, 6/Apex (8 raids, one fully featured Apex) | DONE |
 | Discover (den on the map), Prepare (preview: tier, mechanics, rewards, cost), Battle, Resolve, Progress (run raid record) | DONE, incl. unlocking tiers across runs: tiers 1–3 open from the first run (`raids.json` `openTiers`); winning a tier N raid (any run, kept as the profile best counter `raidBestTier`) opens tier N+1, and in-run wins open the next tier at once. Dens in regions whose tiers are still closed hold the highest open tier. The Raid Observatory shows the open tiers |

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T00:18:01.024Z",
+  "generatedAt": "2026-10-31T00:22:47.666Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -729,6 +729,46 @@
       "kind": "audio",
       "category": "music",
       "path": "audio/bgm/raid_basic.mp3",
+      "lazy": true
+    },
+    {
+      "id": "ui.raid.den_entry",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/ui/den_entry.png"
+    },
+    {
+      "id": "ui.raid.adv_header",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/raid/ui/adv_header.png"
+    },
+    {
+      "id": "bgm.raid.capture.basic",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_capture_basic.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.capture.ultra",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_capture_ultra.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.capture.max",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_capture_max.mp3",
+      "lazy": true
+    },
+    {
+      "id": "bgm.raid.capture.tera",
+      "kind": "audio",
+      "category": "music",
+      "path": "audio/bgm/raid_capture_tera.mp3",
       "lazy": true
     },
     {

@@ -138,6 +138,14 @@
         ],
         "draftExtra": 1,
         "joinChance": 0.5
+      },
+      "modifiers": {
+        "terrain": "electric",
+        "surge": {
+          "type": "water",
+          "boost": 1.25,
+          "text": "The rain surges! Water moves hit harder!"
+        }
       }
     },
     {
@@ -178,6 +186,17 @@
         ],
         "draftExtra": 1,
         "joinChance": 0.4
+      },
+      "modifiers": {
+        "rotatingWeakness": {
+          "types": [
+            "water",
+            "grass",
+            "fighting"
+          ],
+          "everyTurns": 3,
+          "boost": 1.5
+        }
       }
     },
     {
@@ -236,6 +255,14 @@
         "draftExtra": 2,
         "joinChance": 0.4,
         "rareEncounters": 1
+      },
+      "modifiers": {
+        "surge": {
+          "type": "rock",
+          "boost": 1.25,
+          "text": "The sand surges! Rock moves hit harder!"
+        },
+        "noHealing": true
       }
     },
     {
@@ -280,7 +307,19 @@
         "draftExtra": 2,
         "joinChance": 0.4,
         "rareEncounters": 1
-      }
+      },
+      "modifiers": {
+        "terrain": "misty",
+        "surge": {
+          "type": "dragon",
+          "boost": 1.2,
+          "text": "Draconic energy surges!"
+        }
+      },
+      "extraMoves": [
+        "extreme-speed",
+        "hurricane"
+      ]
     },
     {
       "id": "steel-mind",
@@ -333,7 +372,22 @@
         "joinChance": 0.35,
         "megaStones": 1,
         "rareEncounters": 1
-      }
+      },
+      "modifiers": {
+        "rotatingWeakness": {
+          "types": [
+            "fire",
+            "ground",
+            "fighting"
+          ],
+          "everyTurns": 3,
+          "boost": 1.5
+        },
+        "noHealing": true
+      },
+      "extraMoves": [
+        "earth-power"
+      ]
     },
     {
       "id": "sky-pillar-apex",
@@ -404,7 +458,27 @@
         "joinChance": 0.3,
         "megaStones": 2,
         "rareEncounters": 2
-      }
+      },
+      "modifiers": {
+        "surge": {
+          "type": "dragon",
+          "boost": 1.3,
+          "text": "The sky surges! Dragon moves hit harder!"
+        },
+        "rotatingWeakness": {
+          "types": [
+            "ice",
+            "rock",
+            "fairy"
+          ],
+          "everyTurns": 4,
+          "boost": 1.5
+        }
+      },
+      "extraMoves": [
+        "hurricane",
+        "crunch"
+      ]
     },
     {
       "id": "garden-guardian",
@@ -525,6 +599,14 @@
         "everyTurns": 4,
         "boost": 1.5,
         "text": "Gengar is gathering shadows!"
+      },
+      "modifiers": {
+        "terrain": "psychic",
+        "surge": {
+          "type": "ghost",
+          "boost": 1.2,
+          "text": "The dark surges! Ghost moves hit harder!"
+        }
       }
     },
     {
@@ -651,7 +733,24 @@
         "everyTurns": 3,
         "boost": 1.7,
         "text": "Mewtwo is focusing a crushing blow!"
-      }
+      },
+      "modifiers": {
+        "terrain": "psychic",
+        "noHealing": true,
+        "rotatingWeakness": {
+          "types": [
+            "dark",
+            "ghost",
+            "bug"
+          ],
+          "everyTurns": 3,
+          "boost": 1.5
+        }
+      },
+      "extraMoves": [
+        "recover",
+        "calm-mind"
+      ]
     },
     {
       "id": "storm-sovereign-contact",

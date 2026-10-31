@@ -34,7 +34,7 @@ export function layEgg(content: Content, run: RunState, speciesId: string, opts:
   const egg: Egg = {
     uid: `egg${n}`,
     speciesId: family,
-    level: Math.max(1, Math.min(100, opts.level)),
+    level: Math.max(1, Math.min(content.balance.difficulty.maxLevel, opts.level)),
     left: Math.max(1, opts.left),
     unit: opts.unit,
     shiny: rollShiny(content, rng, opts.shinyMultiplier ?? 1),
@@ -47,7 +47,7 @@ export function layEgg(content: Content, run: RunState, speciesId: string, opts:
 
 /** Turns an Egg into its Pokémon (does not touch the run's egg list). */
 export function hatchEgg(content: Content, run: RunState, egg: Egg): PokemonInstance {
-  const level = Math.max(1, Math.min(100, egg.level + hatchLevelOffset(runPerks(content, run))));
+  const level = Math.max(1, Math.min(content.balance.difficulty.maxLevel, egg.level + hatchLevelOffset(runPerks(content, run))));
   const mon = newMon(content, run, egg.speciesId, level, 'p');
   mon.shiny = egg.shiny;
   mon.hatched = true;

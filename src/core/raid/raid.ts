@@ -9,6 +9,7 @@ import type { Content } from '../contentSchema';
 import type { BattleState, PokemonInstance, RaidBattle, RunState } from '../state';
 import { focusDenBonus } from '../campaign/director';
 import { grandRaidFor } from '../story/grandEnemy';
+import type { TypeName } from '../contentSchema';
 import type { RaidDef, RaidPhase } from './schema';
 
 export function getRaid(content: Content, id: string): RaidDef {
@@ -63,6 +64,9 @@ export function freshRaidBattle(def: RaidDef): RaidBattle {
     extraUsed: 0,
     timerLeft: def.timerTurns,
     notes: [],
+    cheersLeft: 3,
+    cheerOffense: 0,
+    cheerDefense: 0,
   };
 }
 
@@ -101,6 +105,55 @@ export function absorbHit(content: Content, battle: BattleState, boss: PokemonIn
   return amount;
 }
 
+/** The type the boss is weak to right now (rotating weakness), or null. Stateless: it follows the turn number. */
+export function rotatingWeakness(content: Content, battle: BattleState, turn = battle.turn): { type: TypeName; boost: number } | null {
+  const rot = battle.raid ? getRaid(content, battle.raid.id).modifiers.rotatingWeakness : undefined;
+  if (!rot) return null;
+  return { type: rot.types[Math.floor(turn / rot.everyTurns) % rot.types.length]!, boost: rot.boost };
+}
+
+/**
+ * Damage multiplier from raid field rules and cheers for one hit: your Offense cheer and the rotating weakness
+ * on your hits; the elemental surge and your Defense cheer on the boss's hits.
+ */
+export function raidFieldMultiplier(content: Content, battle: BattleState, attacker: 'player' | 'enemy', moveType: TypeName): number {
+  const raid = battle.raid;
+  if (!raid) return 1;
+  const mods = getRaid(content, raid.id).modifiers;
+  let m = 1;
+  if (attacker === 'player') {
+    if (raid.cheerOffense > 0) m *= OFFENSE_CHEER;
+    const weak = rotatingWeakness(content, battle);
+    if (weak && weak.type === moveType) m *= weak.boost;
+  } else {
+    if (mods.surge && mods.surge.type === moveType) m *= mods.surge.boost;
+    if (raid.cheerDefense > 0) m *= DEFENSE_CHEER;
+  }
+  return m;
+}
+
+/** Cheer strengths (Raid Battles pack: Offense, Defense, Healing). */
+export const OFFENSE_CHEER = 1.3;
+export const DEFENSE_CHEER = 0.7;
+export const HEALING_CHEER = 0.3;
+export const CHEER_TURNS = 3;
+export type Cheer = 'offense' | 'defense' | 'healing';
+
+/** Why a cheer can't be used now, or null. */
+export function cheerProblem(content: Content, battle: BattleState, cheer: Cheer): string | null {
+  const raid = battle.raid;
+  if (!raid) return 'Only raid fights have cheers.';
+  if (raid.cheersLeft <= 0) return 'No cheers left.';
+  if (cheer === 'healing' && getRaid(content, raid.id).modifiers.noHealing) return 'Healing is restricted in this raid.';
+  return null;
+}
+
+/** Why a healing item can't be used in this raid, or null. */
+export function raidItemProblem(content: Content, battle: BattleState, isHealing: boolean): string | null {
+  const raid = battle.raid;
+  return raid && isHealing && getRaid(content, raid.id).modifiers.noHealing ? 'Healing is restricted in this raid.' : null;
+}
+
 /** A charged (telegraphed) attack hits harder; returns the damage after the boost. */
 export function chargedDamage(content: Content, battle: BattleState, amount: number): number {
   const raid = battle.raid;
@@ -130,7 +183,14 @@ export function advanceRaid(content: Content, battle: BattleState, boss: Pokemon
   const def = getRaid(content, raid.id);
   const actions: RaidAction[] = raid.notes.map((n) => ({ kind: 'note', tone: n.tone, text: n.text }));
   raid.notes = [];
+  if (raid.cheerOffense > 0) raid.cheerOffense -= 1;
+  if (raid.cheerDefense > 0) raid.cheerDefense -= 1;
   if (boss.hp <= 0) return actions;
+  const rot = def.modifiers.rotatingWeakness;
+  if (rot) {
+    const next = rotatingWeakness(content, battle, battle.turn + 1)!;
+    if (next.type !== rotatingWeakness(content, battle)!.type) actions.push({ kind: 'note', tone: 'info', text: `The boss is now weak to ${next.type}-type moves!` });
+  }
   const share = boss.hp / maxHp(content, boss);
   def.phases.forEach((phase, i) => {
     if (raid.phasesDone.includes(i) || share > phase.atHp) return;
@@ -189,6 +249,12 @@ export function describeMechanics(def: RaidDef): string[] {
   if (def.extraActions) out.push('bonus attacks');
   if (def.timerTurns) out.push(`${def.timerTurns}-turn timer`);
   if (def.weather) out.push(`${def.weather} field`);
+  const m = def.modifiers;
+  if (m.terrain) out.push(`${m.terrain} terrain`);
+  if (m.surge) out.push(`${m.surge.type} surge`);
+  if (m.noHealing) out.push('no healing');
+  if (m.rotatingWeakness) out.push('rotating weakness');
+  if (def.extraMoves.length > 0) out.push(`${4 + def.extraMoves.length} moves`);
   return out;
 }
 

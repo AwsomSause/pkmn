@@ -471,6 +471,16 @@
   "switchRatio": 0.5,
   "koBonus": 2,
   "priorityKoBonus": 1.5,
-  "dangerSwitch": 0.5
+  "dangerSwitch": 0.5,
+  "aai": {
+   "abilityReads": true,
+   "recoil": true,
+   "disruption": true,
+   "specialMoves": true,
+   "sideMoves": true,
+   "setupSafety": true,
+   "statusTiming": true,
+   "repetition": true
+  }
  }
 }

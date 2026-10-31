@@ -61,6 +61,11 @@ export function raidMusic(tier: number | null, totem: boolean, key: string): str
   return set[h % set.length]!;
 }
 
+/** The jingle for a beaten raid boss that offers to join, by raid tier (Raid Battles pack capture songs). */
+export function raidCaptureTrack(tier: number): string {
+  return `bgm.raid.capture.${tier >= 5 ? 'tera' : tier >= 4 ? 'max' : tier >= 3 ? 'ultra' : 'basic'}`;
+}
+
 /** Expedition route music by expedition tier (1-4): the Raid Battles pack's adventure songs. */
 export function expeditionTrack(tier: number): string {
   return `bgm.raid.adventure.${(['basic', 'ultra', 'max', 'tera'] as const)[Math.min(3, Math.max(0, tier - 1))]}`;

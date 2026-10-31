@@ -40,6 +40,7 @@ export class ExpeditionScene extends Phaser.Scene {
     const def = getExpedition(session.content, exp.id);
     const song = expeditionTrack(def.tier);
     void loadAssets(this, [song]).then(() => { if (this.scene.isActive()) playMusic(this, song); });
+    if (this.textures.exists('ui.raid.adv_header')) this.add.image(GAME_WIDTH / 2, 22, 'ui.raid.adv_header').setDisplaySize(GAME_WIDTH * 0.7, 56).setAlpha(0.5);
     this.add.text(GAME_WIDTH / 2, 22, `${def.name}  ·  Tier ${def.tier}`, textStyle(32, COLORS.textLight)).setOrigin(0.5);
     drawPanel(this, 16, 48, GAME_WIDTH - 32, 200, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     this.drawRoute(exp);
