@@ -1,4 +1,5 @@
 // Release gate (left-out 3.3): every save record can be upgraded from every old version, and bad saves never crash a load.
+import { animationFlags } from '../../src/core/accessibility';
 import { describe, expect, it } from 'vitest';
 import { CURRENT_VERSIONS, MIGRATIONS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
@@ -29,6 +30,16 @@ describe('release gate: saves', () => {
     const storage = new MemoryStorageProvider();
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 7, savedAt: '', data: { ...V1_SETTINGS, battleAnimations: 'full', effectIntensity: 0.25, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero' } }));
     expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ effectIntensity: 0.25, shakeIntensity: 0.25 });
+  });
+
+  it('v8 settings gain animation keys, and the master switch keeps the individual ones', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', envelope('settings', 8, { ...V1_SETTINGS, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal' }));
+    const s = new SaveManager(storage, content).loadSettings();
+    expect(s).toMatchObject({ abilityAnimations: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false });
+    const off = { ...s, rivalAnimations: false, disableAllAnimations: true };
+    expect(Object.values(animationFlags(off)).some(Boolean)).toBe(false);
+    expect(animationFlags({ ...off, disableAllAnimations: false })).toMatchObject({ rivalAnimations: false, abilityAnimations: true });
   });
 
   it('refuses a run from a newer game and survives garbage without throwing', () => {
