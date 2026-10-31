@@ -156,8 +156,8 @@ export class GameSession {
   }
 
   /** Makes a choice at an event ("?") stop; a battle outcome starts the battle. */
-  chooseEvent(sideId: string, choiceIndex: number): EventResult {
-    const result = chooseEvent(this.content, this.requireRun(), sideId, choiceIndex);
+  chooseEvent(sideId: string, choiceIndex: number, tradeUid?: string): EventResult {
+    const result = chooseEvent(this.content, this.requireRun(), sideId, choiceIndex, tradeUid);
     this.run = result.run;
     this.persistRun();
     return result;

@@ -50,7 +50,8 @@ export class EventScene extends Phaser.Scene {
   private sideId = '';
   private cards: Card[] = [];
   private index = 0;
-  private phase: 'choose' | 'outcome' = 'choose';
+  private phase: 'choose' | 'pick' | 'outcome' = 'choose';
+  private picker: { box: Phaser.GameObjects.Container; rows: Phaser.GameObjects.Text[]; picks: { uid: string; label: string }[]; at: number } | null = null;
   private result: EventResult | null = null;
   private calm = false;
   private moneyText: Phaser.GameObjects.Text | null = null;
@@ -70,6 +71,7 @@ export class EventScene extends Phaser.Scene {
     this.cards = [];
     this.index = 0;
     this.phase = 'choose';
+    this.picker = null;
     this.result = null;
     this.calm = session.settings.battleAnimations !== 'full';
     playMusic(this, 'bgm.menu');
@@ -170,6 +172,10 @@ export class EventScene extends Phaser.Scene {
       if (action === 'confirm' || action === 'back') this.leave();
       return;
     }
+    if (this.phase === 'pick') {
+      this.handlePick(action);
+      return;
+    }
     const n = this.cards.length;
     if (action === 'left' || action === 'up') this.focus((this.index - 1 + n) % n);
     else if (action === 'right' || action === 'down') this.focus((this.index + 1) % n);
@@ -220,8 +226,60 @@ export class EventScene extends Phaser.Scene {
       if (!this.calm) this.shake(card.box, 300);
       return;
     }
+    // A trade with more than one fitting Pokémon: the player picks which one goes.
+    const picks = card.view.tradePicks;
+    if (picks && picks.length > 1) this.openPicker(picks);
+    else this.commit(picks?.[0]?.uid);
+  }
+
+  /** The party Pokémon the partner would take, as a list over the option column. */
+  private openPicker(picks: { uid: string; label: string }[]): void {
+    this.phase = 'pick';
+    playSfx(this, 'ui.select', 0.5);
+    const w = GAME_WIDTH - 24 - OPTIONS_X;
+    const rowH = Math.min(26, Math.floor((BOTTOM_H - 40) / picks.length));
+    const box = this.add.container(OPTIONS_X + w / 2, BOTTOM_Y + BOTTOM_H / 2).setDepth(20);
+    const bg = this.add.graphics();
+    paintGlass(bg, -w / 2, -BOTTOM_H / 2, w, BOTTOM_H, { tint: AERO.glassLow, glow: false, alpha: 0.98, radius: 14 });
+    box.add(bg);
+    box.add(this.add.text(0, -BOTTOM_H / 2 + 12, 'Pick a Pokémon to trade (Esc: back)', textStyle(12, '#f8e8a0')).setOrigin(0.5, 0.5));
+    const rows = picks.map((p, i) => {
+      const t = this.add.text(0, -BOTTOM_H / 2 + 34 + i * rowH, p.label, textStyle(14, COLORS.textLight)).setOrigin(0.5, 0).setInteractive({ useHandCursor: true });
+      t.on('pointerover', () => this.pickAt(i));
+      t.on('pointerdown', () => this.commit(p.uid));
+      box.add(t);
+      return t;
+    });
+    this.picker = { box, rows, picks, at: 0 };
+    this.pickAt(0);
+  }
+
+  private pickAt(i: number): void {
+    const pk = this.picker;
+    if (!pk) return;
+    pk.at = i;
+    pk.rows.forEach((t, j) => t.setColor(j === i ? '#f8e8a0' : COLORS.textLight).setText(`${j === i ? '▶ ' : ''}${pk.picks[j]!.label}`));
+  }
+
+  private handlePick(action: InputAction): void {
+    const pk = this.picker;
+    if (!pk) return;
+    const n = pk.picks.length;
+    if (action === 'up' || action === 'left') this.pickAt((pk.at - 1 + n) % n);
+    else if (action === 'down' || action === 'right') this.pickAt((pk.at + 1) % n);
+    else if (action === 'confirm') this.commit(pk.picks[pk.at]!.uid);
+    else if (action === 'back') {
+      pk.box.destroy();
+      this.picker = null;
+      this.phase = 'choose';
+    }
+  }
+
+  private commit(tradeUid?: string): void {
+    this.picker?.box.destroy();
+    this.picker = null;
     const { session } = services();
-    this.result = session.chooseEvent(this.sideId, this.index);
+    this.result = session.chooseEvent(this.sideId, this.index, tradeUid);
     this.phase = 'outcome';
     playSfx(this, 'ui.select', 0.6);
     // The picked card squashes and flies up; the rest drop away.

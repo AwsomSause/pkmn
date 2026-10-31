@@ -86,6 +86,14 @@ export const MORE_EVENTS: Json[] = [
     ch('Trade a Water-type', out('He beams and sends a Dragon your way.', trade('a Water-type', { type: 'water' }), join({ types: ['dragon'], lv: 2 }))),
     ch('Not today', leave()),
   ]),
+  ev('red-collector', 'The Red Collector', PR, { rarity: 'common', minStage: 2, cast: ['trainer.worker_m'], effect: 'fire', tint: '#381810' }, '"Red! Everything I own is red. Trade me a red Pokémon and I will warm you up with a Fire-type."', [
+    ch('Trade a red Pokémon', out('He grins and hands over a hot-blooded partner.', trade('a red Pokémon', { color: 'red' }), join({ types: ['fire'], lv: 2 }))),
+    ch('Not today', leave()),
+  ]),
+  ev('monster-breeder', 'The Monster Breeder', PR, { rarity: 'uncommon', minStage: 3, cast: ['trainer.hiker'], effect: 'rattle' }, '"I raise only the Monster egg group. Bring me one and I will give you something fierce."', [
+    ch('Trade a Monster egg group Pokémon', out('He nods slowly and leads out a fierce Pokémon.', trade('a Pokémon of the Monster egg group', { eggGroup: 'monster' }), join({ types: ['dragon', 'dark'], lv: 3 }))),
+    ch('Not today', leave()),
+  ]),
   ev('fun-and-games', 'Fun and Games!', PR, { rarity: 'uncommon', cast: ['trainer.guitarist'], pokemon: 'wobbuffet', effect: 'rattle', tint: '#302018' }, 'A carnival game: knock out the Wobbuffet in three turns to win!', [
     ch('Play (₽300)', fight('Wobbuffet stands its ground!', wild({ species: ['wobbuffet'], lv: 0, win: [any(...TREASURE), $(1000)] }), $(-300)), { requires: [money(300)] }),
     ch('Walk on', leave()),

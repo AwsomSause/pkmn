@@ -89,6 +89,9 @@ export const SpeciesSchema = z.object({
   weight: z.number().positive().optional(),
   /** Share of this species that is female (1 = always, 0 = never); null = genderless; missing = an even mix. */
   femaleRatio: z.number().min(0).max(1).nullable().optional(),
+  /** Egg groups and body colour from PokeAPI (npm run data:traits); trade events can ask for them. */
+  eggGroups: z.array(z.string()).default([]),
+  color: z.string().optional(),
   baseExp: z.number().int().positive(),
   growthRate: GrowthRateSchema,
   /**
@@ -2102,6 +2105,10 @@ export const TradeWantSchema = z.object({
   maxWeight: z.number().positive().optional(),
   generation: z.number().int().min(1).max(9).optional(),
   minLevel: z.number().int().min(1).max(100).optional(),
+  /** PokeAPI egg group id ("monster", "water1", "field"...). */
+  eggGroup: z.string().optional(),
+  /** PokeAPI body colour ("red", "yellow"...). */
+  color: z.string().optional(),
 });
 export type TradeWant = z.infer<typeof TradeWantSchema>;
 
