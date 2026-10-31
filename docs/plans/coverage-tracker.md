@@ -32,7 +32,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Untitled document phases A, B | DONE (except new NPC classes) |
 | Untitled doc Phase E1 (§13 difficulty, §13.2 modifiers, §13.3 multiplier, §14 Death-Block, §15 Adventure) | PART: 5 difficulties, multiplier formula with 2.0 cap and published x on the Preparation Desk, snapshot in `run.rules` (run v14), all 12 modifiers run, one per kind (e.g. one party rule at a time): No Transformations, Scarce Supplies, Monotype, Single Region Dex, Rich Route, Blind Research (map hides stage themes, research x1.5), No Revives, Random Draft, Boss Rush (own 4-stage campaign), Variant Hunt (+50% event stops; shiny odds unchanged), Limited Party (4), No Duplicate Species, Death-Block (first 5 battles, once, back to stage start), Adventure (checkpoint on stage start/heal stops, wipe = back to checkpoint, no account rewards). Daily, Endless, Spooky modes planned |
 | Untitled doc Phase C–G rest | PART (E mode rewards, Endless endpoint and reload test done): DONE: C prep slots (Field License new; Directive and Contracts by starter-sets thread). DONE: effective-attribute layers (attributeLayers). TODO: (starter-sets thread owns pools/identity/Run Build Summary); D, F, G |
-| Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
+| Progression and Encounter Balancing, phases 1 and 3 | DONE (3 wired: availability gates wild, trainer, fishing and raid pools); 2, 4–11 TODO |
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | DONE (the 2 Overdrive events are built, limited) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
@@ -62,7 +62,7 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 | Safeguards: encounter level cap, no double reward/cost (den used on entry, battle cleared once), saved mid-raid (run v12), failure never ends the run, config validated at load, visual shield/phase/timer/charge | DONE |
 | Reference plugin (Raid Battles DBK): mechanics rebuilt natively, nothing copied | DONE |
 | Overworld raid dens | DONE (map side stop `raid`); Raid Adventures mode = Expedition below |
-| Use encounter availability for the boss pool | PART (species are listed in `raids.json`; `availability.json` is not wired yet) |
+| Use encounter availability for the boss pool | DONE (`pickRaidFor` only picks a raid whose boss is unlocked at its level, `core/availability.ts`) |
 
 ### 2. Mega-Expeditions (slice 3, DONE except the TODO lines)
 Code: `src/core/expedition/` (schema, graph, flow, gate), `src/data/expeditions.json` (5 expeditions, tiers 1–4), screen `ExpeditionScene`. Gate = map side stop `E`.
@@ -81,18 +81,18 @@ Code: `src/core/expedition/` (schema, graph, flow, gate), `src/data/expeditions.
 | Raid as finale or Totem as finale/stop | DONE |
 | Encounter availability rules for wild stops | DONE (uses the normal stage encounter planner) |
 | Temporary Mega in battle for rentals | limited: only for Pokémon with a Mega Stone available |
-| More expeditions / routes (content expansion, Blueprint M7) | TODO |
+| More expeditions / routes (content expansion, Blueprint M7) | PART: 4 more routes (Hollow of Masks, Dune Trek, Sky Ascent, Scale Summit; 12 total) |
 
 ### 3. Totem Pokémon (slice 2, DONE except the TODO lines)
 Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/grand), territory = map side stop `T`.
 | Item | Status |
 |---|---|
 | Every Totem has a mechanic beyond inflated HP (load check: aura present, at most 2 stages of boost) | DONE |
-| Aura at battle start: stat boost, weather, terrain, hazard; visible in the battle header and a message | DONE; "resist a damage category" is done as a Defense/Special Defense stage; unique status field effect TODO |
-| Ally calls: HP trigger, max calls, no infinite loops, ally takes the Totem's place and defeating it brings the Totem back (interrupt), resummon rule per Totem, support (heal, weather, screens) | DONE; true 2v1 (both on field) TODO, the engine is 1v1 |
+| Aura at battle start: stat boost, weather, terrain, hazard; visible in the battle header and a message | DONE; "resist a damage category" is done as a Defense/Special Defense stage; unique status field effect (`fieldEffect`: Salazzle, Marowak, Vikavolt, Kommo-o) DONE |
+| Ally calls: HP trigger, max calls, no infinite loops, ally takes the Totem's place and defeating it brings the Totem back (interrupt), resummon rule per Totem, support (heal, weather, screens) | DONE; true 2v1: `twoVsOne` Totems (8) start as a double battle with the ally beside the Totem when you have two Pokémon able to fight, else the usual mid-fight call |
 | Behaviour phases at HP lines (reuse raid phases) | DONE |
 | Environmental advantage: weather, terrain, hazards, tied to the stage (Totem type matches the stage theme) | DONE |
-| Rewards: money, items, draft choices, rare Pokémon offer, unlock (per run), research points | DONE; held-item uniques, Mega energy/stones, achievements, cross-run unlocks TODO |
+| Rewards: money, items, draft choices, rare Pokémon offer, unlock (per run), research points | DONE; Mega Stones (`rewards.megaStones`, 5 Totems) and held-item uniques via `items`; achievements totems-1/10/50 and raids-1/10/50 pay Bank credits across runs |
 | Progression table (early: one aura + one weak ally; mid: aura + ally or phase; late: several; grand: unique) | DONE |
 | Validation: species, ally, rewards checked at load; sim of every Totem at 3 levels for 60 turns stays within its call cap | DONE |
 | Same level-cap rules as other battles; failure never ends the run; reload cannot repeat the fight (run v14) | DONE |

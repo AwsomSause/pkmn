@@ -27,7 +27,7 @@ import { onInputAction, type InputAction } from '../ui/input';
 import { drawHubProps } from '../ui/hubProps';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
-import { preloadPokemon, queueAssets } from '../ui/lazyAssets';
+import { loadAssets, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showcase';
 import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
@@ -191,7 +191,7 @@ export class HubScene extends Phaser.Scene {
     const all = [...session.content.species.values()].filter((sp) => !sp.id.includes('-') && services().assets.has(pokemonAssetIds(sp.assets).front));
     this.tileMons = Phaser.Utils.Array.Shuffle(all).slice(0, TILES.length);
     preloadPokemon(this, this.tileMons, { front: true });
-    queueAssets(this, ['ui.trainercard']);
+    queueAssets(this, ['ui.trainercard', 'ui.dex.seen', 'ui.dex.caught']);
   }
 
   create(data: { notice?: string; focus?: number } = {}): void {
@@ -732,7 +732,19 @@ export class HubScene extends Phaser.Scene {
         hint: `${prog.caught} of ${set.members.length} caught, ${prog.seen} met. Milestones at 25/50/75/100% pay ${MILESTONE_PAY.join('/')} Research Points once each.`,
         draw: (scene, box, w, h) => {
           box.add(scene.add.text(12, 6, set.name, textStyle(19)));
-          box.add(scene.add.text(12, 32, `${prog.caught}/${set.members.length} caught`, textStyle(14, COLORS.textMuted)));
+          // UIE Pokédex marks: caught ball, then seen eye (lazy; shown once loaded).
+          const marks = [{ id: 'ui.dex.caught', x: 12, text: `${prog.caught}/${set.members.length} caught` }, { id: 'ui.dex.seen', x: 150, text: `${prog.seen} met` }];
+          for (const m of marks) {
+            const put = (): void => {
+              box.add(scene.add.image(m.x, 40, m.id).setOrigin(0, 0.5).setScale(0.6).setName('dex-mark'));
+              box.add(scene.add.text(m.x + 22, 32, m.text, textStyle(14, COLORS.textMuted)));
+            };
+            if (scene.textures.exists(m.id)) put();
+            else {
+              box.add(scene.add.text(m.x, 32, m.text, textStyle(14, COLORS.textMuted)));
+              void loadAssets(scene, [m.id]);
+            }
+          }
           const bar = scene.add.graphics();
           const frac = set.members.length ? prog.caught / set.members.length : 0;
           bar.fillStyle(0x0b2a4a, 0.8).fillRoundedRect(w - 220, h / 2 - 7, 200, 14, 7);
