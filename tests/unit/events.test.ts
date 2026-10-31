@@ -2,7 +2,7 @@
 
 import { describe, expect, it } from 'vitest';
 import { applyCatalog, getCatalogEntry } from '../../src/core/catalog';
-import { addEventStops, choiceRisk, chooseEvent, eventView, stopIsHidden } from '../../src/core/events';
+import { addEventStops, eligibleEvents, choiceRisk, chooseEvent, eventView, stopIsHidden } from '../../src/core/events';
 import { EventChoiceSchema } from '../../src/core/contentSchema';
 import { createPokemon } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
@@ -89,6 +89,17 @@ describe('placing event stops', () => {
     expect(stopIsHidden(content, hidden!, stop.node, stop.side)).toBe(true);
     take(hidden!, 'silph-scope');
     expect(stopIsHidden(content, hidden!, stop.node, stop.side)).toBe(false);
+  });
+});
+
+describe('recruit events', () => {
+  it('stop appearing for a trainer you already own', () => {
+    const fresh = newRun('own');
+    const owned = structuredClone(fresh);
+    owned.itemCounters = { ...owned.itemCounters, 'owned:npc-youngster-joey': 1 };
+    const has = (r: RunState) => eligibleEvents(content, r).some((e) => e.id === 'npc-meet-youngster-joey');
+    expect(has(fresh)).toBe(true);
+    expect(has(owned)).toBe(false);
   });
 });
 

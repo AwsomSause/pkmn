@@ -92,7 +92,7 @@ export class GameSession {
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice): RunState {
     // A saved preset can name a loan or Vault item the profile no longer has.
     if (prep) prep = { ...prep, loan: prep.loan && !loanProblem(this.content, this.profile), vaultItem: prep.vaultItem && this.profile.vault.includes(prep.vaultItem) ? prep.vaultItem : null };
-    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile) });
+    this.run = Run.createRun(this.content, { runId: randomId('run'), seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile) , ownedTrainers: this.profile.unlockedArchetypes });
     this.profile = recordRunStarted(this.profile);
     if (prep?.vaultItem) {
       const profile = structuredClone(this.profile);

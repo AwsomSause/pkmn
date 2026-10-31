@@ -1374,14 +1374,14 @@
    "name": "The Rival Alliance",
    "group": "",
    "text": "Rivals temporarily cooperate against a common threat, then resume competing when the threat passes.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "mentor-network",
    "name": "The Mentor Network",
    "group": "",
    "text": "A rival seeks advice from a Gym Leader, Champion, researcher, or another rival. Mentors can influence their style and worldview.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "signature-technique",
@@ -1395,14 +1395,14 @@
    "name": "The Team Identity Shift",
    "group": "",
    "text": "A rival changes their roster to reflect a new philosophy, emotional state, or strategic problem.",
-   "status": "planned"
+   "status": "limited"
   },
   {
    "id": "pok-mon-transfer",
    "name": "The Pokémon Transfer",
    "group": "",
    "text": "A rival may trade, release, or rehome a Pokémon for a story-grounded reason, depending on the game's rules. Such decisions should have real consequences.",
-   "status": "limited"
+   "status": "planned"
   },
   {
    "id": "return-encounter",
@@ -1458,7 +1458,7 @@
    "name": "The Unscheduled Challenge",
    "group": "",
    "text": "A rival may interrupt an appropriate exploration or event with a challenge when the story and gameplay state support it.",
-   "status": "limited"
+   "status": "planned"
   },
   {
    "id": "challenge-refusal",

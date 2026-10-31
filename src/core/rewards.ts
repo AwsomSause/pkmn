@@ -23,6 +23,7 @@ import { addRunAttribute, attributeText, runAttributeEffects } from './attribute
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
 import { applyCatalog, catalogTargetProblem, getCatalogEntry, isCatalogUseful, isFreeReroll } from './catalog';
+import { bondEvolves } from './bond';
 import { evolveFully } from './evolution';
 import { changeFriendship } from './friendship';
 import { addItem, itemCount, itemUseProblem } from './items';
@@ -218,7 +219,7 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
       messages.push(`${nameOf(content, mon.speciesId)} grew to level ${result.newLevel}!`);
       for (const m of result.learnedMoves) messages.push(`${nameOf(content, mon.speciesId)} learned ${content.moves.get(m)!.name}!`);
       for (const m of result.skippedMoves) pending.push({ kind: 'learnMove', uid: mon.uid, moveId: m });
-      for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers))) {
+      for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers), bondEvolves(content, run, mon))) {
         count(run, 'evolutions');
         messages.push(`${nameOf(content, evo.from)} evolved into ${nameOf(content, evo.to)}!`);
         for (const m of evo.learnedMoves) messages.push(`${nameOf(content, evo.to)} learned ${content.moves.get(m)!.name}!`);
