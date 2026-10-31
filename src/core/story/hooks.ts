@@ -491,7 +491,8 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
   if (rivalBack && (result === 'win' || result === 'lose')) {
     const hpShare = totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0;
     noteRivalResult(run, rivalBack.id, result === 'win');
-    rivalProgress(content, run, rivalBack, result === 'win' ? 'lostToPlayer' : 'beatPlayer');
+    // A narrative defeat (M12) is the rival's story win, not an ordinary one.
+    rivalProgress(content, run, rivalBack, result === 'win' ? 'lostToPlayer' : battle.narrative ? 'narrativeWin' : 'beatPlayer');
     rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId), foes: fought };
     if (result === 'win') {
       const before = rivalBack.state;

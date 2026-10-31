@@ -215,3 +215,16 @@ describe('world recognition (§5.1-5.3), signature aces (§8.3), rivalries (§8.
     expect(protagonistTitle(run).name).toBe('The False Protagonist');
   });
 });
+
+describe('narrative defeats (M12) in the rival record', () => {
+  it('a narrativeWin puts the rival ahead and NPCs talk about the story loss', async () => {
+    const { npcSituation } = await import('../../src/core/rivals/recognition');
+    const { narrativeLossFlag } = await import('../../src/core/rivals/narrativeDefeat');
+    const { run, id } = withRival('narr-a');
+    const r = rivalOf(run, id);
+    rivalProgress(content, run, r, 'narrativeWin');
+    run.story.flags[narrativeLossFlag(id)] = 1;
+    expect(r.world).toMatchObject({ lead: 1, wins: 1, fame: RIVAL_CONFIG.progression.fame.narrativeWin });
+    expect(npcSituation(content, run)?.situation).toBe('narrativeLoss');
+  });
+});

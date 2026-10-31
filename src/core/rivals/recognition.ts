@@ -9,6 +9,7 @@ import { pickIndex } from '../drama/schema';
 import { addItem } from '../items';
 import type { RunState } from '../state';
 import { emit } from '../story/record';
+import { narrativeLossFlag } from './narrativeDefeat';
 import { RIVAL_STATUSES, rivalWorldView, stageKeyOf, type RivalWorldView } from './progression';
 import { ultimateRival } from './ultimate';
 
@@ -33,8 +34,6 @@ export const RECOGNITION = RecognitionSchema.parse(json);
 
 /** Set by the lost-timeline replay (M13): the player is The False Protagonist in this run. */
 export const FALSE_PROTAGONIST_FLAG = 'falseProtagonist';
-/** Set by narrative rival defeats (M12): the id of the rival that last beat you in a story loss. */
-export const NARRATIVE_LOSS_FLAG = 'narrativeLossBy';
 
 export function fillLine(text: string, vars: Record<string, string | number>): string {
   return text.replace(/\{(\w+)\}/g, (m, k: string) => (vars[k] !== undefined ? String(vars[k]) : m));
@@ -110,7 +109,7 @@ export function npcSituation(content: Content, run: RunState): { situation: keyo
   const here = stageKeyOf(run);
   const recent = run.story.rivals.find((r) => r.id === v.id)?.world?.milestones.filter((m) => m.at === here).map((m) => m.kind) ?? [];
   const situation: keyof typeof RECOGNITION.npc | null = run.story.flags[FALSE_PROTAGONIST_FLAG] ? 'falseProtagonist'
-    : run.story.flags[NARRATIVE_LOSS_FLAG] === v.id && recent.includes('narrativeWin') ? 'narrativeLoss'
+    : run.story.flags[narrativeLossFlag(v.id)] !== undefined && recent.includes('narrativeWin') ? 'narrativeLoss'
       : v.status === 'defeated' ? 'playerBeatRival'
         : v.status === 'champion' ? 'champion'
           : v.status === 'championCandidate' ? 'candidate'
