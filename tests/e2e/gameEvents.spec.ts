@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-// Game events: the Event Hall shows this week's event (fixed clock: 2026-10-30, ISO week 44 = Egg Expedition),
+// Game events: the Event Hall shows this week's event (fixed clock: 2027-04-16 = Egg Expedition (the weekly rotation has 15 events)),
 // its objectives and reward, and a new run's briefing shows the event's rules.
 
 const scene = (page: Page) => page.evaluate(() => (window as any).__pkr?.activeScene() ?? null);
@@ -25,7 +25,7 @@ test('the Event Hall shows the weekly event and runs play by its rules', async (
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
-  await page.clock.setFixedTime(new Date('2026-10-30T12:00:00Z'));
+  await page.clock.setFixedTime(new Date('2027-04-16T12:00:00Z'));
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
   await page.goto('/?seed=events-e2e');
@@ -53,6 +53,6 @@ test('the Event Hall shows the weekly event and runs play by its rules', async (
   }
   await waitForScene(page, 'Briefing');
   expect(await texts(page, 'Briefing')).toContain('Your Pokémon gain 15% more experience');
-  expect(await page.evaluate(() => (window as any).__pkr.session.run.gameEvents)).toContain('egg-expedition@2026-W44');
+  expect(await page.evaluate(() => (window as any).__pkr.session.run.gameEvents)).toContain('egg-expedition@2027-W15');
   expect(errors).toEqual([]);
 });
