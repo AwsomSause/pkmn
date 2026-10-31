@@ -88,7 +88,8 @@
         },
         "unlock": null,
         "research": 1
-      }
+      },
+      "twoVsOne": true
     },
     {
       "id": "totem-salazzle",
@@ -147,6 +148,12 @@
         },
         "unlock": null,
         "research": 2
+      },
+      "twoVsOne": true,
+      "fieldEffect": {
+        "status": "psn",
+        "chance": 0.2,
+        "text": "Toxic fumes drift over the field!"
       }
     },
     {
@@ -242,6 +249,12 @@
         },
         "unlock": null,
         "research": 2
+      },
+      "twoVsOne": true,
+      "fieldEffect": {
+        "status": "par",
+        "chance": 0.15,
+        "text": "Static crackles across the field!"
       }
     },
     {
@@ -307,8 +320,10 @@
           "chance": 0.4
         },
         "unlock": "route-stone-quarry",
-        "research": 3
-      }
+        "research": 3,
+        "megaStones": 1
+      },
+      "twoVsOne": true
     },
     {
       "id": "totem-mimikyu",
@@ -374,8 +389,10 @@
           "chance": 0.35
         },
         "unlock": "route-haunted-hollow",
-        "research": 3
-      }
+        "research": 3,
+        "megaStones": 1
+      },
+      "twoVsOne": true
     },
     {
       "id": "totem-kommo-o",
@@ -448,7 +465,14 @@
           "chance": 0.5
         },
         "unlock": "route-dragon-spire",
-        "research": 5
+        "research": 5,
+        "megaStones": 2
+      },
+      "twoVsOne": true,
+      "fieldEffect": {
+        "status": "par",
+        "chance": 0.2,
+        "text": "Scale-rattle sparks across the field!"
       }
     },
     {
@@ -493,6 +517,12 @@
         "resummon": false,
         "text": "Totem Marowak called a Cubone!",
         "support": {}
+      },
+      "twoVsOne": true,
+      "fieldEffect": {
+        "status": "brn",
+        "chance": 0.15,
+        "text": "Cinders swirl across the field!"
       }
     },
     {
@@ -584,7 +614,8 @@
           "chance": 0.4
         },
         "unlock": null,
-        "research": 3
+        "research": 3,
+        "megaStones": 1
       },
       "ally": {
         "species": "butterfree",
@@ -596,7 +627,8 @@
         "support": {
           "screens": true
         }
-      }
+      },
+      "twoVsOne": true
     },
     {
       "id": "totem-golisopod",
@@ -651,7 +683,8 @@
           "chance": 0.4
         },
         "unlock": null,
-        "research": 4
+        "research": 4,
+        "megaStones": 1
       },
       "environment": {
         "text": "Home field: rain.",

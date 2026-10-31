@@ -81,18 +81,18 @@ Code: `src/core/expedition/` (schema, graph, flow, gate), `src/data/expeditions.
 | Raid as finale or Totem as finale/stop | DONE |
 | Encounter availability rules for wild stops | DONE (uses the normal stage encounter planner) |
 | Temporary Mega in battle for rentals | limited: only for Pokémon with a Mega Stone available |
-| More expeditions / routes (content expansion, Blueprint M7) | TODO |
+| More expeditions / routes (content expansion, Blueprint M7) | PART: 4 more routes (Hollow of Masks, Dune Trek, Sky Ascent, Scale Summit; 12 total) |
 
 ### 3. Totem Pokémon (slice 2, DONE except the TODO lines)
 Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/grand), territory = map side stop `T`.
 | Item | Status |
 |---|---|
 | Every Totem has a mechanic beyond inflated HP (load check: aura present, at most 2 stages of boost) | DONE |
-| Aura at battle start: stat boost, weather, terrain, hazard; visible in the battle header and a message | DONE; "resist a damage category" is done as a Defense/Special Defense stage; unique status field effect TODO |
-| Ally calls: HP trigger, max calls, no infinite loops, ally takes the Totem's place and defeating it brings the Totem back (interrupt), resummon rule per Totem, support (heal, weather, screens) | DONE; true 2v1 (both on field) TODO, the engine is 1v1 |
+| Aura at battle start: stat boost, weather, terrain, hazard; visible in the battle header and a message | DONE; "resist a damage category" is done as a Defense/Special Defense stage; unique status field effect (`fieldEffect`: Salazzle, Marowak, Vikavolt, Kommo-o) DONE |
+| Ally calls: HP trigger, max calls, no infinite loops, ally takes the Totem's place and defeating it brings the Totem back (interrupt), resummon rule per Totem, support (heal, weather, screens) | DONE; true 2v1: `twoVsOne` Totems (8) start as a double battle with the ally beside the Totem when you have two Pokémon able to fight, else the usual mid-fight call |
 | Behaviour phases at HP lines (reuse raid phases) | DONE |
 | Environmental advantage: weather, terrain, hazards, tied to the stage (Totem type matches the stage theme) | DONE |
-| Rewards: money, items, draft choices, rare Pokémon offer, unlock (per run), research points | DONE; held-item uniques, Mega energy/stones, achievements, cross-run unlocks TODO |
+| Rewards: money, items, draft choices, rare Pokémon offer, unlock (per run), research points | DONE; Mega Stones (`rewards.megaStones`, 5 Totems) and held-item uniques via `items`; achievements totems-1/10/50 and raids-1/10/50 pay Bank credits across runs |
 | Progression table (early: one aura + one weak ally; mid: aura + ally or phase; late: several; grand: unique) | DONE |
 | Validation: species, ally, rewards checked at load; sim of every Totem at 3 levels for 60 turns stays within its call cap | DONE |
 | Same level-cap rules as other battles; failure never ends the run; reload cannot repeat the fight (run v14) | DONE |
