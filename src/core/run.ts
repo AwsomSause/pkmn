@@ -150,6 +150,7 @@ import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
 import { withTeamTypes } from './rivals/adapt';
+import { markTakeover, takeoverNote, takeoverRival } from './rivals/promotion';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
 import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
@@ -1256,6 +1257,15 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const c = run.log.counters;
       if (((c.gymLeadersDefeated ?? 0) + (c.eliteFourDefeated ?? 0) + (c.championsDefeated ?? 0) + 1) % 3 === 0) plan = { ...plan, members: plan.members.map((m) => ({ ...m, level: m.level + bossLevels })) };
     }
+    // The Rival Who Wins Without You (left-out 5.5): a rival that took over a Gym, reached the finals or became
+    // Champion stands in for that boss once (the badge and rewards stay the boss's).
+    const takeover = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? takeoverRival(run, node.kind) : null;
+    const takeoverRule = takeover ? rematchRule(content) : null;
+    if (takeover && takeoverRule) {
+      const ret = rivalReturn(content, run, takeover, plan, takeoverRule.effect);
+      plan = { ...plan, name: takeover.name, members: ret.plan.members, ai: Math.max(plan.ai, ret.plan.ai) };
+      markTakeover(run, takeover);
+    }
     // The first rival: the first ordinary trainer of balance.rival.stage is scripted (one starter-line Pokémon).
     const firstRival = node.kind === 'trainer' && !rematch && stageNumber === content.balance.rival.stage && run.story.flags[FIRST_RIVAL_FLAG] === undefined;
     if (firstRival) {
@@ -1331,6 +1341,10 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
     if (firstRival) run.battle.firstRival = true;
+    if (takeover && takeoverRule) {
+      run.battle.rivalId = takeover.id;
+      run.battle.rivalNote = takeoverNote(content, takeover);
+    }
     if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
     if (hunted) run.battle.hunted = true;
     // Some ordinary trainers fight two at a time (their own seed, so no other roll changes).

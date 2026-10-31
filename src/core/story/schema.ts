@@ -273,6 +273,8 @@ export const RivalSchema = z.object({
   /** Arcs it has finished, so a bond or Overdrive arc never repeats. */
   arcsDone: z.array(z.string()).optional(),
   faction: z.string().optional(),
+  /** Past contender (left-out 5.5): it took over a Gym, reached the regional finals, or became Champion. */
+  rank: z.enum(['gymLeader', 'finalist', 'champion']).optional(),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
   /** What it remembers of its last battle with you. */

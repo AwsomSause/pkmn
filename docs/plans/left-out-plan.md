@@ -94,8 +94,8 @@ Kice asked to "search even further". Four more searches: the Untitled document a
 | 5.1 | **Candies can't be spent.** They're earned (release, keepsakes, events) but nothing uses them. Add a candy shop: trainer unlocks, starting buffs (D7) | IMPLEMENTATION_PLAN §6j D, D7 | NONE | S–M |
 | 5.2 | **Achievements awarded when they happen**, not only at run end, with a toast | §6j E | NONE | S |
 | 5.3 | **More rivalry moments:** "The Rivalry Has Only Grown Stronger!", "It Has Studied Your Strategy!", "It Hasn't Forgotten Your Kindness!", "It Hasn't Forgotten Your Cruelty!" (with 1.3) | Hyper/Overdrive §3 | DONE (`core/story/nemesis.ts`) | S |
-| 5.4 | **Pokémon-to-Pokémon rivalry kinds:** Friendly (duo attacks, shared bonus), Bitter (reckless), One-Sided (pays off when mutual), Generational | Techno §1 | DONE (`core/story/rivalryKinds.ts`) | M |
-| 5.5 | **Rival who wins without you:** a rival can become a Gym Leader, regional finalist or Champion; ladder states past "contender" | Rivalry Engine §15, phases 5, 7 | NONE | M |
+| 5.4 | **Pokémon-to-Pokémon rivalry kinds:** Friendly (duo attacks, shared bonus), Bitter (reckless), One-Sided (pays off when mutual), Generational | Techno §1 | PART | M |
+| 5.5 | **Rival who wins without you:** a rival can become a Gym Leader, regional finalist or Champion; ladder states past "contender" | Rivalry Engine §15, phases 5, 7 | DONE (`core/rivals/promotion.ts`) | M |
 | 5.6 | **Ultimate Rival presentation:** intro, emblem/title, custom battle intro, quest chain, "Previous Ultimate Rivals" in the Chronicle | Rivalry Engine §7, §14, phase 8 | PART | S–M |
 | 5.7 | **Rival simulation report** over many seeds (how many rivals, resolutions, repeats, contradictions) + QA scenarios | Rivalry Engine phase 13 | NONE | S |
 | 5.8 | **Raid memories** (First to Face the Beast, Broke Its Guard, Took the Hit for Everyone, The Final Blow Belonged to…, The One That Survived, The Rival Who Stood Beside You, The One That Got Away) and contribution rewards | Techno §3 | PART: first five built (5.8 PR); Rival Who Stood Beside You and One That Got Away come with 5.9 | S–M |
