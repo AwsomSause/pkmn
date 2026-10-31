@@ -14,7 +14,7 @@ import { RIVAL_WORLD } from './schema';
 export const interruptFlag = (run: Pick<RunState, 'regionIndex' | 'stage'>): string => `interrupt:${run.regionIndex}.${run.stage?.index ?? 0}`;
 
 /** The rival that would cut in on this stop, or null. Pure: does not change the run. */
-export function interruptingRival(_content: Content, run: RunState, side: SideStop): Rival | null {
+export function interruptingRival(content: Content, run: RunState, side: SideStop): Rival | null {
   const cfg = RIVAL_WORLD.interrupt;
   const stage = run.stage;
   if (!stage || stage.current === null || stage.kind === 'league') return null;
@@ -23,7 +23,7 @@ export function interruptingRival(_content: Content, run: RunState, side: SideSt
   const node = findNode(stage.map, stage.current);
   if (node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion') return null;
   if (run.party.every((m) => m.hp <= 0)) return null;
-  const rival = waitingRival(run);
+  const rival = waitingRival(run, content);
   if (!rival || !cfg.states.includes(rival.state)) return null;
   if (rival.traits.vindictiveness < cfg.minVindictiveness && rival.state === 'active') return null;
   const rng = new Rng(hashSeed(`${run.seed}::interrupt::${run.regionIndex}.${stage.index}::${side.id}`));

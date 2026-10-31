@@ -151,6 +151,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'ui.optionsbg', kind: 'image', category: 'ui', path: 'images/packs/uie/custom/options_bg.png', lazy: true },
   // Trainer card art (UIE pack Graphics/Custom UI/Trainer), shown in the Hub's Trainer Card room.
   { id: 'ui.trainercard', kind: 'image', category: 'ui', path: 'images/packs/uie/custom/trainer_card.png', lazy: true },
+  // Party list icon boxes (UIE pack Graphics/Custom UI/Party), loaded the first time a party list opens.
+  ...['icon_box', 'icon_box_faint'].map((n): AssetEntry => ({ id: `ui.party.${n}`, kind: 'image', category: 'ui', path: `images/packs/uie/party/${n}.png`, lazy: true })),
   // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
   ...['fade_down', 'fade_up', 'stripes', 'stairs', 'stairs2', 'tiles', 'ripple', 'spread', 'swirl', 'hex', 'computer', 'computer_close'].map(
     (m): AssetEntry => ({ id: `fx.wipe.${m}`, kind: 'image', category: 'ui', path: `images/packs/uie/transitions/${m}.png`, lazy: true }),
@@ -162,6 +164,23 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...['wild', 'trainer', 'leader'].map((n): AssetEntry => ({ id: `bgm.victory_${n}`, kind: 'audio', category: 'music', path: `audio/bgm/victory_${n}.mp3`, lazy: true })),
   // Ending credits: "PWT Victor!" (B2W2 arrangement shipped with the Essentials EBDX kit), looped.
   { id: 'bgm.credits', kind: 'audio', category: 'music', path: 'audio/bgm/credits.mp3' },
+  // Map, Hub, shop, event and boss songs from the packs (ORAS tracks from the UIE .rar; B2W2 PWT and Low HP Battle from the EBDX zip).
+  // Re-encoded to 80 kbps mp3, loaded when the screen or battle opens (`playMusicLazy`, `bossTrack`).
+  ...['map', 'hub', 'shop', 'event', 'battle_leader', 'battle_elite', 'battle_rival', 'victory_elite'].map(
+    (n): AssetEntry => ({ id: `bgm.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/${n}.mp3`, lazy: true }),
+  ),
+  // Jingles (UIE "ME" folder): item, key item, badge, new Pokémon, evolution, healing, save, TM, berry, forgotten move.
+  ...Object.entries({ item_get: 'item_get', key_item: 'key_item', badge: 'badge', pkmn_get: 'pkmn_get', evo_start: 'evo_start', evo_success: 'evo_success', heal: 'heal', save: 'save', tm_get: 'tm_get', berry: 'berry', forget_move: 'forget_move' }).map(
+    ([id, file]): AssetEntry => ({ id: `me.${id}`, kind: 'audio', category: 'sound', path: `audio/me/${file}.ogg`, lazy: true }),
+  ),
+  // Interface and battle sounds (UIE "SE" folder). `ui.select` and `ui.error` are the pack's decision and buzzer.
+  ...['cursor', 'cancel', 'menu_open', 'menu_close', 'party_switch', 'save_choice', 'ability', 'item', 'flee', 'recall', 'use_item', 'buy', 'pc_open', 'pc_close', 'exclaim', 'vs_flash', 'vs_sword', 'page', 'door', 'poison_step'].map(
+    (n): AssetEntry => ({ id: `ui.${n}`, kind: 'audio', category: 'sound', path: `audio/se/ui_${n}.ogg` }),
+  ),
+  // Stat and status sounds reuse the pack's move-animation clips.
+  ...Object.entries({ stat_up: 'ess-up', stat_down: 'ess-take-down', brn: 'prsfx-burn', psn: 'ess-poison', par: 'ess-paralyze1', slp: 'ess-sleep', frz: 'prsfx-freeze-dry1' }).map(
+    ([id, file]): AssetEntry => ({ id: `se.${id}`, kind: 'audio', category: 'sound', path: `audio/battle_anims/${file}.m4a`, lazy: true }),
+  ),
   { id: 'se.ball_throw', kind: 'audio', category: 'sound', path: 'audio/se/pb_throw.wav' },
   { id: 'se.ball_shake', kind: 'audio', category: 'sound', path: 'audio/se/pb_move.wav' },
   { id: 'se.ball_catch', kind: 'audio', category: 'sound', path: 'audio/se/pb_catch.wav' },
@@ -174,8 +193,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'se.level_up', kind: 'audio', category: 'sound', path: 'audio/se/level_up.wav' },
   { id: 'se.exp', kind: 'audio', category: 'sound', path: 'audio/se/exp.wav' },
   { id: 'se.egg_get', kind: 'audio', category: 'sound', path: 'audio/se/egg_get.ogg' },
-  { id: 'ui.select', kind: 'audio', category: 'sound', path: 'audio/ui/select.wav' },
-  { id: 'ui.error', kind: 'audio', category: 'sound', path: 'audio/ui/error.wav' },
+  { id: 'ui.select', kind: 'audio', category: 'sound', path: 'audio/se/ui_decision.ogg' },
+  { id: 'ui.error', kind: 'audio', category: 'sound', path: 'audio/se/ui_buzzer.ogg' },
   { id: 'font.main', kind: 'font', category: 'font', path: 'fonts/pokemon-emerald-pro.ttf' },
   // The Gen 3 battle font: chunky pixel text for everything but fine print.
   { id: 'font.bold', kind: 'font', category: 'font', path: 'fonts/pkmnems.ttf' },

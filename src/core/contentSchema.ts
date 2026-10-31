@@ -1229,6 +1229,8 @@ export const BattleBoostSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('stage'), stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'crit']), stages: z.number().int(), turns: z.number().int().positive() }),
   /** Stats can't be lowered by the opponent for `turns` turns (Guard Spec.). */
   z.object({ kind: z.literal('guard'), turns: z.number().int().positive() }),
+  /** Adrenaline Orb: wild Pokémon call for help more, and may answer a second call, for `turns` turns. */
+  z.object({ kind: z.literal('sos'), turns: z.number().int().positive() }),
   /** Can't get this status (or confusion) during its next battle. */
   z.object({ kind: z.literal('immune'), status: z.enum(['brn', 'psn', 'par', 'slp', 'frz', 'confusion', 'infatuation']) }),
 ]);
@@ -1697,8 +1699,10 @@ export const TrainerAiSchema = z.object({
       statusTiming: z.boolean().default(false),
       /** No Protect twice in a row. */
       repetition: z.boolean().default(false),
+      /** Weather, terrain and speed: rain/sun/terrain damage, weather or terrain moves that help itself more than the foe, Trick Room when slower, Thunder Wave when slower, priority to pick off a worn target. */
+      fieldPlay: z.boolean().default(false),
     })
-    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false }),
+    .default({ abilityReads: false, recoil: false, disruption: false, specialMoves: false, sideMoves: false, setupSafety: false, statusTiming: false, repetition: false, fieldPlay: false }),
 });
 
 export const EVENT_RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
@@ -1712,6 +1716,8 @@ export const BalanceSchema = z.object({
     .object({ chance: z.number().min(0).max(1), fromStage: z.number().int().min(0), wildChance: z.number().min(0).max(1).default(0), bossIds: z.array(z.string()).default([]) })
     .default({ chance: 0.3, fromStage: 1, wildChance: 0, bossIds: [] }),
   /** SOS calls (core/battle/sos.ts): hurt wild Pokémon may call a friend. Off = never (old-seed checks switch it off). */
+  /** Campaign Director focus effects (mystery: more event stops; rivals: sooner returns). */
+  focusEffects: z.boolean().default(true),
   sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
