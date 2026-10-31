@@ -81,14 +81,14 @@ describe('story foundation: random streams', () => {
     ...structuredClone(RAW_CONTENT),
     // The nemesis system (left-out plan 1.3) came later too.
     story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [], nemesis: { ...(RAW_CONTENT.story as { nemesis: object }).nemesis, enabled: false } },
-    itemCatalog: catalog.filter((e) => !eventItem(e)),
+    itemCatalog: catalog.filter((e) => !eventItem(e) && e.id !== 'adrenaline-orb'),
     // The draft deals (bundles, bargains, a risk) join the reward pool, which would change old seeds' drafts.
     rewards: (RAW_CONTENT.rewards as { id: string }[]).filter((r) => !r.id.startsWith('deal-')),
     // The Camp Council (one more rest spot) the Relic Shrine and the world events (milestones, rare sites, callbacks, legendary route) would shift what an old seed meets, so they are left out too.
     events: { events: (RAW_CONTENT.events as { events: { id: string; group?: string }[] }).events.filter((e) => !['camp-council', 'relic-shrine'].includes(e.id) && !['Run Milestones', 'World Sites', 'World Callbacks', 'Legendary Route', 'Habitats', 'Routes'].includes(e.group ?? '') && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
     // Wild pairs and Tate & Liza's double battle came later too.
     // SOS calls (Z7) and the Advanced AI port (Z8: KO bonus, danger switch; aai.ts reads) came later too.
-    balance: { ...structuredClone(RAW_CONTENT.balance as object), sos: { enabled: false }, trainerAi: { ...(RAW_CONTENT.balance as { trainerAi: object }).trainerAi, koBonus: 1, priorityKoBonus: 1, dangerSwitch: 0, aai: {} }, doubles: { ...(RAW_CONTENT.balance as { doubles: object }).doubles, wildChance: 0, bossIds: [] } },
+    balance: { ...structuredClone(RAW_CONTENT.balance as object), sos: { enabled: false }, focusEffects: false, trainerAi: { ...(RAW_CONTENT.balance as { trainerAi: object }).trainerAi, koBonus: 1, priorityKoBonus: 1, dangerSwitch: 0, aai: {} }, doubles: { ...(RAW_CONTENT.balance as { doubles: object }).doubles, wildChance: 0, bossIds: [] } },
   });
   it('old seeds play exactly as they did before the story layer (Hyper moments switched off)', () => {
     for (const [key, expected] of Object.entries(BEFORE_STORY)) {

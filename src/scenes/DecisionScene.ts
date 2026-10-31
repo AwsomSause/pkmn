@@ -27,7 +27,7 @@ const PATH_BLURB: Record<MentorPath, string> = {
 };
 import type { MoveSlot, PokemonInstance } from '../core/state';
 import { services } from '../game/services';
-import { playMusic, playSfx } from '../ui/audio';
+import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { raidCaptureTrack } from '../core/presentation/battleMusic';
 import { onInputAction, type InputAction } from '../ui/input';
 import { partyRows, Picker } from '../ui/partyPanel';
@@ -86,7 +86,8 @@ export class DecisionScene extends Phaser.Scene {
     this.done = false;
     // A beaten raid boss asking to join plays that tier's capture jingle (Raid Battles pack).
     const tier = this.raidTier();
-    playMusic(this, tier ? raidCaptureTrack(tier) : 'bgm.menu');
+    if (tier) playMusic(this, raidCaptureTrack(tier));
+    else playMusicLazy(this, 'bgm.event');
 
     onInputAction(this, (a) => this.handleInput(a));
     if (decision.kind === 'learnMove') this.buildLearnMove(decision.uid, decision.moveId);

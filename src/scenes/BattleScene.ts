@@ -17,7 +17,7 @@ import { calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
-import type { RunEvent, TurnResult } from '../core/run';
+import { isFinalBoss, type RunEvent, type TurnResult } from '../core/run';
 import { noBattleItems } from '../core/rules';
 import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type BattleState, type PokemonInstance, type RunState } from '../core/state';
@@ -26,7 +26,7 @@ import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
 import { cheerProblem, getRaid } from '../core/raid/raid';
-import { playCry, playMusic, playSfx } from '../ui/audio';
+import { playCry, playMusic, playSfx, playSfxLazy } from '../ui/audio';
 import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
 import { regionIdentity } from '../core/presentation/regionIdentity';
 import { ambienceFor, musicState } from '../core/presentation/musicLayers';
@@ -43,7 +43,7 @@ import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { pickWipe, wipeAssetId } from '../ui/battleFx/ruleWipe';
 import { sosEntry } from '../core/battle/sos';
 import { WEATHER_ASSET_IDS, WeatherLayer } from '../ui/battleFx/weather';
-import { battleTrack, raidMusic, victoryTrack } from '../core/presentation/battleMusic';
+import { battleTrack, raidMusic, victoryTrack, type BattleRole } from '../core/presentation/battleMusic';
 import { itemCount } from '../core/items';
 import { planCues } from '../core/presentation/cues';
 import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
@@ -196,7 +196,7 @@ export class BattleScene extends Phaser.Scene {
       const gb = itemCount(run.inventory, 'gb-sounds') > 0 ? ['bgm.battle_gb'] : [];
       const raid = this.raidTrack(run.battle);
       const wipe = this.wipeMask();
-      queueAssets(this, [...WEATHER_ASSET_IDS, ...(wipe ? [wipeAssetId(wipe)] : []), ...gb, ...(raid ? [raid] : []), victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()) })]);
+      queueAssets(this, [...WEATHER_ASSET_IDS, ...(wipe ? [wipeAssetId(wipe)] : []), ...gb, ...(raid ? [raid] : []), victoryTrack({ trainer: run.battle.kind === 'trainer', boss: Boolean(this.boss()), role: this.battleRole() }), ...(this.battleRole() ? [battleTrack({ raidTrack: null, trainer: true, gbSounds: false, role: this.battleRole() })] : [])]);
     }
   }
 
@@ -211,11 +211,13 @@ export class BattleScene extends Phaser.Scene {
     const speed = { normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
     this.tweens.timeScale = speed;
     this.time.timeScale = speed;
+    this.role = this.battleRole();
     playMusic(
       this,
       battleTrack({
         raidTrack: this.raidTrack(battle),
         trainer: battle.kind === 'trainer',
+        role: this.role,
         gbSounds: itemCount(run.inventory, 'gb-sounds') > 0,
       }),
     );
@@ -457,6 +459,18 @@ export class BattleScene extends Phaser.Scene {
     const trainer = this.run.battle?.trainer;
     const role = trainer ? bossRoleForClass(trainer.classId) : null;
     return trainer?.leaderId && role ? bossInfo(services().session.content, role, trainer.leaderId) : null;
+  }
+
+  /** Set in `create`: the battle can be cleared from the run before the win song plays. */
+  private role: BattleRole | undefined;
+
+  /** Rival, gym leader, Elite Four, champion or final boss (null for wild and ordinary trainer fights). Music only. */
+  private battleRole(): BattleRole | undefined {
+    const battle = this.run.battle;
+    if (!battle?.trainer) return undefined;
+    const boss = this.boss();
+    if (boss) return boss.role === 'champion' && isFinalBoss(services().session.content, this.run) ? 'final' : boss.role === 'elite' ? 'elite' : boss.role === 'champion' ? 'champion' : 'gym';
+    return battle.rivalId || battle.rival ? 'rival' : undefined;
   }
 
   private trainerTitle(): string | null {
@@ -1395,7 +1409,7 @@ export class BattleScene extends Phaser.Scene {
     const end = result.end!;
     if (end.outcome === 'win') {
       stopProceduralAudio();
-      playMusic(this, victoryTrack({ trainer: Boolean(trainer), boss: Boolean(bossWin) }));
+      playMusic(this, victoryTrack({ trainer: Boolean(trainer), boss: Boolean(bossWin), role: this.role }));
     }
     if (end.outcome === 'win' && this.playerSprite) void hop(this, this.playerSprite, this.motion);
     if (end.outcome === 'win' && trainer) {
@@ -1420,7 +1434,7 @@ export class BattleScene extends Phaser.Scene {
     for (const n of end.shadowPurified) await this.say(`The Shadow haze lifts from ${n}! It is purified!`);
     if (end.voiceJoined) await this.say(`${content.species.get(end.voiceJoined)?.name ?? 'The Pokémon'} heard your voice. It wants to come with you!`);
     if (end.badge) {
-      playSfx(this, 'se.level_up');
+      playSfxLazy(this, 'me.badge');
       const leaderName = content.bosses.get(end.badge)?.name ?? end.badge;
       await this.playBeat(stamp(this, 'BADGE GET!', `${leaderName}'s badge`, ROLE_RIMS.gym, this.motion));
       await this.say(`You earned ${leaderName}'s badge! (${result.run.badges.length} total)`);
@@ -1464,9 +1478,13 @@ export class BattleScene extends Phaser.Scene {
           }),
         );
       } else await burstReveal(this, PLAYER_POS.x, PLAYER_POS.y - 100, 0x9fe8ff, this.motion).done;
-      playSfx(this, 'se.level_up');
+      playSfxLazy(this, 'me.evo_success');
       await this.say(`Congratulations! Your ${fromName} evolved into ${toName}!`);
       for (const m of evo.learnedMoves) await this.say(`${toName} learned ${content.moves.get(m)!.name}!`);
+    }
+    for (const t of end.bondTaught ?? []) {
+      const mon = result.run.party.find((m) => m.uid === t.uid);
+      if (mon) await this.say(`Close to you, ${getSpecies(content, mon.speciesId).name} learned ${content.moves.get(t.moveId)!.name}!`);
     }
     await exitWipe(this, this.motion, this.wipeMask());
     this.scene.start(sceneForRun(result.run));
@@ -1532,6 +1550,8 @@ export class BattleScene extends Phaser.Scene {
       const sprite = side === 'enemy' ? this.enemySprite : this.playerSprite;
       const mon = side ? this.shown[side] : null;
       let preText: string | null = null;
+      if (e.type === 'stat') playSfxLazy(this, e.change > 0 ? 'se.stat_up' : 'se.stat_down', 0.7);
+      else if (e.type === 'status') playSfxLazy(this, `se.${e.status}`, 0.7);
       switch (e.type) {
         case 'weather':
           this.weatherLayer?.set(e.weather);
@@ -1640,6 +1660,7 @@ export class BattleScene extends Phaser.Scene {
           break;
         }
         case 'item': {
+          playSfxLazy(this, 'ui.use_item', 0.8);
           preText = `You used the ${content.items.get(e.itemId)?.name ?? 'item'}!`;
           break;
         }
