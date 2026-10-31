@@ -4,7 +4,8 @@ import { describe, expect, it } from 'vitest';
 import { createProfile, finalizeRun } from '../../src/core/profile';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { addRunToCodex, codexEntries, codexTotals, noteCodex } from '../../src/core/story/codex';
-import { MIGRATIONS } from '../../src/save/saveManager';
+import { MIGRATIONS, SaveManager } from '../../src/save/saveManager';
+import { MemoryStorageProvider } from '../../src/save/storage';
 import { content } from './helpers';
 
 describe('Moment codex', () => {
@@ -51,6 +52,16 @@ describe('Moment codex', () => {
     const always = { ...content, story: { ...content.story, rarity: { ...content.story.rarity, momentChance: 1 } } };
     const after = takeTurn(always, run, { kind: 'move', index: 0 }).run;
     expect(after.story.flags['codex:not-forgotten-kindness']).toBe(1);
+  });
+
+  it('a version 12 profile loads with an empty codex', () => {
+    const storage = new MemoryStorageProvider();
+    const { momentCodex: _c, ...old } = createProfile(content, 'old');
+    storage.set('pkr.profile', JSON.stringify({ format: 'pkmn-roguelike', record: 'profile', schemaVersion: 12, savedAt: '', data: old }));
+    const { profile, warning } = new SaveManager(storage, content).loadOrCreateProfile(() => 'new');
+    expect(warning).toBeUndefined();
+    expect(profile.profileId).toBe('old');
+    expect(profile.momentCodex).toEqual({});
   });
 
   it('v12 profiles gain an empty codex', () => {
