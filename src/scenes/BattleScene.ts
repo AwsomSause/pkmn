@@ -15,6 +15,9 @@ import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primaryS
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { runPerks } from '../core/archetypes';
 import { abilityOf, calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
+import { formIntro } from '../core/presentation/sceneEffects';
+import { finalRivalArenaTheme } from '../core/story/highHype';
+import { ultimateRival } from '../core/rivals/ultimate';
 import { bossRoleForClass } from '../core/encounters';
 import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
@@ -254,9 +257,11 @@ export class BattleScene extends Phaser.Scene {
     // members and champions with a speciality fight in their own type's arena.
     const boss = this.boss();
     const bossType = boss && boss.role !== 'gym' ? boss.types[0] : undefined;
-    const arena = bossType ? session.content.arenas[bossType] : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
+    // The Final Rival fights in the arena of the stage where you first met (rebuilt from the run's stage themes).
+    const metTheme = finalRivalArenaTheme(session.content, run, battle.rivalId, ultimateRival(run)?.id === battle.rivalId);
+    const arena = bossType ? session.content.arenas[bossType] : metTheme ? arenaFor(session.content, getTheme(session.content, metTheme)) : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
     const raidArena = this.raidArena(battle);
-    const uie = raidArena ? null : this.uieArena();
+    const uie = raidArena || metTheme ? null : this.uieArena();
     const bg = raidArena ?? (uie && this.textures.exists(uie) ? uie : arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
     this.field = this.add.container(0, 0);
     const backLayers: Phaser.GameObjects.Image[] = [];
@@ -1001,6 +1006,7 @@ export class BattleScene extends Phaser.Scene {
           await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
           if (battle.rivalNote) await this.say(battle.rivalNote);
           if (battle.nemesisNote) await this.say(battle.nemesisNote);
+          if (battle.memoryNote) await this.say(battle.memoryNote);
           await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}!`);
         }
       } else if (this.duo) {
@@ -1015,6 +1021,7 @@ export class BattleScene extends Phaser.Scene {
         if (battle.nemesisNote) await this.say(battle.nemesisNote);
       }
       if (this.shown.enemy.shiny) await this.shinySparkle();
+      await this.formIntroBeat(this.shown.enemy);
       if (this.duo) {
         await this.showDuoSide('player', true);
         const second = this.duo.other.player.mon;
@@ -1095,6 +1102,15 @@ export class BattleScene extends Phaser.Scene {
     await b.done;
     over = true;
     this.advance = null;
+  }
+
+  /** Delta, Z, Spooky and regional forms get a tinted burst and a line from sceneEffects.json (presentation only). */
+  private async formIntroBeat(mon: PokemonInstance): Promise<void> {
+    const { content } = services().session;
+    const intro = formIntro(getSpecies(content, mon.speciesId), this.speciesName(mon));
+    if (!intro) return;
+    await burstReveal(this, ENEMY_POS.x, ENEMY_POS.y - 80, intro.tint, this.motion).done;
+    await this.say(intro.line);
   }
 
   private async shinySparkle(): Promise<void> {
@@ -1552,6 +1568,11 @@ export class BattleScene extends Phaser.Scene {
     }
     if (this.role === 'rival' && (result.narrativeDefeat || result.wiped || result.defeated)) await this.fx.flourish('enemy', 'rival.win', ENEMY_POS);
     if (result.narrativeDefeat) {
+      // The story loss: a heavy shake (skipped when battle animations are off), then the rival's words.
+      if (this.motion !== 'off') {
+        this.cameras.main.shake(500, 0.008 * services().session.settings.shakeIntensity);
+        await new Promise<void>((done) => this.time.delayedCall(600, () => done()));
+      }
       await this.say(result.narrativeDefeat.defeatLine);
       await this.say(result.narrativeDefeat.victoryLine);
       await exitWipe(this, this.motion, this.wipeMask());

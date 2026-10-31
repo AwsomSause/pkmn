@@ -16,15 +16,16 @@ import {
   type RunState,
   type Settings,
 } from '../core/state';
+import { emptyTimelineStore, TimelineStoreSchema, type TimelineStore } from '../core/timeline/schema';
 import { StorageUnavailableError, type StorageProvider } from './storage';
 
 export const SAVE_FORMAT = 'pkmn-roguelike';
 export const KEY_PREFIX = 'pkr';
 
-export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
+export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 13, run: 25, settings: 9, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 13, run: 25, settings: 9, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -286,6 +287,7 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     8: (data) => ({ ...(data as Json), abilityAnimations: true, battleTextAnimations: true, interactionAnimations: true, hyperAnimations: true, rivalAnimations: true, evolutionAnimations: true, battleScreenEffects: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false }),
   },
   meta: {},
+  timeline: {},
 };
 
 interface Envelope {
@@ -344,7 +346,7 @@ export class SaveManager {
 
   // ---------- generic envelope handling ----------
 
-  private write(record: RecordName, data: unknown): SaveResult {
+  private write(record: RecordName, data: unknown, key = this.key(record)): SaveResult {
     const envelope: Envelope = {
       format: SAVE_FORMAT,
       record,
@@ -353,7 +355,7 @@ export class SaveManager {
       data,
     };
     try {
-      this.storage.set(this.key(record), JSON.stringify(envelope));
+      this.storage.set(key, JSON.stringify(envelope));
       if (record !== 'meta') {
         this.storage.set(
           this.key('meta'),
@@ -366,10 +368,10 @@ export class SaveManager {
     }
   }
 
-  private read<T>(record: RecordName, schema: z.ZodType<T>): LoadResult<T> {
+  private read<T>(record: RecordName, schema: z.ZodType<T>, key = this.key(record)): LoadResult<T> {
     let raw: string | null;
     try {
-      raw = this.storage.get(this.key(record));
+      raw = this.storage.get(key);
     } catch (err) {
       return { status: 'unavailable', reason: err instanceof StorageUnavailableError ? err.message : String(err) };
     }
@@ -476,6 +478,48 @@ export class SaveManager {
     } catch (err) {
       return { ok: false, reason: String(err) };
     }
+  }
+
+  // ---------- timelines (core/timeline/genesis.ts) ----------
+
+  /** Where a replayed timeline lives: a run record (same versions and migrations) under its own key, apart from the normal run. */
+  get replayKey(): string {
+    return `${KEY_PREFIX}.replay`;
+  }
+
+  loadReplay(): LoadResult<RunState> {
+    const result = this.read('run', RunStateSchema, this.replayKey);
+    if (result.status !== 'ok') return result;
+    if (!result.data.timeline) return { status: 'corrupt', reason: 'The replay save is not a timeline.' };
+    const problem = this.findRunReferenceProblem(result.data);
+    return problem ? { status: 'corrupt', reason: problem } : result;
+  }
+
+  saveReplay(run: RunState): SaveResult {
+    if (!run.timeline) return { ok: false, reason: 'Only a timeline replay can be saved in the replay slot.' };
+    return this.write('run', run, this.replayKey);
+  }
+
+  clearReplay(): SaveResult {
+    try {
+      this.storage.remove(this.replayKey);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, reason: String(err) };
+    }
+  }
+
+  /** The timeline store; a damaged one is backed up and replaced by an empty store (genesis lost, history untouched). */
+  loadTimeline(): { store: TimelineStore; warning: string | null } {
+    const result = this.read('timeline', TimelineStoreSchema);
+    if (result.status === 'ok') return { store: result.data, warning: null };
+    if (result.status === 'none') return { store: emptyTimelineStore(), warning: null };
+    const backup = result.status === 'corrupt' ? this.backupCorrupt('timeline') : null;
+    return { store: emptyTimelineStore(), warning: `Timeline data could not be read (${result.reason})${backup ? `; a backup was kept as ${backup}` : ''}.` };
+  }
+
+  saveTimeline(store: TimelineStore): SaveResult {
+    return this.write('timeline', store);
   }
 
   /** Keeps a copy of a damaged save under a backup key instead of deleting it. */

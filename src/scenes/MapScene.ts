@@ -17,6 +17,7 @@ import { regionIdentity } from '../core/presentation/regionIdentity';
 import { FRAME_ASSET_IDS, headerBar } from '../ui/frames';
 import { currentColumn, findNode } from '../core/map';
 import { runPerks } from '../core/archetypes';
+import { frontRunner, isFalseProtagonist, rivalTitle, TIMELINE } from '../core/timeline/frontRunner';
 import { boxCapacity } from '../core/trainerPerks';
 import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
 import { expeditionPreview } from '../core/expedition/flow';
@@ -40,7 +41,7 @@ import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { showAchievementToasts } from '../ui/achievementToast';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { badge, focusFrame } from '../ui/widgets';
-import { AERO, drawGlass, glassPanel as drawPanel, type MotionLevel } from '../ui/aero';
+import { AERO, drawGlass, floatIdle, glassPanel as drawPanel, typeLabel, type MotionLevel } from '../ui/aero';
 import { addAmbience } from '../ui/battleFx/ambience';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
@@ -115,6 +116,21 @@ export class MapScene extends Phaser.Scene {
     super('Map');
   }
 
+  /** The healing stop: a soft green glow and rising sparkles over the screen, then `done` (straight away with animations Off). */
+  private healFx(done: () => void): void {
+    if (this.motion === 'off') return done();
+    const full = this.motion === 'full';
+    const wash = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x7dffb0, 0).setOrigin(0).setDepth(300);
+    this.tweens.add({ targets: wash, alpha: full ? 0.32 : 0.15, duration: 260, yoyo: true, ease: 'Sine.easeInOut' });
+    if (full) {
+      for (let i = 0; i < 14; i++) {
+        const spark = this.add.text(120 + i * 55, GAME_HEIGHT - 60, i % 3 === 0 ? '+' : '✦', textStyle(i % 3 === 0 ? 30 : 22, '#c8ffd8')).setOrigin(0.5).setDepth(301).setAlpha(0);
+        this.tweens.add({ targets: spark, y: GAME_HEIGHT - 60 - (150 + (i % 4) * 40), alpha: { from: 1, to: 0 }, scale: { from: 0.6, to: 1.3 }, duration: 800, delay: i * 30, ease: 'Sine.easeOut' });
+      }
+    }
+    this.time.delayedCall(full ? 760 : 320, done);
+  }
+
   private get motion(): MotionLevel {
     return services().session.settings.battleAnimations;
   }
@@ -167,6 +183,20 @@ export class MapScene extends Phaser.Scene {
     // The stage's types drift over it (leaves, embers, bubbles...), like the battle arena.
     const air = this.add.container(0, 0).setDepth(-50);
     addAmbience(this, air, 0, league || blindMap(run.rules) ? ['dragon'] : theme.types, this.motion);
+    // Layers in front of the scenery: a far landmark (the stage's lead type, big and faint) and a dark ground band that
+    // fades up from the bottom edge, so the map nodes sit between sky and ground.
+    if (!league && !blindMap(run.rules) && theme.types[0]) {
+      const mark = typeLabel(this, GAME_WIDTH - 150, 150, theme.types[0], 7);
+      if (mark) {
+        mark.setAlpha(0.22).setDepth(-52);
+        floatIdle(this, mark, this.motion, 6, 3200);
+      }
+    }
+    const ground = this.add.graphics().setDepth(-49);
+    for (let i = 0; i < 8; i++) {
+      ground.fillStyle(0x0a0a18, 0.05 + i * 0.03);
+      ground.fillRect(0, GAME_HEIGHT - 120 + i * 15, GAME_WIDTH, 15);
+    }
 
     // ---------- header ----------
     drawPanel(this, 8, 6, GAME_WIDTH - 16, 64, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true, alpha: 0.92 });
@@ -194,6 +224,13 @@ export class MapScene extends Phaser.Scene {
       .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}${wipeStatus(run) ? `  ·  Wipes ${wipeStatus(run)!.wipes}${wipeStatus(run)!.max ? `/${wipeStatus(run)!.max}` : ''}` : ''}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
 
+    // Revisit This Timeline: the False Protagonist's title, and who is ahead of you now.
+    if (isFalseProtagonist(run)) {
+      const fr = frontRunner(run);
+      const ahead = fr?.rank ? `  ·  ${rivalTitle(content, fr)} is ahead (${fr.rank === 'gymLeader' ? 'Gym Leader' : fr.rank === 'finalist' ? 'finalist' : 'Champion'})` : '';
+      const tag = this.add.text(26, 68, `${TIMELINE.title}${ahead}`, textStyle(14, '#ff9fe0', { stroke: '#2a0a2a', strokeThickness: 4 }));
+      if (services().session.settings.battleAnimations === 'full') this.tweens.add({ targets: tag, alpha: 0.55, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    }
     const pinned = pinnedObjective(content, run);
     if (pinned) this.add.text(GAME_WIDTH - 24, 66, `★ ${pinned.text} (${pinned.current}/${pinned.target})`, textStyle(14, '#f0e0a0')).setOrigin(1, 0);
 
@@ -624,7 +661,8 @@ export class MapScene extends Phaser.Scene {
         const message = session.visitSide(option.side.id);
         if (option.side.kind === 'heal') {
           playSfxLazy(this, 'me.heal');
-          this.scene.restart({ notice: message, focus: 0 });
+          this.busy = true;
+          this.healFx(() => this.scene.restart({ notice: message, focus: 0 }));
         } else {
           this.busy = true;
           this.scene.start(sceneForRun(session.run!));

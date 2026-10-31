@@ -16,7 +16,7 @@ import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type A
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
 import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
 import { moveLore, moveRank, topMoves } from '../core/moveMastery';
-import { noteOpen, noteProblem, researchNotes } from '../core/researchNotes';
+import { noteOpen, noteProblem, researchNotes, silhouettes } from '../core/researchNotes';
 import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
 import { arenasOpen, CARD_FRAMES, CRY_THEMES, frameOpen, getFrame, type CardFrame } from '../core/wardrobe';
 import { abilityChoices, atLeast, eggMoveOptions, masteredStarters, familyId, familyMembers, familyPerk, familyRank, nextGoal, rankIndex, RANK_BADGES, RANK_NAMES, speciesRank, type MasteryRank } from '../core/mastery';
@@ -627,13 +627,20 @@ export class HubScene extends Phaser.Scene {
   /** One Pokédex set's members with their seen/caught state; Enter opens the species page. */
   private openDexSet(set: { id: string; name: string; members: string[] }): void {
     const { session } = services();
+    const hinted = silhouettes(session.content, session.profile);
     const rows: PickerRow[] = set.members.map((id) => {
       const sp = session.content.species.get(id)!;
       const state = dexState(session.profile, id);
+      const shadow = state === 'unknown' ? hinted.get(id) : undefined;
       return {
         problem: null,
-        hint: state === 'unknown' ? 'Not met yet.' : `${sp.name}: ${sp.types.join(' / ')}. Enter opens its page.`,
+        hint: shadow ? `A silhouette from your field notes: ${shadow.join(' / ')} type. Not met yet.` : state === 'unknown' ? 'Not met yet.' : `${sp.name}: ${sp.types.join(' / ')}. Enter opens its page.`,
         draw: (scene, box, _w, h) => {
+          if (shadow) {
+            const icon = pokemonIcon(scene, sp, 30, h / 2, 1) as Phaser.GameObjects.GameObject & { setTintFill?: (color: number) => void };
+            icon.setTintFill?.(0x000000);
+            box.add(icon);
+          }
           if (state !== 'unknown') box.add(pokemonIcon(scene, sp, 30, h / 2, 1));
           const mark = state === 'unknown' ? null : state === 'caught' ? 'ui.dex.caught' : 'ui.dex.seen';
           if (mark && scene.textures.exists(mark)) box.add(scene.add.image(_w - 24, h / 2, mark).setScale(0.6));

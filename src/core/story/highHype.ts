@@ -2,6 +2,7 @@
 // Tournament Circuit ranking and the Final Rival's callback. Deterministic: wording is picked by a
 // hash of the run's seed, never by a gameplay random stream.
 
+import { getCampaign } from '../regions';
 import type { Content } from '../contentSchema';
 import { isHostile } from '../rivals/outcome';
 import type { PokemonInstance, RunState } from '../state';
@@ -98,4 +99,14 @@ export function finalRivalLine(content: Content, run: RunState, rivalId: string,
   const rival = run.story.rivals.find((r) => r.id === rivalId);
   if (!rival) return null;
   return `Like the day you first met in region ${rival.origin.where.region + 1}, but the teams and the stakes have changed completely.`;
+}
+
+/** The theme of the stage where the Final Rival first appeared (used to rebuild that arena), or null when it is not the final meeting. */
+export function finalRivalArenaTheme(content: Content, run: RunState, rivalId: string | null | undefined, definesJourney: boolean): string | null {
+  if (!rivalId || !definesJourney || run.regionIndex < run.regionOrder.length - 1) return null;
+  const rival = run.story.rivals.find((r) => r.id === rivalId);
+  const stage = rival?.origin.where.stage;
+  if (!rival || stage === null || stage === undefined) return null;
+  const per = Math.max(1, getCampaign(content, run.campaignId).stagesPerRegion);
+  return run.usedThemes[rival.origin.where.region * per + stage] ?? null;
 }
