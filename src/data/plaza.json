@@ -1,0 +1,224 @@
+{
+  "note": "Trainer Plaza (APPROVED.md §11). One plaza in the middle of every stage. Hand-written; checked by tests/unit/plaza.test.ts. Effects use the map-event effect kinds (contentSchema EventEffect).",
+  "balance": {
+    "regionScale": 0.15,
+    "rarityPrice": { "common": 350, "uncommon": 800, "rare": 1800, "epic": 4200 },
+    "ballPrice": 900,
+    "stallsOpen": 3,
+    "repTitles": [
+      { "at": 0, "title": "Stranger" },
+      { "at": 4, "title": "Visitor" },
+      { "at": 10, "title": "Familiar Face" },
+      { "at": 18, "title": "Regular" },
+      { "at": 30, "title": "Plaza Legend" }
+    ],
+    "alleyRep": 8,
+    "alleyEvil": -2,
+    "caravanChance": 0.25,
+    "eventChance": 0.35,
+    "rivalChance": 0.7,
+    "foeChance": 0.6,
+    "traderCount": 3,
+    "postCount": 3,
+    "errandSlots": 3,
+    "scoutCost": 600,
+    "routeTipCost": 500,
+    "oddityShow": 3,
+    "alleyShow": 3,
+    "repCap": 60
+  },
+  "regulars": [
+    { "id": "hollis", "name": "Hollis Grey", "role": "Held-goods dealer", "goal": "Wants to find the perfect item for every Pokémon in the world.", "likes": ["normal", "fighting"],
+      "lines": [{ "at": 0, "text": "Every Pokémon has an item that suits it. Looking for yours?" }, { "at": 2, "text": "Back again! I set this one aside, I thought of your team." }, { "at": 5, "text": "You get it. The right item is a conversation with the Pokémon. Take a look at the good shelf." }],
+      "perk": { "at": 4, "discount": 0.15, "text": "Hollis knocks 15% off his stall." } },
+    { "id": "tilda", "name": "Tilda Brightwater", "role": "Poké Ball maker", "goal": "Is building a ball nobody has ever thrown.", "likes": ["water", "bug"],
+      "lines": [{ "at": 0, "text": "Hand-pressed balls, none of that factory rubbish." }, { "at": 2, "text": "Your catches have been getting around. People ask who sells you." }, { "at": 5, "text": "I finally finished my prototype. It rolls like a dream. I will not tell you what it does." }],
+      "perk": { "at": 4, "discount": 0.15, "text": "Tilda sells you balls at cost." } },
+    { "id": "mabel", "name": "Mabel Orchard", "role": "Berry peddler", "goal": "Wants one of every berry in a single basket.", "likes": ["grass", "fairy"],
+      "lines": [{ "at": 0, "text": "Fresh picked this morning. Mostly." }, { "at": 2, "text": "The Pokémon always crowd round my cart when you are near." }, { "at": 5, "text": "Do you know a berry can taste of a feeling? Eat this one and tell me what it is." }],
+      "perk": { "at": 3, "discount": 0.2, "text": "Mabel gives you the bruised ones for less." } },
+    { "id": "brandt", "name": "Sergeant Brandt", "role": "Battle supplies", "goal": "Wants a trainer worth equipping for a real campaign.", "likes": ["fighting", "steel"],
+      "lines": [{ "at": 0, "text": "Supplies win battles. Pride loses them." }, { "at": 2, "text": "I have seen how you fight. Sensible. I respect sensible." }, { "at": 5, "text": "Take the good kit. Do not thank me. Win." }],
+      "perk": { "at": 4, "discount": 0.15, "text": "Sergeant Brandt trims 15% off for a fellow campaigner." } },
+    { "id": "fenwick", "name": "Professor Fenwick Lark", "role": "Evolution materials", "goal": "Is trying to document every way a Pokémon can evolve.", "likes": ["psychic", "ghost"],
+      "lines": [{ "at": 0, "text": "Stones, scales, strange metals. Everything has a reason." }, { "at": 2, "text": "Your team is an interesting dataset. May I take notes?" }, { "at": 5, "text": "I will tell you a secret: some of them evolve because they want to, not because they must." }],
+      "perk": { "at": 5, "discount": 0.1, "text": "Fenwick charges you the academic rate." } },
+    { "id": "dottie", "name": "Dottie Vance", "role": "Collectibles", "goal": "Her shop shelves are full of lovely, pointless, priceless things.", "likes": ["fairy", "ice"],
+      "lines": [{ "at": 0, "text": "Pretty things are never pointless. Ask any Pokémon." }, { "at": 2, "text": "I put the shiny one at the front for you." }, { "at": 5, "text": "Some day I will sell you the one I will not sell anyone." }],
+      "perk": { "at": 4, "discount": 0.15, "text": "Dottie wraps your purchases and takes 15% off." } },
+    { "id": "ozzy", "name": "Ozzy Prong", "role": "Oddities dealer", "goal": "Is cataloguing objects nobody can explain.", "likes": ["ghost", "poison"],
+      "lines": [{ "at": 0, "text": "Do not ask what it is. Ask what it wants." }, { "at": 2, "text": "That thing you carried in? I know what it is. Come closer." }, { "at": 5, "text": "I have never shown anyone the box under the counter. Shall we?" }] },
+    { "id": "gus", "name": "Old Gus", "role": "Specialist trader", "goal": "Has traded a Pokémon with someone in every town and wants to keep going.", "likes": ["normal", "ground"],
+      "lines": [{ "at": 0, "text": "A fair swap is a good story. A bad swap is a better one." }, { "at": 2, "text": "I told my wife about you. She said I should offer you the good ones." }, { "at": 5, "text": "Only one rule: look after it. That is the whole of the trade." }] },
+    { "id": "vera", "name": "Vera Quill", "role": "Board keeper", "goal": "Pins up every notice and is quietly checking which ones are true.", "likes": ["psychic", "flying"],
+      "lines": [{ "at": 0, "text": "Read the notices. Read the signatures. Mostly the signatures." }, { "at": 2, "text": "A few of these are from people who can actually pay. I will point them out." }, { "at": 5, "text": "That one in the corner is mine. Between us, I would like it to be answered." }] },
+    { "id": "nox", "name": "Nox", "role": "Back-alley fixer", "goal": "Keeps the alley open and the lights low.", "likes": ["dark", "poison"],
+      "lines": [{ "at": 0, "text": "I do not know you. You do not know me." }, { "at": 2, "text": "You are in the habit of coming back. That is either bravery or trust." }, { "at": 5, "text": "Come in. The door is for people I would be sorry to lose." }] },
+    { "id": "pip", "name": "Pip", "role": "Errand runner", "goal": "Carries messages between every stall and makes a living from it.", "likes": ["electric", "flying"],
+      "lines": [{ "at": 0, "text": "I run, you do, everyone gets paid. Deal?" }, { "at": 2, "text": "They say you are good. Do you do big jobs too?" }, { "at": 5, "text": "I put in a good word for you at every stall. You are welcome." }] },
+    { "id": "elda", "name": "Nurse Elda", "role": "Plaza nurse", "goal": "Opened the nurse's tent so nobody leaves the plaza worse than they came.", "likes": ["normal", "fairy"],
+      "lines": [{ "at": 0, "text": "One treatment per customer. The healing stops are there for a reason." }, { "at": 2, "text": "You always take care of them. It shows." }, { "at": 5, "text": "If there is ever an emergency, you are the person I would call." }] },
+    { "id": "imani", "name": "Coach Imani", "role": "Team advisor", "goal": "Reads a team the way others read a map.", "likes": ["fighting", "dragon"],
+      "lines": [{ "at": 0, "text": "Show me your six. I will tell you what is missing." }, { "at": 2, "text": "I can see you listen to your Pokémon. Most people do not." }, { "at": 5, "text": "If you ever want a sparring partner, ask for the long match." }] },
+    { "id": "lulu", "name": "Lulu Fern", "role": "Pokémon groomer", "goal": "Believes a brushed coat is a confident Pokémon.", "likes": ["fairy", "normal", "grass"],
+      "lines": [{ "at": 0, "text": "A little brushing goes a long way." }, { "at": 2, "text": "Yours are a joy to work on. They like you." }, { "at": 5, "text": "I will put your name on the grooming board. We do that for friends." }] }
+  ],
+  "stalls": [
+    { "id": "held", "name": "Held Goods", "keeper": "hollis", "blurb": "Held items for every kind of Pokémon.", "families": ["Battle held items", "Type boosters (held)", "Plates (team-wide)", "Gems (held, one burst per battle)"], "markup": 1.3, "minRep": 0, "size": 3 },
+    { "id": "balls", "name": "Hand-Pressed Balls", "keeper": "tilda", "blurb": "Poké Balls of every make.", "families": ["ball"], "markup": 1.25, "minRep": 0, "size": 3 },
+    { "id": "berries", "name": "Orchard Cart", "keeper": "mabel", "blurb": "Berries, still on the stem.", "families": ["Berries (held, eaten in battle)"], "markup": 1.2, "minRep": 0, "size": 4 },
+    { "id": "battle", "name": "Field Supplies", "keeper": "brandt", "blurb": "Boosters, healing and tricks for the next fight.", "families": ["Battle boosters (X items, Dire Hit, Guard Spec.)", "Healing and status items", "Battle trick items"], "markup": 1.3, "minRep": 0, "size": 3 },
+    { "id": "evolution", "name": "Stones & Scales", "keeper": "fenwick", "blurb": "Evolution materials and the odd fossil.", "families": ["Evolution items", "Species items", "Fossils", "Drives"], "markup": 1.4, "minRep": 2, "size": 3 },
+    { "id": "collectibles", "name": "Curios & Keepsakes", "keeper": "dottie", "blurb": "Valuables, mail and pretty things.", "families": ["Valuables", "Mail"], "markup": 1.2, "minRep": 0, "size": 3 }
+  ],
+  "oddities": { "keeper": "ozzy", "items": [
+    { "item": "odd-incense", "hint": "Smells like a Pokémon that cannot decide what it is.", "price": 900 },
+    { "item": "lax-incense", "hint": "The smoke seems to dodge you. Someone else might like that.", "price": 1000 },
+    { "item": "poke-doll", "hint": "Rattles faintly when something dangerous is near.", "price": 500 },
+    { "item": "escape-rope", "hint": "Frayed at one end. Strong at the other.", "price": 700 },
+    { "item": "dowsing-mchn", "hint": "Hums when the ground has something to say.", "price": 1800, "minBadges": 1 },
+    { "item": "town-map", "hint": "A map, but not of anywhere I have been.", "price": 800 },
+    { "item": "luck-incense", "hint": "Whoever burns it seems to find coins on the road.", "price": 1500, "minBadges": 1 },
+    { "item": "silph-scope", "hint": "Looks like a monocle. Sees like a lantern.", "price": 2400, "minBadges": 2 },
+    { "item": "poke-flute", "hint": "Plays a note that sleepers do not enjoy.", "price": 1200 },
+    { "item": "red-scale", "hint": "Warm to the touch, even in the rain.", "price": 1500 },
+    { "item": "odd-keystone", "hint": "Sometimes it whispers. Mostly it sulks.", "price": 2800, "minBadges": 2 },
+    { "item": "rare-bone", "hint": "Older than the building. Do not drop it.", "price": 1600 }
+  ] },
+  "traders": [
+    { "id": "t-pikachu", "name": "Spark Trader", "line": "I will give a lively little mouse for a Normal-type with a good heart.", "want": { "label": "a Normal-type", "type": "normal" }, "give": { "label": "Pikachu", "species": ["pikachu"], "levelBonus": 0 }, "minRep": 0 },
+    { "id": "t-eevee", "name": "Fenn the Breeder", "line": "Eevee for a Water-type. Do not ask me why.", "want": { "label": "a Water-type", "type": "water" }, "give": { "label": "Eevee", "species": ["eevee"], "levelBonus": 0 }, "minRep": 0 },
+    { "id": "t-baby", "name": "Nanny Oro", "line": "A baby Pokémon for a fully evolved one, because I want to raise something new.", "want": { "label": "a fully evolved Pokémon", "stage": 3 }, "give": { "label": "a baby Pokémon", "species": ["pichu", "togepi", "riolu", "happiny", "mime-jr", "munchlax"], "levelBonus": 0 }, "minRep": 1 },
+    { "id": "t-onix", "name": "Rock Collector", "line": "Heavy trade! 100 kg or more for something that rolls.", "want": { "label": "a 100 kg+ Pokémon", "minWeight": 100 }, "give": { "label": "Onix", "species": ["onix", "rhyhorn", "larvitar"], "levelBonus": 0 }, "minRep": 0 },
+    { "id": "t-farfetchd", "name": "Mimic Madge", "line": "Psychic for Psychic: my Mr. Mime for your Abra line.", "want": { "label": "a Psychic-type", "type": "psychic" }, "give": { "label": "Mr. Mime", "species": ["mr-mime"], "levelBonus": 1 }, "minRep": 2 },
+    { "id": "t-dragon", "name": "Dragon Dan", "line": "A dragon egg's worth of trust. A pseudo-dragon's worth of trade. Give me a Fire-type.", "want": { "label": "a Fire-type", "type": "fire" }, "give": { "label": "Dratini, Gible, Axew or Deino", "species": ["dratini", "gible", "axew", "deino"], "levelBonus": 0 }, "minRep": 4, "minBadges": 1 },
+    { "id": "t-kanga", "name": "Parent Pelli", "line": "A gentle giant for a gentle gift. A Normal-type at level 15 or more.", "want": { "label": "a Normal-type, Lv.15+", "type": "normal", "minLevel": 15 }, "give": { "label": "Kangaskhan", "species": ["kangaskhan"], "levelBonus": 1 }, "minRep": 5, "minBadges": 1 },
+    { "id": "t-lapras", "name": "Ferryman Joe", "line": "Lapras for a Flying-type. She loves company, and so should you.", "want": { "label": "a Flying-type", "type": "flying" }, "give": { "label": "Lapras", "species": ["lapras"], "levelBonus": 1 }, "minRep": 6, "minBadges": 2 },
+    { "id": "t-porygon", "name": "Dr. Digit", "line": "A Porygon from the lab for an Electric-type. Do not feed it after midnight.", "want": { "label": "an Electric-type", "type": "electric" }, "give": { "label": "Porygon", "species": ["porygon"], "levelBonus": 0 }, "minRep": 3 },
+    { "id": "t-legend", "name": "The Quiet Man", "line": "I will trade a legend, but only to someone with a Pokémon that is already one. Level 40 or more.", "want": { "label": "a Pokémon at Lv.40+", "minLevel": 40 }, "give": { "label": "a Legendary Pokémon", "species": ["articuno", "zapdos", "moltres", "raikou", "entei", "suicune"], "levelBonus": 0 }, "minRep": 12, "minBadges": 4 }
+  ],
+  "posts": [
+    { "id": "p-lapras-photo", "title": "WANTED: A Water-type for a portrait", "text": "A painter wants a portrait of a Water-type in the plaza fountain. Show one in your party.", "need": { "kind": "have", "want": { "label": "a Water-type", "type": "water" } }, "effects": [{ "kind": "money", "amount": 500 }, { "kind": "attribute", "key": "charisma", "amount": 1 }], "rewardText": "₽500 and +1 Charisma", "rep": 1 },
+    { "id": "p-fire-forge", "title": "OFFER: Forge-warm hospitality", "text": "A smith pays well for a visit from a Fire-type. Show one in your party.", "need": { "kind": "have", "want": { "label": "a Fire-type", "type": "fire" } }, "effects": [{ "kind": "item", "id": "charcoal", "count": 1 }], "rewardText": "a Charcoal", "rep": 1 },
+    { "id": "p-ghost-tale", "title": "WANTED: A Ghost-type for a story night", "text": "A storyteller wants a spooky guest. Show a Ghost- or Dark-type.", "need": { "kind": "have", "want": { "label": "a Ghost-type", "type": "ghost" } }, "effects": [{ "kind": "research", "amount": 3 }], "rewardText": "3 Research Points", "rep": 1 },
+    { "id": "p-big-boy", "title": "WANTED: A heavyweight", "text": "A removal crew needs a Pokémon of 100 kg or more.", "need": { "kind": "have", "want": { "label": "a 100 kg+ Pokémon", "minWeight": 100 } }, "effects": [{ "kind": "money", "amount": 700 }], "rewardText": "₽700", "rep": 1 },
+    { "id": "p-stardust", "title": "WANTED: 1 Star Piece", "text": "A jeweller needs a Star Piece for a ring.", "need": { "kind": "item", "id": "star-piece", "count": 1 }, "effects": [{ "kind": "money", "amount": 1500 }, { "kind": "item", "id": "rare-candy", "count": 1 }], "rewardText": "₽1500 and a Rare Candy", "rep": 2 },
+    { "id": "p-proof-fights", "title": "PROOF NEEDED: 6 trainer wins", "text": "A tournament scout wants to see you have beaten 6 trainers this run.", "need": { "kind": "counter", "counter": "trainersDefeated", "n": 6, "label": "6 trainers beaten this run" }, "effects": [{ "kind": "item", "id": "exp-candy-m", "count": 1 }], "rewardText": "an Exp. Candy M", "rep": 2 },
+    { "id": "p-proof-badge", "title": "PROOF NEEDED: A badge", "text": "A guard will let you into the VIP stall with one Gym badge.", "need": { "kind": "badges", "n": 1 }, "effects": [{ "kind": "money", "amount": 800 }], "rewardText": "₽800 as a welcome gift", "rep": 1 },
+    { "id": "p-trade-egg", "title": "OFFER: An egg for a favour", "text": "A farmer will hand over an egg for a fully evolved Pokémon to look at.", "need": { "kind": "have", "want": { "label": "a fully evolved Pokémon", "stage": 3 } }, "effects": [{ "kind": "egg" }], "rewardText": "an Egg", "rep": 2, "minBadges": 1 },
+    { "id": "p-mon-gift", "title": "WANTED: A Pokémon to join a travelling group", "text": "A young trainer wants to adopt a Pokémon of 40 kg or less that you are willing to part with.", "need": { "kind": "mon", "want": { "label": "a Pokémon of 40 kg or less", "maxWeight": 40 } }, "effects": [{ "kind": "money", "amount": 1200 }, { "kind": "attribute", "key": "goodEvil", "amount": 1 }], "rewardText": "₽1200 and +1 Good", "rep": 2 },
+    { "id": "p-berry-bounty", "title": "WANTED: 2 Oran Berries", "text": "A kitchen needs two Oran Berries for the soup.", "need": { "kind": "item", "id": "oran-berry", "count": 2 }, "effects": [{ "kind": "money", "amount": 600 }], "rewardText": "₽600", "rep": 1 },
+    { "id": "p-wild-proof", "title": "PROOF NEEDED: 10 wild Pokémon beaten", "text": "A naturalist wants proof you have beaten 10 wild Pokémon this run.", "need": { "kind": "counter", "counter": "wildDefeated", "n": 10, "label": "10 wild Pokémon beaten" }, "effects": [{ "kind": "item", "id": "ultra-ball", "count": 2 }], "rewardText": "2 Ultra Balls", "rep": 1 },
+    { "id": "p-flying-mail", "title": "WANTED: A Flying-type courier", "text": "A mail room needs a Flying-type to look at the route.", "need": { "kind": "have", "want": { "label": "a Flying-type", "type": "flying" } }, "effects": [{ "kind": "item", "id": "air-mail", "count": 1 }, { "kind": "money", "amount": 400 }], "rewardText": "an Air Mail and ₽400", "rep": 1 }
+  ],
+  "errands": [
+    { "id": "e-pip-parcel", "giver": "pip", "title": "Win three fights for a client", "text": "A client wants to see you beat 3 trainers on your way out. Prove it, come back.", "need": { "kind": "counter", "counter": "trainersDefeated", "n": 3, "label": "3 more trainers beaten" }, "effects": [{ "kind": "money", "amount": 1000 }, { "kind": "item", "id": "super-potion", "count": 2 }], "rewardText": "₽1000 and 2 Super Potions", "rep": 2, "friendship": 2 },
+    { "id": "e-mabel-berry", "giver": "mabel", "title": "Bring me three Sitrus Berries", "text": "A wedding needs Sitrus Berries. Any three will do.", "need": { "kind": "item", "id": "sitrus-berry", "count": 3 }, "effects": [{ "kind": "item", "id": "berry-pots" }, { "kind": "money", "amount": 500 }], "rewardText": "Berry Pots and ₽500", "rep": 2, "unlocks": "discount:mabel" },
+    { "id": "e-hollis-fit", "giver": "hollis", "title": "Test a held item", "text": "Win two battles with a Pokémon of any kind holding an item and I will take your word for it.", "need": { "kind": "counter", "counter": "battlesWon", "n": 2, "label": "2 more battles won" }, "effects": [{ "kind": "item", "id": "focus-sash" }], "rewardText": "a Focus Sash", "rep": 2 },
+    { "id": "e-tilda-catch", "giver": "tilda", "title": "Catch something with my ball", "text": "Catch two wild Pokémon on your way and tell me how the balls handled.", "need": { "kind": "counter", "counter": "pokemonCaught", "n": 2, "label": "2 more Pokémon caught" }, "effects": [{ "kind": "item", "id": "quick-ball", "count": 3 }], "rewardText": "3 Quick Balls", "rep": 2, "unlocks": "discount:tilda" },
+    { "id": "e-brandt-test", "giver": "brandt", "title": "Field-test a booster", "text": "Win four battles and report on the field kit.", "need": { "kind": "counter", "counter": "battlesWon", "n": 4, "label": "4 more battles won" }, "effects": [{ "kind": "item", "id": "x-attack", "count": 3 }, { "kind": "attribute", "key": "strength", "amount": 1 }], "rewardText": "3 X Attack and +1 Strength", "rep": 2 },
+    { "id": "e-fenwick-stone", "giver": "fenwick", "title": "An evolution for my notes", "text": "Evolve any Pokémon so I can see it. I will not touch.", "need": { "kind": "counter", "counter": "evolutions", "n": 1, "label": "1 evolution" }, "effects": [{ "kind": "research", "amount": 5 }, { "kind": "item", "id": "dubious-disc" }], "rewardText": "5 Research Points and a Dubious Disc", "rep": 3, "unlocks": "trade:t-dragon" },
+    { "id": "e-dottie-pearl", "giver": "dottie", "title": "Find me a pearl", "text": "A Pearl or a Big Pearl, for the front window.", "need": { "kind": "item", "id": "pearl", "count": 1 }, "effects": [{ "kind": "item", "id": "star-piece" }], "rewardText": "a Star Piece", "rep": 1 },
+    { "id": "e-ozzy-fossil", "giver": "ozzy", "title": "Dig up a Rare Bone", "text": "Hand me a Rare Bone. I will not say what it is for.", "need": { "kind": "item", "id": "rare-bone", "count": 1 }, "effects": [{ "kind": "item", "id": "odd-keystone" }, { "kind": "attribute", "key": "intelligence", "amount": 1 }], "rewardText": "an Odd Keystone and +1 Intelligence", "rep": 2, "unlocks": "alley" },
+    { "id": "e-gus-swap", "giver": "gus", "title": "A fair trade, once", "text": "Make one trade in a Trade Post or an event on your way. I want to hear about it.", "need": { "kind": "counter", "counter": "tradesMade", "n": 1, "label": "1 trade made" }, "effects": [{ "kind": "money", "amount": 900 }], "rewardText": "₽900", "rep": 2, "unlocks": "trade:t-lapras" },
+    { "id": "e-vera-gym", "giver": "vera", "title": "Win a badge for the board", "text": "A notice for the Gym leader needs to be delivered. Win a badge and I will count it as delivered.", "need": { "kind": "badges", "n": 2 }, "effects": [{ "kind": "money", "amount": 1500 }, { "kind": "attribute", "key": "charisma", "amount": 1 }], "rewardText": "₽1500 and +1 Charisma", "rep": 3 },
+    { "id": "e-elda-heal", "giver": "elda", "title": "Take a rest at a heal stop", "text": "Use a healing stop on your road and report that nobody got worse.", "need": { "kind": "counter", "counter": "healStopsUsed", "n": 1, "label": "1 healing stop used" }, "effects": [{ "kind": "item", "id": "full-heal", "count": 2 }, { "kind": "friendship", "amount": 1, "who": "party" }], "rewardText": "2 Full Heals and friendship", "rep": 1 },
+    { "id": "e-lulu-friend", "giver": "lulu", "title": "Show me a Pokémon who loves you", "text": "A Pokémon at the top of the friendship scale, please. I want to groom it.", "need": { "kind": "have", "want": { "label": "any Pokémon at Lv.20+", "minLevel": 20 } }, "effects": [{ "kind": "item", "id": "heart-scale", "count": 2 }, { "kind": "attribute", "key": "love", "amount": 1 }], "rewardText": "2 Heart Scales and +1 Love", "rep": 1 },
+    { "id": "e-imani-sparring", "giver": "imani", "title": "Beat three before you rest", "text": "Show me your team can win three fights in a row. Count from now.", "need": { "kind": "counter", "counter": "battlesWon", "n": 3, "label": "3 more battles won" }, "effects": [{ "kind": "item", "id": "muscle-band" }, { "kind": "attribute", "key": "speed", "amount": 1 }], "rewardText": "a Muscle Band and +1 Speed", "rep": 2 },
+    { "id": "e-nox-favour", "giver": "nox", "title": "Keep your mouth shut", "text": "Nothing to do. Tell nobody about the alley and I will tell you what it holds. Return with a clean record: no evil.", "need": { "kind": "badges", "n": 1 }, "effects": [{ "kind": "money", "amount": 800 }], "rewardText": "₽800 'for the trouble'", "rep": 2, "unlocks": "alley" }
+  ],
+  "club": [
+    { "id": "friendly", "name": "Friendly Match", "text": "One casual match against a visiting trainer. A loss only costs you pride.", "fee": 300, "rounds": 1, "size": 2, "levelBonus": -1, "minRep": 0, "roundPrize": [], "prize": [{ "kind": "money", "amount": 900 }, { "kind": "friendship", "amount": 1, "who": "party" }], "prizeText": "₽900 and friendship", "rep": 1 },
+    { "id": "streak", "name": "Short Streak", "text": "Three matches back to back. Your team is not healed in between.", "fee": 600, "rounds": 3, "size": 3, "levelBonus": 0, "minRep": 2, "roundPrize": [{ "kind": "money", "amount": 400 }], "prize": [{ "kind": "item", "id": "hyper-potion", "count": 2 }, { "kind": "attribute", "key": "strength", "amount": 1 }], "prizeText": "₽400 each round, then 2 Hyper Potions and +1 Strength", "rep": 2 },
+    { "id": "themed", "name": "Themed Cup", "text": "Today's cup is limited to one type of foe, chosen by the board. A good place to test a counter.", "fee": 500, "rounds": 2, "size": 3, "levelBonus": 1, "themed": true, "minRep": 4, "roundPrize": [{ "kind": "money", "amount": 500 }], "prize": [{ "kind": "itemFrom", "ids": ["life-orb", "choice-scarf", "focus-sash", "expert-belt", "leftovers"] }, { "kind": "research", "amount": 3 }], "prizeText": "₽500 each round, then a held item and 3 Research Points", "rep": 2, "minBadges": 1 },
+    { "id": "champion", "name": "Challenge Team", "text": "A veteran with a gym leader's signature team. The prize is serious.", "fee": 1200, "rounds": 1, "size": 4, "levelBonus": 3, "boss": true, "minRep": 10, "roundPrize": [], "prize": [{ "kind": "item", "id": "rare-candy", "count": 2 }, { "kind": "itemFrom", "ids": ["life-orb", "choice-band", "choice-specs", "choice-scarf", "focus-sash"] }, { "kind": "attribute", "key": "charisma", "amount": 1 }], "prizeText": "2 Rare Candies, a held item and +1 Charisma", "rep": 4, "minBadges": 2 }
+  ],
+  "alley": { "keeper": "nox", "entry": "Someone has to vouch for you, or you have to look like a person who wouldn't mind.", "offers": [
+    { "id": "stolen-box", "title": "Stolen shipment", "text": "A crate off a truck. Maybe good gear, maybe a Mimic. Cheap.", "cost": 1200, "effects": [{ "kind": "itemFrom", "ids": ["life-orb", "choice-band", "choice-specs", "focus-sash", "rare-candy", "max-revive"], "count": 1 }], "risk": 0.3, "trouble": [{ "kind": "loseItem" }, { "kind": "money", "amount": -300 }], "troubleText": "The crate was tagged. Somebody took something back.", "evil": -1 },
+    { "id": "forbidden-egg", "title": "A forbidden egg", "text": "Don't ask where it came from. Hatches into something strong.", "cost": 2000, "effects": [{ "kind": "egg", "shinyMultiplier": 2 }], "risk": 0.25, "trouble": [{ "kind": "damage", "share": 0.3 }], "troubleText": "The seller's guard dogs have opinions about this.", "evil": -2, "minRep": 10 },
+    { "id": "suspicious-contract", "title": "A suspicious contract", "text": "Take ₽3000 now. Pay it back double when the stage ends. The fine print is tiny.", "cost": 0, "effects": [{ "kind": "money", "amount": 3000 }], "risk": 0.5, "trouble": [{ "kind": "money", "amount": -1500 }], "troubleText": "The debt collectors are quick today.", "evil": -1 },
+    { "id": "black-ball", "title": "A ball with no stamp", "text": "A Master Ball, or something shaped like one.", "cost": 5000, "effects": [{ "kind": "item", "id": "master-ball" }], "risk": 0.45, "trouble": [{ "kind": "status", "status": "poison" }, { "kind": "money", "amount": -500 }], "troubleText": "It was a fake. A very loud fake.", "evil": -2, "minRep": 12 },
+    { "id": "lost-pokemon", "title": "A no-questions Pokémon", "text": "A shiny-looking Pokémon with no owner. It really, really wants to be yours.", "cost": 1500, "effects": [{ "kind": "join", "shinyMultiplier": 3 }], "risk": 0.2, "trouble": [{ "kind": "friendship", "amount": -1, "who": "party" }], "troubleText": "Your Pokémon don't like what they just saw.", "evil": -3, "minRep": 14 },
+    { "id": "fence-goods", "title": "Fence your finds", "text": "Sell off a Valuable at a premium and no receipt. Nox pays well for a Star Piece.", "cost": 0, "effects": [{ "kind": "loseItem", "id": "star-piece" }, { "kind": "money", "amount": 2500 }], "risk": 0.15, "trouble": [{ "kind": "money", "amount": -600 }], "troubleText": "A tax inspector was watching.", "evil": -1 }
+  ] },
+  "services": [
+    { "id": "heal", "name": "Nurse's Tent", "keeper": "elda", "text": "Full HP, no status, full PP. One treatment per plaza.", "cost": 600, "limit": 1 },
+    { "id": "groom", "name": "Grooming Stall", "keeper": "lulu", "text": "A brush, a bath, a bow. Your party gains friendship.", "cost": 400, "limit": 1 },
+    { "id": "appraise", "name": "Appraisal Desk", "keeper": "ozzy", "text": "Have a held-item cache valued: the first valuable you hand over sells for double.", "cost": 0, "limit": 1 },
+    { "id": "advice", "name": "Team Advice", "keeper": "imani", "text": "Coach Imani reads your party against the gym leader on this stage.", "cost": 300, "limit": 1 }
+  ],
+  "events": [
+    { "id": "calm", "name": "A Quiet Day", "text": "Nothing special: just a good, busy day in the plaza.", "weight": 5 },
+    { "id": "festival", "name": "Harvest Festival", "text": "Bunting is up. Stalls take 15% off and Mabel is giving away berries.", "weight": 2, "priceScale": 0.85, "gift": [{ "kind": "item", "id": "oran-berry", "count": 2 }], "giftText": "A free basket of Oran Berries" },
+    { "id": "tournament", "name": "Open Tournament", "text": "The Battle Club is packed. Fees are half price and prizes pay double money.", "weight": 2, "minBadges": 1, "clubFee": 0.5 },
+    { "id": "auction", "name": "Plaza Auction", "text": "An auctioneer is selling off a hall of oddities. Stalls charge a little more but sell better stock.", "weight": 1.5, "priceScale": 1.2, "minBadges": 1 },
+    { "id": "emergency", "name": "Emergency", "text": "A crowd crush! Everybody helps. Services are free today and everyone notices who stepped up.", "weight": 1, "serviceScale": 0, "repBonus": 2 },
+    { "id": "celebrity", "name": "Visiting Celebrity", "text": "A famous trainer is shaking hands. Everyone is on their best behaviour.", "weight": 1.2, "minBadges": 2, "gift": [{ "kind": "attribute", "key": "charisma", "amount": 1 }], "giftText": "An autograph, and +1 Charisma", "repBonus": 1 },
+    { "id": "evacuation", "name": "Evacuation", "text": "Sirens! Stalls have shut and everyone is leaving in orderly lines. Relief workers hand out supplies.", "weight": 0.6, "minBadges": 2, "closed": true, "gift": [{ "kind": "item", "id": "max-potion", "count": 1 }, { "kind": "money", "amount": 400 }], "giftText": "A relief pack: a Max Potion and ₽400" }
+  ],
+  "caravans": [
+    { "id": "circus", "name": "The Ringmaster's Caravan", "text": "A travelling circus of Pokémon performers. They stay for one visit.", "offers": [
+      { "id": "show", "title": "Watch the show", "text": "A joyful hour. Your whole party gains friendship.", "cost": 300, "effects": [{ "kind": "friendship", "amount": 2, "who": "party" }] },
+      { "id": "juggler", "title": "Buy the juggling balls", "text": "Six Poké Balls, slightly sticky.", "cost": 800, "effects": [{ "kind": "item", "id": "poke-ball", "count": 6 }, { "kind": "item", "id": "great-ball", "count": 2 }] } ] },
+    { "id": "scholars", "name": "Scholars' Wagon", "text": "A wagon of researchers with a wall of notes.", "minBadges": 1, "offers": [
+      { "id": "lecture", "title": "Attend a lecture", "text": "+1 Intelligence and 4 Research Points.", "cost": 400, "effects": [{ "kind": "attribute", "key": "intelligence", "amount": 1 }, { "kind": "research", "amount": 4 }] },
+      { "id": "scan", "title": "Commission a field scan", "text": "Reveals every hidden \"?\" stop on this stage.", "cost": 700, "effects": [{ "kind": "revealStops" }] } ], "followUp": "caravan:scholars" },
+    { "id": "gypsy", "name": "Fortune Teller's Cart", "text": "A purple cart with a lamp on a hook.", "offers": [
+      { "id": "reading", "title": "Have your fortune read", "text": "A reading. +1 Luck.", "cost": 600, "effects": [{ "kind": "attribute", "key": "luck", "amount": 1 }] },
+      { "id": "charm", "title": "Buy a charm", "text": "A Luck Incense, guaranteed or your money back.", "cost": 1200, "effects": [{ "kind": "item", "id": "luck-incense" }] } ] },
+    { "id": "exchange", "name": "Merchants' Exchange", "text": "Traders from three regions with a list of swaps.", "minBadges": 2, "offers": [
+      { "id": "swap-berries", "title": "Swap 4 berries for a stone", "text": "Hand over four Oran Berries for a random evolution stone.", "cost": 0, "need": { "kind": "item", "id": "oran-berry", "count": 4 }, "effects": [{ "kind": "itemFrom", "ids": ["fire-stone", "water-stone", "thunder-stone", "leaf-stone", "moon-stone", "sun-stone"] }] },
+      { "id": "premium", "title": "Premium crate", "text": "A rare held item, no questions.", "cost": 2500, "effects": [{ "kind": "itemFrom", "ids": ["life-orb", "choice-band", "choice-specs", "choice-scarf", "leftovers"] }] } ] }
+  ],
+  "factions": [
+    { "id": "silph", "name": "Silph Co.", "rep": "Salesperson", "text": "A booth with free pens and a demo of the new scope.", "rival": "rocket", "offers": [
+      { "id": "demo", "title": "Try the demo", "text": "A free sample: 3 Research Points.", "cost": 0, "effects": [{ "kind": "research", "amount": 3 }] },
+      { "id": "buy-scope", "title": "Buy a Silph Scope", "text": "Sees hidden stops. Pricey.", "cost": 2200, "effects": [{ "kind": "item", "id": "silph-scope" }], "minRep": 6 } ] },
+    { "id": "rocket", "name": "Team Rocket", "rep": "Recruiter", "text": "A man in a black cap and an even blacker smile.", "rival": "rangers", "offers": [
+      { "id": "recruit", "title": "Hear the pitch", "text": "A bag of cash for a small favour. +₽1500, -1 Good.", "cost": 0, "effects": [{ "kind": "money", "amount": 1500 }, { "kind": "attribute", "key": "goodEvil", "amount": -1 }], "good": -1 },
+      { "id": "bargain", "title": "Buy the 'bargain' crate", "text": "A held item with questionable origin.", "cost": 1000, "effects": [{ "kind": "itemFrom", "ids": ["choice-band", "choice-specs", "life-orb", "focus-sash"] }, { "kind": "attribute", "key": "goodEvil", "amount": -1 }], "good": -1, "minRep": 4 } ] },
+    { "id": "rangers", "name": "Pokémon Rangers", "rep": "Ranger", "text": "A friendly ranger at a booth full of leaflets and a very sleepy Pachirisu.", "rival": "rocket", "offers": [
+      { "id": "volunteer", "title": "Volunteer a day", "text": "Help clean the plaza. +1 Good and a free Full Heal.", "cost": 0, "effects": [{ "kind": "attribute", "key": "goodEvil", "amount": 1 }, { "kind": "item", "id": "full-heal" }], "good": 1 },
+      { "id": "gear", "title": "Buy ranger gear", "text": "A Repel pack and a Town Map.", "cost": 600, "effects": [{ "kind": "item", "id": "max-repel", "count": 2 }, { "kind": "item", "id": "town-map" }], "good": 0 } ] },
+    { "id": "league", "name": "League Scouts", "rep": "Scout", "text": "A neat lanyard and a neat clipboard.", "offers": [
+      { "id": "sign", "title": "Sign the register", "text": "Register your run. +1 Charisma.", "cost": 0, "effects": [{ "kind": "attribute", "key": "charisma", "amount": 1 }] },
+      { "id": "kit", "title": "Buy the contender's kit", "text": "A training bundle for the long road.", "cost": 1500, "effects": [{ "kind": "item", "id": "rare-candy" }, { "kind": "item", "id": "full-heal", "count": 2 }], "minRep": 6 } ] }
+  ],
+  "rumors": [
+    { "id": "r-legend-1", "text": "A roaming legend was seen near the coast. Fishers say the sea went quiet.", "source": "hearsay" },
+    { "id": "r-legend-2", "text": "Somebody found feathers in the plaza fountain. Three different colours.", "source": "secondhand" },
+    { "id": "r-gang-1", "text": "Men in black are buying every Repel in the district.", "source": "firsthand" },
+    { "id": "r-gang-2", "text": "A hideout was sighted near the old rail yard, but nobody has been back since.", "source": "hearsay", "minBadges": 1 },
+    { "id": "r-spawn-1", "text": "A Pokémon with an odd colour was spotted in the tall grass by the north gate.", "source": "secondhand" },
+    { "id": "r-spawn-2", "text": "They say the swarm patch east of here has doubled this week.", "source": "hearsay" },
+    { "id": "r-suspect-1", "text": "A trainer with no Pokémon but a big bag has been hanging round the shops.", "source": "firsthand" },
+    { "id": "r-suspect-2", "text": "That quiet kid by the bench has beaten every trainer in town. Twice.", "source": "secondhand" },
+    { "id": "r-gym-1", "text": "The gym leader has changed their lineup three times this month.", "source": "hearsay", "minBadges": 1 },
+    { "id": "r-gym-2", "text": "Rumour has it the gym leader only eats berries the morning of a battle.", "source": "hearsay" },
+    { "id": "r-hidden-1", "text": "Folk who take the left fork after the plaza say the road bends somewhere it shouldn't.", "source": "secondhand" },
+    { "id": "r-hidden-2", "text": "A traveller left a bag by the path and never came back for it.", "source": "firsthand" },
+    { "id": "r-treasure-1", "text": "Pearls have been washing up under the bridge. Locals keep it quiet.", "source": "secondhand" },
+    { "id": "r-rival-1", "text": "Your rival was seen buying potions, and laughing a little too loud.", "source": "firsthand", "minBadges": 1 }
+  ],
+  "reactions": [
+    { "type": "grass", "at": "mabel", "text": "Your Grass-type nuzzles Mabel's basket and will not let go." },
+    { "type": "water", "at": "tilda", "text": "Your Water-type spins in the fountain and sprays Tilda's shelf." },
+    { "type": "fire", "at": "brandt", "text": "Your Fire-type takes up a position beside Sergeant Brandt, who nods in approval." },
+    { "type": "electric", "at": "pip", "text": "Your Electric-type and Pip race round the plaza twice. It wins." },
+    { "type": "ghost", "at": "ozzy", "text": "Your Ghost-type floats into Ozzy's stall and refuses to leave. Ozzy looks delighted and a bit nervous." },
+    { "type": "dark", "at": "nox", "text": "Your Dark-type sniffs the way to the alley and stares at the back wall." },
+    { "type": "normal", "at": "gus", "text": "Your Normal-type sits on Gus's feet. He doesn't mind." },
+    { "type": "psychic", "at": "fenwick", "text": "Your Psychic-type stares at Professor Fenwick, who stares back. Neither blinks." },
+    { "type": "fairy", "at": "dottie", "text": "Your Fairy-type is thrilled by Dottie's shelves and picks out a ribbon for you." },
+    { "type": "fighting", "at": "imani", "text": "Your Fighting-type squares up to Coach Imani for a handshake. Her grip wins." },
+    { "type": "dark", "at": "rocket", "text": "Your Dark-type growls at the Rocket recruiter's booth." },
+    { "type": "normal", "at": "rival", "text": "Your Pokémon recognise your rival's footsteps before you do." },
+    { "type": "normal", "at": "foe", "text": "Your Pokémon give an old opponent a long look: not a glare, not quite a greeting." }
+  ],
+  "gatherings": {
+    "early": ["Everyone is still sizing each other up. The plaza has the buzz of a first day.", "Banners are going up; there is a big week ahead and nobody knows what comes first."],
+    "preBoss": ["The gym leader's name is on every lip. People are gossiping about their ace.", "Trainers are practising in corners, nervous about what's ahead.", "Even the stalls have gone a bit quiet: something big is coming."],
+    "postBadge": ["People pat your back and ask about the gym. Your badge is the talk of the plaza.", "Somebody is telling the story of your last battle, and getting it mostly right."],
+    "late": ["The plaza is full of rare faces: these are the people who made it this far.", "An old trainer nods at you and says nothing, which is the highest praise."]
+  }
+}

@@ -114,10 +114,12 @@ import { pickStones } from './expedition/flow';
 import { gainBattleMaterials, RARE_TOKEN_EFFECTS } from './crafting';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { placeServiceStop } from './services/gate';
+import { placePlaza } from './plaza/gate';
+import { noteFoe, plazaClubLost, plazaClubWon } from './plaza/flow';
 import { allyLevel, applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
-import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
+import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState, freshPlaza } from './state';
 import { itemSlotLimit } from './trainerPerks';
 import { applyTrainerTier, readTrainerMemory } from './trainerTiers';
 import { getTheme, pickGymLeader, pickTheme, typesPool, wildEligibleSpecies } from './themes';
@@ -239,6 +241,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     usedThemes: [],
     usedLeaders: [],
     materials: {},
+    plaza: freshPlaza(),
     badges: [],
     ...(opts.ownedTrainers?.length ? { itemCounters: Object.fromEntries(opts.ownedTrainers.map((id) => [`owned:${id}`, 1])) } : {}),
     campaignId: campaign.id,
@@ -492,6 +495,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   placeExpeditionGate(content, run);
   placeMinigameStop(content, run);
   placeServiceStop(run);
+  placePlaza(run);
   run.battle = null;
   run.phase = 'map';
   takeCheckpoint(run);
@@ -1537,6 +1541,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'event') throw new Error('Make a choice at the event (eventView, then chooseEvent)');
   if (side.kind === 'totem') throw new Error('Review the Totem first (totemPreview), then enterTotem');
   if (side.kind === 'service') throw new Error('Use the service menu (serviceView, then useService)');
+  if (side.kind === 'plaza') throw new Error('Use the plaza menu (plazaView, then usePlaza)');
   const run = structuredClone(current);
   const runSide = findNode(run.stage!.map, stage.current).sides.find((s) => s.id === sideId)!;
   if (side.kind === 'heal' && noHealStops(run.rules)) return { run: current, message: 'Your No Rest contract forbids healing stops.' };
@@ -1739,6 +1744,8 @@ export interface TurnResult {
   cues: PresentationCue[];
   /** A raid was lost or timed out: the party is back on its feet and the map is next (the run goes on). */
   raidFailed?: boolean;
+  /** A Battle Club match was lost: a friendly loss, nobody is out. */
+  clubLost?: boolean;
   /** The whole party fainted but the rules sent the run back to its checkpoint. */
   wiped?: boolean;
   /** A narrative rival defeat (M12): the battle was lost for the story, the party is healed and the run goes on. Never a game over. */
@@ -1895,6 +1902,11 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
     return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
+  }
+  if (battle.outcome === 'lose' && battle.event?.eventId === 'plaza:club') {
+    plazaClubLost(content, run);
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end: null, defeated: false, cues, drama, clubLost: true };
   }
   if (battle.outcome === 'lose' && battle.narrative && getNarrativeDef(battle.narrative.id)) {
     const def = getNarrativeDef(battle.narrative.id)!;
@@ -2232,6 +2244,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
       if (run.party.length === 1) count(run, 'bossWinsSolo');
     } else {
       count(run, battle.kind === 'wild' ? 'wildDefeated' : 'trainersDefeated');
+      if (battle.kind === 'trainer' && battle.trainer && !battle.trainer.leaderId && !battle.event && !battle.rival) noteFoe(run, battle.trainer.name, battle.trainer.classId);
     }
   }
   // Encore! Hype carries between battles and resets after a boss battle.
@@ -2283,7 +2296,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   if (leadAsk) run.pending.push({ kind: 'askLead', ...leadAsk });
   // An event battle you won pays its own rewards.
   const chained = outcome === 'win' && !!battle.event && eventChainNext(content, run, battle.event);
-  const eventRewards = outcome === 'win' && battle.event && !chained ? eventBattleWon(content, run, battle.event) : [];
+  const eventRewards = outcome === 'win' && battle.event && !chained ? (battle.event.eventId === 'plaza:club' ? plazaClubWon(content, run) : eventBattleWon(content, run, battle.event)) : [];
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = chained ? 'eventChain' : battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);

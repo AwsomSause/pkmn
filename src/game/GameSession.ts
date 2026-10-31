@@ -29,6 +29,7 @@ import { claim } from '../core/quests';
 import { claimCollectionMilestones } from '../core/collection';
 import * as Run from '../core/run';
 import * as Svc from '../core/services/flow';
+import * as Plz from '../core/plaza/flow';
 import type { RulesChoice } from '../core/rules';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, type LoadResult } from '../save/saveManager';
@@ -296,6 +297,21 @@ export class GameSession {
     this.run = result.run;
     this.persistRun();
     return result.message;
+  }
+
+  plazaView(sideId: string): Plz.PlazaView {
+    return Plz.plazaView(this.content, this.requireRun(), sideId);
+  }
+
+  plazaSection(sideId: string, section: Plz.PlazaSectionId): Plz.PlazaSectionView {
+    return Plz.sectionView(this.content, this.requireRun(), sideId, section);
+  }
+
+  usePlaza(sideId: string, section: Plz.PlazaSectionId, optionId: string): Plz.PlazaResult {
+    const result = Plz.usePlaza(this.content, this.requireRun(), sideId, section, optionId);
+    this.run = result.run;
+    this.persistRun();
+    return result;
   }
 
   buyItem(itemId: string): string {

@@ -7,6 +7,7 @@ import type * as Expedition from '../../src/core/expedition/flow.ts';
 import type * as Minigame from '../../src/core/minigame/flow.ts';
 import type * as Events from '../../src/core/events.ts';
 import type * as Services from '../../src/core/services/flow.ts';
+import type * as Plaza from '../../src/core/plaza/flow.ts';
 import type * as Auto from '../../tests/unit/autoplay.ts';
 import type { Content } from '../../src/core/contentSchema.ts';
 import type { RunState } from '../../src/core/state.ts';
@@ -17,6 +18,7 @@ export interface SideMods {
   mini: typeof Minigame;
   events: typeof Events;
   services: typeof Services;
+  plaza: typeof Plaza;
   auto: typeof Auto;
 }
 
@@ -95,6 +97,18 @@ export function sideBot(m: SideMods, content: Content, seen: Set<string>, findin
             const view = m.services.serviceView(content, run, side.id);
             const option = view.options.find((o) => o.problem === null);
             if (option) run = m.services.useService(content, run, side.id, option.id).run;
+            break;
+          }
+          case 'plaza': {
+            // Try the first affordable option of every area (a club match is played out).
+            for (const sec of m.plaza.plazaView(content, run, side.id).sections) {
+              if (run.phase !== 'map') break;
+              const option = m.plaza.sectionView(content, run, side.id, sec.id).options.find((o) => o.problem === null && o.cost <= run.money / 4);
+              if (!option) continue;
+              const res = m.plaza.usePlaza(content, run, side.id, sec.id, option.id);
+              run = res.run;
+              if (run.phase !== 'map') run = drive(run, (r) => r.phase === 'map');
+            }
             break;
           }
           case 'fish': {

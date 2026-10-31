@@ -652,11 +652,35 @@ export const BattleStateSchema = z.object({
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 
+// ---------- the Trainer Plaza (core/plaza) ----------
+
+export const PlazaStateSchema = z.object({
+  /** How well the plaza knows you: grows with trades, errands, fair deals and club matches. */
+  rep: z.number().int().min(0).default(0),
+  /** Friendship with each regular (plaza.json `regulars`). */
+  friends: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Unlocks: "alley", "trade:<trader id>", "discount:<regular id>", "caravan:<id>". */
+  flags: z.array(z.string()).default([]),
+  /** Errands taken and not finished; `base` is the counter's value when you took it. */
+  errands: z.array(z.object({ id: z.string(), base: z.number().int().min(0), stage: z.string() })).default([]),
+  /** Errands and board notices finished for good. */
+  done: z.array(z.string()).default([]),
+  /** Things done at this stage's plaza: "<stage key>:<what>" counts. */
+  used: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Trainers you fought earlier in the run, for "past enemies return". */
+  foes: z.array(z.object({ name: z.string(), classId: z.string(), won: z.boolean() })).default([]),
+  /** A Battle Club streak in progress. */
+  club: z.object({ stage: z.string(), format: z.string(), round: z.number().int().min(0), theme: z.string().nullable().default(null) }).nullable().default(null),
+  visits: z.number().int().min(0).default(0),
+});
+export type PlazaState = z.infer<typeof PlazaStateSchema>;
+export const freshPlaza = (): PlazaState => PlazaStateSchema.parse({});
+
 // ---------- stage maps ----------
 
 export const SideStopSchema = z.object({
   id: z.string(),
-  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition', 'minigame', 'service']),
+  kind: z.enum(['heal', 'shop', 'fish', 'raid', 'totem', 'event', 'expedition', 'minigame', 'service', 'plaza']),
   /** A raid den: which raid (raids.json) waits here. */
   raidId: z.string().optional(),
   /** A raid boss that escaped earlier and is back, stronger. */
@@ -1014,6 +1038,8 @@ export const RunStateSchema = z.object({
   totems: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), done: z.array(z.string()), unlocks: z.array(z.string()), research: z.number().int().min(0) }).default(() => ({ entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 })),
   /** Crafting materials held (material id → count; core/crafting.ts). Run-only. */
   materials: z.record(z.string(), z.number().int().min(0)).default(() => ({})),
+  /** The Trainer Plaza's memory (core/plaza). */
+  plaza: PlazaStateSchema.default(freshPlaza),
   raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()), /** Raids whose boss escaped (the timer ran out); each comes back as a stronger den in a later stage. */ escaped: z.array(z.string()).default([]), /** The best raid tier won in earlier runs (older saves: every tier open). */ unlockedTier: z.number().int().min(0).max(6).default(6) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6, escaped: [] })),
   /** Revisit This Timeline (core/timeline/genesis.ts): set only on a replay of a lost run, which saves in its own slot and never touches the profile. */
   timeline: z.object({ replayId: z.string(), originRunId: z.string(), attempt: z.number().int().min(1) }).optional(),

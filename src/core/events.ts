@@ -510,7 +510,7 @@ function itemName(content: Content, id: string): string {
   return content.catalog.get(id)?.name ?? content.items.get(id)?.name ?? id;
 }
 
-function effectWords(content: Content, e: EventEffect): string {
+export function effectWords(content: Content, e: EventEffect): string {
   switch (e.kind) {
     case 'money':
       return e.amount >= 0 ? `+₽${e.amount}` : `−₽${-e.amount}`;
@@ -639,7 +639,7 @@ export function isGiftable(content: Content, id: string): boolean {
 }
 
 /** Applies one effect (mutates `run`) and says what changed, or '' when nothing did. */
-function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, tradeUid?: string): string {
+export function applyEffect(content: Content, run: RunState, e: EventEffect, rng: Rng, tradeUid?: string): string {
   switch (e.kind) {
     case 'money': {
       const bonus = e.amount > 0 ? scavengerBonus(content, run.licenses, rng) : 0;
@@ -910,6 +910,12 @@ export function eventChainNext(content: Content, run: RunState, event: EventBatt
   if (!battle || step + 1 >= battle.chain) return false;
   run.eventChain = { eventId: event.eventId, choiceIndex: event.choiceIndex, sideId: event.sideId, success: event.success, step: step + 1 };
   return true;
+}
+
+/** Starts a Battle Club match (core/plaza): an event battle at the plaza's node, with the plaza's own win handling. */
+export function startClubBattle(content: Content, run: RunState, b: EventBattle, rng: Rng, event: EventBattleRef): void {
+  const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
+  startEventBattle(content, run, node, b, rng, event);
 }
 
 /** After an event battle you won: its `win` effects (mutates `run`). Returns the changes in words. */

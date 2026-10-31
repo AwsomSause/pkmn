@@ -14,6 +14,7 @@ import type * as Expedition from '../src/core/expedition/flow.ts';
 import type * as Minigame from '../src/core/minigame/flow.ts';
 import type * as Events from '../src/core/events.ts';
 import type * as Services from '../src/core/services/flow.ts';
+import type * as Plaza from '../src/core/plaza/flow.ts';
 import { closeModules, loadModule } from './lib/gameModules.ts';
 import { sideBot, type SideFinding } from './lib/sideBot.ts';
 
@@ -21,7 +22,7 @@ const { autoplay } = await loadModule<typeof Auto>('/tests/unit/autoplay.ts');
 const { RUN_RULES, rulesProblem } = await loadModule<typeof Rules>('/src/core/rules.ts');
 const { buildContent } = await loadModule<typeof Data>('/src/data/index.ts');
 const { Rng, hashSeed } = await loadModule<typeof RngMod>('/src/core/rng.ts');
-const sideMods = { run: await loadModule<typeof RunMod>('/src/core/run.ts'), exp: await loadModule<typeof Expedition>('/src/core/expedition/flow.ts'), mini: await loadModule<typeof Minigame>('/src/core/minigame/flow.ts'), events: await loadModule<typeof Events>('/src/core/events.ts'), services: await loadModule<typeof Services>('/src/core/services/flow.ts'), auto: await loadModule<typeof Auto>('/tests/unit/autoplay.ts') };
+const sideMods = { run: await loadModule<typeof RunMod>('/src/core/run.ts'), exp: await loadModule<typeof Expedition>('/src/core/expedition/flow.ts'), mini: await loadModule<typeof Minigame>('/src/core/minigame/flow.ts'), events: await loadModule<typeof Events>('/src/core/events.ts'), services: await loadModule<typeof Services>('/src/core/services/flow.ts'), plaza: await loadModule<typeof Plaza>('/src/core/plaza/flow.ts'), auto: await loadModule<typeof Auto>('/tests/unit/autoplay.ts') };
 await closeModules();
 
 const content = buildContent();
