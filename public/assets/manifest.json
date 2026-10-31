@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T00:07:02.088Z",
+  "generatedAt": "2026-10-31T00:17:36.156Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -972,6 +972,13 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/uie/pause/top_red.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.optionsbg",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/custom/options_bg.png",
       "lazy": true
     },
     {
