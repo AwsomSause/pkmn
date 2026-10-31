@@ -5,6 +5,7 @@ import { createPokemon } from '../../src/core/pokemon';
 import { nextChoices } from '../../src/core/map';
 import type { RunState } from '../../src/core/state';
 import { beginReplay, captureGenesis, emptyTimelineStore, endReplay, GENESIS_KEEP, nextAttempt, reconstructRun, rememberGenesis, replayIdFor, replayProblem, type RunGenesis } from '../../src/core/timeline/genesis';
+import { frontRunner, frontRunnerIntro, FRONT_RUNNER_ID, isFalseProtagonist, onFrontRunnerBattle, timelineOutcome, timelineStageLine } from '../../src/core/timeline/frontRunner';
 import { GameSession } from '../../src/game/GameSession';
 import { MemoryStorageProvider } from '../../src/save/storage';
 
@@ -185,5 +186,88 @@ describe('timeline replays (failure)', () => {
     fresh.abandonReplay();
     expect(fresh.timeline.replays[0]!.status).toBe('abandoned');
     expect(fresh.replayProblem(lost)).toBeNull();
+  });
+});
+
+describe('the False Protagonist (front-runner and outcomes)', () => {
+  const ctx = () => {
+    const session = new GameSession(content, new MemoryStorageProvider());
+    const lost = loseRun(session, 'fp-seed');
+    return { session, lost, run: session.startReplay(lost) };
+  };
+
+  it('a lost run keeps its origin, and the replay starts with its rival ahead as a Gym Leader', () => {
+    const { session, lost, run } = ctx();
+    const origin = session.timeline.genesis.find((g) => g.runId === lost)!.origin;
+    expect(origin).toMatchObject({ badges: 0, encounters: 0 });
+    expect(origin!.rival).not.toBeNull();
+    expect(isFalseProtagonist(run)).toBe(true);
+    const fr = frontRunner(run)!;
+    expect(fr).toMatchObject({ id: FRONT_RUNNER_ID, rank: 'gymLeader', state: 'contender', name: origin!.rival!.name });
+    expect(run.story.events.some((e) => e.data['def'] === 'timeline-start')).toBe(true);
+    expect(frontRunnerIntro(content, fr)).toContain(fr.name);
+  });
+
+  it('the front-runner stands in for the first Gym Leader you reach', () => {
+    const { session } = ctx();
+    session.chooseStarter(0);
+    let guard = 0;
+    while (guard++ < 400 && session.run!.phase !== 'over' && session.run!.battle?.rivalId !== FRONT_RUNNER_ID) {
+      session.run!.party.forEach((m) => { m.level = 100; m.hp = 999; });
+      session.run = step(content, session.run!, true).run;
+    }
+    expect(session.run!.battle?.rivalId).toBe(FRONT_RUNNER_ID);
+    expect(session.run!.battle?.rivalNote).toMatch(/finally decided to show up/);
+  });
+
+  it('beating it climbs it a rank; the outcomes follow the flags, best first', () => {
+    const { run } = ctx();
+    const enemy = [createPokemon(content, 'pikachu', 30, 'e1')];
+    expect(timelineOutcome(content, run).id).toBe('forgotten');
+    run.victory = true;
+    expect(timelineOutcome(content, run).id).toBe('second-place');
+    onFrontRunnerBattle(content, run, { rivalId: FRONT_RUNNER_ID, enemyTeam: enemy }, 'win');
+    expect(frontRunner(run)!.rank).toBe('finalist');
+    expect(timelineOutcome(content, run).id).toBe('catch-up');
+    onFrontRunnerBattle(content, run, { rivalId: FRONT_RUNNER_ID, enemyTeam: enemy }, 'win');
+    expect(frontRunner(run)!.rank).toBe('champion');
+    run.party = [createPokemon(content, 'charizard', 60, 'p1'), createPokemon(content, 'blastoise', 60, 'p2')];
+    onFrontRunnerBattle(content, run, { rivalId: FRONT_RUNNER_ID, enemyTeam: enemy }, 'win');
+    expect(timelineOutcome(content, run)).toMatchObject({ id: 'usurper', name: 'The Usurper' });
+  });
+
+  it('a Champion win with one Pokémon standing is an Impossible Victory, and the finished replay records it', () => {
+    const { session, run } = ctx();
+    const fr = frontRunner(run)!;
+    fr.rank = 'champion';
+    run.party = [createPokemon(content, 'pidgey', 20, 'p1')];
+    onFrontRunnerBattle(content, run, { rivalId: FRONT_RUNNER_ID, enemyTeam: [createPokemon(content, 'mewtwo', 70, 'e1')] }, 'win');
+    expect(timelineOutcome(content, run).id).toBe('impossible-victory');
+    run.phase = 'over';
+    session.finishRun();
+    expect(session.timeline.replays[0]).toMatchObject({ status: 'finished', outcome: 'impossible-victory' });
+  });
+
+  it('ignores battles with anyone else, and losses (boundary)', () => {
+    const { run } = ctx();
+    onFrontRunnerBattle(content, run, { rivalId: 'rival-x', enemyTeam: [] }, 'win');
+    onFrontRunnerBattle(content, run, { rivalId: FRONT_RUNNER_ID, enemyTeam: [] }, 'lose');
+    expect(frontRunner(run)!.rank).toBe('gymLeader');
+    expect(timelineOutcome(content, run).id).toBe('forgotten');
+  });
+
+  it('a normal run is never a False Protagonist, and its stage lines stay silent', () => {
+    const session = new GameSession(content, new MemoryStorageProvider());
+    const run = session.newRun('red', 'plain-seed');
+    expect(isFalseProtagonist(run)).toBe(false);
+    timelineStageLine(content, run);
+    expect(run.story.events.some((e) => String(e.data['def']).startsWith('timeline'))).toBe(false);
+  });
+
+  it('an old genesis without an origin still gets a front-runner from the seed (failure fallback)', () => {
+    const session = new GameSession(content, new MemoryStorageProvider());
+    const lost = loseRun(session, 'no-origin-seed');
+    session.timeline = { ...session.timeline, genesis: session.timeline.genesis.map((g) => ({ ...g, origin: null })) };
+    expect(frontRunner(session.startReplay(lost))?.rank).toBe('gymLeader');
   });
 });

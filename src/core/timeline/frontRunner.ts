@@ -34,8 +34,8 @@ export type OutcomeId = (typeof TIMELINE.outcomes)[number]['id'];
 
 /** The front-runner's rival id in a replay (never used by a normal run's rivals, which are "rival-<event id>"). */
 export const FRONT_RUNNER_ID = 'rival-timeline-front-runner';
-/** Story flags: set when the replay began, when you beat the front-runner at a rank, and for an Impossible Victory. */
-export const FP_FLAG = 'timeline:false-protagonist';
+/** Story flags (FP_FLAG matches FALSE_PROTAGONIST_FLAG of the rival recognition work, PR #379): set when the replay began, when you beat the front-runner at a rank, and for an Impossible Victory. */
+export const FP_FLAG = 'falseProtagonist';
 const beatFlag = (rank: string) => `timeline:beat:${rank}`;
 const IMPOSSIBLE_FLAG = 'timeline:impossible';
 
