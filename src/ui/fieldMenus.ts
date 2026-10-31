@@ -188,6 +188,8 @@ export function openBagMenu(host: FieldMenuHost): void {
     glass: true,
     title: 'Bag',
     badge: 'ui.bag.main',
+    backdrop: 'ui.bag.bg',
+    titleInArt: true,
     columns: 2,
     rowHeight: 48,
     rows: allIds.map((id) => {

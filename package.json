@@ -51,7 +51,8 @@
     "data:npc-events": "node tools/build-npc-events.ts",
     "data:trainer-unlocks": "node tools/build-trainer-unlocks.ts",
     "data:game-events": "node tools/build-game-events.ts",
-    "report:levels": "node tools/report-levels.ts"
+    "report:levels": "node tools/report-levels.ts",
+    "report:rivals": "node tools/report-rivals.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.63.0",

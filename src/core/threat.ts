@@ -65,8 +65,8 @@ export function speciesThreat(content: Content, speciesId: string, level: number
   return threatOf(content, createPokemon(content, speciesId, level, `threat:${speciesId}`)).rating;
 }
 
-/** The highest rating an encounter of `tier` may have at `level` (balance.threat.budgets: base + perLevel × level, capped). */
+/** The highest rating an encounter of `tier` may have at `level` (balance.threat.budgets: base + perLevel × level, capped; the cap rises past level 100). */
 export function threatBudget(content: Content, tier: ThreatTier, level: number): number {
   const b = content.balance.threat.budgets[tier];
-  return Math.min(b.max, b.base + b.perLevel * level);
+  return Math.min(b.max, b.base + b.perLevel * level) + b.perLevelAbove100 * Math.max(0, level - 100);
 }

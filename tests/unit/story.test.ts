@@ -83,7 +83,7 @@ describe('story foundation: random streams', () => {
     ...structuredClone(RAW_CONTENT),
     // The nemesis system (left-out plan 1.3) came later too.
     story: { ...structuredClone(RAW_CONTENT.story as object), definitions: [], nemesis: { ...(RAW_CONTENT.story as { nemesis: object }).nemesis, enabled: false } },
-    // The custom regions (left-out plan 1.7) change the region order an old seed draws.
+    // The custom regions (left-out plan 1.7) change the region order an old seed draws; the party-strength correction (1.6) came later too.
     regions: (RAW_CONTENT.regions as { custom?: boolean }[]).filter((r) => !r.custom),
     runPrep: { ...(RAW_CONTENT.runPrep as object), starterPools: (RAW_CONTENT.runPrep as { starterPools: { filter?: { region?: string } }[] }).starterPools.filter((p) => !['torren', 'frontier-isles', 'trial-archipelago'].includes(p.filter?.region ?? '')) },
     itemCatalog: catalog.filter((e) => !eventItem(e) && e.id !== 'adrenaline-orb'),
@@ -93,7 +93,7 @@ describe('story foundation: random streams', () => {
     events: { events: (RAW_CONTENT.events as { events: { id: string; group?: string }[] }).events.filter((e) => !['camp-council', 'relic-shrine'].includes(e.id) && !['Run Milestones', 'World Sites', 'World Callbacks', 'Legendary Route', 'Habitats', 'Routes'].includes(e.group ?? '') && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
     // Wild pairs and Tate & Liza's double battle came later too.
     // SOS calls (Z7) and the Advanced AI port (Z8: KO bonus, danger switch; aai.ts reads) came later too, and so did spreadsheet availability (slack 100 and flat rarity = every species open at the old odds) and the Encounter Director's threat budgets (opened up).
-    balance: { ...structuredClone(RAW_CONTENT.balance as object), sos: { enabled: false }, focusEffects: false, bossEvolution: false, availability: { levelSlack: 100, rarityWeights: { common: 1, uncommon: 1, rare: 1, veryRare: 1, legendary: 1, mythical: 1 } }, threat: { ...(RAW_CONTENT.balance as { threat: object }).threat, budgets: { easy: OPEN_BUDGET, standard: OPEN_BUDGET, challenging: OPEN_BUDGET, elite: OPEN_BUDGET } }, trainerAi: { ...(RAW_CONTENT.balance as { trainerAi: object }).trainerAi, koBonus: 1, priorityKoBonus: 1, dangerSwitch: 0, aai: {} }, doubles: { ...(RAW_CONTENT.balance as { doubles: object }).doubles, wildChance: 0, bossIds: [] } },
+    balance: { ...structuredClone(RAW_CONTENT.balance as object), sos: { enabled: false }, focusEffects: false, bossEvolution: false, difficulty: { ...(RAW_CONTENT.balance as { difficulty: object }).difficulty, partyStrength: { enabled: false, grace: 0, factor: 0, maxBonus: 0 } }, availability: { levelSlack: 100, rarityWeights: { common: 1, uncommon: 1, rare: 1, veryRare: 1, legendary: 1, mythical: 1 } }, threat: { ...(RAW_CONTENT.balance as { threat: object }).threat, budgets: { easy: OPEN_BUDGET, standard: OPEN_BUDGET, challenging: OPEN_BUDGET, elite: OPEN_BUDGET } }, trainerAi: { ...(RAW_CONTENT.balance as { trainerAi: object }).trainerAi, koBonus: 1, priorityKoBonus: 1, dangerSwitch: 0, aai: {} }, doubles: { ...(RAW_CONTENT.balance as { doubles: object }).doubles, wildChance: 0, bossIds: [] } },
   });
   it('old seeds play exactly as they did before the story layer (Hyper moments switched off)', () => {
     for (const [key, expected] of Object.entries(BEFORE_STORY)) {

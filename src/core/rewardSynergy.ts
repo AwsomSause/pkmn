@@ -3,6 +3,7 @@
 
 import type { Content, Reward } from './contentSchema';
 import { effectiveAttributes } from './attributes';
+import { itemUseProblem } from './items';
 import { maxHp } from './pokemon';
 import type { RunState } from './state';
 
@@ -28,6 +29,8 @@ export function rewardSynergy(content: Content, run: RunState, reward: Reward): 
     return now === undefined ? null : `Your ${e.attribute}: ${now} → ${now + e.amount}`;
   }
   if (e.kind === 'addItem') {
+    const who = whoCanUse(content, run, e.item);
+    if (who) return who;
     const have = run.inventory[e.item] ?? 0;
     return have > 0 ? `You carry ${have} already` : 'New to your Bag';
   }
@@ -40,10 +43,24 @@ export function rewardSynergy(content: Content, run: RunState, reward: Reward): 
     const entry = content.catalog.get(e.entry);
     if (!entry) return null;
     const have = run.inventory[e.entry] ?? 0;
+    const who = whoCanUse(content, run, e.entry);
+    if (who) return who;
     if (reward.category === 'transformation' || reward.category === 'key') return have > 0 ? `You already carry ${have}` : 'You have none yet';
     const fainted = run.party.filter((m) => m.hp <= 0).length;
     if (entry.family.startsWith('Revive') || /revive/i.test(entry.name)) return fainted > 0 ? `${fainted} fainted Pokémon could use it` : 'Nobody has fainted';
     return have > 0 ? `You carry ${have} already` : 'New to your Bag';
   }
   return null;
+}
+
+/** Who in the party can use an evolution item or Mega Stone right now (null for any other item). */
+function whoCanUse(content: Content, run: RunState, itemId: string): string | null {
+  const item = content.items.get(itemId);
+  const fx = item?.effect;
+  if (!item || (fx?.kind !== 'evolve' && fx?.kind !== 'megaStone')) return null;
+  const evolve = fx.kind === 'evolve';
+  const who = run.party.filter((m) => (fx.kind === 'megaStone' ? m.speciesId in fx.forms : itemUseProblem(content, item, m, run.regionOrder[run.regionIndex]) === null));
+  const verb = evolve ? 'can evolve' : 'can Mega Evolve';
+  if (who.length === 0) return `Nobody in your party ${verb} with it`;
+  return `${who.length === 1 ? (content.species.get(who[0]!.speciesId)?.name ?? who[0]!.speciesId) : `${who.length} of your Pokémon`} ${verb}`;
 }

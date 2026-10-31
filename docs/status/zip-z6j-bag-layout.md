@@ -1,0 +1,1 @@
+- Z6j: the Bag menu sits on the pack's Bag backdrop (orange grid, BAG plate, dark list area); the Picker skips its own title text there. Limit: the pack's pockets, item-row bases and description box are not used (the game's Bag has no pockets).

@@ -4524,6 +4524,10 @@
         "kind": "damageTakenMultiplier",
         "moveType": "fighting",
         "value": 1.15
+      },
+      {
+        "kind": "statusChanceMultiplier",
+        "value": 1.15
       }
     ],
     "signatureTypes": [
@@ -4561,8 +4565,8 @@
     "spriteAssetId": "boss.ginter",
     "modifiers": [
       {
-        "kind": "shopEarlyStock",
-        "count": 1
+        "kind": "shopEarlyRareStock",
+        "count": 2
       },
       {
         "kind": "priceMultiplier",
@@ -9629,6 +9633,10 @@
         "kind": "damageTakenMultiplier",
         "moveType": "fighting",
         "value": 1.2
+      },
+      {
+        "kind": "statusChanceMultiplier",
+        "value": 1.1
       }
     ],
     "signatureTypes": [

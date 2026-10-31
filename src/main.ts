@@ -31,6 +31,7 @@ import { GAME_HEIGHT, GAME_WIDTH } from './ui/theme';
 import { drawBackdrop } from './ui/widgets';
 import { aeroBackdrop } from './ui/aero';
 import { ArenaBackdrop } from './ui/showcase';
+import { applyDisplaySettings } from './ui/display';
 import './style.css';
 
 function showFatalError(message: string): void {
@@ -82,6 +83,8 @@ function start(): void {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {
         // Screen readers get a name for the game area (the game itself is drawn on the canvas).
+        applyDisplaySettings(g, session.settings);
+        session.onChange(() => applyDisplaySettings(g, session.settings));
         g.canvas.setAttribute('role', 'application');
         g.canvas.setAttribute('aria-label', 'Pocket Raiders, a Pokémon roguelike. Keyboard: arrows, Z/Enter to confirm, X/Esc to go back.');
         // Every screen fades in. Screens without their own scenery get a dimmed,

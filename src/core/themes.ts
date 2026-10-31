@@ -27,11 +27,11 @@ export const baseStatTotal = (s: Species) => Object.values(s.baseStats).reduce((
  * form, with at least one move the battle engine supports, and base stats no higher than
  * balance.wildMaxBaseStats (which keeps Ultra Beasts and Paradox Pokémon out of early routes).
  */
-export function isWildEligible(content: Content, s: Species): boolean {
+export function isWildEligible(content: Content, s: Species, allowSpecial = false): boolean {
   if (s.evolutionStage !== 1 || s.tags.includes('legendary') || s.tags.includes('mythical')) return false;
   if (s.form && s.form.kind !== 'regional' && s.form.kind !== 'alternate') return false;
   // Special forms (Delta, Z, Spooky, regional) are event-only discoveries.
-  if (isSpecialForm(s)) return false;
+  if (!allowSpecial && isSpecialForm(s)) return false;
   if (baseStatTotal(s) > content.balance.wildMaxBaseStats) return false;
   return s.learnset.some((e) => isUsableMove(content, e.move));
 }
@@ -46,11 +46,27 @@ export function wildEligibleSpecies(content: Content): Species[] {
   return cached;
 }
 
+/** Special forms a region lets roam its routes (regions.json `specialWilds`, e.g. Torren's Delta Pokémon): ids ending in "-<tag>" that are otherwise wild-eligible. Native there. */
+export function regionSpecialWilds(content: Content, regionId: string | undefined): Species[] {
+  const tags = (regionId && content.regions.get(regionId)?.specialWilds) || [];
+  if (tags.length === 0) return [];
+  const byRegion = specialCache.get(content) ?? new Map<string, Species[]>();
+  specialCache.set(content, byRegion);
+  let list = byRegion.get(regionId!);
+  if (!list) {
+    list = [...content.species.values()].filter((s) => tags.some((t) => s.id.endsWith(`-${t}`)) && isWildEligible(content, s, true));
+    byRegion.set(regionId!, list);
+  }
+  return list;
+}
+const specialCache = new WeakMap<Content, Map<string, Species[]>>();
+
 /** Region eligibility: a species is native to a region if it is from one of the region's generations or is its regional form. */
 export function isNative(content: Content, s: Species, regionId: string | undefined): boolean {
   const region = regionId ? content.regions.get(regionId) : undefined;
   if (!region) return false;
   if (s.form?.region) return s.form.region === region.id;
+  if (region.specialWilds.some((t) => s.id.endsWith(`-${t}`))) return true;
   return region.generations.length === 0 || region.generations.includes(s.generation);
 }
 
@@ -80,7 +96,7 @@ export function themePool(content: Content, theme: Theme, regionId?: string, lev
 /** Like themePool, for any list of types (an Elite Four member's speciality, for example). With `level`, species not unlocked yet by the spreadsheet are left out (core/availability.ts). */
 export function typesPool(content: Content, types: readonly TypeName[], regionId?: string, level?: number): PoolEntry[] {
   const { dualTypeWeight, nativeWeight, minThemePool, wildPool } = content.balance;
-  const pool: PoolEntry[] = wildEligibleSpecies(content)
+  const pool: PoolEntry[] = [...wildEligibleSpecies(content), ...regionSpecialWilds(content, regionId)]
     .filter((s) => sharesType(s.types, types))
     .map((s) => ({
       speciesId: s.id,

@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-// The Bag menu header carries the UIE bag picture.
+// The Bag menu header carries the UIE bag picture and sits on the UIE Bag backdrop.
 
 const scene = (page: Page) => page.evaluate(() => (window as any).__pkr?.activeScene() ?? null);
 
@@ -29,13 +29,13 @@ test('the Bag menu shows the UIE bag picture', async ({ page }) => {
   const tiles = await page.evaluate(() => {
     let n = 0;
     const walk = (o: any) => {
-      if (o.name === 'picker-badge') n++;
+      if (o.name === 'picker-badge' || o.name === 'picker-backdrop') n++;
       for (const c of o.list ?? []) walk(c);
     };
     for (const s of (window as any).__pkr.game.scene.getScenes(true)) for (const o of s.children.list) walk(o);
     return n;
   });
-  expect(tiles).toBeGreaterThan(0);
+  expect(tiles).toBeGreaterThan(1);
   await page.screenshot({ path: 'test-results/bag-badge.png' });
   expect(errors).toEqual([]);
 });

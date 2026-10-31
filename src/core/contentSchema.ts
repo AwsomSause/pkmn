@@ -797,6 +797,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statusMoveAccuracy'), value: z.number().positive() }),
   /** This many more locked shop entries are for sale early. */
   z.object({ kind: z.literal('shopEarlyStock'), count: z.number().int().positive() }),
+  /** This many more locked shop entries for rare or epic items are for sale early (Ginter). */
+  z.object({ kind: z.literal('shopEarlyRareStock'), count: z.number().int().positive() }),
   /** Damage taken by a Pokémon on its first turn after it enters battle (switching in). */
   z.object({ kind: z.literal('switchGuard'), value: z.number().positive() }),
   /** Damage dealt by a Pokémon that has been out for at least a full turn. */
@@ -1006,7 +1008,8 @@ export const RunPrepFileSchema = z.object({
 });
 
 export const RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
-const ThreatBudgetSchema = z.object({ base: z.number().positive(), perLevel: z.number().min(0), max: z.number().positive() });
+/** Budget at `level`: min(max, base + perLevel × level), plus perLevelAbove100 × (level − 100) past 100 (levels to 500, left-out 1.6). */
+const ThreatBudgetSchema = z.object({ base: z.number().positive(), perLevel: z.number().min(0), max: z.number().positive(), perLevelAbove100: z.number().min(0).default(0) });
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
 
@@ -1575,6 +1578,8 @@ export const RegionSchema = z.object({
   grand: z.boolean().default(false),
   /** One of the game's own regions (D6), not one from the main series. */
   custom: z.boolean().default(false),
+  /** Special-form tags whose first stages roam this region's routes (e.g. "delta": Torren's Delta Pokémon). */
+  specialWilds: z.array(z.string()).default([]),
   /** The generations of Pokémon native to this region (empty = every generation is native). */
   generations: z.array(z.number().int().min(1).max(9)).default([]),
 });
@@ -1844,6 +1849,8 @@ export const BalanceSchema = z.object({
     minLevel: z.number().int().min(1),
     /** The highest level in the game (D14; at most 1000). */
     maxLevel: z.number().int().max(1000),
+    /** Party-strength correction (encounters.ts withPartyStrength). */
+    partyStrength: z.object({ enabled: z.boolean(), grace: z.number().min(0), factor: z.number().min(0), maxBonus: z.number().int().min(0) }).default({ enabled: true, grace: 3, factor: 0.5, maxBonus: 4 }),
     /** Above level 100 each level costs this × (the cost of level 100) × level / 100 EXP (pokemon.ts xpForLevel). */
     highLevelXp: z.number().positive().default(0.4),
     trainerBonus: z.number().int().min(0),
