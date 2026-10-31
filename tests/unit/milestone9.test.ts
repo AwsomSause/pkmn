@@ -131,6 +131,14 @@ describe('presentation cues', () => {
     expect(impact.shake).toBeGreaterThan(0);
   });
 
+  it('shows each badge once for a multi-hit move', () => {
+    const hit: BattleEvent = { type: 'damage', side: 'enemy', amount: 5, hpAfter: 20, effectiveness: 2, crit: true };
+    const events: BattleEvent[] = [{ type: 'move', side: 'player', moveId: 'tackle' }, hit, hit, hit];
+    const cues = planCues(events, content, data, FULL);
+    expect(cues.flat().filter((c) => c.kind === 'badge')).toHaveLength(2);
+    expect(cues.flat().filter((c) => c.kind === 'number')).toHaveLength(3);
+  });
+
   it('skips the animation of a move that misses but still shows the marker', () => {
     const events: BattleEvent[] = [{ type: 'move', side: 'enemy', moveId: 'tackle' }, { type: 'miss', side: 'enemy' }];
     const cues = planCues(events, content, data, FULL);

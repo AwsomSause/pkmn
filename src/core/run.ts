@@ -47,7 +47,7 @@ import { evolveFully, type EvolutionResult } from './evolution';
 import { changeFriendship } from './friendship';
 import { addItem, applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem } from './items';
 import { addLevels, createPokemon, gainXp, getSpecies, MAX_PP_UPS, maxHp, maxPp, xpForDefeat, xpForLevel } from './pokemon';
-import { runLicenses, survivalEntry } from './bank';
+import { bankShopEntries, runLicenses } from './bank';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
@@ -109,7 +109,7 @@ import { pickStones } from './expedition/flow';
 import { gainBattleMaterials, RARE_TOKEN_EFFECTS } from './crafting';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
 import { placeServiceStop } from './services/gate';
-import { applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
+import { allyLevel, applyTotemHp, describeAlly, describeTotemRewards, freshTotemBattle, getTotem, placeTotem, totemLevel, totemSpecies, type TotemPreview } from './totem/totem';
 import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
@@ -130,7 +130,7 @@ import { buildHyperContext } from './story/hyper';
 import type { PresentationCue } from './story/queue';
 import { withTrainingEvolution, midBattleEvolution } from './drama/evolution';
 import { rivalBond } from './drama/bond';
-import { bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
+import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState } from './story/record';
@@ -178,6 +178,8 @@ export interface NewRunOptions {
   raidTierUnlocked?: number;
   /** The Bank licenses the profile owns (core/bank.ts runLicenses keeps the three that act inside a run). */
   licenses?: string[];
+  /** The account's unlocked trainers; map events that recruit one of them stop appearing (itemCounters `owned:<id>`). */
+  ownedTrainers?: readonly string[];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -219,6 +221,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     usedLeaders: [],
     materials: {},
     badges: [],
+    ...(opts.ownedTrainers?.length ? { itemCounters: Object.fromEntries(opts.ownedTrainers.map((id) => [`owned:${id}`, 1])) } : {}),
     campaignId: campaign.id,
     regionOrder,
     regionIndex: 0,
@@ -987,7 +990,7 @@ export function totemPreview(content: Content, current: RunState, sideId: string
   const { speciesId, level } = totemBoss(content, current, def, node.id + sideId);
   return {
     id: def.id, name: def.name, tier: def.tier, blurb: def.blurb, speciesId, level, aura: def.aura.text,
-    environment: def.environment?.text ?? null, ally: describeAlly(def), phases: def.phases.length, rewards: describeTotemRewards(def),
+    environment: [def.environment?.text, def.fieldEffect?.text].filter(Boolean).join(' ') || null, ally: describeAlly(def), phases: def.phases.length, rewards: describeTotemRewards(def),
   };
 }
 
@@ -1031,6 +1034,14 @@ export function startTotemBattle(content: Content, run: RunState, def: TotemDef,
   run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
   run.battle.ai = 0.6;
   run.battle.totem = freshTotemBattle(def, boss.uid);
+  // True 2v1: the ally stands beside the Totem from the start (a double battle, so you need two Pokémon able to fight).
+  if (def.twoVsOne && def.ally && run.party.filter((p) => p.hp > 0).length >= 2) {
+    const ally = newMon(content, run, def.ally.species, allyLevel(def, boss.level), 'e');
+    run.battle.enemyTeam.push(ally);
+    run.battle.totem.allyUid = ally.uid;
+    run.battle.totem.callsUsed = def.ally.maxCalls;
+    makeDoubles(run.battle, run.party);
+  }
   run.totems.entered += 1;
   discover(run, boss.speciesId, false);
   run.phase = 'battle';
@@ -1046,6 +1057,11 @@ function claimTotemRewards(content: Content, run: RunState, battle: BattleState)
   count(run, 'moneyEarned', money);
   const rng = new Rng(hashSeed(`${run.seed}::totem-reward::${def.id}:${run.encountersCompleted}`));
   const items = def.rewards.items.filter((i) => rng.chance(i.chance)).map((i) => i.item);
+  if (def.rewards.megaStones > 0) {
+    const stones = pickStones(content, run, def.rewards.megaStones, new Rng(hashSeed(`${run.seed}::totem-stones::${def.id}:${run.encountersCompleted}`)));
+    if (stones.length > 0 && itemCount(run.inventory, 'mega-ring') === 0) items.push('mega-ring');
+    items.push(...stones.map((stone) => stone.id));
+  }
   const rare = def.rewards.rareJoin;
   if (rare && rng.chance(rare.chance)) {
     const mon = newMon(content, run, rare.species, Math.max(2, totem.level - 2), 'p');
@@ -1221,7 +1237,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     }
     // A rival that sparked earlier takes the first ordinary trainer slot once per region.
     const gauntlet = rule && !back ? gauntletRival(content, run) : null;
-    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run)) : null;
+    const rivalBack = rule && !back ? (gauntlet ?? waitingRival(run, content)) : null;
     if (gauntlet) markGauntletFight(run, gauntlet);
     let rivalNote: string | null = null;
     let trainingIndex = -1;
@@ -1394,8 +1410,7 @@ export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'arch
     .slice(0, earlyStockCount(content, run) + shopEarlyStockPerk(runPerks(content, run)));
   // Rocket Boss Giovanni's Black Market sells everything, locked stock at a markup (shopPrice).
   const black = blackMarketMarkup(runPerks(content, run)) !== null;
-  const survival = survivalEntry(content, run.licenses);
-  const stock = survival && !content.shop.some((e) => e.item === survival.item) ? [...content.shop, survival] : content.shop;
+  const stock = [...content.shop, ...bankShopEntries(content, run.licenses).filter((x) => !content.shop.some((e) => e.item === x.item))];
   return stock.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
 }
 
@@ -1462,7 +1477,7 @@ export function sellItem(content: Content, current: RunState, itemId: string): {
 /** Buys one of an item at the shop. */
 export function buyItem(content: Content, current: RunState, itemId: string): { run: RunState; message: string } {
   assertPhase(current, 'shop');
-  const entry = content.shop.find((e) => e.item === itemId) ?? (survivalEntry(content, current.licenses)?.item === itemId ? survivalEntry(content, current.licenses) : undefined);
+  const entry = content.shop.find((e) => e.item === itemId) ?? bankShopEntries(content, current.licenses).find((e) => e.item === itemId);
   if (!entry) throw new Error(`The shop doesn't sell "${itemId}"`);
   const item = getItem(content, itemId);
   if (ownsKeepsake(content, current.inventory, itemId)) throw new Error(`You already have the ${item.name}.`);
@@ -1509,6 +1524,8 @@ export interface BattleEndResult {
   /** Shadow Pokémon purified by this battle (names). */
   shadowPurified: string[];
   evolutions: (EvolutionResult & { uid: string })[];
+  /** Moves devoted Pokémon learned from their bond after this win. */
+  bondTaught?: { uid: string; moveId: string }[];
   /** The gym leader's id when this win beat a gym leader. */
   badge: string | null;
   /** The region's id when this win beat its champion. */
@@ -1905,12 +1922,13 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
 
   const evolutions: BattleEndResult['evolutions'] = [];
   for (const mon of noEvolution(run.rules) ? [] : run.party) {
-    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers))) {
+    for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers), bondEvolves(content, run, mon))) {
       evolutions.push({ ...evo, uid: mon.uid });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
   }
   count(run, 'evolutions', evolutions.length);
+  const bondTaught = battle.outcome === 'win' ? bondLessons(content, run, battle.participants) : [];
   // The caught Pokémon's decision comes first.
   run.pending = [...caughtPending, ...run.pending];
   // A trainer's signature mechanic (Rival's Answer): choose after the battle.
@@ -2042,7 +2060,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
   run.afterDecisions = battle.expedition ? 'expedition' : battle.fishing || battle.event ? 'map' : 'reward';
   continueAfterDecisions(content, run);
-  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
+  return { outcome, moneyGained, itemsFound, caughtSpeciesId, shadowPurified, evolutions, bondTaught, badge, regionCleared, finale, victory: run.victory, eventRewards, voiceJoined, materials: materialsGained };
 }
 
 /**

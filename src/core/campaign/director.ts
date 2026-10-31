@@ -7,6 +7,9 @@ import { currentRegion, getCampaign } from '../regions';
 import { waitingRival } from '../rivals/adapt';
 import type { MapNode, RunState } from '../state';
 import { emit } from '../story/record';
+import { FOCUSES, regionFocus, type Focus } from './focus';
+
+export { FOCUSES, regionFocus, type Focus };
 
 export const ACTS = ['arrival', 'escalation', 'turningPoint', 'climax', 'aftermath'] as const;
 export type Act = (typeof ACTS)[number];
@@ -19,8 +22,6 @@ export const ACT_NAMES: Record<Act, string> = {
   aftermath: 'Act V: The Aftermath',
 };
 
-export const FOCUSES = ['mystery', 'rivals', 'raids', 'exploration'] as const;
-export type Focus = (typeof FOCUSES)[number];
 
 const FOCUS_LINE: Record<Focus, string> = {
   mystery: 'A local mystery hangs over this region, and its secrets lie off the main road.',
@@ -29,16 +30,6 @@ const FOCUS_LINE: Record<Focus, string> = {
   exploration: 'Unmapped country: expeditions and hidden places reward the curious.',
 };
 
-function hash(text: string): number {
-  let h = 0x811c9dc5;
-  for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
-  return h;
-}
-
-/** What the region is about. Not every region has the same structure. */
-export function regionFocus(run: Pick<RunState, 'seed' | 'regionOrder'>, regionIndex: number): Focus {
-  return FOCUSES[hash(`${run.seed}:focus:${run.regionOrder[regionIndex] ?? regionIndex}`) % FOCUSES.length]!;
-}
 
 /** Extra den chance a raid-focused region gives (and the same for expedition gates in an exploration region). */
 export function focusDenBonus(run: RunState, which: 'raids' | 'exploration'): number {

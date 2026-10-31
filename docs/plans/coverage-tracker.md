@@ -36,7 +36,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | DONE (the 2 Overdrive events are built, limited) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
-| Trainers.md perks | PART: 180 of 220 trainers built (A to Kurt by this thread, Z backwards by the Raids thread); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
+| Trainers.md perks | DONE: all 220 trainers built (A to Kurt by one thread, Z backwards by the Raids thread); per-trainer list in `docs/plans/trainers-coverage.md`. Signature mechanics (Rival's Answer etc.) come with their trainers |
 | Visual guides (VISUAL_BIBLE, COMPLETE VISUAL REMASTER, brief) | PART (M10 visual slices 1-21 built; see visual-coverage.md) |
 | POKEMON_ROGUELIKE_MASTER_EXPANSION_CATALOG (reference) | reference |
 
@@ -56,7 +56,7 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 | Raid modifiers: weather field, terrain, elemental surge, healing restriction, rotating weaknesses | DONE (`modifiers` in raids.json; 8 raids use them) |
 | Raid cheers (Offense / Defense / Healing, 3 per raid) and bosses with 5-6 moves (`extraMoves`) | DONE |
 | Raid capture jingles (4) on the boss-joins card; Dens + Adventures header art on den and expedition screens | DONE (Counter cheer, other Dens/Adventures art not used) |
-| Victory rewards: money, items, extra draft choices, boss joins, Mega resources (tier 5–6: Mega Stones for party Pokémon that can use one, plus a Mega Ring if you have none), rare-encounter tokens (tier 4–6: the next 1–2 wild encounters weight rare x3, Legendary x2; raids and Totems never use a token up) | DONE; crafting materials TODO (needs a crafting system) |
+| Victory rewards: money, items, extra draft choices, boss joins, Mega resources (tier 5–6: Mega Stones for party Pokémon that can use one, plus a Mega Ring if you have none), rare-encounter tokens (tier 4–6: the next 1–2 wild encounters weight rare x3, Legendary x2; raids and Totems never use a token up) | DONE; crafting materials DONE (`core/crafting.ts`: materials drop by raid tier, the Workshop uses them) |
 | Tiers 1, 2, 3, 4, 5, 6/Apex (8 raids, one fully featured Apex) | DONE |
 | Discover (den on the map), Prepare (preview: tier, mechanics, rewards, cost), Battle, Resolve, Progress (run raid record) | DONE, incl. unlocking tiers across runs: tiers 1–3 open from the first run (`raids.json` `openTiers`); winning a tier N raid (any run, kept as the profile best counter `raidBestTier`) opens tier N+1, and in-run wins open the next tier at once. Dens in regions whose tiers are still closed hold the highest open tier. The Raid Observatory shows the open tiers |
 | Safeguards: encounter level cap, no double reward/cost (den used on entry, battle cleared once), saved mid-raid (run v12), failure never ends the run, config validated at load, visual shield/phase/timer/charge | DONE |
@@ -81,18 +81,18 @@ Code: `src/core/expedition/` (schema, graph, flow, gate), `src/data/expeditions.
 | Raid as finale or Totem as finale/stop | DONE |
 | Encounter availability rules for wild stops | DONE (uses the normal stage encounter planner) |
 | Temporary Mega in battle for rentals | limited: only for Pokémon with a Mega Stone available |
-| More expeditions / routes (content expansion, Blueprint M7) | TODO |
+| More expeditions / routes (content expansion, Blueprint M7) | PART: 4 more routes (Hollow of Masks, Dune Trek, Sky Ascent, Scale Summit; 12 total) |
 
 ### 3. Totem Pokémon (slice 2, DONE except the TODO lines)
 Code: `src/core/totem/`, `src/data/totems.json` (8 Totems, tiers early/mid/late/grand), territory = map side stop `T`.
 | Item | Status |
 |---|---|
 | Every Totem has a mechanic beyond inflated HP (load check: aura present, at most 2 stages of boost) | DONE |
-| Aura at battle start: stat boost, weather, terrain, hazard; visible in the battle header and a message | DONE; "resist a damage category" is done as a Defense/Special Defense stage; unique status field effect TODO |
-| Ally calls: HP trigger, max calls, no infinite loops, ally takes the Totem's place and defeating it brings the Totem back (interrupt), resummon rule per Totem, support (heal, weather, screens) | DONE; true 2v1 (both on field) TODO, the engine is 1v1 |
+| Aura at battle start: stat boost, weather, terrain, hazard; visible in the battle header and a message | DONE; "resist a damage category" is done as a Defense/Special Defense stage; unique status field effect (`fieldEffect`: Salazzle, Marowak, Vikavolt, Kommo-o) DONE |
+| Ally calls: HP trigger, max calls, no infinite loops, ally takes the Totem's place and defeating it brings the Totem back (interrupt), resummon rule per Totem, support (heal, weather, screens) | DONE; true 2v1: `twoVsOne` Totems (8) start as a double battle with the ally beside the Totem when you have two Pokémon able to fight, else the usual mid-fight call |
 | Behaviour phases at HP lines (reuse raid phases) | DONE |
 | Environmental advantage: weather, terrain, hazards, tied to the stage (Totem type matches the stage theme) | DONE |
-| Rewards: money, items, draft choices, rare Pokémon offer, unlock (per run), research points | DONE; held-item uniques, Mega energy/stones, achievements, cross-run unlocks TODO |
+| Rewards: money, items, draft choices, rare Pokémon offer, unlock (per run), research points | DONE; Mega Stones (`rewards.megaStones`, 5 Totems) and held-item uniques via `items`; achievements totems-1/10/50 and raids-1/10/50 pay Bank credits across runs |
 | Progression table (early: one aura + one weak ally; mid: aura + ally or phase; late: several; grand: unique) | DONE |
 | Validation: species, ally, rewards checked at load; sim of every Totem at 3 levels for 60 turns stays within its call cap | DONE |
 | Same level-cap rules as other battles; failure never ends the run; reload cannot repeat the fight (run v14) | DONE |

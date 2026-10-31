@@ -97,6 +97,8 @@ for (let i = from; i < from + count; i++) {
   if (findings.length) rec.sides = findings.slice(0, 5);
   if (SIDES) rec.visits = visits;
   rec.ms = Date.now() - t0;
+  // `--strict` (CI): any crash, stuck run or broken number fails the process.
+  if (process.argv.includes('--strict') && (rec.error || rec.stuck || rec.bad)) process.exitCode = 1;
   const line = JSON.stringify(rec);
   if (out) appendFileSync(out, line + '\n');
   else console.log(line);

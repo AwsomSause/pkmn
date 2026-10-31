@@ -95,6 +95,7 @@ export function describeTotemRewards(def: TotemDef): string[] {
   if (r.rareJoin) out.push(`${Math.round(r.rareJoin.chance * 100)}% a rare ${r.rareJoin.species.replace(/-/g, ' ')}`);
   if (r.unlock) out.push(`unlocks ${r.unlock.replace(/-/g, ' ')}`);
   if (r.research > 0) out.push(`${r.research} research`);
+  if (r.megaStones > 0) out.push(`up to ${r.megaStones} Mega Stone${r.megaStones > 1 ? 's' : ''}`);
   return out;
 }
 
@@ -102,5 +103,5 @@ export function describeAlly(def: TotemDef): string | null {
   const a = def.ally;
   if (!a) return null;
   const help = [a.support.heal ? 'heals the Totem' : '', a.support.weather ? `sets ${a.support.weather}` : '', a.support.screens ? 'raises screens' : ''].filter(Boolean).join(', ');
-  return `${a.species.replace(/-/g, ' ')} (up to ${a.maxCalls} call${a.maxCalls > 1 ? 's' : ''}${a.resummon ? ', can be called again' : ''}${help ? `; ${help}` : ''})`;
+  return `${a.species.replace(/-/g, ' ')} (${def.twoVsOne ? 'fights beside it from the start in a double battle; ' : ''}up to ${a.maxCalls} call${a.maxCalls > 1 ? 's' : ''}${a.resummon ? ', can be called again' : ''}${help ? `; ${help}` : ''})`;
 }

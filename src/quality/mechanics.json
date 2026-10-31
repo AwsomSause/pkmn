@@ -144,10 +144,13 @@
  {
   "id": "overdrive-events",
   "name": "Overdrive Breakthrough and Misfire events",
-  "status": "disabled",
-  "code": [],
-  "tests": [],
-  "note": "Planned; owned by the Overdrive thread."
+  "status": "supported",
+  "code": [
+   "src/core/drama/events.ts"
+  ],
+  "tests": [
+   "tests/unit/drama.test.ts"
+  ]
  },
  {
   "id": "capture",
@@ -459,17 +462,23 @@
  {
   "id": "double-battles",
   "name": "Double battles",
-  "status": "disabled",
-  "code": [],
-  "tests": [],
-  "note": "In progress in another thread; not on main yet."
+  "status": "supported",
+  "code": [
+   "src/core/battle/doubles.ts"
+  ],
+  "tests": [
+   "tests/unit/doubles.test.ts"
+  ]
  },
  {
   "id": "egg-hatching",
   "name": "Egg hatching",
-  "status": "disabled",
-  "code": [],
-  "tests": [],
-  "note": "In progress in another thread; not on main yet."
+  "status": "supported",
+  "code": [
+   "src/core/eggs.ts"
+  ],
+  "tests": [
+   "tests/unit/eggs.test.ts"
+  ]
  }
 ]
