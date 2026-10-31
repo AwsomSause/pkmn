@@ -1240,6 +1240,361 @@
         "rareEncounters": 2,
         "megaStones": 1
       }
+    },
+    {
+      "id": "umbra-lab",
+      "name": "Umbra Corps Lab",
+      "tier": 2,
+      "blurb": "A cold lab hums behind a false warehouse wall. A Shadow Pokémon paces in a cage at the back.",
+      "species": [
+        "haunter",
+        "mightyena",
+        "muk"
+      ],
+      "levelBonus": 1,
+      "hpBoostPercent": 200,
+      "entryCost": 150,
+      "shield": null,
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "Alarms ring. Lab guards pour in and the Shadow haze thickens!",
+          "boost": {
+            "atk": 1,
+            "spd": 1
+          }
+        }
+      ],
+      "kind": "regional",
+      "approaches": [
+        {
+          "id": "stealth",
+          "label": "Slip in through the vents",
+          "text": "Quiet and slow: the boss starts weakened and you see its moves coming, but you pay for gear.",
+          "cost": 250,
+          "hpDeltaPercent": -25,
+          "timerDelta": 0,
+          "rewardPercent": 90,
+          "draftDelta": 0
+        },
+        {
+          "id": "direct",
+          "label": "Break down the front door",
+          "text": "No prep and every guard awake: a tougher boss, a bigger prize.",
+          "cost": 0,
+          "hpDeltaPercent": 15,
+          "timerDelta": 0,
+          "rewardPercent": 125,
+          "draftDelta": 1
+        },
+        {
+          "id": "rescue",
+          "label": "Free the caged Pokémon first",
+          "text": "Free the prisoners before the boss: the fight is shorter and the prize smaller, and the freed ones join the draft.",
+          "cost": 100,
+          "hpDeltaPercent": 0,
+          "startHp": 0.85,
+          "timerDelta": -4,
+          "rewardPercent": 80,
+          "draftDelta": 2
+        }
+      ],
+      "gang": {
+        "faction": "umbra-corps",
+        "shadowBoss": true,
+        "rescue": true,
+        "lieutenant": false,
+        "heatDrop": 1
+      },
+      "rewards": {
+        "moneyPerLevel": 80,
+        "items": [
+          {
+            "item": "super-potion",
+            "chance": 1
+          },
+          {
+            "item": "great-ball",
+            "chance": 0.5
+          }
+        ],
+        "draftExtra": 0,
+        "joinChance": 1
+      }
+    },
+    {
+      "id": "umbra-spire",
+      "name": "Umbra Spire",
+      "tier": 4,
+      "blurb": "Dr. Vesper's refinery spire. The Shadow process runs on every floor.",
+      "species": [
+        "gengar",
+        "houndoom",
+        "tyranitar"
+      ],
+      "levelBonus": 2,
+      "hpBoostPercent": 260,
+      "entryCost": 300,
+      "shield": {
+        "at": [
+          0.6
+        ],
+        "points": 0.2
+      },
+      "phases": [
+        {
+          "atHp": 0.66,
+          "text": "Dr. Vesper calls reinforcements: a new wave rushes the floor!",
+          "boost": {
+            "spe": 1
+          },
+          "clearPlayerStages": true
+        },
+        {
+          "atHp": 0.33,
+          "text": "The core flares. The Shadow haze surges!",
+          "boost": {
+            "atk": 1,
+            "spa": 1
+          },
+          "cleanse": true
+        }
+      ],
+      "kind": "regional",
+      "approaches": [
+        {
+          "id": "stealth",
+          "label": "Slip in through the vents",
+          "text": "Quiet and slow: the boss starts weakened and you see its moves coming, but you pay for gear.",
+          "cost": 250,
+          "hpDeltaPercent": -25,
+          "timerDelta": 0,
+          "rewardPercent": 90,
+          "draftDelta": 0
+        },
+        {
+          "id": "direct",
+          "label": "Break down the front door",
+          "text": "No prep and every guard awake: a tougher boss, a bigger prize.",
+          "cost": 0,
+          "hpDeltaPercent": 15,
+          "timerDelta": 0,
+          "rewardPercent": 125,
+          "draftDelta": 1
+        },
+        {
+          "id": "rescue",
+          "label": "Free the caged Pokémon first",
+          "text": "Free the prisoners before the boss: the fight is shorter and the prize smaller, and the freed ones join the draft.",
+          "cost": 100,
+          "hpDeltaPercent": 0,
+          "startHp": 0.85,
+          "timerDelta": -4,
+          "rewardPercent": 80,
+          "draftDelta": 2
+        }
+      ],
+      "gang": {
+        "faction": "umbra-corps",
+        "shadowBoss": true,
+        "rescue": true,
+        "lieutenant": true,
+        "heatDrop": 2
+      },
+      "rewards": {
+        "moneyPerLevel": 130,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 1
+          },
+          {
+            "item": "snag-ball",
+            "chance": 0.3
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 1
+      },
+      "timerTurns": 22
+    },
+    {
+      "id": "talon-camp",
+      "name": "Gilded Talon Camp",
+      "tier": 3,
+      "blurb": "Poachers' cages line a canyon camp. Captain Rook's handlers guard the crates.",
+      "species": [
+        "arcanine",
+        "rhydon",
+        "granbull"
+      ],
+      "levelBonus": 1,
+      "hpBoostPercent": 230,
+      "entryCost": 200,
+      "shield": null,
+      "phases": [
+        {
+          "atHp": 0.5,
+          "text": "The handlers crack their whips and the caged Pokémon scream!",
+          "boost": {
+            "atk": 1,
+            "spe": 1
+          }
+        }
+      ],
+      "kind": "regional",
+      "approaches": [
+        {
+          "id": "stealth",
+          "label": "Slip in through the vents",
+          "text": "Quiet and slow: the boss starts weakened and you see its moves coming, but you pay for gear.",
+          "cost": 250,
+          "hpDeltaPercent": -25,
+          "timerDelta": 0,
+          "rewardPercent": 90,
+          "draftDelta": 0
+        },
+        {
+          "id": "direct",
+          "label": "Break down the front door",
+          "text": "No prep and every guard awake: a tougher boss, a bigger prize.",
+          "cost": 0,
+          "hpDeltaPercent": 15,
+          "timerDelta": 0,
+          "rewardPercent": 125,
+          "draftDelta": 1
+        },
+        {
+          "id": "rescue",
+          "label": "Free the caged Pokémon first",
+          "text": "Free the prisoners before the boss: the fight is shorter and the prize smaller, and the freed ones join the draft.",
+          "cost": 100,
+          "hpDeltaPercent": 0,
+          "startHp": 0.85,
+          "timerDelta": -4,
+          "rewardPercent": 80,
+          "draftDelta": 2
+        }
+      ],
+      "gang": {
+        "faction": "gilded-talon",
+        "shadowBoss": true,
+        "rescue": true,
+        "lieutenant": false,
+        "heatDrop": 1
+      },
+      "rewards": {
+        "moneyPerLevel": 100,
+        "items": [
+          {
+            "item": "hyper-potion",
+            "chance": 0.7
+          },
+          {
+            "item": "ultra-ball",
+            "chance": 0.4
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 1
+      }
+    },
+    {
+      "id": "talon-vault",
+      "name": "Gilded Talon Vault",
+      "tier": 5,
+      "blurb": "A fortified vault where the best stolen Pokémon are sealed for the lab.",
+      "species": [
+        "tyranitar",
+        "salamence",
+        "scizor"
+      ],
+      "levelBonus": 3,
+      "hpBoostPercent": 300,
+      "entryCost": 400,
+      "shield": {
+        "at": [
+          0.6,
+          0.3
+        ],
+        "points": 0.15
+      },
+      "phases": [
+        {
+          "atHp": 0.66,
+          "text": "Captain Rook bolts the doors. Armoured handlers rush in!",
+          "boost": {
+            "def": 1,
+            "spd": 1
+          }
+        },
+        {
+          "atHp": 0.33,
+          "text": "The vault alarm triggers the Shadow process early!",
+          "boost": {
+            "atk": 1,
+            "spe": 1
+          },
+          "cleanse": true
+        }
+      ],
+      "kind": "regional",
+      "approaches": [
+        {
+          "id": "stealth",
+          "label": "Slip in through the vents",
+          "text": "Quiet and slow: the boss starts weakened and you see its moves coming, but you pay for gear.",
+          "cost": 250,
+          "hpDeltaPercent": -25,
+          "timerDelta": 0,
+          "rewardPercent": 90,
+          "draftDelta": 0
+        },
+        {
+          "id": "direct",
+          "label": "Break down the front door",
+          "text": "No prep and every guard awake: a tougher boss, a bigger prize.",
+          "cost": 0,
+          "hpDeltaPercent": 15,
+          "timerDelta": 0,
+          "rewardPercent": 125,
+          "draftDelta": 1
+        },
+        {
+          "id": "rescue",
+          "label": "Free the caged Pokémon first",
+          "text": "Free the prisoners before the boss: the fight is shorter and the prize smaller, and the freed ones join the draft.",
+          "cost": 100,
+          "hpDeltaPercent": 0,
+          "startHp": 0.85,
+          "timerDelta": -4,
+          "rewardPercent": 80,
+          "draftDelta": 2
+        }
+      ],
+      "gang": {
+        "faction": "gilded-talon",
+        "shadowBoss": true,
+        "rescue": true,
+        "lieutenant": true,
+        "heatDrop": 2
+      },
+      "rewards": {
+        "moneyPerLevel": 170,
+        "items": [
+          {
+            "item": "full-restore",
+            "chance": 1
+          },
+          {
+            "item": "snag-ball",
+            "chance": 0.35
+          }
+        ],
+        "draftExtra": 1,
+        "joinChance": 1
+      },
+      "timerTurns": 24
     }
   ]
 }

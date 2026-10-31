@@ -75,6 +75,8 @@ export const PokemonInstanceSchema = z.object({
   dynamaxed: z.literal(true).optional(),
   /** Shadow Pokémon (catalog #76-77, core/shadow.ts): the Heart Gauge, 100 (sealed) down to 0 (purified). */
   shadow: z.object({ heart: z.number().int().min(1).max(100) }).optional(),
+  /** Blissful Pokémon (core/shadowWorld/blissful.ts): touched by a benevolent force. `aura` picks its look (bloom, glow, chime). */
+  blissful: z.object({ aura: z.string().min(1) }).optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 
@@ -530,6 +532,8 @@ export const BattleStateSchema = z.object({
   kind: z.enum(['wild', 'trainer']),
   /** The ball that caught the wild Pokémon (Friend, Luxury and Heal Ball change it afterwards). */
   ball: z.string().optional(),
+  /** Shadow Pokémon snagged from the trainer this fight (Snag Ball); they join you when the battle is won. */
+  snagged: z.array(PokemonInstanceSchema).optional(),
   turn: z.number().int().min(1),
   /** Encore! Hype (core/battle/engine.ts applyHype): the meter, turns of boost left, and whether the run's Hype was loaded in. */
   hype: z.number().int().min(0).default(0),

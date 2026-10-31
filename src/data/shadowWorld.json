@@ -1,0 +1,237 @@
+{
+ "heartStages": [
+  {
+   "name": "Sealed",
+   "above": 75
+  },
+  {
+   "name": "Wary",
+   "above": 50
+  },
+  {
+   "name": "Thawing",
+   "above": 25
+  },
+  {
+   "name": "Opening",
+   "above": 0
+  }
+ ],
+ "chemistrySoothe": 3,
+ "chemistryMaxPartners": 2,
+ "resistPercent": 15,
+ "outbreakWildPercent": 35,
+ "startHeart": {
+  "min": 80,
+  "max": 100
+ },
+ "blissfulAfterBattleHeal": 0.04,
+ "temperaments": [
+  {
+   "id": "wary",
+   "label": "Wary",
+   "natures": [
+    "timid",
+    "bashful",
+    "careful",
+    "docile",
+    "quirky"
+   ],
+   "sootheMultiplier": 0.8,
+   "story": "Flinches at every hand and watches before it trusts.",
+   "lines": {
+    "Sealed": "It stays at the edge of the party, eyes down.",
+    "Wary": "It lets a teammate sit close for the first time.",
+    "Thawing": "It follows you without being called.",
+    "Opening": "It takes a berry from your hand.",
+    "purified": "The haze lifts. It leans against you, shaking, then steady."
+   }
+  },
+  {
+   "id": "proud",
+   "label": "Proud",
+   "natures": [
+    "adamant",
+    "brave",
+    "naughty",
+    "hasty",
+    "jolly"
+   ],
+   "sootheMultiplier": 1.2,
+   "story": "Eager to prove its strength, and angry that it was ever made to hide it.",
+   "lines": {
+    "Sealed": "It snaps at the air, daring anyone to pity it.",
+    "Wary": "It nods once after a win. That is all.",
+    "Thawing": "It stands between you and the next foe unasked.",
+    "Opening": "It shows you the move it was ashamed of.",
+    "purified": "The haze lifts. It stands tall and, for the first time, fights for itself."
+   }
+  },
+  {
+   "id": "gentle",
+   "label": "Gentle",
+   "natures": [
+    "gentle",
+    "calm",
+    "modest",
+    "mild",
+    "bold"
+   ],
+   "sootheMultiplier": 1.0,
+   "story": "Still kind under the haze, and quick to forgive.",
+   "lines": {
+    "Sealed": "It tilts its head, as if trying to remember something warm.",
+    "Wary": "It nuzzles a teammate and looks surprised at itself.",
+    "Thawing": "It hums while the party rests.",
+    "Opening": "It brings you a flower from the roadside.",
+    "purified": "The haze lifts. It is purified, and it remembers every kindness."
+   }
+  },
+  {
+   "id": "stubborn",
+   "label": "Stubborn",
+   "natures": [
+    "lonely",
+    "relaxed",
+    "impish",
+    "lax",
+    "sassy",
+    "serious",
+    "rash",
+    "hardy"
+   ],
+   "sootheMultiplier": 0.65,
+   "story": "Distrusts everyone, and will take its time deciding you are the exception.",
+   "lines": {
+    "Sealed": "It turns its back and will not eat.",
+    "Wary": "It stops flinching when you reach into the bag.",
+    "Thawing": "It stays awake on watch while you sleep.",
+    "Opening": "It finally answers when you call its name.",
+    "purified": "The haze lifts. It looks at you a long time, then falls into step beside you."
+   }
+  },
+  {
+   "id": "restless",
+   "label": "Restless",
+   "natures": [
+    "naive",
+    "lonely",
+    "timid",
+    "quiet"
+   ],
+   "sootheMultiplier": 1.1,
+   "story": "Always moving, as if the haze might catch it if it ever stopped.",
+   "lines": {
+    "Sealed": "It paces and will not settle.",
+    "Wary": "It rests, once, with one eye open.",
+    "Thawing": "It races ahead and doubles back to check on you.",
+    "Opening": "It falls asleep mid-stride and does not mind.",
+    "purified": "The haze lifts. It runs a full lap of camp, laughing."
+   }
+  }
+ ],
+ "factions": [
+  {
+   "id": "umbra-corps",
+   "name": "Umbra Corps",
+   "color": "#5b3a8c",
+   "aim": "Close Pokémon hearts in a lab and sell them as unstoppable fighters.",
+   "startStage": 2,
+   "lieutenant": {
+    "id": "vesper",
+    "name": "Dr. Vesper",
+    "intro": "Dr. Vesper adjusts a glove. \"Subject recovered, I see. How careless of them to lose it.\"",
+    "returns": "Dr. Vesper is back with a fresh team. \"You cost me a clean prototype last time. I kept the notes.\""
+   },
+   "expands": "Umbra Corps opens more labs and ships more Shadow Pokémon.",
+   "retaliates": "Umbra Corps sends hunters after the Pokémon you freed."
+  },
+  {
+   "id": "gilded-talon",
+   "name": "Gilded Talon",
+   "color": "#b8892f",
+   "aim": "Poach rare Pokémon and hand the strongest to a lab for the Shadow process.",
+   "startStage": 3,
+   "lieutenant": {
+    "id": "rook",
+    "name": "Captain Rook",
+    "intro": "Captain Rook cracks a whip against a crate. \"Pretty team. Pity about the cages.\"",
+    "returns": "Captain Rook returns with armoured handlers. \"Third time lucky. This crate is bolted shut.\""
+   },
+   "expands": "Gilded Talon poaches more routes and fills more cages.",
+   "retaliates": "Gilded Talon raids a quiet place to replace what it lost."
+  }
+ ],
+ "blessings": [
+  {
+   "id": "blessing-hearth",
+   "name": "Hearth Blessing",
+   "text": "A warm calm settles over the party. It takes 15% less damage for the next 3 battles.",
+   "effects": [
+    {
+     "kind": "damageTakenMultiplier",
+     "value": 0.85
+    }
+   ],
+   "battles": 3,
+   "until": "battle"
+  },
+  {
+   "id": "blessing-bloom",
+   "name": "Bloom Blessing",
+   "text": "Soft light mends the team after each of the next 3 battles.",
+   "effects": [
+    {
+     "kind": "postBattleHeal",
+     "percent": 8
+    }
+   ],
+   "battles": 3,
+   "until": "battle"
+  },
+  {
+   "id": "blessing-clarity",
+   "name": "Clarity Blessing",
+   "text": "A clear head: status conditions on your side wear off sooner for the next 2 battles.",
+   "effects": [
+    {
+     "kind": "statusDurationMultiplier",
+     "value": 0.5
+    }
+   ],
+   "battles": 2,
+   "until": "battle"
+  },
+  {
+   "id": "blessing-wild-grace",
+   "name": "Wild Grace",
+   "text": "Wild Pokémon are calmer and easier to befriend for the next 3 wild encounters.",
+   "effects": [
+    {
+     "kind": "captureMultiplier",
+     "value": 1.25
+    }
+   ],
+   "battles": 3,
+   "until": "wild"
+  }
+ ],
+ "auras": [
+  {
+   "id": "bloom",
+   "label": "Bloom",
+   "color": "#9be8a6"
+  },
+  {
+   "id": "glow",
+   "label": "Glow",
+   "color": "#ffe9a8"
+  },
+  {
+   "id": "chime",
+   "label": "Chime",
+   "color": "#a8d4ff"
+  }
+ ],
+ "blissfulRestSoothe": 8
+}

@@ -28,3 +28,9 @@ Added 22 scripts (26 moves): psychic (confusion, extrasensory, psychic-noise), l
 
 ## Slice 7 (draft-generated, 75 scripts)
 75 more generator drafts (the list is in `ebdxAnims.json`): fling, ice-beam, surf, fire-blast, overheat, brave-bird, flash-cannon, sludge-bomb, brick-break, thunder-punch, head-smash, whirlpool, hail, electric-terrain and more. Total 259 moves (230 scripts). About 390 unported EBDX scripts remain.
+
+## Slice 8 (draft-generated, 75 scripts)
+75 more generator drafts (the list is in `ebdxAnims.json`): ice-ball, ion-deluge, mega-kick, spotlight, strength-sap and more. Total 334 moves (305 scripts). About 315 unported EBDX scripts remain.
+
+## Slice 9 (draft-generated, 75 scripts)
+75 more generator drafts (the list is in `ebdxAnims.json`): poltergeist, trailblaze, volt-tackle and more. Total 403 moves (374 scripts). About 245 unported EBDX scripts remain.
