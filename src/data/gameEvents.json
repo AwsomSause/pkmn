@@ -113,7 +113,10 @@
     "rival-rematch",
     "blue-taunt",
     "kieran-rivalry",
-    "mirror-match"
+    "mirror-match",
+    "living-rival-clash",
+    "living-rival-clash-retired",
+    "rival-gauntlet-entry"
    ],
    "objectives": [
     {

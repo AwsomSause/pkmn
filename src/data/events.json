@@ -33754,6 +33754,1082 @@
      }
     }
    ]
+  },
+  {
+   "id": "living-rival-rescue",
+   "name": "A Rival in Trouble",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "rival-rescued",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d24",
+    "effect": "rattle"
+   },
+   "intro": "Someone you have fought is cornered at the edge of the road, their Pokémon worn out and a pack of rough trainers closing in. They see you. They do not ask for help.",
+   "choices": [
+    {
+     "label": "Step in and fight (risky)",
+     "success": {
+      "text": "\"Back off. They are with me.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Roadside Gang",
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 2
+        },
+        {
+         "kind": "flag",
+         "key": "rival-rescued",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You stood between your rival and a gang on the road. They have not forgotten it.",
+         "importance": 80
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Stand with them quietly (safe)",
+     "success": {
+      "text": "The gang thinks twice. Your rival says nothing, but walks beside you for a while.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-rescued",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "You helped your rival out of a corner.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You keep walking. You hear them behind you, and then you do not.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-returns-favor",
+   "name": "The Favour Returned",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "rival-rescued",
+     "atLeast": 1,
+     "atMost": 99
+    },
+    {
+     "kind": "flag",
+     "key": "rival-favor",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a30",
+    "effect": "hearts"
+   },
+   "intro": "Your rival is waiting at the healing stop with their arms crossed. \"I do not owe anyone. So do not think this is a favour. It is a debt.\"",
+   "choices": [
+    {
+     "label": "Let them help (safe)",
+     "success": {
+      "text": "They patch your team up and press a bundle into your hands. \"Now we are even. Almost.\"",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-favor",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 600
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival repaid the rescue.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say it is not a debt",
+     "success": {
+      "text": "They look away, pleased and annoyed about it. A rare item ends up in your bag anyway.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-favor",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-bad-day",
+   "name": "A Rival's Bad Day",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2230",
+    "effect": "rain"
+   },
+   "intro": "Your rival is sitting on a wall in the rain, a lost badge case in their lap. They have not noticed you yet.",
+   "choices": [
+    {
+     "label": "Sit beside them (safe)",
+     "success": {
+      "text": "You do not say much. After a while they laugh, once, and say: \"Next time.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "You sat with your rival on a bad day.",
+        "importance": 65
+       }
+      ]
+     }
+    },
+    {
+     "label": "Tease them",
+     "success": {
+      "text": "Their head snaps up. \"You will regret that.\" Every Pokémon in your party feels a little braver.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave them alone",
+     "success": {
+      "text": "Some days are not for company. You walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-photo-friend",
+   "name": "A Photo With a Friend",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1d",
+    "effect": "hearts"
+   },
+   "intro": "A street photographer is setting up. Your rival waves you over before you can say a word. \"Come on. Both of us. Everyone smiling.\"",
+   "choices": [
+    {
+     "label": "Pose together (safe)",
+     "success": {
+      "text": "The photo is crooked and perfect. Both teams crowd into the frame.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: both teams laughing, arms around each other.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline politely",
+     "success": {
+      "text": "They shrug and take a solo picture instead. They look a little smaller in it.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-photo-rival",
+   "name": "A Photo Neither Wants",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "flicker"
+   },
+   "intro": "A photographer wants \"the famous two\" in one shot. Your rival stands exactly one arm span away and does not smile.",
+   "choices": [
+    {
+     "label": "Stare back at them (safe)",
+     "success": {
+      "text": "The photo is terrifying. It sells well.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       },
+       {
+        "kind": "money",
+        "amount": 400
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: neither blinked.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Offer a handshake",
+     "success": {
+      "text": "They take it, hard, and the camera catches that instead. A small thaw.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: a handshake neither of you meant.",
+        "importance": 75
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-photo-between",
+   "name": "A Photo, Awkwardly",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "between"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a38",
+    "effect": "sparkle"
+   },
+   "intro": "A photographer wants you and your rival in one frame. You both stand there, hands in odd places, not sure what you are to each other.",
+   "choices": [
+    {
+     "label": "Lean in",
+     "success": {
+      "text": "You throw an arm around them. They flinch, then relax.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: awkward, close, and kept.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep your distance",
+     "success": {
+      "text": "The picture shows two people looking at different things.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "A photo with your rival: two people looking at different things.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Skip it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-montage",
+   "name": "A Rival Training Hard",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d18",
+    "effect": "sparkle"
+   },
+   "intro": "Past a fence you see your rival drilling their team at dawn: sprints, dodges, the same move forty times. Their Pokémon are staring at the spot where your team stood.",
+   "choices": [
+    {
+     "label": "Watch from the fence (safe)",
+     "success": {
+      "text": "You learn how they have changed. When you meet again, you will be ready.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You watched your rival train. They are coming back stronger.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spar with them",
+     "success": {
+      "text": "\"Finally. I needed someone who hits back.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Training Partner",
+       "rival": true,
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 1
+        },
+        {
+         "kind": "levels",
+         "amount": 1,
+         "who": "party"
+        },
+        {
+         "kind": "moment",
+         "text": "You sparred with your rival at dawn.",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-promise",
+   "name": "A Promised Rematch",
+   "group": "Living Rival",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "flag",
+     "key": "rival-promise",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "glint"
+   },
+   "intro": "Your rival points past the next ridge. \"Not here. Not like this. Meet me at the end of the next region, and bring everything. I will be ready.\"",
+   "choices": [
+    {
+     "label": "Promise to be there",
+     "success": {
+      "text": "\"Then it is a promise.\" They do not shake your hand. They nod, once.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-promise",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You promised your rival a rematch at the end of the next region.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say you will see",
+     "success": {
+      "text": "\"Fine. But I will be waiting.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-promise",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline",
+     "success": {
+      "text": "\"Your loss.\" They walk away without looking back.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-promise-kept",
+   "name": "The Promise Kept",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "rival-promise",
+     "atLeast": 1,
+     "atMost": 99
+    },
+    {
+     "kind": "flag",
+     "key": "rival-promise-kept",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "glint"
+   },
+   "intro": "Your rival is standing exactly where they said they would be, team at full strength. \"You came. Good. Everything you have.\"",
+   "choices": [
+    {
+     "label": "Fight them",
+     "success": {
+      "text": "\"This is the match I have been training for.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Promised Rival",
+       "rival": true,
+       "size": 4,
+       "types": [],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2200
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "flag",
+         "key": "rival-promise-kept",
+         "amount": 1
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You kept your promise and beat your rival at the place they named.",
+         "importance": 85
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask for a day",
+     "success": {
+      "text": "They look as if they might argue, then do not. \"Tomorrow, then. I have waited this long.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-promise-kept",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-acknowledges",
+   "name": "They Say It Out Loud",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 3
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a38",
+    "effect": "hearts"
+   },
+   "intro": "Your rival climbs onto a crate in the plaza. \"I want everyone to hear this. I lost. They beat me, and it was not luck. I made the same mistake twice.\"",
+   "choices": [
+    {
+     "label": "Shake their hand (safe)",
+     "success": {
+      "text": "The plaza applauds. They look relieved, as if a weight has gone.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival admitted a defeat in public. It marks a turning point in their story.",
+        "importance": 85
+       }
+      ]
+     }
+    },
+    {
+     "label": "Admit you got lucky",
+     "success": {
+      "text": "\"Do not do that,\" they say, smiling. \"Take the win.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-acknowledges-rival",
+   "name": "Grudging Respect",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 3
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "flicker"
+   },
+   "intro": "Your rival blocks the road, jaw tight. \"You beat me. I saw what I did wrong. I will not make the same mistake. That is not a compliment.\"",
+   "choices": [
+    {
+     "label": "Take it as one (safe)",
+     "success": {
+      "text": "They look as if they might say more, and do not. A rare item changes hands.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival admitted, through gritted teeth, that you were better.",
+        "importance": 85
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say nothing",
+     "success": {
+      "text": "You let the silence say it. They nod, and are gone.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-clash",
+   "name": "Rival Clash",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "championGhost"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#201a38",
+    "effect": "spin"
+   },
+   "intro": "Your rival has borrowed a roster: a team recorded from a finished run, set up as a challenge. Nobody is online and no one is playing it live. It is a recording, and it fights like one.",
+   "choices": [
+    {
+     "label": "Take the clash",
+     "success": {
+      "text": "\"This is the strongest team I could find. Let us see whose is better.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival Clash",
+       "ghost": true,
+       "rival": true,
+       "size": 6,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 3000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 80
+        },
+        {
+         "kind": "flag",
+         "key": "rival-heat",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You beat a recorded team in a Rival Clash.",
+         "importance": 80
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-rival-clash-retired",
+   "name": "Rival Clash: The One That Fell",
+   "group": "Living Rival",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "retiredGhost"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#201a38",
+    "effect": "spin"
+   },
+   "intro": "Your rival found a team from a run that ended early and wants to see if you can do what it could not. It is a recording of a past run, not another player live.",
+   "choices": [
+    {
+     "label": "Take the clash",
+     "success": {
+      "text": "\"They almost made it. Show me you can.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival Clash",
+       "retired": true,
+       "rival": true,
+       "size": 6,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 2400
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You beat a recorded run in a Rival Clash.",
+         "importance": 80
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "living-gauntlet-rest",
+   "name": "Between Rivals",
+   "group": "Living Rival",
+   "rarity": "epic",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "gauntlet",
+     "active": true
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "sparkle"
+   },
+   "intro": "A bench between two gauntlet fights. Another rival is already on their way. What do you spend the break on?",
+   "choices": [
+    {
+     "label": "Rest (full recovery)",
+     "success": {
+      "text": "You sleep for an hour. Your team is fully healed.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Train (a level for the team)",
+     "success": {
+      "text": "You use the break to drill. The team comes out a little stronger, but still bruised.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Scout the next rival",
+     "success": {
+      "text": "A scrap of paper tells you what the next opponent is carrying.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 40
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    }
+   ]
   }
  ]
 }
