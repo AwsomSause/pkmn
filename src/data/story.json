@@ -3964,7 +3964,157 @@
       },
       "priority": "emotionalOverdrive",
       "eligibilityTags": [],
-      "emotions": ["perseverance"],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "grudge-foe",
+      "displayName": "An Old Grudge",
+      "messagePool": [
+        "{name} glares at the {enemy}. It has not forgotten."
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "grudgeFoe"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Faced the {enemy} it holds a grudge against"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3a0",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "old-acquaintance",
+      "displayName": "Old Acquaintances",
+      "messagePool": [
+        "{name} recognises the {enemy} from before."
+      ],
+      "category": "flavour",
+      "triggerConditions": {
+        "trigger": "oldAcquaintance"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "flair"
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Recognised the {enemy} from earlier fights"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#7fe3a0",
+        "sound": null,
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "revenge-pact",
+      "displayName": "Revenge Pact!",
+      "messagePool": [
+        "{name} remembers its pact with {other}: this {enemy} will not win again."
+      ],
+      "category": "rivalry",
+      "triggerConditions": {
+        "trigger": "revengePact"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "atk",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Kept its pact against the {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#52d18b",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "determination"
+      ],
+      "variants": {}
+    },
+    {
+      "id": "pair-synergy",
+      "displayName": "Inseparable Pair",
+      "messagePool": [
+        "{name} and {other} read each other perfectly and find an opening."
+      ],
+      "category": "rivalry",
+      "triggerConditions": {
+        "trigger": "pairSynergy"
+      },
+      "chance": null,
+      "effect": {
+        "kind": "statStage",
+        "stat": "acc",
+        "stages": 1
+      },
+      "duration": "battle",
+      "cooldown": "oncePerBattlePerPokemon",
+      "memoryRecord": {
+        "importance": 65,
+        "text": "Opened a gap with {other}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": false,
+        "color": "#52d18b",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": false
+      },
+      "priority": "emotionalOverdrive",
+      "eligibilityTags": [],
+      "emotions": [
+        "kindness"
+      ],
       "variants": {}
     }
   ],
@@ -4213,7 +4363,8 @@
       "rivalRespect",
       "promiseKept",
       "crisisAid",
-      "nemesisReckoning"
+      "nemesisReckoning",
+      "revengePact"
     ]
   },
   "gauntlet": {

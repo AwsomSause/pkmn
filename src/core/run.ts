@@ -147,6 +147,7 @@ import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealM
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
+import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, quickWinBonus, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { withChampionTeam } from './story/championDefense';
 import { grandGauntlet, gauntletRival, markGauntletFight } from './story/gauntlet';
@@ -272,6 +273,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], speciesShiny: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
+    partyLife: createPartyLife(),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
@@ -1565,6 +1567,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'heal' && noHealStops(run.rules)) return { run: current, message: 'Your No Rest contract forbids healing stops.' };
   if (side.kind === 'heal') {
     healParty(content, run);
+    partyLifeCamp(run);
     runSide.used = true;
     count(run, 'healStopsUsed');
     // A Blissful Pokémon's aura calms the Shadow Pokémon resting beside it.
@@ -1869,6 +1872,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const enemyCombo_ = enemyCombo(content, run, enemyBefore);
   if (enemyCombo_) engineEvents.push(enemyCombo_);
   updateBondsTurn(run, engineEvents);
+  partyLifeTurn(content, run, engineEvents);
   run.rng.battle = rng.state;
   run.rng.capture = captureRng.state;
   run.rng.hyper = hyperRng.state;
@@ -1896,6 +1900,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   for (const r of reveal) if (r) events.push(r);
   events.push(...trackFeelings(content, current, run, events as BattleEvent[]));
   if (battle.outcome === 'win') bondVictory(run, Object.values(run.story.histories).filter((h) => h.lastBattle === run.encountersCompleted && run.party.some((m) => m.uid === h.uid)).map((h) => h.uid));
+  if (battle.outcome === 'win') partyLifeVictory(content, run);
   const cues = recordBattleTurn(content, current, run, events);
   // Trainer dialogue for what just happened (presentation only: it never changes the battle).
   const drama = planDrama(content, run, current.battle!, events as BattleEvent[], dialogue);

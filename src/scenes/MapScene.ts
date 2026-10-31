@@ -35,6 +35,7 @@ import { services } from '../game/services';
 import { playMusic, playSfx, playSfxLazy, playMusicLazy } from '../ui/audio';
 import { mapTrack } from '../core/presentation/battleMusic';
 import { openBondMenu } from '../ui/bondMenu';
+import { openPartyScene, openScrapbook } from '../ui/partyLifeUi';
 import { openSummaryMenu } from '../ui/summaryMenu';
 import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
@@ -95,6 +96,7 @@ type Option =
   | { kind: 'items' }
   | { kind: 'story' }
   | { kind: 'bond' }
+  | { kind: 'scrapbook' }
   | { kind: 'summary' }
   | { kind: 'box' }
   | { kind: 'endRun' };
@@ -424,7 +426,7 @@ export class MapScene extends Phaser.Scene {
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
-    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel }, { option: { kind: 'summary' }, label: 'Summary', color: COLORS.panel });
+    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'scrapbook' }, label: 'Album', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel }, { option: { kind: 'summary' }, label: 'Summary', color: COLORS.panel });
     if (wipeStatus(services().session.run!)) buttons.push({ option: { kind: 'endRun' }, label: 'End run', color: 0x6a2a38 });
     // Narrower buttons when there are many, so they never run into the info line.
     const bw = buttons.length > 7 ? Math.max(76, Math.floor((GAME_WIDTH - 48) / buttons.length) - 8) : 92;
@@ -457,6 +459,15 @@ export class MapScene extends Phaser.Scene {
       if (action === 'down' || action === 'right') this.focus((this.index + 1) % n);
       if (action === 'confirm') this.activate(this.index);
     });
+
+    // Party scenes: what the team did on the way here (a conversation, a gathering, a huddle before a boss).
+    const partyScene = stage.current !== null ? session.ensureScene() : null;
+    if (partyScene) {
+      this.time.delayedCall(350, () => {
+        if (this.picker) return;
+        openPartyScene(this.fieldHost(), partyScene, (lines) => this.scene.restart({ notice: lines.join(' '), focus: this.index }));
+      });
+    }
 
     if (stage.current === null && !data.notice) {
       const regions = run.regionOrder.length;
@@ -583,7 +594,9 @@ export class MapScene extends Phaser.Scene {
       case 'summary':
         return 'Look at each Pokémon: types, ability, held items, stats, moves and its story this run.';
       case 'bond':
-        return 'See how each Pokémon feels about you: trust, affection, sync and more.';
+        return 'See how each Pokémon feels about you: trust, affection, sync and more, plus its personality and friendships.';
+      case 'scrapbook':
+        return 'Your team scrapbook: photos and small moments from the road. Take a team photo here.';
       case 'story':
         return `Read the story of your run so far, with the feelings each moment left. People call you ${protagonistTitle(services().session.run!).name}.`;
       case 'endRun':
@@ -694,6 +707,9 @@ export class MapScene extends Phaser.Scene {
         break;
       case 'bond':
         openBondMenu(this.fieldHost());
+        break;
+      case 'scrapbook':
+        openScrapbook(this.fieldHost());
         break;
       case 'story':
         openStoryMenu(this.fieldHost());

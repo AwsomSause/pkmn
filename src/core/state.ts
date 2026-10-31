@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { STREAM_NAMES, type StreamName } from './rng';
 import { ArchivedRivalSchema, StoryStateSchema } from './story/schema';
+import { PartyLifeStateSchema, createPartyLife } from './partyLife/schema';
 import { freshHyperBattle } from './battle/hyper';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
@@ -1021,6 +1022,8 @@ export const RunStateSchema = z.object({
   }),
   /** The story layer: domain events, Pokémon histories, the chronicle and applied effect ids (core/story). */
   story: StoryStateSchema,
+  /** Personalities in play: pair chemistry, grudges, pacts, the scene waiting on the map and the scrapbook (core/partyLife). */
+  partyLife: PartyLifeStateSchema.default(() => createPartyLife()),
   /** An earlier run's rival whose character may shape one of this run's rivals (picked at the start from the account archive; null: none). */
   legacyRival: ArchivedRivalSchema.nullable().default(null),
   /** Raid record this run (dens entered, won, lost) and the dens already finished. */
