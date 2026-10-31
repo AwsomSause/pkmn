@@ -167,6 +167,9 @@ import { withTeamTypes } from './rivals/adapt';
 import { finaleAssistRival } from './rivals/living';
 import { markTakeover, takeoverNote, takeoverRival } from './rivals/promotion';
 import { frontRunnerIntro, onFrontRunnerBattle } from './timeline/frontRunner';
+import { memoryPick } from './memories/encounters';
+import { noteReplayTurn, sealReplay } from './memories/replay';
+import { noteSkips, worldStageStart } from './memories/world';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
 import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
@@ -234,6 +237,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     prep: { ...prep, campaignId: campaign.id, note: draft.note },
     party: [],
     eggs: [],
+    past: null,
     money: Math.floor(resources.money * scale),
     inventory,
     candies: 0,
@@ -477,6 +481,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   });
   const problems = validateStageMap(map);
   if (problems.length > 0) throw new Error(`Generated an invalid stage map: ${problems.join('; ')}`);
+  noteSkips(content, run);
   noteJournal(content, run);
   run.usedThemes.push(theme.id);
   run.usedLeaders.push(leader.id);
@@ -489,6 +494,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   noteProtagonistTitle(content, run);
   tellCampfire(content, run);
   tellAct(content, run);
+  worldStageStart(content, run);
   applyGrandInfluence(content, run);
   growCrisis(content, run);
   grandGauntlet(content, run);
@@ -1444,14 +1450,17 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       plan = r.plan;
       nemesisSetup = r;
     }
+    // Memories: a Previous-Run Gauntlet team, an Echo of a skipped branch, or a Ghost from a failed run takes the slot (one a stage).
+    const memoryHit = rule && !back && !rivalBack && !nemesis ? memoryPick(content, run, plan) : null;
+    if (memoryHit) plan = memoryHit.plan;
     // The Hunter Has Become the Hunted!: a class you keep beating sends a team built to beat your lead (once per region).
-    const hunted = rule && !back && !rivalBack && !nemesis && isHunted(content, run, plan.classId);
+    const hunted = rule && !back && !rivalBack && !nemesis && !memoryHit && isHunted(content, run, plan.classId);
     if (hunted) {
       plan = withTeamTypes(content, plan, counterTypes(content, getSpecies(content, run.party[activeIndex]!.speciesId).types));
       markHunted(run);
     }
     // RSVP Mail: the first ordinary trainer of the stage is a rival, a few levels up.
-    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival && !nemesis && !hunted ? perkItem(content, run, 'rival') : null;
+    const rsvp = node.kind === 'trainer' && !rematch && !back && !rivalBack && !firstRival && !nemesis && !hunted && !memoryHit ? perkItem(content, run, 'rival') : null;
     let isRival = false;
     if (rsvp && !usedThisStage(run, rsvp)) {
       isRival = true;
@@ -1485,6 +1494,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     }
     if (nemesis && nemesisSetup) beginNemesisBattle(content, run, nemesis, nemesisSetup.change, nemesisSetup.partner);
     if (hunted) run.battle.hunted = true;
+    if (memoryHit) run.battle.memory = memoryHit.memory;
     // Living Rival: a friend (or a rescued rival) arrives to help in the final boss (clear rules in rivals/living.ts).
     if (plan.classId === CHAMPION_CLASS && isFinalBoss(content, run)) {
       const assist = finaleAssistRival(content, run, Math.max(...team.map((m) => m.level)));
@@ -1498,7 +1508,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const doublesCfg = content.balance.doubles;
     // Bosses known for double battles (Tate & Liza) always fight two at a time.
     if (plan.leaderId && doublesCfg.bossIds.includes(plan.leaderId) && canBeDoubles(run.party, team)) makeDoubles(run.battle, run.party);
-    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && !nemesis && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
+    else if (node.kind === 'trainer' && !rematch && !back && !rivalBack && !isRival && !nemesis && !memoryHit && stageNumber >= doublesCfg.fromStage && canBeDoubles(run.party, team)) {
       if (new Rng(hashSeed(`${run.seed}::doubles::${run.regionIndex}::${stage.index}::${node.id}`)).chance(doublesCfg.chance)) makeDoubles(run.battle, run.party);
     }
     if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
@@ -1904,6 +1914,9 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   const cues = recordBattleTurn(content, current, run, events);
   // Trainer dialogue for what just happened (presentation only: it never changes the battle).
   const drama = planDrama(content, run, current.battle!, events as BattleEvent[], dialogue);
+  // Battle Replay: the big fights keep a short turn-by-turn record, sealed when the fight ends.
+  noteReplayTurn(content, run, current.battle!, events as BattleEvent[]);
+  if (battle.outcome) sealReplay(content, run);
   // Mega Evolution and other transformations end with the battle, and so do "next battle" item effects.
   if (battle.outcome) {
     revertTransformations(content, battle, run.party, runArchetype(content, run).modifiers);

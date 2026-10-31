@@ -21,6 +21,8 @@ import { changeFriendship } from '../friendship';
 import { ATTRIBUTE_KEYS, METER_ATTRIBUTES, type Content, type Item, type StatName } from '../contentSchema';
 import type { PokemonInstance, RunState, SideStop } from '../state';
 import { recordTraded } from '../story/hooks';
+import { claimKeepsake, grantKeepsake, keepsakeName, keepsakeValid, nextKeepsake, type Keepsake } from '../memories/keepsakes';
+import { MEMORIES } from '../memories/schema';
 import { getService, SERVICES, type ServiceDef } from './schema';
 import { highestOpenTier } from '../raid/raid';
 
@@ -188,6 +190,13 @@ function auctionLots(content: Content, run: RunState, sideId: string): [Item, nu
   return lots;
 }
 
+/** The Lost-and-Found lot at an auction stop: a keepsake from an earlier run, or none (a hash of the seed picks which stops have one). */
+function lostFoundLot(content: Content, run: RunState, sideId: string): { index: number; k: Keepsake; cost: number } | null {
+  const k = nextKeepsake(run);
+  if (!k || !keepsakeValid(content, k.itemId) || new Rng(hashSeed(`${run.seed}::lostfound::${sideId}`)).float() >= MEMORIES.lostFound.chance) return null;
+  return { index: run.past!.keepsakes.indexOf(k), k, cost: Math.max(50, Math.round(price(run, C.auctionReserve) * MEMORIES.lostFound.discount)) };
+}
+
 /** The room's hidden best bid on a lot: fixed by the seed, so reloading never changes the result. */
 function hiddenBid(run: RunState, sideId: string, itemId: string, reserve: number): number {
   return Math.round(reserve * (0.9 + new Rng(hashSeed(`${run.seed}::auction-room::${sideId}:${itemId}`)).float() * 0.9));
@@ -302,6 +311,11 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
       for (const [it, reserve] of auctionLots(content, run, sideId)) {
         add(`bid:${it.id}:low`, `${it.name}: bid ₽${reserve}`, `Pays only if you win. The room's best bid is hidden; a higher bid wins more often.`, reserve, side.used ? 'You already bid today.' : null);
         add(`bid:${it.id}:high`, `${it.name}: bid ₽${Math.round(reserve * C.auctionHighBid)}`, 'A strong bid. Still pays only if you win.', Math.round(reserve * C.auctionHighBid), side.used ? 'You already bid today.' : null);
+      }
+      {
+        // Lost-and-Found: a lot with a history, from an earlier run (core/memories/keepsakes.ts), sold at a reduced price.
+        const found = lostFoundLot(content, run, sideId);
+        if (found) add(`found:${found.index}`, `Lost-and-Found: ${keepsakeName(content, found.k.itemId)}`, `${found.k.line} Sold at a reduced price.`, found.cost, side.used ? 'You already bid today.' : null);
       }
       break;
     case 'workshop': {
@@ -511,6 +525,13 @@ export function useService(content: Content, current: RunState, sideId: string, 
         run.money += option.cost;
         message = 'Someone in the room outbid you. You keep your money.';
       }
+      break;
+    }
+    case 'found': {
+      const k = current.past?.keepsakes[Number(uid)];
+      if (!k || !grantKeepsake(content, run, k.itemId)) throw new Error('That lot is gone');
+      claimKeepsake(content, run, k);
+      message = `You recovered ${keepsakeName(content, k.itemId)}. ${k.line}`;
       break;
     }
     case 'read':

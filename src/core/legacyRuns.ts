@@ -156,6 +156,8 @@ export function buildLegacyRun(content: Content, run: RunState, now: string, his
     moments,
     journal: [...(history?.journal ?? run.journal)],
     epitaph: history?.epitaph ?? null,
+    replays: structuredClone(run.story.replays),
+    world: structuredClone(run.story.world),
     genesis: null,
   };
   return record;
@@ -196,6 +198,8 @@ export function legacyRunFromHistory(r: RunRecord): LegacyRun {
     moments: r.defeatedBy ? [{ kind: 'runEnding', text: `The journey ended against ${r.defeatedBy.trainer ? `${r.defeatedBy.trainer}'s ` : 'a wild '}${r.defeatedBy.speciesId} (Lv ${r.defeatedBy.level}).`, speciesId: r.defeatedBy.speciesId, region: null }] : [],
     journal: [...r.journal],
     epitaph: r.epitaph,
+    replays: [],
+    world: null,
     genesis: null,
   };
 }

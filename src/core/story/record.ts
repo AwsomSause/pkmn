@@ -8,6 +8,7 @@
 
 import type { Content } from '../contentSchema';
 import { findNode } from '../map';
+import { freshWorld } from '../memories/schema';
 import type { RunState } from '../state';
 import { applyRivalProgress } from '../rivals/progression';
 import type {
@@ -25,7 +26,7 @@ import type {
 } from './schema';
 
 export function createStoryState(): StoryState {
-  return { seq: 0, events: [], histories: {}, relationships: [], enemyProfiles: [], rivals: [], rivalGraph: [], standing: { sponsor: null, factions: {}, bosses: 0, debts: [] }, chronicle: [], appliedEffects: [], flags: {}, majorCuesThisBattle: 0, nemeses: [] };
+  return { seq: 0, events: [], histories: {}, relationships: [], enemyProfiles: [], rivals: [], rivalGraph: [], standing: { sponsor: null, factions: {}, bosses: 0, debts: [] }, chronicle: [], appliedEffects: [], flags: {}, majorCuesThisBattle: 0, nemeses: [], replays: [], world: freshWorld() };
 }
 
 /** Which battle of the run this is (counted from 0). Lost battles end the run, so this never repeats. */

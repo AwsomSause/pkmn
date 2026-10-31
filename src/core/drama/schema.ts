@@ -67,6 +67,8 @@ export const DramaBattleSchema = z.object({
   feelings: z.record(z.string(), z.record(z.string(), z.number().int().min(0))).default({}),
   turned: z.array(z.string()).default([]),
   /** Battle recap tally (catalog 14): damage dealt per Pokémon, narrowest survival, biggest hit. Optional: older saves have none. */
+  /** Battle Replay: concise turn lines of this fight (core/memories/replay.ts). */
+  replay: z.array(z.string()).optional(),
   recap: z.object({
     dealt: z.record(z.string(), z.number()).default({}),
     low: z.object({ uid: z.string(), share: z.number() }).nullable().default(null),

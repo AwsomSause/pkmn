@@ -28,6 +28,9 @@ import { openFeud, settleFeud } from './story/feud';
 import { noteEventMorality } from './story/nemesis';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
+import { pastGauntletLeft, startPastGauntlet } from './memories/encounters';
+import { nextKeepsake, recoverKeepsake } from './memories/keepsakes';
+import { noteChoice } from './memories/world';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
 import { scavengerBonus } from './bank';
@@ -119,6 +122,10 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return huntClues(run) >= c.atLeast && huntClues(run) <= c.atMost && !(c.atLeast > 0 && huntDone(run));
     case 'gauntlet':
       return (gauntletLeft(run) > 0) === c.active;
+    case 'pastTeams':
+      return (run.past?.gauntlet.length ?? 0) >= c.atLeast && pastGauntletLeft(run) === 0 && !run.story.flags['pgaunt:started'];
+    case 'keepsake':
+      return nextKeepsake(run) !== null;
     case 'partyTag':
       return run.party.some((m) => content.species.get(m.speciesId)?.tags.includes(c.tag));
     case 'bond':
@@ -233,6 +240,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs more clues about the Grand-Enemy';
     case 'gauntlet':
       return c.active ? 'Needs a rival gauntlet to be running' : 'Needs no rival gauntlet running';
+    case 'pastTeams':
+      return `Needs ${c.atLeast} teams from past runs`;
+    case 'keepsake':
+      return 'Needs an item from an earlier run';
   }
 }
 
@@ -488,6 +499,7 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   emit(content, run, 'eventChoice', { data: { event: event.id, choice: choiceIndex, risky, success } });
   // Kindness and cruelty are remembered by the event's Pokémon types (It Hasn't Forgotten…).
   noteEventMorality(content, run, event.types ?? [], outcome.effects);
+  noteChoice(content, run, event.name, outcome.effects, risky);
   const changes: string[] = [];
   // Prop Case: a Contest stop's Charisma counts twice.
   const contest = event.stop === 'contest' && hasPerk(content, run, 'doubleContest');
@@ -598,6 +610,10 @@ export function effectWords(content: Content, e: EventEffect): string {
       return e.finish ? 'the hunt ends' : 'a clue';
     case 'gauntlet':
       return `${e.rivals} rivals will come for you`;
+    case 'pastGauntlet':
+      return `${e.teams} of your old teams will come for you`;
+    case 'recoverKeepsake':
+      return 'an item from an earlier run';
     case 'tournament':
       return e.round === 9 ? 'tournament over' : 'tournament round';
     case 'recruit':
@@ -817,6 +833,10 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       return e.finish ? finishHunt(content, run) : addHuntClue(content, run);
     case 'gauntlet':
       return startGauntlet(content, run, e.rivals) > 0 ? effectWords(content, e) : 'no rivals to face yet';
+    case 'pastGauntlet':
+      return startPastGauntlet(content, run, e.teams) > 0 ? effectWords(content, e) : 'no old teams to face yet';
+    case 'recoverKeepsake':
+      return recoverKeepsake(content, run) ?? 'nothing was left to recover';
     case 'recruit':
       run.itemCounters = { ...run.itemCounters, [`recruit:${e.trainer}`]: 1 };
       return effectWords(content, e);
