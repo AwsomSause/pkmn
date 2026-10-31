@@ -74,6 +74,7 @@ export function freshRaidBattle(def: RaidDef): RaidBattle {
     cheersLeft: 3,
     cheerOffense: 0,
     cheerDefense: 0,
+    cheerLevel: 1,
     lead: null,
     breaker: null,
     tank: null,
@@ -137,20 +138,22 @@ export function raidFieldMultiplier(content: Content, battle: BattleState, attac
   const mods = getRaid(content, raid.id).modifiers;
   let m = 1;
   if (attacker === 'player') {
-    if (raid.cheerOffense > 0) m *= OFFENSE_CHEER;
+    if (raid.cheerOffense > 0) m *= OFFENSE_CHEER[raid.cheerLevel - 1]!;
     const weak = rotatingWeakness(content, battle);
     if (weak && weak.type === moveType) m *= weak.boost;
   } else {
     if (mods.surge && mods.surge.type === moveType) m *= mods.surge.boost;
-    if (raid.cheerDefense > 0) m *= DEFENSE_CHEER;
+    if (raid.cheerDefense > 0) m *= DEFENSE_CHEER[raid.cheerLevel - 1]!;
   }
   return m;
 }
 
 /** Cheer strengths (Raid Battles pack: Offense, Defense, Healing). */
-export const OFFENSE_CHEER = 1.3;
-export const DEFENSE_CHEER = 0.7;
-export const HEALING_CHEER = 0.3;
+export const OFFENSE_CHEER = [1.3, 1.45, 1.6];
+export const DEFENSE_CHEER = [0.7, 0.6, 0.5];
+export const HEALING_CHEER = [0.3, 0.45, 0.6];
+/** Cheer level from the raids won so far: 0 wins = 1, 1 to 2 = 2, 3 or more = 3. */
+export const cheerLevelFor = (raidsWon: number): number => (raidsWon >= 3 ? 3 : raidsWon >= 1 ? 2 : 1);
 export const CHEER_TURNS = 3;
 export type Cheer = 'offense' | 'defense' | 'healing' | 'counter';
 

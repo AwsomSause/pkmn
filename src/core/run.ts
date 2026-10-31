@@ -106,7 +106,7 @@ import {
   wildShinyMultiplier,
   wildSpeciesWithItems,
 } from './mapItems';
-import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { pickStones } from './expedition/flow';
@@ -353,6 +353,8 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   if (wantsTypeLock(run.rules)) run.rules.lockType = getSpecies(content, speciesId).types[0]!;
   run.party[0]!.friendship = content.balance.friendship.starter;
   const perks = runArchetype(content, run).modifiers;
+  const fixed = runArchetype(content, run).signatureMovesets[speciesId];
+  if (fixed) run.party[0]!.moves = fixed.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
   const signature = hasStarterSignature(perks) ? signatureMoveFor(content, speciesId) : null;
   if (signature && !run.party[0]!.moves.some((m) => m.id === signature)) {
     const starter = run.party[0]!;
@@ -1019,6 +1021,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   run.battle.ai = 0.6;
   run.battle.raid = freshRaidBattle(def);
   run.battle.raid.lead = run.party[activeIndex]!.uid;
+  run.battle.raid.cheerLevel = cheerLevelFor(run.raids.won);
   const raidState = run.battle.raid;
   if (approach) {
     if (approach.startHp) raidState.pendingShields = raidState.pendingShields.filter((at) => at < approach.startHp!);

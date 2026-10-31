@@ -95,7 +95,20 @@ export class Picker {
       else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && put());
     }
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
-    this.root.add(scene.add.text(GAME_WIDTH - 48, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
+    const hintRight = config.onBack ? GAME_WIDTH - 150 : GAME_WIDTH - 48;
+    this.root.add(scene.add.text(hintRight, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
+    if (config.onBack) {
+      // A clickable Back button, so every page can be left with the mouse or touch too.
+      const back = scene.add
+        .text(GAME_WIDTH - 48, 47, '◀ Back', textStyle(22, COLORS.gold))
+        .setOrigin(1, 0.5)
+        .setName('picker-back')
+        .setInteractive({ useHandCursor: true });
+      back.on('pointerover', () => back.setColor(COLORS.textLight));
+      back.on('pointerout', () => back.setColor(COLORS.gold));
+      back.on('pointerdown', () => this.handle('back'));
+      this.root.add(back);
+    }
 
     const colW = config.columns === 2 ? (GAME_WIDTH - 112) / 2 : GAME_WIDTH - 96;
     this.list = scene.add.container(0, 0);

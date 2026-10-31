@@ -73,3 +73,32 @@ describe('NPC trainer recruit events', () => {
     expect(profile.unlockedArchetypes.filter((id) => id === joey.id)).toHaveLength(1);
   });
 });
+
+describe('NPC trainer movesets and trainer classes', () => {
+  it('every NPC trainer has a fixed supported moveset for each signature species it can start with', () => {
+    for (const a of npcs) {
+      for (const id of a.signatureSpecies) {
+        const set = a.signatureMovesets[id];
+        expect(set, `${a.id} ${id}`).toBeTruthy();
+        for (const m of set!) expect(content.moves.get(m)?.supported, `${a.id} ${id} ${m}`).toBe(true);
+      }
+    }
+  });
+  it('picking a signature species starts with exactly that moveset', async () => {
+    const { chooseStarter } = await import('../../src/core/run');
+    const a = npcs[0]!;
+    const species = a.signatureSpecies[0]!;
+    const run = createRun(content, { runId: 'm', seed: 'm', archetypeId: a.id, prep: defaultPrep(content) });
+    run.starterChoices = [species, ...run.starterChoices.slice(1)];
+    const started = chooseStarter(content, run, 0);
+    expect(started.party[0]!.moves.map((m) => m.id)).toEqual(a.signatureMovesets[species]);
+  });
+  it('has at least 25 trainer classes with a style, personality and lines', () => {
+    const classes = [...content.trainers.values()];
+    expect(classes.length).toBeGreaterThanOrEqual(25);
+    for (const c of classes) {
+      expect(c.personality.length, c.id).toBeGreaterThan(0);
+      expect(c.lines?.intro, c.id).toBeTruthy();
+    }
+  });
+});
