@@ -520,6 +520,10 @@ export const BASE_COUNTER_NAMES = [
   'eventClues',
   'eventBossesWon',
   'eventFinalesWon',
+  /** Relationship counters, worked out when a run ends (core/relationships.ts). */
+  'bestFriends',
+  'mentorshipsStarted',
+  'mentorshipsGraduated',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
