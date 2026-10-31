@@ -3979,9 +3979,11 @@
       "steps": [
         "trainer-will-return",
         "enemy-unshaken",
-        "pushed-back-up"
+        "pushed-back-up",
+        "rivalry-grown",
+        "rival-respect"
       ],
-      "text": "a trainer vowed to return, stood firm at the end, and was beaten after a comeback",
+      "text": "a trainer vowed to return, stood firm at the end, was beaten after a comeback, and finally earned respect once both sides had won",
       "importance": 90,
       "emotions": [
         "determination"

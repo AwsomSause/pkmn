@@ -157,6 +157,7 @@ import { markTakeover, takeoverNote, takeoverRival } from './rivals/promotion';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
 import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
+import { answerAskLead, planAskLead } from './story/askLead';
 import { planReunion, reunionPokemon } from './story/reunion';
 
 export interface NewRunOptions {
@@ -2189,6 +2190,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   graduateMentorships(content, run);
   const mentorOffer = !run.victory ? planMentorship(content, run) : null;
   if (mentorOffer) run.pending.push({ kind: 'mentorship', ...mentorOffer });
+  const leadAsk = !run.victory && battle.outcome === 'win' && !mentorOffer ? planAskLead(content, run) : null;
+  if (leadAsk) run.pending.push({ kind: 'askLead', ...leadAsk });
   // An event battle you won pays its own rewards.
   const eventRewards = outcome === 'win' && battle.event ? eventBattleWon(content, run, battle.event) : [];
   // A fished Pokémon is an extra catch, and an event battle has its own rewards: no reward draft after them.
@@ -2325,7 +2328,8 @@ export type DecisionChoice =
   | { kind: 'keepsake' }
   | { kind: 'teachMove'; moveIndex: number }
   | { kind: 'ppUpMove'; moveIndex: number }
-  | { kind: 'mentor'; accept: boolean };
+  | { kind: 'mentor'; accept: boolean }
+  | { kind: 'askLead'; accept: boolean };
 
 export interface DecisionResult {
   run: RunState;
@@ -2417,6 +2421,9 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
   } else if (decision.kind === 'mentorship') {
     if (choice.kind !== 'mentor') throw new Error('Accept or decline the mentorship');
     message = answerMentorship(content, run, decision, choice.accept);
+  } else if (decision.kind === 'askLead') {
+    if (choice.kind !== 'askLead') throw new Error('Say yes or not now');
+    message = answerAskLead(content, run, decision, choice.accept);
   } else if (decision.kind === 'teachMove') {
     const mon = run.party.find((p) => p.uid === decision.uid);
     if (!mon) {

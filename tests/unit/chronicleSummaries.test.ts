@@ -27,3 +27,51 @@ describe('Chronicle summaries per region, raid and nemesis (2.3)', () => {
     expect(story.body).toContain('Reckoning is still ahead');
   });
 });
+
+import { advanceChains, chainProgress } from '../../src/core/story/chains';
+
+describe('rival chain steps 4 and 5 (2.3)', () => {
+  it('the rival chain finishes only after the rivalry has grown and respect was earned', () => {
+    const run = fresh();
+    const chain = content.story.chains.find((c) => c.id === 'rival-wont-stay-down')!;
+    expect(chain.steps).toHaveLength(5);
+    const uid = run.party[0]!.uid;
+    for (const step of chain.steps.slice(0, 4)) expect(advanceChains(content, run, step, uid)).toEqual([]);
+    expect(chainProgress(run, chain.id)).toBe(4);
+    expect(advanceChains(content, run, 'rival-respect', uid)).toEqual([chain.id]);
+    expect(run.story.histories[uid]?.titles ?? []).toEqual(expect.arrayContaining([chain.title]));
+  });
+});
+
+import { createPokemon } from '../../src/core/pokemon';
+import { answerAskLead, planAskLead } from '../../src/core/story/askLead';
+import { openHistory } from '../../src/core/story/record';
+
+describe('Feels Left Out / Campfire: ask to lead (2.3)', () => {
+  it('a benched Pokémon with hardly any fights asks once per stage; yes puts it first', () => {
+    const run = fresh();
+    const rookie = createPokemon(content, 'rattata', 8, 'rookie');
+    run.party.push(rookie);
+    openHistory(content, run, rookie.uid, rookie.speciesId, 'caught');
+    run.encountersCompleted = 2;
+    expect(planAskLead(content, run)).toBeNull();
+    run.encountersCompleted = 6;
+    const ask = planAskLead(content, run)!;
+    expect(ask).toMatchObject({ uid: 'rookie', reason: 'leftOut' });
+    const before = rookie.friendship;
+    expect(answerAskLead(content, run, ask, true)).toContain('takes the lead');
+    expect(run.party[0]!.uid).toBe('rookie');
+    expect(rookie.friendship).toBeGreaterThan(before);
+    expect(planAskLead(content, run)).toBeNull();
+  });
+  it('not now keeps the order and does not ask again this stage', () => {
+    const run = fresh();
+    const rookie = createPokemon(content, 'rattata', 8, 'rookie');
+    run.party.push(rookie);
+    openHistory(content, run, rookie.uid, rookie.speciesId, 'caught');
+    run.encountersCompleted = 6;
+    answerAskLead(content, run, planAskLead(content, run)!, false);
+    expect(run.party[0]!.uid).not.toBe('rookie');
+    expect(planAskLead(content, run)).toBeNull();
+  });
+});

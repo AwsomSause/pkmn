@@ -728,6 +728,8 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('reunion'), mon: PokemonInstanceSchema, hallOfFame: z.boolean() }),
   /** A veteran offers to mentor a younger teammate (core/story/mentorship.ts). */
   z.object({ kind: z.literal('mentorship'), mentorUid: z.string(), proteUid: z.string(), path: z.enum(['guardian', 'striker', 'strategist', 'survivor', 'challenger', 'bonded']) }),
+  /** A benched Pokémon asks to lead (core/story/askLead.ts). */
+  z.object({ kind: z.literal('askLead'), uid: z.string(), reason: z.enum(['leftOut', 'campfire']) }),
   /** A PP Up or PP Max: pick which move gets the extra PP. */
   z.object({ kind: z.literal('ppUp'), uid: z.string(), itemName: z.string(), ups: z.number().int().min(1).max(3) }),
   /** A trainer's signature mechanic: pick one of the options (core/signature.ts). */
