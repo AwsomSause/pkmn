@@ -33,6 +33,8 @@ import { dexState } from '../core/presentation/dexInfo';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { loadAssets, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showcase';
+import { LegacyRotationView } from '../ui/legacyRotation';
+import { legacyRotation } from '../core/legacyRuns';
 import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
@@ -40,7 +42,7 @@ import { codexEntries, codexTotals } from '../core/story/codex';
 import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -58,6 +60,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
   { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, the Contract Board, objectives and rewards (Enter)." },
   { room: 'fame', label: 'Hall of Fame', blurb: 'Champion teams, unusual wins, rare Pokémon, records and Legacy Cards (Enter).' },
+  { room: 'legacy', label: 'Legacy Gallery', blurb: 'Every past Trainer: their team, Ace, rivals, final battle and ending. Relive the Moment (Enter).' },
   { room: 'tree', label: 'Research Tree', blurb: 'Spend Research Points on small start-of-run perks and deeper intel (Enter).' },
   { room: 'prestige', label: 'Prestige', blurb: 'Rise a rank for a title and more contacts. Nothing you own is ever deleted (Enter).' },
   { room: 'network', label: 'Trainer Network', blurb: 'Trainers you did not pick still send a small parcel when you start a run (Enter).' },
@@ -139,7 +142,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['options', 'save', 'back'], blurb: 'Game settings, save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'codex', 'intel', 'museum', 'seeds'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
+  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'codex', 'intel', 'museum', 'seeds'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
@@ -159,11 +162,15 @@ const ROOM_ICON: Partial<Record<Room, string>> = {
   moves: 'item.exp_charm',
   seeds: 'item.mystery_egg',
   events: 'item.calendar',
+  legacy: 'item.master_ribbon',
   save: 'item.map',
   back: 'item.pair_of_tickets',
 };
 
 const TILE_Y = 470;
+/** Hub visits this session, and the past runs the last rotation showed (they cool down next time). */
+let rotationVisits = 0;
+let lastRotation: string[] = [];
 const TILE_H = 104;
 /** How far a focused tile rises. */
 const TILE_RISE = 16;
@@ -188,6 +195,8 @@ export class HubScene extends Phaser.Scene {
   private blurb!: Phaser.GameObjects.Text;
   private blurbPill!: Phaser.GameObjects.Graphics;
   private showcase!: ShowcaseMon;
+  /** The Legacy Rotation (past Trainers and their Aces) on the stage instead of the tile Pokémon, once there are past runs. */
+  private rotation: LegacyRotationView | null = null;
   /** One Pokémon per tile, shown behind the menu when that tile is focused. */
   private tileMons: Species[] = [];
 
@@ -232,6 +241,13 @@ export class HubScene extends Phaser.Scene {
     }
     drawHubProps(this, p, session.settings.battleAnimations);
     this.showcase = new ShowcaseMon(this, GAME_WIDTH / 2, 356, PIXEL_SCALE, 250);
+    // The Legacy Rotation (M9): the saved run first, then past Trainers by Legacy Score; last visit's picks cool down.
+    const current = session.savedRun.status === 'ok' ? session.savedRun.data : null;
+    const entries = legacyRotation(session.content, p.legacyRuns, { seed: `${p.stats.runsEnded}:${rotationVisits++}`, current, cooldown: lastRotation });
+    lastRotation = entries.filter((e) => !e.current).map((e) => e.runId);
+    this.rotation = entries.length > 0
+      ? new LegacyRotationView(this, session.content, entries, { x: GAME_WIDTH / 2, y: 356, motion: session.settings.battleAnimations, records: new Map(p.legacyRuns.map((r) => [r.runId, r])), currentSpecies: current?.party.map((m) => m.speciesId) ?? [], seed: `${p.profileId}:${rotationVisits}` })
+      : null;
 
     drawLogo(this, 20, 8, 34, 0, session.settings.battleAnimations);
     let right = GAME_WIDTH - 16;
@@ -316,7 +332,7 @@ export class HubScene extends Phaser.Scene {
     const t = TILES[i]!;
     this.setBlurb(t.blurb);
     const mon = this.tileMons[i];
-    if (mon) this.showcase.show(mon);
+    if (mon && !this.rotation) this.showcase.show(mon);
   }
 
   /** The one-line description above the tiles, on a dark pill. */
@@ -506,6 +522,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'fame':
         this.scene.start('HallOfFame');
+        break;
+      case 'legacy':
+        this.scene.start('LegacyGallery');
         break;
       case 'tree':
       case 'prestige':

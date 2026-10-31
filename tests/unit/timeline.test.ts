@@ -4,7 +4,7 @@ import { gameplayFingerprint, step } from './autoplay';
 import { createPokemon } from '../../src/core/pokemon';
 import { nextChoices } from '../../src/core/map';
 import type { RunState } from '../../src/core/state';
-import { beginReplay, captureGenesis, emptyTimelineStore, endReplay, GENESIS_KEEP, nextAttempt, reconstructRun, rememberGenesis, replayIdFor, replayProblem, type RunGenesis } from '../../src/core/timeline/genesis';
+import { beginReplay, captureGenesis, emptyTimelineStore, endReplay, GENESIS_KEEP, nextAttempt, reconstructRun, rememberGenesis, replayIdFor, replayProblem, startingData, type RunGenesis } from '../../src/core/timeline/genesis';
 import { frontRunner, frontRunnerIntro, FRONT_RUNNER_ID, isFalseProtagonist, onFrontRunnerBattle, timelineOutcome } from '../../src/core/timeline/frontRunner';
 import { protagonistTitle } from '../../src/core/rivals/recognition';
 import { GameSession } from '../../src/game/GameSession';
@@ -157,9 +157,12 @@ describe('timeline replays (failure)', () => {
     const session = new GameSession(content, new MemoryStorageProvider());
     const lost = loseRun(session, 'refuse-seed');
     expect(replayProblem(session.timeline, session.profile, 'nope')).toMatch(/no longer/);
-    const won = { ...session.profile, runHistory: session.profile.runHistory.map((r) => ({ ...r, victory: true })) };
+    const won = { ...session.profile, runHistory: session.profile.runHistory.map((r) => ({ ...r, victory: true })), legacyRuns: session.profile.legacyRuns.map((r) => ({ ...r, outcome: 'victory' as const })) };
     expect(replayProblem(session.timeline, won, lost)).toMatch(/Only lost/);
-    expect(replayProblem(emptyTimelineStore(), session.profile, lost)).toMatch(/before timelines/);
+    expect(replayProblem(emptyTimelineStore(), { ...session.profile, legacyRuns: [] }, lost)).toMatch(/before timelines/);
+    // Once the run ended, its starting data lives on its legacy record, not in the timeline store.
+    expect(session.timeline.genesis.some((g) => g.runId === lost)).toBe(false);
+    expect(startingData(emptyTimelineStore(), session.profile, lost)?.runId).toBe(lost);
     session.startReplay(lost);
     expect(session.replayProblem(lost)).toMatch(/Finish or abandon/);
     expect(() => session.startReplay(lost)).toThrow();
@@ -199,7 +202,7 @@ describe('the False Protagonist (front-runner and outcomes)', () => {
 
   it('a lost run keeps its origin, and the replay starts with its rival ahead as a Gym Leader', () => {
     const { session, lost, run } = ctx();
-    const origin = session.timeline.genesis.find((g) => g.runId === lost)!.origin;
+    const origin = startingData(session.timeline, session.profile, lost)!.origin;
     expect(origin).toMatchObject({ badges: 0, encounters: 0 });
     expect(origin!.rival).not.toBeNull();
     expect(isFalseProtagonist(run)).toBe(true);

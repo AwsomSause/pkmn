@@ -99,22 +99,33 @@ export const nextAttempt = (store: TimelineStore, originRunId: string): number =
 export const activeReplay = (store: TimelineStore): ReplayRecord | undefined => store.replays.find((r) => r.status === 'active');
 
 /** Why this run can't be revisited right now, or null. */
-export function replayProblem(store: TimelineStore, profile: Pick<Profile, 'runHistory'>, originRunId: string): string | null {
+/**
+ * A lost run's starting data: its legacy record (the source of truth once the run has ended, core/legacyRuns.ts), or
+ * the timeline store for a run that ended before legacy records kept it.
+ */
+export function startingData(store: TimelineStore, profile: Partial<Pick<Profile, 'legacyRuns'>>, runId: string): RunGenesis | undefined {
+  const kept = profile.legacyRuns?.find((r) => r.runId === runId)?.genesis;
+  const parsed = kept ? RunGenesisSchema.safeParse(kept) : null;
+  return parsed?.success ? parsed.data : genesisFor(store, runId);
+}
+
+export function replayProblem(store: TimelineStore, profile: Pick<Profile, 'runHistory'> & Partial<Pick<Profile, 'legacyRuns'>>, originRunId: string): string | null {
+  const legacy = profile.legacyRuns?.find((r) => r.runId === originRunId);
   const record = profile.runHistory.find((r) => r.runId === originRunId);
-  if (!record) return 'That run is no longer in your history.';
-  if (record.victory) return 'Only lost runs can be revisited.';
-  if (!genesisFor(store, originRunId)) return 'This run began before timelines were recorded, so it cannot be rebuilt.';
+  if (!legacy && !record) return 'That run is no longer in your history.';
+  if (legacy ? legacy.outcome === 'victory' : record!.victory) return 'Only lost runs can be revisited.';
+  if (!startingData(store, profile, originRunId)) return 'This run began before timelines were recorded, so it cannot be rebuilt.';
   if (activeReplay(store)) return 'Finish or abandon your current timeline first.';
   return null;
 }
 
 /** Starts a replay of a lost run: the rebuilt run plus the False Protagonist layer (the front-runner). Throws when `replayProblem` would say no. */
-export function beginReplay(content: Content, store: TimelineStore, profile: Pick<Profile, 'runHistory'>, originRunId: string, now: string): { store: TimelineStore; run: RunState } {
+export function beginReplay(content: Content, store: TimelineStore, profile: Pick<Profile, 'runHistory'> & Partial<Pick<Profile, 'legacyRuns'>>, originRunId: string, now: string): { store: TimelineStore; run: RunState } {
   const problem = replayProblem(store, profile, originRunId);
   if (problem) throw new Error(problem);
   const attempt = nextAttempt(store, originRunId);
   const replayId = replayIdFor(originRunId, attempt);
-  const g = genesisFor(store, originRunId)!;
+  const g = startingData(store, profile, originRunId)!;
   const run = reconstructRun(content, g, replayId, attempt);
   seedFrontRunner(content, run, g.origin);
   const record = ReplayRecordSchema.parse({ replayId, originRunId, attempt, startedAt: now, status: 'active' });

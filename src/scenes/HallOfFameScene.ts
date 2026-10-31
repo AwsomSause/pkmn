@@ -4,6 +4,7 @@
 
 import Phaser from 'phaser';
 import { hallOfFame } from '../core/hallOfFame';
+import { rivalHallOfFame } from '../core/legacyRuns';
 import type { RunRecord } from '../core/state';
 import { services } from '../game/services';
 import { AERO, type MotionLevel } from '../ui/aero';
@@ -12,8 +13,6 @@ import { preloadPokemon } from '../ui/lazyAssets';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { pokemonIcon } from '../ui/sprites';
 import { textStyle } from '../ui/theme';
-import { sceneForRun } from './routing';
-import { activeReplay, genesisFor, genesisNote } from '../core/timeline/genesis';
 
 const GOLD = '#ffe08a';
 
@@ -26,11 +25,11 @@ export class HallOfFameScene extends Phaser.Scene {
 
   preload(): void {
     const { session } = services();
-    const ids = new Set(session.profile.runHistory.flatMap((r) => [...r.party.map((m) => m.speciesId), ...r.legacy.map((c) => c.speciesId)]));
+    const ids = new Set([...session.profile.runHistory.flatMap((r) => [...r.party.map((m) => m.speciesId), ...r.legacy.map((c) => c.speciesId)]), ...session.profile.legacyRuns.flatMap((r) => r.rivals.flatMap((v) => v.team.slice(0, 1)))]);
     preloadPokemon(this, [...ids].flatMap((id) => session.content.species.get(id) ?? []), { icon: true });
   }
 
-  create(data: { confirmAbandon?: boolean } = {}): void {
+  create(): void {
     const { session } = services();
     const content = session.content;
     const motion: MotionLevel = session.settings.battleAnimations;
@@ -67,53 +66,7 @@ export class HallOfFameScene extends Phaser.Scene {
         });
       },
     });
-    // Revisit This Timeline (M13): lost runs whose start was recorded can be rebuilt; the original record never changes.
-    const actions = new Map<number, () => void>();
-    const store = session.timeline;
-    const live = activeReplay(store);
-    let abandonRow: number | undefined;
-    if (live) {
-      const origin = session.profile.runHistory.find((r) => r.runId === live.originRunId);
-      const label = origin ? `${trainer(origin)} · ${date(origin)}` : 'a lost run';
-      if (session.canContinueReplay) {
-        actions.set(rows.length, () => {
-          const run = session.continueReplay();
-          this.scene.start(sceneForRun(run));
-        });
-        rows.push({ problem: null, hint: `Pick up the timeline of ${label} where you left it.`, draw: (_s, box) => heading(box, `↺ Continue revisited timeline · ${label}`, '#9fd8ff') });
-      }
-      abandonRow = rows.length;
-      actions.set(rows.length, () => {
-        if (!data.confirmAbandon) return this.scene.restart({ confirmAbandon: true });
-        session.abandonReplay();
-        this.scene.restart({});
-      });
-      rows.push({
-        problem: null,
-        hint: data.confirmAbandon ? 'Press again to abandon. The replay ends; the original run and your profile stay exactly as they are.' : 'Walk away from this timeline. The original run is never changed.',
-        draw: (_s, box) => heading(box, data.confirmAbandon ? '✕ Press again to abandon this timeline' : `✕ Abandon revisited timeline · ${label}`, '#ff9f9f'),
-      });
-    }
-    for (const r of session.profile.runHistory) {
-      if (r.victory || !genesisFor(store, r.runId)) continue;
-      const tries = store.replays.filter((x) => x.originRunId === r.runId).length;
-      const note = genesisNote(genesisFor(store, r.runId)!);
-      actions.set(rows.length, () => {
-        session.startReplay(r.runId);
-        this.scene.start('StarterSelect');
-      });
-      rows.push({
-        problem: session.replayProblem(r.runId),
-        hint: `Revisit This Timeline: same seed, regions, starters and encounters as the run you lost. Revisited ${tries} time${tries === 1 ? '' : 's'}.${note ? ` ${note}` : ''}`,
-        draw: (_s, box, w) => {
-          heading(box, `↺ Revisit This Timeline · ${trainer(r)}`, '#9fd8ff');
-          box.add(this.add.text(w - 14, 10, date(r), textStyle(14, '#a8c8e8')).setOrigin(1, 0));
-          r.party.slice(0, 6).forEach((m, i) => icon(box, m.speciesId, 40 + i * 52, 64, 1.6, m.shiny, i));
-          const end = r.defeatedBy ? `Lost to ${r.defeatedBy.trainer ?? name(r.defeatedBy.speciesId)}` : 'Run ended';
-          box.add(this.add.text(352, 38, `${end} · ${r.badges} badges · ${r.encounters} encounters`, textStyle(15, '#ffffff', { wordWrap: { width: w - 370 } })));
-        },
-      });
-    }
+    // Revisit This Timeline (M13) lives in the Legacy Gallery (scenes/LegacyGalleryScene.ts), beside each lost run.
     for (const [n, r] of hof.champions.entries()) {
       const odd = hof.unusual.find((u) => u.run === r);
       rows.push({
@@ -162,6 +115,21 @@ export class HallOfFameScene extends Phaser.Scene {
         },
       });
     }
+    // The Rival Hall of Fame (§8.1): rivals who finished their journeys, and the deepest rivalries, beside your champions.
+    const rivals = rivalHallOfFame(session.profile.legacyRuns);
+    const TITLE = { champion: '♛ Champion', finalist: 'Finalist', gymLeader: 'Gym Leader' } as const;
+    for (const [i, rv] of rivals.entries()) {
+      const region = rv.regionId ? content.regions.get(rv.regionId)?.name ?? rv.regionId : 'an unknown region';
+      rows.push({
+        problem: null,
+        hint: `${rv.name} · ${rv.title ? `${TITLE[rv.title]} of ${region}` : `rival in ${region}`} · met ${rv.encounters}× · fame ${rv.fame}, ${rv.badges} badges${rv.narrativeWins ? ` · beat you in a story battle ${rv.narrativeWins}×` : ''} · ${rv.relationship}${rv.resolution ? ` (${rv.resolution} ending)` : ''} · ${rv.defeatedByYou ? 'you beat them' : 'you never beat them'} · ${rv.endedAt.slice(0, 10)}`,
+        draw: (_scene, box, w) => {
+          heading(box, `⚔ Rival Hall of Fame · ${rv.name}${rv.title ? ` · ${TITLE[rv.title]}` : ''}`, '#ff9fb8');
+          if (rv.signature) icon(box, rv.signature, 40, 64, 1.8, false, i);
+          box.add(this.add.text(80, 46, `${rv.signature ? `${name(rv.signature)}  ·  ` : ''}${region}  ·  met ${rv.encounters}×  ·  ${rv.relationship}  ·  ${rv.defeatedByYou ? 'You beat them' : 'Undefeated by you'}`, textStyle(16, '#ffffff', { wordWrap: { width: w - 100 } })));
+        },
+      });
+    }
     const empty = hof.champions.length === 0 && hof.legends.length === 0;
     this.picker = new Picker(this, {
       glass: true,
@@ -169,8 +137,7 @@ export class HallOfFameScene extends Phaser.Scene {
       columns: 1,
       rowHeight: 104,
       rows,
-      onSelect: (i) => actions.get(i)?.(),
-      ...(data.confirmAbandon && abandonRow !== undefined ? { start: abandonRow } : {}),
+      onSelect: () => undefined,
       onBack: () => this.scene.start('Hub', { focus: 3 }),
     });
     // The title band shines once.
