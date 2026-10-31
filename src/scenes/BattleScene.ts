@@ -477,6 +477,13 @@ export class BattleScene extends Phaser.Scene {
     if (boss) return { assetId: boss.spriteAssetId, label: boss.name };
     const cls = content.trainers.get(trainer.classId);
     if (cls) return { assetId: cls.spriteAssetId, label: cls.name };
+    // A boss's ace back as a nemesis: drawn as that boss (the battle itself is not a boss fight).
+    const nemesisBoss = this.run.story.nemeses.find((n) => n.id === this.run.battle?.nemesis)?.trainer;
+    const nemesisRole = nemesisBoss?.leaderId ? bossRoleForClass(nemesisBoss.classId) : null;
+    if (nemesisBoss?.leaderId && nemesisRole) {
+      const info = bossInfo(content, nemesisRole, nemesisBoss.leaderId);
+      return { assetId: info.spriteAssetId, label: info.name };
+    }
     // A map event's trainer is drawn with the event's first cast member.
     const eventId = this.run.battle?.event?.eventId;
     const cast = eventId ? content.events.get(eventId)?.scene.cast[0] : undefined;
@@ -824,7 +831,7 @@ export class BattleScene extends Phaser.Scene {
       const art = this.trainerArt();
       if (title && art) {
         const trainerSprite = trainerVisual(this, art.assetId, art.label, ENEMY_POS.x, ENEMY_POS.y, 2.5);
-        await this.say(battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
+        await this.say(battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.nemesis ? `${title} is back, and so is your nemesis!` : battle.hunted ? `${title} came hunting for you!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
         await tween(this, { targets: trainerSprite, x: GAME_WIDTH + 120, duration: 350 });
         trainerSprite.destroy();
         if (this.duo) {
@@ -836,6 +843,7 @@ export class BattleScene extends Phaser.Scene {
           this.showSprite('enemy', this.shown.enemy);
           await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
           if (battle.rivalNote) await this.say(battle.rivalNote);
+          if (battle.nemesisNote) await this.say(battle.nemesisNote);
           await this.say(`${title} sent out ${this.speciesName(this.shown.enemy)}!`);
         }
       } else if (this.duo) {
@@ -846,7 +854,8 @@ export class BattleScene extends Phaser.Scene {
       } else {
         this.showSprite('enemy', this.shown.enemy);
         await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
-        await this.say(`A wild ${this.speciesName(this.shown.enemy)} appeared!`);
+        await this.say(battle.nemesis ? `Your nemesis, ${this.speciesName(this.shown.enemy)}, appeared!` : `A wild ${this.speciesName(this.shown.enemy)} appeared!`);
+        if (battle.nemesisNote) await this.say(battle.nemesisNote);
       }
       if (this.shown.enemy.shiny) await this.shinySparkle();
       if (this.duo) {

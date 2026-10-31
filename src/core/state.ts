@@ -605,6 +605,11 @@ export const BattleStateSchema = z.object({
   /** A rival back for its rematch (Living Rivalry Engine): its id, and what it changed about its team. */
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),
+  /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
+  nemesis: z.string().optional(),
+  nemesisNote: z.string().optional(),
+  /** "The Hunter Has Become the Hunted!": an ordinary trainer whose class you beat too often, with a counter-team. */
+  hunted: z.boolean().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
   fishing: z.boolean().optional(),
   /** A raid boss fight: shield, phases, telegraph and timer (core/raid/raid.ts). */
