@@ -51,7 +51,16 @@ test('every scripted EBDX animation plays, finishes and restores the Pokémon', 
       return spots;
     }, name);
     await page.waitForTimeout(Number(process.env.EBDX_SHOT_MS ?? 450));
-    const during = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').fx.opts.field.length - (window as any).__fieldCount);
+    // A slow machine can be between frames here, so sample the field a few times and keep the largest count.
+    const during = await page.evaluate(async () => {
+      const b = (window as any).__pkr.game.scene.getScene('Battle');
+      let most = 0;
+      for (let i = 0; i < 12; i++) {
+        most = Math.max(most, b.fx.opts.field.length - (window as any).__fieldCount);
+        await new Promise((r) => setTimeout(r, 40));
+      }
+      return most;
+    });
     if (shots.includes(name) || only) await page.screenshot({ path: `test-results/ebdx-${name}.png` });
     const after = await page.evaluate(async () => {
       const b = (window as any).__pkr.game.scene.getScene('Battle');
