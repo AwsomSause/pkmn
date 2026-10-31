@@ -143,7 +143,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
   { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'codex', 'intel', 'museum', 'seeds'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
-  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
+  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe', 'card'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
 const ROOM_ICON: Partial<Record<Room, string>> = {
@@ -154,6 +154,7 @@ const ROOM_ICON: Partial<Record<Room, string>> = {
   mastery: 'item.master_ribbon',
   research: 'item.scanner',
   wardrobe: 'item.sachet',
+  card: 'item.master_ribbon',
   tree: 'item.dna_splicers',
   prestige: 'item.master_ribbon',
   network: 'item.pair_of_tickets',
@@ -516,6 +517,7 @@ export class HubScene extends Phaser.Scene {
         this.openWardrobe();
         break;
       case 'card':
+        this.openCard();
         break;
       case 'events':
         this.openEventHall();
@@ -1475,6 +1477,36 @@ export class HubScene extends Phaser.Scene {
       },
       onBack: () => this.closePicker(),
     });
+  }
+
+  /** The Trainer Card: the UIE card art with the player's title, runs, wins, best and badges on it. */
+  private openCard(): void {
+    const { session } = services();
+    const p = session.profile;
+    const frame = getFrame(p.cardFrame);
+    const scale = 0.9;
+    const rows: PickerRow[] = [
+      {
+        problem: null,
+        hint: `Frame: ${frame.name}. Change title and frame in the Wardrobe.`,
+        draw: (scene, box, w) => {
+          const x = (w - 620 * scale) / 2;
+          const y = 8;
+          if (scene.textures.exists('ui.trainercard')) box.add(scene.add.image(x, y, 'ui.trainercard').setOrigin(0).setScale(scale));
+          box.add(scene.add.graphics().lineStyle(2, Phaser.Display.Color.HexStringToColor(frame.color).color, 1).strokeRoundedRect(x, y, 620 * scale, 356 * scale, 6));
+          const label = (row: number, text: string): void => {
+            box.add(scene.add.text(x + 38 * scale, y + (92 + row * 48) * scale, text, textStyle(18, '#ffffff')).setShadow(1, 1, '#103050', 0, false, true));
+          };
+          label(0, p.activeTitle ?? 'Trainer');
+          label(1, `Runs ${p.stats.runsEnded}`);
+          label(2, `Wins ${p.stats.battlesWon}`);
+          label(3, `Best ${p.stats.bestEncounters} encounters`);
+          const badges = Math.min(8, p.best.badges ?? 0);
+          for (let i = 0; i < badges; i++) box.add(scene.add.circle(x + (40 + i * 44) * scale, y + 316 * scale, 7, 0xf8d848).setStrokeStyle(1, 0x805800));
+        },
+      },
+    ];
+    this.openPicker({ title: 'Trainer Card', rows, columns: 1, rowHeight: 340, onSelect: () => undefined, onBack: () => this.closePicker() });
   }
 
   /** Hyper moment codex: every story moment, found ones named with how often you saw them, the rest hidden. */
