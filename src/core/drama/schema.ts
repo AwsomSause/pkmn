@@ -71,6 +71,7 @@ export const DramaBattleSchema = z.object({
     dealt: z.record(z.string(), z.number()).default({}),
     low: z.object({ uid: z.string(), share: z.number() }).nullable().default(null),
     bigHit: z.object({ uid: z.string(), moveId: z.string(), amount: z.number() }).nullable().default(null),
+    kos: z.record(z.string(), z.number().int()).default({}),
   }).optional(),
 });
 export type DramaBattle = z.infer<typeof DramaBattleSchema>;
