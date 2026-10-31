@@ -5,7 +5,8 @@ import { createPokemon } from '../../src/core/pokemon';
 import { nextChoices } from '../../src/core/map';
 import type { RunState } from '../../src/core/state';
 import { beginReplay, captureGenesis, emptyTimelineStore, endReplay, GENESIS_KEEP, nextAttempt, reconstructRun, rememberGenesis, replayIdFor, replayProblem, type RunGenesis } from '../../src/core/timeline/genesis';
-import { frontRunner, frontRunnerIntro, FRONT_RUNNER_ID, isFalseProtagonist, onFrontRunnerBattle, timelineOutcome, timelineStageLine } from '../../src/core/timeline/frontRunner';
+import { frontRunner, frontRunnerIntro, FRONT_RUNNER_ID, isFalseProtagonist, onFrontRunnerBattle, timelineOutcome } from '../../src/core/timeline/frontRunner';
+import { protagonistTitle } from '../../src/core/rivals/recognition';
 import { GameSession } from '../../src/game/GameSession';
 import { MemoryStorageProvider } from '../../src/save/storage';
 
@@ -256,12 +257,14 @@ describe('the False Protagonist (front-runner and outcomes)', () => {
     expect(timelineOutcome(content, run).id).toBe('forgotten');
   });
 
-  it('a normal run is never a False Protagonist, and its stage lines stay silent', () => {
+  it('a normal run is never a False Protagonist; a replay switches on the recognition title and sets the rival\'s pace', () => {
     const session = new GameSession(content, new MemoryStorageProvider());
     const run = session.newRun('red', 'plain-seed');
     expect(isFalseProtagonist(run)).toBe(false);
-    timelineStageLine(content, run);
-    expect(run.story.events.some((e) => String(e.data['def']).startsWith('timeline'))).toBe(false);
+    expect(protagonistTitle(run).id).not.toBe('falseProtagonist');
+    const { run: replay } = ctx();
+    expect(protagonistTitle(replay).id).toBe('falseProtagonist');
+    expect(frontRunner(replay)!.world?.lead).toBeGreaterThan(0);
   });
 
   it('an old genesis without an origin still gets a front-runner from the seed (failure fallback)', () => {

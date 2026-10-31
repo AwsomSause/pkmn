@@ -1,6 +1,7 @@
 // The False Protagonist (M13, Kice's spec §4.2–4.5): in a replayed timeline the rival who mattered most in the lost run is
 // already ahead. It starts as the leader of the first Gym you reach, climbs to the regional finals and then the Champion's seat
-// (each once, through the rival takeover of core/rivals/promotion.ts), and the world talks about it instead of you.
+// (each once, through the rival takeover of core/rivals/promotion.ts). Its world record and the NPC lines about it come from
+// core/rivals/progression.ts and recognition.ts (this file only sets the pace and the title flag).
 // The replay ends in one of five outcomes. Every roll here has its own seed, so the gameplay streams never move.
 
 import { z } from 'zod';
@@ -9,7 +10,9 @@ import type { Content } from '../contentSchema';
 import { planFirstRival } from '../encounters';
 import { hashSeed, Rng } from '../rng';
 import { RIVAL_RANKS, takeoverFlag } from '../rivals/promotion';
-import { RIVAL_PROFILES } from '../rivals/schema';
+import { rivalProgress } from '../rivals/progression';
+import { FALSE_PROTAGONIST_FLAG } from '../rivals/recognition';
+import { RIVAL_CONFIG, RIVAL_PROFILES } from '../rivals/schema';
 import { factionFor } from '../rivals/standing';
 import type { BattleState, RunState } from '../state';
 import { emit } from '../story/record';
@@ -19,11 +22,9 @@ import type { TimelineOrigin } from './schema';
 const RankLines = z.object({ gymLeader: z.string(), finalist: z.string(), champion: z.string() });
 export const TIMELINE = z
   .object({
-    npcLineChance: z.number().min(0).max(1),
     impossible: z.object({ maxStanding: z.number().int().min(1), levelGap: z.number().int().min(1) }),
     title: z.string().min(1),
     start: z.string(),
-    npcLines: z.array(z.string()).min(1),
     rivalIntro: RankLines,
     afterWin: RankLines,
     outcomes: z.array(z.object({ id: z.enum(['impossible-victory', 'usurper', 'catch-up', 'second-place', 'forgotten']), name: z.string(), text: z.string() })).length(5),
@@ -34,8 +35,8 @@ export type OutcomeId = (typeof TIMELINE.outcomes)[number]['id'];
 
 /** The front-runner's rival id in a replay (never used by a normal run's rivals, which are "rival-<event id>"). */
 export const FRONT_RUNNER_ID = 'rival-timeline-front-runner';
-/** Story flags (FP_FLAG matches FALSE_PROTAGONIST_FLAG of the rival recognition work, PR #379): set when the replay began, when you beat the front-runner at a rank, and for an Impossible Victory. */
-export const FP_FLAG = 'falseProtagonist';
+/** Story flags (FP_FLAG is the rival recognition's title switch, core/rivals/recognition.ts): set when the replay began, when you beat the front-runner at a rank, and for an Impossible Victory. */
+export const FP_FLAG = FALSE_PROTAGONIST_FLAG;
 const beatFlag = (rank: string) => `timeline:beat:${rank}`;
 const IMPOSSIBLE_FLAG = 'timeline:impossible';
 
@@ -93,6 +94,8 @@ export function seedFrontRunner(content: Content, run: RunState, origin: Timelin
   run.story.rivals = [rival, ...run.story.rivals.filter((r) => r.id !== FRONT_RUNNER_ID)];
   run.story.flags[takeoverFlag(rival)] = 'timeline';
   run.story.flags[FP_FLAG] = true;
+  // The world's record agrees: it is as far ahead as a rival can be, a badge past where you fell (rivals/progression.ts).
+  rivalProgress(content, run, rival, 'setPace', { lead: RIVAL_CONFIG.progression.leadMax, badges: (origin?.badges ?? 0) + 1 });
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'timeline-start', suppressed: false }, importance: 70, text: fill(TIMELINE.start, rivalTitle(content, rival)) });
 }
 
@@ -100,15 +103,6 @@ export function seedFrontRunner(content: Content, run: RunState, origin: Timelin
 export function frontRunnerIntro(content: Content, rival: Rival): string | null {
   if (rival.id !== FRONT_RUNNER_ID || !rival.rank) return null;
   return fill(TIMELINE.rivalIntro[rival.rank], rivalTitle(content, rival));
-}
-
-/** A new stage of a replay: sometimes a stranger reminds you whose story this is now (its own seed). */
-export function timelineStageLine(content: Content, run: RunState): void {
-  const fr = isFalseProtagonist(run) ? frontRunner(run) : undefined;
-  if (!fr) return;
-  const rng = new Rng(hashSeed(`${run.seed}::timeline-npc::${run.regionIndex}.${run.stage?.index ?? 0}`));
-  if (!rng.chance(TIMELINE.npcLineChance)) return;
-  emit(content, run, 'storyMoment', { actors: [], data: { def: 'timeline-npc', suppressed: false }, importance: 40, text: `“${fill(rng.pick(TIMELINE.npcLines), rivalTitle(content, fr))}”` });
 }
 
 /**
@@ -133,6 +127,7 @@ export function onFrontRunnerBattle(content: Content, run: RunState, battle: Pic
   if (!next || (next === 'champion' && run.story.rivals.some((r) => r.rank === 'champion' && r.id !== FRONT_RUNNER_ID))) return;
   fr.rank = next;
   run.story.flags[takeoverFlag(fr)] = `${run.regionIndex}.${run.stage?.index ?? 0}`;
+  rivalProgress(content, run, fr, 'rank', { rank: next });
 }
 
 /** How a finished replay ended: the five outcomes of §4.5, best first. */
