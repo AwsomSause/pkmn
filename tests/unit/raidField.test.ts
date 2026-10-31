@@ -3,7 +3,7 @@
 import { describe, expect, it } from 'vitest';
 import { createBattle, itemProblem, resolveTurn, type BattleContext } from '../../src/core/battle/engine';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
-import { placeRaidDens, raidMemories, applyBossHp, cheerProblem, freshRaidBattle, getRaid, raidFieldMultiplier, rotatingWeakness } from '../../src/core/raid/raid';
+import { placeRaidDens, raidMemories, applyBossHp, cheerLevelFor, cheerProblem, freshRaidBattle, getRaid, raidFieldMultiplier, rotatingWeakness } from '../../src/core/raid/raid';
 import { raidCaptureTrack } from '../../src/core/presentation/battleMusic';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseStarter, createRun, enterRaid, takeTurn } from '../../src/core/run';
@@ -108,6 +108,29 @@ describe('cheers', () => {
     expect(battle.enemyStages.eva).toBe(1);
     expect(battle.playerStages.eva).toBe(-3);
     expect(events.filter((e) => e.type === 'stat').length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('cheer level follows raids won, and higher levels cheer harder', () => {
+    expect([0, 1, 2, 3, 9].map(cheerLevelFor)).toEqual([1, 2, 2, 3, 3]);
+    const { ctx, battle } = fight('sleeping-snorlax');
+    battle.raid!.cheerLevel = 3;
+    battle.raid!.cheerOffense = 3;
+    expect(raidFieldMultiplier(ctx.content, battle, 'player', 'normal')).toBeCloseTo(1.6);
+    battle.raid!.cheerDefense = 3;
+    expect(raidFieldMultiplier(ctx.content, battle, 'enemy', 'normal')).toBeCloseTo(0.5);
+  });
+
+  it('level 3 counter swaps screens and blocks healing on both sides', () => {
+    const { ctx, battle } = fight('sleeping-snorlax');
+    battle.raid!.cheerLevel = 3;
+    battle.sideEffects.enemy.reflect = 4;
+    battle.sideEffects.player.spikes = 2;
+    resolveTurn(ctx, { kind: 'cheer', cheer: 'counter' });
+    expect(battle.sideEffects.player.reflect).toBeGreaterThan(0);
+    expect(battle.sideEffects.enemy.reflect).toBe(0);
+    expect(battle.sideEffects.enemy.spikes).toBe(2);
+    expect(battle.playerVolatile.healBlock).toBeGreaterThan(0);
+    expect(battle.enemyVolatile.healBlock).toBeGreaterThan(0);
   });
 
   it('cheers only exist in raids', () => {

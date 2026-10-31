@@ -45,6 +45,7 @@ import { addAmbience } from '../ui/battleFx/ambience';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { eggStatus } from '../core/eggs';
+import { protagonistTitle, topHeadline } from '../core/rivals/recognition';
 
 const COL_SPACING = 104;
 const ROW_SPACING = 92;
@@ -397,7 +398,7 @@ export class MapScene extends Phaser.Scene {
     const riding = run.moveMode ? mapActions(content, run).find((a) => a.on) : undefined;
     const working = [riding ? `Riding the ${content.catalog.get(riding.itemId)!.name}` : '', mapItemSummary(content, run)].filter(Boolean).join(' · ');
     this.notice = this.add
-      .text(GAME_WIDTH - 24, 506, data.notice ?? (working ? `Working: ${working}` : ''), textStyle(15, '#f0e0a0', { align: 'right', wordWrap: { width: 340 } }))
+      .text(GAME_WIDTH - 24, 506, data.notice ?? (working ? `Working: ${working}` : newsLine(content, run)), textStyle(15, '#f0e0a0', { align: 'right', wordWrap: { width: 340 } }))
       .setOrigin(1, 0);
     this.focus(Math.min(data.focus ?? 0, this.options.length - 1), false);
     showAchievementToasts(this, session.takeAchievementToasts(), this.motion);
@@ -540,7 +541,7 @@ export class MapScene extends Phaser.Scene {
       case 'bond':
         return 'See how each Pokémon feels about you: trust, affection, sync and more.';
       case 'story':
-        return 'Read the story of your run so far, with the feelings each moment left.';
+        return `Read the story of your run so far, with the feelings each moment left. People call you ${protagonistTitle(services().session.run!).name}.`;
       case 'endRun':
         return 'Give up this Adventure run. Press it twice to confirm; what you earned so far still counts.';
       case 'box':
@@ -1028,4 +1029,10 @@ export class MapScene extends Phaser.Scene {
       this.busy = false;
     } });
   }
+}
+
+/** The newest rival headline for the map's notice corner (world recognition), or ''. */
+function newsLine(content: Parameters<typeof topHeadline>[0], run: Parameters<typeof topHeadline>[1]): string {
+  const h = topHeadline(content, run);
+  return h ? `News: ${h}` : '';
 }

@@ -26,6 +26,15 @@ describe('release gate: saves', () => {
     }
   });
 
+  it('v8 settings gain every animation switch, on', () => {
+    const storage = new MemoryStorageProvider();
+    let data: unknown = V1_SETTINGS;
+    for (let from = 1; from < 8; from++) data = MIGRATIONS.settings[from]!(data);
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 8, savedAt: '', data }));
+    const loaded = new SaveManager(storage, content).loadSettings();
+    expect(loaded).toMatchObject({ abilityAnimations: true, rivalAnimations: true, animationSpeed: 'normal', disableAllAnimations: false });
+  });
+
   it('v7 settings keep their one strength for both shake and flashes', () => {
     const storage = new MemoryStorageProvider();
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 7, savedAt: '', data: { ...V1_SETTINGS, battleAnimations: 'full', effectIntensity: 0.25, battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero' } }));
@@ -46,6 +55,12 @@ describe('release gate: saves', () => {
     const off = { ...s, rivalAnimations: false, disableAllAnimations: true };
     expect(Object.values(animationFlags(off)).some(Boolean)).toBe(false);
     expect(animationFlags({ ...off, disableAllAnimations: false })).toMatchObject({ rivalAnimations: false, abilityAnimations: true });
+  });
+
+  it('a v8 settings file loads', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 8, savedAt: '', data: { ...V1_SETTINGS, battleAnimations: 'full', effectIntensity: 1, battleSpeed: 'normal', dialogueFrequency: 'normal' } }));
+    expect(new SaveManager(storage, content).loadSettings()).toMatchObject({ musicVolume: 0.3, disableAllAnimations: false });
   });
 
   it('refuses a run from a newer game and survives garbage without throwing', () => {

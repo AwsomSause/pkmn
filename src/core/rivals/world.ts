@@ -17,6 +17,7 @@ import { RIVAL_CONFIG } from './schema';
 import { rivalSponsorRoll } from './standing';
 import { rivalTransfers } from './transfer';
 import { promoteRival } from './promotion';
+import { rivalProgress } from './progression';
 
 type Edge = RunState['story']['rivalGraph'][number];
 
@@ -57,6 +58,7 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
     if (rng.float() < w.privateGoalChance && r.traits.ambition >= w.privateGoalMinAmbition) {
       // A private goal that comes before any battle invitation.
       r.cooldown = Math.max(r.cooldown, 1);
+      rivalProgress(content, run, r, 'sitOut');
       rumor ??= `${who} is chasing a goal that has nothing to do with you`;
       continue;
     }
@@ -66,14 +68,20 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
       r.progress = Math.min(w.progressCap, r.progress + 1);
       r.rivalPotential += w.unseenWinPotential;
       r.state = stateFor(r);
+      rivalProgress(content, run, r, 'unseenWin');
+      // Its own stream, so the badge roll never moves the world rolls above.
+      if (new Rng(hashSeed(`${run.seed}::rival-badge::${run.regionIndex}.${stage}::${r.id}`)).float() < RIVAL_CONFIG.progression.badgeChance) rivalProgress(content, run, r, 'badge');
       const promoted = promoteRival(content, run, r, `${run.regionIndex}.${stage}`);
+      if (promoted) rivalProgress(content, run, r, 'rank', { rank: r.rank ?? null });
       rumor = promoted ?? rumor ?? `${who} won a big battle while you were away`;
     } else if (r.traits.resilience < w.fragileResilience) {
       // Unseen defeat that shakes it: it sits out a stage to recover.
       r.cooldown = Math.max(r.cooldown, 1);
+      rivalProgress(content, run, r, 'unseenLoss');
       rumor ??= `${who} lost to a stranger and is taking time to recover`;
     } else {
       r.progress = Math.min(w.progressCap, r.progress + (r.traits.resilience >= w.toughResilience ? 1 : 0));
+      rivalProgress(content, run, r, 'unseenLoss');
       rumor ??= `${who} lost to a stranger and is retraining`;
     }
   }
@@ -100,6 +108,10 @@ export function simulateRivalWorld(content: Content, run: RunState): void {
     if (rng.float() >= RIVAL_CONFIG.relations.exchangeChance) continue;
     if (e.kind === 'enemies') {
       const r = pokemonInfluence(run, a, b, `${run.regionIndex}.${stage}`);
+      if (r) {
+        rivalProgress(content, run, r.winner, 'beatRival', { other: r.loser.id });
+        rivalProgress(content, run, r.loser, 'lostToRival', { other: r.winner.id });
+      }
       if (r) rumor ??= `${title(content, r.winner)}'s Pokémon beat one of ${title(content, r.loser)}'s in a sparring match`;
     } else if (trainingExchange(a, b)) {
       rumor ??= `${title(content, a)} and ${title(content, b)} traded training methods`;

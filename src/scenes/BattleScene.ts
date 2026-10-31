@@ -56,7 +56,7 @@ import { wouldRefuse } from '../core/bond';
 import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
-import { championGlow, levelUpBanner } from '../ui/battleFx/transitions';
+import { championGlow, levelUpBanner, platformEdgeLight } from '../ui/battleFx/transitions';
 import { addAmbience, arenaType } from '../ui/battleFx/ambience';
 import { addEnvironment } from '../ui/battleFx/environment';
 import { environmentStory } from '../core/presentation/environmentStory';
@@ -272,6 +272,12 @@ export class BattleScene extends Phaser.Scene {
     const stageTypes = bossType ? [bossType] : run.stage ? getTheme(session.content, run.stage.themeId).types : [arenaType(bg)];
     this.arenaTypes = stageTypes.length > 0 ? stageTypes : [arenaType(bg)];
     addAmbience(this, this.field, this.field.length, this.arenaTypes, this.motion);
+    if (this.motion !== 'off' && !battle.doubles) {
+      const edge = TYPE_COLORS[this.arenaTypes[0] ?? 'normal'] ?? 0xffffff;
+      for (const at of [ENEMY_POS, PLAYER_POS]) {
+        platformEdgeLight(this, this.field, at.x, at.y + 6, edge, this.motion);
+      }
+    }
     // Environmental storytelling (catalog 67): crisis weather, villain banners, ruins, lab panels, Shadow miasma.
     const envEvent = run.battle?.event ? session.content.events.get(run.battle.event.eventId) : undefined;
     const envFoe = run.battle ? run.battle.enemyTeam[run.battle.enemyIndex] : undefined;
@@ -1298,7 +1304,7 @@ export class BattleScene extends Phaser.Scene {
     ] as const;
     this.clearMenus();
     const blocked = cheers.map((c) => cheerProblem(content, battle, c.cheer));
-    this.message.setText(blocked.find((b) => b) ?? 'Cheer your team on! Offense and Defense last 3 turns; Heal restores some HP; Turn the tables reverses all stat changes.');
+    this.message.setText(blocked.find((b) => b) ?? `Cheer Lv.${battle.raid!.cheerLevel}: cheer your team on! Offense and Defense last 3 turns; Heal restores some HP; Turn the tables reverses all stat changes.`);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
       y: MESSAGE_Y + 26,
@@ -1774,6 +1780,18 @@ export class BattleScene extends Phaser.Scene {
           if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, y: sprite.y + 30, duration: 400 });
           break;
+        case 'miss': {
+          // The target slips aside and back (presentation only; the miss itself is already decided).
+          const target = e.side === 'player' ? this.enemySprite : this.playerSprite;
+          if (target && battleAnimations !== 'off') {
+            const dx = (e.side === 'player' ? 36 : -36) * (battleAnimations === 'full' ? 1 : 0.4);
+            const x = target.x;
+            await tween(this, { targets: target, x: x + dx, alpha: 0.6, duration: 130, yoyo: true, ease: 'Sine.easeOut' });
+            target.x = x;
+            target.setAlpha(1);
+          }
+          break;
+        }
         case 'switchOut':
           if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, duration: 250 });

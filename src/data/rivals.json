@@ -60,6 +60,16 @@
   "friendMinEmpathy": 55,
   "rivalMinAmbition": 60
  },
+ "progression": {
+  "note": "Rival world progression (core/rivals/progression.ts): how far ahead of you each rival is (lead, in stages), its badges this region and its fame. Every change arrives as a rivalProgress domain event.",
+  "leadMin": -3,
+  "leadMax": 3,
+  "badgeChance": 0.6,
+  "candidateBadges": 6,
+  "milestonesKept": 8,
+  "lead": { "unseenWin": 1, "unseenLoss": -1, "sitOut": -1, "rank": 1, "beatRival": 0, "lostToRival": 0, "badge": 0 },
+  "fame": { "unseenWin": 2, "unseenLoss": -1, "sitOut": 0, "badge": 5, "rank": 15, "beatPlayer": 8, "narrativeWin": 12, "lostToPlayer": -4, "beatRival": 6, "lostToRival": -2 }
+ },
  "relations": {
   "exchangeChance": 0.4,
   "exchangeShift": 6,

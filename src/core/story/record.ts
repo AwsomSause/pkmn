@@ -9,6 +9,7 @@
 import type { Content } from '../contentSchema';
 import { findNode } from '../map';
 import type { RunState } from '../state';
+import { applyRivalProgress } from '../rivals/progression';
 import type {
   ChronicleEntry,
   DomainEvent,
@@ -85,6 +86,7 @@ export function emit(content: Content, run: RunState, type: DomainEventType, opt
   if (story.events.length > cfg.limits.recentEvents) story.events.splice(0, story.events.length - cfg.limits.recentEvents);
 
   updateCounters(story, event);
+  applyRivalProgress(run, event);
   const importance = opts.importance ?? cfg.importance[type];
   if (opts.text && importance > 0) {
     const emotions = opts.emotions ?? cfg.emotions.byEvent[type] ?? [];

@@ -106,7 +106,8 @@ import {
   wildShinyMultiplier,
   wildSpeciesWithItems,
 } from './mapItems';
-import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { pickRaidRival } from './raid/rivalAlly';
+import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { pickStones } from './expedition/flow';
@@ -150,6 +151,9 @@ import { finalRivalLine, tellCampfire } from './story/highHype';
 import { ultimateRival } from './rivals/ultimate';
 import { applyGrandInfluence, endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
 import { simulateRivalWorld } from './rivals/world';
+import { noteProtagonistTitle, rivalSighting } from './rivals/recognition';
+import { rivalRivalries, rivalTeamUp } from './rivals/rivalries';
+import { ensureAce, withSignatureAce } from './rivals/signatureTeam';
 import { pickLegacyRival } from './rivals/legacy';
 import { rivalReturn, rivalReturnFlag, rivalSeenFlag, RIVAL_SEEN_ANY, scheduleKey, waitingRival } from './rivals/adapt';
 import { rematchRule, returnFlag, revisedTeam, waitingTrainer } from './story/returns';
@@ -467,6 +471,9 @@ function enterStage(content: Content, run: RunState, index: number): void {
   startStageEffects(run);
   hatchEggs(content, run);
   simulateRivalWorld(content, run);
+  rivalRivalries(content, run);
+  rivalSighting(content, run);
+  noteProtagonistTitle(content, run);
   tellCampfire(content, run);
   tellAct(content, run);
   applyGrandInfluence(content, run);
@@ -1023,6 +1030,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   run.battle.ai = 0.6;
   run.battle.raid = freshRaidBattle(def);
   run.battle.raid.lead = run.party[activeIndex]!.uid;
+  run.battle.raid.cheerLevel = cheerLevelFor(run.raids.won);
   const raidState = run.battle.raid;
   if (approach) {
     if (approach.startHp) raidState.pendingShields = raidState.pendingShields.filter((at) => at < approach.startHp!);
@@ -1030,6 +1038,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
     raidState.rewardPercent = approach.rewardPercent;
     raidState.draftDelta = approach.draftDelta;
     raidState.rivalHelped = approach.rivalHelps;
+    if (approach.rivalHelps || approach.rivalRaces) raidState.rival = pickRaidRival(content, run, level, approach.rivalRaces ? 'race' : 'help');
   }
   if (opts.returning) {
     raidState.returning = true;
@@ -1193,7 +1202,7 @@ function failRaid(content: Content, run: RunState): void {
 function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number } {
   const def = getRaid(content, battle.raid!.id);
   const boss = currentEnemy(battle);
-  const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent) / 100);
+  const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent * (battle.raid!.rivalFinished ? 0.5 : 1)) / 100);
   run.money += money;
   count(run, 'moneyEarned', money);
   const rng = new Rng(hashSeed(`${run.seed}::raid-reward::${def.id}:${run.encountersCompleted}`));
@@ -1221,7 +1230,7 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   // Raid memories: rewards follow contribution, not only the last hit.
   const bossName = speciesName(content, boss.speciesId);
   const earned = new Set<string>();
-  for (const m of raidMemories(battle, run.party[battle.activeIndex]?.uid)) {
+  for (const m of battle.raid!.rivalFinished ? [] : raidMemories(battle, run.party[battle.activeIndex]?.uid)) {
     const mon = run.party.find((p) => p.uid === m.uid);
     if (!mon) continue;
     emit(content, run, 'storyMoment', { actors: [mon.uid], data: { raidMemory: m.key, raid: def.id }, importance: 70, text: `${m.title}: ${m.text(speciesName(content, mon.speciesId), bossName)}` });
@@ -1229,9 +1238,19 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
     earned.add(mon.uid);
   }
   const lead = run.party.find((p) => p.uid === battle.raid!.lead);
-  if (battle.raid!.rivalHelped && lead) {
-    emit(content, run, 'storyMoment', { actors: [lead.uid], data: { raidMemory: 'rival', raid: def.id }, importance: 70, text: `The Rival Who Stood Beside You: a rival fought ${bossName} at ${speciesName(content, lead.speciesId)}'s side.` });
+  const named = battle.raid!.rival;
+  const rivalName = named?.name ?? 'a rival';
+  if (battle.raid!.rivalHelped && lead && !battle.raid!.rivalFinished) {
+    emit(content, run, 'storyMoment', { actors: [lead.uid], data: { raidMemory: 'rival', raid: def.id, rival: named?.id ?? null }, importance: 70, text: `The Rival Who Stood Beside You: ${rivalName} fought ${bossName} at ${speciesName(content, lead.speciesId)}'s side.` });
     changeFriendship(content, lead, RAID_MEMORY_FRIENDSHIP);
+  }
+  if (named) {
+    const rival = run.story.rivals.find((r) => r.id === named.id);
+    // A raced boss makes the rivalry hotter whoever wins; a rival that took the last hit is proud of it.
+    if (rival && named.mode === 'race') rival.rivalPotential += battle.raid!.rivalFinished ? 2 : 1;
+    if (named.mode === 'race' || battle.raid!.rivalFinished) {
+      emit(content, run, 'storyMoment', { actors: lead ? [lead.uid] : [], data: { raidMemory: 'rival-race', raid: def.id, rival: named.id, rivalFinished: battle.raid!.rivalFinished }, importance: 65, text: battle.raid!.rivalFinished ? `${rivalName} took the last hit on ${bossName}.` : `You beat ${rivalName} to the last hit on ${bossName}.` });
+    }
   }
   // An anomaly raid adds a research find and its own counter.
   if (def.kind === 'anomaly') {
@@ -1362,7 +1381,9 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let narrativeDef: ReturnType<typeof dueNarrativeDefeat> = null;
     let trainingIndex = -1;
     if (rule && rivalBack) {
+      ensureAce(content, rivalBack);
       const ret = rivalReturn(content, run, rivalBack, plan, rule.effect);
+      ret.plan = withSignatureAce(content, rivalBack, ret.plan);
       const trained = withTrainingEvolution(content, ret.plan.members);
       plan = { ...ret.plan, members: trained.members };
       trainingIndex = trained.index;
@@ -1376,6 +1397,12 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       } else {
         const hint = foreshadowNote(run, rivalBack);
         if (hint) rivalNote = [rivalNote, hint].filter(Boolean).join(' ');
+      }
+      // A rival far ahead of you: an ally or one of its enemies may join forces with you (heals your team, once per pair).
+      const teamUp = narrativeDef ? null : rivalTeamUp(content, run, rivalBack);
+      if (teamUp) {
+        healParty(content, run);
+        rivalNote = [rivalNote, teamUp].filter(Boolean).join(' ');
       }
       if (ret.note) rivalBack.adaptations.push(ret.note);
       run.story.flags[rivalReturnFlag(rivalBack.id)] = run.regionIndex;
