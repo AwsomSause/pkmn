@@ -52,6 +52,8 @@ export const RaidApproachSchema = z.object({
   draftDelta: z.number().int().min(-2).max(2).default(0),
   /** A rival trainer fights beside you ("The Rival Who Stood Beside You" for the Pokémon in front). */
   rivalHelps: z.boolean().default(false),
+  /** A rival races you for the last hit (hits harder, and a rival that lands the final blow takes half the prize). */
+  rivalRaces: z.boolean().default(false),
   /** Walk away: no fight, the den is used up. */
   leave: z.boolean().default(false),
 });

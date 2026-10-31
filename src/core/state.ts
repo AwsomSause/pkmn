@@ -459,6 +459,9 @@ export const RaidBattleSchema = z.object({
   survivor: z.string().nullable().default(null),
   /** Raid types: a rival fights beside you, the boss is back after escaping, and the approach's prize changes. */
   rivalHelped: z.boolean().default(false),
+  /** The named rival fighting the boss (or racing you for the last hit), and whether it landed the final blow. */
+  rival: z.object({ id: z.string(), name: z.string(), speciesId: z.string(), level: z.number().int().min(1), mode: z.enum(['help', 'race']) }).nullable().default(null),
+  rivalFinished: z.boolean().default(false),
   returning: z.boolean().default(false),
   rewardPercent: z.number().int().default(100),
   draftDelta: z.number().int().default(0),
