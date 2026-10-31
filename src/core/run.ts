@@ -351,6 +351,8 @@ export function chooseStarter(content: Content, current: RunState, choiceIndex: 
   if (wantsTypeLock(run.rules)) run.rules.lockType = getSpecies(content, speciesId).types[0]!;
   run.party[0]!.friendship = content.balance.friendship.starter;
   const perks = runArchetype(content, run).modifiers;
+  const fixed = runArchetype(content, run).signatureMovesets[speciesId];
+  if (fixed) run.party[0]!.moves = fixed.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
   const signature = hasStarterSignature(perks) ? signatureMoveFor(content, speciesId) : null;
   if (signature && !run.party[0]!.moves.some((m) => m.id === signature)) {
     const starter = run.party[0]!;
