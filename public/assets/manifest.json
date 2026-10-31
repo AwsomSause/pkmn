@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T00:30:03.127Z",
+  "generatedAt": "2026-10-31T00:31:14.466Z",
   "assets": [
     {
       "id": "bg.battle",
@@ -1000,6 +1000,20 @@
       "kind": "image",
       "category": "ui",
       "path": "images/packs/uie/party/icon_box_faint.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.dex.seen",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/dex/seen.png",
+      "lazy": true
+    },
+    {
+      "id": "ui.dex.caught",
+      "kind": "image",
+      "category": "ui",
+      "path": "images/packs/uie/dex/caught.png",
       "lazy": true
     },
     {
