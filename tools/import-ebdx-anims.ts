@@ -19,6 +19,8 @@ if (!root) {
 const dataDir = 'src/data';
 const file = parseEbdxAnims(JSON.parse(readFileSync(join(dataDir, 'ebdxAnims.json'), 'utf8')));
 const { images, sounds } = scriptAssets(file);
+const srcOf = new Map<string, string>();
+for (const sc of Object.values(file.scripts)) for (const f of sc.sfx) srcOf.set(f.id, f.src ?? `EBDX/Anim/${f.id}`);
 
 const imgOut = 'public/assets/images/packs/ebdx/moves';
 const sndOut = 'public/assets/audio/ebdx';
@@ -31,10 +33,19 @@ for (const name of images) {
   copyFileSync(src, join(imgOut, `${name}.png`));
 }
 for (const id of sounds) {
-  const base = join(root, 'Audio/SE/EBDX/Anim', id);
-  const src = ['.wav', '.ogg'].map((e) => base + e).find(existsSync);
-  if (!src) throw new Error(`missing sound ${base}`);
-  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', src, '-ac', '1', '-c:a', 'aac', '-b:a', '64k', join(sndOut, `${id}.m4a`)]);
+  const base = join(root, 'Audio/SE', srcOf.get(id)!);
+  const out = join(sndOut, `${id}.m4a`);
+  // Some pack files are damaged; use the first copy ffmpeg can read.
+  const ok = ['.ogg', '.wav', '.mp3', '.m4a'].map((e) => base + e).some((src) => {
+    if (!existsSync(src)) return false;
+    try {
+      execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', src, '-ac', '1', '-c:a', 'aac', '-b:a', '64k', out], { stdio: 'ignore' });
+      return true;
+    } catch {
+      return false;
+    }
+  });
+  if (!ok) throw new Error(`no readable sound for ${base}`);
 }
 
 const animsPath = join(dataDir, 'moveAnims.json');

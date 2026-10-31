@@ -49,6 +49,7 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
   };
 
   const particles: Particle[] = [];
+  const fills: { tile: Phaser.GameObjects.TileSprite; layer: ScriptLayer }[] = [];
   script.layers.forEach((layer, li) => {
     const key = ebdxAssetIds.image(layer.img);
     if (!scene.textures.exists(key)) return;
@@ -61,6 +62,13 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
     for (let c = 0; c < cols * rows; c++) {
       const fname = `s${cw}x${ch}:${c}`;
       if (!tex.has(fname)) tex.add(fname, 0, (c % cols) * cw, Math.floor(c / cols) * ch, cw, ch);
+    }
+    if (layer.fill) {
+      const tile = scene.add.tileSprite(480, 270, 960, 540, key).setAlpha(0).setVisible(false).setTileScale(EBDX_SCALE);
+      field.add(tile);
+      field.bringToTop(tile);
+      fills.push({ tile, layer });
+      return;
     }
     for (let i = 0; i < layer.count; i++) {
       const img = scene.add.image(0, 0, key, `s${cw}x${ch}:0`).setOrigin(layer.origin[0], layer.origin[1]).setAlpha(0).setVisible(false);
@@ -111,6 +119,7 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
     finished = true;
     counter?.stop();
     particles.forEach((p) => p.img.destroy());
+    fills.forEach((f) => f.tile.destroy());
     particles.length = 0;
     veil?.destroy();
     veil = null;
@@ -146,6 +155,12 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
       const list = layer.frames ?? Array.from({ length: cols }, (_, c) => c);
       const step = Math.floor(Math.max(0, t - layer.start - layer.stagger * p.index) / layer.frameMs) % list.length;
       img.setFrame(`s${cw}x${ch}:${list[step]! + p.row * cols}`);
+    }
+    for (const { tile, layer } of fills) {
+      const life = (t - layer.start) / layer.dur;
+      const a = lifeAlpha(life, layer.fade) * layer.alpha;
+      tile.setVisible(a > 0.01).setAlpha(a);
+      tile.tilePositionX = t * 0.15;
     }
     if (veil && script.veil) {
       const { alpha, inMs, outMs } = script.veil;

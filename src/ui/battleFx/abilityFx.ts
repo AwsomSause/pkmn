@@ -22,25 +22,25 @@ export interface FxTools {
   /** Stacking position for text so two words don't overlap. */
   slot: number;
   /** The Pokémon's sprite, for the close-up punch. */
-  visual: Visual;
+  visual: Visual | null;
   /** The ability's id, for its own signature effect. */
   ability?: string;
   /** The opposing sprite, for effects that land on the foe (Intimidate's recoil). */
-  foe?: Visual | null;
+  foeSprite?: Visual | null;
   shake: (px: number) => void;
 }
 
 const col = (hex: string) => Phaser.Display.Color.HexStringToColor(hex).color;
 
 /** A ring that grows (or shrinks inward) and fades. */
-function ring(t: FxTools, x: number, y: number, from: number, to: number, ms: number, delay = 0): void {
+export function ring(t: FxTools, x: number, y: number, from: number, to: number, ms: number, delay = 0): void {
   const g = t.scene.add.circle(x, y, from).setStrokeStyle(4, col(t.plan.color), 0.9).setFillStyle(col(t.plan.color), 0.12).setAlpha(0);
   t.field.add(g);
   t.scene.tweens.add({ targets: g, alpha: { from: 0.9, to: 0 }, radius: to, delay, duration: ms, ease: 'Sine.easeOut', onStart: () => g.setAlpha(0.9), onComplete: () => g.destroy() });
 }
 
 /** Little glyph sparks. `mode` sets where they travel: out from the middle, up, or in from the edge. */
-function sparks(t: FxTools, mode: 'out' | 'up' | 'in', count = 8): void {
+export function sparks(t: FxTools, mode: 'out' | 'up' | 'in', count = 8): void {
   if (!t.plan.particles) return;
   const { x, y } = t.at;
   for (let i = 0; i < count; i++) {
@@ -54,7 +54,7 @@ function sparks(t: FxTools, mode: 'out' | 'up' | 'in', count = 8): void {
   }
 }
 
-function flash(t: FxTools, alpha: number): void {
+export function flash(t: FxTools, alpha: number): void {
   if (t.plan.flash <= 0) return;
   const w = t.scene.scale.width;
   const h = t.scene.scale.height;
@@ -100,6 +100,7 @@ function frame(t: FxTools): void {
   t.scene.tweens.add({ targets: bottom, y: h - 20, duration: 220, ease: 'Cubic.easeOut' });
   t.scene.tweens.add({ targets: cap, alpha: 1, delay: 120, duration: 160 });
   t.scene.tweens.add({ targets: parts, alpha: 0, delay: hold, duration: 220, onComplete: () => parts.forEach((p) => p.destroy()) });
+  if (!t.visual) return;
   const v = t.visual as unknown as { scaleX: number; scaleY: number };
   const [sx, sy] = [v.scaleX, v.scaleY];
   t.scene.tweens.add({ targets: t.visual, scaleX: sx * 1.1, scaleY: sy * 1.1, duration: 160, yoyo: true, ease: 'Back.easeOut', onComplete: () => (t.visual as unknown as Phaser.GameObjects.Components.Transform).setScale(sx, sy) });
@@ -116,6 +117,7 @@ function angerMark(t: FxTools): void {
 /** Effects for the abilities the spec names (6.1) on top of their category's flourish. */
 function signature(t: FxTools): void {
   const { x, y } = t.at;
+  if (!t.visual) return;
   const sprite = t.visual as unknown as Phaser.GameObjects.Components.Transform & { y: number };
   const dir = t.side === 'enemy' ? -1 : 1;
   switch (t.ability) {
@@ -155,8 +157,8 @@ function signature(t: FxTools): void {
       break;
     case 'intimidate': {
       // The foe flinches back from the pressure.
-      const foe = t.foe as unknown as (Phaser.GameObjects.Components.Transform & { x: number }) | null | undefined;
-      if (foe) t.scene.tweens.add({ targets: t.foe, x: foe.x + dir * 12, duration: 120, yoyo: true, repeat: 1, ease: 'Sine.easeOut' });
+      const foe = t.foeSprite as unknown as (Phaser.GameObjects.Components.Transform & { x: number }) | null | undefined;
+      if (foe) t.scene.tweens.add({ targets: t.foeSprite, x: foe.x + dir * 12, duration: 120, yoyo: true, repeat: 1, ease: 'Sine.easeOut' });
       break;
     }
   }

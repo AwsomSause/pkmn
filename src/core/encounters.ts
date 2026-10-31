@@ -150,7 +150,7 @@ export interface PlannedMember {
   moves?: string[];
   /** Bosses only: extra vitamin-style stacks per stat. */
   training?: Partial<Record<StatName, number>>;
-  /** Bosses past level 100 only (bossBands.ts): held items (item id → copies). */
+  /** Held items (item id → copies): bosses past level 100 (bossBands.ts) and trainer tiers (trainerTiers.ts). */
   held?: Record<string, number>;
 }
 
@@ -163,6 +163,8 @@ export interface TrainerPlan {
   levelInfo: EnemyLevelBreakdown[];
   /** 0–1: how often the trainer picks its best move instead of a random one (bosses only). */
   ai: number;
+  /** Trainer tiers: a line told in the intro when the trainer remembers you (core/trainerTiers.ts). */
+  memoryNote?: string;
 }
 
 /** Creates a planned Pokémon, with a boss's moves and training when it has them. */

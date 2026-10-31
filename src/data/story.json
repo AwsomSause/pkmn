@@ -55,7 +55,8 @@
     "runEnded": 90,
     "nemesisFormed": 75,
     "nemesisReturned": 60,
-    "nemesisSettled": 90
+    "nemesisSettled": 90,
+    "rivalProgress": 0
   },
   "emotions": {
     "window": 10,

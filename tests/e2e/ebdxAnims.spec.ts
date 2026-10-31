@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { readFileSync } from 'node:fs';
 import { confirmToMenu } from './battleInput';
 
 // Scripted EBDX move animations (left-out 6.6): each one draws pictures on the
@@ -31,25 +32,28 @@ test('every scripted EBDX animation plays, finishes and restores the Pokémon', 
   await waitForScene(page, 'MainMenu');
   await startBattle(page);
 
-  const names = ['tackle', 'ember', 'water-gun', 'thunderbolt', 'absorb', 'mega-drain', 'giga-drain'];
-  for (const [i, name] of names.entries()) {
-    const result = await page.evaluate(async (script) => {
+  const names = Object.keys(JSON.parse(readFileSync('src/data/ebdxAnims.json', 'utf8')).scripts);
+  const shots = ['thunderbolt', 'psychic', 'bite', 'hydropump', 'giga-drain'];
+  for (const name of names) {
+    const before = await page.evaluate(async (script) => {
       const b = (window as any).__pkr.game.scene.getScene('Battle');
-      const spots = () => ['player', 'enemy'].map((s) => { const v = b.opts?.sprite?.(s) ?? b.fx.opts.sprite(s); return [v.x, v.y, v.scaleX, v.scaleY, v.alpha]; });
-      await b.fx.readyScript(script); 
-      const before = spots();
-      const field = b.fx.opts.field;
-      const count = field.length;
-      const run = b.fx.play([{ kind: 'moveAnim', user: 'player', target: 'enemy', anim: 'tackle', script, color: '#ffffff', family: 'projectile', moveType: 'normal' }]);
-      await new Promise((r) => setTimeout(r, 350));
-      const during = field.length - count;
-      await run;
-      return { before, after: spots(), during, left: field.length - count };
+      await b.fx.readyScript(script);
+      const spots = ['player', 'enemy'].map((s) => { const v = b.fx.opts.sprite(s); return [v.x, v.y, v.scaleX, v.scaleY, v.alpha]; });
+      (window as any).__fieldCount = b.fx.opts.field.length;
+      (window as any).__run = b.fx.play([{ kind: 'moveAnim', user: 'player', target: 'enemy', anim: 'tackle', script, color: '#ffffff', family: 'projectile', moveType: 'normal' }]);
+      return spots;
     }, name);
-    expect(result.during, `${name} draws pictures`).toBeGreaterThan(0);
-    expect(result.left, `${name} cleans up`).toBe(0);
-    expect(result.after, `${name} restores the Pokémon`).toEqual(result.before);
-    if (name === 'thunderbolt') await page.screenshot({ path: 'test-results/ebdx-thunderbolt.png' });
+    await page.waitForTimeout(450);
+    const during = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').fx.opts.field.length - (window as any).__fieldCount);
+    if (shots.includes(name)) await page.screenshot({ path: `test-results/ebdx-${name}.png` });
+    const after = await page.evaluate(async () => {
+      const b = (window as any).__pkr.game.scene.getScene('Battle');
+      await (window as any).__run;
+      return { spots: ['player', 'enemy'].map((s) => { const v = b.fx.opts.sprite(s); return [v.x, v.y, v.scaleX, v.scaleY, v.alpha]; }), left: b.fx.opts.field.length - (window as any).__fieldCount };
+    });
+    expect(during, `${name} draws pictures`).toBeGreaterThan(0);
+    expect(after.left, `${name} cleans up`).toBe(0);
+    expect(after.spots, `${name} restores the Pokémon`).toEqual(before);
   }
   expect(errors).toEqual([]);
 });

@@ -81,10 +81,12 @@ const rivalWins = (run: RunState, id: string) => Number(run.story.flags[`rivalW:
 export function ultimateQuest(run: RunState, rival: Rival): UltimateQuestStep[] {
   const q = RIVAL_CONFIG.ultimate.quest;
   const wins = rivalWins(run, rival.id);
+  // A settled quest stays settled, even if the rivalry later turns hostile again.
+  const settled = Boolean(run.story.flags[ultimateDoneFlag(rival.id)]);
   return [
-    { text: 'Become each other\'s Ultimate Rival', done: Boolean(run.story.flags[everUltimateFlag(rival.id)]) },
-    { text: 'Beat them in a rival battle', done: wins >= 1 },
-    { text: `Settle it: win ${q.settleWins} times, or end the rivalry for good`, done: wins >= q.settleWins || !isHostile(rival) || rival.arc?.resolution != null },
+    { text: 'Become each other\'s Ultimate Rival', done: settled || Boolean(run.story.flags[everUltimateFlag(rival.id)]) },
+    { text: 'Beat them in a rival battle', done: settled || wins >= 1 },
+    { text: `Settle it: win ${q.settleWins} times, or end the rivalry for good`, done: settled || wins >= q.settleWins || !isHostile(rival) || rival.arc?.resolution != null },
   ];
 }
 

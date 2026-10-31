@@ -23,7 +23,6 @@ test('the Hub shows the Bank, the Trainer Archive and the Achievement Hall', asy
   await waitForScene(page, 'MainMenu');
   await page.keyboard.press('Enter'); // Enter the Hub
   await waitForScene(page, 'Hub');
-  await page.screenshot({ path: 'test-results/m5-hub.png' });
 
   // The Hub is a row of tiles: Settings, Trainers, New Run (focused), Events (and Past Runs), Unlocks.
   await page.keyboard.press('ArrowLeft'); // Trainers
@@ -80,7 +79,11 @@ test('a lost run pays Bank Credits and earns achievements; a claimed trainer can
       while (session.run.phase === 'battle' && guard++ < 200) {
         const battle = session.run.battle;
         if (strong) battle.enemyTeam[battle.enemyIndex].hp = 1;
-        else session.run.party[battle.activeIndex].hp = 1;
+        else {
+          const lead = session.run.party[battle.activeIndex];
+          lead.hp = 1;
+          lead.moves[0] = { id: 'splash', pp: 40 }; // a harmless move, so the lead cannot win before it faints
+        }
         session.takeTurn({ kind: 'move', index: 0 });
       }
       while (session.run.phase === 'decision') session.resolveDecision({ kind: 'skipMove' });
@@ -118,7 +121,10 @@ test('a lost run pays Bank Credits and earns achievements; a claimed trainer can
   await waitForScene(page, 'Hub');
   await page.screenshot({ path: 'test-results/m5-claimed.png' });
 
-  await page.keyboard.press('ArrowRight'); // from Trainers to New Run
+  // The claim leaves the Trainers page open: Esc back to the tiles, then from Trainers to New Run.
+  await page.keyboard.press('Escape');
+  await page.waitForTimeout(400);
+  await page.keyboard.press('ArrowRight');
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   // Brock's slot depends on where Trainer Evolutions sit, so look it up instead of counting.

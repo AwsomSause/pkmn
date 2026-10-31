@@ -24,6 +24,17 @@ export const MASTERY_RANKS = ['none', 'seen', 'caught', 'bronze', 'silver', 'gol
 export type MasteryRank = (typeof MASTERY_RANKS)[number];
 export const RANK_NAMES: Record<MasteryRank, string> = { none: 'Unknown', seen: 'Seen', caught: 'Caught', bronze: 'Bronze', silver: 'Silver', gold: 'Gold', master: 'Master' };
 
+/** Collection cosmetics for a rank (Silver and up earn a frame around the species' icon): a badge glyph and a frame colour. */
+export const RANK_BADGES: Record<MasteryRank, { glyph: string; frame: number | null }> = {
+  none: { glyph: '', frame: null },
+  seen: { glyph: '', frame: null },
+  caught: { glyph: '·', frame: null },
+  bronze: { glyph: '●', frame: 0xcd7f32 },
+  silver: { glyph: '◆', frame: 0xc0c8d0 },
+  gold: { glyph: '★', frame: 0xf2c94c },
+  master: { glyph: '✦', frame: 0x7fe0ff },
+};
+
 export const rankIndex = (rank: MasteryRank) => MASTERY_RANKS.indexOf(rank);
 export const atLeast = (rank: MasteryRank, min: MasteryRank) => rankIndex(rank) >= rankIndex(min);
 

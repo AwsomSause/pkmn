@@ -22,10 +22,10 @@ export interface Beat {
   skip: () => void;
 }
 
-const noBeat = (): Beat => ({ done: Promise.resolve(), skip: () => undefined });
+export const noBeat = (): Beat => ({ done: Promise.resolve(), skip: () => undefined });
 
 /** Runs a timed beat over the given objects and cleans them up at the end or on skip. */
-function beat(scene: Phaser.Scene, objects: Phaser.GameObjects.GameObject[], lengthMs: number): Beat {
+export function beat(scene: Phaser.Scene, objects: Phaser.GameObjects.GameObject[], lengthMs: number): Beat {
   let finish: () => void = () => undefined;
   let over = false;
   const done = new Promise<void>((resolve) => {

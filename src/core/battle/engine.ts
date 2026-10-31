@@ -77,6 +77,7 @@ import {
 } from './abilities';
 import { genderOf, oppositeGender, sameGender } from '../gender';
 import * as Held from './held';
+import { rivalStrikeDamage } from '../raid/rivalAlly';
 import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
@@ -737,6 +738,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (!battle.outcome && battle.enemyIndex !== enemyBefore) warnRage(ctx, currentEnemy(battle), events);
   battle.turn += 1;
   if (raidTimeout && !battle.outcome) battle.outcome = 'lose';
+  // A narrative fight that drags on ends as the story loss (the rival cannot be beaten, so it must end).
+  if (battle.narrative && !battle.outcome && battle.turn > battle.narrative.maxTurns) battle.outcome = 'lose';
   applyHype(ctx, events);
   return events;
 }
@@ -771,6 +774,22 @@ function raidEndOfTurn(ctx: BattleContext, player: Combatant, enemy: Combatant, 
       events.push({ type: 'raid', tone: 'warn', text: 'Time is up! The raid boss slips away...' });
     } else {
       applyBossPhase(ctx, enemy, a.phase, events);
+    }
+  }
+  // The named rival's strike (no dice): a rival that lands the final blow takes half the prize.
+  const rival = battle.raid?.rival;
+  if (rival && !timeout && !battle.outcome && !battle.raid!.rivalFinished && player.mon.hp > 0 && enemy.mon.hp > 0) {
+    const hit = rivalStrikeDamage(content, rival, enemy.mon);
+    const amount = Math.min(enemy.mon.hp, absorbHit(content, battle, enemy.mon, hit.amount));
+    events.push({ type: 'raid', tone: 'info', text: `${rival.name}'s ${getSpecies(content, rival.speciesId).name} strikes the boss!` });
+    if (amount > 0) {
+      enemy.mon.hp -= amount;
+      events.push({ type: 'damage', side: 'enemy', amount, hpAfter: enemy.mon.hp, effectiveness: hit.effectiveness, crit: false });
+      if (enemy.mon.hp <= 0) {
+        battle.raid!.rivalFinished = true;
+        events.push({ type: 'raid', tone: 'warn', text: `${rival.name} lands the final blow!` });
+        recordFaints(ctx, player, enemy, events);
+      }
     }
   }
   // A bonus attack (strictly limited by the raid's `max`).
@@ -4904,6 +4923,12 @@ function settleFaints(ctx: BattleContext, events: BattleEvent[]): void {
     if (next < 0) {
       // Both sides out at once: the user of Explosion loses, the user of a recoil move wins; otherwise the player wins.
       const playerOut = !ctx.party.some((p) => p.hp > 0);
+      // A narrative rival fight (M12) cannot be won: the rival's last Pokémon holds on until the story loss plays.
+      if (battle.narrative && !playerOut) {
+        enemy.hp = 1;
+        events.push({ type: 'raid', tone: 'info', text: `${getSpecies(ctx.content, enemy.speciesId).name} refuses to go down!` });
+        return;
+      }
       battle.outcome = playerOut && ctx.doubleKoLoser === 'player' ? 'lose' : 'win';
       return;
     }

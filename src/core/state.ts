@@ -459,6 +459,9 @@ export const RaidBattleSchema = z.object({
   survivor: z.string().nullable().default(null),
   /** Raid types: a rival fights beside you, the boss is back after escaping, and the approach's prize changes. */
   rivalHelped: z.boolean().default(false),
+  /** The named rival fighting the boss (or racing you for the last hit), and whether it landed the final blow. */
+  rival: z.object({ id: z.string(), name: z.string(), speciesId: z.string(), level: z.number().int().min(1), mode: z.enum(['help', 'race']) }).nullable().default(null),
+  rivalFinished: z.boolean().default(false),
   returning: z.boolean().default(false),
   rewardPercent: z.number().int().default(100),
   draftDelta: z.number().int().default(0),
@@ -620,10 +623,12 @@ export const BattleStateSchema = z.object({
   rivalId: z.string().optional(),
   rivalNote: z.string().optional(),
   /** Narrative rival defeat (M12): losing this rival fight is part of the story and does not end the run (rivals/narrativeDefeat.ts). */
-  narrative: z.object({ id: z.string() }).optional(),
+  narrative: z.object({ id: z.string(), maxTurns: z.number().int().min(1).default(60) }).optional(),
   /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
   nemesis: z.string().optional(),
   nemesisNote: z.string().optional(),
+  /** Trainer tiers: what an ordinary trainer remembers about you, told in the intro. */
+  memoryNote: z.string().optional(),
   /** "The Hunter Has Become the Hunted!": an ordinary trainer whose class you beat too often, with a counter-team. */
   hunted: z.boolean().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */

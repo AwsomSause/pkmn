@@ -18,6 +18,7 @@ import { getSpecies, maxHp, movesAtLevel, usableLearnset } from '../pokemon';
 import { fnv1a } from './moments';
 import type { PokemonInstance, RunState } from '../state';
 import { battleIndex, emit } from './record';
+import { recordTrainerMemory } from '../trainerTiers';
 import { applyStoryEffect } from './effects';
 import type { Nemesis, NemesisArchetype, StoryTriggerKind, Where } from './schema';
 import type { Side } from '../battle/engine';
@@ -70,6 +71,7 @@ export function noteNemesisBreakFree(run: RunState, enemyUid: string): void {
 export function nemesisAfterBattle(content: Content, run: RunState, where: Where): NemesisMoment[] {
   const battle = run.battle!;
   countHunt(content, run);
+  recordTrainerMemory(content, run);
   const met = nemesisById(run, battle.nemesis);
   if (met) return resolveMeeting(content, run, met, where);
   return incident(content, run, where);
