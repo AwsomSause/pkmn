@@ -1476,7 +1476,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
       if (rivalNote) run.battle.rivalNote = rivalNote;
-      if (narrativeDef) run.battle.narrative = { id: narrativeDef.id };
+      if (narrativeDef) run.battle.narrative = { id: narrativeDef.id, maxTurns: narrativeDef.maxTurns };
     }
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;
     // Bosses hold items, from their own generator so no other roll changes.

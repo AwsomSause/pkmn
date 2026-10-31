@@ -17,6 +17,8 @@ export const NarrativeDefSchema = z.object({
   minMeetings: z.number().int().min(1),
   minRegionIndex: z.number().int().min(0),
   levelBonus: z.number().int().min(0),
+  /** The fight ends as the story loss after this many turns, so it can never stall. */
+  maxTurns: z.number().int().min(1).default(60),
   foreshadow: z.string(),
   introLine: z.string(),
   defeatLine: z.string(),
