@@ -28,6 +28,7 @@ const PATH_BLURB: Record<MentorPath, string> = {
 import type { MoveSlot, PokemonInstance } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx } from '../ui/audio';
+import { raidCaptureTrack } from '../core/presentation/battleMusic';
 import { onInputAction, type InputAction } from '../ui/input';
 import { partyRows, Picker } from '../ui/partyPanel';
 import { fitHeight } from '../ui/showcase';
@@ -60,11 +61,18 @@ export class DecisionScene extends Phaser.Scene {
     super('Decision');
   }
 
+  private raidTier(): number | null {
+    const d = services().session.run?.pending[0];
+    return d?.kind === 'caught' && d.raidTier ? d.raidTier : null;
+  }
+
   preload(): void {
     const { session } = services();
     const caught = (session.run?.pending ?? []).flatMap((d) => (d.kind === 'caught' || d.kind === 'reunion' ? (session.content.species.get(d.mon.speciesId) ?? []) : []));
     preloadPokemon(this, [...partySpecies(), ...caught], { front: true, shiny: true, icon: true });
     if (session.run?.pending.some((d) => d.kind === 'caught' && d.mon.hatched)) queueAssets(this, HATCH_ASSETS);
+    const tier = this.raidTier();
+    if (tier) queueAssets(this, [raidCaptureTrack(tier)]);
   }
 
   create(): void {
@@ -76,7 +84,9 @@ export class DecisionScene extends Phaser.Scene {
     this.confirmMenu = null;
     this.confirmLayer = null;
     this.done = false;
-    playMusic(this, 'bgm.menu');
+    // A beaten raid boss asking to join plays that tier's capture jingle (Raid Battles pack).
+    const tier = this.raidTier();
+    playMusic(this, tier ? raidCaptureTrack(tier) : 'bgm.menu');
 
     onInputAction(this, (a) => this.handleInput(a));
     if (decision.kind === 'learnMove') this.buildLearnMove(decision.uid, decision.moveId);
