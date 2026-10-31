@@ -144,6 +144,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...['basic', 'ultra', 'max', 'tera'].map((n): AssetEntry => ({ id: `bgm.raid.adventure.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/raid_adventure_${n}.mp3`, lazy: true })),
   // Header bars (UIE pack Graphics/Custom UI/Pause Menu), one per colour; see `ui/frames.ts`.
   ...['blue', 'green', 'orange', 'pink', 'purple', 'red'].map((c): AssetEntry => ({ id: `ui.bar.top.${c}`, kind: 'image', category: 'ui', path: `images/packs/uie/pause/top_${c}.png`, lazy: true })),
+  // Options screen backdrop (UIE pack Graphics/Custom UI/Options), shown behind the title screen's Settings page.
+  { id: 'ui.optionsbg', kind: 'image', category: 'ui', path: 'images/packs/uie/custom/options_bg.png', lazy: true },
   // Trainer card art (UIE pack Graphics/Custom UI/Trainer), shown in the Hub's Trainer Card room.
   { id: 'ui.trainercard', kind: 'image', category: 'ui', path: 'images/packs/uie/custom/trainer_card.png', lazy: true },
   // Rule-mask screen wipes (UIE pack Graphics/Transitions), loaded when a battle picks one.
