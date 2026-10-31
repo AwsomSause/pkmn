@@ -23,6 +23,7 @@ import { autoCommands, canBeDoubles, makeDoubles, primarySpot, resolveDoublesTur
 import { endBattle as endHeldBattle, expMultiplier, giveBossItems, growthOnLevelUp } from './battle/held';
 import { bossMechanics, revertTransformations } from './battle/transform';
 import { RARITIES, TYPE_NAMES, type AttributeKey, type Content, type TypeName } from './contentSchema';
+import { auditEncounter, directSpecies } from './encounterDirector';
 import {
   curveLevel,
   bossTeamSpecies,
@@ -104,7 +105,7 @@ import {
   wildShinyMultiplier,
   wildSpeciesWithItems,
 } from './mapItems';
-import { applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { RAID_MEMORY_FRIENDSHIP, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { pickStones } from './expedition/flow';
@@ -135,7 +136,7 @@ import { rivalBond } from './drama/bond';
 import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealMove, shapeAction, updateBondsTurn } from './bond';
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
-import { createStoryState } from './story/record';
+import { createStoryState, emit } from './story/record';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, quickWinBonus, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { withChampionTeam } from './story/championDefense';
 import { grandGauntlet, gauntletRival, markGauntletFight } from './story/gauntlet';
@@ -905,8 +906,9 @@ export function fishingOffer(content: Content, run: RunState, sideId: string): {
   const shinyChance = runAttributeEffects(content, run).shinyChance;
   const out: { speciesId: string; level: number; shiny: boolean }[] = [];
   for (let i = 0; i < rod.choices; i++) {
-    let speciesId = rng.weighted(pool);
-    for (let tries = 0; tries < 5 && out.some((o) => o.speciesId === speciesId); tries++) speciesId = rng.weighted(pool);
+    const hook = () => directSpecies(content, { source: 'fishing', level: curveLevel(content, scale), cap: scale.cap, draw: () => rng.weighted(pool) }).speciesId;
+    let speciesId = hook();
+    for (let tries = 0; tries < 5 && out.some((o) => o.speciesId === speciesId); tries++) speciesId = hook();
     const tries = (rod.rare && i === rod.choices - 1 ? 3 : 0) + fishingRareTriesPerk(archetype.modifiers);
     if (tries > 0) {
       for (let j = 0; j < tries; j++) {
@@ -985,6 +987,7 @@ export function enterRaid(content: Content, current: RunState, sideId: string): 
 export function startRaidBattle(content: Content, run: RunState, def: RaidDef, speciesId: string, level: number): void {
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   const boss = newMon(content, run, speciesId, level, 'e');
+  auditEncounter(content, 'raid', boss, 'raid-boss');
   applyBossHp(def, boss);
   for (const id of def.extraMoves) {
     const mv = content.moves.get(id);
@@ -994,6 +997,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
   run.battle.ai = 0.6;
   run.battle.raid = freshRaidBattle(def);
+  run.battle.raid.lead = run.party[activeIndex]!.uid;
   if (def.weather) run.battle.weather = { id: def.weather, turns: 999 };
   if (def.modifiers.terrain) run.battle.terrain = { id: def.modifiers.terrain, turns: 999 };
   run.raids.entered += 1;
@@ -1147,6 +1151,16 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
   if (def.rewards.rareEncounters > 0) {
     run.perkEffects.push(...RARE_TOKEN_EFFECTS);
     run.tempEffects.push({ effects: RARE_TOKEN_EFFECTS, battles: def.rewards.rareEncounters, until: 'wild' });
+  }
+  // Raid memories: rewards follow contribution, not only the last hit.
+  const bossName = speciesName(content, boss.speciesId);
+  const earned = new Set<string>();
+  for (const m of raidMemories(battle, run.party[battle.activeIndex]?.uid)) {
+    const mon = run.party.find((p) => p.uid === m.uid);
+    if (!mon) continue;
+    emit(content, run, 'storyMoment', { actors: [mon.uid], data: { raidMemory: m.key, raid: def.id }, importance: 70, text: `${m.title}: ${m.text(speciesName(content, mon.speciesId), bossName)}` });
+    if (!earned.has(mon.uid)) changeFriendship(content, mon, RAID_MEMORY_FRIENDSHIP);
+    earned.add(mon.uid);
   }
   run.raids.won += 1;
   count(run, 'raidsWon');
