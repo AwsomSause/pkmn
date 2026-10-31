@@ -7,6 +7,8 @@
 import Phaser from 'phaser';
 import type { Side } from '../../core/battle/engine';
 import type { AnimPlan } from '../../core/presentation/animRegistry';
+import type { Visual } from '../sprites';
+import { playSfxLazy } from '../audio';
 import { textStyle } from '../theme';
 
 export interface FxTools {
@@ -19,6 +21,12 @@ export interface FxTools {
   plan: AnimPlan;
   /** Stacking position for text so two words don't overlap. */
   slot: number;
+  /** The Pokémon's sprite, for the close-up punch. */
+  visual: Visual | null;
+  /** The ability's id, for its own signature effect. */
+  ability?: string;
+  /** The opposing sprite, for effects that land on the foe (Intimidate's recoil). */
+  foeSprite?: Visual | null;
   shake: (px: number) => void;
 }
 
@@ -76,9 +84,94 @@ function banner(t: FxTools): void {
   t.scene.tweens.add({ targets: box, alpha: 0, delay: (t.plan.reduced ? 150 : 300) + hold, duration: 250, onComplete: () => box.destroy() });
 }
 
+/** The reference's cinematic frame: the screen dims, bars slide in top and bottom, the caption sits top-left, and the Pokémon punches in. */
+function frame(t: FxTools): void {
+  const w = t.scene.scale.width;
+  const h = t.scene.scale.height;
+  const hold = Math.max(300, t.plan.ms - 300);
+  const parts: Phaser.GameObjects.GameObject[] = [];
+  const dim = t.scene.add.rectangle(w / 2, h / 2, w, h, 0x000000, 0).setDepth(880);
+  const top = t.scene.add.rectangle(w / 2, -20, w, 40, 0x000000, 0.7).setDepth(881);
+  const bottom = t.scene.add.rectangle(w / 2, h + 20, w, 40, 0x000000, 0.7).setDepth(881);
+  const cap = t.scene.add.text(14, 8, t.label.toUpperCase(), textStyle(14, '#ffffff', { stroke: '#181818', strokeThickness: 3 })).setDepth(882).setAlpha(0);
+  parts.push(dim, top, bottom, cap);
+  t.scene.tweens.add({ targets: dim, fillAlpha: 0.3, duration: 180 });
+  t.scene.tweens.add({ targets: top, y: 20, duration: 220, ease: 'Cubic.easeOut' });
+  t.scene.tweens.add({ targets: bottom, y: h - 20, duration: 220, ease: 'Cubic.easeOut' });
+  t.scene.tweens.add({ targets: cap, alpha: 1, delay: 120, duration: 160 });
+  t.scene.tweens.add({ targets: parts, alpha: 0, delay: hold, duration: 220, onComplete: () => parts.forEach((p) => p.destroy()) });
+  if (!t.visual) return;
+  const v = t.visual as unknown as { scaleX: number; scaleY: number };
+  const [sx, sy] = [v.scaleX, v.scaleY];
+  t.scene.tweens.add({ targets: t.visual, scaleX: sx * 1.1, scaleY: sy * 1.1, duration: 160, yoyo: true, ease: 'Back.easeOut', onComplete: () => (t.visual as unknown as Phaser.GameObjects.Components.Transform).setScale(sx, sy) });
+}
+
+/** A red anger mark that pops on the Pokémon's head (the reference's Intimidate star). */
+function angerMark(t: FxTools): void {
+  const { x, y } = t.at;
+  const star = t.scene.add.star(x - 24, y - 50, 4, 5, 15, col('#d83838')).setStrokeStyle(2, 0xffffff, 0.9).setScale(0.2).setDepth(883);
+  t.field.add(star);
+  t.scene.tweens.add({ targets: star, scale: 1.2, angle: 20, duration: 220, ease: 'Back.easeOut', yoyo: true, hold: 180, onComplete: () => star.destroy() });
+}
+
+/** Effects for the abilities the spec names (6.1) on top of their category's flourish. */
+function signature(t: FxTools): void {
+  const { x, y } = t.at;
+  if (!t.visual) return;
+  const sprite = t.visual as unknown as Phaser.GameObjects.Components.Transform & { y: number };
+  const dir = t.side === 'enemy' ? -1 : 1;
+  switch (t.ability) {
+    case 'levitate': {
+      const y0 = sprite.y;
+      t.scene.tweens.add({ targets: t.visual, y: y0 - 18, duration: 350, yoyo: true, ease: 'Sine.easeInOut', hold: 300 });
+      break;
+    }
+    case 'speed-boost':
+    case 'quick-feet':
+    case 'swift-swim':
+      for (let i = 0; i < 5; i++) {
+        const line = t.scene.add.rectangle(x - dir * 70, y - 40 + i * 20, 50, 3, 0xffffff, 0.85).setAlpha(0);
+        t.field.add(line);
+        t.scene.tweens.add({ targets: line, x: x + dir * 40, alpha: { from: 0.9, to: 0 }, delay: i * 50, duration: 380, ease: 'Cubic.easeOut', onStart: () => line.setAlpha(0.9), onComplete: () => line.destroy() });
+      }
+      break;
+    case 'download':
+    case 'trace':
+      for (let i = 0; i < 3; i++) {
+        const scan = t.scene.add.rectangle(x, y - 60, 120, 3, col(t.plan.color), 0.9).setAlpha(0);
+        t.field.add(scan);
+        t.scene.tweens.add({ targets: scan, y: y + 60, alpha: { from: 0.9, to: 0 }, delay: i * 180, duration: 450, onStart: () => scan.setAlpha(0.9), onComplete: () => scan.destroy() });
+      }
+      break;
+    case 'pressure': {
+      const dark = t.scene.add.circle(x, y, 20, 0x301848, 0.5).setStrokeStyle(3, 0x8040c0, 0.9);
+      t.field.add(dark);
+      t.scene.tweens.add({ targets: dark, radius: 110, alpha: 0, duration: 800, ease: 'Sine.easeOut', onComplete: () => dark.destroy() });
+      break;
+    }
+    case 'moxie':
+    case 'beast-boost':
+      ring(t, x, y, 10, 150, 500);
+      flash(t, 0.35);
+      t.shake(Math.round(5 * t.plan.shake));
+      break;
+    case 'intimidate': {
+      // The foe flinches back from the pressure.
+      const foe = t.foeSprite as unknown as (Phaser.GameObjects.Components.Transform & { x: number }) | null | undefined;
+      if (foe) t.scene.tweens.add({ targets: t.foeSprite, x: foe.x + dir * 12, duration: 120, yoyo: true, repeat: 1, ease: 'Sine.easeOut' });
+      break;
+    }
+  }
+}
+
 /** Plays one ability banner with its category flourish. Resolves when it has mostly played. */
 export function playAbilityAnim(t: FxTools): Promise<void> {
   banner(t);
+  if (!t.plan.reduced) {
+    frame(t);
+    signature(t);
+  }
+  if (t.plan.sound) playSfxLazy(t.scene, t.plan.sound, 0.6);
   const { x, y } = t.at;
   if (!t.plan.reduced) {
     switch (t.plan.id) {
@@ -91,6 +184,7 @@ export function playAbilityAnim(t: FxTools): Promise<void> {
         ring(t, x, y + 50, 20, 110, 800, 150);
         break;
       case 'ability.menace':
+        angerMark(t);
         ring(t, x, y, 140, 20, 500);
         flash(t, 0.25);
         t.shake(Math.round(6 * t.plan.shake));

@@ -1736,7 +1736,7 @@ export class BattleScene extends Phaser.Scene {
     const content = session.content;
     const { battleAnimations, effectIntensity } = session.settings;
     // What the screen shows for each event; worked out from the finished turn, so it can't change it.
-    const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity, shake: session.settings.shakeIntensity });
+    const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity, shake: session.settings.shakeIntensity }, (side) => (this.shown[side] ? abilityOf(content, this.shown[side]) : null));
 
     for (const [index, e] of events.entries()) {
       // "Charmander used Ember!" goes up before its animation; other messages follow theirs.
