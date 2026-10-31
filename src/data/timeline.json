@@ -1,0 +1,32 @@
+{
+  "npcLineChance": 0.5,
+  "impossible": { "maxStanding": 1, "levelGap": 5 },
+  "title": "THE FALSE PROTAGONIST",
+  "start": "The world moved on without you. {rival} is already the region's rising star, and you are the one who lost.",
+  "npcLines": [
+    "Wait… aren't you the one who lost?",
+    "I thought somebody else was supposed to save this region.",
+    "You're still chasing after them?",
+    "{rival} has already made their mark around here.",
+    "Some people just aren't meant to be the protagonist.",
+    "That Trainer is already several routes ahead of you.",
+    "Everyone's talking about {rival}. Nobody's talking about you."
+  ],
+  "rivalIntro": {
+    "gymLeader": "{rival}: \"You finally decided to show up? I've already finished what we started. This Gym is mine now.\"",
+    "finalist": "{rival}: \"Still chasing me? I'm already in the regional finals. Go home.\"",
+    "champion": "{rival}: \"I'm the Champion now. This is where your story ended last time, remember?\""
+  },
+  "afterWin": {
+    "gymLeader": "{rival} can't believe it: the one who lost is catching up.",
+    "finalist": "{rival} stares at you: \"How are you still here?\"",
+    "champion": "The crowd goes quiet. The False Protagonist just beat the Champion."
+  },
+  "outcomes": [
+    { "id": "impossible-victory", "name": "The Impossible Victory", "text": "Against every odd, you beat {rival} at the very top. Nobody will forget it." },
+    { "id": "usurper", "name": "The Usurper", "text": "You beat {rival} and took their place as the region's Champion." },
+    { "id": "catch-up", "name": "The Catch-Up", "text": "You finally caught up to {rival} and beat them." },
+    { "id": "second-place", "name": "The Second Place", "text": "You finished the journey, but never got past {rival}." },
+    { "id": "forgotten", "name": "The Forgotten", "text": "You lost again, and {rival} is more famous than ever." }
+  ]
+}

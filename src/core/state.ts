@@ -1005,6 +1005,8 @@ export const RunStateSchema = z.object({
   /** Crafting materials held (material id → count; core/crafting.ts). Run-only. */
   materials: z.record(z.string(), z.number().int().min(0)).default(() => ({})),
   raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()), /** Raids whose boss escaped (the timer ran out); each comes back as a stronger den in a later stage. */ escaped: z.array(z.string()).default([]), /** The best raid tier won in earlier runs (older saves: every tier open). */ unlockedTier: z.number().int().min(0).max(6).default(6) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6, escaped: [] })),
+  /** Revisit This Timeline (core/timeline/genesis.ts): set only on a replay of a lost run, which saves in its own slot and never touches the profile. */
+  timeline: z.object({ replayId: z.string(), originRunId: z.string(), attempt: z.number().int().min(1) }).optional(),
   /** A past run's Pokémon waiting to meet you after this many battles (story slice 5); unset when none was chosen. */
   reunion: z.object({ mon: PastPokemonSchema, afterEncounters: z.number().int().min(1), done: z.boolean() }).optional(),
 });

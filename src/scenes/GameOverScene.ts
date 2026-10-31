@@ -84,6 +84,7 @@ export class GameOverScene extends Phaser.Scene {
     }
     const summary = session.lastRunSummary;
     const lines: string[] = [];
+    if (run?.timeline) lines.push(`Revisited timeline (attempt ${run.timeline.attempt}): kept apart from your profile. The original run is untouched.`);
     if (summary) {
       const p = summary.payout;
       lines.push(`+${p.total} Bank Credits`, `   savings ${p.savings} · stipend ${p.stipend} · achievements ${p.achievements}`);

@@ -16,7 +16,7 @@ export type RivalRank = (typeof RIVAL_RANKS)[number];
 const NODE_FOR: Record<RivalRank, 'gym' | 'elite' | 'champion'> = { gymLeader: 'gym', finalist: 'elite', champion: 'champion' };
 const RANK_NAME: Record<RivalRank, string> = { gymLeader: 'took over a Gym', finalist: 'reached the regional finals', champion: 'became Champion' };
 
-const takeoverFlag = (rival: Rival) => `takeover:${rival.id}:${rival.rank}`;
+export const takeoverFlag = (rival: Pick<Rival, 'id' | 'rank'>) => `takeover:${rival.id}:${rival.rank}`;
 
 /**
  * After an unseen win (rivals/world.ts): an active rival, nemesis or contender (or a rival already ranked) may climb one rank when
