@@ -32,7 +32,7 @@ Data: `src/data/rivalCatalog.json` (built by `npm run data:rival-catalog` from `
 | Untitled document phases A, B | DONE (except new NPC classes) |
 | Untitled doc Phase E1 (§13 difficulty, §13.2 modifiers, §13.3 multiplier, §14 Death-Block, §15 Adventure) | PART: 5 difficulties, multiplier formula with 2.0 cap and published x on the Preparation Desk, snapshot in `run.rules` (run v14), all 12 modifiers run, one per kind (e.g. one party rule at a time): No Transformations, Scarce Supplies, Monotype, Single Region Dex, Rich Route, Blind Research (map hides stage themes, research x1.5), No Revives, Random Draft, Boss Rush (own 4-stage campaign), Variant Hunt (+50% event stops; shiny odds unchanged), Limited Party (4), No Duplicate Species, Death-Block (first 5 battles, once, back to stage start), Adventure (checkpoint on stage start/heal stops, wipe = back to checkpoint, no account rewards). Daily, Endless, Spooky modes planned |
 | Untitled doc Phase C–G rest | PART (E mode rewards, Endless endpoint and reload test done): DONE: C prep slots (Field License new; Directive and Contracts by starter-sets thread). DONE: effective-attribute layers (attributeLayers). TODO: (starter-sets thread owns pools/identity/Run Build Summary); D, F, G |
-| Progression and Encounter Balancing, phases 1 and 3 | DONE; 2, 4–11 TODO |
+| Progression and Encounter Balancing, phases 1 and 3 | DONE (3 wired: availability gates wild, trainer, fishing and raid pools); 2, 4–11 TODO |
 | Overdrive Hyper Techno Supreme Z | PART: see the section "Overdrive Hyper Techno Supreme Z" at the end |
 | The Battle Drama Engine (9 phases) | DONE (the 2 Overdrive events are built, limited) |
 | Blueprint: Raids, Totems, Expeditions, Minigames | PART (raids done; see the Blueprint section below) |
@@ -62,7 +62,7 @@ Order: Raids, Totems, Expeditions, Minigames. Code: `src/core/raid/` + `src/data
 | Safeguards: encounter level cap, no double reward/cost (den used on entry, battle cleared once), saved mid-raid (run v12), failure never ends the run, config validated at load, visual shield/phase/timer/charge | DONE |
 | Reference plugin (Raid Battles DBK): mechanics rebuilt natively, nothing copied | DONE |
 | Overworld raid dens | DONE (map side stop `raid`); Raid Adventures mode = Expedition below |
-| Use encounter availability for the boss pool | PART (species are listed in `raids.json`; `availability.json` is not wired yet) |
+| Use encounter availability for the boss pool | DONE (`pickRaidFor` only picks a raid whose boss is unlocked at its level, `core/availability.ts`) |
 
 ### 2. Mega-Expeditions (slice 3, DONE except the TODO lines)
 Code: `src/core/expedition/` (schema, graph, flow, gate), `src/data/expeditions.json` (5 expeditions, tiers 1–4), screen `ExpeditionScene`. Gate = map side stop `E`.

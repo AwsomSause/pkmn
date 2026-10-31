@@ -10,6 +10,8 @@ import type { BattleState, PokemonInstance, RaidBattle, RunState } from '../stat
 import { focusDenBonus } from '../campaign/director';
 import { grandRaidFor } from '../story/grandEnemy';
 import type { TypeName } from '../contentSchema';
+import { isUnlockedAt } from '../availability';
+import { levelCap } from '../regions';
 import type { RaidDef, RaidPhase } from './schema';
 
 export function getRaid(content: Content, id: string): RaidDef {
@@ -37,7 +39,12 @@ export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regi
   const region = tiersForRegion(content, run.regionIndex).filter((t) => t <= open);
   // A region whose tiers are all still closed gets the highest open tier instead.
   const tiers = region.length > 0 ? region : [Math.max(...content.raids.raids.filter((r) => !r.grand && r.tier <= open).map((r) => r.tier))];
-  const pool = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand);
+  const tiered = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand);
+  // Spreadsheet availability: a den's boss must be unlocked at the level it would fight at (else the tier's dens stay as they were).
+  const cap = levelCap(content, run.regionIndex);
+  const end = Math.max(1, cap - content.balance.difficulty.capMargin);
+  const unlocked = tiered.filter((r) => r.species.every((id) => isUnlockedAt(content, id, raidLevel(r, end, cap))));
+  const pool = unlocked.length > 0 ? unlocked : tiered;
   const rng = new Rng(hashSeed(`${run.seed}::raid-pick::${key}`));
   return rng.pick(pool.length > 0 ? pool : content.raids.raids);
 }
