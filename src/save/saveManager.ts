@@ -27,7 +27,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 25, settings: 9, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 26, settings: 9, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -275,6 +275,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       const d = data as Json & { story?: Json };
       return d.story ? { ...d, story: { ...d.story, nemeses: [] } } : d;
     },
+    // v26 (Shadow and Blissful): optional `blissful` on a Pokémon and `snagged` on a battle; older runs have neither.
+    25: (data) => data as Json,
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.

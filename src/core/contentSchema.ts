@@ -7,6 +7,7 @@ import { z } from 'zod';
 import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
 import type { TotemFile } from './totem/schema';
+import type { ShadowWorldFile } from './shadowWorld/schema';
 import type { ExpeditionFile } from './expedition/schema';
 import type { MinigameFile } from './minigame/schema';
 
@@ -1037,7 +1038,7 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('catch'),
     multiplier: z.number().positive(),
-    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk', 'dream', 'beast', 'safari', 'sport', 'flyer', 'weight100', 'weight300']).optional(),
+    rule: z.enum(['level', 'lure', 'dive', 'net', 'moon', 'love', 'heavy', 'fast', 'nest', 'repeat', 'timer', 'quick', 'dusk', 'dream', 'beast', 'safari', 'sport', 'flyer', 'weight100', 'weight300', 'snag', 'bless']).optional(),
     after: z.enum(['friend', 'luxury', 'heal']).optional(),
   }),
   z.object({ kind: z.literal('healHp'), amount: z.number().int().positive() }),
@@ -2295,6 +2296,9 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('partyTag'), tag: z.enum(SPECIES_TAGS) }),
   /** The Pokémon you started with (still in the party) has this type, species or species tag: starter-tagged events. */
   z.object({ kind: z.literal('starter'), type: TypeNameSchema.optional(), species: z.string().optional(), tag: z.enum(SPECIES_TAGS).optional() }).refine((c) => c.type !== undefined || c.species !== undefined || c.tag !== undefined, { message: 'a starter condition needs a type, species or tag' }),
+  /** A Blissful Pokémon is in the party / a Shadow Pokémon is in the party (APPROVED.md §12-14). */
+  z.object({ kind: z.literal('partyBlissful') }),
+  z.object({ kind: z.literal('partyShadow') }),
   /** Event Director: two of your Pokémon share an open bond. */
   z.object({ kind: z.literal('bond') }),
   /** Event Director: the region's focus (mystery, rivals, raids, exploration). */
@@ -2368,7 +2372,11 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('research'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('levels'), amount: z.number().int().positive(), who: z.enum(['lead', 'party']).default('lead') }),
   /** A Pokémon joins (or goes to storage when the party is full): a listed species, or one of the types, or the stage's theme. */
-  z.object({ kind: z.literal('join'), species: z.array(z.string()).default([]), types: z.array(TypeNameSchema).default([]), levelBonus: z.number().int().default(0), shinyMultiplier: z.number().min(1).default(1), shadow: z.boolean().default(false) }),
+  z.object({ kind: z.literal('join'), species: z.array(z.string()).default([]), types: z.array(TypeNameSchema).default([]), levelBonus: z.number().int().default(0), shinyMultiplier: z.number().min(1).default(1), shadow: z.boolean().default(false), blissful: z.boolean().default(false) }),
+  /** A sanctuary's blessing (shadowWorld.json): a few battles of a small, narrow boost. */
+  z.object({ kind: z.literal('blessing'), id: z.string().min(1) }),
+  /** A Blissful awakening: the healthiest, fondest party Pokémon that is not Shadow becomes Blissful for good (needs friendship 150). */
+  z.object({ kind: z.literal('awaken') }),
   /** You get an Egg (core/eggs.ts) that hatches after `left` battles or stages; it carries up to two egg moves. */
   z.object({
     kind: z.literal('egg'),
@@ -2420,6 +2428,9 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     types: z.array(TypeNameSchema).default([]),
     levelBonus: z.number().int().default(0),
     shinyMultiplier: z.number().min(1).default(1),
+    /** A Shadow foe (a Snag Ball can't take it; it can be caught like any wild one) / a calm Blissful foe (only a Blessing Ball catches it). */
+    shadow: z.boolean().default(false),
+    blissful: z.boolean().default(false),
     /** The wild Pokémon is one that beat a party member earlier this run (catalog 28). */
     recall: z.boolean().default(false),
     /** Battles in a row at this stop without healing in between (a detour); `win` pays after the last. */
@@ -2439,6 +2450,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     ally: z.string().optional(),
     name: z.string(),
     size: z.number().int().min(1).max(6).default(2),
+    /** How many of the trainer's Pokémon (the first ones) are Shadow Pokémon a Snag Ball can take. */
+    shadow: z.number().int().min(0).max(6).default(0),
     types: z.array(TypeNameSchema).default([]),
     levelBonus: z.number().int().default(0),
     chain: z.number().int().min(1).max(3).default(1),
@@ -2606,6 +2619,7 @@ export interface Content {
   events: Map<string, EventDef>;
   /** Totem Pokémon (totems.json, core/totem). */
   totems: TotemFile;
+  shadowWorld: ShadowWorldFile;
   /** Mega-Expeditions (expeditions.json, core/expedition). */
   expeditions: ExpeditionFile;
   /** Minigames (minigames.json, core/minigame). */
