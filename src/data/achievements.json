@@ -53,6 +53,8 @@
   "name": "Trainer Tamer",
   "description": "Defeat 10 trainers.",
   "category": "battle",
+  "chain": "trainers",
+  "tier": 1,
   "requirement": {
    "kind": "total",
    "counter": "trainersDefeated",
@@ -116,6 +118,8 @@
   "name": "Elite Challenger",
   "description": "Defeat an Elite Four member.",
   "category": "campaign",
+  "chain": "elite-four",
+  "tier": 1,
   "requirement": {
    "kind": "total",
    "counter": "eliteFourDefeated",
@@ -130,6 +134,8 @@
   "name": "Champion Material",
   "description": "Defeat your first regional champion.",
   "category": "campaign",
+  "chain": "champions",
+  "tier": 1,
   "requirement": {
    "kind": "total",
    "counter": "championsDefeated",
@@ -470,6 +476,8 @@
   "name": "Wild at Heart",
   "description": "Defeat 100 wild Pokémon.",
   "category": "exploration",
+  "chain": "wild",
+  "tier": 1,
   "requirement": {
    "kind": "total",
    "counter": "wildDefeated",
@@ -575,6 +583,375 @@
   "reward": {
    "bankCredits": 1000,
    "title": "Raid Master"
+  }
+ },
+ {
+  "id": "best-friend-1",
+  "name": "Best Friend",
+  "description": "Have a Pokémon reach friendship-evolution level in a run.",
+  "category": "relationship",
+  "chain": "best-friends",
+  "tier": 1,
+  "requirement": {
+   "kind": "best",
+   "counter": "bestFriends",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 100
+  }
+ },
+ {
+  "id": "best-friend-3",
+  "name": "Close-Knit",
+  "description": "Have 3 Pokémon at friendship-evolution level in one run.",
+  "category": "relationship",
+  "chain": "best-friends",
+  "tier": 2,
+  "requirement": {
+   "kind": "best",
+   "counter": "bestFriends",
+   "atLeast": 3
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "best-friend-6",
+  "name": "Inseparable",
+  "description": "Have a full party at friendship-evolution level in one run.",
+  "category": "relationship",
+  "chain": "best-friends",
+  "tier": 3,
+  "requirement": {
+   "kind": "best",
+   "counter": "bestFriends",
+   "atLeast": 6
+  },
+  "reward": {
+   "bankCredits": 1000,
+   "title": "Inseparable"
+  }
+ },
+ {
+  "id": "mentor-1",
+  "name": "Looking Up",
+  "description": "Start a mentorship.",
+  "category": "relationship",
+  "chain": "mentors",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "mentorshipsStarted",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 100
+  }
+ },
+ {
+  "id": "mentor-5",
+  "name": "Good Teacher",
+  "description": "Start 5 mentorships.",
+  "category": "relationship",
+  "chain": "mentors",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "mentorshipsStarted",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "mentor-15",
+  "name": "Master Mentor",
+  "description": "Start 15 mentorships.",
+  "category": "relationship",
+  "chain": "mentors",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "mentorshipsStarted",
+   "atLeast": 15
+  },
+  "reward": {
+   "bankCredits": 1000,
+   "title": "Mentor"
+  }
+ },
+ {
+  "id": "graduate-1",
+  "name": "The Student Becomes the Teacher",
+  "description": "Finish a mentorship.",
+  "category": "relationship",
+  "chain": "graduates",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "mentorshipsGraduated",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ },
+ {
+  "id": "graduate-5",
+  "name": "Proud Teacher",
+  "description": "Finish 5 mentorships.",
+  "category": "relationship",
+  "chain": "graduates",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "mentorshipsGraduated",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 600
+  }
+ },
+ {
+  "id": "rival-1",
+  "name": "Rivalry Begins",
+  "description": "Win a battle against a rival.",
+  "category": "relationship",
+  "chain": "rivals",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "rivalBattlesWon",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 100
+  }
+ },
+ {
+  "id": "rival-10",
+  "name": "Worthy Opponent",
+  "description": "Win 10 rival battles.",
+  "category": "relationship",
+  "chain": "rivals",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "rivalBattlesWon",
+   "atLeast": 10
+  },
+  "reward": {
+   "bankCredits": 400
+  }
+ },
+ {
+  "id": "rival-30",
+  "name": "Rival Respect",
+  "description": "Win 30 rival battles.",
+  "category": "relationship",
+  "chain": "rivals",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "rivalBattlesWon",
+   "atLeast": 30
+  },
+  "reward": {
+   "bankCredits": 1000,
+   "title": "Rival"
+  }
+ },
+ {
+  "id": "trade-1",
+  "name": "Fair Trade",
+  "description": "Make a trade.",
+  "category": "relationship",
+  "chain": "trades",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "tradesMade",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 100
+  }
+ },
+ {
+  "id": "trade-10",
+  "name": "Trading Partner",
+  "description": "Make 10 trades.",
+  "category": "relationship",
+  "chain": "trades",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "tradesMade",
+   "atLeast": 10
+  },
+  "reward": {
+   "bankCredits": 400
+  }
+ },
+ {
+  "id": "elite-four-10",
+  "name": "Elite Breaker",
+  "description": "Defeat 10 Elite Four members.",
+  "category": "campaign",
+  "chain": "elite-four",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "eliteFourDefeated",
+   "atLeast": 10
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "champion-5",
+  "name": "Champion Streak",
+  "description": "Defeat 5 champions.",
+  "category": "campaign",
+  "chain": "champions",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "championsDefeated",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 500
+  }
+ },
+ {
+  "id": "champion-20",
+  "name": "Hall of Famer",
+  "description": "Defeat 20 champions.",
+  "category": "campaign",
+  "chain": "champions",
+  "tier": 3,
+  "requirement": {
+   "kind": "total",
+   "counter": "championsDefeated",
+   "atLeast": 20
+  },
+  "reward": {
+   "bankCredits": 1500,
+   "title": "Hall of Famer"
+  }
+ },
+ {
+  "id": "runs-50",
+  "name": "The Long Game",
+  "description": "Finish 50 runs.",
+  "category": "roguelike",
+  "hidden": true,
+  "requirement": {
+   "kind": "total",
+   "counter": "runsFinished",
+   "atLeast": 50
+  },
+  "reward": {
+   "bankCredits": 1000
+  }
+ },
+ {
+  "id": "wins-5",
+  "name": "Veteran Raider",
+  "description": "Win 5 runs.",
+  "category": "roguelike",
+  "chain": "run-wins",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "runsWon",
+   "atLeast": 5
+  },
+  "reward": {
+   "bankCredits": 500
+  }
+ },
+ {
+  "id": "wins-1",
+  "name": "Run Complete",
+  "description": "Win a run.",
+  "category": "roguelike",
+  "chain": "run-wins",
+  "tier": 1,
+  "requirement": {
+   "kind": "total",
+   "counter": "runsWon",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 200
+  }
+ },
+ {
+  "id": "against-the-odds",
+  "name": "Against the Odds",
+  "description": "Beat a boss with a one-Pokémon party.",
+  "category": "secret",
+  "hidden": true,
+  "requirement": {
+   "kind": "total",
+   "counter": "bossWinsSolo",
+   "atLeast": 1
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "lucky-break",
+  "name": "Lucky Break",
+  "description": "Find 2 shiny Pokémon in one run.",
+  "category": "secret",
+  "hidden": true,
+  "requirement": {
+   "kind": "best",
+   "counter": "shiniesFound",
+   "atLeast": 2
+  },
+  "reward": {
+   "bankCredits": 500
+  }
+ },
+ {
+  "id": "trainer-100",
+  "name": "Trainer Hunter",
+  "description": "Defeat 100 trainers.",
+  "category": "battle",
+  "chain": "trainers",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "trainersDefeated",
+   "atLeast": 100
+  },
+  "reward": {
+   "bankCredits": 300
+  }
+ },
+ {
+  "id": "wild-1000",
+  "name": "Wild Hunter",
+  "description": "Defeat 1,000 wild Pokémon.",
+  "category": "exploration",
+  "chain": "wild",
+  "tier": 2,
+  "requirement": {
+   "kind": "total",
+   "counter": "wildDefeated",
+   "atLeast": 1000
+  },
+  "reward": {
+   "bankCredits": 500
   }
  }
 ]

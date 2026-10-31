@@ -907,3 +907,22 @@ describe('trainer perk systems: Lana fishing and Looker bonus rewards', () => {
     expect(fishingRareTriesPerk(perks('lana'))).toBe(2);
   });
 });
+
+describe('perk re-reads (left-out 2.8)', () => {
+  it('Raihan boosts sandstorm and hail too', () => {
+    for (const weather of ['rain', 'sun', 'sand', 'hail'] as const) {
+      expect(damageDealtPerk(perks('raihan'), { ...hit, weather }), weather).toBeCloseTo(1.2);
+    }
+    expect(damageDealtPerk(perks('raihan'), { ...hit, weather: 'snow' })).toBe(1);
+  });
+  it('Calem makes Mega Stone crafting cost 20% less, other recipes unchanged', async () => {
+    const { recipeCost, CRAFTING } = await import('../../src/core/crafting');
+    const run = createRun(content, { runId: 'cm', seed: 'calem', archetypeId: 'calem' });
+    const mega = CRAFTING.recipes.find((r) => r.gives.kind === 'megaStone')!;
+    expect(recipeCost(content, run, mega)['star-core']).toBe(Math.ceil(mega.cost['star-core']! * 0.8));
+    const plain = createRun(content, { runId: 'cm2', seed: 'calem', archetypeId: 'red' });
+    expect(recipeCost(content, plain, mega)).toEqual(mega.cost);
+    const other = CRAFTING.recipes.find((r) => r.gives.kind !== 'megaStone')!;
+    expect(recipeCost(content, run, other)).toEqual(other.cost);
+  });
+});

@@ -448,6 +448,11 @@ export const RaidBattleSchema = z.object({
   cheersLeft: z.number().int().min(0).default(3),
   cheerOffense: z.number().int().min(0).default(0),
   cheerDefense: z.number().int().min(0).default(0),
+  /** Who earned a raid memory (uids): started the raid, broke a shield, took a charged attack under a Defense cheer, survived a charged attack. */
+  lead: z.string().nullable().default(null),
+  breaker: z.string().nullable().default(null),
+  tank: z.string().nullable().default(null),
+  survivor: z.string().nullable().default(null),
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
@@ -1136,6 +1141,8 @@ export const ProfileSchema = z.object({
   gameEvents: z.record(z.string(), z.record(z.string(), z.number().int().min(0))),
   /** Legacy & Live hub systems: Research Tree, Prestige, Trainer Network, Item Museum, Intelligence Board, Seed Shelf (core/legacy.ts). */
   legacy: LegacySchema.optional(),
+  /** Hyper moment codex (core/story/codex.ts): times each story moment (story.json id) was seen, over all runs. */
+  momentCodex: z.record(z.string(), z.number().int().min(0)).default({}),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 

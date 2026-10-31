@@ -520,6 +520,10 @@ export const BASE_COUNTER_NAMES = [
   'eventClues',
   'eventBossesWon',
   'eventFinalesWon',
+  /** Relationship counters, worked out when a run ends (core/relationships.ts). */
+  'bestFriends',
+  'mentorshipsStarted',
+  'mentorshipsGraduated',
 ] as const;
 /**
  * Also counted, by type: boss wins (gym leader, Elite Four, champion) by the lead Pokémon's type, as "bossWinsLead.<type>",
@@ -694,7 +698,7 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   /** Extra turns of weather your side sets up. */
   z.object({ kind: z.literal('weatherTurnsBonus'), turns: z.number().int().positive() }),
   /** Damage boost in a weather: your moves in `weather` (side player) or the enemy's (side enemy). */
-  z.object({ kind: z.literal('weatherDamageMultiplier'), weather: z.enum(['rain', 'sun']), side: z.enum(['player', 'enemy']), moveType: TypeNameSchema.optional(), value: z.number().positive() }),
+  z.object({ kind: z.literal('weatherDamageMultiplier'), weather: WeatherSchema, side: z.enum(['player', 'enemy']), moveType: TypeNameSchema.optional(), value: z.number().positive() }),
   /** Multiplier on how often a group of wild Pokémon is offered. */
   z.object({ kind: z.literal('encounterWeightMultiplier'), group: z.enum(['legendary', 'rare']), value: z.number().positive() }),
   /** Chance of your Hyper moments. */
@@ -745,6 +749,8 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('statEncounterWeight'), stat: StatNameSchema, value: z.number().positive() }),
   /** Mega Evolved Pokémon of yours take more damage. */
   z.object({ kind: z.literal('megaDamageTakenMultiplier'), value: z.number().positive() }),
+  /** Calem: crafting a Mega Stone costs this share of its materials (rounded up, at least 1). */
+  z.object({ kind: z.literal('megaCraftCost'), value: z.number().positive().max(1) }),
   /** Your side's first attack in a battle deals `first`× damage, every later attack `later`×. */
   z.object({ kind: z.literal('firstAttackDamage'), first: z.number().positive(), later: z.number().positive() }),
   /** Damage dealt by your Pokémon that are holding an item (holding: true) or not holding one (false). */
@@ -998,6 +1004,7 @@ export const RunPrepFileSchema = z.object({
 });
 
 export const RARITIES = ['common', 'uncommon', 'rare', 'epic'] as const;
+const ThreatBudgetSchema = z.object({ base: z.number().positive(), perLevel: z.number().min(0), max: z.number().positive() });
 export const RaritySchema = z.enum(RARITIES);
 export type Rarity = z.infer<typeof RaritySchema>;
 
@@ -1980,6 +1987,23 @@ export const BalanceSchema = z.object({
   wildMaxBaseStats: z.number().int().positive(),
   /** Regular enemies (wild and trainer) may not exceed base + perLevel × level total base stats; up to `retries` re-draws, keeping the weakest. */
   levelBst: z.object({ base: z.number().int().positive(), perLevel: z.number().positive(), retries: z.number().int().min(0) }),
+  /** Combat Threat Rating (core/threat.ts) and the Encounter Director (core/encounterDirector.ts). 100 = all-70 base stats with a 60-power same-type attack. */
+  threat: z.object({
+    setupBonus: z.number().min(0),
+    recoveryBonus: z.number().min(0),
+    statusBonus: z.number().min(0),
+    priorityBonus: z.number().min(0),
+    abilityBonus: z.number().min(0),
+    strongAbilities: z.array(z.string()),
+    noAttackOffense: z.number().positive(),
+    speedWeight: z.number().min(0).max(1),
+    /** Per tier: budget = min(max, base + perLevel × level). */
+    budgets: z.object({ easy: ThreatBudgetSchema, standard: ThreatBudgetSchema, challenging: ThreatBudgetSchema, elite: ThreatBudgetSchema }),
+    /** Bounded retries before the director falls back to the weakest valid candidate it drew. */
+    retries: z.number().int().min(0),
+    /** Which tier each source is held to. */
+    sourceTiers: z.record(z.string(), z.enum(['easy', 'standard', 'challenging', 'elite'])),
+  }),
   /** Spreadsheet availability (core/availability.ts): a species unlocks at its sheet minimum level minus levelSlack; rarityWeights scale the odds of unlocked ones. */
   availability: z.object({
     levelSlack: z.number().int().min(0),

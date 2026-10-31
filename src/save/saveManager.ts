@@ -24,7 +24,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 12, run: 25, settings: 8, meta: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 13, run: 25, settings: 8, meta: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -98,6 +98,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
         })),
       };
     },
+    // v13 (Hyper moment codex): older profiles have seen no moments yet.
+    12: (data) => ({ ...(data as Json), momentCodex: {} }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against

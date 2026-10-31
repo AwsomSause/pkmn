@@ -592,6 +592,13 @@ export class BattleScene extends Phaser.Scene {
     // Text and bar positions follow the old art's slots (art pixel × 3).
     const left = isPlayer ? 48 : 24;
     const right = isPlayer ? 366 : 342;
+    // The kit art has no name or level plates, so the kit styles get small dark glass plates of our own behind the text.
+    if (kit) {
+      const plates = this.add.graphics();
+      plates.fillStyle(0x10202c, 0.72).fillRoundedRect(left - 10, 8, right - left - 74, 40, 12).fillRoundedRect(right - 82, 8, 92, 40, 12);
+      plates.lineStyle(2, 0xbfe9ff, 0.55).strokeRoundedRect(left - 10, 8, right - left - 74, 40, 12).strokeRoundedRect(right - 82, 8, 92, 40, 12);
+      container.add(plates);
+    }
     const name = this.add.text(left, 14, '', textStyle(26));
     const level = this.add.text(right, 14, '', textStyle(24)).setOrigin(1, 0);
     container.add([name, level]);
@@ -616,7 +623,7 @@ export class BattleScene extends Phaser.Scene {
     if (isPlayer) {
       box.hpText = this.add.text(right, 76, '', textStyle(24)).setOrigin(1, 0);
       container.add(box.hpText);
-      if (kit) box.xpBar = new KitBar(this, 123, 120, 'pack.dbk.box.basicExp', 1, 6, 2.7, 'xp');
+      if (kit) box.xpBar = new KitBar(this, 123, 104, 'pack.dbk.box.basicExp', 1, 6, 2.7, 'xp');
       else box.xpBar = new Bar(this, 123, 120, 255, 6, 'xp');
       box.xpBar.addTo(container);
     } else {

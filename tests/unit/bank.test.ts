@@ -133,3 +133,30 @@ describe('draft modifiers and tokens', () => {
     expect(licenseNote(content, { ...run, regionIndex: 1 })).toBeNull();
   });
 });
+
+import { relationshipCounters } from '../../src/core/relationships';
+describe('relationship achievements', () => {
+  it('the Relationship category has chains, and counters read from the run', () => {
+    const rel = [...content.achievements.values()].filter((a) => a.category === 'relationship');
+    expect(rel.length).toBeGreaterThanOrEqual(10);
+    const run = chooseStarter(content, createRun(content, { runId: 'rel', seed: 'rel', archetypeId: 'red' }), 0);
+    run.party[0]!.friendship = content.balance.friendship.max;
+    expect(relationshipCounters(content, run).bestFriends).toBe(1);
+    expect(relationshipCounters(content, run).mentorshipsStarted).toBe(0);
+  });
+});
+
+import { researchLevel, researchLines } from '../../src/core/trainerResearch';
+describe('Trainer Research', () => {
+  it('grows with finished runs as that trainer', () => {
+    const red = content.archetypes.get('red')!;
+    const p = rich({ trainerCounters: { red: { runsFinished: 3 } } });
+    expect(researchLevel(p, 'red')).toBe(2);
+    expect(researchLevel(rich(), 'red')).toBe(0);
+    const lines = researchLines(content, p, red);
+    expect(lines.some((l) => l.startsWith('Background'))).toBe(true);
+    expect(lines.some((l) => l.startsWith('Habits'))).toBe(true);
+    expect(lines.some((l) => l.startsWith('Story'))).toBe(false);
+    expect(researchLines(content, { ...p, trainerCounters: { red: { runsFinished: 6 } } }, red).some((l) => l.startsWith('Story'))).toBe(true);
+  });
+});
