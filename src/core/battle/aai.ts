@@ -4,6 +4,8 @@
 
 import type { Content, Move, TypeName } from '../contentSchema';
 import { typeEffectiveness } from './damage';
+import { hooksOf } from './held';
+import { calcStats } from '../pokemon';
 import type { BattleState, PokemonInstance, Stages, Volatile } from '../state';
 
 /** What the scorer knows about one matchup. Built once per move choice by the engine (see `moveValue`). */
@@ -92,6 +94,23 @@ export function aaiDamageFactor(v: AaiView, move: Move): number {
     if (move.id === 'facade' && v.user.status) f *= 2;
   }
   if (cfg.fieldPlay && v.battle) f *= fieldDamage(v, move);
+  if (cfg.itemReads) f *= itemDamage(v, move);
+  return f;
+}
+
+const foeSideOf = (v: AaiView): 'enemy' | 'player' => (v.side === 'enemy' ? 'player' : 'enemy');
+/** The target's held items on a hit (Item_Intelligence, Advanced_Items): Air Balloon, resist berries, damage-taken items. */
+function itemDamage(v: AaiView, move: Move): number {
+  const all = hooksOf({ content: v.content, battle: v.battle }, v.target, foeSideOf(v));
+  if (all.length === 0) return 1;
+  const se = superEffective(v, move);
+  let f = 1;
+  for (const { hook } of all) {
+    if (hook.hook === 'airBalloon' && move.type === 'ground' && !v.battle?.held.popped.includes(v.target.uid)) return 0;
+    if (hook.hook === 'damageTaken' && (!hook.superEffective || se) && (!hook.holderType || v.targetTypes.includes(hook.holderType)) && !hook.fromWild) f *= 1 + hook.percent / 100;
+  }
+  const berry = all.find(({ hook }) => hook.hook === 'berryResist' && hook.type === move.type && (hook.any || se));
+  if (berry && berry.hook.hook === 'berryResist') f *= berry.hook.through ?? 0.5;
   return f;
 }
 
@@ -151,6 +170,10 @@ export function aaiTacticFactor(v: AaiView, move: Move): number {
     const spiky = v.targetAbility === 'rough-skin' || v.targetAbility === 'iron-barbs' || holds(v.target, 'rocky-helmet');
     if (spiky && move.flags.includes('contact') && userPct <= 0.2) f *= 0.5;
   }
+  // Pivot moves: U-turn / Volt Switch carry it out of a bad matchup when it has someone to bring in.
+  if (cfg.pivot && move.effects.switchOut === 'switch' && v.ownReserves > 0 && v.threat() >= v.user.hp * 0.5) f *= 1.25;
+  // Endgame: a last, slower Pokémon that will be KO'd plays for damage now, not for a two-turn move.
+  if (cfg.endgame && v.ownReserves === 0 && move.effects.charge && !v.userFaster && v.threat() >= v.user.hp) f *= 0.2;
   // Priority tiers: a slower user picks off a worn-down target with a priority hit.
   if (cfg.fieldPlay && move.priority > 0 && !v.userFaster && pct(v.target.hp, v.targetMax) <= 0.25) f *= 1.3;
   if (cfg.disruption && move.effects.itemMove === 'knock' && Object.keys(v.target.held ?? {}).length > 0) f *= 1.5;
@@ -198,6 +221,16 @@ export function aaiStatusValue(v: AaiView, move: Move): number | null {
     // Magic Bounce sends it back; Good as Gold ignores it; Prankster status moves fail on Dark types.
     if (v.targetAbility === 'magic-bounce' || v.targetAbility === 'good-as-gold') return 0;
     if (v.userAbility === 'prankster' && v.targetTypes.includes('dark')) return 0;
+  }
+  if (cfg.itemReads && fx.status && hitsFoe) {
+    const shield = hooksOf({ content: v.content, battle: v.battle }, v.target, foeSideOf(v)).some(({ hook }) => hook.hook === 'statusImmune' && hook.statuses.includes(fx.status!.id));
+    if (shield) return 0;
+  }
+  // Endgame: the last Pokémon, about to be KO'd, only attacks (or heals, which the engine scores itself).
+  if (cfg.endgame && v.ownReserves === 0 && !fx.heal && !fx.protect && v.threat() >= v.user.hp && !v.userFaster) return 0;
+  if (cfg.pivot && fx.switchOut === 'baton') {
+    const boost = Object.values(v.stages).reduce((a, n) => a + Math.max(0, n ?? 0), 0);
+    return v.ownReserves > 0 && boost >= 2 ? best * 1.2 : 0;
   }
   if (cfg.repetition && fx.protect && userVol?.lastMove && v.content.moves.get(userVol.lastMove)?.effects.protect) return 0;
 
@@ -299,4 +332,89 @@ function scaleStatus(v: AaiView, move: Move, k: number): number {
   const s = move.effects.status!;
   const weight = s.id === 'slp' ? 1.1 : s.id === 'par' || s.id === 'brn' ? 0.8 : 0.5;
   return v.best * weight * ((move.accuracy ?? 100) / 100) * k;
+}
+
+export type Personality = 'aggressive' | 'defensive' | 'balanced' | 'hyperOffensive';
+const PERSONALITY_CACHE = new WeakMap<readonly PokemonInstance[], Personality>();
+
+/**
+ * Battle_Personalities + Role_Detection: a trainer's style read from its own team (sweepers, walls, set-up moves),
+ * the same team always giving the same style. Cached per team list.
+ */
+export function aaiPersonality(content: Content, team: readonly PokemonInstance[]): Personality {
+  const hit = PERSONALITY_CACHE.get(team);
+  if (hit) return hit;
+  let sweepers = 0;
+  let walls = 0;
+  let stall = 0;
+  let offensive = 0;
+  let setup = 0;
+  for (const mon of team) {
+    const st = calcStats(content, mon);
+    const moves = mon.moves.map((m) => content.moves.get(m.id)).filter((m): m is Move => Boolean(m));
+    const boosts = moves.filter((m) => (m.effects.statChanges ?? []).some((c) => c.target === 'self' && c.stages > 0) && m.category === 'status').length;
+    const heals = moves.some((m) => m.effects.heal);
+    const off = Math.max(st.atk, st.spa) >= 1.2 * ((st.def + st.spd) / 2);
+    const bulky = st.hp + st.def + st.spd >= 1.15 * (st.atk + st.spa + st.spe);
+    setup += boosts;
+    if (off) offensive += 1;
+    if (off && boosts > 0) sweepers += 1;
+    if (bulky && heals) walls += 1;
+    if (bulky && heals && !off) stall += 1;
+  }
+  const n = Math.max(1, team.length);
+  const out: Personality =
+    sweepers >= n * 0.6 && setup >= 4 ? 'hyperOffensive' : walls >= n * 0.5 || stall >= 2 ? 'defensive' : offensive >= n * 0.5 && walls <= 1 ? 'aggressive' : 'balanced';
+  PERSONALITY_CACHE.set(team, out);
+  return out;
+}
+
+/** Score multiplier for a move under a personality (the pack's +points on a ~100 scale, as shares). */
+export function personalityFactor(p: Personality, move: Move): number {
+  const fx = move.effects;
+  const attack = move.category !== 'status';
+  const setup = !attack && (fx.statChanges ?? []).some((c) => c.target === 'self' && c.stages > 0);
+  const heal = Boolean(fx.heal);
+  const hazard = fx.sideMove === 'spikes' || fx.sideMove === 'toxicSpikes' || fx.sideMove === 'stealthRock' || fx.sideMove === 'stickyWeb';
+  let pts = 0;
+  if (p === 'aggressive') pts += (attack ? 25 : 0) + (setup ? -20 : 0) + (heal ? -30 : 0) + (attack && move.priority > 0 ? 15 : 0) + (fx.ohko ? 40 : 0);
+  if (p === 'defensive') pts += (attack ? -10 : 0) + (setup ? 20 : 0) + (heal ? 40 : 0) + (!attack && !setup && !heal ? 30 : 0) + (fx.protect ? 35 : 0) + (hazard ? 25 : 0);
+  if (p === 'balanced') pts += (attack ? 10 : 0) + (setup ? 10 : 0) + (heal ? 15 : 0) + (!attack && !setup && !heal ? 15 : 0) + (fx.switchOut ? 15 : 0);
+  if (p === 'hyperOffensive') pts += (attack ? 15 : 0) + (setup ? 50 : 0) + (heal ? -40 : 0) + (fx.protect ? 30 : 0) + (fx.ohko ? -20 : 0);
+  return Math.max(0.1, 1 + pts / 100);
+}
+
+/**
+ * Tera / Z-Move / Dynamax timing (Terastallization_, ZMove_, Dynamax_Intelligence): a boss's ace holds its once-a-battle
+ * power until it helps. `turnsOut` is how long the ace has been out, so it never waits past `maxWait` turns.
+ */
+export function aaiGimmickReady(
+  content: Content,
+  kind: 'tera' | 'zmove' | 'dynamax',
+  ace: PokemonInstance,
+  foe: PokemonInstance,
+  info: { aceTypes: readonly TypeName[]; teraType?: TypeName; zMoveType?: TypeName; foeKnown: readonly Move[]; turnsOut: number },
+): boolean {
+  const cfg = content.balance.trainerAi.aai;
+  if (!cfg.gimmickTiming || info.turnsOut >= cfg.gimmickMaxWait) return true;
+  const aceMax = calcStats(content, ace).hp;
+  const foeMax = calcStats(content, foe).hp;
+  const foeTypes = content.species.get(foe.speciesId)?.types ?? [];
+  if (ace.hp <= aceMax * 0.5) return true;
+  if (kind === 'tera') {
+    const t = info.teraType;
+    if (!t) return true;
+    // Offence: it gains STAB on a move it has. Defence: the foe has shown a super-effective hit that Tera takes away.
+    const gainsStab = !info.aceTypes.includes(t) && ace.moves.some((m) => content.moves.get(m.id)?.type === t && content.moves.get(m.id)?.category !== 'status');
+    const keepsStab = info.aceTypes.includes(t);
+    const saved = info.foeKnown.some((m) => m.category !== 'status' && typeEffectiveness(content.typeChart, m.type, info.aceTypes) > 1 && typeEffectiveness(content.typeChart, m.type, [t]) <= 1);
+    return gainsStab || keepsStab || saved;
+  }
+  if (kind === 'zmove') {
+    // Not into an immune target, and not wasted on a foe already nearly down.
+    if (info.zMoveType && typeEffectiveness(content.typeChart, info.zMoveType, foeTypes) === 0) return false;
+    return foe.hp > foeMax * 0.25;
+  }
+  // Dynamax: not to finish a foe that is nearly down anyway.
+  return foe.hp > foeMax * 0.25;
 }
