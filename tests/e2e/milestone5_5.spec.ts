@@ -56,7 +56,7 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   });
   await waitForScene(page, 'Hub');
 
-  // Unlocks tile → Bank → licenses: the first one is the Type Specialist License.
+  // Unlocks tile → Bank → licenses: the first license is the Type Specialist License.
   for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowRight');
   await page.keyboard.press('Enter'); // Achievement Hall, Bank, Starter Laboratory, Attributes
   await page.waitForTimeout(200);
@@ -64,6 +64,8 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   await page.keyboard.press('Enter');
   await page.waitForTimeout(300);
   await page.screenshot({ path: 'test-results/m55-licenses.png' });
+  // The Bank list starts with its services (tier, 2 exchange rows, 5 Candy Shop perks); the licenses follow.
+  for (let i = 0; i < 8; i++) await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await expect.poll(async () => (await profile(page)).licenses).toEqual(['type-specialist']);
   await waitForScene(page, 'Hub');
