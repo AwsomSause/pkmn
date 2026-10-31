@@ -19,7 +19,7 @@ import { noRevives } from './rules';
 import { fortuneBias } from './bank';
 import { moneyMultiplier, runArchetype } from './archetypes';
 import { evolutionLevelOffset, rareItemWeightPerk } from './trainerPerks';
-import { addRunAttribute, attributeText, runAttributeEffects } from './attributes';
+import { addItemAttribute, attributeText, runAttributeEffects } from './attributes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
 import { applyCatalog, catalogTargetProblem, getCatalogEntry, isCatalogUseful, isFreeReroll } from './catalog';
@@ -228,7 +228,7 @@ export function applyReward(content: Content, run: RunState, archetype: Archetyp
       break;
     }
     case 'attribute': {
-      const value = addRunAttribute(content, run, effect.attribute, effect.amount);
+      const value = addItemAttribute(content, run, effect.attribute, effect.amount);
       messages.push(`${attributeText(effect.attribute, value)} for the rest of this run.`);
       break;
     }

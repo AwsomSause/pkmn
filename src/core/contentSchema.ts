@@ -1755,6 +1755,8 @@ export const BalanceSchema = z.object({
   sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
+  /** Repeat attribute boosts from items diminish: after this many full-size boosts to one attribute in a run, each is scaled by `factor` (at least 1 point). */
+  attributeItemFalloff: z.object({ afterBoosts: z.number().int().min(0), factor: z.number().min(0).max(1) }).default({ afterBoosts: 2, factor: 0.5 }),
   partyMax: z.number().int().positive(),
   starterLevel: z.number().int().positive(),
   starterChoices: z.number().int().positive(),

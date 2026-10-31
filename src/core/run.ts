@@ -60,7 +60,7 @@ import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsks
 import { layEgg, tickEggs } from './eggs';
 import { addEventStops, eventBattleWon, eventGymPreview } from './events';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
-import { addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
+import { addItemAttribute, addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
 import { count, countShiny, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
@@ -1546,7 +1546,7 @@ export function buyItem(content: Content, current: RunState, itemId: string): { 
   afterPurchase(content, run, priceMultiplierFromItems(content, current) === 0);
   if (item.effect.kind === 'attribute') {
     // Attribute items work as soon as they're bought.
-    const value = addRunAttribute(content, run, item.effect.attribute, item.effect.amount);
+    const value = addItemAttribute(content, run, item.effect.attribute, item.effect.amount);
     return { run, message: `You bought a ${item.name} for ₽${price}: ${attributeText(item.effect.attribute, value)}.` };
   }
   addItem(run.inventory, itemId, 1);
