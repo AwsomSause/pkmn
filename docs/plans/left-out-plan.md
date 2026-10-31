@@ -100,7 +100,7 @@ Kice asked to "search even further". Four more searches: the Untitled document a
 | 5.7 | **Rival simulation report** over many seeds (how many rivals, resolutions, repeats, contradictions) + QA scenarios | Rivalry Engine phase 13 | NONE | S |
 | 5.8 | **Raid memories** (First to Face the Beast, Broke Its Guard, Took the Hit for Everyone, The Final Blow Belonged to…, The One That Survived, The Rival Who Stood Beside You, The One That Got Away) and contribution rewards | Techno §3 | BUILT (all seven; the last two with 5.9) | S–M |
 | 5.9 | **Raid types:** Regional Raid, Rival Raid (help, race for the last hit, or leave), Anomaly Raid; a boss that escapes and returns | Techno §3; Blueprint §1 Resolve | NONE | M |
-| 5.10 | **Doubles limits:** only the left Pokémon can transform; Hyper moments and rage follow only the left pair; only Tate & Liza fight boss doubles | Doubles thread | LIMITED | M |
+| 5.10 | **Doubles limits:** only the left Pokémon can transform; Hyper moments and rage follow only the left pair; only Tate & Liza fight boss doubles | Doubles thread | BUILT (5.10 PR): either Pokémon can transform, rage follows every move, 10 double-battle bosses | M |
 | 5.11 | **Daily Run as its own format:** curated daily starter set, daily modifiers, shorter route with a set final boss | Untitled §16.2 | PART | M |
 | 5.12 | **Spooky Mode content:** its own events, shop stock, NPCs, bosses, battle lines and objectives (now it only turns 1 in 4 wilds Spooky) | Untitled §16.4 | PART | M |
 | 5.13 | **Later modes:** Draft Lab, Regional Circuit, Research Expedition (Boss Gauntlet ≈ Boss Rush) | Untitled §16.7 | NONE | M |

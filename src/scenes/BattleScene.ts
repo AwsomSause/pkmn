@@ -1088,14 +1088,13 @@ export class BattleScene extends Phaser.Scene {
     const content = services().session.content;
     // Transformations: a fourth option that cycles off -> Tera -> Z-Move -> Dynamax -> off. (Mega and Gigantamax happen by themselves.)
     const ctx = this.battleCtx();
-    // In a double battle only the Pokémon in the engine's main spot can transform (one per turn).
-    const mainSpot = !this.run.battle?.doubles || this.cmdSpot === primarySpot(this.run.battle.doubles, 'player');
-    const tera = mainSpot ? teraOption(ctx) : null;
-    const zMove = mainSpot && zMoveOptions(ctx).some((z) => z !== null);
+    // In a double battle either Pokémon can transform (the context looks at the one being commanded).
+    const tera = teraOption(ctx);
+    const zMove = zMoveOptions(ctx).some((z) => z !== null);
     const choices: TransformRequest[] = [
       ...(tera ? [{ kind: 'tera' as const }] : []),
       ...(zMove ? [{ kind: 'zmove' as const }] : []),
-      ...(mainSpot && canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
+      ...(canDynamax(ctx) ? [{ kind: 'dynamax' as const }] : []),
     ];
     const same = (a: TransformRequest | null, b: TransformRequest) => a?.kind === b.kind;
     if (!choices.some((c) => same(this.transformChoice, c))) this.transformChoice = null;
@@ -1281,7 +1280,11 @@ export class BattleScene extends Phaser.Scene {
 
   private battleCtx() {
     const run = this.run;
-    return { content: services().session.content, battle: run.battle!, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
+    // Double battles: the helpers read the party's "active" Pokémon, so point them at the one being commanded.
+    const doubles = run.battle?.doubles;
+    const idx = doubles ? run.party.indexOf(this.activeMon()) : -1;
+    const battle = doubles && idx >= 0 && idx !== run.battle!.activeIndex ? { ...run.battle!, activeIndex: idx } : run.battle!;
+    return { content: services().session.content, battle, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
   }
 
   private openBag(): void {
