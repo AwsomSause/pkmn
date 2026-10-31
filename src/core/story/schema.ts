@@ -157,6 +157,8 @@ export const RelationshipRecordSchema = z.object({
   formedAt: WhereSchema,
   /** Domain event ids that moved it along (limit in story.json). */
   history: z.array(z.string()),
+  /** A Pokémon rivalry's personality (left-out 5.4): bitter, one-sided, or one-sided turned mutual. */
+  tone: z.enum(['bitter', 'oneSided', 'mutual']).optional(),
 });
 export type RelationshipRecord = z.infer<typeof RelationshipRecordSchema>;
 
@@ -427,7 +429,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['starterDestiny', 'sacrificeStand', 'lastStand', 'comebackRevenge', 'promiseKept', 'wildAmbush', 'wildKin', 'chemistryPerfect', 'rivalResentment', 'rivalFear', 'rivalRespect', 'grandOmen', 'grandShadow', 'grandGrudge', 'crisisLoom', 'crisisAid', 'championRespect', 'championRecall', 'eliteForce', 'eliteWall', 'eliteMind', 'eliteTempo', 'toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays', 'overdriveDetermination', 'overdriveBravery', 'overdriveJustice', 'overdriveKindness', 'overdrivePatience', 'overdriveIntegrity', 'overdrivePerseverance', 'dualEmotion', 'emotionalClash', 'understandEachOther', 'wontLetFriendFight', 'wantsToProve', 'feelsLeftOut', 'gatheringEverything', 'gatherUnleashed', 'fightingBeyondLimits', 'lostComposure', 'rememberDefeat', 'notOverBetweenUs', 'fightingForPride', 'angerDangerous', 'somethingToProve', 'hunterHunted', 'enemyWillReturn', 'nemesisReckoning', 'rivalryGrown', 'studiedStrategy', 'notForgottenKindness', 'notForgottenCruelty'] as const;
+export const STORY_TRIGGERS = ['starterDestiny', 'sacrificeStand', 'lastStand', 'comebackRevenge', 'promiseKept', 'wildAmbush', 'wildKin', 'chemistryPerfect', 'rivalResentment', 'rivalFear', 'rivalRespect', 'grandOmen', 'grandShadow', 'grandGrudge', 'crisisLoom', 'crisisAid', 'championRespect', 'championRecall', 'eliteForce', 'eliteWall', 'eliteMind', 'eliteTempo', 'toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays', 'overdriveDetermination', 'overdriveBravery', 'overdriveJustice', 'overdriveKindness', 'overdrivePatience', 'overdriveIntegrity', 'overdrivePerseverance', 'dualEmotion', 'emotionalClash', 'understandEachOther', 'wontLetFriendFight', 'wantsToProve', 'feelsLeftOut', 'gatheringEverything', 'gatherUnleashed', 'fightingBeyondLimits', 'lostComposure', 'rememberDefeat', 'notOverBetweenUs', 'fightingForPride', 'angerDangerous', 'somethingToProve', 'hunterHunted', 'enemyWillReturn', 'nemesisReckoning', 'rivalryGrown', 'studiedStrategy', 'notForgottenKindness', 'notForgottenCruelty', 'bitterRivalry', 'rivalryMutual', 'friendlyTag', 'generationalRivalry'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
@@ -583,6 +585,8 @@ export const StoryConfigSchema = z.object({
     /** Left-out 5.3: Good/Evil shift that makes an event remembered, and rival battles before it has studied you. */
     moralityAt: z.number().int().min(1),
     studiedAfter: z.number().int().min(2),
+    /** Left-out 5.4: levels a foe must be above your Pokémon for a loss to start a One-Sided rivalry. */
+    oneSidedGap: z.number().int().min(1),
     reward: z.object({ money: z.number().int().min(0), itemId: z.string(), quantity: z.number().int().positive() }),
     archetypes: z.array(z.object({ id: NemesisArchetypeSchema, name: z.string(), stat: BoostStatSchema, line: z.string() })).min(NEMESIS_ARCHETYPES.length),
   }),
