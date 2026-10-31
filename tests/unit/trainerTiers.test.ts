@@ -76,6 +76,11 @@ describe('applying a tier', () => {
       if (out.members.some((m) => m.speciesId === 'poliwhirl' || m.speciesId === 'poliwrath' || m.speciesId === 'politoed')) evolved++;
     }
     expect(evolved).toBeGreaterThan(0);
+    const told = applyTrainerTier(content, got.plan, input(12), got.scale.cap, 'm1', { species: 'poliwag', type: 'grass' });
+    const noteSeeds = Array.from({ length: 40 }, (_, i) => applyTrainerTier(content, got.plan, input(12), got.scale.cap, `n${i}`, { species: 'poliwag', type: 'grass' }).memoryNote).filter(Boolean);
+    expect(noteSeeds.length).toBeGreaterThan(0);
+    expect(noteSeeds[0]).toMatch(/Poliwag|trained against/);
+    expect(told.members.length).toBe(got.plan.members.length);
   });
   it('a static class (Youngster) ignores memory', () => {
     const got = planFor('youngster', 12);

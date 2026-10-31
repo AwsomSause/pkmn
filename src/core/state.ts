@@ -627,6 +627,8 @@ export const BattleStateSchema = z.object({
   /** Nemesis system: the nemesis back for its Return or Reckoning, and the telegraphed change told in the intro. */
   nemesis: z.string().optional(),
   nemesisNote: z.string().optional(),
+  /** Trainer tiers: what an ordinary trainer remembers about you, told in the intro. */
+  memoryNote: z.string().optional(),
   /** "The Hunter Has Become the Hunted!": an ordinary trainer whose class you beat too often, with a counter-team. */
   hunted: z.boolean().optional(),
   /** A Pokémon fished from a fishing spot: an extra catch, with no reward draft after it. */
