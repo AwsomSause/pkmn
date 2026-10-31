@@ -495,7 +495,14 @@
    "setupSafety": true,
    "statusTiming": true,
    "repetition": true,
-   "fieldPlay": true
+   "fieldPlay": true,
+   "itemReads": true,
+   "pivot": true,
+   "endgame": true,
+   "personality": true,
+   "illusion": true,
+   "gimmickTiming": true,
+   "gimmickMaxWait": 3
   }
  }
 }
