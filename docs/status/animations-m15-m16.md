@@ -17,7 +17,7 @@ Built on the central animation registry (`core/presentation/animRegistry.ts`). R
 **6.5 Rivals:** `rival.intro` (a caption bar, the rival's picture swoops in with a bounce, red star pops, slides out; plays before the title card), `rival.ace` (when their last Pokémon comes out), `rival.win` / `rival.lose` (victory hop or defeat slump, including narrative defeats).
 
 ## Settings
-Uses only existing keys: Hyper/Overdrive, Interaction and Rival Animations switches, `disableAllAnimations` (remembers the switches), Animation mode, intensity, shake and Reduced Particles. Reduced motion gives a calm dip, Off plays nothing; the text lines still show. The category switches now gate every registered animation through `planFor`.
+Uses only existing keys: Hyper/Overdrive, Interaction and Rival Animations switches, `disableAllAnimations` (remembers the switches), Animation mode, intensity, shake and Reduced Particles. Reduced motion gives a calm dip, Off plays nothing; the text lines still show. The registry resolver (`animSettingsFrom`) applies the category switches, speed and strength.
 
 ## Known limits
 - Rival expressions use the existing trainer art (no new poses); per-rival signature intros are not data-driven yet.

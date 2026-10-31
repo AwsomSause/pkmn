@@ -35,6 +35,8 @@ const Layer = z.object({
   frameMs: z.number().positive().default(50),
   /** A particle picks one grid row by scatter (the flame art has three). */
   randomRow: z.boolean().default(false),
+  /** A full-field backdrop (tiled and drifting) instead of particles. */
+  fill: z.boolean().default(false),
   /** Pivot inside the picture, 0–1. */
   origin: z.tuple([z.number(), z.number()]).default([0.5, 0.5]),
   count: z.number().int().min(1).max(64).default(1),
@@ -82,7 +84,7 @@ export const ScriptAnimSchema = z.object({
   /** The user's own shake (a roar, a wind-up). */
   userShake: z.object({ at: z.number().min(0), ms: z.number().positive(), amp: z.number().positive() }).optional(),
   /** Sound effects: ids of public/assets/audio/ebdx/<id>.m4a and when they play. */
-  sfx: z.array(z.object({ at: z.number().min(0), id: z.string().min(1), vol: z.number().min(0).max(1).default(0.6) })).default([]),
+  sfx: z.array(z.object({ at: z.number().min(0), id: z.string().min(1), vol: z.number().min(0).max(1).default(0.6), src: z.string().optional() })).default([]),
 });
 export type ScriptAnim = z.infer<typeof ScriptAnimSchema>;
 

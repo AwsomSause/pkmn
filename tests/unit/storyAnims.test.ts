@@ -2,7 +2,14 @@ import { describe, expect, it } from 'vitest';
 import story from '../../src/data/story.json';
 import { animsIn, getAnim } from '../../src/core/presentation/animRegistry';
 import { planCues } from '../../src/core/presentation/cues';
-import { hyperAnimId, planFor } from '../../src/core/presentation/storyAnims';
+import { animSettingsFrom } from '../../src/core/accessibility';
+import { resolveAnim } from '../../src/core/presentation/animRegistry';
+import { hyperAnimId } from '../../src/core/presentation/storyAnims';
+
+const planFor = (id: string, s: Parameters<typeof animSettingsFrom>[0]) => {
+  const p = resolveAnim(id, animSettingsFrom(s));
+  return p?.play ? p : null;
+};
 import { DEFAULT_SETTINGS } from '../../src/save/saveManager';
 
 const anims = { moves: {}, common: {} } as never;

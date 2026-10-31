@@ -3,9 +3,7 @@
 // moment plays which animation is data here; the drawing is in
 // ui/battleFx/storyFx.ts. Pure data, no Phaser and no random numbers.
 
-import { animationFlags } from '../accessibility';
-import type { Settings } from '../state';
-import { getAnim, registerAnims, resolveAnim, type AnimCategory, type AnimPlan } from './animRegistry';
+import { registerAnims } from './animRegistry';
 
 export type OverdriveAnimKind = 'toughened' | 'hung' | 'rise' | 'bond' | 'rivalry' | 'flair' | 'emotion' | 'rage' | 'moment';
 
@@ -50,21 +48,3 @@ registerAnims([
   { id: 'rival.win', category: 'rival', ms: 1100, color: '#ffd040', glyph: '★', particles: true },
   { id: 'rival.lose', category: 'rival', ms: 1100, color: '#a0a8b8', glyph: '·' },
 ]);
-
-const SWITCH: Partial<Record<AnimCategory, keyof ReturnType<typeof animationFlags>>> = {
-  ability: 'abilityAnimations',
-  text: 'battleTextAnimations',
-  interaction: 'interactionAnimations',
-  overdrive: 'hyperAnimations',
-  rival: 'rivalAnimations',
-};
-
-/** The plan for a registered animation, or null when it is unknown or its group switch (or Disable All) is off. */
-export function planFor(id: string, s: Settings): AnimPlan | null {
-  const def = getAnim(id);
-  if (!def) return null;
-  const key = SWITCH[def.category];
-  if (key && !animationFlags(s)[key]) return null;
-  return resolveAnim(id, { mode: s.battleAnimations, intensity: s.effectIntensity, shake: s.shakeIntensity, reduceParticles: s.reduceParticles });
-}
-

@@ -17,7 +17,7 @@ export function archiveRivals(profile: Profile, run: RunState): void {
   const have = new Set(profile.rivalArchive.map((a) => `${a.runId}:${a.name}:${a.classId}`));
   for (const r of run.story.rivals) {
     if (r.encounters < cfg.minEncounters || have.has(`${run.runId}:${r.name}:${r.classId}`)) continue;
-    profile.rivalArchive.push({ runId: run.runId, name: r.name, classId: r.classId, archetype: r.archetype, style: r.style, traits: { ...r.traits }, state: r.state, encounters: r.encounters, resolution: r.arc?.resolution ?? null, team: [...r.memory.lastBattle.team], ...(isUltimate(run, r.id) ? { ultimate: true } : {}) });
+    profile.rivalArchive.push({ runId: run.runId, name: r.name, classId: r.classId, archetype: r.archetype, style: r.style, traits: { ...r.traits }, state: r.state, encounters: r.encounters, resolution: r.arc?.resolution ?? null, team: [...r.memory.lastBattle.team], ...(isUltimate(run, r.id) ? { ultimate: true } : {}), ...(r.world ? { world: { fame: r.world.fame, badges: r.world.badges, regionsDone: r.world.regionsDone, wins: r.world.wins, defeats: r.world.defeats, rank: r.rank ?? null } } : {}) });
   }
   profile.rivalArchive = profile.rivalArchive.slice(-cfg.archiveMax);
 }
