@@ -118,6 +118,7 @@ import type { TotemDef } from './totem/schema';
 import { createStreams, hashSeed, Rng, withStream } from './rng';
 import { currentEnemy, type BattleState, type MapNode, type SideStop, type RunPrep, type PastPokemon, type PendingDecision, type PokemonInstance, type Profile, type RunState, type StageState } from './state';
 import { itemSlotLimit } from './trainerPerks';
+import { applyTrainerTier, readTrainerMemory } from './trainerTiers';
 import { getTheme, pickGymLeader, pickTheme, typesPool, wildEligibleSpecies } from './themes';
 import {
   ensureHistories,
@@ -1322,6 +1323,11 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
           return planTrainer(content, archetype, theme, stageNumber, scale, r, run.regionOrder[run.regionIndex]);
       }
     });
+    // Trainer tiers: an ordinary trainer's team grows more skilled with progress (its own seed, so no roll changes).
+    if (node.kind === 'trainer') {
+      const known = readTrainerMemory(run, plan.classId);
+      plan = applyTrainerTier(content, plan, { stageNumber, partyBonus: scale.party ?? 0, classWins: known.wins, rematch: !!rematch, important: false }, scale.cap, `${run.seed}::${run.regionIndex}::${node.id}`, known.memory);
+    }
     // Meteor's Prophecy: every third boss is stronger.
     const bossLevels = thirdBossLevels(runPerks(content, run));
     if (bossLevels > 0 && (node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion')) {
