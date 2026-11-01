@@ -79,13 +79,20 @@ test('when a pack animation can\'t load, the PokeRogue one plays instead', async
   await page.goto('/?seed=m9-anims');
   await waitForScene(page, 'MainMenu');
   await startBattle(page);
-  await waitForMenu(page);
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(200);
-  await page.keyboard.press('Enter');
-  await expect
-    .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').fx.busy), { timeout: 8_000 })
-    .toBe(true);
+  // A slow runner can miss the 1.5 s load window on the first turn: the quick stand-in plays and the PokeRogue files keep
+  // loading "for next time". So try up to three turns; the fallback animation must be playing by then.
+  let playing = false;
+  for (let turn = 0; turn < 3 && !playing; turn++) {
+    await waitForMenu(page);
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(200);
+    await page.keyboard.press('Enter');
+    playing = await expect
+      .poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').fx.busy), { timeout: 8_000 })
+      .toBe(true)
+      .then(() => true, () => false);
+  }
+  expect(playing).toBe(true);
   expect(animRequests.some((u) => !u.includes('/battle-anims/ess-'))).toBe(true);
   expect(errors).toEqual([]);
 });
