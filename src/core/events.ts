@@ -26,6 +26,7 @@ import { oldFoe } from './story/promises';
 import { featuredRival, rivalBeaten, rivalFightTeam, rivalPath } from './rivals/living';
 import { monRivalState } from './rivals/monRivals';
 import { openFeud, settleFeud } from './story/feud';
+import { applyMentorEffect, mentorConditionMet, mentorConditionText, mentorStopEvent } from './mentors';
 import { noteEventMorality } from './story/nemesis';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
@@ -120,6 +121,8 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return rivalBeaten(run);
     case 'monRival':
       return monRivalState(run, c.state);
+    case 'mentor':
+      return mentorConditionMet(run, c);
     case 'crisis':
       return crisisLevel(run) >= c.atLeast && crisisLevel(run) <= c.atMost;
     case 'aid':
@@ -234,6 +237,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs a rival you beat last time';
     case 'monRival':
       return c.state === 'any' ? 'Needs a Pokémon rival' : c.state === 'sacrificed' ? 'Needs a rival Pokémon that gave itself up' : c.state === 'carried' ? 'Needs a rival Pokémon that a trainer caught' : 'Needs a Pokémon rival still out there';
+    case 'mentor':
+      return mentorConditionText(c);
     case 'rivalMet':
       return `Needs a rival you have fought ${c.atLeast} time${c.atLeast === 1 ? '' : 's'}`;
     case 'partyTag':
@@ -363,7 +368,7 @@ export function addEventStops(content: Content, run: RunState): void {
   const modeStops = [...open].filter((id) => content.events.get(id)!.modeStop);
   // A follow-up scene (a kindness coming back) gets its stop on the first stage where it is eligible.
   const callbacks = [...open].filter((id) => content.events.get(id)!.callback);
-  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone, ...modeStops, ...callbacks].filter((id): id is string => !!id && open.has(id));
+  const forced = [tournamentEventId(run), crisisEventIds(run).find((id) => open.has(id)), milestone, mentorStopEvent(content, run, open), ...modeStops, ...callbacks].filter((id): id is string => !!id && open.has(id));
   for (const id of forced) {
     taken.add(id);
     place(id, false);
@@ -671,6 +676,8 @@ export function effectWords(content: Content, e: EventEffect): string {
       return 'allies gathered';
     case 'flag':
       return '';
+    case 'mentor':
+      return 'your mentor';
     case 'moment':
       return '';
     case 'relic':
@@ -896,6 +903,8 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
     case 'flag':
       run.story.flags[`ev:${e.key}`] = Math.max(0, Number(run.story.flags[`ev:${e.key}`] ?? 0) + e.amount);
       return '';
+    case 'mentor':
+      return applyMentorEffect(content, run, e);
     case 'moment':
       emit(content, run, 'storyMoment', { actors: [], data: { def: 'rival-living', suppressed: false }, importance: e.importance, text: e.text });
       return '';

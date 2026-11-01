@@ -1,0 +1,1364 @@
+{
+ "note": "Mentors and apprentices (spec section 15). Authored by tools/gen script in the slice; edit the JSON freely.",
+ "config": {
+  "trustMax": 100,
+  "loyaltyMax": 100,
+  "startLoyalty": 20,
+  "trustPerBadge": 6,
+  "loyaltyPerBadge": 1,
+  "trustFirstWin": 2,
+  "carryOverShare": 0.5,
+  "carryOverCap": 30,
+  "graduationTrust": 60,
+  "devotedLoyalty": 50,
+  "missionCap": 1,
+  "maxLegacyApprentices": 4,
+  "tiers": [
+   {
+    "id": "newcomer",
+    "name": "Newcomer",
+    "min": 0
+   },
+   {
+    "id": "student",
+    "name": "Student",
+    "min": 20
+   },
+   {
+    "id": "protege",
+    "name": "Protégé",
+    "min": 45
+   },
+   {
+    "id": "heir",
+    "name": "Heir",
+    "min": 75
+   }
+  ]
+ },
+ "apprentices": {
+  "names": [
+   "Pia",
+   "Corin",
+   "Wren",
+   "Tamsin",
+   "Oskar",
+   "Lio",
+   "Bree",
+   "Hollis",
+   "Nadia",
+   "Fitch",
+   "Maren",
+   "Quill",
+   "Sorrel",
+   "Dev",
+   "Isla",
+   "Tobin"
+  ],
+  "personalities": [
+   {
+    "id": "ambitious",
+    "text": "Ambitious and a little ruthless about it."
+   },
+   {
+    "id": "gentle",
+    "text": "Gentle, loyal and quick to blush."
+   },
+   {
+    "id": "hot-headed",
+    "text": "Hot-headed and proud of it."
+   },
+   {
+    "id": "bookish",
+    "text": "Bookish; quotes the manual at the worst moments."
+   },
+   {
+    "id": "cheerful",
+    "text": "Cheerful in a way that makes rivals suspicious."
+   },
+   {
+    "id": "secretive",
+    "text": "Secretive and good at poker."
+   },
+   {
+    "id": "stubborn",
+    "text": "Stubborn enough to win a staring contest with a Snorlax."
+   },
+   {
+    "id": "dreamy",
+    "text": "Dreamy, often late, often right."
+   }
+  ],
+  "strengths": [
+   "quick reflexes",
+   "steady nerves",
+   "a gift for reading Pokémon",
+   "a huge appetite for practice",
+   "a good memory",
+   "natural charm",
+   "surprising luck",
+   "patience"
+  ],
+  "weaknesses": [
+   "overconfidence",
+   "impatience",
+   "self-doubt",
+   "a short temper",
+   "poor sleep",
+   "overthinking",
+   "showing off",
+   "forgetting to rest"
+  ],
+  "interests": [
+   "rare berries",
+   "old maps",
+   "photography",
+   "cooking for Pokémon",
+   "contest costumes",
+   "fossils",
+   "weather watching",
+   "trading cards",
+   "bird songs",
+   "tide pools"
+  ],
+  "learning": [
+   {
+    "id": "slow",
+    "pace": 1
+   },
+   {
+    "id": "steady",
+    "pace": 2
+   },
+   {
+    "id": "fast",
+    "pace": 3
+   }
+  ]
+ },
+ "mentors": [
+  {
+   "id": "ravi-ironhand",
+   "name": "Captain Ravi Ironhand",
+   "category": "battle-specialist",
+   "title": "The Drill Captain",
+   "background": "Led a coastal guard unit for twenty years before turning to training. Believes every battle is won in the week before it.",
+   "personality": "Stern, fair and allergic to excuses.",
+   "specialty": "Pressure battles and clean finishes.",
+   "strength": "Raw battle power.",
+   "weakness": "Has little patience for care and comfort.",
+   "leans": [
+    "fighting",
+    "steel"
+   ],
+   "unlock": {
+    "kind": "default"
+   },
+   "unlockText": "Always available.",
+   "teaching": "Drills that make your attacks land harder.",
+   "lessons": [
+    {
+     "id": "ravi-footwork",
+     "name": "Footwork Drills",
+     "text": "Hold your ground and strike first.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "critChanceMultiplier",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "ravi-finisher",
+     "name": "The Clean Finish",
+     "text": "End fights fast, before they end you.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "typeDamageMultiplier",
+       "type": "fighting",
+       "value": 1.15
+      },
+      {
+       "kind": "typeDamageMultiplier",
+       "type": "steel",
+       "value": 1.15
+      }
+     ]
+    },
+    {
+     "id": "ravi-captain",
+     "name": "Captain's Order",
+     "text": "Gym leaders fall to a plan, not luck.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "bossDamageMultiplier",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "ravi-veteran",
+     "name": "Veteran's Stance",
+     "text": "A former apprentice never forgets the stance.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "statMultiplier",
+       "stat": "atk",
+       "value": 1.04
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Eyes up. We start at the first bell.",
+    "praise": "That was clean. Do it again.",
+    "scold": "Sloppy. We drill it until it is not.",
+    "disagree": "You think resting wins fights? Rest after the badge.",
+    "graduate": "You do not need me to say it. Go and win."
+   },
+   "mission": {
+    "name": "The Captain's Test",
+    "text": "Win the next 2 gym battles without being told twice.",
+    "bosses": 2,
+    "trust": 14,
+    "reward": {
+     "item": "x-speed",
+     "count": 2
+    }
+   },
+   "graduation": {
+    "title": "Ironhand's Pupil",
+    "text": "Ravi salutes you. It is the only salute he gives."
+   }
+  },
+  {
+   "id": "marigold-hatch",
+   "name": "Marigold Hatch",
+   "category": "breeder",
+   "title": "The Nest Keeper",
+   "background": "Runs a daycare on a hilltop farm. Has hatched more Eggs than anyone in three regions and names every one.",
+   "personality": "Warm, teasing and impossible to hurry.",
+   "specialty": "Eggs, bonds and patient growth.",
+   "strength": "Friendship and healing.",
+   "weakness": "Avoids confrontation with hard-hitting opponents.",
+   "leans": [
+    "normal",
+    "grass",
+    "fairy"
+   ],
+   "unlock": {
+    "kind": "default"
+   },
+   "unlockText": "Always available.",
+   "teaching": "Care techniques that grow bonds and speed up hatching.",
+   "lessons": [
+    {
+     "id": "marigold-warmth",
+     "name": "A Warm Hand",
+     "text": "Pokémon grow where they feel safe.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "friendshipMultiplier",
+       "value": 1.15
+      }
+     ]
+    },
+    {
+     "id": "marigold-nest",
+     "name": "The Nest Rule",
+     "text": "A hatchling learns twice as fast beside a friend.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "hatchedXpMultiplier",
+       "value": 1.2
+      }
+     ],
+     "items": [
+      {
+       "id": "soothe-bell",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "id": "marigold-rest",
+     "name": "Rest Is a Move",
+     "text": "Rest after a battle is part of the battle.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "postBattleHeal",
+       "percent": 5
+      },
+      {
+       "kind": "healingMoveMultiplier",
+       "value": 1.15
+      }
+     ]
+    },
+    {
+     "id": "marigold-heirloom",
+     "name": "Heirloom Recipe",
+     "text": "Old hands pass on a recipe for strong tea.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "healingMultiplier",
+       "value": 1.1
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Sit, sit. Nobody grows on an empty stomach.",
+    "praise": "See how it leans on you? That is trust.",
+    "scold": "You pushed it too far, dear. Look at it.",
+    "disagree": "There is no hurry that is worth a tired Pokémon.",
+    "graduate": "My little nest empties and I am proud. Come visit."
+   },
+   "mission": {
+    "name": "A Full Nest",
+    "text": "Reach 2 gym badges while your lead stays friendly.",
+    "bosses": 2,
+    "trust": 12,
+    "reward": {
+     "item": "sweet-heart",
+     "count": 1
+    }
+   },
+   "graduation": {
+    "title": "Hatch's Fledgling",
+    "text": "Marigold presses a spare Egg basket into your hands."
+   }
+  },
+  {
+   "id": "linden-vale",
+   "name": "Dr. Linden Vale",
+   "category": "researcher",
+   "title": "The Field Scholar",
+   "background": "A lab dropout who found the field more honest. Fills notebooks with sketches of everything that moves.",
+   "personality": "Curious, distracted and generous with credit.",
+   "specialty": "Studying Pokémon so battles are never a surprise.",
+   "strength": "Knowledge and Research Points.",
+   "weakness": "Not a fighter; gives no direct combat strength.",
+   "leans": [
+    "psychic",
+    "bug"
+   ],
+   "unlock": {
+    "kind": "default"
+   },
+   "unlockText": "Always available.",
+   "teaching": "Observation methods: previews and research.",
+   "lessons": [
+    {
+     "id": "linden-notes",
+     "name": "Field Notes",
+     "text": "Write it down and it becomes knowledge.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "researchMultiplier",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "linden-forecast",
+     "name": "Reading the Gym",
+     "text": "Study a leader and you know their team.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "preview",
+       "what": "gymTeam"
+      }
+     ]
+    },
+    {
+     "id": "linden-wild",
+     "name": "The Wild Index",
+     "text": "Know what waits on the road before you walk it.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "preview",
+       "what": "wild"
+      },
+      {
+       "kind": "researchMultiplier",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "linden-cited",
+     "name": "Cited Work",
+     "text": "A graduate is quoted in the next edition.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "researchMultiplier",
+       "value": 1.05
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Hold still, I want to sketch that stance.",
+    "praise": "Fascinating! You did exactly what the data said you would not.",
+    "scold": "You skipped the observation phase again.",
+    "disagree": "We have not collected enough data to decide.",
+    "graduate": "I will cite you. Do not make it embarrassing."
+   },
+   "mission": {
+    "name": "A Complete Survey",
+    "text": "Clear 2 gyms with your notes in hand.",
+    "bosses": 2,
+    "trust": 12,
+    "reward": {
+     "item": "big-mushroom",
+     "count": 1
+    }
+   },
+   "graduation": {
+    "title": "Vale's Co-Author",
+    "text": "Linden adds your name to the cover of the field guide."
+   }
+  },
+  {
+   "id": "juno-trailwind",
+   "name": "Juno Trailwind",
+   "category": "explorer",
+   "title": "The Trailblazer",
+   "background": "Has walked every route twice and some of them backwards. Trades maps for stories.",
+   "personality": "Restless, funny and good at silences.",
+   "specialty": "Shortcuts, hidden spots and rare finds.",
+   "strength": "Encounter knowledge.",
+   "weakness": "Takes risks a careful trainer would not.",
+   "leans": [
+    "flying",
+    "ground",
+    "rock"
+   ],
+   "unlock": {
+    "kind": "default"
+   },
+   "unlockText": "Always available.",
+   "teaching": "Trail knowledge: rarer finds and better odds on the road.",
+   "lessons": [
+    {
+     "id": "juno-compass",
+     "name": "Trail Sense",
+     "text": "The road tells you what lives on it.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "rareItemWeight",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "juno-rare",
+     "name": "Off the Path",
+     "text": "Rare things hide where people do not look.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "encounterWeightMultiplier",
+       "group": "rare",
+       "value": 1.2
+      }
+     ]
+    },
+    {
+     "id": "juno-summit",
+     "name": "The Long View",
+     "text": "From the top you see every road at once.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "preview",
+       "what": "wild"
+      },
+      {
+       "kind": "captureMultiplier",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "juno-legend",
+     "name": "Legend of the Road",
+     "text": "A graduate hears the old routes calling.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "encounterWeightMultiplier",
+       "group": "rare",
+       "value": 1.1
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Boots on. The road does not wait.",
+    "praise": "Now you are reading the ground. Good.",
+    "scold": "You walked right past it. Look again.",
+    "disagree": "The safe way is a map. I prefer the unmarked way.",
+    "graduate": "Go find a road I have not walked, then tell me."
+   },
+   "mission": {
+    "name": "The Unmarked Route",
+    "text": "Find your way to 2 badges with the trail as your guide.",
+    "bosses": 2,
+    "trust": 12,
+    "reward": {
+     "item": "ultra-ball",
+     "count": 3
+    }
+   },
+   "graduation": {
+    "title": "Trailwind's Heir",
+    "text": "Juno hands you her oldest compass."
+   }
+  },
+  {
+   "id": "celeste-ribbon",
+   "name": "Celeste Ribbon",
+   "category": "coordinator",
+   "title": "The Grand Festival Star",
+   "background": "Won three Grand Festivals and retired to teach style. Insists a move is only good if it looks good.",
+   "personality": "Radiant, exacting and secretly shy.",
+   "specialty": "Showmanship, charm and status play.",
+   "strength": "Charisma and status moves.",
+   "weakness": "Values style over safety.",
+   "leans": [
+    "fairy",
+    "water",
+    "grass"
+   ],
+   "unlock": {
+    "kind": "runs",
+    "atLeast": 2
+   },
+   "unlockText": "Finish 2 runs.",
+   "teaching": "Performance technique: accurate status moves and charm.",
+   "lessons": [
+    {
+     "id": "celeste-pose",
+     "name": "Strike the Pose",
+     "text": "Confidence is half of a move.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "friendshipBonusMultiplier",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "celeste-timing",
+     "name": "Perfect Timing",
+     "text": "A status move that lands on time wins the room.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "statusMoveAccuracy",
+       "value": 1.15
+      }
+     ]
+    },
+    {
+     "id": "celeste-finale",
+     "name": "The Grand Finale",
+     "text": "Always finish with something unforgettable.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "typeDamageMultiplier",
+       "type": "fairy",
+       "value": 1.15
+      },
+      {
+       "kind": "typeDamageMultiplier",
+       "type": "water",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "celeste-encore",
+     "name": "Encore",
+     "text": "Past apprentices still get an encore.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "statusDurationBonus",
+       "turns": 1
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Chin up. The audience is watching, even when it is empty.",
+    "praise": "Darling, that was a performance.",
+    "scold": "That was effective but dull. Again.",
+    "disagree": "Winning ugly is still ugly.",
+    "graduate": "Take your bow. You earned it."
+   },
+   "mission": {
+    "name": "The Rehearsal",
+    "text": "Win 2 gym battles in style.",
+    "bosses": 2,
+    "trust": 13,
+    "reward": {
+     "item": "silk-scarf",
+     "count": 1
+    }
+   },
+   "graduation": {
+    "title": "Ribbon's Star",
+    "text": "Celeste pins her ribbon to your sleeve."
+   }
+  },
+  {
+   "id": "sable-oakridge",
+   "name": "Sable Oakridge",
+   "category": "former-champion",
+   "title": "The Retired Champion",
+   "background": "Held the title for nine years and left it on a Tuesday. Never explained why.",
+   "personality": "Calm, dry and quietly intense.",
+   "specialty": "Composure under the biggest stages.",
+   "strength": "Champion-level battle sense.",
+   "weakness": "Old wounds: an apprentice who disappoints cuts deep.",
+   "leans": [
+    "dragon",
+    "dark"
+   ],
+   "unlock": {
+    "kind": "wins",
+    "atLeast": 1
+   },
+   "unlockText": "Win a run.",
+   "teaching": "Champion's temperament: staying calm when it counts.",
+   "lessons": [
+    {
+     "id": "sable-calm",
+     "name": "Quiet Mind",
+     "text": "Panic is the only real opponent.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "survivalChance",
+       "chance": 0.1
+      }
+     ]
+    },
+    {
+     "id": "sable-stage",
+     "name": "Big Stage",
+     "text": "The brighter the room, the slower you move.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "bossDamageMultiplier",
+       "value": 1.08
+      }
+     ]
+    },
+    {
+     "id": "sable-throne",
+     "name": "The Empty Throne",
+     "text": "A title is a weight, not a prize.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "xpMultiplier",
+       "value": 1.1
+      },
+      {
+       "kind": "bossDamageMultiplier",
+       "value": 1.05
+      }
+     ]
+    },
+    {
+     "id": "sable-legacy",
+     "name": "A Champion's Word",
+     "text": "A graduate's name opens doors.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "moneyMultiplier",
+       "value": 1.05
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "I am not here to be impressive. Let us begin.",
+    "praise": "That is how a champion thinks.",
+    "scold": "Disappointing. You know better.",
+    "disagree": "I once ignored advice like that. I do not recommend it.",
+    "graduate": "I have waited a long time to say this. Well done."
+   },
+   "mission": {
+    "name": "The Last Tuesday",
+    "text": "Take 2 gym badges to prove you are ready.",
+    "bosses": 2,
+    "trust": 15,
+    "reward": {
+     "item": "max-potion",
+     "count": 2
+    }
+   },
+   "graduation": {
+    "title": "Sable's Successor",
+    "text": "Sable finally tells you why they left."
+   }
+  },
+  {
+   "id": "dax-corvane",
+   "name": "Dax Corvane",
+   "category": "rival-trainer",
+   "title": "The Rival Who Teaches",
+   "background": "A rival trainer who lost to you once and decided that the best way to beat you was to make you better.",
+   "personality": "Competitive, loud and secretly sincere.",
+   "specialty": "Learning by being beaten.",
+   "strength": "Strong against other trainers.",
+   "weakness": "Everything is a contest, including friendship.",
+   "leans": [
+    "fire",
+    "electric"
+   ],
+   "unlock": {
+    "kind": "trust",
+    "mentor": "ravi-ironhand",
+    "atLeast": 30
+   },
+   "unlockText": "Reach trust 30 with Captain Ravi Ironhand.",
+   "teaching": "Rival drills: harder training, bigger rewards.",
+   "lessons": [
+    {
+     "id": "dax-spar",
+     "name": "Sparring Partner",
+     "text": "Beat me and you beat anyone.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "xpMultiplier",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "dax-grudge",
+     "name": "Useful Grudge",
+     "text": "A little spite is good fuel.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "bossDamageMultiplier",
+       "value": 1.08
+      },
+      {
+       "kind": "critChanceMultiplier",
+       "value": 1.08
+      }
+     ]
+    },
+    {
+     "id": "dax-respect",
+     "name": "Earned Respect",
+     "text": "The best compliment is a rematch.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "moneyMultiplier",
+       "value": 1.1
+      },
+      {
+       "kind": "xpMultiplier",
+       "value": 1.05
+      }
+     ]
+    },
+    {
+     "id": "dax-rematch",
+     "name": "Rematch Rights",
+     "text": "Graduates may challenge him any time.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "damageVsTypeMultiplier",
+       "foeType": "fire",
+       "value": 1.05
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Do not smile. This is a rivalry, not a lesson.",
+    "praise": "Fine. That was... good. Do not let it go to your head.",
+    "scold": "You are better than that! Prove it!",
+    "disagree": "We are not friends. We are better than friends.",
+    "graduate": "I am not crying. It is the wind. Now race me."
+   },
+   "mission": {
+    "name": "Race to the Badge",
+    "text": "Beat him to 2 badges.",
+    "bosses": 2,
+    "trust": 14,
+    "reward": {
+     "item": "x-attack",
+     "count": 2
+    }
+   },
+   "graduation": {
+    "title": "Corvane's Equal",
+    "text": "Dax finally calls you by name instead of \"rival\"."
+   }
+  },
+  {
+   "id": "brook-tidewater",
+   "name": "Brook of Tidewater",
+   "category": "gym-leader",
+   "title": "The Tidewater Gym Leader",
+   "background": "Keeps a water gym by a harbour and still fixes the roof herself. Takes teaching as seriously as her badge.",
+   "personality": "Steady, patient and wry.",
+   "specialty": "Specialising in one type and doing it well.",
+   "strength": "Type mastery.",
+   "weakness": "Inflexible: one type, one way.",
+   "leans": [
+    "water",
+    "ice"
+   ],
+   "unlock": {
+    "kind": "runs",
+    "atLeast": 4
+   },
+   "unlockText": "Finish 4 runs.",
+   "teaching": "Type mastery: pick a type and own it.",
+   "lessons": [
+    {
+     "id": "brook-tide",
+     "name": "Read the Tide",
+     "text": "Water takes the shape of whatever holds it.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "typeDamageMultiplier",
+       "type": "water",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "brook-badge",
+     "name": "What a Badge Means",
+     "text": "A badge is a promise to teach.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "typeDamageMultiplier",
+       "type": "water",
+       "value": 1.1
+      },
+      {
+       "kind": "damageVsTypeMultiplier",
+       "foeType": "fire",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "brook-harbour",
+     "name": "The Safe Harbour",
+     "text": "A good gym leader also knows when to stop.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "turnHeal",
+       "type": "water",
+       "percent": 5
+      },
+      {
+       "kind": "postBattleHeal",
+       "percent": 4
+      }
+     ]
+    },
+    {
+     "id": "brook-lighthouse",
+     "name": "Lighthouse Duty",
+     "text": "Graduates keep a light on for the next apprentice.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "weatherTurnsBonus",
+       "turns": 1
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "One type. Done properly. That is the whole lesson.",
+    "praise": "You are starting to flow.",
+    "scold": "Do not fight the current. Use it.",
+    "disagree": "Variety is nice. Mastery wins.",
+    "graduate": "You are ready for my gym, or your own."
+   },
+   "mission": {
+    "name": "A Badge to Teach",
+    "text": "Win 2 gym badges using one type as your core.",
+    "bosses": 2,
+    "trust": 13,
+    "reward": {
+     "item": "mystic-water",
+     "count": 1
+    }
+   },
+   "graduation": {
+    "title": "Brook's Understudy",
+    "text": "Brook hands you a spare gym key, just in case."
+   }
+  },
+  {
+   "id": "vesper-nox",
+   "name": "Vesper Nox",
+   "category": "elite-four",
+   "title": "The Fourth of the Four",
+   "background": "Sits at the end of the Elite Four and hates being the last obstacle. Teaches to find someone who can beat them.",
+   "personality": "Elegant, theatrical and scarily perceptive.",
+   "specialty": "Setting up and punishing mistakes.",
+   "strength": "Tactical depth.",
+   "weakness": "Holds apprentices to an impossible standard.",
+   "leans": [
+    "ghost",
+    "psychic",
+    "dark"
+   ],
+   "unlock": {
+    "kind": "wins",
+    "atLeast": 2
+   },
+   "unlockText": "Win 2 runs.",
+   "teaching": "Elite tactics: predicting the enemy and turning their plan.",
+   "lessons": [
+    {
+     "id": "vesper-patience",
+     "name": "Patient Trap",
+     "text": "A good plan costs nothing until it is needed.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "statMultiplier",
+       "stat": "spa",
+       "value": 1.04
+      }
+     ]
+    },
+    {
+     "id": "vesper-punish",
+     "name": "Punish the Habit",
+     "text": "Everyone repeats themselves. Wait for it.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "critChanceMultiplier",
+       "value": 1.1
+      },
+      {
+       "kind": "bossDamageMultiplier",
+       "value": 1.06
+      }
+     ]
+    },
+    {
+     "id": "vesper-last",
+     "name": "The Last Door",
+     "text": "The final door is only locked from the inside.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "bossDamageMultiplier",
+       "value": 1.1
+      },
+      {
+       "kind": "switchGuard",
+       "value": 0.92
+      }
+     ]
+    },
+    {
+     "id": "vesper-curtain",
+     "name": "Second Curtain",
+     "text": "A graduate is shown the other half of the plan.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "damageVsTypeMultiplier",
+       "foeType": "psychic",
+       "value": 1.05
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Do not tell me your plan. Show me your second plan.",
+    "praise": "Elegant. I almost did not see it.",
+    "scold": "You telegraphed that. A child could read it.",
+    "disagree": "Brave is not the same as correct.",
+    "graduate": "Come find me at the end of the hall. Bring a better plan."
+   },
+   "mission": {
+    "name": "The Fourth Door",
+    "text": "Defeat 2 gym leaders with a plan worth admiring.",
+    "bosses": 2,
+    "trust": 15,
+    "reward": {
+     "item": "scope-lens",
+     "count": 1
+    }
+   },
+   "graduation": {
+    "title": "Nox's Successor",
+    "text": "Vesper bows. The theatre goes quiet."
+   }
+  },
+  {
+   "id": "ysolde-marrow",
+   "name": "Ysolde Marrow",
+   "category": "legend-researcher",
+   "title": "The Legend Scholar",
+   "background": "Spent forty years collecting stories of legendary Pokémon. Believes each myth hides one true fact.",
+   "personality": "Hushed, reverent and stubborn about sources.",
+   "specialty": "Myths, legends and the places they sleep.",
+   "strength": "Legendary encounter knowledge.",
+   "weakness": "Teaches almost nothing about ordinary battles.",
+   "leans": [
+    "dragon",
+    "psychic",
+    "ghost"
+   ],
+   "unlock": {
+    "kind": "trust",
+    "mentor": "linden-vale",
+    "atLeast": 40
+   },
+   "unlockText": "Reach trust 40 with Dr. Linden Vale.",
+   "teaching": "Legend lore: where legendaries sleep and how to meet them.",
+   "lessons": [
+    {
+     "id": "ysolde-myth",
+     "name": "Read the Myth",
+     "text": "Every legend names its own resting place.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "encounterWeightMultiplier",
+       "group": "legendary",
+       "value": 1.15
+      }
+     ]
+    },
+    {
+     "id": "ysolde-sign",
+     "name": "Signs of the Old Ones",
+     "text": "The ground remembers what the sky forgot.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "encounterWeightMultiplier",
+       "group": "legendary",
+       "value": 1.1
+      },
+      {
+       "kind": "rareItemWeight",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "ysolde-covenant",
+     "name": "The Covenant",
+     "text": "To meet a legend you must be worth meeting.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "captureMultiplier",
+       "value": 1.1
+      },
+      {
+       "kind": "researchMultiplier",
+       "value": 1.1
+      }
+     ]
+    },
+    {
+     "id": "ysolde-archive",
+     "name": "The Archive Key",
+     "text": "A graduate is given the archive's key.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "encounterWeightMultiplier",
+       "group": "legendary",
+       "value": 1.05
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Quiet. The old ones listen better than people do.",
+    "praise": "Yes. That is what the third scroll said.",
+    "scold": "You forgot the source. Always the source.",
+    "disagree": "Stories are not instructions. But they are not nothing.",
+    "graduate": "You will see what I only wrote about. Remember me."
+   },
+   "mission": {
+    "name": "The Third Scroll",
+    "text": "Clear 2 gyms while following the scholar's notes.",
+    "bosses": 2,
+    "trust": 12,
+    "reward": {
+     "item": "star-piece",
+     "count": 1
+    }
+   },
+   "graduation": {
+    "title": "Marrow's Keeper",
+    "text": "Ysolde gives you the archive's key, still warm."
+   }
+  },
+  {
+   "id": "tobias-satchel",
+   "name": "Tobias Satchel",
+   "category": "item-specialist",
+   "title": "The Satchel Sage",
+   "background": "A pedlar who stocked a hundred adventurers and learned what each one forgot to pack.",
+   "personality": "Chatty, thrifty and secretly sentimental.",
+   "specialty": "Items, holding and trading.",
+   "strength": "Supplies and money.",
+   "weakness": "Always has a scheme; not all of them work.",
+   "leans": [
+    "normal",
+    "steel"
+   ],
+   "unlock": {
+    "kind": "runs",
+    "atLeast": 3
+   },
+   "unlockText": "Finish 3 runs.",
+   "teaching": "Item craft: better shops, better stock, better Bag.",
+   "lessons": [
+    {
+     "id": "tobias-pack",
+     "name": "Pack Light",
+     "text": "Carry what saves you twice.",
+     "trust": 0,
+     "items": [
+      {
+       "id": "potion",
+       "count": 3
+      },
+      {
+       "id": "great-ball",
+       "count": 3
+      }
+     ]
+    },
+    {
+     "id": "tobias-haggle",
+     "name": "The Art of the Haggle",
+     "text": "A shop price is an opening offer.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "shopEarlyStock",
+       "count": 2
+      },
+      {
+       "kind": "moneyMultiplier",
+       "value": 1.05
+      }
+     ]
+    },
+    {
+     "id": "tobias-held",
+     "name": "Hold It Right",
+     "text": "The right item in the right paw.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "heldEffectMultiplier",
+       "value": 1.1
+      }
+     ],
+     "items": [
+      {
+       "id": "leftovers",
+       "count": 1
+      }
+     ]
+    },
+    {
+     "id": "tobias-stash",
+     "name": "The Hidden Stash",
+     "text": "Graduates know where the spare pack is.",
+     "trust": 0,
+     "needs": "graduated",
+     "items": [
+      {
+       "id": "revive",
+       "count": 1
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "Everything has a price. The good stuff has two.",
+    "praise": "You used that item perfectly. I would have charged for that.",
+    "scold": "You wasted it! That was premium!",
+    "disagree": "You can sell sentiment; you cannot eat it.",
+    "graduate": "No charge. This one is on me."
+   },
+   "mission": {
+    "name": "The Long Delivery",
+    "text": "Reach 2 badges and keep the stock unspoiled.",
+    "bosses": 2,
+    "trust": 12,
+    "reward": {
+     "item": "max-revive",
+     "count": 1
+    }
+   },
+   "graduation": {
+    "title": "Satchel's Partner",
+    "text": "Tobias slides his battered satchel across the counter."
+   }
+  },
+  {
+   "id": "fenwick-eon",
+   "name": "Fenwick Eon",
+   "category": "evolution-specialist",
+   "title": "The Evolution Tutor",
+   "background": "Believes every Pokémon is halfway to something else. Tracks evolution lines on a wall of string.",
+   "personality": "Gentle, intense and absent-minded.",
+   "specialty": "Evolution timing and forms.",
+   "strength": "Evolution knowledge.",
+   "weakness": "Frets over every Pokémon that has not evolved yet.",
+   "leans": [
+    "grass",
+    "normal",
+    "dragon"
+   ],
+   "unlock": {
+    "kind": "trust",
+    "mentor": "marigold-hatch",
+    "atLeast": 40
+   },
+   "unlockText": "Reach trust 40 with Marigold Hatch.",
+   "teaching": "Evolution craft: earlier evolutions and stronger forms.",
+   "lessons": [
+    {
+     "id": "fenwick-patience",
+     "name": "Almost There",
+     "text": "Growing is a quiet kind of brave.",
+     "trust": 0,
+     "effects": [
+      {
+       "kind": "evolutionLevelOffset",
+       "value": -2
+      }
+     ]
+    },
+    {
+     "id": "fenwick-bond",
+     "name": "The Bond Stone",
+     "text": "Some forms only wake to friendship.",
+     "trust": 25,
+     "effects": [
+      {
+       "kind": "friendshipMultiplier",
+       "value": 1.1
+      },
+      {
+       "kind": "xpMultiplier",
+       "value": 1.05
+      }
+     ]
+    },
+    {
+     "id": "fenwick-form",
+     "name": "The Final Form",
+     "text": "The last stage is the first stage, understood.",
+     "trust": 55,
+     "effects": [
+      {
+       "kind": "evolutionLevelOffset",
+       "value": -2
+      },
+      {
+       "kind": "statMultiplier",
+       "stat": "spe",
+       "value": 1.03
+      }
+     ]
+    },
+    {
+     "id": "fenwick-wall",
+     "name": "The String Wall",
+     "text": "Graduates get a thread of their own.",
+     "trust": 0,
+     "needs": "graduated",
+     "effects": [
+      {
+       "kind": "hatchedXpMultiplier",
+       "value": 1.1
+      }
+     ]
+    }
+   ],
+   "lines": {
+    "greet": "There is a form in there. Be patient with it.",
+    "praise": "Oh! It is starting. Do you see?",
+    "scold": "You skipped a stage. Stages matter.",
+    "disagree": "Faster is not wiser. Wait for the light.",
+    "graduate": "Every one of us is halfway to something. Go and find yours."
+   },
+   "mission": {
+    "name": "The Final Stage",
+    "text": "Win 2 gym badges before your team finishes growing.",
+    "bosses": 2,
+    "trust": 13,
+    "reward": {
+     "item": "moon-stone",
+     "count": 1
+    }
+   },
+   "graduation": {
+    "title": "Eon's Heir",
+    "text": "Fenwick ties a piece of string to your wrist."
+   }
+  }
+ ]
+}

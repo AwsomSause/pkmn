@@ -52,6 +52,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     mastery: {},
     gameEvents: {},
     momentCodex: {},
+    mentorBonds: {},
     legacyRuns: [],
     memories: { heirlooms: [], claimed: [], cameos: [] },
   };

@@ -19,6 +19,7 @@ import {
   tokenAvailable,
   tokenLockText,
 } from '../core/runPrep';
+import { availableMentors, getMentor, mentorBlurb, mentorUnlocked, MENTORS } from '../core/mentors';
 import type { LoadoutPreset, RunPrep } from '../core/state';
 import { services } from '../game/services';
 import { playSfx } from '../ui/audio';
@@ -48,7 +49,7 @@ export interface RunPrepData {
   slide?: 1 | -1;
 }
 
-type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'loan' | 'vault' | 'mode' | 'region' | 'difficulty' | 'weeks' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
+type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'loan' | 'vault' | 'mentor' | 'mode' | 'region' | 'difficulty' | 'weeks' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
 
 interface PageDef {
   id: string;
@@ -61,7 +62,7 @@ interface PageDef {
 /** The five pages of the Preparation Desk (spec §13). It opens on the Overview, where Enter rolls the starters. */
 const PAGES: PageDef[] = [
   { id: 'config', title: 'Run Setup', blurb: 'Mode, region, difficulty, campaign, Weeks and seed.', tint: 0x2f80d0, rows: ['mode', 'region', 'difficulty', 'campaign', 'weeks', 'seed'] },
-  { id: 'trainer', title: 'Trainer', blurb: 'Who you are and what you bring: preparation, directive, license, loan, Vault.', tint: 0x2fa080, rows: ['trainer', 'token', 'directive', 'license', 'loan', 'vault'] },
+  { id: 'trainer', title: 'Trainer', blurb: 'Who you are and what you bring: preparation, directive, license, loan, Vault, mentor.', tint: 0x2fa080, rows: ['trainer', 'token', 'directive', 'license', 'loan', 'vault', 'mentor'] },
   { id: 'starters', title: 'Starters', blurb: 'The starter pool and how the starters are drafted.', tint: 0xd0902f, rows: ['pool', 'draft', 'type'] },
   { id: 'modifiers', title: 'Modifiers', blurb: 'Special rules, challenges and Death-Block.', tint: 0xb050c0, rows: ['modifier', 'deathBlock'] },
   { id: 'overview', title: 'Overview', blurb: 'Check everything, keep a preset, then roll the starters.', tint: 0xd04a5a, rows: ['start', 'save', 'load'] },
@@ -80,6 +81,7 @@ const ROW_HELP: Record<Row, string> = {
   directive: 'Study one type this run for bonus Research Points when you defeat or catch its Pokémon.',
   license: 'A Field License gives one exploration hint for the whole run.',
   loan: 'Borrow money now. Finish with enough badges, or the Bank takes credits back.',
+  mentor: 'Train under a mentor: lessons that unlock with trust, a mission, a fellow apprentice. More mentors unlock with runs, wins and trust.',
   vault: "Take a rare held item from the Collector's Vault into this run.",
   mode: 'The kind of run: Standard, Adventure, Endless, Daily Run and more. Some modes pay no account rewards.',
   region: 'Regional Circuit only: the region you run. "By seed" lets the seed pick.',
@@ -160,6 +162,7 @@ export class RunPrepScene extends Phaser.Scene {
       directive: `Research Directive: ${this.prep.directive ? capitalise(this.prep.directive) : 'none'}`,
       license: `Field License: ${this.prep.license ? licenseName(this.prep.license) : 'none'}`,
       loan: `Bank loan: ${this.prep.loan ? `ON (+₽${content.balance.bank.loan.money})` : 'off'}`,
+      mentor: `Mentor: ${getMentor(this.prep.mentorId)?.name ?? 'none'}`,
       vault: `Vault item: ${this.prep.vaultItem ? content.items.get(this.prep.vaultItem)?.name ?? this.prep.vaultItem : 'none'}`,
       mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
       region: `Circuit region: ${this.rules.regionId ? content.regions.get(this.rules.regionId)?.name ?? this.rules.regionId : 'by seed'}`,
@@ -216,7 +219,13 @@ export class RunPrepScene extends Phaser.Scene {
       const locked = [
         ...[...content.draftRules.values()].filter((r) => !draftRuleAvailable(profile, r)).map((r) => `${r.name} (needs the ${content.licenses.get(r.license!)?.name})`),
         ...[...content.prepTokens.values()].filter((t) => !tokenAvailable(profile, t)).map((t) => `${t.name} (${tokenLockText(content, t)})`),
+        ...(MENTORS.some((m) => !mentorUnlocked(m, profile)) ? [`${MENTORS.filter((m) => !mentorUnlocked(m, profile)).length} more mentors (Hub, Events, Mentors)`] : []),
       ];
+      const mentor = getMentor(this.prep.mentorId);
+      if (mentor) {
+        y += 4;
+        for (const l of mentorBlurb(mentor).slice(0, 4)) line(l, 13, '#d8c8f0');
+      }
       if (locked.length > 0) {
         y += 4;
         line(`Not yet available: ${locked.join(', ')}.`, 13, '#a69cb4');
@@ -335,6 +344,11 @@ export class RunPrepScene extends Phaser.Scene {
         const ids: (string | null)[] = [null, ...[...content.prepTokens.values()].filter((t) => tokenAvailable(profile, t)).map((t) => t.id)];
         if (ids.length < 2) return this.refresh({}, { notice: 'Earn achievements or buy licenses to unlock preparation choices.' });
         return this.refresh({ tokenId: next(ids, this.prep.tokenId) });
+      }
+      case 'mentor': {
+        // None, then each unlocked mentor (spec section 15); the summary below tells their story.
+        const ids: (string | null)[] = [null, ...availableMentors(profile).map((m) => m.id)];
+        return this.refresh({ mentorId: next(ids, this.prep.mentorId) });
       }
       case 'directive':
         // None, then every type: study it this run for bonus Research Points.
