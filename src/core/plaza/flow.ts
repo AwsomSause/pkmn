@@ -13,6 +13,8 @@ import { isHostile } from '../rivals/outcome';
 import { continueAfterDecisions, healParty, newMon, sellPrice } from '../run';
 import { stageKey } from '../mapItems';
 import { getSpecies, maxHp, maxPp } from '../pokemon';
+import { layEgg } from '../eggs';
+import { wildEligibleSpecies } from '../themes';
 import { typeEffectiveness } from '../battle/damage';
 import { recordTraded } from '../story/hooks';
 import { TYPE_NAMES, type Content, type EventBattle, type EventEffect, type TypeName } from '../contentSchema';
@@ -21,10 +23,12 @@ import { PLAZA, type PlazaData, type PlazaNeed } from './schema';
 import { PLAZA_LIFE } from './life';
 
 const B = PLAZA.balance;
+/** Most Eggs a trainer carries at once (a Trading Post purchase is refused above this). */
+const EGG_CAP = 4;
 type ClubFormat = PlazaData['club'][number] & { trainerName?: string; classId?: string };
 type Rarity = 'common' | 'uncommon' | 'rare' | 'epic';
 
-export type PlazaSectionId = 'stalls' | 'oddities' | 'traders' | 'board' | 'rumors' | 'club' | 'errands' | 'alley' | 'services' | 'people' | 'caravan';
+export type PlazaSectionId = 'stalls' | 'oddities' | 'traders' | 'board' | 'rumors' | 'club' | 'errands' | 'alley' | 'services' | 'people' | 'caravan' | 'eggs';
 
 export interface PlazaOption {
   id: string;
@@ -483,6 +487,7 @@ export function plazaView(content: Content, run: RunState, sideId: string): Plaz
     add('stalls', 'Merchant stalls', 'Rotating stalls: held items, balls, berries, supplies, evolution materials, keepsakes.');
     add('oddities', 'The Oddities Dealer', `${regularName(PLAZA.oddities.keeper)} sells things that don't fit anywhere.`);
     add('traders', 'Specialist traders', 'Trainers who swap a Pokémon for a Pokémon.');
+    add('eggs', 'Egg traders', 'Buy or swap Eggs. What is inside is a surprise.');
     add('board', 'Trade board', 'Notices and wanted posters.');
     add('rumors', 'Rumour board', 'Tips, gossip and paid scouting.');
     add('club', 'Battle Club', 'Optional matches for prizes and respect.');
@@ -545,6 +550,15 @@ export function sectionView(content: Content, run: RunState, sideId: string, sec
           add(`trade:${t.id}:${m.uid}`, `${t.name}: ${sp.name} Lv${m.level} for ${species.name}`, `You get ${species.name} (${species.types.join('/')}), Lv${Math.min(runLevelCap(content, run), m.level + t.give.levelBonus)}. ${sp.name} leaves for good; the new Pokémon starts fresh.`, 0, usedN(run, `trade:${t.id}`) > 0 ? 'Already traded today.' : null);
         }
         if (tradeCandidates(content, run, t.want).length === 0) add(`trade:${t.id}:none`, `${t.name}: wants ${t.want.label}`, `Offers ${species.name}. You don't carry what they want.`, 0, `Needs ${t.want.label} in your party`);
+      }
+      break;
+    }
+    case 'eggs': {
+      for (const t of PLAZA_LIFE.eggTraders) {
+        notes.push(`${t.name}: "${t.line}"`);
+        const doneToday = usedN(run, `egg:${t.id}`) > 0 ? 'Already dealt with today.' : null;
+        add(`egg:${t.id}:buy`, `${t.name}: buy an Egg`, 'Hatches in 3 stages. Its kind is a surprise until it is half hatched.', regionPrice(run, t.price), doneToday ?? (run.eggs.length >= EGG_CAP ? `You can carry ${EGG_CAP} Eggs.` : null));
+        for (const egg of run.eggs) add(`egg:${t.id}:${egg.uid}`, `${t.name}: swap your Egg`, `Gives away your ${egg.source} Egg and takes one of theirs, which starts again from the beginning.`, 0, doneToday);
       }
       break;
     }
@@ -724,6 +738,19 @@ export function usePlaza(content: Content, current: RunState, sideId: string, se
       addRep(run, 2);
       addFriend(run, 'gus', 1);
       words.push(`${getSpecies(content, mon.speciesId).name} was traded for ${getSpecies(content, speciesId).name}!`);
+      break;
+    }
+    case 'egg': {
+      const t = PLAZA_LIFE.eggTraders.find((x) => x.id === a)!;
+      if (b !== 'buy') run.eggs = run.eggs.filter((eg) => eg.uid !== b);
+      const rare = new Rng(hashSeed(`${run.seed}::plaza-egg::${a}::${run.itemCounters?.['eggs-laid'] ?? 0}`));
+      const species = rare.pick(wildEligibleSpecies(content).filter((s) => s.evolutionStage === 1));
+      const levels = run.party.map((m) => m.level);
+      const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((x, y) => x + y, 0) / Math.max(1, levels.length)) - 5));
+      layEgg(content, run, species.id, { level, left: 3, unit: 'stage', source: t.name, origin: t.origin }, rare);
+      markUsed(run, `egg:${a}`);
+      addRep(run, 1);
+      words.push(b === 'buy' ? `${t.name} hands you a warm Egg.` : `${t.name} takes your Egg and gives you another.`);
       break;
     }
     case 'post': {
