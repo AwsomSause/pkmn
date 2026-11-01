@@ -1,11 +1,12 @@
 // Writes src/data/gameEvents.json: the weekly, holiday and themed game events (Untitled doc §17.2, plan Part 4b).
-// Run with: npm run data:game-events
+// Run with: npm run data:game-events (rewrites only the W9 batch; see below)
 //
 // Weekly events rotate by ISO week (core/gameEvents.ts). Each has a themed ruleset (trainer
 // modifiers added to every run started that week), 3–5 milestone objectives counted over the
 // week's runs, a permanent reward the first time every objective is done, and a fallback reward
 // after that. Holiday and themed events come back every year between two dates.
 import { readFileSync, writeFileSync } from 'node:fs';
+import { W9_EVENTS } from './game-events-w9.ts';
 
 type Json = Record<string, unknown>;
 const data = (f: string) => JSON.parse(readFileSync(new URL(`../src/data/${f}`, import.meta.url), 'utf8'));
@@ -338,6 +339,10 @@ const YEARLY: Json[] = [
     { researchPoints: 350, title: 'Honor Student', pool: 'research' }, '#5080c0', 'item.wise_glasses', ['themed', 'research']),
 ];
 
-const events = [...WEEKLY, ...YEARLY.map((e) => ({ ...e, fallbackReward: HOLIDAY_FALLBACK }))];
+// The base 27 events above were generated once and then edited by hand in the JSON (featured map events, new stops):
+// regenerating them would undo that. This script now only (re)writes the W9 batch (tools/game-events-w9.ts), by id.
+const made = new Set(W9_EVENTS.map((e) => e.id as string));
+const kept = (JSON.parse(readFileSync(new URL('../src/data/gameEvents.json', import.meta.url), 'utf8')) as { events: Json[] }).events.filter((e) => !made.has(e.id as string));
+const events = [...kept, ...W9_EVENTS];
 writeFileSync(new URL('../src/data/gameEvents.json', import.meta.url), JSON.stringify({ events }, null, 1) + '\n');
-console.log(`gameEvents.json: ${events.length} game events (${WEEKLY.length} weekly, ${YEARLY.length} holiday/themed)`);
+console.log(`gameEvents.json: ${events.length} game events (${kept.length} older, ${W9_EVENTS.length} W9 calendar)`);

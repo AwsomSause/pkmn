@@ -619,6 +619,12 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   for (const ge of content.gameEvents.values()) {
     const where = `game event "${ge.id}"`;
     for (const id of ge.mapEvents) if (!content.events.has(id)) problems.push(`${where} features unknown map event "${id}"`);
+    for (const m of ge.modifiers) {
+      if (m.kind === 'speciesEncounterWeight') for (const id of m.lines ?? []) if (!content.species.has(id)) problems.push(`${where} weights unknown species "${id}"`);
+      if (m.kind === 'legendaryFocus') for (const id of m.species) if (!content.expeditions.expeditions.some((x) => x.legendary?.species === id)) problems.push(`${where} focuses "${id}", which has no Legendary world event`);
+      if (m.kind === 'evilTeamFocus') for (const id of m.teams) if (!content.evilTeams.teams.some((t) => t.id === id)) problems.push(`${where} focuses unknown evil team "${id}"`);
+      if (m.kind === 'priceMultiplier') for (const id of m.items ?? []) if (!content.items.has(id)) problems.push(`${where} prices unknown item "${id}"`);
+    }
     for (const r of [ge.reward, ge.fallbackReward, ...ge.objectives.map((o) => o.reward)]) {
       if (r.pool && !content.starterPools.has(r.pool)) problems.push(`${where} gives unknown starter set "${r.pool}"`);
       if (r.trainer && !content.archetypes.has(r.trainer)) problems.push(`${where} gives unknown trainer "${r.trainer}"`);
@@ -636,6 +642,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       }
     }
     if ((ge.schedule.kind === 'weeklyRotation') !== (ge.seedRule === 'isoWeek')) problems.push(`${where}: weekly events use the ISO week, yearly ones the year`);
+    if ((ge.schedule.kind === 'daily') !== (ge.seedRule === 'day')) problems.push(`${where}: day-rule events use the day edition and no other schedule does`);
   }
   for (const e of content.events.values()) if (e.gameEvent && !content.gameEvents.has(e.gameEvent)) problems.push(`map event "${e.id}" belongs to unknown game event "${e.gameEvent}"`);
   // Trainer quests: one line per trainer, real pools, rewards that exist.

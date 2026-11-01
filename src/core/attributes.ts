@@ -131,7 +131,9 @@ export function attributeEffects(content: Content, a: Attributes): AttributeEffe
 export function runAttributeEffects(content: Content, run: RunState): AttributeEffects {
   const effects = attributeEffects(content, effectiveAttributes(content, run));
   const perks = runPerks(content, run);
-  return perks ? { ...effects, friendship: effects.friendship * friendshipPerk(perks) } : effects;
+  if (!perks) return effects;
+  const shiny = perks.reduce((v, m) => (m.kind === 'shinyChanceMultiplier' ? v * m.value : v), 1);
+  return { ...effects, friendship: effects.friendship * friendshipPerk(perks), shinyChance: effects.shinyChance * shiny };
 }
 
 /** Luck tilts the draft's rarity weights toward uncommon, rare and epic; common is unchanged. */

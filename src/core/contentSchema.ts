@@ -742,6 +742,16 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('catchLevelOffset'), value: z.number().int() }),
   /** Wild species of a type turn up less (or more) often. */
   z.object({ kind: z.literal('typeEncounterWeight'), type: TypeNameSchema, value: z.number().positive() }),
+  /** A Legendary week: gates to these species' world events turn up this much likelier (`weight`), up to `gateChance` per stage, one more allowed per region, and their usual conditions are waived. */
+  z.object({ kind: z.literal('legendaryFocus'), species: z.array(z.string()).min(1), weight: z.number().positive(), gateChance: z.number().positive().max(1) }),
+  /** A Team week: the evil team of the run is picked from these (by the run's seed) instead of from every team. */
+  z.object({ kind: z.literal('evilTeamFocus'), teams: z.array(z.string()).min(1) }),
+  /** Wild odds of a kind of species: dual-type, single-type, baby, pseudo-legend (600 BST, 3 stages), or the lines that start at the listed base species. */
+  z.object({ kind: z.literal('speciesEncounterWeight'), trait: z.enum(['dual', 'mono', 'baby', 'pseudo', 'unevolved', 'fullyEvolved']).optional(), generation: z.number().int().min(1).max(9).optional(), lines: z.array(z.string()).min(1).optional(), value: z.number().positive() }),
+  /** Shiny odds for wild Pokémon, event gifts and Eggs. */
+  z.object({ kind: z.literal('shinyChanceMultiplier'), value: z.number().positive() }),
+  /** A challenge week: every run started while it is on also plays by this run modifier (core/rules.ts), as if picked on the briefing screen. */
+  z.object({ kind: z.literal('runRule'), id: z.enum(['no-battle-items', 'no-heal-stops', 'solo-run', 'limited-party', 'no-transformations', 'no-revives', 'no-duplicate-species']) }),
   /** Burn damage on foes you burn. */
   z.object({ kind: z.literal('burnDamageMultiplier'), value: z.number().positive() }),
   /** A stat bonus that only applies in a situation: while burned, or for Pokémon from a three-stage evolution line. */
@@ -2705,9 +2715,11 @@ export const GameEventSchema = z.object({
   schedule: z.discriminatedUnion('kind', [
     z.object({ kind: z.literal('weeklyRotation') }),
     z.object({ kind: z.literal('yearly'), start: MonthDaySchema, end: MonthDaySchema }),
+    /** On for whole days picked by a rule of the (UTC) date: a Friday the 13th, a new or full moon, every Friday or Tuesday, a palindrome date (11/11). */
+    z.object({ kind: z.literal('daily'), rule: z.enum(['friday13', 'newMoon', 'fullMoon', 'friday', 'tuesday', 'palindrome']) }),
   ]),
   /** What makes an edition: the ISO week ("2026-W44") or the year ("2026"). */
-  seedRule: z.enum(['isoWeek', 'year']),
+  seedRule: z.enum(['isoWeek', 'year', 'day']),
   /** Which runs count: only runs that earn progress (Standard mode, not the dev campaign) when true. */
   progressionEligibility: z.boolean().default(true),
   /** Which runs it applies to (every mode for now). */

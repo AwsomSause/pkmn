@@ -57,7 +57,8 @@ const ALL_SPOOKY = { gymLeadersDefeated: 3, eventClues: 8, eventBossesWon: 1, 'd
 
 describe('the holiday calendar', () => {
   it('has twelve holiday and themed events, each with its own stops and 3–5 objectives', () => {
-    const yearly = [...content.gameEvents.values()].filter((e) => e.schedule.kind === 'yearly');
+    // W9 calendar events (tag "w9") run on rule modifiers and featured stops, not on stops of their own.
+    const yearly = [...content.gameEvents.values()].filter((e) => e.schedule.kind === 'yearly' && !e.contentTags.includes('w9'));
     expect(yearly.length).toBeGreaterThanOrEqual(12);
     for (const e of yearly) {
       expect(e.objectives.length, e.id).toBeGreaterThanOrEqual(3);

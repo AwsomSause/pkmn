@@ -232,7 +232,10 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   const archetype = getArchetype(content, opts.archetypeId);
   const prep: RunPrep = { ...(opts.prep ?? { ...defaultPrep(content), campaignId: opts.campaignId ?? 'full' }) };
   const resources = startingResources(content, archetype, prep, opts.candyPerks);
-  const rules = makeRules(opts.rules ?? { modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false });
+  const picked = opts.rules ?? { modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false };
+  // A challenge week adds its run rules to whatever the player picked (once each).
+  const weekRules = gameEventModifiers(content, opts.gameEvents ?? []).flatMap((m) => (m.kind === 'runRule' ? [m.id] : []));
+  const rules = makeRules(weekRules.length > 0 ? { ...picked, modifierIds: [...new Set([...picked.modifierIds, ...weekRules])] } : picked);
   const scale = startScale(rules);
   const inventory: Record<string, number> = {};
   for (const [id, n] of Object.entries(resources.items)) addItem(inventory, id, scale < 1 ? Math.floor(n * scale) : n);

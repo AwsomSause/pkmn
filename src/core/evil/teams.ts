@@ -51,7 +51,9 @@ export function evilStageStart(content: Content, run: RunState): void {
   s.stages += 1;
   if (!s.teamId) {
     if (s.stages < cfg.firstStage || content.evilTeams.teams.length === 0) return;
-    const teams = content.evilTeams.teams;
+    const focus = (run.perkEffects ?? []).flatMap((m) => (m.kind === 'evilTeamFocus' ? m.teams : []));
+    const focused = content.evilTeams.teams.filter((t) => focus.includes(t.id));
+    const teams = focused.length > 0 ? focused : content.evilTeams.teams;
     const team = teams[new Rng(hashSeed(`${run.seed}::evil-team`)).int(0, teams.length - 1)]!;
     s.teamId = team.id;
     s.nextAt = s.stages;

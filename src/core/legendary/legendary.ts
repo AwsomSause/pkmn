@@ -8,11 +8,16 @@ import { timeOfDay } from '../arenaStyle';
 import { getTheme } from '../themes';
 import { hashSeed, Rng } from '../rng';
 import { maxHp } from '../pokemon';
-import type { Content } from '../contentSchema';
+import type { ArchetypeModifier, Content } from '../contentSchema';
 import type { BattleState, ExpeditionState, LegendaryRecord, RunState } from '../state';
 import type { ExpeditionDef, LegendaryBlock, LegendaryEnv } from '../expedition/schema';
 
 export const LEGEND_RARITY_FACTOR: Record<LegendaryBlock['rarity'], number> = { uncommon: 1, rare: 0.5, veryRare: 0.2 };
+
+type Focus = Extract<ArchetypeModifier, { kind: 'legendaryFocus' }>;
+/** The Legendary-week modifiers on this run (event editions put them in `perkEffects`). */
+const focusOf = (run: Pick<RunState, 'perkEffects'>): Focus[] => (run.perkEffects ?? []).filter((m): m is Focus => m.kind === 'legendaryFocus');
+const focusFor = (run: Pick<RunState, 'perkEffects'>, species: string): Focus | undefined => focusOf(run).find((m) => m.species.includes(species));
 
 export function legendaryRecord(run: RunState): LegendaryRecord {
   run.legendary ??= { offered: [], completed: [], failed: [], extracted: [], placed: {}, outcomes: [] };
@@ -35,6 +40,7 @@ export function legendaryProblem(content: Content, run: RunState, def: Expeditio
   const t = l.trigger;
   if (run.regionIndex < t.minRegion) return `needs region ${t.minRegion + 1}+`;
   if (t.maxRegion !== null && run.regionIndex > t.maxRegion) return 'region too late';
+  if (focusFor(run, l.species)) return null; // its week: time of day, stage theme and party conditions are waived
   if (t.time.length > 0 && !t.time.includes(timeOfDay(run.seed, stage.index))) return 'wrong time of day';
   if (t.themeTypes.length > 0) {
     const types = getTheme(content, stage.themeId)?.types ?? [];
@@ -52,7 +58,7 @@ export function eligibleLegendary(content: Content, run: RunState): { def: Exped
     .map((def) => {
       const t = def.legendary!.trigger;
       const liked = t.favoured.length > 0 && run.party.some((m) => (content.species.get(m.speciesId)?.types ?? []).some((x) => t.favoured.includes(x)));
-      return { def, weight: t.weight * LEGEND_RARITY_FACTOR[def.legendary!.rarity] * (liked ? 2 : 1) };
+      return { def, weight: t.weight * LEGEND_RARITY_FACTOR[def.legendary!.rarity] * (liked ? 2 : 1) * (focusFor(run, def.legendary!.species)?.weight ?? 1) };
     });
 }
 
@@ -62,15 +68,16 @@ export function placeLegendaryGate(content: Content, run: RunState): void {
   if (!stage || stage.kind !== 'stage' || !content.legendaryGate) return;
   const cfg = content.legendaryGate;
   const rec = legendaryRecord(run);
-  if ((rec.placed[String(run.regionIndex)] ?? 0) >= cfg.perRegion) return;
+  const focus = focusOf(run);
+  if ((rec.placed[String(run.regionIndex)] ?? 0) >= cfg.perRegion + (focus.length > 0 ? 1 : 0)) return;
   const rng = new Rng(hashSeed(`${run.seed}::legend-gate::${run.regionIndex}:${stage.index}`));
-  if (!rng.chance(cfg.gateChance)) return;
+  if (!rng.chance(Math.max(cfg.gateChance, ...focus.map((m) => m.gateChance)))) return;
   const pool = eligibleLegendary(content, run);
   const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && n.column > 1 && n.sides.length === 0);
   if (pool.length === 0 || candidates.length === 0) return;
   // Rarer events thin themselves out: a second roll against the picked event's own rarity.
   const def = rng.weighted(pool.map((p) => ({ item: p.def, weight: p.weight })));
-  if (!rng.chance(Math.min(1, 0.4 + LEGEND_RARITY_FACTOR[def.legendary!.rarity]))) return;
+  if (!focusFor(run, def.legendary!.species) && !rng.chance(Math.min(1, 0.4 + LEGEND_RARITY_FACTOR[def.legendary!.rarity]))) return;
   rng.pick(candidates).sides.push({ id: `legend-${stage.index}`, kind: 'expedition', expeditionId: def.id, used: false });
   rec.placed[String(run.regionIndex)] = (rec.placed[String(run.regionIndex)] ?? 0) + 1;
 }
