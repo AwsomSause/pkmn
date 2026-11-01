@@ -3,6 +3,8 @@
 import { ruleWipe, wipeAssetId, type WipeMask } from './ui/battleFx/ruleWipe';
 import { loadAssets } from './ui/lazyAssets';
 import { installTouchControls, setTouchLayout } from './ui/touchControls';
+import { playReaction, runInteractionPrompt } from './ui/interactionPrompt';
+import { promptById } from './core/interaction/prompt';
 import { sheenSweep } from './ui/battleFx/transitions';
 import { installUiJuice, noteSceneEnter, pageEnter, setUiMotion } from './ui/wiiMotion';
 import { uiMotionFrom } from './core/presentation/uiMotion';
@@ -145,6 +147,16 @@ function start(): void {
     session,
     game,
     activeScene: () => game.scene.getScenes(true).map((s) => s.scene.key)[0] ?? null,
+    /** Runs a shared interaction prompt over the active scene and resolves with its result (browser tests, debug panel). */
+    prompt: (id: string, assist?: { skip?: boolean; widen?: number }) => {
+      const s = game.scene.getScenes(true)[0];
+      return s ? runInteractionPrompt(s, promptById(id), { assist, motion: session.settings.battleAnimations }) : Promise.resolve(null);
+    },
+    /** Plays one tiny reaction cue (react.heart ...) at a point on the active scene. */
+    reaction: (id: string, x = 480, y = 270) => {
+      const s = game.scene.getScenes(true)[0];
+      return s ? playReaction(s, session.settings, id, x, y) : Promise.resolve();
+    },
     /** Plays one rule-mask wipe over the active scene (browser tests and the debug panel). */
     wipe: (mask: WipeMask, ms = 520) => {
       const s = game.scene.getScenes(true)[0];

@@ -5,6 +5,7 @@
 //   *Multiplier kinds multiply together (start at 1).
 //   *Offset kinds add together (start at 0).
 
+import { resolveCounterPerks } from './eventToolkit';
 import type { Archetype, ArchetypeModifier, ArchetypeModifierKind, Content, TypeName } from './contentSchema';
 
 export function getArchetype(content: Content, id: string): Archetype {
@@ -105,7 +106,7 @@ export function runArchetype(content: Content, run: { archetypeId: string; perkE
 }
 
 /** The run's whole perk list (trainer plus signature choices), or undefined for an unknown trainer. */
-export function runPerks(content: Content, run: { archetypeId: string; perkEffects?: ArchetypeModifier[] }): Perks | undefined {
+export function runPerks(content: Content, run: { archetypeId: string; perkEffects?: ArchetypeModifier[]; itemCounters?: Record<string, number> }): Perks | undefined {
   const archetype = content.archetypes.get(run.archetypeId);
-  return archetype ? [...archetype.modifiers, ...(run.perkEffects ?? [])] : undefined;
+  return archetype ? resolveCounterPerks([...archetype.modifiers, ...(run.perkEffects ?? [])], run) : undefined;
 }

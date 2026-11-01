@@ -26,7 +26,7 @@ import type { BoostStat, Content, ItemEffect, Move, PowerRule, Semi, SideMove, S
 import { catchProbability, resolveCatchRoll } from '../capture';
 import { applyItemToPokemon, consumeItem, getItem, itemCount, itemUseProblem, lastStandItemId } from '../items';
 import { abilityOf, calcStats, createPokemon, getSpecies, maxHp } from '../pokemon';
-import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, statusLengthPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, hypeMeterOf, isUltraBeast, moveStyleOf, poisonDamagePerk, evasionPerk, moveFlagsOf, unusualKind } from '../trainerPerks';
+import { enemyHyperChancePerk, weatherHealPercent, burnDamagePerk, ppCostExtra, statusChancePerk, statusTurnsPerk, statusLengthPerk, damageDealtPerk, damageTakenPerk, critDamagePerk, critChancePerk, bonusFriendship, enemyHealingBlocked, isSpreadMove, turnHealPercent, healingMoveMultiplier, burnDamageTakenPerk, statusMoveAccuracyPerk, isBossClass, isLegendaryLike, critChanceBonusPerk, hypeMeterOf, isUltraBeast, moveStyleOf, poisonDamagePerk, evasionPerk, moveFlagsOf, unusualKind, battleStartRules } from '../trainerPerks';
 import type { Rng } from '../rng';
 import { cooldownKey, hasBattleEffect, markBattleEffect } from '../story/ledger';
 import type { StoryTriggerKind } from '../story/schema';
@@ -5281,7 +5281,23 @@ export function startBattle(ctx: BattleContext): BattleEvent[] {
   resolveEntries(ctx, events);
   if (ctx.battle.totem) totemAura(ctx, events);
   championsAura(ctx, events);
+  eventStartRules(ctx, events);
   return events;
+}
+
+/** Event toolkit `battleStart` rules (Ice Week hail, Gravity Week...): set once at the start of each battle. */
+function eventStartRules(ctx: BattleContext, events: BattleEvent[]): void {
+  for (const r of battleStartRules(ctx.perks)) {
+    if (r.weather && setWeather(ctx, r.weather, r.turns)) events.push({ type: 'weather', weather: r.weather });
+    if (r.field && ctx.battle.field[r.field] === 0) {
+      ctx.battle.field[r.field] = r.turns;
+      events.push({ type: 'fieldStart', field: r.field });
+    }
+    if (r.tailwind && ctx.battle.sideEffects.player.tailwind === 0) {
+      ctx.battle.sideEffects.player.tailwind = r.turns;
+      events.push({ type: 'sideEffect', side: 'player', effect: 'tailwind', on: true });
+    }
+  }
 }
 
 /** Champion Cynthia's Champion's Aura: at the start of a boss battle your lead's best stat rises. */

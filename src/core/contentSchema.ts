@@ -788,6 +788,12 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('zMoveDelay'), turns: z.number().int().positive() }),
   /** Damage dealt by multi-target (spread: true) or single-target (false) moves. */
   z.object({ kind: z.literal('spreadMoveDamageMultiplier'), spread: z.boolean(), value: z.number().positive() }),
+  /** Event toolkit (ideas W0). A named run counter (stored in run.itemCounters as `ev:<id>`): +amount each time `on` happens, capped at `max`; with `cycle` it wraps around (a tide that rises and falls). */
+  z.object({ kind: z.literal('eventCounter'), id: z.string().regex(/^[a-z0-9-]+$/), on: z.enum(['battleWin', 'nodeEnter']), amount: z.number().int().positive().default(1), max: z.number().int().positive(), cycle: z.boolean().default(false) }),
+  /** Event toolkit: while counter `counter` is at least `atLeast`, your Pokémon (of `type`, if given) deal `base + perPoint × count` times damage (count = the counter, capped at its max). */
+  z.object({ kind: z.literal('counterDamage'), counter: z.string(), atLeast: z.number().int().min(0).default(0), type: TypeNameSchema.optional(), base: z.number().positive().default(1), perPoint: z.number().min(0) }),
+  /** Event toolkit: a rule that holds at the start of every battle: a weather, a field (Gravity, Trick Room) or Tailwind for you (for `turns` turns). */
+  z.object({ kind: z.literal('battleStart'), weather: WeatherSchema.optional(), field: z.enum(['gravity', 'trickRoom']).optional(), tailwind: z.boolean().optional(), turns: z.number().int().positive().default(5) }),
   /** Pokémon of a type recover this share of max HP at the end of every turn. */
   z.object({ kind: z.literal('turnHeal'), type: TypeNameSchema, percent: z.number().positive() }),
   /** HP restored by healing moves your Pokémon use. */

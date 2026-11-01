@@ -58,6 +58,7 @@ import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } fr
 import { pickRunQuest } from './quests';
 import { familyId, masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
+import { bumpEventCounters } from './eventToolkit';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { growGarden } from './berries';
 import { layEgg, tickEggs } from './eggs';
@@ -684,6 +685,7 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   // An escort is struck on the way to a battle, and delivered (or lost) at the gym.
   convoyStep(content, run, node);
   recordRouteChosen(content, run, nodeId, node.harder, node.kind);
+  bumpEventCounters(runPerks(content, run), run, 'nodeEnter');
   // The Mach Bike rides past a wild Pokémon: no battle, but the reward draft still comes.
   if (mode === 'machBike' && node.kind === 'wild') {
     run.afterDecisions = 'reward';
@@ -2439,6 +2441,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // Encore! Hype carries between battles and resets after a boss battle.
   run.hype = isBossClass(classId) ? 0 : battle.hype;
   tickTempEffects(run, battle, isBossClass(classId));
+  if (won) bumpEventCounters(runPerks(content, run), run, 'battleWin');
   if (won) {
     const share = postBattleHealShare(runArchetype(content, run).modifiers);
     if (share > 0) for (const mon of run.party) if (mon.hp > 0) mon.hp = Math.min(maxHp(content, mon), mon.hp + Math.ceil(maxHp(content, mon) * share));
