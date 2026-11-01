@@ -939,9 +939,9 @@
   },
   {
    "id": "legend-raikou",
-   "name": "Raikou: Static Storm",
+   "name": "Raikou: Thunder Chase",
    "tier": 2,
-   "blurb": "Raikou stirs, and its stage is open for a short time. Raikou has been sighted nearby, and the land is changing around it: storm and wire.",
+   "blurb": "Raikou stirs, and its stage is open for a short time. A rolling thunderclap keeps moving across the plain, always a step ahead of the clouds.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -961,8 +961,8 @@
     "totemId": "legend-raikou"
    },
    "rentals": [
-    "raichu",
-    "jolteon",
+    "luxray",
+    "electabuzz",
     "manectric"
    ],
    "restHeal": 0.4,
@@ -997,18 +997,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "raikou",
-    "epithet": "Static Storm",
+    "epithet": "Thunder Chase",
     "rarity": "rare",
-    "omen": "Raikou has been sighted nearby, and the land is changing around it: storm and wire.",
+    "omen": "A rolling thunderclap keeps moving across the plain, always a step ahead of the clouds.",
     "lore": [
-     "Locals speak of Raikou in whispers.",
-     "Where it passes, the stage turns to storm and wire."
+     "Footprints of scorched grass run in a straight line to the horizon.",
+     "It runs where the lightning has not struck yet."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
      "tint": "#8a7a1f",
      "accent": "#fff27a",
-     "motif": "storm and wire"
+     "motif": "stormy plains, lightning tracks"
     },
     "music": null,
     "trigger": {
@@ -1017,7 +1017,16 @@
      "time": [],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "electric"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
       "electric"
      ],
@@ -1026,19 +1035,21 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "Electricity crackles over the stage.",
+      "text": "Thunder rolls over the plain: rain and electric ground.",
+      "weather": "rain",
       "terrain": "electric"
      },
      {
       "fromLayer": 4,
-      "text": "The charge keeps building.",
+      "text": "The storm is right overhead.",
+      "weather": "rain",
       "terrain": "electric"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "A lightning strike splits a bridge."
      }
     ],
     "distort": [],
@@ -1046,86 +1057,65 @@
      "types": [
       "electric"
      ],
-     "heal": 0.08,
-     "text": "electric-type Pokémon recover a little HP here."
+     "heal": 0.1,
+     "text": "Electric Pokémon soak up the charge."
     },
     "peril": {
      "types": [
-      "water"
+      "water",
+      "flying"
      ],
      "chip": 0.05,
-     "text": "water-type Pokémon lose some HP here."
+     "text": "Water and Flying Pokémon are shocked by stray bolts."
     },
     "wild": [
-     "raichu",
-     "jolteon",
+     "luxray",
+     "electabuzz",
      "manectric",
-     "electivire",
-     "eelektrik",
-     "charjabug"
+     "jolteon",
+     "ampharos",
+     "arcanine"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "raikou-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Raikou. Nobody believes me. You look like you might.\"",
+      "id": "storm-chaser",
+      "name": "The Storm Chaser",
+      "text": "\"Run with it, not at it.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Run with the storm",
+        "result": "The charge restores your team.",
         "effect": {
-         "research": 1
+         "heal": 0.3
         }
        },
        {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Collect hailstones",
+        "result": "You pocket useful supplies.",
         "effect": {
          "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "raikou-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "Electricity crackles over the stage",
-     "electric-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Storm and electric ground",
+     "Electric Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Raikou waits at the end of the road.",
-     "win": "Raikou yields. The land begins to settle.",
-     "lose": "Raikou lets the land push you back. It is not done with you."
+     "intro": "The thunder stops. Raikou stands on the ridge, sparking.",
+     "win": "Raikou bows its head and fades into the rain.",
+     "lose": "The storm sweeps you off the ridge."
     }
    }
   },
   {
    "id": "legend-entei",
-   "name": "Entei: Burning Ground",
+   "name": "Entei: Burning Tower",
    "tier": 2,
-   "blurb": "Entei stirs, and its stage is open for a short time. Entei has been sighted nearby, and the land is changing around it: embers and ash.",
+   "blurb": "Entei stirs, and its stage is open for a short time. The old tower is burning again, and nothing is left to burn.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -1145,9 +1135,9 @@
     "totemId": "legend-entei"
    },
    "rentals": [
-    "charmeleon",
-    "typhlosion",
-    "monferno"
+    "rapidash",
+    "arcanine",
+    "houndoom"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -1181,18 +1171,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "entei",
-    "epithet": "Burning Ground",
+    "epithet": "Burning Tower",
     "rarity": "rare",
-    "omen": "Entei has been sighted nearby, and the land is changing around it: embers and ash.",
+    "omen": "The old tower is burning again, and nothing is left to burn.",
     "lore": [
-     "Locals speak of Entei in whispers.",
-     "Where it passes, the stage turns to embers and ash."
+     "Ash falls like snow, but warm.",
+     "A great mane of flame moves in the smoke."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
      "tint": "#a8341d",
      "accent": "#ffc66f",
-     "motif": "embers and ash"
+     "motif": "burnt tower, ash"
     },
     "music": null,
     "trigger": {
@@ -1204,7 +1194,16 @@
      ],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
       "fire"
      ],
@@ -1213,19 +1212,28 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "Harsh sunlight beats down on every fight.",
+      "text": "Smoke and harsh sun.",
       "weather": "sun"
      },
      {
-      "fromLayer": 4,
-      "text": "The heat becomes unbearable.",
+      "fromLayer": 3,
+      "text": "Ash storms blow through the ruin.",
+      "weather": "sand"
+     },
+     {
+      "fromLayer": 5,
+      "text": "The sun returns, fiercer.",
       "weather": "sun"
      }
     ],
     "closes": [
      {
-      "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "afterLayer": 1,
+      "text": "A floor burns through."
+     },
+     {
+      "afterLayer": 3,
+      "text": "Falling beams block another way."
      }
     ],
     "distort": [],
@@ -1233,87 +1241,67 @@
      "types": [
       "fire"
      ],
-     "heal": 0.08,
-     "text": "fire-type Pokémon recover a little HP here."
+     "heal": 0.1,
+     "text": "Fire Pokémon warm to the flames."
     },
     "peril": {
      "types": [
-      "ice",
-      "grass"
+      "water",
+      "grass",
+      "ice"
      ],
      "chip": 0.05,
-     "text": "ice/grass-type Pokémon lose some HP here."
+     "text": "Water, Grass and Ice Pokémon are scorched."
     },
     "wild": [
-     "charmeleon",
-     "typhlosion",
-     "monferno",
-     "darmanitan",
-     "torracat",
-     "coalossal"
+     "rapidash",
+     "arcanine",
+     "houndoom",
+     "magcargo",
+     "torkoal",
+     "ninetales"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "entei-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Entei. Nobody believes me. You look like you might.\"",
+      "id": "bell-keeper",
+      "name": "The Bell Keeper",
+      "text": "\"The bell rings when the fire is ready.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Ring the bell",
+        "result": "A calm falls and heals your team.",
         "effect": {
-         "research": 1
+         "heal": 0.3
         }
        },
        {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Salvage the beams",
+        "result": "The salvage is valuable. The fire bites.",
         "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "entei-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
+         "money": 400,
+         "hurt": 0.08
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "Harsh sunlight beats down on every fight",
-     "fire-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Sun, ash, then sun",
+     "Fire Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Entei waits at the end of the road.",
-     "win": "Entei yields. The land begins to settle.",
-     "lose": "Entei lets the land push you back. It is not done with you."
+     "intro": "The roof burns off. Entei charges out of the flames.",
+     "win": "The fire dims. Entei trots away across the ash.",
+     "lose": "The flames drive you out."
     }
    }
   },
   {
    "id": "legend-suicune",
-   "name": "Suicune: Rising Tide",
+   "name": "Suicune: Northern Wind",
    "tier": 2,
-   "blurb": "Suicune stirs, and its stage is open for a short time. Suicune has been sighted nearby, and the land is changing around it: flooded paths.",
+   "blurb": "Suicune stirs, and its stage is open for a short time. A clear wind crosses the lake, and the water stays perfectly smooth behind it.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -1333,9 +1321,9 @@
     "totemId": "legend-suicune"
    },
    "rentals": [
-    "wartortle",
-    "starmie",
-    "slowking"
+    "vaporeon",
+    "milotic",
+    "lapras"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -1369,18 +1357,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "suicune",
-    "epithet": "Rising Tide",
+    "epithet": "Northern Wind",
     "rarity": "rare",
-    "omen": "Suicune has been sighted nearby, and the land is changing around it: flooded paths.",
+    "omen": "A clear wind crosses the lake, and the water stays perfectly smooth behind it.",
     "lore": [
-     "Locals speak of Suicune in whispers.",
-     "Where it passes, the stage turns to flooded paths."
+     "The lake is clean enough to see the bottom.",
+     "A mane of aurora moves across the far shore."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#1d4f9c",
-     "accent": "#6fd0ff",
-     "motif": "flooded paths"
+     "tint": "#2a6a9c",
+     "accent": "#b0f0ff",
+     "motif": "clear lakes, aurora"
     },
     "music": null,
     "trigger": {
@@ -1389,107 +1377,97 @@
      "time": [],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
-      "water"
+      "water",
+      "ice"
      ],
      "weight": 1
     },
     "env": [
      {
       "fromLayer": 0,
-      "text": "Rain falls on every fight.",
+      "text": "Clean rain falls on the lake.",
       "weather": "rain"
      },
      {
       "fromLayer": 4,
-      "text": "The water keeps rising.",
-      "weather": "rain"
+      "text": "The wind turns cold and the rain turns to snow.",
+      "weather": "snow"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "Ice seals one shore."
      }
     ],
     "distort": [],
     "affinity": {
      "types": [
-      "water"
+      "water",
+      "ice"
      ],
-     "heal": 0.08,
-     "text": "water-type Pokémon recover a little HP here."
+     "heal": 0.1,
+     "text": "Water and Ice Pokémon are refreshed by the clean air."
     },
     "peril": {
      "types": [
-      "fire"
+      "fire",
+      "poison"
      ],
      "chip": 0.05,
-     "text": "fire-type Pokémon lose some HP here."
+     "text": "Fire and Poison Pokémon are weakened by the purity."
     },
     "wild": [
-     "wartortle",
-     "starmie",
-     "slowking",
+     "vaporeon",
      "milotic",
-     "dewott",
-     "brionne"
+     "lapras",
+     "walrein",
+     "glaceon",
+     "starmie"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "suicune-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Suicune. Nobody believes me. You look like you might.\"",
+      "id": "lake-hermit",
+      "name": "The Lake Hermit",
+      "text": "\"Drink, and it will drink with you.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Drink from the lake",
+        "result": "The water restores your team.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Watch the water",
+        "result": "You note how the lake clears.",
         "effect": {
          "research": 1
-        }
-       },
-       {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
-        "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "suicune-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "Rain falls on every fight",
-     "water-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Rain, then snow",
+     "Water and Ice Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Suicune waits at the end of the road.",
-     "win": "Suicune yields. The land begins to settle.",
-     "lose": "Suicune lets the land push you back. It is not done with you."
+     "intro": "The lake parts. Suicune runs across the water.",
+     "win": "The water clears. Suicune races off with the wind.",
+     "lose": "The wind pushes you back to the shore."
     }
    }
   },
@@ -1876,9 +1854,9 @@
   },
   {
    "id": "legend-celebi",
-   "name": "Celebi: Waking Dream",
+   "name": "Celebi: Forest of Time",
    "tier": 3,
-   "blurb": "Celebi stirs, and its stage is open for a short time. Celebi has been sighted nearby, and the land is changing around it: dreamlike halls.",
+   "blurb": "Celebi stirs, and its stage is open for a short time. A glade has appeared where there was a field, and the trees in it are of every age at once.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -1898,9 +1876,9 @@
     "totemId": "legend-celebi"
    },
    "rentals": [
-    "ivysaur",
-    "jumpluff",
-    "metang"
+    "venusaur",
+    "sceptile",
+    "leafeon"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -1938,154 +1916,135 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "celebi",
-    "epithet": "Waking Dream",
+    "epithet": "Forest of Time",
     "rarity": "veryRare",
-    "omen": "Celebi has been sighted nearby, and the land is changing around it: dreamlike halls.",
+    "omen": "A glade has appeared where there was a field, and the trees in it are of every age at once.",
     "lore": [
-     "Locals speak of Celebi in whispers.",
-     "Where it passes, the stage turns to dreamlike halls."
+     "A sapling and an ancient oak share a root.",
+     "The tiny guardian travels where time does not."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#7a3a8a",
-     "accent": "#ffb0ff",
-     "motif": "dreamlike halls"
+     "tint": "#2f7a4a",
+     "accent": "#c8ffb8",
+     "motif": "timeless forest"
     },
     "music": null,
     "trigger": {
      "minRegion": 2,
      "maxRegion": null,
-     "time": [
-      "night"
-     ],
+     "time": [],
      "themeTypes": [],
      "requires": [],
      "any": [
       {
+       "kind": "partyType",
+       "type": "grass"
+      },
+      {
        "kind": "friendship",
-       "atLeast": 120
+       "atLeast": 150
       },
       {
        "kind": "partyTag",
-       "tag": "legendary"
+       "tag": "mythical"
       }
      ],
      "favoured": [
-      "psychic",
-      "grass"
+      "grass",
+      "psychic"
      ],
      "weight": 1
     },
     "env": [
      {
       "fromLayer": 0,
-      "text": "Psychic terrain hums over the stage.",
-      "terrain": "psychic"
+      "text": "A living forest: grassy ground.",
+      "terrain": "grassy"
      },
      {
-      "fromLayer": 4,
-      "text": "Thought and sound seem to blur.",
+      "fromLayer": 3,
+      "text": "Time stirs; the forest turns psychic.",
       "terrain": "psychic"
      }
     ],
     "closes": [
      {
-      "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "afterLayer": 1,
+      "text": "The forest grows over a path."
      }
     ],
     "distort": [
      {
-      "afterLayer": 1,
-      "text": "The way on shifts and rearranges itself."
+      "afterLayer": 2,
+      "text": "Time skips; the way on is not where it was."
      }
     ],
     "affinity": {
      "types": [
+      "grass",
       "psychic"
      ],
-     "heal": 0.08,
-     "text": "psychic-type Pokémon recover a little HP here."
+     "heal": 0.1,
+     "text": "Grass and Psychic Pokémon thrive in the glade."
     },
     "peril": {
      "types": [
-      "dark",
-      "bug",
-      "ghost"
+      "fire",
+      "bug"
      ],
      "chip": 0.05,
-     "text": "dark/bug/ghost-type Pokémon lose some HP here."
+     "text": "Fire and Bug Pokémon are uneasy."
     },
     "wild": [
-     "ivysaur",
-     "jumpluff",
-     "metang",
-     "swoobat",
-     "malamar",
-     "mr-rime"
+     "venusaur",
+     "sceptile",
+     "leafeon",
+     "tropius",
+     "gallade",
+     "espeon"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "celebi-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Celebi. Nobody believes me. You look like you might.\"",
+      "id": "old-ranger",
+      "name": "The Ranger Who Never Aged",
+      "text": "\"I have been here a week. Or a century.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Rest in the glade",
+        "result": "The glade heals your team.",
         "effect": {
-         "research": 1
+         "heal": 0.3
         }
        },
        {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Pick a berry",
+        "result": "The berry is ripe now.",
         "effect": {
          "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "celebi-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "Psychic terrain hums over the stage",
-     "psychic-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Grassy ground, then psychic",
+     "Grass and Psychic Pokémon recover HP",
+     "Time skips rearrange the road"
     ],
     "finale": {
-     "intro": "Celebi waits at the end of the road.",
-     "win": "Celebi yields. The land begins to settle.",
-     "lose": "Celebi lets the land push you back. It is not done with you."
+     "intro": "The glade stills. Celebi laughs and the forest holds its breath.",
+     "win": "Celebi spins once and slips back through time.",
+     "lose": "The glade blinks and you are at the gate, minutes earlier."
     }
    }
   },
   {
    "id": "legend-regirock",
-   "name": "Regirock: Stone Hall",
+   "name": "Regirock: Braille Vault",
    "tier": 2,
-   "blurb": "Regirock stirs, and its stage is open for a short time. Regirock has been sighted nearby, and the land is changing around it: ancient halls.",
+   "blurb": "Regirock stirs, and its stage is open for a short time. The dots in the old stone have been pressed, one by one, from the inside.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -2106,8 +2065,8 @@
    },
    "rentals": [
     "golem",
-    "magcargo",
-    "cradily"
+    "rhyperior",
+    "tyranitar"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -2141,18 +2100,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "regirock",
-    "epithet": "Stone Hall",
+    "epithet": "Braille Vault",
     "rarity": "rare",
-    "omen": "Regirock has been sighted nearby, and the land is changing around it: ancient halls.",
+    "omen": "The dots in the old stone have been pressed, one by one, from the inside.",
     "lore": [
-     "Locals speak of Regirock in whispers.",
-     "Where it passes, the stage turns to ancient halls."
+     "A tomb of rock opens when you read the dots.",
+     "The giants sleep until the pattern is whole."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
      "tint": "#7a6a5a",
      "accent": "#e8d8c0",
-     "motif": "ancient halls"
+     "motif": "stone tomb, braille walls"
     },
     "music": null,
     "trigger": {
@@ -2161,117 +2120,111 @@
      "time": [],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "rock"
+      },
+      {
+       "kind": "partyType",
+       "type": "ground"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
-      "rock"
+      "rock",
+      "ground"
      ],
      "weight": 1
     },
     "env": [
      {
       "fromLayer": 0,
-      "text": "Grit and dust fill the air of every fight.",
-      "weather": "sand"
-     },
-     {
-      "fromLayer": 4,
-      "text": "The walls start to shake.",
+      "text": "Dust and grit fill the vault.",
       "weather": "sand"
      }
     ],
     "closes": [
      {
-      "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "afterLayer": 1,
+      "text": "A stone slab seals a hall."
+     },
+     {
+      "afterLayer": 3,
+      "text": "Another slab grinds shut."
      }
     ],
     "distort": [],
     "affinity": {
      "types": [
       "rock",
+      "ground",
       "steel"
      ],
      "heal": 0.08,
-     "text": "rock/steel-type Pokémon recover a little HP here."
+     "text": "Rock, Ground and Steel Pokémon are at home in the stone."
     },
     "peril": {
      "types": [
       "water",
-      "grass"
+      "grass",
+      "fighting"
      ],
      "chip": 0.05,
-     "text": "water/grass-type Pokémon lose some HP here."
+     "text": "Water, Grass and Fighting Pokémon are ground down by the grit."
     },
     "wild": [
      "golem",
-     "magcargo",
-     "cradily",
      "rhyperior",
-     "carracosta",
-     "lycanroc"
+     "tyranitar",
+     "steelix",
+     "probopass",
+     "gigalith"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "regirock-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Regirock. Nobody believes me. You look like you might.\"",
+      "id": "archivist",
+      "name": "The Archivist",
+      "text": "\"Read with your fingers. The stone remembers.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Read the dots",
+        "result": "The pattern is a map.",
         "effect": {
          "research": 1
         }
        },
        {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Pry open a niche",
+        "result": "You find supplies inside.",
         "effect": {
          "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "regirock-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "Grit and dust fill the air of every fight",
-     "rock/steel-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Sandstorm in the vault",
+     "Rock, Ground and Steel Pokémon recover HP",
+     "Slabs seal paths"
     ],
     "finale": {
-     "intro": "Regirock waits at the end of the road.",
-     "win": "Regirock yields. The land begins to settle.",
-     "lose": "Regirock lets the land push you back. It is not done with you."
+     "intro": "The last dot is pressed. Regirock rises, slow and certain.",
+     "win": "The stone sits back down. The vault is quiet.",
+     "lose": "The vault doors seal you out."
     }
    }
   },
   {
    "id": "legend-regice",
-   "name": "Regice: Deep Freeze",
+   "name": "Regice: Frozen Vault",
    "tier": 2,
-   "blurb": "Regice stirs, and its stage is open for a short time. Regice has been sighted nearby, and the land is changing around it: frozen fields.",
+   "blurb": "Regice stirs, and its stage is open for a short time. The tomb is cold enough to freeze breath into snow.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -2291,9 +2244,9 @@
     "totemId": "legend-regice"
    },
    "rentals": [
-    "dewgong",
     "glalie",
-    "abomasnow"
+    "weavile",
+    "mamoswine"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -2327,18 +2280,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "regice",
-    "epithet": "Deep Freeze",
+    "epithet": "Frozen Vault",
     "rarity": "rare",
-    "omen": "Regice has been sighted nearby, and the land is changing around it: frozen fields.",
+    "omen": "The tomb is cold enough to freeze breath into snow.",
     "lore": [
-     "Locals speak of Regice in whispers.",
-     "Where it passes, the stage turns to frozen fields."
+     "Frost has crept up the braille.",
+     "A sleeper of ice that cannot be melted."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
      "tint": "#4a86b0",
      "accent": "#e8faff",
-     "motif": "frozen fields"
+     "motif": "ice vault, frost braille"
     },
     "music": null,
     "trigger": {
@@ -2347,7 +2300,16 @@
      "time": [],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "ice"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
       "ice"
      ],
@@ -2356,107 +2318,82 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "Snow falls over every fight.",
-      "weather": "snow"
-     },
-     {
-      "fromLayer": 4,
-      "text": "A whiteout closes in.",
+      "text": "Snow drifts through the vault.",
       "weather": "snow"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "Ice seals a hall."
      }
     ],
     "distort": [],
     "affinity": {
      "types": [
-      "ice"
+      "ice",
+      "steel"
      ],
      "heal": 0.08,
-     "text": "ice-type Pokémon recover a little HP here."
+     "text": "Ice and Steel Pokémon feel the cold calm."
     },
     "peril": {
      "types": [
       "fire",
-      "grass"
+      "fighting",
+      "rock"
      ],
      "chip": 0.05,
-     "text": "fire/grass-type Pokémon lose some HP here."
+     "text": "Fire, Fighting and Rock Pokémon are numbed."
     },
     "wild": [
-     "dewgong",
      "glalie",
-     "abomasnow",
+     "weavile",
      "mamoswine",
-     "beartic",
-     "crabominable"
+     "walrein",
+     "abomasnow",
+     "froslass"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "regice-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Regice. Nobody believes me. You look like you might.\"",
+      "id": "frost-reader",
+      "name": "The Frost Reader",
+      "text": "\"Breathe slowly, or the dots will freeze.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Breathe slowly",
+        "result": "You rest in the cold.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Trace the frost",
+        "result": "You copy the pattern.",
         "effect": {
          "research": 1
-        }
-       },
-       {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
-        "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "regice-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "Snow falls over every fight",
-     "ice-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Snow in the vault",
+     "Ice and Steel Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Regice waits at the end of the road.",
-     "win": "Regice yields. The land begins to settle.",
-     "lose": "Regice lets the land push you back. It is not done with you."
+     "intro": "The ice cracks. Regice opens its eyes.",
+     "win": "The cold eases. Regice sits back in its frost.",
+     "lose": "The vault freezes shut."
     }
    }
   },
   {
    "id": "legend-registeel",
-   "name": "Registeel: Iron Works",
+   "name": "Registeel: Iron Vault",
    "tier": 2,
-   "blurb": "Registeel stirs, and its stage is open for a short time. Registeel has been sighted nearby, and the land is changing around it: foundries and gears.",
+   "blurb": "Registeel stirs, and its stage is open for a short time. The tomb hums. Every metal thing in your bag pulls toward the north.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -2476,9 +2413,9 @@
     "totemId": "legend-registeel"
    },
    "rentals": [
-    "magneton",
-    "lairon",
-    "bastiodon"
+    "magnezone",
+    "steelix",
+    "aggron"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -2512,18 +2449,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "registeel",
-    "epithet": "Iron Works",
+    "epithet": "Iron Vault",
     "rarity": "rare",
-    "omen": "Registeel has been sighted nearby, and the land is changing around it: foundries and gears.",
+    "omen": "The tomb hums. Every metal thing in your bag pulls toward the north.",
     "lore": [
-     "Locals speak of Registeel in whispers.",
-     "Where it passes, the stage turns to foundries and gears."
+     "The door is steel, thicker than a house.",
+     "It has been waiting since the mountain was young."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
      "tint": "#6a7a8a",
      "accent": "#e0e8f0",
-     "motif": "foundries and gears"
+     "motif": "iron vault, magnetic halls"
     },
     "music": null,
     "trigger": {
@@ -2532,7 +2469,16 @@
      "time": [],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "steel"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
       "steel"
      ],
@@ -2541,104 +2487,83 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "The air rings with metal."
-     },
-     {
-      "fromLayer": 4,
-      "text": "The machinery wakes."
+      "text": "A metallic hum fills the air; the footing is slick iron.",
+      "terrain": "electric"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "A steel door drops across a hall."
      }
     ],
     "distort": [],
     "affinity": {
      "types": [
-      "steel"
+      "steel",
+      "electric"
      ],
      "heal": 0.08,
-     "text": "steel-type Pokémon recover a little HP here."
+     "text": "Steel and Electric Pokémon feed on the hum."
     },
     "peril": {
      "types": [
-      "fire"
+      "fire",
+      "ground",
+      "fighting"
      ],
      "chip": 0.05,
-     "text": "fire-type Pokémon lose some HP here."
+     "text": "Fire, Ground and Fighting Pokémon are worn by the heat of the iron."
     },
     "wild": [
-     "magneton",
-     "lairon",
+     "magnezone",
+     "steelix",
+     "aggron",
      "bastiodon",
-     "excadrill",
-     "klinklang",
-     "corviknight"
+     "skarmory",
+     "scizor"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "registeel-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Registeel. Nobody believes me. You look like you might.\"",
+      "id": "smith",
+      "name": "The Last Smith",
+      "text": "\"Nothing here rusts. Nothing here forgives.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Take scrap",
+        "result": "The scrap is worth a lot. It cuts.",
         "effect": {
-         "research": 1
+         "money": 400,
+         "hurt": 0.08
         }
        },
        {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Rest by the forge",
+        "result": "The warmth mends your team.",
         "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "registeel-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
+         "heal": 0.3
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "The air rings with metal",
-     "steel-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Electric hum in the vault",
+     "Steel and Electric Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Registeel waits at the end of the road.",
-     "win": "Registeel yields. The land begins to settle.",
-     "lose": "Registeel lets the land push you back. It is not done with you."
+     "intro": "The iron door opens. Registeel steps through.",
+     "win": "Registeel returns to its vault; the hum fades.",
+     "lose": "The iron door slams."
     }
    }
   },
   {
    "id": "legend-latias",
-   "name": "Latias: Dragon’s Rest",
+   "name": "Latias: Veil of Dreams",
    "tier": 3,
-   "blurb": "Latias stirs, and its stage is open for a short time. Latias has been sighted nearby, and the land is changing around it: high cliffs and scales.",
+   "blurb": "Latias stirs, and its stage is open for a short time. A red shape keeps vanishing at the edge of the town, and people dream of the same garden.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -2658,9 +2583,9 @@
     "totemId": "legend-latias"
    },
    "rentals": [
-    "kadabra",
-    "espeon",
-    "claydol"
+    "altaria",
+    "gardevoir",
+    "togekiss"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -2694,18 +2619,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "latias",
-    "epithet": "Dragon’s Rest",
+    "epithet": "Veil of Dreams",
     "rarity": "rare",
-    "omen": "Latias has been sighted nearby, and the land is changing around it: high cliffs and scales.",
+    "omen": "A red shape keeps vanishing at the edge of the town, and people dream of the same garden.",
     "lore": [
-     "Locals speak of Latias in whispers.",
-     "Where it passes, the stage turns to high cliffs and scales."
+     "The air shimmers with light that is not there.",
+     "It watches you from where nothing stands."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#3a4a9c",
-     "accent": "#b0c0ff",
-     "motif": "high cliffs and scales"
+     "tint": "#b05a7a",
+     "accent": "#ffd0e0",
+     "motif": "dream gardens, light mirages"
     },
     "music": null,
     "trigger": {
@@ -2714,7 +2639,16 @@
      "time": [],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "friendship",
+       "atLeast": 150
+      },
+      {
+       "kind": "partyType",
+       "type": "psychic"
+      }
+     ],
      "favoured": [
       "dragon",
       "psychic"
@@ -2724,105 +2658,86 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "The air is heavy with old power."
-     },
-     {
-      "fromLayer": 4,
-      "text": "The power is waking."
+      "text": "A soft psychic haze hangs over the stage.",
+      "terrain": "psychic"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "A mirage fades; the path it hid is gone."
      }
     ],
-    "distort": [],
+    "distort": [
+     {
+      "afterLayer": 1,
+      "text": "Light bends. The way on changes."
+     }
+    ],
     "affinity": {
      "types": [
-      "dragon"
+      "dragon",
+      "psychic"
      ],
-     "heal": 0.08,
-     "text": "dragon-type Pokémon recover a little HP here."
+     "heal": 0.1,
+     "text": "Dragon and Psychic Pokémon rest in the haze."
     },
     "peril": {
      "types": [
-      "ice",
-      "fairy"
+      "dark",
+      "bug"
      ],
      "chip": 0.05,
-     "text": "ice/fairy-type Pokémon lose some HP here."
+     "text": "Dark and Bug Pokémon are dazzled."
     },
     "wild": [
-     "kadabra",
+     "altaria",
+     "gardevoir",
+     "togekiss",
      "espeon",
-     "claydol",
-     "gothitelle",
-     "malamar",
-     "flapple"
+     "dragonair",
+     "chimecho"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "latias-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Latias. Nobody believes me. You look like you might.\"",
+      "id": "dream-child",
+      "name": "A Dreaming Child",
+      "text": "\"She wants to show you something.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Follow the child",
+        "result": "A peaceful rest heals your team.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Ask about the dream",
+        "result": "You record the dream.",
         "effect": {
          "research": 1
-        }
-       },
-       {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
-        "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "latias-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "The air is heavy with old power",
-     "dragon-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Psychic haze",
+     "Paths shift like mirages"
     ],
     "finale": {
-     "intro": "Latias waits at the end of the road.",
-     "win": "Latias yields. The land begins to settle.",
-     "lose": "Latias lets the land push you back. It is not done with you."
+     "intro": "The haze clears and Latias hovers, curious.",
+     "win": "Latias circles you happily and fades.",
+     "lose": "The haze closes; she is gone."
     }
    }
   },
   {
    "id": "legend-latios",
-   "name": "Latios: Dragon’s Rest",
+   "name": "Latios: Eon Flight",
    "tier": 3,
-   "blurb": "Latios stirs, and its stage is open for a short time. Latios has been sighted nearby, and the land is changing around it: high cliffs and scales.",
+   "blurb": "Latios stirs, and its stage is open for a short time. A blue streak crosses the sky at dawn, low enough to rattle the roofs.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -2842,9 +2757,9 @@
     "totemId": "legend-latios"
    },
    "rentals": [
-    "kadabra",
-    "espeon",
-    "claydol"
+    "altaria",
+    "salamence",
+    "swellow"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -2878,18 +2793,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "latios",
-    "epithet": "Dragon’s Rest",
+    "epithet": "Eon Flight",
     "rarity": "rare",
-    "omen": "Latios has been sighted nearby, and the land is changing around it: high cliffs and scales.",
+    "omen": "A blue streak crosses the sky at dawn, low enough to rattle the roofs.",
     "lore": [
-     "Locals speak of Latios in whispers.",
-     "Where it passes, the stage turns to high cliffs and scales."
+     "It is faster than any rider.",
+     "It circles the place where a promise was made."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#3a4a9c",
-     "accent": "#b0c0ff",
-     "motif": "high cliffs and scales"
+     "tint": "#2a4a9c",
+     "accent": "#b0c8ff",
+     "motif": "dawn sky, contrails"
     },
     "music": null,
     "trigger": {
@@ -2898,7 +2813,16 @@
      "time": [],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "friendship",
+       "atLeast": 150
+      },
+      {
+       "kind": "partyType",
+       "type": "flying"
+      }
+     ],
      "favoured": [
       "dragon",
       "psychic"
@@ -2908,97 +2832,82 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "The air is heavy with old power."
+      "text": "Fast clouds, dry wind."
      },
      {
-      "fromLayer": 4,
-      "text": "The power is waking."
+      "fromLayer": 3,
+      "text": "A psychic tailwind lifts the field.",
+      "terrain": "psychic"
      }
     ],
     "closes": [
      {
-      "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "afterLayer": 1,
+      "text": "A bridge drops away."
+     },
+     {
+      "afterLayer": 3,
+      "text": "The wind tears off a platform."
      }
     ],
     "distort": [],
     "affinity": {
      "types": [
-      "dragon"
+      "dragon",
+      "flying"
      ],
-     "heal": 0.08,
-     "text": "dragon-type Pokémon recover a little HP here."
+     "heal": 0.1,
+     "text": "Dragon and Flying Pokémon ride the tailwind."
     },
     "peril": {
      "types": [
-      "ice",
-      "fairy"
+      "rock",
+      "ground"
      ],
      "chip": 0.05,
-     "text": "ice/fairy-type Pokémon lose some HP here."
+     "text": "Rock and Ground Pokémon are shaken by the gusts."
     },
     "wild": [
-     "kadabra",
-     "espeon",
-     "claydol",
-     "gothitelle",
-     "malamar",
-     "flapple"
+     "altaria",
+     "salamence",
+     "swellow",
+     "staraptor",
+     "skarmory",
+     "dragonair"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "latios-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Latios. Nobody believes me. You look like you might.\"",
+      "id": "courier",
+      "name": "A Sky Courier",
+      "text": "\"If you can keep up, I will tell you a shortcut.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Keep up",
+        "result": "The wind eases your team.",
         "effect": {
-         "research": 1
+         "heal": 0.3
         }
        },
        {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Take the shortcut",
+        "result": "It pays, but it is a rough road.",
         "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "latios-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
+         "money": 400,
+         "hurt": 0.08
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "The air is heavy with old power",
-     "dragon-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Tailwind, then psychic ground",
+     "Dragon and Flying Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Latios waits at the end of the road.",
-     "win": "Latios yields. The land begins to settle.",
-     "lose": "Latios lets the land push you back. It is not done with you."
+     "intro": "A blue flash, then silence. Latios hangs above you.",
+     "win": "Latios dips its head and streaks into the dawn.",
+     "lose": "Latios is gone before you can blink."
     }
    }
   },
@@ -5012,9 +4921,9 @@
   },
   {
    "id": "legend-heatran",
-   "name": "Heatran: Burning Ground",
+   "name": "Heatran: Lava Dome",
    "tier": 3,
-   "blurb": "Heatran stirs, and its stage is open for a short time. Heatran has been sighted nearby, and the land is changing around it: embers and ash.",
+   "blurb": "Heatran stirs, and its stage is open for a short time. Steam has been rising from a cave that was always cold.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -5034,9 +4943,9 @@
     "totemId": "legend-heatran"
    },
    "rentals": [
-    "charmeleon",
-    "scizor",
-    "infernape"
+    "magcargo",
+    "camerupt",
+    "torkoal"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -5070,30 +4979,40 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "heatran",
-    "epithet": "Burning Ground",
+    "epithet": "Lava Dome",
     "rarity": "rare",
-    "omen": "Heatran has been sighted nearby, and the land is changing around it: embers and ash.",
+    "omen": "Steam has been rising from a cave that was always cold.",
     "lore": [
-     "Locals speak of Heatran in whispers.",
-     "Where it passes, the stage turns to embers and ash."
+     "The rock is warm and the walls drip.",
+     "The magma has a pulse."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
      "tint": "#a8341d",
-     "accent": "#ffc66f",
-     "motif": "embers and ash"
+     "accent": "#ffb347",
+     "motif": "lava caverns"
     },
     "music": null,
     "trigger": {
      "minRegion": 2,
      "maxRegion": null,
-     "time": [
-      "day",
-      "eve"
-     ],
+     "time": [],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      },
+      {
+       "kind": "partyType",
+       "type": "steel"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
       "fire",
       "steel"
@@ -5103,99 +5022,84 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "Harsh sunlight beats down on every fight.",
+      "text": "Heat rises from the lava below.",
       "weather": "sun"
      },
      {
       "fromLayer": 4,
-      "text": "The heat becomes unbearable.",
+      "text": "The cave floods with magma light.",
       "weather": "sun"
      }
     ],
     "closes": [
      {
-      "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "afterLayer": 1,
+      "text": "Lava floods a tunnel."
+     },
+     {
+      "afterLayer": 3,
+      "text": "The roof falls in over another tunnel."
      }
     ],
     "distort": [],
     "affinity": {
      "types": [
-      "fire"
+      "fire",
+      "steel",
+      "rock"
      ],
      "heal": 0.08,
-     "text": "fire-type Pokémon recover a little HP here."
+     "text": "Fire, Steel and Rock Pokémon thrive in the heat."
     },
     "peril": {
      "types": [
-      "ice",
-      "grass"
+      "water",
+      "grass",
+      "ice"
      ],
-     "chip": 0.05,
-     "text": "ice/grass-type Pokémon lose some HP here."
+     "chip": 0.06,
+     "text": "Water, Grass and Ice Pokémon suffer in the heat."
     },
     "wild": [
-     "charmeleon",
-     "scizor",
-     "infernape",
-     "excadrill",
-     "talonflame",
-     "carkol"
+     "magcargo",
+     "camerupt",
+     "torkoal",
+     "magmortar",
+     "steelix",
+     "aggron"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "heatran-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Heatran. Nobody believes me. You look like you might.\"",
+      "id": "miner",
+      "name": "The Deep Miner",
+      "text": "\"Quiet. The walls are listening.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
-        "effect": {
-         "research": 1
-        }
-       },
-       {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Share a pickaxe",
+        "result": "You uncover a cache.",
         "effect": {
          "item": "hyper-potion"
         }
-       }
-      ]
-     },
-     {
-      "id": "heatran-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
        },
        {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
+        "label": "Rest at the vent",
+        "result": "The vent warms and heals.",
         "effect": {
-         "money": 200
+         "heal": 0.3
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "Harsh sunlight beats down on every fight",
-     "fire-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Harsh heat",
+     "Fire, Steel and Rock Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Heatran waits at the end of the road.",
-     "win": "Heatran yields. The land begins to settle.",
-     "lose": "Heatran lets the land push you back. It is not done with you."
+     "intro": "The lava parts. Heatran walks out of the dome.",
+     "win": "The lava settles. Heatran returns to the deep.",
+     "lose": "The heat drives you out of the cave."
     }
    }
   },
@@ -5620,9 +5524,9 @@
   },
   {
    "id": "legend-cresselia",
-   "name": "Cresselia: Waking Dream",
+   "name": "Cresselia: Crescent Night",
    "tier": 2,
-   "blurb": "Cresselia stirs, and its stage is open for a short time. Cresselia has been sighted nearby, and the land is changing around it: dreamlike halls.",
+   "blurb": "Cresselia stirs, and its stage is open for a short time. Everyone in the region slept soundly last night, and woke with the same dream.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -5642,9 +5546,9 @@
     "totemId": "legend-cresselia"
    },
    "rentals": [
-    "kadabra",
-    "starmie",
-    "medicham"
+    "gardevoir",
+    "espeon",
+    "clefable"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -5678,29 +5582,38 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "cresselia",
-    "epithet": "Waking Dream",
+    "epithet": "Crescent Night",
     "rarity": "rare",
-    "omen": "Cresselia has been sighted nearby, and the land is changing around it: dreamlike halls.",
+    "omen": "Everyone in the region slept soundly last night, and woke with the same dream.",
     "lore": [
-     "Locals speak of Cresselia in whispers.",
-     "Where it passes, the stage turns to dreamlike halls."
+     "A crescent shape hangs in a sky with no moon.",
+     "Feathers of light drift to the ground."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#7a3a8a",
-     "accent": "#ffb0ff",
-     "motif": "dreamlike halls"
+     "tint": "#4a3a8a",
+     "accent": "#e0d0ff",
+     "motif": "moonlit fields, dream feathers"
     },
     "music": null,
     "trigger": {
-     "minRegion": 1,
+     "minRegion": 2,
      "maxRegion": null,
      "time": [
       "night"
      ],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "psychic"
+      },
+      {
+       "kind": "friendship",
+       "atLeast": 150
+      }
+     ],
      "favoured": [
       "psychic"
      ],
@@ -5709,19 +5622,14 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "Psychic terrain hums over the stage.",
-      "terrain": "psychic"
-     },
-     {
-      "fromLayer": 4,
-      "text": "Thought and sound seem to blur.",
+      "text": "Moonlit calm: a soft psychic glow.",
       "terrain": "psychic"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "A cloud of mist hides the way."
      }
     ],
     "distort": [
@@ -5732,82 +5640,60 @@
     ],
     "affinity": {
      "types": [
-      "psychic"
+      "psychic",
+      "fairy"
      ],
-     "heal": 0.08,
-     "text": "psychic-type Pokémon recover a little HP here."
+     "heal": 0.12,
+     "text": "Psychic and Fairy Pokémon bask in the moonlight."
     },
     "peril": {
      "types": [
       "dark",
-      "bug",
       "ghost"
      ],
-     "chip": 0.05,
-     "text": "dark/bug/ghost-type Pokémon lose some HP here."
+     "chip": 0.04,
+     "text": "Dark and Ghost Pokémon are uneasy in the glow."
     },
     "wild": [
-     "kadabra",
-     "starmie",
-     "medicham",
-     "gallade",
-     "beheeyem",
-     "hatterene"
+     "gardevoir",
+     "espeon",
+     "clefable",
+     "chimecho",
+     "hypno",
+     "sylveon"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "cresselia-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Cresselia. Nobody believes me. You look like you might.\"",
+      "id": "sleepwalker",
+      "name": "A Sleepwalker",
+      "text": "\"I cannot wake, and I do not want to.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Carry them home",
+        "result": "The kindness heals your team.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Ask what they see",
+        "result": "You note the dream.",
         "effect": {
          "research": 1
-        }
-       },
-       {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
-        "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "cresselia-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "Psychic terrain hums over the stage",
-     "psychic-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Psychic glow",
+     "Psychic and Fairy Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Cresselia waits at the end of the road.",
-     "win": "Cresselia yields. The land begins to settle.",
-     "lose": "Cresselia lets the land push you back. It is not done with you."
+     "intro": "The crescent descends. Cresselia unfolds in the moonlight.",
+     "win": "The dream ends gently. Cresselia scatters feathers and is gone.",
+     "lose": "You wake at the gate, unharmed."
     }
    }
   },
@@ -6010,9 +5896,9 @@
   },
   {
    "id": "legend-darkrai",
-   "name": "Darkrai: Long Night",
+   "name": "Darkrai: Nightmare Isle",
    "tier": 3,
-   "blurb": "Darkrai stirs, and its stage is open for a short time. Darkrai has been sighted nearby, and the land is changing around it: unlit alleys.",
+   "blurb": "Darkrai stirs, and its stage is open for a short time. No one on the shore will say what they saw. They only say the night did not end.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -6032,9 +5918,9 @@
     "totemId": "legend-darkrai"
    },
    "rentals": [
-    "umbreon",
-    "sharpedo",
-    "skuntank"
+    "mismagius",
+    "gengar",
+    "honchkrow"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -6072,18 +5958,18 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "darkrai",
-    "epithet": "Long Night",
+    "epithet": "Nightmare Isle",
     "rarity": "veryRare",
-    "omen": "Darkrai has been sighted nearby, and the land is changing around it: unlit alleys.",
+    "omen": "No one on the shore will say what they saw. They only say the night did not end.",
     "lore": [
-     "Locals speak of Darkrai in whispers.",
-     "Where it passes, the stage turns to unlit alleys."
+     "The sleepers will not wake.",
+     "A shadow wearing a cloak of stars."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#2a2a3a",
-     "accent": "#a0a0c0",
-     "motif": "unlit alleys"
+     "tint": "#1a1a2a",
+     "accent": "#a080d0",
+     "motif": "dark isle, nightmare fog"
     },
     "music": null,
     "trigger": {
@@ -6096,8 +5982,12 @@
      "requires": [],
      "any": [
       {
-       "kind": "friendship",
-       "atLeast": 120
+       "kind": "partyType",
+       "type": "dark"
+      },
+      {
+       "kind": "partyType",
+       "type": "ghost"
       },
       {
        "kind": "partyTag",
@@ -6105,104 +5995,94 @@
       }
      ],
      "favoured": [
-      "dark"
+      "dark",
+      "ghost"
      ],
      "weight": 1
     },
     "env": [
      {
       "fromLayer": 0,
-      "text": "It is darker here than it should be."
+      "text": "A thick fog and a long night.",
+      "terrain": "misty"
      },
      {
-      "fromLayer": 4,
-      "text": "The dark deepens."
+      "fromLayer": 3,
+      "text": "Nightmares seep in. The fog turns to hail.",
+      "weather": "hail",
+      "terrain": "misty"
      }
     ],
     "closes": [
      {
-      "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "afterLayer": 1,
+      "text": "The fog swallows a path."
      }
     ],
-    "distort": [],
+    "distort": [
+     {
+      "afterLayer": 2,
+      "text": "The nightmare rearranges the road."
+     }
+    ],
     "affinity": {
      "types": [
-      "dark"
+      "dark",
+      "ghost"
      ],
      "heal": 0.08,
-     "text": "dark-type Pokémon recover a little HP here."
+     "text": "Dark and Ghost Pokémon are comfortable in the dark."
     },
     "peril": {
      "types": [
-      "fighting",
-      "bug"
+      "psychic",
+      "fairy"
      ],
-     "chip": 0.05,
-     "text": "fighting/bug-type Pokémon lose some HP here."
+     "chip": 0.06,
+     "text": "Psychic and Fairy Pokémon suffer terrible dreams."
     },
     "wild": [
-     "umbreon",
-     "sharpedo",
-     "skuntank",
-     "krookodile",
-     "mandibuzz",
-     "malamar"
+     "mismagius",
+     "gengar",
+     "honchkrow",
+     "houndoom",
+     "sableye",
+     "absol"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "darkrai-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Darkrai. Nobody believes me. You look like you might.\"",
+      "id": "insomniac",
+      "name": "The Insomniac",
+      "text": "\"Do not sleep. Whatever you do.\"",
       "options": [
-       {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
-        "effect": {
-         "research": 1
-        }
-       },
        {
         "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "result": "Warm food steadies your team.",
         "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "darkrai-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
+         "heal": 0.3
         }
        },
        {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
+        "label": "Rob the sleepers",
+        "result": "It pays, and something in the dark notices.",
         "effect": {
-         "money": 200
+         "money": 400,
+         "hurt": 0.08
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "It is darker here than it should be",
-     "dark-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Fog and a long night",
+     "Dark and Ghost Pokémon recover HP",
+     "The road rearranges"
     ],
     "finale": {
-     "intro": "Darkrai waits at the end of the road.",
-     "win": "Darkrai yields. The land begins to settle.",
-     "lose": "Darkrai lets the land push you back. It is not done with you."
+     "intro": "The stars go out. Darkrai stands in the dark, waiting.",
+     "win": "The night ends. Darkrai dissolves into the dawn.",
+     "lose": "You wake on the shore with a headache."
     }
    }
   },
@@ -6405,9 +6285,9 @@
   },
   {
    "id": "legend-arceus",
-   "name": "Arceus: Quiet Meadow",
+   "name": "Arceus: Hall of Origin",
    "tier": 4,
-   "blurb": "Arceus stirs, and its stage is open for a short time. Arceus has been sighted nearby, and the land is changing around it: open meadows.",
+   "blurb": "Arceus stirs, and its stage is open for a short time. A stair of light has opened in the sky above the oldest ruin.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -6427,9 +6307,9 @@
     "totemId": "legend-arceus"
    },
    "rentals": [
-    "pidgeot",
-    "noctowl",
-    "exploud"
+    "blissey",
+    "snorlax",
+    "porygon-z"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -6467,34 +6347,38 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "arceus",
-    "epithet": "Quiet Meadow",
+    "epithet": "Hall of Origin",
     "rarity": "veryRare",
-    "omen": "Arceus has been sighted nearby, and the land is changing around it: open meadows.",
+    "omen": "A stair of light has opened in the sky above the oldest ruin.",
     "lore": [
-     "Locals speak of Arceus in whispers.",
-     "Where it passes, the stage turns to open meadows."
+     "All the colours of the world line the stair.",
+     "It is said everything began here."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#7a7a5c",
-     "accent": "#f0f0d0",
-     "motif": "open meadows"
+     "tint": "#b8a850",
+     "accent": "#fff8d0",
+     "motif": "celestial hall, plates"
     },
     "music": null,
     "trigger": {
-     "minRegion": 3,
+     "minRegion": 4,
      "maxRegion": null,
      "time": [],
      "themeTypes": [],
      "requires": [],
      "any": [
       {
-       "kind": "friendship",
-       "atLeast": 120
+       "kind": "partyTag",
+       "tag": "legendary"
       },
       {
        "kind": "partyTag",
-       "tag": "legendary"
+       "tag": "mythical"
+      },
+      {
+       "kind": "friendship",
+       "atLeast": 200
       }
      ],
      "favoured": [
@@ -6505,17 +6389,32 @@
     "env": [
      {
       "fromLayer": 0,
-      "text": "The air is calm and bright."
+      "text": "A calm hall under starlight."
+     },
+     {
+      "fromLayer": 2,
+      "text": "The hall shows the sun.",
+      "weather": "sun"
      },
      {
       "fromLayer": 4,
-      "text": "The calm turns uneasy."
+      "text": "The hall turns to rain.",
+      "weather": "rain"
+     },
+     {
+      "fromLayer": 6,
+      "text": "The hall turns to snow.",
+      "weather": "snow"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "A plate of light falls away."
+     },
+     {
+      "afterLayer": 4,
+      "text": "The stair loses a step."
      }
     ],
     "distort": [],
@@ -6523,78 +6422,50 @@
      "types": [
       "normal"
      ],
-     "heal": 0.08,
-     "text": "normal-type Pokémon recover a little HP here."
+     "heal": 0.1,
+     "text": "Normal Pokémon are at peace in the hall."
     },
-    "peril": {
-     "types": [
-      "ghost"
-     ],
-     "chip": 0.05,
-     "text": "ghost-type Pokémon lose some HP here."
-    },
+    "peril": null,
     "wild": [
-     "pidgeot",
-     "noctowl",
-     "exploud",
-     "lickilicky",
-     "braviary",
-     "greedent"
+     "blissey",
+     "snorlax",
+     "porygon-z",
+     "togekiss",
+     "staraptor",
+     "ursaring"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "arceus-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Arceus. Nobody believes me. You look like you might.\"",
+      "id": "plate-bearer",
+      "name": "The Plate Bearer",
+      "text": "\"Every plate is a promise. Choose which one you keep.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Accept a blessing",
+        "result": "A light heals your team.",
         "effect": {
-         "research": 1
+         "heal": 0.3
         }
        },
        {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Take a plate shard",
+        "result": "The shard is yours.",
         "effect": {
          "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "arceus-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "The air is calm and bright",
-     "normal-type Pokémon recover HP",
-     "A path collapses as you go"
+     "The weather turns through the seasons",
+     "Normal Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Arceus waits at the end of the road.",
-     "win": "Arceus yields. The land begins to settle.",
-     "lose": "Arceus lets the land push you back. It is not done with you."
+     "intro": "The stair ends. Arceus waits in the Hall of Origin.",
+     "win": "Arceus is satisfied. The stair fades like a breath.",
+     "lose": "The hall lets you go, unharmed."
     }
    }
   },
@@ -7730,9 +7601,9 @@
   },
   {
    "id": "legend-reshiram",
-   "name": "Reshiram: Dragon’s Rest",
+   "name": "Reshiram: Vast White",
    "tier": 4,
-   "blurb": "Reshiram stirs, and its stage is open for a short time. Reshiram has been sighted nearby, and the land is changing around it: high cliffs and scales.",
+   "blurb": "Reshiram stirs, and its stage is open for a short time. The old castle has lit up from the inside, with a white flame that gives no smoke.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -7752,9 +7623,9 @@
     "totemId": "legend-reshiram"
    },
    "rentals": [
-    "charmeleon",
-    "houndoom",
-    "infernape"
+    "chandelure",
+    "arcanine",
+    "salamence"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -7792,135 +7663,127 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "reshiram",
-    "epithet": "Dragon’s Rest",
+    "epithet": "Vast White",
     "rarity": "veryRare",
-    "omen": "Reshiram has been sighted nearby, and the land is changing around it: high cliffs and scales.",
+    "omen": "The old castle has lit up from the inside, with a white flame that gives no smoke.",
     "lore": [
-     "Locals speak of Reshiram in whispers.",
-     "Where it passes, the stage turns to high cliffs and scales."
+     "Truth, it says, burns clean.",
+     "A white dragon sleeps in the throne room."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#3a4a9c",
-     "accent": "#b0c0ff",
-     "motif": "high cliffs and scales"
+     "tint": "#b05a30",
+     "accent": "#fff0d0",
+     "motif": "white flame, castle halls"
     },
     "music": null,
     "trigger": {
      "minRegion": 3,
      "maxRegion": null,
-     "time": [],
+     "time": [
+      "day",
+      "eve"
+     ],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      },
+      {
+       "kind": "partyType",
+       "type": "dragon"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
-      "dragon",
-      "fire"
+      "fire",
+      "dragon"
      ],
      "weight": 1
     },
     "env": [
      {
       "fromLayer": 0,
-      "text": "The air is heavy with old power."
-     },
-     {
-      "fromLayer": 4,
-      "text": "The power is waking."
+      "text": "White light and harsh sun in the halls.",
+      "weather": "sun"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "A burning doorway collapses."
      }
     ],
     "distort": [],
     "affinity": {
      "types": [
+      "fire",
       "dragon"
      ],
      "heal": 0.08,
-     "text": "dragon-type Pokémon recover a little HP here."
+     "text": "Fire and Dragon Pokémon bask in the white flame."
     },
     "peril": {
      "types": [
-      "ice",
-      "fairy"
+      "water",
+      "ice"
      ],
      "chip": 0.05,
-     "text": "ice/fairy-type Pokémon lose some HP here."
+     "text": "Water and Ice Pokémon are scorched."
     },
     "wild": [
-     "charmeleon",
-     "houndoom",
-     "infernape",
+     "chandelure",
+     "arcanine",
+     "salamence",
      "haxorus",
-     "noivern",
-     "coalossal"
+     "hydreigon",
+     "flygon"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "reshiram-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Reshiram. Nobody believes me. You look like you might.\"",
+      "id": "truth-seeker",
+      "name": "The Truth Seeker",
+      "text": "\"Ideals are fire. Handle with care.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Share the flame",
+        "result": "The white flame steadies your team.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Study the flame",
+        "result": "You learn how it burns.",
         "effect": {
          "research": 1
-        }
-       },
-       {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
-        "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "reshiram-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "The air is heavy with old power",
-     "dragon-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Harsh sun in the castle",
+     "Fire and Dragon Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Reshiram waits at the end of the road.",
-     "win": "Reshiram yields. The land begins to settle.",
-     "lose": "Reshiram lets the land push you back. It is not done with you."
+     "intro": "The throne room blazes white. Reshiram unfolds its wings.",
+     "win": "The white flame gutters. Reshiram nods and departs.",
+     "lose": "The flame forces you out of the castle."
     }
    }
   },
   {
    "id": "legend-zekrom",
-   "name": "Zekrom: Dragon’s Rest",
+   "name": "Zekrom: Deep Black",
    "tier": 4,
-   "blurb": "Zekrom stirs, and its stage is open for a short time. Zekrom has been sighted nearby, and the land is changing around it: high cliffs and scales.",
+   "blurb": "Zekrom stirs, and its stage is open for a short time. The old castle went dark last night, and every lamp in the town flickered in time with it.",
    "nodes": {
     "min": 6,
     "max": 8
@@ -7940,9 +7803,9 @@
     "totemId": "legend-zekrom"
    },
    "rentals": [
-    "raichu",
-    "kingdra",
-    "magnezone"
+    "galvantula",
+    "magnezone",
+    "luxray"
    ],
    "restHeal": 0.4,
    "cache": [
@@ -7980,127 +7843,125 @@
    "failureKeep": 0.3,
    "legendary": {
     "species": "zekrom",
-    "epithet": "Dragon’s Rest",
+    "epithet": "Deep Black",
     "rarity": "veryRare",
-    "omen": "Zekrom has been sighted nearby, and the land is changing around it: high cliffs and scales.",
+    "omen": "The old castle went dark last night, and every lamp in the town flickered in time with it.",
     "lore": [
-     "Locals speak of Zekrom in whispers.",
-     "Where it passes, the stage turns to high cliffs and scales."
+     "Ideals, it says, strike like lightning.",
+     "A black dragon sleeps in the throne room, crackling."
     ],
     "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
     "visual": {
-     "tint": "#3a4a9c",
-     "accent": "#b0c0ff",
-     "motif": "high cliffs and scales"
+     "tint": "#1a1a3a",
+     "accent": "#6fa8ff",
+     "motif": "black thunder, castle halls"
     },
     "music": null,
     "trigger": {
      "minRegion": 3,
      "maxRegion": null,
-     "time": [],
+     "time": [
+      "night"
+     ],
      "themeTypes": [],
      "requires": [],
-     "any": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "electric"
+      },
+      {
+       "kind": "partyType",
+       "type": "dragon"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
      "favoured": [
-      "dragon",
-      "electric"
+      "electric",
+      "dragon"
      ],
      "weight": 1
     },
     "env": [
      {
       "fromLayer": 0,
-      "text": "The air is heavy with old power."
+      "text": "A black storm of static in the halls.",
+      "terrain": "electric"
      },
      {
       "fromLayer": 4,
-      "text": "The power is waking."
+      "text": "Rain and lightning pour through the roof.",
+      "terrain": "electric",
+      "weather": "rain"
      }
     ],
     "closes": [
      {
       "afterLayer": 2,
-      "text": "A path collapses behind you. One way forward is gone."
+      "text": "A lightning strike brings a ceiling down."
      }
     ],
     "distort": [],
     "affinity": {
      "types": [
+      "electric",
       "dragon"
      ],
      "heal": 0.08,
-     "text": "dragon-type Pokémon recover a little HP here."
+     "text": "Electric and Dragon Pokémon drink the static."
     },
     "peril": {
      "types": [
-      "ice",
-      "fairy"
+      "water",
+      "flying"
      ],
      "chip": 0.05,
-     "text": "ice/fairy-type Pokémon lose some HP here."
+     "text": "Water and Flying Pokémon are shocked."
     },
     "wild": [
-     "raichu",
-     "kingdra",
+     "galvantula",
      "magnezone",
+     "luxray",
+     "hydreigon",
      "haxorus",
-     "charjabug",
-     "drakloak"
+     "flygon"
     ],
     "wildLevelBonus": 2,
     "npcs": [
      {
-      "id": "zekrom-witness",
-      "name": "A Local Witness",
-      "text": "\"I saw Zekrom. Nobody believes me. You look like you might.\"",
+      "id": "ideal-seeker",
+      "name": "The Ideal Seeker",
+      "text": "\"A thunderbolt asks no permission.\"",
       "options": [
        {
-        "label": "Listen to the story",
-        "result": "The witness tells you what to expect.",
+        "label": "Stand beside a rod",
+        "result": "The charge restores your team.",
         "effect": {
-         "research": 1
+         "heal": 0.3
         }
        },
        {
-        "label": "Share your rations",
-        "result": "The witness shares a hidden cache.",
+        "label": "Take a coil",
+        "result": "The coil is valuable and bites.",
         "effect": {
-         "item": "hyper-potion"
-        }
-       }
-      ]
-     },
-     {
-      "id": "zekrom-pilgrim",
-      "name": "A Pilgrim",
-      "text": "\"Rest here. The road ahead is not kind.\"",
-      "options": [
-       {
-        "label": "Rest with the pilgrim",
-        "result": "Your team rests.",
-        "effect": {
-         "heal": 0.25
-        }
-       },
-       {
-        "label": "Press on",
-        "result": "You find a few coins on the road.",
-        "effect": {
-         "money": 200
+         "money": 400,
+         "hurt": 0.08
         }
        }
       ]
      }
     ],
     "modifiers": [
-     "The air is heavy with old power",
-     "dragon-type Pokémon recover HP",
-     "A path collapses as you go"
+     "Static and storm in the halls",
+     "Electric and Dragon Pokémon recover HP"
     ],
     "finale": {
-     "intro": "Zekrom waits at the end of the road.",
-     "win": "Zekrom yields. The land begins to settle.",
-     "lose": "Zekrom lets the land push you back. It is not done with you."
+     "intro": "The throne room goes black, then crackles. Zekrom rises.",
+     "win": "The static eases. Zekrom bows and departs into the night.",
+     "lose": "A bolt throws you out of the castle."
     }
    }
   },
@@ -17384,7 +17245,7 @@
   },
   {
    "id": "legend-raikou",
-   "name": "Raikou, Static Storm",
+   "name": "Raikou, Thunder Chase",
    "tier": "mid",
    "legendary": true,
    "type": "electric",
@@ -17395,27 +17256,31 @@
    "levelBonus": 6,
    "hpBoostPercent": 300,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "Static crackles around it (Speed up).",
     "boost": {
-     "spa": 1
+     "spe": 1
     },
     "terrain": "electric"
    },
    "ally": null,
    "twoVsOne": false,
-   "fieldEffect": null,
+   "fieldEffect": {
+    "status": "par",
+    "chance": 0.1,
+    "text": "Static runs through your Pokémon."
+   },
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The charge spikes. Raikou presses the attack.",
+     "atHp": 0.6,
+     "text": "Raikou roars; thunder answers.",
      "boost": {
-      "spd": 1
+      "spa": 1
      },
      "clearPlayerStages": true
     },
     {
      "atHp": 0.3,
-     "text": "Raikou gives everything it has!",
+     "text": "Lightning strikes from every side!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -17424,7 +17289,7 @@
     }
    ],
    "environment": {
-    "text": "Static Storm: Electricity crackles over the stage.",
+    "text": "A storm ridge: Electric terrain all fight.",
     "terrain": "electric"
    },
    "rewards": {
@@ -17447,7 +17312,7 @@
   },
   {
    "id": "legend-entei",
-   "name": "Entei, Burning Ground",
+   "name": "Entei, Burning Tower",
    "tier": "mid",
    "legendary": true,
    "type": "fire",
@@ -17458,7 +17323,7 @@
    "levelBonus": 6,
    "hpBoostPercent": 300,
    "aura": {
-    "text": "Its presence fills the stage (Attack up).",
+    "text": "Flames wreathe it (Attack up).",
     "boost": {
      "atk": 1
     },
@@ -17466,19 +17331,23 @@
    },
    "ally": null,
    "twoVsOne": false,
-   "fieldEffect": null,
+   "fieldEffect": {
+    "status": "brn",
+    "chance": 0.1,
+    "text": "Embers burn your Pokémon."
+   },
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The flames flare. Entei presses the attack.",
+     "atHp": 0.6,
+     "text": "Entei howls and the tower roars.",
      "boost": {
-      "def": 1
+      "atk": 1
      },
      "clearPlayerStages": true
     },
     {
      "atHp": 0.3,
-     "text": "Entei gives everything it has!",
+     "text": "Sacred Fire — everything burns!",
      "boost": {
       "atk": 1,
       "spe": 1
@@ -17487,7 +17356,7 @@
     }
    ],
    "environment": {
-    "text": "Burning Ground: Harsh sunlight beats down on every fight.",
+    "text": "The burning tower: harsh sun all fight.",
     "weather": "sun"
    },
    "rewards": {
@@ -17510,7 +17379,7 @@
   },
   {
    "id": "legend-suicune",
-   "name": "Suicune, Rising Tide",
+   "name": "Suicune, Northern Wind",
    "tier": "mid",
    "legendary": true,
    "type": "water",
@@ -17521,9 +17390,9 @@
    "levelBonus": 6,
    "hpBoostPercent": 300,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "Pure water swirls around it (Special Defense up).",
     "boost": {
-     "spa": 1
+     "spd": 1
     },
     "weather": "rain"
    },
@@ -17532,16 +17401,16 @@
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "A wave rolls through. Suicune presses the attack.",
+     "atHp": 0.6,
+     "text": "Suicune sets the water in motion.",
      "boost": {
-      "spd": 1
+      "spa": 1
      },
      "clearPlayerStages": true
     },
     {
      "atHp": 0.3,
-     "text": "Suicune gives everything it has!",
+     "text": "The aurora flares; the lake turns to ice!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -17550,7 +17419,7 @@
     }
    ],
    "environment": {
-    "text": "Rising Tide: Rain falls on every fight.",
+    "text": "A clear lake: rain all fight.",
     "weather": "rain"
    },
    "rewards": {
@@ -17703,7 +17572,7 @@
   },
   {
    "id": "legend-celebi",
-   "name": "Celebi, Waking Dream",
+   "name": "Celebi, Forest of Time",
    "tier": "late",
    "legendary": true,
    "type": "psychic",
@@ -17714,19 +17583,19 @@
    "levelBonus": 6,
    "hpBoostPercent": 370,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "Time ripples around it (Speed up).",
     "boost": {
-     "spa": 1
+     "spe": 1
     },
-    "terrain": "psychic"
+    "terrain": "grassy"
    },
    "ally": null,
    "twoVsOne": false,
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The air hums louder. Celebi presses the attack.",
+     "atHp": 0.6,
+     "text": "Celebi skips a moment; your boosts are lost.",
      "boost": {
       "spd": 1
      },
@@ -17734,7 +17603,7 @@
     },
     {
      "atHp": 0.3,
-     "text": "Celebi gives everything it has!",
+     "text": "Time Travel — it is everywhere at once!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -17743,8 +17612,8 @@
     }
    ],
    "environment": {
-    "text": "Waking Dream: Psychic terrain hums over the stage.",
-    "terrain": "psychic"
+    "text": "The forest of time: Grassy terrain all fight.",
+    "terrain": "grassy"
    },
    "rewards": {
     "moneyPerLevel": 240,
@@ -17766,7 +17635,7 @@
   },
   {
    "id": "legend-regirock",
-   "name": "Regirock, Stone Hall",
+   "name": "Regirock, Braille Vault",
    "tier": "mid",
    "legendary": true,
    "type": "rock",
@@ -17777,9 +17646,9 @@
    "levelBonus": 6,
    "hpBoostPercent": 300,
    "aura": {
-    "text": "Its presence fills the stage (Attack up).",
+    "text": "Rock plating covers it (Defense up).",
     "boost": {
-     "atk": 1
+     "def": 1
     },
     "weather": "sand"
    },
@@ -17788,8 +17657,8 @@
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The stone cracks. Regirock presses the attack.",
+     "atHp": 0.6,
+     "text": "Regirock rebuilds its plating.",
      "boost": {
       "def": 1
      },
@@ -17797,7 +17666,7 @@
     },
     {
      "atHp": 0.3,
-     "text": "Regirock gives everything it has!",
+     "text": "Hammer Arm — the vault shakes!",
      "boost": {
       "atk": 1,
       "spe": 1
@@ -17806,7 +17675,7 @@
     }
    ],
    "environment": {
-    "text": "Stone Hall: Grit and dust fill the air of every fight.",
+    "text": "The vault: sandstorm all fight.",
     "weather": "sand"
    },
    "rewards": {
@@ -17829,7 +17698,7 @@
   },
   {
    "id": "legend-regice",
-   "name": "Regice, Deep Freeze",
+   "name": "Regice, Frozen Vault",
    "tier": "mid",
    "legendary": true,
    "type": "ice",
@@ -17840,9 +17709,9 @@
    "levelBonus": 6,
    "hpBoostPercent": 300,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "A shell of ice (Special Defense up).",
     "boost": {
-     "spa": 1
+     "spd": 1
     },
     "weather": "snow"
    },
@@ -17851,8 +17720,8 @@
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The cold bites harder. Regice presses the attack.",
+     "atHp": 0.6,
+     "text": "Regice thickens its shell.",
      "boost": {
       "spd": 1
      },
@@ -17860,7 +17729,7 @@
     },
     {
      "atHp": 0.3,
-     "text": "Regice gives everything it has!",
+     "text": "Ice Beam — the vault freezes!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -17869,7 +17738,7 @@
     }
    ],
    "environment": {
-    "text": "Deep Freeze: Snow falls over every fight.",
+    "text": "The vault: snow all fight.",
     "weather": "snow"
    },
    "rewards": {
@@ -17892,7 +17761,7 @@
   },
   {
    "id": "legend-registeel",
-   "name": "Registeel, Iron Works",
+   "name": "Registeel, Iron Vault",
    "tier": "mid",
    "legendary": true,
    "type": "steel",
@@ -17903,9 +17772,9 @@
    "levelBonus": 6,
    "hpBoostPercent": 300,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "Iron plating (Defense up).",
     "boost": {
-     "spa": 1
+     "def": 1
     }
    },
    "ally": null,
@@ -17913,8 +17782,8 @@
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The gears turn. Registeel presses the attack.",
+     "atHp": 0.6,
+     "text": "Registeel hardens.",
      "boost": {
       "spd": 1
      },
@@ -17922,16 +17791,17 @@
     },
     {
      "atHp": 0.3,
-     "text": "Registeel gives everything it has!",
+     "text": "Flash Cannon — the vault lights up!",
      "boost": {
       "spa": 1,
-      "spe": 1
+      "atk": 1
      },
      "cleanse": true
     }
    ],
    "environment": {
-    "text": "Iron Works: The air rings with metal."
+    "text": "The vault: Electric terrain all fight.",
+    "terrain": "electric"
    },
    "rewards": {
     "moneyPerLevel": 200,
@@ -17953,7 +17823,7 @@
   },
   {
    "id": "legend-latias",
-   "name": "Latias, Dragon’s Rest",
+   "name": "Latias, Veil of Dreams",
    "tier": "late",
    "legendary": true,
    "type": "dragon",
@@ -17964,26 +17834,27 @@
    "levelBonus": 6,
    "hpBoostPercent": 370,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "A light veil surrounds it (Special Defense up).",
     "boost": {
-     "spa": 1
-    }
+     "spd": 1
+    },
+    "terrain": "psychic"
    },
    "ally": null,
    "twoVsOne": false,
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The air shakes. Latias presses the attack.",
+     "atHp": 0.6,
+     "text": "Latias turns invisible.",
      "boost": {
-      "spd": 1
+      "spe": 1
      },
      "clearPlayerStages": true
     },
     {
      "atHp": 0.3,
-     "text": "Latias gives everything it has!",
+     "text": "Mist Ball — the veil lifts!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -17992,7 +17863,8 @@
     }
    ],
    "environment": {
-    "text": "Dragon’s Rest: The air is heavy with old power."
+    "text": "A dream garden: Psychic terrain all fight.",
+    "terrain": "psychic"
    },
    "rewards": {
     "moneyPerLevel": 240,
@@ -18014,7 +17886,7 @@
   },
   {
    "id": "legend-latios",
-   "name": "Latios, Dragon’s Rest",
+   "name": "Latios, Eon Flight",
    "tier": "late",
    "legendary": true,
    "type": "dragon",
@@ -18025,9 +17897,9 @@
    "levelBonus": 6,
    "hpBoostPercent": 370,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "It outpaces the wind (Speed up).",
     "boost": {
-     "spa": 1
+     "spe": 1
     }
    },
    "ally": null,
@@ -18035,16 +17907,16 @@
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The air shakes. Latios presses the attack.",
+     "atHp": 0.6,
+     "text": "Latios dives.",
      "boost": {
-      "spd": 1
+      "spa": 1
      },
      "clearPlayerStages": true
     },
     {
      "atHp": 0.3,
-     "text": "Latios gives everything it has!",
+     "text": "Luster Purge — a blue blaze!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -18053,7 +17925,8 @@
     }
    ],
    "environment": {
-    "text": "Dragon’s Rest: The air is heavy with old power."
+    "text": "A dawn sky: psychic tailwind all fight.",
+    "terrain": "psychic"
    },
    "rewards": {
     "moneyPerLevel": 240,
@@ -18746,7 +18619,7 @@
   },
   {
    "id": "legend-heatran",
-   "name": "Heatran, Burning Ground",
+   "name": "Heatran, Lava Dome",
    "tier": "late",
    "legendary": true,
    "type": "fire",
@@ -18757,7 +18630,7 @@
    "levelBonus": 6,
    "hpBoostPercent": 370,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "Magma glows within (Special Attack up).",
     "boost": {
      "spa": 1
     },
@@ -18765,11 +18638,15 @@
    },
    "ally": null,
    "twoVsOne": false,
-   "fieldEffect": null,
+   "fieldEffect": {
+    "status": "brn",
+    "chance": 0.1,
+    "text": "Magma heat burns your Pokémon."
+   },
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The flames flare. Heatran presses the attack.",
+     "atHp": 0.6,
+     "text": "Heatran stamps; the lava rises.",
      "boost": {
       "spd": 1
      },
@@ -18777,7 +18654,7 @@
     },
     {
      "atHp": 0.3,
-     "text": "Heatran gives everything it has!",
+     "text": "Magma Storm — the dome erupts!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -18786,7 +18663,7 @@
     }
    ],
    "environment": {
-    "text": "Burning Ground: Harsh sunlight beats down on every fight.",
+    "text": "The lava dome: harsh sun all fight.",
     "weather": "sun"
    },
    "rewards": {
@@ -18940,7 +18817,7 @@
   },
   {
    "id": "legend-cresselia",
-   "name": "Cresselia, Waking Dream",
+   "name": "Cresselia, Crescent Night",
    "tier": "mid",
    "legendary": true,
    "type": "psychic",
@@ -18951,9 +18828,9 @@
    "levelBonus": 6,
    "hpBoostPercent": 300,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "Moonlight shields it (Special Defense up).",
     "boost": {
-     "spa": 1
+     "spd": 1
     },
     "terrain": "psychic"
    },
@@ -18962,16 +18839,16 @@
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The air hums louder. Cresselia presses the attack.",
+     "atHp": 0.6,
+     "text": "Cresselia sings; the dream deepens.",
      "boost": {
-      "spd": 1
+      "def": 1
      },
      "clearPlayerStages": true
     },
     {
      "atHp": 0.3,
-     "text": "Cresselia gives everything it has!",
+     "text": "Lunar Blessing — the moon is full!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -18980,7 +18857,7 @@
     }
    ],
    "environment": {
-    "text": "Waking Dream: Psychic terrain hums over the stage.",
+    "text": "A moonlit field: Psychic terrain all fight.",
     "terrain": "psychic"
    },
    "rewards": {
@@ -19066,7 +18943,7 @@
   },
   {
    "id": "legend-darkrai",
-   "name": "Darkrai, Long Night",
+   "name": "Darkrai, Nightmare Isle",
    "tier": "late",
    "legendary": true,
    "type": "dark",
@@ -19077,10 +18954,11 @@
    "levelBonus": 6,
    "hpBoostPercent": 370,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "A cloak of dark (Special Attack up).",
     "boost": {
      "spa": 1
-    }
+    },
+    "terrain": "misty"
    },
    "ally": null,
    "twoVsOne": false,
@@ -19088,15 +18966,22 @@
    "phases": [
     {
      "atHp": 0.65,
-     "text": "The dark closes in. Darkrai presses the attack.",
+     "text": "Darkrai plunges you into a nightmare.",
      "boost": {
-      "spd": 1
+      "spe": 1
      },
      "clearPlayerStages": true
     },
     {
-     "atHp": 0.3,
-     "text": "Darkrai gives everything it has!",
+     "atHp": 0.35,
+     "text": "Dark Void — the nightmare spreads!",
+     "boost": {
+      "spa": 1
+     }
+    },
+    {
+     "atHp": 0.15,
+     "text": "Darkrai gives in to the dark.",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -19105,7 +18990,8 @@
     }
    ],
    "environment": {
-    "text": "Long Night: It is darker here than it should be."
+    "text": "A nightmare isle: Misty terrain all fight.",
+    "terrain": "misty"
    },
    "rewards": {
     "moneyPerLevel": 240,
@@ -19190,7 +19076,7 @@
   },
   {
    "id": "legend-arceus",
-   "name": "Arceus, Quiet Meadow",
+   "name": "Arceus, Hall of Origin",
    "tier": "grand",
    "legendary": true,
    "type": "normal",
@@ -19201,9 +19087,10 @@
    "levelBonus": 6,
    "hpBoostPercent": 440,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "The first power (Attack and Defense up).",
     "boost": {
-     "spa": 1
+     "atk": 1,
+     "def": 1
     }
    },
    "ally": null,
@@ -19211,17 +19098,27 @@
    "fieldEffect": null,
    "phases": [
     {
-     "atHp": 0.65,
-     "text": "The stillness breaks. Arceus presses the attack.",
+     "atHp": 0.7,
+     "text": "Arceus shifts its plate: sun floods the hall.",
      "boost": {
-      "spd": 1
+      "spa": 1
      },
+     "weather": "sun",
      "clearPlayerStages": true
     },
     {
-     "atHp": 0.3,
-     "text": "Arceus gives everything it has!",
+     "atHp": 0.45,
+     "text": "A new plate — rain pours through the hall.",
      "boost": {
+      "spd": 1
+     },
+     "weather": "rain"
+    },
+    {
+     "atHp": 0.2,
+     "text": "Judgment — the plates align!",
+     "boost": {
+      "atk": 1,
       "spa": 1,
       "spe": 1
      },
@@ -19229,7 +19126,7 @@
     }
    ],
    "environment": {
-    "text": "Quiet Meadow: The air is calm and bright."
+    "text": "The Hall of Origin: calm light all fight."
    },
    "rewards": {
     "moneyPerLevel": 280,
@@ -19625,7 +19522,7 @@
   },
   {
    "id": "legend-reshiram",
-   "name": "Reshiram, Dragon’s Rest",
+   "name": "Reshiram, Vast White",
    "tier": "grand",
    "legendary": true,
    "type": "dragon",
@@ -19636,18 +19533,23 @@
    "levelBonus": 6,
    "hpBoostPercent": 440,
    "aura": {
-    "text": "Its presence fills the stage (Special Attack up).",
+    "text": "White flame (Special Attack up).",
     "boost": {
      "spa": 1
-    }
+    },
+    "weather": "sun"
    },
    "ally": null,
    "twoVsOne": false,
-   "fieldEffect": null,
+   "fieldEffect": {
+    "status": "brn",
+    "chance": 0.1,
+    "text": "White flames burn your Pokémon."
+   },
    "phases": [
     {
      "atHp": 0.65,
-     "text": "The air shakes. Reshiram presses the attack.",
+     "text": "Reshiram flares; the hall turns white.",
      "boost": {
       "spd": 1
      },
@@ -19655,7 +19557,7 @@
     },
     {
      "atHp": 0.3,
-     "text": "Reshiram gives everything it has!",
+     "text": "Blue Flare — a pillar of fire!",
      "boost": {
       "spa": 1,
       "spe": 1
@@ -19664,7 +19566,8 @@
     }
    ],
    "environment": {
-    "text": "Dragon’s Rest: The air is heavy with old power."
+    "text": "The throne room: harsh sun all fight.",
+    "weather": "sun"
    },
    "rewards": {
     "moneyPerLevel": 280,
@@ -19686,7 +19589,7 @@
   },
   {
    "id": "legend-zekrom",
-   "name": "Zekrom, Dragon’s Rest",
+   "name": "Zekrom, Deep Black",
    "tier": "grand",
    "legendary": true,
    "type": "dragon",
@@ -19697,18 +19600,23 @@
    "levelBonus": 6,
    "hpBoostPercent": 440,
    "aura": {
-    "text": "Its presence fills the stage (Attack up).",
+    "text": "Black thunder (Attack up).",
     "boost": {
      "atk": 1
-    }
+    },
+    "terrain": "electric"
    },
    "ally": null,
    "twoVsOne": false,
-   "fieldEffect": null,
+   "fieldEffect": {
+    "status": "par",
+    "chance": 0.1,
+    "text": "Thunder runs through your Pokémon."
+   },
    "phases": [
     {
      "atHp": 0.65,
-     "text": "The air shakes. Zekrom presses the attack.",
+     "text": "Zekrom crackles; the room goes dark.",
      "boost": {
       "def": 1
      },
@@ -19716,7 +19624,7 @@
     },
     {
      "atHp": 0.3,
-     "text": "Zekrom gives everything it has!",
+     "text": "Bolt Strike — lightning everywhere!",
      "boost": {
       "atk": 1,
       "spe": 1
@@ -19725,7 +19633,8 @@
     }
    ],
    "environment": {
-    "text": "Dragon’s Rest: The air is heavy with old power."
+    "text": "The throne room: Electric terrain all fight.",
+    "terrain": "electric"
    },
    "rewards": {
     "moneyPerLevel": 280,

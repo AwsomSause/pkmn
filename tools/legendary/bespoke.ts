@@ -26,7 +26,10 @@ export interface Bespoke {
 const heal = { heal: 0.25 };
 const mend = { heal: 0.4 };
 
+import { BESPOKE2 } from './bespoke2.ts';
+
 export const BESPOKE: Record<string, Bespoke> = {
+  ...BESPOKE2,
   kyogre: {
     epithet: 'Primordial Flood',
     omen: 'The sea has climbed the cliffs overnight, and the sky will not stop raining.',

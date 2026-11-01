@@ -1,5 +1,5 @@
 // Writes src/data/legendaryEvents.json: the events and their finale Totems (merged into expeditions and totems when content loads).
-// Every Legendary and Mythical gets a world event: 12 hand-designed ones (tools/legendary/bespoke.ts) and a type-themed
+// Every Legendary and Mythical gets a world event: hand-designed ones (tools/legendary/bespoke.ts) and a type-themed
 // template for the rest. Run with: npm run data:legendary-events
 import { readFileSync, writeFileSync } from 'node:fs';
 import { BESPOKE } from './legendary/bespoke.ts';
