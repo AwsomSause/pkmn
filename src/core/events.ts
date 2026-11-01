@@ -24,6 +24,7 @@ import { makeDoubles } from './battle/doubles';
 import { championTeam, retiredTeam } from './story/championDefense';
 import { oldFoe } from './story/promises';
 import { featuredRival, rivalBeaten, rivalFightTeam, rivalPath } from './rivals/living';
+import { monRivalState } from './rivals/monRivals';
 import { openFeud, settleFeud } from './story/feud';
 import { noteEventMorality } from './story/nemesis';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
@@ -117,6 +118,8 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return rivalPath(run) === c.path;
     case 'rivalBeaten':
       return rivalBeaten(run);
+    case 'monRival':
+      return monRivalState(run, c.state);
     case 'crisis':
       return crisisLevel(run) >= c.atLeast && crisisLevel(run) <= c.atMost;
     case 'aid':
@@ -229,6 +232,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return c.path === 'friend' ? 'Needs a rival who is becoming a friend' : c.path === 'rival' ? 'Needs a rival who sees you as an adversary' : 'Needs a rival who has not decided about you';
     case 'rivalBeaten':
       return 'Needs a rival you beat last time';
+    case 'monRival':
+      return c.state === 'any' ? 'Needs a Pokémon rival' : c.state === 'sacrificed' ? 'Needs a rival Pokémon that gave itself up' : c.state === 'carried' ? 'Needs a rival Pokémon that a trainer caught' : 'Needs a Pokémon rival still out there';
     case 'rivalMet':
       return `Needs a rival you have fought ${c.atLeast} time${c.atLeast === 1 ? '' : 's'}`;
     case 'partyTag':

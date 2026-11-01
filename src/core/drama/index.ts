@@ -19,6 +19,7 @@ import { afterBattleCandidates, favouredType, flavorPool, playerDeclarationCandi
 import { pickWitness, libraryCandidates, memoryCallback, recordLibraryEvent, signatureCandidates, type Candidate, type PlanCtx } from './events';
 import { npcWorldLine } from '../rivals/recognition';
 import { aceCandidates } from '../rivals/signatureTeam';
+import { monRivalCandidates } from '../rivals/monRivals';
 
 export * from './schema';
 
@@ -170,7 +171,7 @@ export function planDrama(content: Content, run: RunState, prior: BattleState | 
     state.seen.push(habitFresh.id);
     candidates.push({ ev: { id: habitFresh.id, kind: 'playerHabit', turn, at: habitFresh.at, data: {} }, category: 'taunt', tier: 'tactical' });
   }
-  candidates.push(...signatureCandidates(ctx), ...playerDeclarationCandidates(ctx), ...libraryCandidates(ctx), ...afterBattleCandidates(ctx, dramaEvents), ...aceCandidates(ctx));
+  candidates.push(...signatureCandidates(ctx), ...playerDeclarationCandidates(ctx), ...libraryCandidates(ctx), ...afterBattleCandidates(ctx, dramaEvents), ...aceCandidates(ctx), ...monRivalCandidates(ctx));
   // World recognition: an ordinary trainer sometimes brings up a rival's news or your title before the battle.
   if (!prior && cls === 'ordinary' && !rival) {
     const talk = npcWorldLine(content, run, key);

@@ -40254,6 +40254,117 @@
    "room": true
   },
   {
+   "id": "camp-rival-trail",
+   "name": "A Rival's Trail",
+   "group": "Camp",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "monRival",
+     "state": "any"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c24",
+    "effect": "sparkle"
+   },
+   "intro": "A quiet clearing off the road. One of your Pokémon stops here and will not move on: something about its rival is on its mind.",
+   "choices": [
+    {
+     "label": "Remember the rival who took the blow",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "sacrificed"
+      }
+     ],
+     "success": {
+      "text": "Nobody plays tonight. The Pokémon it saved sits closest to the fire and watches the dark where its rival used to be. The others lean in around it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    },
+    {
+     "label": "Train for the rematch with its rival",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "open"
+      }
+     ],
+     "success": {
+      "text": "One of your Pokémon will not sit still. Somewhere out there is the one with the mark, and next time it means to win.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about the rival that joined a trainer",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "carried"
+      }
+     ],
+     "success": {
+      "text": "Its rival rides with another trainer now. Your Pokémon growls at the thought, then settles. It will be ready.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Move on",
+     "success": {
+      "text": "You coax it along. It looks back once.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "camp-prepare",
    "name": "Before You Go",
    "group": "Camp",
