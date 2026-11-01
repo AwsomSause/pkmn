@@ -159,3 +159,13 @@ describe('real-world dates', () => {
     expect(run.calendar).toEqual({ today: '03-01', startedOn: '02-27' });
   });
 });
+
+describe('camp talks', () => {
+  it('rival talks open once a rival has been met, on the matching path', () => {
+    const run = atEvent(newRun(), 'camp-talk');
+    const open = (r: RunState) => eventView(content, r, 'test-event').choices.map((c) => c.locked === null);
+    expect(open(run)).toEqual([true, false, false, false]); // no rival met yet
+    run.story.rivals.push({ ...(run.story.rivals[0] ?? ({} as never)), encounters: 1 } as never);
+    expect(open(run).slice(1).filter(Boolean)).toHaveLength(1); // exactly one rival talk fits their path
+  });
+});

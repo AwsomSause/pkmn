@@ -41,7 +41,14 @@ export const CAMP_EVENTS: Json[] = [
       ch('Morning play (morning)', out('Rolling, racing and wrestling in the dew. A few scraped knees, a lot of laughter.', fr(6, 'party'), rp(15)), { requires: [at('morning')] }),
       ch('Sunny-afternoon contest (afternoon)', out('A friendly contest in the warm light. Winners crow, losers promise a rematch. Everyone is closer for it.', fr(5, 'party'), heal(0.15), rp(20)), { requires: [at('afternoon')] }),
       ch('Stories by the fire (evening or night)', out('Stories, a song, and someone\'s joke you will remember. Everyone feels closer.', heal(0.3), fr(9, 'party'), rp(30), good(1)), { requires: [at('evening', 'night')] }),
+      ch('Sit and talk with someone', out('The fire burns low. Who do you want to talk to?', room('camp-talk'))),
+    ]),
+  ev('camp-talk', 'Quiet Talk', 'Camp', { rarity: 'common', minStage: 1, effect: 'hearts', tint: '#241c2a' },
+    'Away from the others, the night is long enough for a real conversation.', [
       ch('Talk with your partner', out('You sit with your lead for a while. Not much is said. It is enough.', fr(8, 'lead'), rp(10))),
+      ch('Talk about your rival (a friend)', out('You wonder aloud where they are camped tonight. Your party agrees: they would probably share the fire. You feel less alone on the road.', fr(4, 'party'), flag('rival-friend', 1), good(1), rp(20)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'friend' }] }),
+      ch('Talk about your rival (a rival)', out('You go over every move they made against you. Your party listens, and by the end you all know what to do next time. Tension and focus.', fr(3, 'party'), flag('rival-heat', 1), lv(1, 'lead'), rp(25)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'rival' }] }),
+      ch('Talk about the rival who is unsure', out('You do not know what they want yet. Neither do they. You decide to leave the door open.', fr(4, 'party'), rp(15)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'between' }] }),
     ]),
   ev('camp-prepare', 'Before You Go', 'Camp', { rarity: 'common', minStage: 1, effect: 'sparkle', tint: '#1c242a' },
     'The road ahead is quiet, and what you can do with it changes as the day wears on.', [
