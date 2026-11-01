@@ -3,6 +3,7 @@
 // so the game refuses to load a save that doesn't match.
 
 import { NATURE_IDS } from './natures';
+import { CareSchema } from './care/mods';
 import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
 import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
@@ -84,6 +85,8 @@ export const PokemonInstanceSchema = z.object({
   shadow: z.object({ heart: z.number().int().min(1).max(100) }).optional(),
   /** Blissful Pokémon (core/shadowWorld/blissful.ts): touched by a benevolent force. `aura` picks its look (bloom, glow, chime). */
   blissful: z.object({ aura: z.string().min(1) }).optional(),
+  /** Care & party life (core/care): mood, fatigue, journal counters, nickname, talent, training. */
+  care: CareSchema.optional(),
 });
 export type PokemonInstance = z.infer<typeof PokemonInstanceSchema>;
 
