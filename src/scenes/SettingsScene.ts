@@ -11,6 +11,9 @@ import { downloadText, pickTextFile } from '../ui/files';
 import { queueAssets } from '../ui/lazyAssets';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
+import { holdToConfirm } from '../ui/pointerFx';
+import { framedScreenshot, runShareCard } from '../ui/shareCard';
+import { UI_THEMES, themeIsLight, FONT_SCALE } from '../core/presentation/uiPrefs';
 import { drawBackdrop, drawPanel, Menu, type MenuOption } from '../ui/widgets';
 
 type Page = 'home' | 'search' | 'confirmReset' | SettingCategory;
@@ -91,7 +94,7 @@ export class SettingsScene extends Phaser.Scene {
     const toggleRow = (d: SettingDef, withCategory = false): Row => {
       const cat = SETTING_CATEGORIES.find((c) => c.id === d.category)!.label;
       return {
-        option: { label: `${d.label}: ${d.show(s)}${APPLIES_TAG[d.applies]}${d.advanced ? '  (advanced)' : ''}${withCategory ? `  [${cat}]` : ''}`, disabled: d.disabled?.(s) ?? false },
+        option: { label: `${d.label}: ${d.show(s)}${APPLIES_TAG[d.applies]}${d.advanced ? '  (advanced)' : ''}${withCategory ? `  [${cat}]` : ''}`, disabled: d.disabled?.(s) ?? false, tip: d.description },
         hint: d.description,
         action: () => this.change(d.id),
       };
@@ -111,7 +114,7 @@ export class SettingsScene extends Phaser.Scene {
     }
     if (this.page === 'confirmReset') {
       return [
-        { option: { label: 'Yes, reset every setting' }, hint: 'Audio, display, animations and text all go back to their starting values.', action: () => this.reset() },
+        { option: { label: 'Yes, reset every setting' }, hint: 'Audio, display, animations and text all go back to their starting values.', action: () => holdToConfirm(this, services().session.settings, { title: 'Reset every setting?', onConfirm: () => this.reset() }) },
         { option: { label: 'No, keep my settings' }, hint: '', action: () => this.go('home') },
       ];
     }
@@ -119,6 +122,8 @@ export class SettingsScene extends Phaser.Scene {
       return [
         { option: { label: 'Export save to a file' }, hint: 'Downloads your profile and settings as a .json file.', action: () => downloadText(`pkmn-save-${new Date().toISOString().slice(0, 10)}.json`, session.exportSave()) },
         { option: { label: 'Import save from a file' }, hint: 'Replaces your profile with one from a file. Your current profile is kept as a backup.', action: () => pickTextFile((t) => { this.notice = session.importSave(t); this.render(1); }) },
+        { option: { label: 'Save a framed screenshot' }, hint: 'Saves the game screen as a PNG with a frame. Also F9 anywhere.', action: () => framedScreenshot(this.game) },
+        { option: { label: 'Save a run share card' }, hint: 'Saves a PNG card with your current run’s trainer and team. Also F10.', action: () => { this.notice = runShareCard(session) ? 'Share card saved.' : 'Start a run first.'; this.render(this.menu?.index ?? 0); } },
         { option: { label: 'Reset settings to defaults' }, hint: 'Asks first. Run and profile data are not touched.', action: () => this.go('confirmReset') },
         back,
       ];
@@ -186,7 +191,27 @@ export class SettingsScene extends Phaser.Scene {
       animateIn: this.entering,
     });
     this.entering = false;
+    if (this.page === 'display' || this.page === 'text' || this.page === 'accessibility') this.preview(ui);
     this.menu.focus(Math.min(focus, rows.length - 1), false);
     this.hintText.setText(rows[this.menu.index]?.hint ?? '');
+  }
+
+  /** A live sample of the chosen theme, text size and popup size, drawn from the saved settings on the right. */
+  private preview(ui: Phaser.GameObjects.Container): void {
+    const { session } = services();
+    const s = session.settings;
+    const t = UI_THEMES[s.uiTheme];
+    const light = themeIsLight(s.uiTheme);
+    const ink = light ? '#2a2431' : '#f8f8f8';
+    const x = 620;
+    const y = 78;
+    ui.add(this.add.rectangle(x, y, 300, 200, t.background).setOrigin(0).setStrokeStyle(2, t.borderMuted));
+    ui.add(this.add.rectangle(x + 14, y + 14, 272, 120, t.panel).setOrigin(0).setStrokeStyle(4, t.border));
+    ui.add(this.add.text(x + 26, y + 24, t.label, textStyle(Math.round(20 * FONT_SCALE[s.fontSize]), ink, { wordWrap: { width: 250 } })).setName('preview-label'));
+    ui.add(this.add.text(x + 26, y + 64, 'Sample text 123', textStyle(Math.round(16 * FONT_SCALE[s.fontSize]), ink)));
+    ui.add(this.add.rectangle(x + 26, y + 100, 80, 20, t.accent).setOrigin(0));
+    ui.add(this.add.circle(x + 270, y + 70, 16, t.rim, 0.8));
+    ui.add(this.add.text(x + 150, y + 150, '-42', textStyle(24, light ? '#b03020' : '#ffe9a8')).setOrigin(0.5).setScale(s.popupScale).setStroke('#201020', 4));
+    ui.add(this.add.text(x, y + 210, 'Preview of the theme, text size\nand damage popup size.', textStyle(16, COLORS.textMuted)));
   }
 }

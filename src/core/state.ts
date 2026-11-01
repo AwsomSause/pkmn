@@ -1540,6 +1540,20 @@ export const SettingsSchema = z.object({
   autoBattle: z.boolean().default(false),
   /** Auto-Battle: say why a Pokémon chose its action. */
   autoExplain: z.boolean().default(true),
+  /** W11 (UI, accessibility, presentation). All presentation only. */
+  uiTheme: z.enum(['classic', 'aero', 'ds', 'wii', 'cyber']).default('classic'),
+  fontSize: z.enum(['normal', 'large', 'huge']).default('normal'),
+  dyslexiaFont: z.boolean().default(false),
+  reducedFlash: z.boolean().default(false),
+  tooltipDelay: z.enum(['off', 'short', 'normal', 'long']).default('normal'),
+  popupScale: z.number().min(0.5).max(2).default(1),
+  transitionStyle: z.enum(['fade', 'bounce', 'wipe', 'ripple']).default('fade'),
+  cursorTrail: z.boolean().default(false),
+  holdToConfirm: z.boolean().default(false),
+  haptics: z.boolean().default(false),
+  oneHanded: z.enum(['off', 'left', 'right']).default('off'),
+  gamepadConfirm: z.number().int().min(0).max(3).default(0),
+  gamepadBack: z.number().int().min(0).max(3).default(1),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

@@ -1,5 +1,6 @@
 // Title screen: Continue, the Hub (start a run, Bank, trainers, achievements), sound toggle, and any save warnings.
 
+import { pokemonIcon } from '../ui/sprites';
 import Phaser from 'phaser';
 import { services } from '../game/services';
 import { playMusic, stopMusic } from '../ui/audio';
@@ -52,6 +53,18 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     drawLogo(this, 48, 18, 60, 0, session.settings.battleAnimations);
+    // Pet-the-logo easter egg (I477): tapping the logo makes a Pokémon peek in from the edge.
+    const pet = this.add.zone(48, 18, 420, 130).setOrigin(0).setInteractive({ useHandCursor: true });
+    pet.on('pointerdown', () => {
+      const sp = Phaser.Utils.Array.GetRandom(species);
+      if (!sp) return;
+      void loadAssets(this, [pokemonAssetIds(sp.assets).icon]).then(() => {
+        if (!this.scene.isActive()) return;
+        const icon = pokemonIcon(this, sp, GAME_WIDTH + 40, 90 + Math.random() * 40, 2.4);
+        (icon as Phaser.GameObjects.Image).setDepth(50);
+        this.tweens.add({ targets: icon, x: GAME_WIDTH - 60, duration: 260, ease: 'Back.easeOut', yoyo: true, hold: 900, onComplete: () => icon.destroy() });
+      });
+    });
     this.add.text(64, 158, 'Raid. Collect. Rise.', textStyle(16, COLORS.textMuted));
 
     drawPanel(this, 48, 186, 400, 300, { alpha: 0.95 });

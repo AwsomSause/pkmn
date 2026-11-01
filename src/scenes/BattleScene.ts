@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { cameraFocus, capFlash, hapticPattern } from '../core/presentation/uiPrefs';
 import { fitLine } from '../ui/fitText';
 import { modeBattleLine } from '../core/modeObjectives';
 import { isUltimateBattle, ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
@@ -46,7 +47,7 @@ import { ambienceFor, musicState } from '../core/presentation/musicLayers';
 import { eventText, fixedDamageLabel, type Names } from '../ui/battleText';
 import { onInputAction, type InputAction } from '../ui/input';
 import { bagRow, partyRows, Picker } from '../ui/partyPanel';
-import { animSettingsFrom } from '../core/accessibility';
+import { animationStrength, animSettingsFrom } from '../core/accessibility';
 import { resolveAnim } from '../core/presentation/animRegistry';
 import '../core/presentation/storyAnims';
 import { rivalIntro } from '../ui/battleFx/storyFx';
@@ -1016,9 +1017,29 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** A damage number that floats up from the Pokémon that was hit (Settings > Damage numbers). */
+  private lastMoveType = 'normal';
+
+  /** Presentation only: a short vibration pattern by move type (Settings > Haptic buzz), and a camera push-in on a KO. */
+  private buzz(type: string, strong = false): void {
+    if (!services().session.settings.haptics) return;
+    try {
+      navigator.vibrate?.(hapticPattern(type, strong));
+    } catch {
+      /* unsupported device */
+    }
+  }
+
+  private focusPush(kind: 'ko' | 'phase'): void {
+    const st = services().session.settings;
+    if (this.motion !== 'full' || st.disableAllAnimations || !st.battleScreenEffects) return;
+    const f = cameraFocus(kind, animationStrength(st));
+    const cam = this.cameras.main;
+    this.tweens.add({ targets: cam, zoom: 1 + f.zoom, duration: f.ms / 2, yoyo: true, ease: 'Sine.easeInOut' });
+  }
+
   private floatDamage(sprite: { x: number; y: number } | null | undefined, amount: number): void {
     if (!sprite || this.motion === 'off') return;
-    const text = this.add.text(sprite.x, sprite.y - 60, `-${amount}`, textStyle(24, '#ffe9a8')).setOrigin(0.5).setDepth(900);
+    const text = this.add.text(sprite.x, sprite.y - 60, `-${amount}`, textStyle(24, '#ffe9a8')).setOrigin(0.5).setDepth(900).setScale(services().session.settings.popupScale);
     text.setStroke('#201020', 4);
     this.tweens.add({ targets: text, y: text.y - 36, alpha: 0, duration: this.motion === 'full' ? 900 : 500, ease: 'Cubic.easeOut', onComplete: () => text.destroy() });
   }
@@ -1977,7 +1998,7 @@ export class BattleScene extends Phaser.Scene {
     if (result.narrativeDefeat) {
       // The story loss: a heavy shake (skipped when battle animations are off), then the rival's words.
       if (this.motion !== 'off') {
-        this.cameras.main.shake(500, 0.008 * services().session.settings.shakeIntensity);
+        this.cameras.main.shake(500, 0.008 * capFlash(services().session.settings.shakeIntensity, services().session.settings.reducedFlash));
         await new Promise<void>((done) => this.time.delayedCall(600, () => done()));
       }
       await this.say(result.narrativeDefeat.defeatLine);
@@ -2076,8 +2097,8 @@ export class BattleScene extends Phaser.Scene {
             tint: 0x9fe8ff,
             motion: this.motion,
             speed: 1,
-            intensity: services().session.settings.effectIntensity,
-            shake: services().session.settings.shakeIntensity,
+            intensity: capFlash(services().session.settings.effectIntensity, services().session.settings.reducedFlash),
+            shake: capFlash(services().session.settings.shakeIntensity, services().session.settings.reducedFlash),
             onSwap: () => this.showSprite('player', { ...shownMon, speciesId: evo.to }),
           }),
         );
@@ -2125,7 +2146,8 @@ export class BattleScene extends Phaser.Scene {
   /** A line of trainer dialogue: "Joey: \"Crush them!\"". */
   private async sayTrainer(line: DramaLine): Promise<void> {
     const { session } = services();
-    const { battleAnimations, effectIntensity } = session.settings;
+    const { battleAnimations } = session.settings;
+    const effectIntensity = capFlash(session.settings.effectIntensity, session.settings.reducedFlash);
     // Signature attacks and rare events get a short banner; reduced motion keeps the banner without movement, "off" skips it.
     const title = line.category === 'signature' && line.cue?.moveId ? (session.content.moves.get(line.cue.moveId)?.name ?? null) : line.cue?.event && !line.cue.event.startsWith('memory:') ? (DRAMA_LIBRARY.events.find((e) => e.id === line.cue!.event)?.name ?? null) : null;
     if (title && battleAnimations !== 'off') {
@@ -2142,13 +2164,17 @@ export class BattleScene extends Phaser.Scene {
   private async playEvents(events: RunEvent[], before: RunState, trainer: string | null, storyCues: PresentationCue[] = [], drama: DramaLine[] = []): Promise<void> {
     const { session } = services();
     const content = session.content;
-    const { battleAnimations, effectIntensity } = session.settings;
+    const { battleAnimations } = session.settings;
+    const effectIntensity = capFlash(session.settings.effectIntensity, session.settings.reducedFlash);
     // What the screen shows for each event; worked out from the finished turn, so it can't change it.
     const cues = planCues(events, content, moveAnims(), { mode: battleAnimations, intensity: effectIntensity, shake: session.settings.shakeIntensity }, (side) => (this.shown[side] ? abilityOf(content, this.shown[side]) : null));
 
     for (const [index, e] of events.entries()) {
       // "Charmander used Ember!" goes up before its animation; other messages follow theirs.
-      if (e.type === 'move') this.message.setText(eventText(content, this.names(trainer), e) ?? '');
+      if (e.type === 'move') {
+        this.message.setText(eventText(content, this.names(trainer), e) ?? '');
+        this.lastMoveType = content.moves.get(e.moveId)?.type ?? 'normal';
+      }
       await this.fx.play(cues[index] ?? []);
       const side = 'side' in e ? e.side : null;
       const box = side === 'enemy' ? this.enemyBox : this.playerBox;
@@ -2180,6 +2206,7 @@ export class BattleScene extends Phaser.Scene {
         case 'seedDamage':
         case 'weatherDamage':
           if (e.hpAfter < mon!.hp && services().session.settings.damageNumbers) this.floatDamage(sprite, mon!.hp - e.hpAfter);
+          if (e.type === 'damage' && e.hpAfter < mon!.hp) this.buzz(this.lastMoveType, e.effectiveness > 1);
           mon!.hp = e.hpAfter;
           if (e.type !== 'drain' && e.type !== 'heal') {
             playSfx(this, e.type === 'damage' && e.effectiveness > 1 ? 'se.hit_strong' : e.type === 'damage' && e.effectiveness < 1 ? 'se.hit_weak' : 'se.hit');
@@ -2235,6 +2262,7 @@ export class BattleScene extends Phaser.Scene {
         case 'faint':
           mon!.hp = 0;
           playSfx(this, 'se.faint');
+          this.focusPush('ko');
           if (sprite) this.tweens.killTweensOf(sprite);
           if (sprite) await tween(this, { targets: sprite, alpha: 0, y: sprite.y + 30, duration: 400 });
           break;
@@ -2266,8 +2294,8 @@ export class BattleScene extends Phaser.Scene {
               tint: 0x9fe8ff,
               motion: this.motion,
               speed: 1,
-              intensity: services().session.settings.effectIntensity,
-            shake: services().session.settings.shakeIntensity,
+              intensity: capFlash(services().session.settings.effectIntensity, services().session.settings.reducedFlash),
+            shake: capFlash(services().session.settings.shakeIntensity, services().session.settings.reducedFlash),
               onSwap: () => {
                 mon!.speciesId = e.to;
                 mon!.hp = e.hpAfter;
@@ -2346,8 +2374,8 @@ export class BattleScene extends Phaser.Scene {
                 motion: this.motion,
                 // The scene's clock already runs at the battle speed.
                 speed: 1,
-                intensity: services().session.settings.effectIntensity,
-            shake: services().session.settings.shakeIntensity,
+                intensity: capFlash(services().session.settings.effectIntensity, services().session.settings.reducedFlash),
+            shake: capFlash(services().session.settings.shakeIntensity, services().session.settings.reducedFlash),
                 onSwap: swapForm,
               }),
             );
@@ -2400,6 +2428,7 @@ export class BattleScene extends Phaser.Scene {
         await this.playBeat(chargeUp(this, { x: at.x, y: at.y - 80, tint: charge.tint, label: charge.label, motion: this.motion, intensity: effectIntensity }));
       }
       // A raid/totem phase change gets a banner with its written rule.
+      if (e.type === 'raid' && e.tone === 'phase') this.focusPush('phase');
       if (e.type === 'raid' && e.tone === 'phase') this.arenaLight?.set(++this.arenaPhase, 0xff4fd8);
       if (e.type === 'raid' && e.tone === 'phase') await this.playBeat(phaseBanner(this, e.text, 0xff4fd8, this.motion));
       // A story moment replaces the event's own line with its own (and a banner when it is a major one).

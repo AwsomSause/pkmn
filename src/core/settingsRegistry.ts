@@ -4,8 +4,9 @@
 
 import { applyProfile, nextProfile, PROFILE_INFO } from './accessibility';
 import type { Settings } from './state';
+import { POPUP_SCALES, PAD_BUTTON_NAMES, TOOLTIP_DELAY_MS, TRANSITION_INFO, UI_THEME_ORDER, UI_THEMES } from './presentation/uiPrefs';
 
-export type SettingCategory = 'display' | 'audio' | 'gameplay' | 'animations' | 'text' | 'accessibility' | 'data';
+export type SettingCategory = 'display' | 'audio' | 'gameplay' | 'animations' | 'text' | 'accessibility' | 'controls' | 'data';
 
 export const SETTING_CATEGORIES: { id: SettingCategory; label: string; blurb: string }[] = [
   { id: 'display', label: 'Display', blurb: 'Screen size, contrast and interface look.' },
@@ -14,6 +15,7 @@ export const SETTING_CATEGORIES: { id: SettingCategory; label: string; blurb: st
   { id: 'animations', label: 'Animations & Effects', blurb: 'Every animation, its speed and strength.' },
   { id: 'text', label: 'Text & Dialogue', blurb: 'Text speed, trainer talk and battle messages.' },
   { id: 'accessibility', label: 'Accessibility', blurb: 'Presets, reduced effects and readability.' },
+  { id: 'controls', label: 'Controls', blurb: 'Gamepad, touch layout, hold-to-confirm and haptics.' },
   { id: 'data', label: 'Save & Data', blurb: 'Export, import and reset.' },
 ];
 
@@ -109,6 +111,20 @@ export const SETTINGS: SettingDef[] = [
   // Accessibility
   { id: 'accessibilityProfile', label: 'Accessibility preset', description: 'One choice that sets several settings at once.', category: 'accessibility', applies: 'now', show: (s) => PROFILE_INFO[s.accessibilityProfile].label, next: (s) => applyProfile(s, nextProfile(s.accessibilityProfile)) },
   { id: 'typeMarkers', label: 'Type names in words', description: 'Names a move’s type in words next to the coloured art.', category: 'accessibility', applies: 'now', ...toggle('typeMarkers') },
+  // W11: themes, readability, tooltips, transitions, controls
+  { id: 'uiTheme', label: 'Interface theme', description: 'Classic Plum, Frutiger Aero, DS Touch, Wii Channel or Cyber-Maximalism. A preview is shown on the right; screens redraw as you open them.', category: 'display', applies: 'now', show: (s) => UI_THEMES[s.uiTheme].label, next: (s) => ({ ...s, uiTheme: UI_THEME_ORDER[(UI_THEME_ORDER.indexOf(s.uiTheme) + 1) % UI_THEME_ORDER.length]! }) },
+  { id: 'fontSize', label: 'Text size', description: 'Makes all text larger. Applies to screens you open next.', category: 'display', also: ['accessibility', 'text'], applies: 'now', ...choice('fontSize', { normal: 'Normal', large: 'Large', huge: 'Huge' }, ['normal', 'large', 'huge']) },
+  { id: 'dyslexiaFont', label: 'Dyslexia-friendly font', description: 'Swaps the pixel fonts for a wide, even-spaced reading font.', category: 'display', also: ['accessibility', 'text'], applies: 'now', ...toggle('dyslexiaFont') },
+  { id: 'reducedFlash', label: 'Reduced flash', description: 'Caps flashes and shakes at 20% and removes bright full-screen flashes.', category: 'animations', also: ['accessibility'], applies: 'now', ...toggle('reducedFlash') },
+  { id: 'tooltipDelay', label: 'Tooltip delay', description: 'How long to hover before a tooltip shows. Off hides them.', category: 'display', also: ['accessibility'], applies: 'now', show: (s) => (TOOLTIP_DELAY_MS[s.tooltipDelay] === null ? 'Off' : `${s.tooltipDelay[0]!.toUpperCase()}${s.tooltipDelay.slice(1)}`), next: (s) => ({ ...s, tooltipDelay: ({ off: 'short', short: 'normal', normal: 'long', long: 'off' } as const)[s.tooltipDelay] }) },
+  { id: 'popupScale', label: 'Damage popup size', description: 'How big the floating damage numbers are.', category: 'display', also: ['accessibility'], applies: 'now', disabled: (s) => !s.damageNumbers, show: (s) => pct(s.popupScale), next: (s) => ({ ...s, popupScale: POPUP_SCALES[(POPUP_SCALES.findIndex((v) => Math.abs(v - s.popupScale) < 0.01) + 1) % POPUP_SCALES.length]! }) },
+  { id: 'transitionStyle', label: 'Screen transition', description: 'How a new screen appears: fade, bounce, wipe or ripple.', category: 'animations', applies: 'now', disabled: animOff, show: (s) => TRANSITION_INFO[s.transitionStyle].label, next: (s) => ({ ...s, transitionStyle: ({ fade: 'bounce', bounce: 'wipe', wipe: 'ripple', ripple: 'fade' } as const)[s.transitionStyle] }) },
+  { id: 'cursorTrail', label: 'Cursor sparkle trail', description: 'Sparkles follow the mouse, tinted by the region.', category: 'animations', applies: 'now', disabled: animOff, ...toggle('cursorTrail') },
+  { id: 'holdToConfirm', label: 'Hold to confirm risky actions', description: 'Abandoning a run or resetting needs a held press with a filling ring.', category: 'controls', also: ['accessibility'], applies: 'now', ...toggle('holdToConfirm') },
+  { id: 'haptics', label: 'Haptic buzz', description: 'Phones and controllers vibrate in a pattern for each move type.', category: 'controls', applies: 'now', ...toggle('haptics') },
+  { id: 'oneHanded', label: 'One-handed layout', description: 'Bunches the on-screen buttons to the left or right edge.', category: 'controls', also: ['accessibility'], applies: 'now', show: (s) => ({ off: 'Off', left: 'Left hand', right: 'Right hand' })[s.oneHanded], next: (s) => ({ ...s, oneHanded: ({ off: 'left', left: 'right', right: 'off' } as const)[s.oneHanded] }) },
+  { id: 'gamepadConfirm', label: 'Gamepad: confirm button', description: 'Which face button confirms. The d-pad and left stick always move.', category: 'controls', applies: 'now', show: (s) => PAD_BUTTON_NAMES[s.gamepadConfirm]!, next: (s) => { const gamepadConfirm = (s.gamepadConfirm + 1) % 4; return { ...s, gamepadConfirm, gamepadBack: s.gamepadBack === gamepadConfirm ? (gamepadConfirm + 1) % 4 : s.gamepadBack }; } },
+  { id: 'gamepadBack', label: 'Gamepad: back button', description: 'Which face button goes back.', category: 'controls', applies: 'now', show: (s) => PAD_BUTTON_NAMES[s.gamepadBack]!, next: (s) => { const gamepadBack = (s.gamepadBack + 1) % 4; return { ...s, gamepadBack: gamepadBack === s.gamepadConfirm ? (gamepadBack + 1) % 4 : gamepadBack }; } },
 ];
 
 export const settingById = (id: string): SettingDef | undefined => SETTINGS.find((d) => d.id === id);

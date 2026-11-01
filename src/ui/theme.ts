@@ -68,7 +68,17 @@ const BOLD_FROM = 18;
  * uses the bold font at a multiple of 8, about three quarters of the requested
  * size because its letters are much bigger: 18–25 → 16, 26–37 → 24, 38–47 → 32…
  */
-export function pixelFont(size: number): { family: string; size: number; grid: number } {
+let fontScale = 1;
+let readingFont: string | null = null;
+/** Text size multiplier and the optional reading font (Settings > Text size, Dyslexia-friendly font). Presentation only. */
+export function setTextPrefs(scale: number, dyslexiaFamily: string | null): void {
+  fontScale = scale;
+  readingFont = dyslexiaFamily;
+}
+
+export function pixelFont(requested: number): { family: string; size: number; grid: number } {
+  const size = requested * fontScale;
+  if (readingFont) return { family: readingFont, size: Math.max(12, Math.round(size * 0.9)), grid: 1 };
   if (size < BOLD_FROM) return { family: FONT_FAMILY, size: 16, grid: 1 };
   const snapped = Math.max(16, Math.round((size * 0.75) / 8) * 8);
   return { family: BOLD_FONT_FAMILY, size: snapped, grid: snapped / 8 };

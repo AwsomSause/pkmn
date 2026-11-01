@@ -2,7 +2,7 @@
 
 import { ruleWipe, wipeAssetId, type WipeMask } from './ui/battleFx/ruleWipe';
 import { loadAssets } from './ui/lazyAssets';
-import { installTouchControls } from './ui/touchControls';
+import { installTouchControls, setTouchLayout } from './ui/touchControls';
 import { sheenSweep } from './ui/battleFx/transitions';
 import { installUiJuice, noteSceneEnter, pageEnter, setUiMotion } from './ui/wiiMotion';
 import { uiMotionFrom } from './core/presentation/uiMotion';
@@ -40,6 +40,11 @@ import { drawBackdrop } from './ui/widgets';
 import { aeroBackdrop } from './ui/aero';
 import { ArenaBackdrop } from './ui/showcase';
 import { applyDisplaySettings } from './ui/display';
+import { applyUiSkin } from './ui/uiSkin';
+import { installPointerFx } from './ui/pointerFx';
+import { installGamepad } from './ui/gamepad';
+import { installShareTools } from './ui/shareCard';
+import { enterTransition } from './ui/transitions';
 import './style.css';
 
 function showFatalError(message: string): void {
@@ -91,9 +96,16 @@ function start(): void {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {
         // Screen readers get a name for the game area (the game itself is drawn on the canvas).
+        applyUiSkin(session.settings);
         applyDisplaySettings(g, session.settings);
         setUiMotion(uiMotionFrom(session.settings));
+        installPointerFx(g, () => session.settings, () => regionIdentity(session.run ? session.run.regionOrder[session.run.regionIndex] : undefined).sky);
+        installGamepad(() => session.settings);
+        setTouchLayout(session.settings.oneHanded);
+        installShareTools(g, session);
         session.onChange(() => {
+          applyUiSkin(session.settings);
+          setTouchLayout(session.settings.oneHanded);
           applyDisplaySettings(g, session.settings);
           setUiMotion(uiMotionFrom(session.settings));
         });
@@ -107,7 +119,7 @@ function start(): void {
         for (const scene of g.scene.getScenes(false)) {
           scene.events.on(Phaser.Scenes.Events.CREATE, () => {
             if (scene.scene.key !== 'Boot') {
-              scene.cameras.main.fadeIn(220, 14, 11, 18);
+              enterTransition(scene, session.settings);
               sheenSweep(scene, session.settings.battleAnimations);
               // Wii-style menu motion (spec §24): a soft zoom settle and hover/press bounces on everything clickable.
               if (noteSceneEnter(scene.scene.key) && scene.scene.key !== 'Battle') pageEnter(scene);

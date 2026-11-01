@@ -1,6 +1,8 @@
 // On-screen pad (catalog #125): arrows and Confirm/Back buttons that send the same key events as the keyboard,
 // so every screen works by touch. Shown only on touch devices and narrow windows. Presentation only.
 
+import { padJustify } from '../core/presentation/uiPrefs';
+import type { Settings } from '../core/state';
 import { showRotateHint, showTouchPad, type Viewport } from '../core/presentation/touchLayout';
 
 const BUTTONS: { label: string; code: string; keyCode: number; grid: string }[] = [
@@ -16,6 +18,12 @@ const viewport = (): Viewport => ({ width: window.innerWidth, height: window.inn
 
 function press(code: string, keyCode: number): void {
   for (const type of ['keydown', 'keyup']) window.dispatchEvent(new KeyboardEvent(type, { code, key: code, keyCode, which: keyCode, bubbles: true } as KeyboardEventInit));
+}
+
+/** One-handed layout (Settings > Controls): bunches the pad's two clusters to one edge. */
+export function setTouchLayout(mode: Settings['oneHanded']): void {
+  const pad = typeof document === 'undefined' ? null : document.getElementById('touch-pad');
+  if (pad) pad.style.justifyContent = padJustify(mode);
 }
 
 export function installTouchControls(): void {
