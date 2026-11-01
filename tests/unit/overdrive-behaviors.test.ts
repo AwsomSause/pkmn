@@ -146,8 +146,12 @@ describe('Pushed Beyond Its Limits', () => {
   it('a badly hurt Pokémon pays HP strain (never to 0) and its move cannot miss', () => {
     const { player, max, ctx } = setup(0.4);
     const before = player.hp;
-    const [e] = hypers(resolveTurn(ctx, { kind: 'move', index: 0 }));
+    const events = resolveTurn(ctx, { kind: 'move', index: 0 });
+    const [e] = hypers(events);
     expect(e).toMatchObject({ defId: 'pushed-beyond-limits', uid: 'p1' });
+    // It reached for a move it does not know (Tackle is Normal, so Body Slam).
+    expect(events.some((x) => x.type === 'move' && x.side === 'player' && x.moveId === 'body-slam')).toBe(true);
+    expect(player.moves.map((m) => m.id)).toEqual(['tackle']);
     expect(player.hp).toBe(before - Math.floor(max * 0.15));
     expect(player.hp).toBeGreaterThanOrEqual(1);
   });
