@@ -2,7 +2,7 @@
 // the hold-to-confirm ring. Presentation only; none of it reads or changes game state.
 
 import Phaser from 'phaser';
-import { holdProgress, TOOLTIP_DELAY_MS, tiltFor } from '../core/presentation/uiPrefs';
+import { GLOSSARY, glossaryLinks, holdProgress, TOOLTIP_DELAY_MS, tiltFor } from '../core/presentation/uiPrefs';
 import type { Settings } from '../core/state';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from './theme';
 
@@ -36,7 +36,8 @@ function hookScene(scene: Phaser.Scene, get: Get): void {
       hide();
       timer = setTimeout(() => {
         if (!scene.sys.isActive()) return;
-        tip = drawTooltip(scene, text, pointer.x, pointer.y);
+        const links = glossaryLinks(text);
+        tip = drawTooltip(scene, links.keys.length ? `${links.clean}\n▸ click to read: ${links.keys.join(', ')}` : text, pointer.x, pointer.y);
       }, delay);
     }
     if (obj.getData?.('tilt') && motionOn(get())) tiltStart(scene, obj as Phaser.GameObjects.Image);
@@ -45,7 +46,22 @@ function hookScene(scene: Phaser.Scene, get: Get): void {
     hide();
     if (obj.getData?.('tilt')) tiltEnd(scene, obj as Phaser.GameObjects.Image);
   });
-  scene.input.on('pointerdown', hide);
+  // Tooltip chains (I462): clicking a tooltip's object while it shows steps through the [[keywords]] in its text.
+  let chain: { keys: string[]; at: number } | null = null;
+  scene.input.on('gameobjectdown', (pointer: Phaser.Input.Pointer, obj: Phaser.GameObjects.GameObject) => {
+    const raw = obj.getData?.('tooltip') as string | undefined;
+    const links = raw ? glossaryLinks(raw) : null;
+    if (links && links.keys.length > 0 && tip) {
+      chain = chain && chain.keys.join() === links.keys.join() ? { keys: chain.keys, at: (chain.at + 1) % links.keys.length } : { keys: links.keys, at: 0 };
+      tip.destroy();
+      tip = drawTooltip(scene, GLOSSARY[chain.keys[chain.at]!]!, pointer.x, pointer.y);
+      return;
+    }
+    hide();
+  });
+  scene.input.on('pointerdown', (_p: Phaser.Input.Pointer, over: unknown[]) => {
+    if (over.length === 0) hide();
+  });
   scene.events.once('shutdown', hide);
 }
 

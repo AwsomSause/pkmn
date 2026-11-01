@@ -172,6 +172,21 @@ export class SettingsScene extends Phaser.Scene {
     session.saveSettings(after);
     this.sideEffects(before, after);
     this.render(this.menu?.index ?? 0);
+    this.previewAnim(id, after);
+  }
+
+  /** Setting sliders answer with a small demo (I486): shake, flash, speed or popup size, in the box at the right. */
+  private previewAnim(id: string, s: typeof DEFAULT_SETTINGS): void {
+    if (s.disableAllAnimations) return;
+    const x = 770;
+    const y = 360;
+    const box = this.add.rectangle(x, y, 60, 60, COLORS.accent, 1).setDepth(50).setData('noJuice', true).setName('setting-preview');
+    const done = (): void => void box.destroy();
+    if (id === 'shakeIntensity') this.tweens.add({ targets: box, x: x + 14 * s.shakeIntensity, yoyo: true, repeat: 5, duration: 45, onComplete: done });
+    else if (id === 'effectIntensity' || id === 'reducedFlash') this.tweens.add({ targets: box, alpha: { from: 0.1, to: 1 }, scale: 1 + (s.reducedFlash ? 0.2 : s.effectIntensity) * 0.5, yoyo: true, duration: 220, onComplete: done });
+    else if (id === 'popupScale') this.tweens.add({ targets: box, scale: s.popupScale, yoyo: true, duration: 300, onComplete: done });
+    else if (id === 'animationSpeed' || id === 'animationIntensity' || id === 'battleSpeed') this.tweens.add({ targets: box, x: x + 80 * ({ reduced: 0.5, normal: 1, enhanced: 1.4 }[s.animationIntensity]), duration: { slow: 900, normal: 600, fast: 360 }[s.animationSpeed], yoyo: true, ease: 'Back.easeOut', onComplete: done });
+    else done();
   }
 
   private reset(): void {

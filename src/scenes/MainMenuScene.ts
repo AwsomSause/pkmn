@@ -1,5 +1,6 @@
 // Title screen: Continue, the Hub (start a run, Bank, trainers, achievements), sound toggle, and any save warnings.
 
+import { dailyChest } from '../ui/overlays';
 import { pokemonIcon } from '../ui/sprites';
 import Phaser from 'phaser';
 import { services } from '../game/services';
@@ -65,6 +66,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.tweens.add({ targets: icon, x: GAME_WIDTH - 60, duration: 260, ease: 'Back.easeOut', yoyo: true, hold: 900, onComplete: () => icon.destroy() });
       });
     });
+    dailyChest(this, 420, 460, new Date().toISOString().slice(0, 10));
     this.add.text(64, 158, 'Raid. Collect. Rise.', textStyle(16, COLORS.textMuted));
 
     drawPanel(this, 48, 186, 400, 300, { alpha: 0.95 });

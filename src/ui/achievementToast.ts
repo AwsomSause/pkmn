@@ -2,12 +2,14 @@
 // the reward was already paid (core/progress.ts awardLiveAchievements).
 
 import Phaser from 'phaser';
+import { interactionLog } from '../core/presentation/uiPrefs';
 import type { Achievement } from '../core/contentSchema';
 import type { MotionLevel } from './aero';
 import { COLORS, GAME_WIDTH, textStyle } from './theme';
 import { drawPanel } from './widgets';
 
 export function showAchievementToasts(scene: Phaser.Scene, list: readonly Achievement[], motion: MotionLevel): void {
+  list.forEach((a) => interactionLog.add(`Achievement: ${a.name}`));
   list.slice(0, 3).forEach((a, i) => {
     const box = scene.add.container(GAME_WIDTH / 2, -60).setDepth(1000);
     const panel = drawPanel(scene, -230, 0, 460, 52, { fill: COLORS.panelDark, border: 0xf8d048 });

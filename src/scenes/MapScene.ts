@@ -114,6 +114,8 @@ type Option =
   | { kind: 'save' }
   | { kind: 'endRun' };
 
+const PING_ICONS = ['⚑', '★', '❗', '?'];
+
 export class MapScene extends Phaser.Scene {
   private options: Option[] = [];
   private cursors: Phaser.GameObjects.Graphics[] = [];
@@ -182,6 +184,7 @@ export class MapScene extends Phaser.Scene {
     this.accent = identity.accent;
     const cap = runLevelCap(content, run);
     this.options = [];
+    this.pings.clear();
     this.cursors = [];
     this.index = 0;
     this.picker = null;
@@ -585,11 +588,28 @@ export class MapScene extends Phaser.Scene {
     this.cursors.push(makeCursor());
     const zone = this.add.zone(hit.x, hit.y, hit.w, hit.h).setOrigin(0).setInteractive({ useHandCursor: true });
     zone.on('pointerover', () => !this.picker && !this.busy && this.focus(index));
-    zone.on('pointerdown', () => {
+    zone.on('pointerdown', (p: Phaser.Input.Pointer) => {
+      if (p.rightButtonDown()) return this.pingNode(index, hit);
       if (this.picker || this.busy) return;
       this.focus(index);
       this.activate(index);
     });
+  }
+
+  /** Mini-map ping (I473): right-click a stop to mark it with an icon (flag, star, warning, question), again to change, then clear. Presentation only. */
+  private pings = new Map<number, { at: number; text: Phaser.GameObjects.Text }>();
+  private pingNode(index: number, hit: { x: number; y: number; w: number; h: number }): void {
+    const icons = PING_ICONS;
+    const prev = this.pings.get(index);
+    const next = (prev?.at ?? -1) + 1;
+    prev?.text.destroy();
+    if (next >= icons.length) {
+      this.pings.delete(index);
+      return;
+    }
+    const text = this.add.text(hit.x + hit.w / 2, hit.y - 6, icons[next]!, textStyle(24, '#ffe9a8')).setOrigin(0.5, 1).setDepth(500).setName('node-ping');
+    this.tweens.add({ targets: text, y: text.y - 6, yoyo: true, repeat: 2, duration: 160, ease: 'Sine.easeOut' });
+    this.pings.set(index, { at: next, text });
   }
 
   private ringCursor(layer: Phaser.GameObjects.Container, x: number, y: number, r: number): Phaser.GameObjects.Graphics {

@@ -2,7 +2,8 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
-import { cameraFocus, capFlash, hapticPattern } from '../core/presentation/uiPrefs';
+import { showCaption } from '../ui/overlays';
+import { aeroMood, autoInterruption, cameraFocus, capFlash, hapticPattern } from '../core/presentation/uiPrefs';
 import { fitLine } from '../ui/fitText';
 import { modeBattleLine } from '../core/modeObjectives';
 import { isUltimateBattle, ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
@@ -18,7 +19,7 @@ import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, telegraphedA
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
 import { runPerks } from '../core/archetypes';
-import { abilityOf, calcStats, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
+import { abilityOf, calcStats, maxHp, getSpecies, maxPp, xpForLevel } from '../core/pokemon';
 import { heartStage } from '../core/shadow';
 import { formIntro } from '../core/presentation/sceneEffects';
 import { finalRivalArenaTheme } from '../core/story/highHype';
@@ -338,6 +339,7 @@ export class BattleScene extends Phaser.Scene {
     if (boss?.role === 'champion') championGlow(this, this.field, this.motion);
     this.weatherLayer = new WeatherLayer(this, this.field, this.motion);
     this.weatherLayer.set(run.battle?.weather?.id ?? null);
+    this.applyMood(run.battle?.weather?.id ?? null);
     this.arenaLight = new ArenaLight(this, this.field, this.field.length, this.motion);
     this.arenaPhase = 0;
     addContactShadows(this, this.field, () => this.shadowTargets());
@@ -1010,6 +1012,21 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** A damage number that floats up from the Pokémon that was hit (Settings > Damage numbers). */
+  private moodTint: Phaser.GameObjects.Rectangle | null = null;
+
+  /** Aero panel mood (M120): a faint weather tint over the battle UI. Cosmetic; off with animations off. */
+  private applyMood(weather: string | null): void {
+    const st = services().session.settings;
+    const mood = aeroMood(weather, null);
+    if (st.disableAllAnimations || !st.battleScreenEffects || this.motion === 'off' || mood.strength === 0) {
+      this.moodTint?.setAlpha(0);
+      return;
+    }
+    this.moodTint ??= this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0xffffff, 0).setOrigin(0).setDepth(850).setData('noJuice', true).setName('aero-mood');
+    this.moodTint.setFillStyle(mood.tint, 1);
+    this.tweens.add({ targets: this.moodTint, alpha: mood.strength * 0.5, duration: 600 });
+  }
+
   private lastMoveType = 'normal';
 
   /** Presentation only: a short vibration pattern by move type (Settings > Haptic buzz), and a camera push-in on a KO. */
@@ -1473,10 +1490,21 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** The Auto-Battle turn: shows what the Pokémon will do (and why), waits a beat (Back takes control), then plays it. */
+  private autoPrompted = '';
+
   private async runAuto(): Promise<void> {
     const { session } = services();
     const pick = chooseAutoAction(session.content, this.run);
     if (!pick) {
+      this.showRootMenu();
+      return;
+    }
+    const stop = autoInterruption(this.activeMon().hp, maxHp(session.content, this.activeMon()), Boolean(this.run.battle?.trainer && isBossClass(this.run.battle.trainer.classId)), Boolean(this.run.battle?.raid));
+    if (stop && this.autoPrompted !== this.activeMon().uid + stop) {
+      // Interruption prompt: pause once for this moment; pressing Auto again carries on.
+      this.autoPrompted = this.activeMon().uid + stop;
+      this.setAuto(false);
+      this.flash(`Auto-Battle paused: ${stop}`);
       this.showRootMenu();
       return;
     }
@@ -2047,7 +2075,8 @@ export class BattleScene extends Phaser.Scene {
     for (const line of end.aftermath ?? []) await this.say(line);
     if (end.voiceJoined) await this.say(`${content.species.get(end.voiceJoined)?.name ?? 'The Pokémon'} heard your voice. It wants to come with you!`);
     if (end.badge) {
-      playSfxLazy(this, 'me.badge');
+      playSfxLazy(this, `me.${services().session.settings.victoryJingle}`);
+      showCaption('Badge earned!');
       const leaderName = content.bosses.get(end.badge)?.name ?? end.badge;
       await this.playBeat(stamp(this, 'BADGE GET!', `${leaderName}'s badge`, ROLE_RIMS.gym, this.motion));
       await this.say(`You earned ${leaderName}'s badge! (${result.run.badges.length} total)`);
@@ -2093,6 +2122,7 @@ export class BattleScene extends Phaser.Scene {
         );
       } else await burstReveal(this, PLAYER_POS.x, PLAYER_POS.y - 100, 0x9fe8ff, this.motion).done;
       playSfxLazy(this, 'me.evo_success');
+      showCaption('Evolution!');
       await this.say(`Congratulations! Your ${fromName} evolved into ${toName}!`);
       for (const m of evo.learnedMoves) await this.say(`${toName} learned ${content.moves.get(m)!.name}!`);
     }
@@ -2175,9 +2205,11 @@ export class BattleScene extends Phaser.Scene {
       switch (e.type) {
         case 'weather':
           this.weatherLayer?.set(e.weather);
+          this.applyMood(e.weather);
           break;
         case 'weatherEnd':
           this.weatherLayer?.set(null);
+          this.applyMood(null);
           break;
         case 'focus':
           this.focusOn(e.side, e.uid);

@@ -9,6 +9,7 @@
 import { setCalendar } from '../core/clock';
 import { giveHeld, takeOffHeld } from '../core/bag';
 import { careAction, type CareAction } from '../core/care';
+import { interactionLog } from '../core/presentation/uiPrefs';
 import type { Achievement, Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { awardLiveAchievements, claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
@@ -416,6 +417,7 @@ export class GameSession {
 
   buyItem(itemId: string): string {
     const result = Run.buyItem(this.content, this.requireRun(), itemId);
+    interactionLog.add(`Bought ${itemId}`);
     this.run = result.run;
     this.persistRun();
     return result.message;

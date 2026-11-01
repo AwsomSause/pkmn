@@ -10,7 +10,11 @@
 // run except for the party order (session.moveParty) and never rolls anything.
 
 import { fitLine } from './fitText';
-import type Phaser from 'phaser';
+import Phaser from 'phaser';
+import { DRAG_MIN_PX, hotkeyIndex, LONG_PRESS_MS, MoveUndo, rowAt } from '../core/presentation/uiPrefs';
+import { interactionLog } from '../core/presentation/uiPrefs';
+import { pinCard } from './pinnedCard';
+import { spritesAnimate } from './display';
 import { genderSign } from '../core/gender';
 import { heldBuild, type HeldItemInfo } from '../core/itemEffects';
 import { runLevelCap } from '../core/regions';
@@ -96,6 +100,34 @@ class PokemonScreen implements PickerLike {
   private closed = false;
   private flash = '';
   private loadingKey = '';
+  private readonly undo = new MoveUndo();
+  /** A second Pokémon chosen with Ctrl-click or C to compare against (Stats tab). */
+  private compareIdx: number | null = null;
+  /** Drag a row onto another to reorder with a snap, or hold a row for the action menu (long-press). */
+  private readonly up = (p: Phaser.Input.Pointer): void => {
+    const press = this.press;
+    this.press = null;
+    if (!press || this.closed || this.pick) return;
+    const { top, rowH, gap } = this.rowGeom;
+    if (Math.abs(p.y - press.y) >= DRAG_MIN_PX) {
+      const to = rowAt(p.y, top, rowH, gap, this.party.length);
+      if (to !== press.i) {
+        this.sel = press.i;
+        this.reorder(to);
+        this.mode = 'list';
+        this.render();
+        const row = this.dyn.getByName(`party-row-${to}`) as Phaser.GameObjects.Container | null;
+        if (row && this.motion !== 'off') this.host.scene.tweens.add({ targets: row, scaleX: { from: 1.04, to: 1 }, scaleY: { from: 1.08, to: 1 }, duration: 260, ease: 'Back.easeOut' });
+      }
+    } else if (this.host.scene.time.now - press.at >= LONG_PRESS_MS && this.sel === press.i) {
+      this.mode = 'menu';
+      this.menuIdx = 0;
+      this.render();
+    }
+  };
+  private readonly keys = (e: KeyboardEvent): void => this.hotkey(e);
+  private press: { i: number; y: number; at: number; moved: boolean } | null = null;
+  private rowGeom = { top: 0, rowH: 44, gap: 6 };
 
   constructor(private readonly host: FieldMenuHost, start: number, private readonly pick?: PokemonPick) {
     const { scene } = host;
@@ -120,7 +152,50 @@ class PokemonScreen implements PickerLike {
     this.root.add(this.footer);
     this.dyn = scene.add.container(0, 0);
     this.root.add(this.dyn);
+    scene.input.keyboard?.on('keydown', this.keys);
+    scene.input.on('pointerup', this.up);
     this.render();
+  }
+
+  /** Hotkeys: 1-6 jump to a Pokémon, U undoes the last move in the order, C compares, P pins a card, M opens actions. */
+  private hotkey(e: KeyboardEvent): void {
+    if (this.closed || this.mode === 'menu') return;
+    const i = hotkeyIndex(e.code, this.party.length);
+    if (i !== null) {
+      this.sel = i;
+      this.cursor = 0;
+      return this.render();
+    }
+    if (e.code === 'KeyU') {
+      const m = this.undo.pop();
+      if (!m) {
+        this.flash = 'Nothing to undo.';
+      } else {
+        try {
+          services().session.moveParty(m.from, m.to);
+          this.sel = m.to;
+          this.reordered = true;
+          this.flash = 'Undid the last move in the party order.';
+          interactionLog.add('Undid a party reorder');
+        } catch {
+          this.flash = 'Could not undo.';
+        }
+      }
+      this.render();
+    } else if (e.code === 'KeyC' && !this.pick) {
+      this.compareIdx = this.compareIdx === this.sel ? null : this.sel;
+      this.flash = this.compareIdx === null ? 'Comparison cleared.' : `${this.nameOf(this.mon)} marked: pick another Pokémon and open Stats to compare.`;
+      this.render();
+    } else if (e.code === 'KeyP') {
+      const s = summaryInfo(this.content, this.run, this.mon);
+      pinCard(this.host.scene, [`${this.nameOf(this.mon)}  Lv${this.mon.level}`, `HP ${this.mon.hp}/${this.maxHp(this.mon)}`, ...s.stats.filter((x) => x.key !== 'hp').slice(0, 5).map((x) => `${x.label} ${x.value}`)]);
+      this.flash = 'Pinned. Drag the card anywhere; ✕ closes it.';
+      this.render();
+    } else if (e.code === 'KeyM' && !this.pick) {
+      this.mode = 'menu';
+      this.menuIdx = 0;
+      this.render();
+    }
   }
 
   // ---------- data ----------
@@ -317,7 +392,10 @@ class PokemonScreen implements PickerLike {
 
   private reorder(to: number): void {
     try {
-      services().session.moveParty(this.sel, to);
+      const from = this.sel;
+      services().session.moveParty(from, to);
+      this.undo.push(from, to);
+      interactionLog.add(`Moved ${this.nameOf(this.mon)} to slot ${to + 1}`);
       this.sel = to;
       this.reordered = true;
       this.flash = to === 0 ? `${this.nameOf(this.mon)} leads the party.` : `${this.nameOf(this.mon)} moved to slot ${to + 1}.`;
@@ -358,6 +436,8 @@ class PokemonScreen implements PickerLike {
   close(): void {
     if (this.closed) return;
     this.closed = true;
+    this.host.scene.input.keyboard?.off('keydown', this.keys);
+    this.host.scene.input.off('pointerup', this.up);
     this.root.destroy();
   }
 
@@ -441,6 +521,7 @@ class PokemonScreen implements PickerLike {
     const n = this.party.length;
     const gap = 6;
     const rowH = Math.max(44, Math.min(64, Math.floor((LIST_H - gap * (n - 1)) / n)));
+    this.rowGeom = { top: LIST_Y, rowH, gap };
     this.party.forEach((mon, i) => {
       const y = LIST_Y + i * (rowH + gap);
       const row = scene.add.container(LEFT_X, y).setName(`party-row-${i}`);
@@ -450,7 +531,10 @@ class PokemonScreen implements PickerLike {
       g.lineStyle(focused ? 2 : 1, focused ? 0xfff2b0 : AERO.rim, focused ? 0.95 : 0.5).strokeRoundedRect(0, 0, LEFT_W, rowH, 12);
       row.add(g);
       const species = lookSpecies(this.content, mon);
-      row.add(pokemonIcon(scene, species, 26, rowH / 2, 1.1));
+      const doodle = pokemonIcon(scene, species, 26, rowH / 2, 1.1);
+      row.add(doodle);
+      // Team doodles bob lazily (I482); off with sprite animations or reduced motion.
+      if (spritesAnimate() && this.motion === 'full') scene.tweens.add({ targets: doodle, y: rowH / 2 - 3, yoyo: true, repeat: -1, duration: 900 + i * 130, ease: 'Sine.easeInOut', delay: i * 200 });
       const r = readiness(this.content, mon);
       row.add(scene.add.circle(LEFT_W - 14, 14, 6, STATE_COLOR[r.state]).setStrokeStyle(2, 0x061528).setName(`ready-${r.state}`));
       const feeling = emotionOf(this.content, this.run, mon.uid);
@@ -466,9 +550,28 @@ class PokemonScreen implements PickerLike {
       if (tag) row.add(scene.add.text(LEFT_W - 12, rowH - 20, tag, textStyle(13, i === 0 ? '#fff2b0' : '#ffb070')).setOrigin(1, 0));
       if (focused && this.mode === 'list' && this.motion !== 'off') row.add(scene.add.text(-2, rowH / 2, '▶', textStyle(14, '#fff2b0')).setOrigin(1, 0.5));
       const zone = scene.add.zone(0, 0, LEFT_W, rowH).setOrigin(0).setInteractive({ useHandCursor: true });
-      zone.on('pointerdown', () => {
+      zone.on('pointerdown', (p: Phaser.Input.Pointer) => {
         if (this.closed) return;
+        const ev = p.event as MouseEvent | undefined;
+        this.press = { i, y: p.y, at: scene.time.now, moved: false };
+        if (ev?.ctrlKey && !this.pick && i !== this.sel) {
+          // Ctrl-click: compare this Pokémon with the focused one on the Stats tab.
+          this.compareIdx = this.sel;
+          this.sel = i;
+          this.tab = POKEMON_TABS.indexOf('Stats');
+          this.press = null;
+          return this.render();
+        }
+        const context = p.rightButtonDown() && !this.pick;
         if (this.mode === 'menu') this.mode = 'list';
+        if (context) {
+          this.press = null;
+          this.sel = i;
+          this.menuIdx = 0;
+          this.mode = 'menu';
+          this.render();
+          return;
+        }
         if (this.sel === i && this.mode === 'list' && !this.pick) this.mode = 'menu';
         else if (this.sel === i && this.pick) return this.handle('confirm');
         this.sel = i;
@@ -609,7 +712,7 @@ class PokemonScreen implements PickerLike {
   private drawStats(scene: Phaser.Scene, box: Phaser.GameObjects.Container): void {
     const mon = this.mon;
     const info = summaryInfo(this.content, this.run, mon);
-    const other = compareTarget(this.party, this.sel);
+    const other = this.compareIdx !== null && this.compareIdx !== this.sel && this.compareIdx < this.party.length ? this.compareIdx : compareTarget(this.party, this.sel);
     const cmp = other === null ? null : compareStats(this.content, mon, this.party[other]!);
     this.text(box, 0, 0, `Stats  ·  bar = base stat${cmp ? `  ·  compared with ${this.nameOf(this.party[other!]!)}${other === 0 ? ' (lead)' : ''}` : ''}`, 15, '#bfe9ff');
     info.stats.forEach((s, i) => {

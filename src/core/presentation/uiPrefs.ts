@@ -220,3 +220,123 @@ export function shareCardRows(c: ShareCardInput): string[] {
   return rows;
 }
 export const shotFileName = (kind: 'screenshot' | 'card', now: Date): string => `pocket-raiders-${kind}-${now.toISOString().replace(/[:.]/g, '-').slice(0, 19)}.png`;
+
+// --- Party screen helpers (drag order, hotkeys, undo) -------------------------------------------------------------
+
+/** The party row under a pointer y in a list that starts at `top` (clamped to 0..n-1). */
+export function rowAt(y: number, top: number, rowH: number, gap: number, n: number): number {
+  return Math.max(0, Math.min(n - 1, Math.floor((y - top) / (rowH + gap))));
+}
+/** A drag counts only when the pointer moved this far and ended on another row. */
+export const DRAG_MIN_PX = 18;
+export const LONG_PRESS_MS = 500;
+/** Hotkey 1 to 6 (or numpad) to a party index, or null. */
+export function hotkeyIndex(code: string, partySize: number): number | null {
+  const m = /^(?:Digit|Numpad)([1-6])$/.exec(code);
+  if (!m) return null;
+  const i = Number(m[1]) - 1;
+  return i < partySize ? i : null;
+}
+/** Reorder history for the party screen's Undo (non-RNG menu actions only). */
+export class MoveUndo {
+  private stack: { from: number; to: number }[] = [];
+  push(from: number, to: number): void {
+    this.stack.push({ from, to });
+    if (this.stack.length > 20) this.stack.shift();
+  }
+  /** The move that reverses the latest one, or null. */
+  pop(): { from: number; to: number } | null {
+    const m = this.stack.pop();
+    return m ? { from: m.to, to: m.from } : null;
+  }
+  get size(): number {
+    return this.stack.length;
+  }
+}
+
+// --- Notifications, hints, tooltip chains, subtitles ---------------------------------------------------------------
+
+export interface Notice {
+  id: number;
+  text: string;
+  at: number;
+}
+/** A stack of notification bubbles: newest first, at most `max`, each swiped away or expiring after `ttl` ms. */
+export class NoticeStack {
+  private items: Notice[] = [];
+  private nextId = 1;
+  constructor(private readonly max = 4, private readonly ttl = 6000) {}
+  push(text: string, at: number): Notice {
+    const n = { id: this.nextId++, text, at };
+    this.items.unshift(n);
+    if (this.items.length > this.max) this.items.pop();
+    return n;
+  }
+  dismiss(id: number): void {
+    this.items = this.items.filter((n) => n.id !== id);
+  }
+  visible(now: number): Notice[] {
+    this.items = this.items.filter((n) => now - n.at < this.ttl);
+    return [...this.items];
+  }
+}
+
+/** Idle hints (I479): shows one only after `idleMs` without input, and never twice within `gapMs`. */
+export function idleHintDue(now: number, lastInput: number, lastHint: number, idleMs = 25000, gapMs = 60000): boolean {
+  return now - lastInput >= idleMs && now - lastHint >= gapMs;
+}
+
+/** Tooltip chains (I462): a keyword in `[[double brackets]]` links to a glossary entry. */
+export const GLOSSARY: Record<string, string> = {
+  stab: 'STAB: Same-Type Attack Bonus. A move matching the user’s type does 1.5× damage.',
+  crit: 'Critical hit: 1.5× damage that ignores the target’s defence boosts.',
+  bond: 'Bond: how close a Pokémon is to you. Bonded Pokémon may endure a hit or share a boost.',
+  weather: 'Weather: a field effect that lasts a few turns and powers or weakens types.',
+  status: 'Status: a lasting condition (burn, poison, paralysis, sleep, freeze).',
+  pp: 'PP: how many times a move can be used before a rest.',
+};
+export function glossaryLinks(text: string): { clean: string; keys: string[] } {
+  const keys: string[] = [];
+  const clean = text.replace(/\[\[([a-z]+)\]\]/gi, (_m, k: string) => {
+    if (GLOSSARY[k.toLowerCase()]) keys.push(k.toLowerCase());
+    return k;
+  });
+  return { clean, keys };
+}
+
+/** Lyric-style subtitles (I480): the line to show at time `t` ms for `[startMs, text]` cues sorted by start. */
+export function lyricAt(cues: readonly [number, string][], t: number): string {
+  let out = '';
+  for (const [start, text] of cues) {
+    if (start <= t) out = text;
+    else break;
+  }
+  return out;
+}
+
+/** Slider preview (I486): a 0..1 factor for a setting id's demo animation (strength in the preview box). */
+export const previewStrength = (value: number | string): number => (typeof value === 'number' ? Math.max(0, Math.min(2, value)) : 1);
+
+/** Shake-to-undo (I489): true when accelerometer magnitude readings swing hard enough to be a shake. */
+export function isShake(samples: readonly number[], threshold = 18, needed = 3): boolean {
+  let swings = 0;
+  for (let i = 1; i < samples.length; i++) if (Math.abs(samples[i]! - samples[i - 1]!) > threshold) swings++;
+  return swings >= needed;
+}
+
+/** Swipe (I450): 'left' | 'right' | 'up' | 'down' from a drag, or null when too short. */
+export function swipeDir(dx: number, dy: number, min = 60): 'left' | 'right' | 'up' | 'down' | null {
+  if (Math.max(Math.abs(dx), Math.abs(dy)) < min) return null;
+  return Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 'right' : 'left') : dy > 0 ? 'down' : 'up';
+}
+
+/** Daily chest (I488): whether today's chest is unopened. Dates are YYYY-MM-DD strings. */
+export const chestReady = (lastOpened: string | null, today: string): boolean => lastOpened !== today;
+
+/** Auto-Battle interruption prompts (I467): why auto play should pause and hand control back, or null to carry on. */
+export function autoInterruption(hp: number, maxHp: number, foeIsBoss: boolean, raid: boolean): string | null {
+  if (maxHp > 0 && hp / maxHp < 0.25) return 'Your Pokémon is in danger (under 25% HP).';
+  if (raid) return 'A raid boss: take control for the big moments.';
+  if (foeIsBoss) return 'A boss trainer is in front of you.';
+  return null;
+}
