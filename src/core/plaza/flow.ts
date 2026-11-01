@@ -399,6 +399,14 @@ function clubFormat(content: Content, run: RunState, id: string): ClubFormat {
     if (!f) throw new Error('That trainer is not here');
     return { id, name: `Rematch with ${f.name}`, text: 'A rematch.', fee: 0, rounds: 1, size: 3, levelBonus: 0, themed: false, boss: false, minRep: 0, minBadges: 0, roundPrize: [], prize: [{ kind: 'money', amount: regionPrice(run, 700) }], prizeText: 'a purse', rep: 2, trainerName: f.name, classId: f.classId };
   }
+  if (id === 'evil:unmask') {
+    // A disguised Evil Team member, called out in the plaza: one fight with their team's grunt squad (core/evil/plaza.ts).
+    const team = evilTeam(content, run);
+    const agent = plazaAgent(content, run);
+    if (!team || !agent) throw new Error('Nobody suspicious is here');
+    const cfg = content.evilTeams.plaza;
+    return { id, name: `Unmask the ${agent.name}`, text: teamText(team, cfg.unmask), fee: 0, rounds: 1, size: 2, levelBonus: 1, themed: false, boss: false, minRep: 0, minBadges: 0, roundPrize: [], prize: [{ kind: 'evil', beat: false, heat: 1, defect: false }, { kind: 'money', amount: regionPrice(run, cfg.unmaskMoney) }, { kind: 'itemFrom', ids: team.spoils, count: 1 }, { kind: 'choice', id: `${team.id}-plaza-unmask`, pick: 'yes', text: `Unmasked a disguised ${team.name} member in the Plaza`, weight: 1 }], prizeText: 'a reward and their stash', rep: 1, trainerName: team.ranks.grunt.name };
+  }
   const f = clubFormats(run).find((x) => x.id === id);
   if (!f) throw new Error(`No Battle Club format "${id}"`);
   return f;
@@ -417,7 +425,7 @@ function clubBattleOf(content: Content, run: RunState, f: ClubFormat, theme: str
     bossId = rng.pick(ids);
     name = content.bosses.get(bossId)?.name ?? name;
   }
-  return { kind: 'trainer', name, classId: f.classId, bossId, ghost: false, retired: false, chain: 1, rival: false, shadow: 0, size: f.size, types: theme ? [theme as TypeName] : [], levelBonus: f.levelBonus + Math.floor(round / 2), win: [] };
+  return { kind: 'trainer', name, classId: f.classId, bossId, ghost: false, retired: false, chain: 1, rival: false, shadow: 0, size: f.size, types: theme ? [theme as TypeName] : [], levelBonus: f.levelBonus + Math.floor(round / 2), win: [], ...(f.id === 'evil:unmask' ? { evil: 'grunt' as const } : {}) };
 }
 
 function beginClubRound(content: Content, run: RunState, sideId: string): void {
@@ -445,7 +453,7 @@ export function plazaClubWon(content: Content, run: RunState): string[] {
   if (session.round >= f.rounds) {
     apply(f.prize);
     addRep(run, f.rep);
-    if (f.id.startsWith('rival:') || f.id.startsWith('foe:')) markUsed(run, `club:${f.id}`);
+    if (f.id.startsWith('rival:') || f.id.startsWith('foe:') || f.id.startsWith('evil:')) markUsed(run, `club:${f.id}`);
     run.plaza.club = null;
     words.push(`${f.name} complete!`);
   } else {
@@ -692,7 +700,7 @@ export function sectionView(content: Content, run: RunState, sideId: string, sec
       if (agent) {
         notes.push(`${agent.name}: "${agent.line}"`);
         const done = usedN(run, 'evil:unmask') + usedN(run, 'evil:buy') > 0 ? 'They slipped away.' : null;
-        add('evil:unmask', `Unmask the ${agent.name}`, `You are sure they are with ${agent.team.name}. Call them out (the team will notice).`, 0, done);
+        add('evil:unmask', `Unmask the ${agent.name}`, `You are sure they are with ${agent.team.name}. Call them out: they will fight (win for a reward and their stash; the team will notice).`, 0, done ?? (!run.party.some((m) => m.hp > 0) ? 'No Pokémon can fight.' : null));
         add('evil:buy', `Buy from the ${agent.name}`, `Cheap goods, and your money goes to ${agent.team.name}.`, content.evilTeams.plaza.buyCost, done);
       }
       const villain = plazaVillain(content, run);
@@ -905,9 +913,13 @@ export function usePlaza(content: Content, current: RunState, sideId: string, se
       const team = evilTeam(content, run);
       const cfg = content.evilTeams.plaza;
       if (team && a === 'unmask') {
-        effects([{ kind: 'evil', beat: false, heat: 1, defect: false }, { kind: 'money', amount: regionPrice(run, cfg.unmaskMoney) }, { kind: 'choice', id: `${team.id}-plaza-unmask`, pick: 'yes', text: `Unmasked a disguised ${team.name} member in the Plaza`, weight: 1 }]);
-        addRep(run, 1);
-        words.unshift(teamText(team, cfg.unmask));
+        // Called out, they fight: a one-round Battle Club match with the team's own Pokémon and rule; the prize pays on a win.
+        markUsed(run, 'evil:unmask');
+        run.plaza.club = { stage: key(run), format: 'evil:unmask', round: 0, theme: null };
+        beginClubRound(content, run, sideId);
+        battle = true;
+        words.push(`"${team.ranks.grunt.lines.first.replace(/^"|"$/g, '')}"`);
+        break;
       } else if (team && a === 'buy') {
         effects([{ kind: 'itemFrom', ids: team.spoils, count: 1 }, { kind: 'evil', beat: false, heat: -1, defect: false }, { kind: 'attribute', key: 'goodEvil', amount: -3 }]);
         words.unshift(teamText(team, cfg.buy));

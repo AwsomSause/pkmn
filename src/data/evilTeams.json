@@ -2623,6 +2623,262 @@
      }
     ]
    }
+  },
+  {
+   "id": "rescue",
+   "slot": "rescue",
+   "event": {
+    "name": "{team} Holding Pen",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "uncommon",
+    "scene": {
+     "cast": [
+      "{specialistSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "Behind a {front} warehouse, stolen Pokémon sit in cages, waiting to be shipped out.",
+    "choices": [
+     {
+      "label": "Break them out",
+      "success": {
+       "text": "\"Hey! Those are the boss's!\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "talk": "specialist"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "specialist",
+        "name": "{specialist}",
+        "size": 3,
+        "levelBonus": 1,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "join",
+          "levelBonus": 1
+         },
+         {
+          "kind": "friendship",
+          "amount": 5
+         },
+         {
+          "kind": "evil",
+          "heat": 1
+         },
+         {
+          "kind": "choice",
+          "id": "{teamId}-rescue",
+          "pick": "freed",
+          "text": "Freed the Pokémon in a {team} holding pen",
+          "weight": 2
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Sneak them out",
+      "check": "speed",
+      "success": {
+       "text": "You slip the locks one by one. One of the freed Pokémon will not leave your side.",
+       "effects": [
+        {
+         "kind": "join",
+         "levelBonus": 1
+        },
+        {
+         "kind": "evil",
+         "heat": 1
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-rescue",
+         "pick": "freed",
+         "text": "Freed the Pokémon in a {team} holding pen",
+         "weight": 2
+        }
+       ]
+      },
+      "failure": {
+       "text": "An alarm! Grunts come running.",
+       "effects": [],
+       "battle": {
+        "kind": "trainer",
+        "evil": "grunt",
+        "name": "{grunt}",
+        "size": 3,
+        "levelBonus": 1,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "friendship",
+          "amount": 5
+         },
+         {
+          "kind": "choice",
+          "id": "{teamId}-rescue",
+          "pick": "freed",
+          "text": "Freed the Pokémon in a {team} holding pen",
+          "weight": 2
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Walk away",
+      "success": {
+       "text": "You leave them. The trucks roll out at dawn.",
+       "effects": [
+        {
+         "kind": "choice",
+         "id": "{teamId}-rescue",
+         "pick": "left",
+         "text": "Left stolen Pokémon in a {team} pen",
+         "weight": 2
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -5
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "infighting",
+   "slot": "infighting",
+   "event": {
+    "name": "Trouble Inside {team}",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "uncommon",
+    "scene": {
+     "cast": [
+      "{execSprite}",
+      "{specialistSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "{exec} and a {specialist} are shouting at each other in an alley. \"{leader} promised ME that lab!\" Neither has noticed you.",
+    "choices": [
+     {
+      "label": "Side with {exec}",
+      "success": {
+       "text": "{exec} smirks. \"You have taste.\" {team} eases off you, for now.",
+       "effects": [
+        {
+         "kind": "evil",
+         "heat": -2
+        },
+        {
+         "kind": "money",
+         "amount": 1200
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -5
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-infighting",
+         "pick": "exec",
+         "text": "Sided with {exec} in a {team} feud",
+         "weight": 2
+        }
+       ]
+      }
+     },
+     {
+      "label": "Side with the {specialist}",
+      "success": {
+       "text": "The {specialist} owes you now, and slips you their notes. \"If you ever need a way in, I know one.\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "defect": true
+        },
+        {
+         "kind": "research",
+         "amount": 40
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-infighting",
+         "pick": "specialist",
+         "text": "Turned a {team} {specialist} into an inside source",
+         "weight": 2
+        }
+       ]
+      }
+     },
+     {
+      "label": "Turn them against each other",
+      "check": "charisma",
+      "success": {
+       "text": "A few well placed words and they come to blows. Their operation here falls apart.",
+       "effects": [
+        {
+         "kind": "evil",
+         "op": "foiled"
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-infighting",
+         "pick": "split",
+         "text": "Split {team} from the inside",
+         "weight": 2
+        }
+       ]
+      },
+      "failure": {
+       "text": "They both turn on you.",
+       "effects": [
+        {
+         "kind": "evil",
+         "heat": 1
+        },
+        {
+         "kind": "evil",
+         "talk": "executive"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "executive",
+        "name": "{executive}",
+        "size": 3,
+        "levelBonus": 2,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "itemFrom",
+          "ids": "{spoils}"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Slip away",
+      "success": {
+       "text": "You leave them to it.",
+       "effects": []
+      }
+     }
+    ]
+   }
   }
  ],
  "plaza": {

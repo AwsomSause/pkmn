@@ -1,6 +1,6 @@
 // Evil Teams in the Trainer Plaza (spec §33 "Plaza + Evil Teams").
 import { describe, expect, it } from 'vitest';
-import { sectionView, usePlaza } from '../../src/core/plaza/flow';
+import { plazaClubWon, sectionView, usePlaza } from '../../src/core/plaza/flow';
 import { plazaLayout } from '../../src/core/plaza/layout';
 import { evilMarkup, plazaAgent, plazaVillain } from '../../src/core/evil/plaza';
 import { evilOf, evilStageStart, evilTeam } from '../../src/core/evil/teams';
@@ -46,13 +46,24 @@ describe('Evil Teams in the plaza', () => {
     expect(plazaAgent(content, run)).toBeNull();
   });
 
-  it('unmasking raises heat, pays, records the choice and works once per stage', () => {
+  it('unmasking starts a fight with their grunt team; winning raises heat, pays, records the choice, once per stage', () => {
     const run = withAgent();
+    const team = evilTeam(content, run)!;
     const before = evilOf(run).heat;
-    const r = usePlaza(content, run, sideId(run)!, 'people', 'evil:unmask').run;
+    const started = usePlaza(content, run, sideId(run)!, 'people', 'evil:unmask');
+    expect(started.battle).toBe(true);
+    const r = started.run;
+    expect(r.phase).toBe('battle');
+    expect(r.battle!.trainer!.name).toBe(team.ranks.grunt.name);
+    expect(r.battle!.enemyTeam.length).toBeGreaterThanOrEqual(1);
+    const money = r.money;
+    const words = plazaClubWon(content, r);
+    expect(words.join(' ')).toMatch(/complete/);
     expect(r.story.evil.heat).toBe(before + 1);
-    expect(r.money).toBeGreaterThan(run.money);
-    expect(choiceMade(r, `${r.story.evil.teamId}-plaza-unmask`)).toBe(true);
+    expect(r.money).toBeGreaterThan(money);
+    expect(choiceMade(r, `${team.id}-plaza-unmask`)).toBe(true);
+    r.battle = null;
+    r.phase = 'map';
     expect(sectionView(content, r, sideId(r)!, 'people').options.find((o) => o.id === 'evil:buy')!.problem).toBe('They slipped away.');
   });
 

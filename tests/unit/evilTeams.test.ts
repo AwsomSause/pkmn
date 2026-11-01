@@ -171,6 +171,31 @@ describe('evil team progression', () => {
   });
 });
 
+describe('rescue missions and infighting', () => {
+  it('a holding pen opens mid-story; freeing them lets a Pokémon join and is remembered', () => {
+    const run = withTeam('rescue');
+    const team = evilTeam(content, run)!;
+    const id = evilEventId(team.id, 'rescue');
+    const opens = () => content.events.get(id)!.requires.every((c) => conditionMet(content, run, c));
+    expect(opens()).toBe(false);
+    evilOf(run).beat = 3;
+    expect(opens()).toBe(true);
+    const r = pickChoice(run, id, 'Walk away').run;
+    expect(choiceMade(r, `${team.id}-rescue`, 'left')).toBe(true);
+  });
+
+  it('siding with the specialist in a team feud wins an inside source (a defector for the hideout)', () => {
+    const run = withTeam('feud');
+    const team = evilTeam(content, run)!;
+    evilOf(run).beat = 4;
+    const r = pickChoice(run, evilEventId(team.id, 'infighting'), `Side with the ${team.ranks.specialist.name}`).run;
+    expect(r.story.evil.defector).toBe(true);
+    const hideout = content.events.get(evilEventId(team.id, 'hideout'))!;
+    const back = hideout.choices.find((c) => c.label.startsWith('Let the defector'))!;
+    expect(back.requires.every((c) => conditionMet(content, r, c))).toBe(true);
+  });
+});
+
 describe('permanent choices', () => {
   it('keeps the first answer, and opens or closes follow-ups', () => {
     const run = newRun('choices');

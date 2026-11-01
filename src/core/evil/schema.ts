@@ -108,7 +108,7 @@ export const EvilFileSchema = z.object({
     controlled: z.string().min(1),
   }),
   /** Storyline beats (1 to 7) and the extra stops, as event templates with {team}-style tokens (core/evil/content.ts). */
-  templates: z.array(z.object({ id: z.string().regex(/^[a-z][a-z0-9-]*$/), beat: z.number().int().min(1).max(7).optional(), slot: z.enum(['op', 'ambush', 'disguise', 'legend']).optional(), styles: z.array(z.enum(EVIL_STYLES)).optional(), event: z.record(z.string(), z.unknown()) })).min(7),
+  templates: z.array(z.object({ id: z.string().regex(/^[a-z][a-z0-9-]*$/), beat: z.number().int().min(1).max(7).optional(), slot: z.enum(['op', 'ambush', 'disguise', 'legend', 'rescue', 'infighting']).optional(), styles: z.array(z.enum(EVIL_STYLES)).optional(), event: z.record(z.string(), z.unknown()) })).min(7),
 });
 export type EvilFile = z.infer<typeof EvilFileSchema>;
 
