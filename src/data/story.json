@@ -4340,6 +4340,64 @@
       "emotions": [
         "determination"
       ]
+    },
+    {
+      "id": "pushed-beyond-limits",
+      "displayName": "Pushed Beyond Its Limits!",
+      "messagePool": [
+        "{name} pushed past what its body should allow!",
+        "{name} gave everything. Its next attack cannot miss!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "limitBreak",
+        "minFriendship": 130
+      },
+      "chance": {
+        "base": 0.1,
+        "attributes": [
+          "strength",
+          "rage"
+        ],
+        "perPoint": 0.001,
+        "cap": 2,
+        "again": 0.5
+      },
+      "effect": {
+        "kind": "limitBreak",
+        "damage": 0.4,
+        "strain": 0.15,
+        "maxHpShare": 0.5
+      },
+      "cooldown": "oncePerBattlePerPokemon",
+      "duration": "battle",
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Pushed beyond its limits against {enemy}"
+      },
+      "followUpEvents": [],
+      "visualCue": {
+        "major": true,
+        "color": "#ffd040",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "transformation",
+      "eligibilityTags": [],
+      "emotions": [
+        "perseverance",
+        "bravery"
+      ],
+      "variants": {
+        "again": {
+          "displayName": "Beyond Its Limits Again!",
+          "messagePool": [
+            "{name} pushed past its limits once more!"
+          ]
+        }
+      }
     }
   ],
   "awakening": {

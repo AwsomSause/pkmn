@@ -2179,6 +2179,27 @@ function hyperAwaken(ctx: BattleContext, c: Combatant, events: BattleEvent[]): b
   return true;
 }
 
+/** The damage bonus of the Limit Break in progress (0 when none); set only while that one move runs. */
+let limitBreakDamage = 0;
+
+/**
+ * Pushed Beyond Its Limits (Overdrive, spec 8): a badly hurt Pokémon's damaging move cannot miss
+ * and hits harder, after the strain has cost it HP. Returns the damage bonus (0 when it does not happen).
+ */
+function tryLimitBreak(ctx: BattleContext, user: Combatant, move: Move, events: BattleEvent[]): number {
+  if (user.side !== 'player' || move.category === 'status' || !ctx.hyper || user.mon.hp <= 1) return 0;
+  const peek = ctx.hyper.eligibility('limitBreak', user.mon);
+  const spec = peek?.def.effect;
+  if (!peek || spec?.kind !== 'limitBreak') return 0;
+  const max = calcStats(ctx.content, user.mon).hp;
+  if (user.mon.hp > max * spec.maxHpShare) return 0;
+  const e = tryHyper(ctx, 'limitBreak', user.mon);
+  if (!e || e.def.effect?.kind !== 'limitBreak') return 0;
+  user.mon.hp = Math.max(1, user.mon.hp - Math.floor(max * e.def.effect.strain));
+  events.push({ type: 'hyper', side: user.side, uid: user.mon.uid, defId: e.def.id, variant: e.variant, hpAfter: user.mon.hp, cured: false });
+  return e.def.effect.damage;
+}
+
 // ---------- The Enemy Is Getting Riled Up ----------
 
 function rageOf(ctx: BattleContext, uid: string): EnemyRage {
@@ -2318,7 +2339,7 @@ function friendlyFinish(ctx: BattleContext, finisher: PokemonInstance, events: B
 function rivalryMultiplier(ctx: BattleContext, user: Combatant, target: Combatant): number {
   const h = ctx.battle.hyper;
   if (!ctx.hyper || user.side !== 'player' || !h) return 1;
-  let multiplier = 1;
+  let multiplier = 1 + limitBreakDamage;
   const state = h.rivals?.[`${user.mon.uid}|${target.mon.speciesId}`];
   if (state) {
     const found = rivalryDef(ctx, 'heatedRivalry');
@@ -2601,10 +2622,13 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
 /** What a move does once its user has acted: accuracy, then its status effect or its damage and side effects. */
 function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]): void {
   moveIgnoresAbility = Boolean(move.effects.ignoreAbility) || (move.category === 'status' && abilityIn(ctx, user) === 'mycelium-might');
+  limitBreakDamage = 0;
   try {
+    limitBreakDamage = tryLimitBreak(ctx, user, move, events);
     runMoveInner(ctx, user, target, move, movedFirst, events);
   } finally {
     moveIgnoresAbility = false;
+    limitBreakDamage = 0;
   }
 }
 
@@ -2878,7 +2902,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     return;
   }
   // Thunder never misses in rain (half the time in sun); Blizzard never misses in snow or hail.
-  const sure = fx.sureIn !== undefined && (fx.sureIn === weather || (fx.sureIn === 'snow' && weather === 'hail'));
+  const sure = limitBreakDamage > 0 || (fx.sureIn !== undefined && (fx.sureIn === weather || (fx.sureIn === 'snow' && weather === 'hail')));
   const baseAccuracy = sure ? null : fx.sureIn === 'rain' && weather === 'sun' ? 50 : move.accuracy;
   const perkAccuracy = user.side === 'player' && move.category === 'status' ? statusMoveAccuracyPerk(ctx.perks) : 1;
   const itemAccuracy = targetsEnemy ? Held.accuracyMultiplier(ctx, user, target, !movedFirst, move) : 1;

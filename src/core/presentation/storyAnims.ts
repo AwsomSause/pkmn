@@ -9,7 +9,7 @@ export type OverdriveAnimKind = 'toughened' | 'hung' | 'rise' | 'bond' | 'rivalr
 
 const HYPER_BY_KIND: Record<Exclude<OverdriveAnimKind, 'moment'>, string> = {
   toughened: 'toughened-it-out defiance',
-  hung: 'hung-in-there second-wind not-given-up remembered-training broke-limits something-awakened instincts-took-over refused-weakness turned-pain',
+  hung: 'hung-in-there pushed-beyond-limits second-wind not-given-up remembered-training broke-limits something-awakened instincts-took-over refused-weakness turned-pain',
   rise: 'pushed-back-up',
   bond:
     'felt-a-bond make-you-proud protective-instinct came-to-aid more-than-teammates knows-you-believe learned-something student-surpassed last-lesson different-ways understand-each-other wont-let-friend-fight wants-to-prove feels-left-out',
