@@ -327,75 +327,75 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 
 | # | Idea | Note | Status | Evidence |
 |---|---|---|---|---|
-| I108 | Shopkeeper remembers your loyalty and offers a mystery discount |  | TODO |  |
-| I109 | Gift an NPC an item to raise friendship and unlock a secret shop tier |  | TODO |  |
-| I110 | Share a meal with a traveler for a rumor about the next map |  | TODO |  |
+| I108 | Shopkeeper remembers your loyalty and offers a mystery discount |  | DONE | events.json shopkeeper-regular + shopkeeper-discount; run flag shop-loyalty lowers shop prices (core/npcShop.ts, balance.npcShop) |
+| I109 | Gift an NPC an item to raise friendship and unlock a secret shop tier |  | DONE | eventsW5.json gift-the-keeper sets secret-shop; secret stock tier in shopStock (balance.npcShop.secretTier) |
+| I110 | Share a meal with a traveler for a rumor about the next map |  | DONE | eventsW5.json share-a-meal (berry or ₽ for a scouting rumour) |
 | I111 | NPC asks you to deliver a note to another map node |  | DONE | events.json deliver-letter (keyItem letter delivered to a node) |
 | I112 | Escort mission: lead a lost child NPC to the next stop |  | DONE | events.json convoy-lost-children (escort convoy to the gym) |
-| I113 | NPC pickpocket attempt: tap to catch the thief before the item vanishes |  | PART | events.json pickpocket (speed check chase, no tap) |
-| I114 | Fortune teller: draw three cards, each affects the next battles |  | TODO |  |
-| I115 | Tell a story to the campfire group for random buffs |  | PART | events.json tale-storyteller (campfire tale trade for friendship/research) |
-| I116 | Duel invitation by challenge glove throw, accept or refuse |  | TODO |  |
-| I117 | Beg for mercy from a trainer who could out-level you, a Charm check |  | TODO |  |
-| I119 | Apprentice NPC follows you for a node and learns from your choices |  | TODO |  |
-| I120 | NPC rival of the shop: two merchants compete, buy from one and the other grumbles |  | TODO |  |
-| I121 | Barter with items, not money, at secret markets |  | TODO |  |
-| I122 | Ask for directions: NPCs may lie depending on mood |  | TODO |  |
-| I123 | NPC asks you to recommend a team for their trainer, you pick and they use it later |  | TODO |  |
-| I124 | Wedding encounter: sign the guestbook, gain luck |  | TODO |  |
-| I125 | Funeral encounter: pay respects, unlock lore and a relic |  | TODO |  |
-| I126 | Street performer: tip to hear a song that applies a team-wide aura |  | TODO |  |
-| I127 | Chef NPC: cook together with a timing minigame to produce buff meals |  | TODO |  |
-| I128 | Doctor NPC: negotiate priced treatments for status ailments |  | TODO |  |
+| I113 | NPC pickpocket attempt: tap to catch the thief before the item vanishes |  | PART | events.json pickpocket (speed check chase, no tap); the tap prompt exists in core/interaction but is not wired to events |
+| I114 | Fortune teller: draw three cards, each affects the next battles |  | PART | eventsW5.json fortune-three-cards: three face-down cards give a run relic (lasts the run, not "the next battles") |
+| I115 | Tell a story to the campfire group for random buffs |  | PART | events.json tale-storyteller + eventsW5.json lore-scribe-1..3 (lore buffs/research, no random buff table) |
+| I116 | Duel invitation by challenge glove throw, accept or refuse |  | DONE | eventsW5.json glove-duel: accept (battle) or refuse |
+| I117 | Beg for mercy from a trainer who could out-level you, a Charm check |  | DONE | eventsW5.json beg-for-mercy: Charm check, else the fight |
+| I119 | Apprentice NPC follows you for a node and learns from your choices |  | DONE | eventsW5.json apprentice-follows + apprentice-kind/apprentice-sly callbacks that read your Good/Evil meter |
+| I120 | NPC rival of the shop: two merchants compete, buy from one and the other grumbles |  | DONE | eventsW5.json rival-merchants (buy from one, the other grumbles; shop-loyalty) |
+| I121 | Barter with items, not money, at secret markets |  | DONE | eventsW5.json secret-market-barter (items for items) |
+| I122 | Ask for directions: NPCs may lie depending on mood |  | DONE | eventsW5.json ask-directions (Charisma check; failure sends you the long way) |
+| I123 | NPC asks you to recommend a team for their trainer, you pick and they use it later |  | DONE | eventsW5.json recommend-team + recommend-returns-fire/water/grass callback battles |
+| I124 | Wedding encounter: sign the guestbook, gain luck |  | DONE | eventsW5.json wedding-guestbook |
+| I125 | Funeral encounter: pay respects, unlock lore and a relic |  | DONE | eventsW5.json funeral-respects (lore + Mourner's Token relic) |
+| I126 | Street performer: tip to hear a song that applies a team-wide aura |  | DONE | eventsW5.json street-performer (tip for a blessing) |
+| I127 | Chef NPC: cook together with a timing minigame to produce buff meals |  | PART | eventsW5.json chef-cook-together: Speed check stands in for a timing minigame |
+| I128 | Doctor NPC: negotiate priced treatments for status ailments |  | DONE | eventsW5.json traveling-doctor (priced cures, haggle) |
 | I129 | Professor check-in: bring discoveries and receive research rewards |  | DONE | events.json professors-lab (show Pokedex for research) |
-| I130 | Gym leader dialogue trees before the badge fight affect their lead choice |  | TODO |  |
-| I131 | Elite-four members respond to your badge count with custom lines |  | TODO |  |
-| I132 | Spy NPC: trade secrets with a masked stranger for one-time intel |  | TODO |  |
-| I133 | Mentor NPC teaches a technique after an optional quiz of Pokémon trivia |  | TODO |  |
-| I134 | Tournament registration desk with a clerk who comments on your past runs |  | TODO |  |
-| I135 | NPC remembers whether you spared or crushed them last time |  | TODO |  |
-| I136 | Trainers react to your team's type coverage with taunts or praise |  | TODO |  |
-| I137 | Pen-pal NPC mailbox: letters arrive between runs with small gifts |  | TODO |  |
+| I130 | Gym leader dialogue trees before the badge fight affect their lead choice |  | PART | core/drama/flavor.ts tags newcomer/veteran + eventsW5.json gym-eve-tone; the leader's lead choice does not change |
+| I131 | Elite-four members respond to your badge count with custom lines |  | DONE | core/drama/flavor.ts: Elite/leaders get veteran/newcomer lines by badge count (drama.json flavor) |
+| I132 | Spy NPC: trade secrets with a masked stranger for one-time intel |  | DONE | eventsW5.json spy-trade |
+| I133 | Mentor NPC teaches a technique after an optional quiz of Pokémon trivia |  | DONE | eventsW5.json mentor-quiz (trivia, egg move) |
+| I134 | Tournament registration desk with a clerk who comments on your past runs |  | DONE | eventsW5.json registration-desk (clerk reads your past teams) |
+| I135 | NPC remembers whether you spared or crushed them last time |  | DONE | profile.npcMemory (spared/crushed/helped) seeds remembers-* flags; eventsW5.json mara-gatekeeper + mara-remembers-kind/grudge |
+| I136 | Trainers react to your team's type coverage with taunts or praise |  | DONE | core/drama/flavor.ts tags diverse/mono/merciful/ruthless + eventsW5.json coverage-judge |
+| I137 | Pen-pal NPC mailbox: letters arrive between runs with small gifts |  | DONE | eventsW5.json pen-pal-mailbox + pen-pal-letter (a letter in a later run, via NPC memory) |
 | I138 | Hire a guide for the next route; they reveal one hidden node |  | DONE | events.json fog-guide (hire guide: scout columns) |
-| I139 | Offer a swap: pick a Pokémon to trade with an NPC who has a quirky history |  | TODO |  |
+| I139 | Offer a swap: pick a Pokémon to trade with an NPC who has a quirky history |  | DONE | eventsW5.json swap-quirky |
 | I140 | NPC asks you to hold their egg, hatch it for a reward |  | DONE | events.json egg-cradle-find/night/hatch |
-| I141 | Cooking contest judge scores your dish with a reaction montage |  | TODO |  |
-| I142 | Dance-off with a festival NPC, matching arrows for a boon |  | PART | events.json dancing-lessons (speed check) |
-| I143 | Carnival game booths: ring toss, shooting gallery, bobbing for berries |  | PART | events.json ball-toss, voltorb-flip, fishing-derby |
-| I144 | Fishing buddy NPC shares tips and locations of rare spawns |  | TODO |  |
-| I145 | Detective NPC: gather clues across nodes to solve a small mystery |  | PART | events.json eventClues counter chains (md-*, tower) |
-| I146 | Gossip network: speaking to NPCs updates a rumor board in the Hub |  | PART | plazaLife.json rumors section (Plaza, not Hub board) |
-| I147 | Pick a side in an NPC argument; the loser leaves, winner gifts |  | TODO |  |
-| I148 | NPC offers a risky loan, repay within X nodes or face a debt-collector battle |  | TODO |  |
-| I149 | Insurance NPC: pay to protect one Pokémon from permadeath this run |  | TODO |  |
-| I150 | Pawn shop: appraise relics with a loupe minigame |  | TODO |  |
-| I151 | Barkeep: ask for the "usual", daily special changes by seed |  | TODO |  |
-| I152 | NPC guard asks a riddle, solving it grants entry |  | TODO |  |
-| I153 | Language barrier NPC: decode sign language icons to trade |  | TODO |  |
-| I154 | Tour guide narrates a landmark with bonus lore if you stay |  | TODO |  |
-| I155 | Blind NPC asks you to describe the scene; descriptions shape reward |  | TODO |  |
-| I156 | Retired champion shares a secret move hint after you win a spar |  | TODO |  |
+| I141 | Cooking contest judge scores your dish with a reaction montage |  | PART | eventsW5.json cooking-contest: check instead of a reaction montage |
+| I142 | Dance-off with a festival NPC, matching arrows for a boon |  | PART | events.json dancing-lessons + eventsW5.json dance-off (Speed check, no arrow minigame) |
+| I143 | Carnival game booths: ring toss, shooting gallery, bobbing for berries |  | DONE | eventsW5.json carnival-booths (ring toss, shooting gallery, berry bobbing) + events.json ball-toss |
+| I144 | Fishing buddy NPC shares tips and locations of rare spawns |  | DONE | eventsW5.json fishing-buddy (opens a fishing stop) |
+| I145 | Detective NPC: gather clues across nodes to solve a small mystery |  | DONE | eventsW5.json detective-case + detective-clue-2/3 (three-room mystery) |
+| I146 | Gossip network: speaking to NPCs updates a rumor board in the Hub |  | DONE | run flags gossip-* print as Overheard lines in the paper (npcStory.gossip); Hub Tales & News room |
+| I147 | Pick a side in an NPC argument; the loser leaves, winner gifts |  | DONE | eventsW5.json quarrel-sides |
+| I148 | NPC offers a risky loan, repay within X nodes or face a debt-collector battle |  | DONE | eventsW5.json risky-loan + debt-collector callback battle + repay-banker |
+| I149 | Insurance NPC: pay to protect one Pokémon from permadeath this run |  | DONE | eventsW5.json insurance-agent (Nuzlocke only); flag insured spent in nuzlocke.buryFallen |
+| I150 | Pawn shop: appraise relics with a loupe minigame |  | DONE | eventsW5.json pawn-appraiser |
+| I151 | Barkeep: ask for the "usual", daily special changes by seed |  | DONE | eventsW5.json barkeep-usual |
+| I152 | NPC guard asks a riddle, solving it grants entry |  | DONE | eventsW5.json riddle-guard |
+| I153 | Language barrier NPC: decode sign language icons to trade |  | DONE | eventsW5.json sign-language-market |
+| I154 | Tour guide narrates a landmark with bonus lore if you stay |  | DONE | eventsW5.json tour-landmark |
+| I155 | Blind NPC asks you to describe the scene; descriptions shape reward |  | DONE | eventsW5.json blind-describer |
+| I156 | Retired champion shares a secret move hint after you win a spar |  | DONE | eventsW5.json retired-champion-spar |
 | I157 | Mimic NPC: a Ditto in disguise, you can spot it by clues to avoid a trap |  | DONE | events.json ditto-impostor (spot the Ditto) |
-| I158 | NPC rival pair you can set up as friends or enemies |  | TODO |  |
-| F156 | Branching dialogue with trust meter per NPC. |  | PART | events.json mentor trust (mentor-*), no general per-NPC meter |
-| F158 | Recurring merchant with memorable personality and a running arc. |  | PART | trainer-plaza-rework.md regulars/Gilded Merchant; merchant-remembers event |
-| F159 | Lore fragments collected per run, assembling a codex. | ASK: Idk bru sounds cool | PART | docs/status/moment-codex.md (account codex, not per-run fragments) |
+| I158 | NPC rival pair you can set up as friends or enemies |  | DONE | eventsW5.json rival-pair-setup |
+| F156 | Branching dialogue with trust meter per NPC. |  | DONE | run flags trust-<npc> gate dialogue tiers (eventsW5.json ranger-trust-1..3); trust persists in profile.npcMemory |
+| F158 | Recurring merchant with memorable personality and a running arc. |  | DONE | eventsW5.json peddler-1..3 (Wicker's three-part arc) + shopkeeper-regular |
+| F159 | Lore fragments collected per run, assembling a codex. | ASK: Idk bru sounds cool | DONE | npcStory.json 20 lore fragments, found in events, stored in profile.npcMemory.lore, shown in the Hub Tales & News room |
 | F160 | Legendary whispers: hints appear before a legendary encounter. |  | DONE | events.json legend-clue-tracks/song/scales (flag legend-clue before legend-encounter) |
-| F161 | NPC quests spanning multiple runs. | Y (but they can’t remember player) | TODO |  |
+| F161 | NPC quests spanning multiple runs. | Y (but they can’t remember player) | DONE | eventsW5.json farmers-quest-1..3 across runs (progress in NPC memory; the NPC does not know you) |
 | F162 | Morality-lite choices with visible consequences. |  | DONE | events.json Lasting Choices (road-fork, strangers-map choice effects, callbacks) |
-| F165 | Trainer class backstories shown on the select screen. |  | TODO |  |
+| F165 | Trainer class backstories shown on the select screen. |  | DONE | core/npcMemory.ts backstoryFor shown on the trainer select screen |
 | F166 | Epilogue screens by ending achieved. |  | DONE | src/core/ending.ts:18 buildEpilogue by ending |
-| F167 | New Game+ story variants. |  | TODO |  |
-| F168 | Secret ending requirements as a hint-puzzle. |  | TODO |  |
-| F169 | In-world newspaper recapping the world after each run. | ASK: H | TODO |  |
-| F170 | Rumour mill: shops sell rumours that foreshadow events. |  | PART | plazaLife.json rumors (rumour about next gym) |
-| F171 | Pokémon diary snippets after evolutions. |  | TODO |  |
-| F174 | Ally NPC assists in a battle once per run. |  | PART | events.json borrowed-ally (ally in battle) |
-| F176 | Mentor character who gives tips based on your play style. |  | TODO |  |
+| F167 | New Game+ story variants. |  | DONE | profile.npcMemory.ngPlus -> flag ng-plus, ngVariant text in Tales & News, ng-plus-old-friends event, returning drama lines |
+| F168 | Secret ending requirements as a hint-puzzle. |  | DONE | npcStory.json hints; Tales & News shows the next hint for an ending not yet reached |
+| F169 | In-world newspaper recapping the world after each run. | ASK: H | DONE | core/npcMemory.ts buildNewsIssue: a paper issue per finished run (5 kept), Hub Tales & News |
+| F170 | Rumour mill: shops sell rumours that foreshadow events. |  | DONE | eventsW5.json rumour-seller (pay for a road or gym rumour) + plazaLife.json rumors |
+| F171 | Pokémon diary snippets after evolutions. |  | DONE | core/run.ts evolution loop writes a diary Chronicle line (npcStory.diary) |
+| F174 | Ally NPC assists in a battle once per run. |  | DONE | eventsW5.json cameo-ally-assist (once per run, ally fights beside you) + events.json borrowed-ally |
+| F176 | Mentor character who gives tips based on your play style. |  | DONE | eventsW5.json playstyle-mentor (tips by Good/Evil and Rage/Peace) |
 | F177 | Time-limited story events tied to dates. |  | DONE | core/gameEvents.ts + balance.clock.specialDates (camp-day-night.md) |
-| F178 | Credit scene with sprites of everything defeated. |  | TODO |  |
+| F178 | Credit scene with sprites of everything defeated. |  | DONE | core/credits.ts defeatedLines + CreditsScene sprite rows: Everyone We Beat |
 | F179 | Dialog speed setting and auto-advance. |  | DONE | src/core/settingsRegistry.ts:105-108 textSpeed, autoAdvance, messageDelay |
-| F180 | Skip-seen dialogue toggle. |  | TODO |  |
+| F180 | Skip-seen dialogue toggle. |  | DONE | setting skipSeenDialogue (settings v13): seen event intros show at once |
 
 ## W6 Rivals, legacy & ghosts (37)
 

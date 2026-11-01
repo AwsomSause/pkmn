@@ -36,8 +36,17 @@ export class CreditsScene extends Phaser.Scene {
     const style: Record<string, [number, string]> = { title: [40, '#f0d060'], heading: [26, '#7ff3ff'], text: [20, '#ffffff'], gap: [20, '#ffffff'] };
     let y = roll ? GAME_HEIGHT + 20 : 24;
     const step = roll ? 34 : 17;
-    const items: Phaser.GameObjects.Text[] = [];
+    const items: (Phaser.GameObjects.Text | Phaser.GameObjects.Image)[] = [];
     for (const l of lines) {
+      if (l.kind === 'mons') {
+        const ids = l.species ?? [];
+        ids.forEach((id, i) => {
+          const sp = session.content.species.get(id);
+          if (sp) items.push(pokemonIcon(this, sp, GAME_WIDTH / 2 + (i - (ids.length - 1) / 2) * 56, y + 20, 1) as Phaser.GameObjects.Image);
+        });
+        y += 48;
+        continue;
+      }
       if (l.kind !== 'gap') {
         const [size, color] = style[l.kind]!;
         items.push(this.add.text(GAME_WIDTH / 2, y, l.text, textStyle(roll ? size : Math.min(size, 15), color, { align: 'center', wordWrap: { width: GAME_WIDTH - 80 } })).setOrigin(0.5, 0));

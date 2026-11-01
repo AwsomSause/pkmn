@@ -1,0 +1,236 @@
+{
+ "lore": [
+  {
+   "id": "first-ember",
+   "title": "The First Ember",
+   "text": "Before gyms, before ranks, one trainer lit a fire on a bare hill and asked a stray Charmander to stay. Every league since began at that fire."
+  },
+  {
+   "id": "ledger-tide",
+   "title": "The Tide Ledger",
+   "text": "Fishers on the old coast kept a ledger of every catch they let go. The last page reads: 'They remember kindness longer than we do.'"
+  },
+  {
+   "id": "hollow-bell",
+   "title": "The Hollow Bell",
+   "text": "A bell with no clapper hangs in a ruined tower. It rings only when a trainer who has never lied walks beneath it."
+  },
+  {
+   "id": "ninth-badge",
+   "title": "The Ninth Badge",
+   "text": "Old leaders swear there was a ninth badge, given for something other than winning. Nobody remembers what it was for."
+  },
+  {
+   "id": "mirror-trainer",
+   "title": "The Mirror Trainer",
+   "text": "A traveller who always fights one step ahead of you is only your shadow with better manners. Beat them kindly and they fade."
+  },
+  {
+   "id": "storm-letter",
+   "title": "A Letter Before the Storm",
+   "text": "Found pinned to a gatepost: 'If the sky goes green, take the low road. The high road belongs to the ones who made the storm.'"
+  },
+  {
+   "id": "salt-road",
+   "title": "The Salt Road",
+   "text": "Merchants once crossed the desert on a road paved with salt. Where a caravan fell, a Pokémon of that caravan still guards the stones."
+  },
+  {
+   "id": "lantern-oath",
+   "title": "The Lantern Oath",
+   "text": "Campers swear on a lantern: no one is left behind on the trail. It is the oldest rule that nobody ever wrote down."
+  },
+  {
+   "id": "gym-ghost",
+   "title": "The Gym That Lost",
+   "text": "One gym closed because its leader lost on purpose, to a child who needed the badge more. The sign still hangs, face down."
+  },
+  {
+   "id": "egg-song",
+   "title": "The Egg Song",
+   "text": "Breeders hum a tune to unhatched eggs. If the Pokémon inside knows it, it hatches a little early."
+  },
+  {
+   "id": "champions-chair",
+   "title": "The Empty Chair",
+   "text": "The Champion's chair at the summit is never dusted. They say it keeps the shape of everyone who sat there and left."
+  },
+  {
+   "id": "rival-scar",
+   "title": "The Rival's Scar",
+   "text": "Every champion has a rival who gave them a scar they are proud of. The rivals keep the matching one."
+  },
+  {
+   "id": "whisper-wood",
+   "title": "The Whispering Wood",
+   "text": "In the wood, trees repeat what trainers say, a season late. Folk go there to hear what they should have said."
+  },
+  {
+   "id": "ash-market",
+   "title": "The Ash Market",
+   "text": "After a big battle, a market appears at the edge of the field. Everything is cheap. Nothing there was ever really lost."
+  },
+  {
+   "id": "twin-flames",
+   "title": "Twin Flames",
+   "text": "Two trainers once walked into a volcano together and walked out with one team. They never agreed on whose it was."
+  },
+  {
+   "id": "last-lullaby",
+   "title": "The Last Lullaby",
+   "text": "A Jigglypuff sang a whole stadium to sleep, then tucked every sleeper in. The match was a draw."
+  },
+  {
+   "id": "paper-crane",
+   "title": "The Paper Crane",
+   "text": "A folded paper crane found on a bench has a route drawn inside it. Following it never leads anywhere dangerous, only somewhere honest."
+  },
+  {
+   "id": "deep-register",
+   "title": "The Deep Register",
+   "text": "The oldest guestbook lists trainers who passed through a cave and signed with a paw print. There are more paw prints than names."
+  },
+  {
+   "id": "legend-wake",
+   "title": "In the Legend's Wake",
+   "text": "Legendary Pokémon leave weather behind them like a wake behind a boat. Learn to read the sky and you can learn where they went."
+  },
+  {
+   "id": "unwritten-ending",
+   "title": "The Unwritten Ending",
+   "text": "There is a page at the back of the champion's book that stays blank for everyone. It is for the one who does not need to be remembered."
+  }
+ ],
+ "backstory": {
+  "origins": [
+   "grew up where the road meets the sea",
+   "was raised above a berry stall in a mountain town",
+   "learned to battle on a school roof at lunch",
+   "left a quiet farm after a Pokémon wandered in one night",
+   "spent childhood in a lighthouse with a long-suffering Pokémon",
+   "trained alongside a famous sibling and never mentioned it",
+   "was a stage hand at the regional contest before taking up battling",
+   "was found as a child at a train station with a single Poké Ball",
+   "apprenticed to a retired ranger who talked mostly to the weather",
+   "ran the family ferry and learned patience from the waves"
+  ],
+  "motives": [
+   "wants to prove a hometown wrong",
+   "is chasing a promise made to a friend",
+   "is looking for the Pokémon that once saved them",
+   "wants to see every region before settling down",
+   "carries a letter they have not dared to open",
+   "is trying to be someone their rival could respect",
+   "simply cannot stop at the second-best gym",
+   "wants a team that is more like a family than a roster"
+  ],
+  "secrets": [
+   "Secretly keeps a diary of every Pokémon they have met.",
+   "Secretly cried at their first victory and has never told anyone.",
+   "Secretly believes the Champion is hiding something kind.",
+   "Secretly still sleeps with the starter's ball under a pillow.",
+   "Secretly writes poems to their team and burns them afterwards.",
+   "Secretly dreads the day the road ends."
+  ]
+ },
+ "diary": [
+  {
+   "id": "d-proud",
+   "text": "{name} wrote in its diary: 'I became {to} today. The trainer clapped first. I will remember that longer than the battle.'"
+  },
+  {
+   "id": "d-shy",
+   "text": "{name} became {to} and hid behind its trainer for an hour. Then it came out and showed everyone."
+  },
+  {
+   "id": "d-sleepy",
+   "text": "{name}'s diary reads: 'Slept. Woke up as {to}. Still hungry.'"
+  },
+  {
+   "id": "d-brave",
+   "text": "{name}'s diary: 'As {to} I can carry the others when they are tired. I mean to do that.'"
+  },
+  {
+   "id": "d-fond",
+   "text": "{name} became {to} and the first thing it did was find its trainer. It did not need a reason."
+  },
+  {
+   "id": "d-grumpy",
+   "text": "{name} insists it was always {to}. Nobody argues."
+  },
+  {
+   "id": "d-curious",
+   "text": "{name}'s diary: 'New {to} legs, new view. The world is taller than I remembered, and more interesting.'"
+  },
+  {
+   "id": "d-quiet",
+   "text": "{name} became {to} in the rain. It stayed out a little longer than needed, just listening."
+  }
+ ],
+ "news": {
+  "win": [
+   "CHAMPION CROWNED: {trainer} tops {region} with {mons} at their side.",
+   "THE LONG ROAD ENDS: {trainer} carries {badges} badges into the history books.",
+   "{trainer} AND TEAM CLEAR THE LEAGUE: crowds in {region} call it the finest run in years."
+  ],
+  "loss": [
+   "TRAINER FALLS IN {region}: {trainer} was last seen with {mons}, still smiling.",
+   "A HARD DAY IN {region}: {trainer} and {badges} badges are 'resting', reports say.",
+   "{trainer} DEFEATED, DETERMINED: observers expect a comeback."
+  ],
+  "rumour": [
+   "Rumour: a shiny was seen near the old bridge.",
+   "Rumour: the shopkeeper in the hills is giving discounts to the kind.",
+   "Rumour: someone left a lantern burning at the summit.",
+   "Rumour: a rival was spotted buying a map of the next region."
+  ]
+ },
+ "hints": [
+  {
+   "id": "hint-untouched",
+   "ending": "untouched",
+   "text": "An old trainer murmurs: 'A clean sheet is a rarer thing than a gold badge.'"
+  },
+  {
+   "id": "hint-rivals",
+   "ending": "rivals",
+   "text": "A rival's note: 'Next time, I would rather see you at the finish line than across it.'"
+  },
+  {
+   "id": "hint-storm",
+   "ending": "storm",
+   "text": "The sky is wrong tonight. The one who made it is still waiting at the end of the Grand Region."
+  },
+  {
+   "id": "hint-champion",
+   "ending": "champion",
+   "text": "A child asks if you ever get tired of winning. You say: only when it is for nobody."
+  }
+ ],
+ "ngVariants": [
+  {
+   "atLeast": 1,
+   "name": "The Return",
+   "text": "Old faces know you now. Shopkeepers nod, rivals loiter longer, and the road remembers your boots."
+  },
+  {
+   "atLeast": 3,
+   "name": "The Long Memory",
+   "text": "The Champion has started writing your name in the margins before you arrive."
+  },
+  {
+   "atLeast": 6,
+   "name": "The Unwritten Page",
+   "text": "Everyone is waiting to see what you will do with the blank page."
+  }
+ ],
+ "gossip": {
+  "road": "Overheard: someone sold a safe-road rumour for a hundred and no questions.",
+  "gym": "Overheard: the gym leader's habits are for sale in the market square.",
+  "meal": "Overheard: a traveller shared his campfire with a stranger who carried a berry.",
+  "spy": "Overheard: a masked stranger traded secrets on the road, and left no footprints.",
+  "shiny": "Overheard: a shiny was sighted by the old bridge.",
+  "lantern": "Overheard: someone left a lantern burning at the summit.",
+  "yours": "Overheard: a story about you is going around, and it is improving with every telling."
+ }
+}

@@ -3,6 +3,7 @@
 // Presentation only: picks are hashed, never gameplay RNG, and nothing here changes a battle.
 
 import { getArchetype } from '../archetypes';
+import { effectiveAttributes } from '../attributes';
 import { currentEnemy } from '../state';
 import { calcStats } from '../pokemon';
 import { DRAMA, type DialogueCategory } from './schema';
@@ -21,7 +22,19 @@ export function flavorTags(c: PlanCtx): string[] {
     if (b.respect >= 70) tags.push('respect');
   }
   if (getArchetype(c.content, c.run.archetypeId).signatureTypes[0]) tags.push('specialist');
-  return tags;
+  // Ideas W5 (I130/I131/I136/I135): leaders and the Elite react to your badges, your team's type coverage, your reputation and a returning player.
+  if (c.cls !== 'ordinary') {
+    const badges = c.run.badges.length;
+    if (badges >= 6) tags.push('veteran');
+    else if (badges <= 2) tags.push('newcomer');
+  }
+  const kinds = new Set(c.run.party.flatMap((m) => c.content.species.get(m.speciesId)?.types ?? []));
+  if (c.run.party.length >= 3) tags.push(kinds.size >= 5 ? 'diverse' : kinds.size === 1 ? 'mono' : '');
+  const good = effectiveAttributes(c.content, c.run).goodEvil ?? 0;
+  if (good >= 5) tags.push('merciful');
+  else if (good <= -5) tags.push('ruthless');
+  if (Number(c.run.story.flags['ev:ng-plus'] ?? 0) > 0) tags.push('returning');
+  return tags.filter(Boolean);
 }
 
 /** Flavoured lines for a category, or null when none fit. {type} is filled by the caller via vars. */

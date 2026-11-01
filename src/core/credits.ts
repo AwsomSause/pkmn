@@ -7,8 +7,10 @@ import { buildEpilogue } from './ending';
 import { buildRecap } from './recap';
 
 export interface CreditsLine {
-  kind: 'title' | 'heading' | 'text' | 'gap';
+  kind: 'title' | 'heading' | 'text' | 'gap' | 'mons';
   text: string;
+  /** `mons`: a row of up to 6 species (their sprites) shown in the roll. */
+  species?: string[];
 }
 
 /** Credits for a won run: the trainer, each party member, how it went, then the project's thanks. */
@@ -29,6 +31,7 @@ export function buildCredits(content: Content, run: RunState): CreditsLine[] {
     ...(recap.biggestMoment ? [{ kind: 'text', text: `★ ${recap.biggestMoment}` } as CreditsLine] : []),
     ...(recap.stamps.length ? [{ kind: 'text', text: `Stamps: ${recap.stamps.join(' · ')}` } as CreditsLine] : []),
     ...recap.rivals.map((r): CreditsLine => ({ kind: 'text', text: r })),
+    ...defeatedLines(content, run),
     { kind: 'gap', text: '' },
     { kind: 'heading', text: 'Made by' },
     { kind: 'text', text: 'Kice, director' },
@@ -43,4 +46,19 @@ export function buildCredits(content: Content, run: RunState): CreditsLine[] {
     { kind: 'title', text: 'Thanks for playing' },
   ];
   return lines;
+}
+
+/** Ideas W5 (F178): everyone you beat, with their teams' sprites in rows (at most MAX_FOES trainers, newest first). */
+const MAX_FOES = 8;
+export function defeatedLines(content: Content, run: RunState): CreditsLine[] {
+  const beaten = run.story.enemyProfiles.filter((p) => p.battles.some((b) => b.result === 'win')).slice(-MAX_FOES).reverse();
+  if (beaten.length === 0) return [];
+  return [
+    { kind: 'gap', text: '' },
+    { kind: 'heading', text: 'Everyone We Beat' },
+    ...beaten.flatMap((p): CreditsLine[] => [
+      { kind: 'text', text: p.name },
+      { kind: 'mons', text: '', species: p.team.map((m) => m.speciesId).filter((id) => content.species.has(id)).slice(0, 6) },
+    ]),
+  ];
 }

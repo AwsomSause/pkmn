@@ -1915,6 +1915,11 @@ export const BalanceSchema = z.object({
   specialSpecimen: z.object({ levelPenalty: z.number().int().min(0) }).default({ levelPenalty: 3 }),
   /** Extra stock the shop carries in a mode (key: the mode id). */
   modeShops: z.record(z.string(), z.array(z.object({ item: z.string(), price: z.number().int().positive(), minBadges: z.number().int().min(0) }))).default({}),
+  /** Ideas W5: shopkeeper loyalty (run flag `shop-loyalty`) lowers prices; a gift (flag `secret-shop`) opens a secret tier of stock. */
+  npcShop: z.object({
+    loyaltyDiscounts: z.array(z.object({ atLeast: z.number().int().min(1), discount: z.number().min(0).max(0.9) })).default([]),
+    secretTier: z.array(z.object({ item: z.string(), price: z.number().int().positive(), minBadges: z.number().int().min(0) })).default([]),
+  }).default({ loyaltyDiscounts: [], secretTier: [] }),
   /** Penny Pincher: a won run that spent at most this much in shops. */
   frugalRunMaxSpent: z.number().int().min(0).default(300),
   attributeItemFalloff: z.object({ afterBoosts: z.number().int().min(0), factor: z.number().min(0).max(1) }).default({ afterBoosts: 2, factor: 0.5 }),
@@ -2780,6 +2785,19 @@ export const EventDefSchema = z.object({
 }).refine((e) => e.choices.every((c) => (c.check === undefined && c.chance === undefined) || c.failure), { message: 'a choice with a check or chance needs a failure outcome' });
 export type EventDef = z.infer<typeof EventDefSchema>;
 
+/** Ideas W5: story text banks (npcStory.json): lore fragments, trainer backstories, evolution diary, newspaper, ending hints, New Game+ variants. */
+export const NpcStorySchema = z.object({
+  lore: z.array(z.object({ id: z.string().regex(/^[a-z][a-z0-9-]*$/), title: z.string().min(1), text: z.string().min(1) })).min(1),
+  backstory: z.object({ origins: z.array(z.string().min(1)).min(1), motives: z.array(z.string().min(1)).min(1), secrets: z.array(z.string().min(1)).min(1) }),
+  diary: z.array(z.object({ id: z.string().min(1), text: z.string().includes('{name}') })).min(1),
+  news: z.object({ win: z.array(z.string().min(1)).min(1), loss: z.array(z.string().min(1)).min(1), rumour: z.array(z.string().min(1)).min(1) }),
+  hints: z.array(z.object({ id: z.string().min(1), ending: z.enum(['storm', 'untouched', 'rivals', 'champion']), text: z.string().min(1) })).min(1),
+  ngVariants: z.array(z.object({ atLeast: z.number().int().min(1), name: z.string().min(1), text: z.string().min(1) })).min(1),
+  /** Gossip lines the paper prints for run flags `gossip-<id>` (rumour board, I146). */
+  gossip: z.record(z.string(), z.string().min(1)).default({}),
+});
+export type NpcStory = z.infer<typeof NpcStorySchema>;
+
 export const EventsFileSchema = z.object({ events: z.array(EventDefSchema).min(1) });
 
 export interface Content {
@@ -2837,6 +2855,8 @@ export interface Content {
   minigames: MinigameFile;
   zMoves: ZMoveData;
   maxMoves: MaxMoveData;
+  /** Ideas W5 text banks (npcStory.json, core/npcMemory.ts). */
+  npcStory: NpcStory;
 }
 
 /** One trainer's unlock challenge (trainerUnlocks.json, built by `npm run data:trainer-unlocks`). */

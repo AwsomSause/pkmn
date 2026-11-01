@@ -106,6 +106,7 @@ export const SETTINGS: SettingDef[] = [
   // Text & Dialogue
   { id: 'textSpeed', label: 'Battle text speed', description: 'How fast battle messages appear.', category: 'text', applies: 'now', ...choice('textSpeed', { instant: 'Instant', fast: 'Fast', normal: 'Normal', slow: 'Slow' }, ['instant', 'fast', 'normal', 'slow']) },
   { id: 'dialogueFrequency', label: 'Trainer talk', description: 'How much trainers speak in battle.', category: 'text', applies: 'now', ...choice('dialogueFrequency', { off: 'Off', low: 'Low', normal: 'Normal', high: 'High' }, ['normal', 'high', 'off', 'low']) },
+  { id: 'skipSeenDialogue', label: 'Skip seen event text', description: 'Map-event text you have read before shows at once instead of typing out.', category: 'text', applies: 'now', ...toggle('skipSeenDialogue') },
   { id: 'autoAdvance', label: 'Auto-advance messages', description: 'Messages move on by themselves after a short wait.', category: 'text', applies: 'now', ...toggle('autoAdvance') },
   { id: 'messageDelay', label: 'Message delay', description: 'How long an auto-advanced message waits.', category: 'text', applies: 'now', advanced: true, disabled: (s) => !s.autoAdvance, ...choice('messageDelay', { short: 'Short', normal: 'Normal', long: 'Long' }, ['short', 'normal', 'long']) },
   // Accessibility

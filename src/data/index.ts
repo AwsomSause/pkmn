@@ -10,6 +10,7 @@ import {
   GameEventsFileSchema,
   ATTRIBUTE_KEYS,
   EventsFileSchema,
+  NpcStorySchema,
   RunPrepFileSchema,
   ArchetypeSchema,
   TrainerUnlocksFileSchema,
@@ -84,6 +85,8 @@ import { MINIGAMES } from '../core/minigame/games';
 import { TotemFileSchema } from '../core/totem/schema';
 import { RaidFileSchema } from '../core/raid/schema';
 import eventsJson from './events.json';
+import eventsW5Json from './eventsW5.json';
+import npcStoryJson from './npcStory.json';
 import { isGiftable } from '../core/events';
 
 export class ContentError extends Error {
@@ -129,6 +132,9 @@ export interface RawContent {
   minigames: unknown;
   zMoves: unknown;
   maxMoves: unknown;
+  npcStory: unknown;
+  /** Ideas W5 map events (eventsW5.json), added to `events`. */
+  eventsW5: unknown;
 }
 
 /**
@@ -186,6 +192,8 @@ export const RAW_CONTENT: RawContent = {
   zMoves: zMovesJson,
   // Generated: npm run data:maxmoves.
   maxMoves: maxMovesJson,
+  npcStory: npcStoryJson,
+  eventsW5: eventsW5Json,
 };
 
 function parse<T>(schema: z.ZodType<T>, value: unknown, label: string, problems: string[]): T | null {
@@ -250,7 +258,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const shadowWorld = parse(ShadowWorldFileSchema, raw.shadowWorld, 'shadowWorld.json', problems);
   const evilTeams = parse(EvilFileSchema, raw.evilTeams, 'evilTeams.json', problems);
   // Evil Team storyline and operation stops are expanded from templates into ordinary events (core/evil/content.ts).
-  const eventsFile = parse(EventsFileSchema, evilTeams ? { events: [...(raw.events as { events: unknown[] }).events, ...expandEvilEvents(evilTeams)] } : raw.events, 'events.json', problems);
+  const w5Events = ((raw.eventsW5 as { events?: unknown[] } | undefined)?.events ?? []);
+  const eventsFile = parse(EventsFileSchema, evilTeams ? { events: [...(raw.events as { events: unknown[] }).events, ...expandEvilEvents(evilTeams), ...w5Events] } : { events: [...(raw.events as { events: unknown[] }).events, ...w5Events] }, 'events.json', problems);
   const baseExpeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
   const legend = parse(LegendaryFileSchema, raw.legendaryEvents, 'legendaryEvents.json', problems);
   const raids = baseRaids && legend ? { ...baseRaids, raids: [...baseRaids.raids, ...legend.raids] } : null;
@@ -259,7 +268,8 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const minigames = parse(MinigameFileSchema, raw.minigames, 'minigames.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!quests || !evilTeams || !gameEventsFile || !eventsFile || !story || !raids || !totems || !shadowWorld || !expeditions || !legend || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
+  const npcStory = parse(NpcStorySchema, raw.npcStory, 'npcStory.json', problems);
+  if (!quests || !evilTeams || !gameEventsFile || !eventsFile || !story || !raids || !totems || !shadowWorld || !expeditions || !legend || !minigames || !zMoves || !maxMoves || !npcStory || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
     throw new ContentError(problems);
   }
 
@@ -303,6 +313,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     minigames,
     zMoves,
     maxMoves,
+    npcStory,
   };
 
   addCatalog(content, problems);

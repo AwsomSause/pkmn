@@ -13,6 +13,7 @@ import { decodeSeedCode, encodeSeedCode } from '../core/seedCode';
 import { contractBoard, contractDone, contractRewardText } from '../core/contracts';
 import Phaser from 'phaser';
 import { availableMentors, bondOf, categoryName, mentorUnlocked, MENTORS, tierName } from '../core/mentors';
+import { taleEntries } from '../core/npcMemory';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthProgress, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
@@ -46,7 +47,7 @@ import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 import { WiiCursor } from '../ui/wiiMotion';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -59,6 +60,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'quests', label: 'Trainer Quests', blurb: 'Each trainer\'s five-step quest line, done across runs (Enter for the steps).' },
   { room: 'mastery', label: 'Species Mastery', blurb: 'Every Pokémon you met, its mastery rank, and what each rank unlocks (Enter).' },
   { room: 'research', label: 'Research Room', blurb: 'Pokédex and form collection sets with Research Point milestones (Enter).' },
+  { room: 'tales', label: 'Tales & News', blurb: 'The paper, lore fragments, what NPCs remember and the endings you have seen (Enter).' },
   { room: 'codex', label: 'Moment Codex', blurb: 'Every Hyper and Overdrive moment you have discovered across runs (Enter).' },
   { room: 'card', label: 'Trainer Card', blurb: 'Your card: title, frame, runs, wins and badges.' },
   { room: 'wardrobe', label: 'Wardrobe', blurb: 'Choose the title and card frame on your trainer card (Enter).' },
@@ -148,7 +150,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['options', 'save', 'back'], blurb: 'Game settings, save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'intel', 'museum', 'seeds', 'mentors'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
+  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'tales', 'intel', 'museum', 'seeds', 'mentors'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe', 'card'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
@@ -486,6 +488,8 @@ export class HubScene extends Phaser.Scene {
         const met = MENTORS.filter((m) => bondOf(p, m.id).runs > 0).length;
         return `${availableMentors(p).length} of ${MENTORS.length} mentors open, ${met} met`;
       }
+      case 'tales':
+        return `${p.npcMemory.lore.length} of ${c.npcStory.lore.length} lore fragments · ${p.npcMemory.news.length} paper issues`;
       case 'codex': {
         const t = codexTotals(c, p);
         return `${t.found} of ${t.total} moments found`;
@@ -542,6 +546,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'codex':
         this.openCodex();
+        break;
+      case 'tales':
+        this.openTales();
         break;
       case 'mentors':
         this.openMentors();
@@ -1565,6 +1572,19 @@ export class HubScene extends Phaser.Scene {
       };
     });
     this.openPicker({ title: 'Mentors', rows, columns: 1, rowHeight: 40, onSelect: () => undefined, onBack: () => this.closePicker() });
+  }
+
+  private openTales(): void {
+    const { session } = services();
+    const rows: PickerRow[] = taleEntries(session.content, session.profile.npcMemory).map((e) => ({
+      problem: null,
+      hint: e.hint,
+      draw: (scene, box, w, h) => {
+        box.add(scene.add.text(12, h / 2, e.label, textStyle(16, e.found ? COLORS.text : COLORS.textMuted)).setOrigin(0, 0.5));
+        box.add(scene.add.text(w - 12, h / 2, e.right, textStyle(13, COLORS.textMuted)).setOrigin(1, 0.5));
+      },
+    }));
+    this.openPicker({ title: 'Tales & News', rows, columns: 2, rowHeight: 40, onSelect: () => undefined, onBack: () => this.closePicker() });
   }
 
   private openCodex(): void {

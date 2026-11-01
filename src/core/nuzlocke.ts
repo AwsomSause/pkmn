@@ -9,6 +9,7 @@ import type { Content } from './contentSchema';
 import { getMode } from './rules';
 import { getSpecies } from './pokemon';
 import type { RunRules, RunState } from './state';
+import { spendInsurance } from './npcShop';
 
 export type NuzlockeLevel = 'standard' | 'hardcore';
 
@@ -43,7 +44,8 @@ export const nuzlockeCatchProblem = (battle: { nuzlockeNoCatch?: boolean }): str
  */
 export function buryFallen(content: Content, run: RunState, cause: string): string[] {
   if (!nuzlockeLevel(run.rules)) return [];
-  const fallen = run.party.filter((m) => m.hp <= 0 && m.uid !== run.battle?.loaner);
+  let fallen = run.party.filter((m) => m.hp <= 0 && m.uid !== run.battle?.loaner);
+  fallen = spendInsurance(run, fallen);
   if (fallen.length === 0 || fallen.length >= run.party.length) return [];
   const nz = (run.nuzlocke ??= { areas: [], memorial: [] });
   const top = Math.max(...run.party.map((m) => m.level));

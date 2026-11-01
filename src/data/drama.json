@@ -580,6 +580,111 @@
       "victory": [
         "Your {type} plan was not enough."
       ]
+    },
+    "veteran": {
+      "opening": [
+        "Those badges were earned. I will not go easy on you.",
+        "So many badges already. Let me see what they were really for."
+      ],
+      "defeat": [
+        "Those badges were no accident. Go on."
+      ],
+      "victory": [
+        "The badges are heavy. Maybe you forgot to carry them."
+      ],
+      "taunt": [
+        "A trainer with that many badges should not be hesitating."
+      ]
+    },
+    "newcomer": {
+      "opening": [
+        "Few badges and a lot of nerve. I like it.",
+        "Fresh to the circuit? Then let me show you how this ends."
+      ],
+      "defeat": [
+        "Not bad for someone so new. Keep going."
+      ],
+      "victory": [
+        "Come back when the badges outnumber the doubts."
+      ],
+      "taunt": [
+        "Everyone starts with an empty case. Not everyone starts with this much confidence."
+      ]
+    },
+    "diverse": {
+      "opening": [
+        "Every type on one team. Either you are a genius or you are lost.",
+        "A team with no theme? I will have to study you."
+      ],
+      "defeat": [
+        "Breadth beat me. I did not expect it."
+      ],
+      "victory": [
+        "Variety is nice. Focus wins."
+      ],
+      "taunt": [
+        "So many types, and none enough to scare me."
+      ]
+    },
+    "mono": {
+      "opening": [
+        "An all-one-type team. Bold, and predictable.",
+        "One type, six Pokémon. I know exactly where to aim."
+      ],
+      "defeat": [
+        "You made the single type count. Respect."
+      ],
+      "victory": [
+        "One type is a door with one key. I changed the lock."
+      ],
+      "taunt": [
+        "I know your whole team already. It is one idea six times."
+      ]
+    },
+    "merciful": {
+      "opening": [
+        "They say you let your rivals go. I will see if you let me go.",
+        "You have a name for kindness out here. It will not help you in this ring."
+      ],
+      "defeat": [
+        "Mercy and strength. A rarer pair than you think."
+      ],
+      "victory": [
+        "Kindness is lovely. It is not armor."
+      ],
+      "taunt": [
+        "Will you be gentle with me too?"
+      ]
+    },
+    "ruthless": {
+      "opening": [
+        "I have heard what you do to people who stand in your way.",
+        "They say you never hold back. Neither will I."
+      ],
+      "defeat": [
+        "You were right to be that hard. I was not ready."
+      ],
+      "victory": [
+        "Cruelty only looks like strength until someone meets it."
+      ],
+      "taunt": [
+        "Everybody talks about you. Nobody says it kindly."
+      ]
+    },
+    "returning": {
+      "opening": [
+        "You again. The whole region keeps telling stories about you.",
+        "I know that stance. You have fought here before."
+      ],
+      "defeat": [
+        "Every time you come back, you are better. I should have trained harder."
+      ],
+      "victory": [
+        "Not this time. Even the legends lose."
+      ],
+      "taunt": [
+        "Old habits, old moves. I remember them."
+      ]
     }
   },
   "afterBattle": {

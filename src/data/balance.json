@@ -578,6 +578,21 @@
    { "item": "soothe-bell", "price": 1200, "minBadges": 0 }
   ]
  },
+ "npcShop": {
+  "loyaltyDiscounts": [
+   { "atLeast": 2, "discount": 0.05 },
+   { "atLeast": 4, "discount": 0.1 },
+   { "atLeast": 6, "discount": 0.15 }
+  ],
+  "secretTier": [
+   { "item": "snag-ball", "price": 1500, "minBadges": 0 },
+   { "item": "blessing-ball", "price": 2000, "minBadges": 0 },
+   { "item": "oval-stone", "price": 1000, "minBadges": 0 },
+   { "item": "strawberry-sweet", "price": 1800, "minBadges": 1 },
+   { "item": "last-stand-charm", "price": 2500, "minBadges": 2 },
+   { "item": "master-ball", "price": 9000, "minBadges": 4 }
+  ]
+ },
  "frugalRunMaxSpent": 300,
  "shopSale": {
   "everyStages": 3,
