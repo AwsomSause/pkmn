@@ -3,35 +3,14 @@
 // hash (never the battle, encounter or reward streams), so a reload shows the same plaza. Presentation reads this; it never
 // changes game state.
 
-import { z } from 'zod';
-import json from '../../data/plazaLife.json';
 import { hashSeed, Rng } from '../rng';
 import { stageKey } from '../mapItems';
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
-import { plazaView, plazaVisitors, type PlazaSectionId, type PlazaView } from './flow';
+import { plazaView, plazaVisitors, rareVisitorHere, type PlazaSectionId, type PlazaView } from './flow';
+import { PLAZA_LIFE, type DistrictId } from './life';
 
-const SECTION_IDS = ['stalls', 'oddities', 'traders', 'board', 'rumors', 'club', 'errands', 'alley', 'services', 'people', 'caravan'] as const;
-const DistrictIdSchema = z.enum(['market', 'trading', 'gathering', 'social', 'services', 'secret']);
-export type DistrictId = z.infer<typeof DistrictIdSchema>;
-
-const LifeSchema = z.object({
-  districts: z.array(z.object({
-    id: DistrictIdSchema,
-    name: z.string(),
-    blurb: z.string(),
-    sections: z.array(z.enum(SECTION_IDS)).min(1),
-    x: z.number().min(0).max(1),
-    y: z.number().min(0).max(1),
-    color: z.string(),
-  })).length(6),
-  looks: z.array(z.object({ id: z.string(), name: z.string(), decor: z.array(z.string()), tint: z.number().int() })).min(3),
-  travelers: z.array(z.object({ name: z.string(), line: z.string() })).min(6),
-  chatter: z.array(z.tuple([z.string(), z.string()])).min(3),
-  rare: z.array(z.object({ id: z.string(), name: z.string(), line: z.string(), minBadges: z.number().int().min(0) })).min(2),
-  bubbles: z.object({ player: z.array(z.string()).min(1), secretClosed: z.string() }),
-});
-export const PLAZA_LIFE = LifeSchema.parse(json);
+export { PLAZA_LIFE, type DistrictId };
 
 export interface DistrictView {
   id: DistrictId;
@@ -58,6 +37,8 @@ export interface Wanderer {
   home: DistrictId;
   /** Body colour for the figure. */
   color: number;
+  /** A trainer sprite asset id (a trainer class's art), or none: the scene then draws a simple figure. */
+  spriteId?: string;
   /** For `pokemon`: the species shown. */
   speciesId?: string;
   /** Pokémon walk beside this wanderer's id, trainers have none. */
@@ -108,8 +89,11 @@ export function plazaLayout(content: Content, run: RunState, sideId: string): Pl
   const crowd: Wanderer[] = [];
   let color = 0;
   const nextColor = (): number => BODY_COLORS[color++ % BODY_COLORS.length]!;
-  const add = (w: Omit<Wanderer, 'color' | 'speed' | 'roam'> & { color?: number }): Wanderer => {
-    const full: Wanderer = { color: w.color ?? nextColor(), speed: 14 + Math.floor(rng.float() * 18), roam: 50 + Math.floor(rng.float() * 60), ...w } as Wanderer;
+  const classes = [...content.trainers.values()].filter((t) => t.spriteAssetId).sort((a, b) => a.id.localeCompare(b.id));
+  const spriteOf = (key: string, classId?: string): string | undefined =>
+    (classId ? content.trainers.get(classId)?.spriteAssetId : undefined) ?? (classes.length > 0 ? classes[new Rng(hashSeed(`plaza-sprite::${key}`)).int(0, classes.length - 1)]!.spriteAssetId : undefined);
+  const add = (w: Omit<Wanderer, 'color' | 'speed' | 'roam' | 'spriteId'> & { color?: number; classId?: string }): Wanderer => {
+    const full: Wanderer = { spriteId: w.kind === 'pokemon' ? undefined : spriteOf(w.id, w.classId), color: w.color ?? nextColor(), speed: 14 + Math.floor(rng.float() * 18), roam: 50 + Math.floor(rng.float() * 60), ...w } as Wanderer;
     crowd.push(full);
     return full;
   };
@@ -124,18 +108,15 @@ export function plazaLayout(content: Content, run: RunState, sideId: string): Pl
     if (visitors.rival) {
       const r = visitors.rival;
       const line = r.state === 'ally' ? `${r.name}: "Good to see you. I saved you some supplies."` : r.state === 'retired' ? `${r.name} nods and says nothing. The rivalry is over.` : `${r.name}: "Still going? I'm further along than you think."`;
-      add({ id: `rival:${r.id}`, kind: 'rival', name: r.name, line, home: 'social', color: 0xe04848 });
+      add({ id: `rival:${r.id}`, kind: 'rival', name: r.name, line, home: 'social', color: 0xe04848, classId: r.classId });
     }
-    if (visitors.foe) add({ id: `foe:${visitors.foe.name}`, kind: 'foe', name: visitors.foe.name, line: `${visitors.foe.name}: "You beat me fair. I've been practising."`, home: 'social', color: 0x888090 });
+    if (visitors.foe) add({ id: `foe:${visitors.foe.name}`, kind: 'foe', name: visitors.foe.name, line: `${visitors.foe.name}: "You beat me fair. I've been practising."`, home: 'social', color: 0x888090, classId: visitors.foe.classId });
     // Travellers: a different few every stage.
     const travelers = [...PLAZA_LIFE.travelers].map((t) => ({ t, k: rng.float() })).sort((a, b) => a.k - b.k).slice(0, 3 + (run.regionIndex >= 2 ? 1 : 0));
     travelers.forEach(({ t }, i) => add({ id: `trav:${i}`, kind: 'traveler', name: t.name, line: `${t.name}: "${t.line}"`, home: (['gathering', 'social', 'trading', 'market'] as DistrictId[])[i % 4]! }));
     // A rare visitor now and then (more often the further you are).
-    const eligible = PLAZA_LIFE.rare.filter((r) => r.minBadges <= run.badges.length);
-    if (eligible.length > 0 && rng.chance(Math.min(0.5, 0.15 + run.badges.length * 0.05))) {
-      const r = rng.pick(eligible);
-      add({ id: `rare:${r.id}`, kind: 'rare', name: r.name, line: `${r.name}: "${r.line}"`, home: 'gathering', color: 0xf8e060 });
-    }
+    const r = rareVisitorHere(run);
+    if (r) add({ id: `rare:${r.id}`, kind: 'rare', name: r.name, line: `${r.name}: "${r.line}" (Talk to them in the Gathering Square.)`, home: 'gathering', color: 0xf8e060 });
     // Pokémon wander and follow: a few of your own region's species, and one beside most trainers.
     const species = [...content.species.values()].filter((s) => s.assets && s.id).slice(0, 400);
     if (species.length > 0) {

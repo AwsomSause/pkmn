@@ -3,6 +3,8 @@
 
 import { describe, expect, it } from 'vitest';
 import { plazaLayout, PLAZA_LIFE } from '../../src/core/plaza/layout';
+import { rareVisitorHere, sectionView, usePlaza } from '../../src/core/plaza/flow';
+import { isGiftable } from '../../src/core/events';
 import { chooseStarter, createRun } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
 import { content } from './helpers';
@@ -74,5 +76,51 @@ describe('plaza layout', () => {
     const open = plazaLayout(content, run, sideOf(run)).districts.find((d) => d.id === 'secret')!;
     expect(open.locked).toBe(false);
     if (closed.locked) expect(closed.count).toBe(0);
+  });
+
+  it('gives trainer figures real class sprites', () => {
+    const run = plazaRun('layout-sprites');
+    const l = plazaLayout(content, run, sideOf(run));
+    const people = l.crowd.filter((w) => w.kind !== 'pokemon');
+    expect(people.length).toBeGreaterThan(0);
+    for (const w of people) expect(w.spriteId, w.id).toBeTruthy();
+  });
+});
+
+describe('plaza mini-events', () => {
+  it('only pays items that exist', () => {
+    const effects = [...PLAZA_LIFE.rare.flatMap((r) => r.gift), ...PLAZA_LIFE.fountain.wishes.flatMap((w) => w.effects), ...PLAZA_LIFE.performance.effects];
+    for (const e of effects) if (e.kind === 'item') expect(isGiftable(content, e.id), e.id).toBe(true);
+  });
+
+  it('the fountain and the performer work once per stage, and the wish cannot be rerolled', () => {
+    const run = plazaRun('mini-a');
+    run.money = 5000;
+    const side = sideOf(run);
+    const ids = (r: RunState) => sectionView(content, r, side, 'people').options.map((o) => o.id);
+    expect(ids(run)).toContain('fountain');
+    const a = structuredClone(run);
+    const b = structuredClone(run);
+    const ra = usePlaza(content, a, side, 'people', 'fountain');
+    const rb = usePlaza(content, b, side, 'people', 'fountain');
+    expect(ra.message).toBe(rb.message);
+    expect(() => usePlaza(content, ra.run, side, 'people', 'fountain')).toThrow();
+    const shown = usePlaza(content, ra.run, side, 'people', 'show');
+    expect(shown.run.plaza.rep).toBeGreaterThan(run.plaza.rep);
+    expect(() => usePlaza(content, shown.run, side, 'people', 'show')).toThrow();
+  });
+
+  it('a rare visitor gives a gift once', () => {
+    for (let i = 0; i < 40; i++) {
+      const run = plazaRun(`rare-${i}`, 6);
+      const v = rareVisitorHere(run);
+      if (!v) continue;
+      const side = sideOf(run);
+      const r = usePlaza(content, run, side, 'people', `rare:${v.id}`);
+      expect(r.message).toContain(v.giftText);
+      expect(() => usePlaza(content, r.run, side, 'people', `rare:${v.id}`)).toThrow();
+      return;
+    }
+    throw new Error('no rare visitor in 40 seeds');
   });
 });
