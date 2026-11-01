@@ -5,7 +5,7 @@ import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf
 import { tradeCandidates } from '../../src/core/events';
 import { bondOf } from '../../src/core/bond';
 import { evolutionTarget } from '../../src/core/evolution';
-import { calcStats } from '../../src/core/pokemon';
+import { createPokemon, calcStats } from '../../src/core/pokemon';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { RunStateSchema, type RunState } from '../../src/core/state';
 import { content } from './helpers';
@@ -307,4 +307,44 @@ it('sing-along is for singers and a good one protects the team from sleep', () =
   run.party[0]!.speciesId = 'jigglypuff';
   const out = careAction(content, run, 0, 'singalong', `tap:${CARE.tap.goal}`).run;
   expect(out.party[0]!.boosts).toContainEqual({ kind: 'immune', status: 'slp' });
+});
+
+describe('whole-team activities and more forms', () => {
+  function team(): RunState {
+    const run = setup();
+    for (const [id, uid] of [['pidgey', 'b2'], ['rattata', 'b3'], ['caterpie', 'b4']] as const) run.party.push(createPokemon(content, id, 10, uid));
+    return run;
+  }
+  it('team dance lifts everyone, more with good tapping; needs two Pokémon', () => {
+    expect(careProblem(content, setup(), 0, 'teamdance')).toMatch(/two/);
+    const run = team();
+    const out = careAction(content, run, 0, 'teamdance', `tap:${CARE.tap.goal}`).run;
+    expect(out.party.every((m) => m.care!.mood === CARE.team.dance.mood + CARE.team.dance.goodMood)).toBe(true);
+  });
+  it('camp race crowns the same winner every time', () => {
+    const a = careAction(content, team(), 0, 'race').message;
+    const b = careAction(content, team(), 0, 'race').message;
+    expect(a).toBe(b);
+    expect(a).toMatch(/wins/);
+  });
+  it('healing circle needs three healers', () => {
+    const run = team();
+    expect(careProblem(content, run, 0, 'healcircle')).toMatch(/needs/);
+    for (const m of run.party.slice(0, 3)) m.moves = [{ id: 'recover', pp: 5 }];
+    run.party.forEach((m) => (m.hp = 1));
+    const out = careAction(content, run, 0, 'healcircle').run;
+    expect(out.party[0]!.hp).toBeGreaterThan(1);
+  });
+  it('sparring trains both partners', () => {
+    const out = careAction(content, team(), 0, 'spar', 'atk').run;
+    expect(out.party[0]!.care!.train).toMatchObject({ stat: 'atk', left: CARE.team.spar.fights });
+    expect(out.party[1]!.care!.train).toMatchObject({ stat: 'atk', left: CARE.team.spar.fights });
+  });
+  it('Oricorio takes a season style', () => {
+    const run = setup();
+    run.party[0]!.speciesId = 'oricorio';
+    run.clock.day = 1;
+    expect(swapForms(content, run)).toBe(1);
+    expect(run.party[0]!.speciesId).toBe('oricorio-pom-pom');
+  });
 });

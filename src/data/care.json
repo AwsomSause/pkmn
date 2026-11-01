@@ -108,6 +108,9 @@
     ],
     "singalong": [
       "belts out a tune, and the team sways along."
+    ],
+    "dance": [
+      "The whole team dances around the fire."
     ]
   },
   "accessories": {
@@ -192,6 +195,49 @@
         "Autumn": "castform",
         "Winter": "castform-snowy"
       }
+    },
+    {
+      "family": [
+        "oricorio",
+        "oricorio-pom-pom",
+        "oricorio-pau",
+        "oricorio-sensu"
+      ],
+      "bySeason": {
+        "Spring": "oricorio-pom-pom",
+        "Summer": "oricorio",
+        "Autumn": "oricorio-sensu",
+        "Winter": "oricorio-pau"
+      }
+    },
+    {
+      "family": [
+        "wormadam",
+        "wormadam-sandy",
+        "wormadam-trash"
+      ],
+      "bySeason": {
+        "Spring": "wormadam",
+        "Summer": "wormadam-sandy",
+        "Autumn": "wormadam-trash",
+        "Winter": "wormadam"
+      }
+    },
+    {
+      "family": [
+        "rotom",
+        "rotom-heat",
+        "rotom-wash",
+        "rotom-frost",
+        "rotom-fan",
+        "rotom-mow"
+      ],
+      "bySeason": {
+        "Spring": "rotom-mow",
+        "Summer": "rotom-heat",
+        "Autumn": "rotom-fan",
+        "Winter": "rotom-frost"
+      }
     }
   ],
   "cuddleBonus": 15,
@@ -233,5 +279,43 @@
       "brionne"
     ],
     "friendship": 2
+  },
+  "team": {
+    "dance": {
+      "mood": 1,
+      "goodMood": 1,
+      "friendship": 1
+    },
+    "race": {
+      "winnerMood": 1,
+      "othersFriendship": 1
+    },
+    "healCircle": {
+      "moves": [
+        "softboiled",
+        "recover",
+        "heal-pulse",
+        "moonlight",
+        "synthesis",
+        "morning-sun",
+        "milk-drink",
+        "wish",
+        "aromatherapy",
+        "life-dew",
+        "floral-healing",
+        "heal-order",
+        "slack-off",
+        "roost",
+        "shore-up",
+        "strength-sap",
+        "rest"
+      ],
+      "minHealers": 3,
+      "healShare": 0.4
+    },
+    "spar": {
+      "fights": 3,
+      "statPercent": 6
+    }
   }
 }

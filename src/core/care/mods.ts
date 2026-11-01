@@ -37,6 +37,7 @@ const CareDataSchema = z.object({
   formSwaps: z.array(z.object({ family: z.array(z.string()), bySeason: z.record(z.string(), z.string()) })),
   whistle: z.object({ minTrust: z.number().int(), commands: z.record(z.string(), z.object({ stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'crit']), stages: z.number().int(), turns: z.number().int().positive(), line: z.string() })) }),
   singalong: z.object({ species: z.array(z.string()), friendship: z.number().int() }),
+  team: z.object({ dance: z.object({ mood: z.number().int(), goodMood: z.number().int(), friendship: z.number().int() }), race: z.object({ winnerMood: z.number().int(), othersFriendship: z.number().int() }), healCircle: z.object({ moves: z.array(z.string()), minHealers: z.number().int(), healShare: z.number() }), spar: z.object({ fights: z.number().int(), statPercent: z.number() }) }),
   sing: z.object({ eggSteps: z.number().int().min(1) }),
   releaseGift: z.object({ candiesPerLevels: z.number().int().min(1) }),
   quips: z.record(z.string(), z.array(z.string()).min(1)),

@@ -20,6 +20,7 @@ Also: I17 Show off (Hype/hyper readiness +8), F46/I51 Hold evolution (no evolvin
 
 ## Follow-up 2
 M52 **Teamwork** (`data/teamwork.json`, 12 pairs like Plusle + Minun): the newcomer gets +1 in the pair's stats when sent in beside its partner, once per pair per battle (a boost, not an attack move; the log says "X and Y work together: Double Spark!"). M62 **Mastery stars**: a move used 20 times by the lead earns a star (+1 PP, +5% accuracy). M64 **Seasonal forms**: Castform takes the run's season form at a healing stop. I14 **Cuddle**: a hug gives friendship evolvers (Pichu, Eevee, Togepi...) +15 friendship (a bonus, not a hard gate: a gate broke old-seed determinism). I11 **Whistle** (Focus = crit, Steady = accuracy, Rush = speed; trust 40+; next fight only; no Guard/Brace). I26 **Sing-along** (singers only; tap Enter; a good one gives the whole team sleep immunity next fight). Show off (I17) and Hold evolution (F46/I51).
+Whole-team activities: Team dance (tap; all moods up), Camp race (I301, fastest wins by stat), Healing circle (I326, 3 healers, heals everyone 40%), Tag-team sparring (I327, two Pokémon train a stat together). Seasonal forms now also cover Oricorio, Wormadam and Rotom. The Care menu scrolls.
 Already existing, so not rebuilt: M61 tutor and F35 relearner (`services.json` Move Tutor / relearn services).
 
 ## Earlier (see `docs/status/party-life.md`, Bond Engine)
