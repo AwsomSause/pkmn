@@ -25,6 +25,7 @@ test('Pokédex list and species page', async ({ page }) => {
   await page.keyboard.press('Enter'); // first set: Generation 1
   await page.waitForTimeout(800);
   await page.screenshot({ path: 'test-results/dex-list.png' });
+  await page.keyboard.press('ArrowRight'); // the first row is the tab switcher; Bulbasaur sits beside it
   await page.keyboard.press('Enter'); // first species: Bulbasaur
   await page.waitForTimeout(1500);
   const open = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').children.list.some((o: any) => o.name === 'dex-info'));
