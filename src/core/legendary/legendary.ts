@@ -29,7 +29,8 @@ export function legendaryProblem(content: Content, run: RunState, def: Expeditio
   const stage = run.stage;
   if (!l || !stage || stage.kind !== 'stage') return 'no stage';
   const rec = run.legendary;
-  if (rec?.completed.includes(def.id)) return 'already completed this run';
+  // A Legendary is faced once per run, in either its duel or its Raid version.
+  if (rec?.completed.some((id) => content.expeditions.expeditions.find((e) => e.id === id)?.legendary?.species === l.species)) return 'already completed this run';
   if (!content.species.has(l.species)) return 'unknown species';
   const t = l.trigger;
   if (run.regionIndex < t.minRegion) return `needs region ${t.minRegion + 1}+`;
