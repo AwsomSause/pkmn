@@ -26,7 +26,7 @@ import { onInputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { Menu } from '../ui/widgets';
-import { glassPanel as drawPanel } from '../ui/aero';
+import { AERO, drawGlass, glassPanel as drawPanel, type MotionLevel } from '../ui/aero';
 import { dailySetup } from '../core/daily';
 import { dailyClaimKey, getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
 import { isClaimed } from '../core/quests';
@@ -42,10 +42,55 @@ export interface RunPrepData {
   rules?: RulesChoice;
   /** Which modifier the Modifier row shows (Enter turns it on or off). */
   modCursor?: number;
+  /** The page shown (0 to 4; default the Overview). */
+  page?: number;
+  /** Page change direction, for the slide-in. */
+  slide?: 1 | -1;
 }
 
-type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'loan' | 'vault' | 'mode' | 'region' | 'difficulty' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
-const ROWS: Row[] = ['start', 'trainer', 'campaign', 'pool', 'draft', 'type', 'token', 'directive', 'license', 'loan', 'vault', 'mode', 'region', 'difficulty', 'modifier', 'deathBlock', 'seed', 'save', 'load'];
+type Row = 'start' | 'trainer' | 'campaign' | 'pool' | 'draft' | 'type' | 'token' | 'directive' | 'license' | 'loan' | 'vault' | 'mode' | 'region' | 'difficulty' | 'weeks' | 'modifier' | 'deathBlock' | 'seed' | 'save' | 'load';
+
+interface PageDef {
+  id: string;
+  title: string;
+  blurb: string;
+  tint: number;
+  rows: Row[];
+}
+
+/** The five pages of the Preparation Desk (spec §13). It opens on the Overview, where Enter rolls the starters. */
+const PAGES: PageDef[] = [
+  { id: 'config', title: 'Run Setup', blurb: 'Mode, region, difficulty, campaign, Weeks and seed.', tint: 0x2f80d0, rows: ['mode', 'region', 'difficulty', 'campaign', 'weeks', 'seed'] },
+  { id: 'trainer', title: 'Trainer', blurb: 'Who you are and what you bring: preparation, directive, license, loan, Vault.', tint: 0x2fa080, rows: ['trainer', 'token', 'directive', 'license', 'loan', 'vault'] },
+  { id: 'starters', title: 'Starters', blurb: 'The starter pool and how the starters are drafted.', tint: 0xd0902f, rows: ['pool', 'draft', 'type'] },
+  { id: 'modifiers', title: 'Modifiers', blurb: 'Special rules, challenges and Death-Block.', tint: 0xb050c0, rows: ['modifier', 'deathBlock'] },
+  { id: 'overview', title: 'Overview', blurb: 'Check everything, keep a preset, then roll the starters.', tint: 0xd04a5a, rows: ['start', 'save', 'load'] },
+];
+const OVERVIEW = PAGES.length - 1;
+
+/** What each row changes, shown beside the list while it is focused. */
+const ROW_HELP: Record<Row, string> = {
+  start: 'Rolls your starters from the pool and begins the run with everything on this desk.',
+  trainer: 'The Trainer you play: their Pokémon leanings, strengths and weaknesses. ←/→ changes it.',
+  campaign: 'How many regions the run covers. Shorter campaigns are for testing and do not count for progress.',
+  pool: 'Which Pokémon your starters are drawn from. Unlock more pools in the Starter Laboratory.',
+  draft: 'How you pick your starters: choose from a few, a blind draft, or focus on one type.',
+  type: 'Type Focus only: the type your starter choices lean toward.',
+  token: 'One preparation for the run (extra items, money or a hint). More unlock with achievements and licenses.',
+  directive: 'Study one type this run for bonus Research Points when you defeat or catch its Pokémon.',
+  license: 'A Field License gives one exploration hint for the whole run.',
+  loan: 'Borrow money now. Finish with enough badges, or the Bank takes credits back.',
+  vault: "Take a rare held item from the Collector's Vault into this run.",
+  mode: 'The kind of run: Standard, Adventure, Endless, Daily Run and more. Some modes pay no account rewards.',
+  region: 'Regional Circuit only: the region you run. "By seed" lets the seed pick.',
+  difficulty: 'Raises enemy levels and the rewards for beating them.',
+  weeks: 'Weeks ON (the default): this week\'s event and any holiday event apply to this run: their rules, roamers and map stops, and the run counts toward their goals. Weeks OFF: none of that this run. Events you already finished and their rewards are kept either way. The choice is fixed for the whole run.',
+  modifier: '←/→ browse the modifiers, Enter turns one on or off. Each one changes a rule and the rewards.',
+  deathBlock: 'Once, at the start of a run, a wipe sends you back to a checkpoint instead of ending it. On for your first three runs.',
+  seed: 'A fixed seed makes the run play out the same way again. Paste a shared seed code (PR1.…) to copy its trainer and rules too.',
+  save: 'Keeps this whole setup in a preset slot to load later.',
+  load: 'Replaces this setup with one from a preset slot.',
+};
 
 /** Cuts a menu label so it stays inside the left panel. */
 function fitLabel(text: string, max = 38): string {
@@ -61,6 +106,8 @@ export class RunPrepScene extends Phaser.Scene {
   private seed: string | null = null;
   private rules: RulesChoice = STANDARD_CHOICE;
   private modCursor = 0;
+  private page = OVERVIEW;
+  private help: Phaser.GameObjects.Text | null = null;
 
   constructor() {
     super('RunPrep');
@@ -86,10 +133,17 @@ export class RunPrepScene extends Phaser.Scene {
     this.modCursor = data.modCursor ?? 0;
     this.rules = data.rules ?? { ...STANDARD_CHOICE, deathBlock: profile.stats.runsEnded < 3 && !params.has('debug') };
     const notice = [data.notice, ...resolved.problems].filter(Boolean).join(' ');
+    this.page = Math.max(0, Math.min(OVERVIEW, data.page ?? OVERVIEW));
+    const def = PAGES[this.page]!;
+    const motion = session.settings.battleAnimations;
+    const rows = def.rows;
+    this.help = null; // a Text from the screen's previous run is gone
 
-    this.add.text(GAME_WIDTH / 2, 26, 'Preparation Desk', textStyle(36, COLORS.textLight)).setOrigin(0.5);
-    drawPanel(this, 16, 56, 400, 420);
-    drawPanel(this, 430, 56, GAME_WIDTH - 446, 420, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    this.add.text(GAME_WIDTH / 2, 22, 'Preparation Desk', textStyle(30, COLORS.textLight)).setOrigin(0.5);
+    this.drawTabs();
+    drawPanel(this, 16, 96, 440, 376);
+    drawPanel(this, 470, 96, GAME_WIDTH - 486, 376, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
+    this.add.text(36, 104, def.blurb, textStyle(14, COLORS.textMuted, { wordWrap: { width: 400 } }));
 
     const archetype = content.archetypes.get(this.archetypeId)!;
     const pool = content.starterPools.get(this.prep.poolId)!;
@@ -110,66 +164,140 @@ export class RunPrepScene extends Phaser.Scene {
       mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
       region: `Circuit region: ${this.rules.regionId ? content.regions.get(this.rules.regionId)?.name ?? this.rules.regionId : 'by seed'}`,
       difficulty: `Difficulty: ${getDifficulty(this.rules.difficultyId)?.name}`,
+      weeks: `Weeks: ${this.rules.weeks === false ? 'OFF' : 'ON (default)'}`,
       modifier: `◂ ${RUN_RULES.modifiers[this.modCursor]?.name} ▸ ${this.rules.modifierIds.includes(RUN_RULES.modifiers[this.modCursor]!.id) ? 'ON' : 'off'}`,
       deathBlock: `Death-Block: ${this.rules.deathBlock ? 'on' : 'off'}`,
       seed: `Seed: ${this.seed ?? 'random'}`,
       save: 'Save as preset…',
       load: 'Load a preset…',
     };
+    const disabled = (r: Row): boolean => (r === 'type' && rule.kind !== 'typeFocus') || (r === 'region' && getMode(this.rules.modeId)?.campaignId !== 'regional-circuit');
     this.menu = new Menu(this, {
-      x: 40,
-      y: 72,
-      options: ROWS.map((r) => ({ label: fitLabel(labels[r]), disabled: (r === 'type' && rule.kind !== 'typeFocus') || (r === 'region' && getMode(this.rules.modeId)?.campaignId !== 'regional-circuit') })),
-      itemWidth: 370,
-      itemHeight: 22,
-      fontSize: 16,
-      onFocus: (i) => (this.focusIndex = i),
-      onSelect: (i) => this.select(ROWS[i]!),
+      x: 34,
+      y: 134,
+      options: rows.map((r) => ({ label: fitLabel(labels[r], 32), disabled: disabled(r) })),
+      itemWidth: 410,
+      itemHeight: 52,
+      fontSize: 20,
+      glass: { tints: rows.map(() => def.tint), motion: motion as MotionLevel },
+      onFocus: (i) => {
+        this.focusIndex = i;
+        this.help?.setText(ROW_HELP[rows[i]!] ?? '');
+      },
+      onSelect: (i) => this.select(rows[i]!),
       onBack: () => this.scene.start('TrainerSelect'),
     });
 
-    // The Run Build Summary on the right.
-    const summary = this.add.container(450, 70);
+    // The right pane: what the focused row does, then the Run Build Summary (the whole pane on the Overview).
+    const overview = this.page === OVERVIEW;
+    const left = 490;
+    const width = GAME_WIDTH - 526;
+    let top = 108;
+    if (!overview) {
+      this.add.text(left, top, 'What this does', textStyle(16, '#f0e0a0'));
+      this.help = this.add.text(left, top + 22, ROW_HELP[rows[Math.min(data.focus ?? 0, rows.length - 1)]!] ?? '', textStyle(15, COLORS.text, { wordWrap: { width } }));
+      top += 128;
+    }
+    const summary = this.add.container(left, top);
     let y = 0;
     const line = (text: string, size = 18, color: string = COLORS.textLight) => {
-      const t = this.add.text(0, y, text, textStyle(size, color, { wordWrap: { width: GAME_WIDTH - 486 } }));
+      const t = this.add.text(0, y, text, textStyle(size, color, { wordWrap: { width } }));
       summary.add(t);
-      y += t.height + 5;
+      y += t.height + 4;
     };
-    line('Run Build Summary', 24);
-    for (const l of buildSummary(content, this.archetypeId, this.prep, profile.attributes)) line(l, 17, l.startsWith('  −') ? '#f0a0a0' : l.startsWith('  +') ? '#a0e0a0' : COLORS.textLight);
-    y += 6;
-    for (const l of rulesLines(this.rules)) line(l, 15, '#c8e0f0');
-    if (getMode(this.rules.modeId)?.dailySeed) for (const l of dailySetup(content, new Date().toISOString(), this.prep, this.rules).lines) line(l, 15, '#f0e0a0');
-    y += 6;
-    line(`${rule.description}`, 15, '#d8d0e0');
-    const locked = [
-      ...[...content.draftRules.values()].filter((r) => !draftRuleAvailable(profile, r)).map((r) => `${r.name} (needs the ${content.licenses.get(r.license!)?.name})`),
-      ...[...content.prepTokens.values()].filter((t) => !tokenAvailable(profile, t)).map((t) => `${t.name} (${tokenLockText(content, t)})`),
-    ];
-    if (locked.length > 0) {
+    if (overview) {
+      line('Run Overview', 24);
+      for (const l of buildSummary(content, this.archetypeId, this.prep, profile.attributes)) line(l, 17, l.startsWith('  −') ? '#f0a0a0' : l.startsWith('  +') ? '#a0e0a0' : COLORS.textLight);
+      y += 6;
+      for (const l of rulesLines(this.rules)) line(l, 15, '#c8e0f0');
+      if (getMode(this.rules.modeId)?.dailySeed) for (const l of dailySetup(content, new Date().toISOString(), this.prep, this.rules).lines) line(l, 15, '#f0e0a0');
+      y += 6;
+      line(`${rule.description}`, 15, '#d8d0e0');
+      const locked = [
+        ...[...content.draftRules.values()].filter((r) => !draftRuleAvailable(profile, r)).map((r) => `${r.name} (needs the ${content.licenses.get(r.license!)?.name})`),
+        ...[...content.prepTokens.values()].filter((t) => !tokenAvailable(profile, t)).map((t) => `${t.name} (${tokenLockText(content, t)})`),
+      ];
+      if (locked.length > 0) {
+        y += 4;
+        line(`Not yet available: ${locked.join(', ')}.`, 13, '#a69cb4');
+      }
+    } else {
+      // Other pages: a short, readable recap of the choices so far (the Overview has the full build).
+      const mods = this.rules.modifierIds.map((id) => getModifier(id)?.name ?? id);
+      line('Current setup', 18);
+      for (const l of [
+        `Trainer: ${archetype.name}`,
+        `Mode: ${getMode(this.rules.modeId)?.name} · ${getDifficulty(this.rules.difficultyId)?.name}`,
+        `Campaign: ${content.campaigns.get(this.prep.campaignId)?.name ?? this.prep.campaignId}`,
+        `Weeks: ${this.rules.weeks === false ? 'off' : 'on'}`,
+        `Starters: ${pool.name}, ${rule.name}`,
+        `Preparation: ${token?.name ?? 'none'}`,
+        `Modifiers: ${mods.length > 0 ? mods.join(', ') : 'none'}${this.rules.deathBlock ? ' · Death-Block' : ''}`,
+        `Seed: ${this.seed ?? 'random'}`,
+      ]) line(l, 15);
       y += 4;
-      line(`Not yet available: ${locked.join(', ')}.`, 14, '#a69cb4');
+      line('Page 5 (Overview) has the full summary.', 13, '#a69cb4');
     }
-    // Shrink the whole summary to fit its panel instead of spilling out of the bottom.
-    const room = 476 - 8 - 70;
+    // Shrink the summary to fit its pane instead of spilling out of the bottom.
+    const room = 472 - 8 - top;
     if (y > room) summary.setScale(room / y);
 
-    this.add.text(GAME_WIDTH / 2, 484, notice, textStyle(16, '#f0e0a0', { align: 'center', wordWrap: { width: GAME_WIDTH - 60 } })).setOrigin(0.5, 0);
-    this.add.text(16, GAME_HEIGHT - 22, '↑/↓ choose  ·  ←/→ change  ·  Enter select  ·  Esc back to trainers', textStyle(14, '#8a7f96'));
+    this.add.text(GAME_WIDTH / 2, 478, notice, textStyle(16, '#f0e0a0', { align: 'center', wordWrap: { width: GAME_WIDTH - 60 } })).setOrigin(0.5, 0);
+    this.add.text(16, GAME_HEIGHT - 22, '↑/↓ choose  ·  ←/→ change  ·  Enter select  ·  Q/E or PgUp/PgDn page  ·  Esc back to trainers', textStyle(14, '#8a7f96'));
 
-    this.focusIndex = Math.min(data.focus ?? 0, ROWS.length - 1);
+    this.focusIndex = Math.min(data.focus ?? 0, rows.length - 1);
     this.menu.focus(this.focusIndex, false);
+    this.help?.setText(ROW_HELP[rows[this.focusIndex]!] ?? '');
+
+    // Pages slide in from the side they came from (a fade when motion is reduced; nothing when it is off).
+    if (data.slide && motion !== 'off') {
+      const targets = [this.menu.container, summary];
+      const dx = motion === 'full' ? 36 * data.slide : 0;
+      for (const t of targets) {
+        const x = t.x;
+        t.setAlpha(0).setX(x + dx);
+        this.tweens.add({ targets: t, alpha: 1, x, duration: 220, ease: 'Cubic.easeOut' });
+      }
+    }
 
     onInputAction(this, (a) => {
       if (this.picker) return this.picker.handle(a);
-      if (a === 'left' || a === 'right') return this.cycle(ROWS[this.focusIndex]!, a === 'right' ? 1 : -1);
+      if (a === 'left' || a === 'right') return this.cycle(rows[this.focusIndex]!, a === 'right' ? 1 : -1);
       this.menu.handle(a);
+    });
+    const keyboard = this.input.keyboard;
+    if (keyboard) {
+      const turn = (step: 1 | -1) => !this.picker && this.goPage(this.page + step);
+      const prev = () => turn(-1);
+      const next = () => turn(1);
+      keyboard.on('keydown-Q', prev).on('keydown-PAGE_UP', prev).on('keydown-E', next).on('keydown-PAGE_DOWN', next);
+      this.events.once('shutdown', () => keyboard.off('keydown-Q', prev).off('keydown-PAGE_UP', prev).off('keydown-E', next).off('keydown-PAGE_DOWN', next));
+    }
+  }
+
+  /** The five page chips across the top; click one to jump to it. */
+  private drawTabs(): void {
+    const w = 172;
+    const gap = 8;
+    const x0 = (GAME_WIDTH - (PAGES.length * w + (PAGES.length - 1) * gap)) / 2;
+    PAGES.forEach((p, i) => {
+      const x = x0 + i * (w + gap);
+      const on = i === this.page;
+      drawGlass(this, x, 48, w, 38, { tint: on ? p.tint : AERO.glassLow, alpha: on ? 0.96 : 0.55, glow: on, radius: 14 });
+      this.add.text(x + w / 2, 67, `${i + 1}  ${p.title}`, textStyle(on ? 19 : 17, on ? '#ffffff' : COLORS.textMuted)).setOrigin(0.5);
+      this.add.zone(x, 48, w, 38).setOrigin(0).setInteractive({ useHandCursor: true }).on('pointerdown', () => !this.picker && this.goPage(i));
     });
   }
 
+  /** Shows another page (clamped; the first row is focused). */
+  goPage(index: number): void {
+    const page = Math.max(0, Math.min(OVERVIEW, index));
+    if (page === this.page) return;
+    this.scene.restart({ archetypeId: this.archetypeId, prep: this.prep, seed: this.seed, focus: 0, rules: this.rules, modCursor: this.modCursor, page, slide: page > this.page ? 1 : -1 } satisfies RunPrepData);
+  }
+
   private refresh(changes: Partial<RunPrep> = {}, extra: Partial<RunPrepData> = {}): void {
-    this.scene.restart({ archetypeId: this.archetypeId, prep: { ...this.prep, ...changes }, seed: this.seed, focus: this.focusIndex, rules: this.rules, modCursor: this.modCursor, ...extra } satisfies RunPrepData);
+    this.scene.restart({ archetypeId: this.archetypeId, prep: { ...this.prep, ...changes }, seed: this.seed, focus: this.focusIndex, rules: this.rules, modCursor: this.modCursor, page: this.page, ...extra } satisfies RunPrepData);
   }
 
   /** Steps through the options of a row (←/→, or Enter on rows that cycle). */
@@ -242,6 +370,8 @@ export class RunPrepScene extends Phaser.Scene {
         this.modCursor = (this.modCursor + step + RUN_RULES.modifiers.length) % RUN_RULES.modifiers.length;
         return this.refresh();
       }
+      case 'weeks':
+        return this.refresh({}, { rules: { ...this.rules, weeks: this.rules.weeks === false } });
       case 'deathBlock':
         return this.refresh({}, { rules: { ...this.rules, deathBlock: !this.rules.deathBlock } });
       default:
@@ -269,7 +399,7 @@ export class RunPrepScene extends Phaser.Scene {
           if (!code.ok) return this.refresh({}, { notice: code.reason });
           this.seed = code.parts.seed;
           const trainer = services().session.content.archetypes.has(code.parts.archetypeId) ? code.parts.archetypeId : this.archetypeId;
-          this.scene.restart({ archetypeId: trainer, prep: this.prep, seed: this.seed, focus: this.focusIndex, rules: code.parts.rules, notice: code.note ?? 'Seed code loaded: seed, trainer and rules set.' } satisfies RunPrepData);
+          this.scene.restart({ archetypeId: trainer, prep: this.prep, seed: this.seed, focus: this.focusIndex, rules: code.parts.rules, page: this.page, notice: code.note ?? 'Seed code loaded: seed, trainer and rules set.' } satisfies RunPrepData);
           return;
         }
         this.seed = value.trim() || null;

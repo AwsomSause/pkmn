@@ -37,7 +37,7 @@ import * as Svc from '../core/services/flow';
 import * as Plz from '../core/plaza/flow';
 import type { RulesChoice } from '../core/rules';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
-import { SaveManager, type LoadResult } from '../save/saveManager';
+import { SaveManager, SLOTS, readActiveSlot, writeActiveSlot, type LoadResult, type SlotNumber, type SlotPeek } from '../save/saveManager';
 import type { StorageProvider } from '../save/storage';
 
 function randomId(prefix: string): string {
@@ -46,7 +46,8 @@ function randomId(prefix: string): string {
 }
 
 export class GameSession {
-  readonly saves: SaveManager;
+  /** The save slot in use; its keys hold this session's profile, run and timeline (swapped by `switchSlot`). */
+  saves: SaveManager;
   profile: Profile;
   settings: Settings;
   run: RunState | null = null;
@@ -63,8 +64,8 @@ export class GameSession {
   lastRunSummary: RunEndSummary | null = null;
   private listeners = new Set<() => void>();
 
-  constructor(readonly content: Content, storage: StorageProvider) {
-    this.saves = new SaveManager(storage, content);
+  constructor(readonly content: Content, private readonly storage: StorageProvider, slot: SlotNumber = readActiveSlot(storage)) {
+    this.saves = new SaveManager(storage, content, undefined, slot);
     const { profile, warning } = this.saves.loadOrCreateProfile(() => randomId('profile'));
     this.profile = profile;
     if (warning) this.warnings.push(warning);
@@ -74,6 +75,64 @@ export class GameSession {
     this.timeline = timeline.store;
     if (timeline.warning) this.warnings.push(timeline.warning);
     this.savedReplay = this.saves.loadReplay();
+  }
+
+  get slot(): SlotNumber {
+    return this.saves.slot;
+  }
+
+  /** What each of the three slots holds (read only; nothing is created). */
+  slotPeeks(): SlotPeek[] {
+    return SLOTS.map((n) => (n === this.slot ? this.saves : new SaveManager(this.storage, this.content, undefined, n)).peekSlot());
+  }
+
+  /** The slot with a run to continue that was saved most recently, or null. */
+  latestRunSlot(): SlotNumber | null {
+    const live = this.slotPeeks().filter((p) => p.run.status === 'ok');
+    live.sort((a, b) => (b.savedAt ?? '').localeCompare(a.savedAt ?? ''));
+    return live[0]?.slot ?? null;
+  }
+
+  /**
+   * Moves to another slot: its profile, run and timeline are loaded; nothing is written to any slot but the active-slot
+   * marker. Any run in play is already saved (every checkpoint saves), so it is only closed here.
+   */
+  switchSlot(slot: SlotNumber): void {
+    if (slot === this.slot) {
+      this.refreshSavedRun();
+      return;
+    }
+    this.run = null;
+    this.saves = new SaveManager(this.storage, this.content, undefined, slot);
+    const { profile, warning } = this.saves.loadOrCreateProfile(() => randomId('profile'));
+    this.profile = profile;
+    if (warning) this.warnings.push(warning);
+    this.savedRun = this.saves.loadRun();
+    const timeline = this.saves.loadTimeline();
+    this.timeline = timeline.store;
+    if (timeline.warning) this.warnings.push(timeline.warning);
+    this.savedReplay = this.saves.loadReplay();
+    this.lastRunSummary = null;
+    this.toasts = [];
+    this.liveSignature = '';
+    this.checkSave(writeActiveSlot(this.storage, slot));
+    this.changed();
+  }
+
+  /** Empties a slot (a copy is kept). Deleting the slot in use leaves a fresh, empty profile in its place. */
+  deleteSlot(slot: SlotNumber): { ok: true } | { ok: false; reason: string } {
+    const result = new SaveManager(this.storage, this.content, undefined, slot).deleteSlot();
+    if (!result.ok) return result;
+    if (slot === this.slot) {
+      this.run = null;
+      this.saves = new SaveManager(this.storage, this.content, undefined, slot);
+      this.profile = this.saves.loadOrCreateProfile(() => randomId('profile')).profile;
+      this.savedRun = this.saves.loadRun();
+      this.timeline = this.saves.loadTimeline().store;
+      this.savedReplay = this.saves.loadReplay();
+    }
+    this.changed();
+    return result;
   }
 
   /** True while the run in play is a replayed timeline (it never changes the profile). */
@@ -142,7 +201,7 @@ export class GameSession {
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice, starterOverride?: string[]): RunState {
     // A saved preset can name a loan or Vault item the profile no longer has.
     if (prep) prep = { ...prep, loan: prep.loan && !loanProblem(this.content, this.profile), vaultItem: prep.vaultItem && this.profile.vault.includes(prep.vaultItem) ? prep.vaultItem : null };
-    const opts = { seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, mastery: this.profile.mastery, gameEvents: activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile), candyPerks: this.profile.candyPerks, ownedTrainers: this.profile.unlockedArchetypes };
+    const opts = { seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, mastery: this.profile.mastery, gameEvents: rules?.weeks === false ? [] : activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile), candyPerks: this.profile.candyPerks, ownedTrainers: this.profile.unlockedArchetypes };
     this.run = Run.createRun(this.content, { ...opts, runId: randomId('run'), pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory });
     const grants = startGrants(this.content, this.profile, archetypeId);
     applyStartGrants(this.content, this.run, this.profile);

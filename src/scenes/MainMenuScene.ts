@@ -36,7 +36,10 @@ export class MainMenuScene extends Phaser.Scene {
       shade.fillRect(i * 24, 0, 24, GAME_HEIGHT);
     }
     // With a saved run, the UIE Load card shows it (trainer, stage, party) where the random Pokémon would stand.
-    const card = session.savedRun.status === 'ok' ? continueCard(this, session.content, session.savedRun.data, 470, 130) : null;
+    // Continue picks the slot saved most recently (this one, unless another slot has a newer run).
+    const latest = session.latestRunSlot();
+    const latestPeek = latest ? session.slotPeeks().find((p) => p.slot === latest) : undefined;
+    const card = latestPeek?.run.status === 'ok' ? continueCard(this, session.content, latestPeek.run.data, 470, 130) : null;
     const species = [...session.content.species.values()].filter((sp) => !sp.id.includes('-'));
     const mon = new ShowcaseMon(this, 740, 336, PIXEL_SCALE, 230);
     const pick = () => {
@@ -56,14 +59,16 @@ export class MainMenuScene extends Phaser.Scene {
     const saved = session.savedRun;
     const damaged = saved.status === 'corrupt' || saved.status === 'incompatible';
     const options: { option: MenuOption; action: () => void }[] = [];
-    if (saved.status === 'ok') {
-      options.push({ option: { label: 'Continue' }, action: () => this.continueRun() });
+    if (latest !== null && !damaged) {
+      options.push({ option: { label: `Continue (Slot ${latest})` }, action: () => this.continueRun() });
     } else if (damaged) {
       options.push({ option: { label: 'Discard damaged save' }, action: () => this.discardDamaged() });
     } else {
       options.push({ option: { label: 'Continue', disabled: true }, action: () => undefined });
     }
     options.push({ option: { label: 'Enter the Hub', disabled: damaged }, action: () => this.scene.start('Hub') });
+    options.push({ option: { label: 'New Run', disabled: damaged }, action: () => this.newRun() });
+    options.push({ option: { label: 'Save Slots' }, action: () => this.scene.start('SaveSlots') });
     options.push({ option: { label: 'Settings' }, action: () => this.scene.start('Settings', { from: 'MainMenu' }) });
 
     const rowH = Math.min(46, Math.floor(272 / options.length));
@@ -99,9 +104,19 @@ export class MainMenuScene extends Phaser.Scene {
   }
 
   private continueRun(): void {
-    const run = services().session.continueRun();
+    const { session } = services();
+    const latest = session.latestRunSlot();
+    if (latest !== null && latest !== session.slot) session.switchSlot(latest);
+    const run = session.continueRun();
     stopMusic();
     this.scene.start(sceneForRun(run));
+  }
+
+  /** Straight to choosing a trainer; a run in progress in this slot is only replaced after a yes. */
+  private newRun(): void {
+    const { session } = services();
+    if (session.canContinue && !window.confirm(`Slot ${session.slot} has a run in progress. Starting a new run replaces it. Start anyway?`)) return;
+    this.scene.start('TrainerSelect');
   }
 
   private discardDamaged(): void {
