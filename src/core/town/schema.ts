@@ -76,7 +76,7 @@ const Action = z.object({
   rewards: GradeRewards.optional(),
   options: z.array(Option).default([]),
   /** Options built from the profile instead of the list: lastTeam, history, trophies, relics, pets, items. */
-  dynamic: z.enum(['lastTeam', 'history', 'trophies', 'relics', 'pets', 'museum', 'contracts', 'ghosts', 'mail', 'items']).optional(),
+  dynamic: z.enum(['lastTeam', 'history', 'trophies', 'relics', 'pets', 'museum', 'contracts', 'ghosts', 'mail', 'items', 'memorial']).optional(),
   /** What a dynamic option pays; "{name}" in `say` is the option's name. */
   template: Option.optional(),
   goods: z.array(Good).default([]),
@@ -137,7 +137,7 @@ export const TOWN = TownDataSchema.parse(json);
 
 // ---------- saved state ----------
 
-export const BoonSchema = z.object({ money: Count.default(0), items: Items.default({}), stuff: Items.default({}), notes: z.array(z.string()).default([]) });
+export const BoonSchema = z.object({ eggs: z.array(z.string()).default([]), money: Count.default(0), items: Items.default({}), stuff: Items.default({}), notes: z.array(z.string()).default([]) });
 export type Boon = z.infer<typeof BoonSchema>;
 
 export const PlotSchema = z.object({ crop: z.string(), stage: Count.default(0), wet: z.boolean().default(false) });
@@ -166,6 +166,10 @@ export const TownProfileSchema = z.object({
   wishes: z.array(z.string()).default([]),
   /** Puzzle progress: the vault number, statue turns, and how many vaults were opened. */
   puzzle: z.record(z.string(), z.array(z.number().int())).default({}),
+  /** Memorial Wall: Nuzlocke losses and aces, "speciesId|level|ace|cause". */
+  memorial: z.array(z.string()).default([]),
+  /** Pokémon waiting at the Daycare (species ids, at most two). */
+  daycare: z.array(z.string()).default([]),
   /** Items left behind at the end of runs, waiting in Lost & Found. */
   lost: z.array(z.string()).default([]),
   /** Facts about the last finished run the town reacts to. */

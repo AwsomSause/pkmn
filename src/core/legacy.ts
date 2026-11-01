@@ -6,6 +6,8 @@ import { z } from 'zod';
 import legacyJson from '../data/legacy.json';
 import type { Content, Region } from './contentSchema';
 import { freshCamp } from './camp/schema';
+import { layEgg } from './eggs';
+import { hashSeed, Rng } from './rng';
 import { addItem } from './items';
 import { townStartGrants } from './town';
 import { MOVE_RANK_USES, MOVE_RANKS, moveRank } from './moveMastery';
@@ -160,8 +162,9 @@ export function applyStartGrants(content: Content, run: RunState, p: Profile): v
     const camp = (run.camp ??= freshCamp());
     for (const [id, n] of Object.entries(g.stuff)) camp.stuff[id] = (camp.stuff[id] ?? 0) + n;
   }
-  const notes = townStartGrants(content, p).notes;
-  for (const line of notes) run.journal.push(line);
+  const tg = townStartGrants(content, p);
+  for (const line of tg.notes) run.journal.push(line);
+  tg.eggs.forEach((species, i) => { if (content.species.has(species)) layEgg(content, run, species, { level: 5, left: 3, unit: 'stage', source: 'Daycare', origin: 'Adopted Baby' }, new Rng(hashSeed(`${run.seed}::daycare-egg::${i}`))); });
 }
 
 // ---------- Item Museum ----------

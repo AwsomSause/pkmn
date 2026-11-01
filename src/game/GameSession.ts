@@ -6,6 +6,7 @@
 //   - on entering a map node, using a side stop, or buying at a shop
 //   - when the run ends (profile first, then the run record is cleared)
 
+import { changeFriendship } from '../core/friendship';
 import { spendTownStart, townAction, visitBuilding, type TownArgs, type TownResult } from '../core/town';
 import type { Grade } from '../core/interaction/prompt';
 import { setCalendar } from '../core/clock';
@@ -296,6 +297,12 @@ export class GameSession {
 
   chooseStarter(index: number): RunState {
     this.run = Run.chooseStarter(this.content, this.requireRun(), index);
+    const bond = this.run.camp?.stuff['spa-bond'] ?? 0;
+    if (bond > 0 && this.run.party[0]) {
+      this.run = structuredClone(this.run);
+      changeFriendship(this.content, this.run.party[0]!, bond * 20);
+      this.run.camp!.stuff['spa-bond'] = 0;
+    }
     this.persistRun();
     return this.run;
   }

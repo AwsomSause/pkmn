@@ -166,7 +166,7 @@
     {
      "id": "dojo-spar",
      "name": "Spar with the dummy",
-     "desc": "Time your strikes. Better rounds earn more practice.",
+     "desc": "Pick a Pokémon from your last team and time your strikes. Its strongest move earns real Move Research uses.",
      "kind": "grade",
      "rows": [
       "I242"
@@ -208,6 +208,13 @@
        },
        "say": "Flawless! The dummy bows."
       }
+     },
+     "dynamic": "lastTeam",
+     "template": {
+      "id": "spar",
+      "label": "{name}",
+      "desc": "",
+      "say": ""
      }
     },
     {
@@ -577,13 +584,13 @@
       {
        "id": "repair-gear",
        "label": "Tune up the toolkit",
-       "desc": "The forge hums.",
+       "desc": "Your next gadgets come with 3 extra uses each (two tune-ups).",
        "say": "You oil every hinge and sharpen every blade.",
        "reward": {
         "stuff": {
-         "oil": 2
+         "tune-up": 2
         },
-        "say": "You pack two flasks of oil for the road."
+        "say": "Two tune-ups are packed: each gadget you build gets 3 extra uses."
        }
       }
      ]
@@ -907,15 +914,21 @@
        "items": {
         "potion": 1
        },
-       "say": "A pleasant soak."
+       "stuff": {
+        "spa-bond": 1
+       },
+       "say": "A pleasant soak. Your next starter warms up to you."
       },
       "good": {
        "items": {
         "super-potion": 1,
         "soothe-bell": 1
        },
+       "stuff": {
+        "spa-bond": 2
+       },
        "xp": 1,
-       "say": "Your team is glowing."
+       "say": "Your team is glowing, and so is your next starter."
       },
       "perfect": {
        "items": {
@@ -923,9 +936,12 @@
         "soothe-bell": 1,
         "revive": 1
        },
+       "stuff": {
+        "spa-bond": 3
+       },
        "xp": 2,
        "rp": 1,
-       "say": "Perfect temperature. Everyone is happy."
+       "say": "Perfect temperature. Everyone is happy, and bonds run deep."
       }
      },
      "dynamic": "lastTeam"
@@ -1032,6 +1048,29 @@
        "credits": 10,
        "coins": 2,
        "say": "Super effective!"
+      }
+     }
+    },
+    {
+     "id": "arcade-duel",
+     "name": "Mini battle cabinet (duel)",
+     "desc": "Your last team member duels a random foe with the real damage rules. Once a day.",
+     "kind": "pick",
+     "rows": [
+      "I255"
+     ],
+     "limit": "day",
+     "options": [],
+     "dynamic": "lastTeam",
+     "template": {
+      "id": "duel",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
+       "credits": 12,
+       "coins": 2,
+       "xp": 1
       }
      }
     },
@@ -1408,31 +1447,23 @@
     {
      "id": "replica-mirror",
      "name": "Mirror Room",
-     "desc": "Meet a ghost of your last winning or losing team and spar with it.",
-     "kind": "grade",
+     "desc": "Pick a Pokémon from your last team. Its ghost appears and duels it, move for move.",
+     "kind": "pick",
      "rows": [
       "I263"
      ],
      "limit": "day",
-     "prompt": "echo-rhythm",
-     "rewards": {
-      "miss": {
-       "say": "Your ghost laughs and vanishes."
-      },
-      "ok": {
-       "rp": 1,
-       "say": "You match your ghost move for move."
-      },
-      "good": {
+     "dynamic": "lastTeam",
+     "options": [],
+     "template": {
+      "id": "mirror",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
        "rp": 2,
        "xp": 1,
-       "say": "You outpace your ghost."
-      },
-      "perfect": {
-       "rp": 3,
-       "xp": 2,
-       "credits": 10,
-       "say": "Your ghost salutes you."
+       "credits": 10
       }
      }
     }
@@ -1467,7 +1498,7 @@
     {
      "id": "daycare-leave",
      "name": "Leave a Pokémon",
-     "desc": "Pick from your last team. After two runs the pair-up yields an egg-gift of mixed parentage.",
+     "desc": "Leave up to two of your last team. After two runs the caretaker has an egg of one parent's family, found by chance.",
      "kind": "pick",
      "rows": [
       "I262"
@@ -1481,16 +1512,14 @@
       "desc": "",
       "say": "",
       "reward": {
-       "counts": {
-        "daycare": 1
-       }
+       "xp": 1
       }
      }
     },
     {
      "id": "daycare-collect",
-     "name": "Collect from the Daycare",
-     "desc": "Ready after two runs. Mixed-parentage eggs come as items.",
+     "name": "Collect the egg",
+     "desc": "Ready two runs after you leave a Pokémon. The egg starts your next run in the party Egg slot.",
      "kind": "pick",
      "rows": [
       "I262"
@@ -1503,14 +1532,7 @@
        "desc": "",
        "say": "The caretaker beams. \"Look who has your eyes.\"",
        "reward": {
-        "items": {
-         "lucky-egg": 1,
-         "poke-ball": 2
-        },
-        "say": "You collect a Lucky Egg and spare balls."
-       },
-       "needs": {
-        "text": "Needs two Daycare visits."
+        "xp": 1
        }
       }
      ]
@@ -2231,6 +2253,35 @@
       "I279"
      ],
      "view": "square"
+    }
+   ]
+  },
+  {
+   "id": "memorial",
+   "name": "Memorial Wall",
+   "icon": "item.sachet",
+   "blurb": "Nuzlocke losses and aces who fell. Leave a flower.",
+   "actions": [
+    {
+     "id": "memorial-flower",
+     "name": "Leave a flower",
+     "desc": "Only Nuzlocke losses and fallen aces are carved here. One flower per grave per day.",
+     "kind": "pick",
+     "rows": [
+      "I42"
+     ],
+     "limit": "none",
+     "dynamic": "memorial",
+     "options": [],
+     "template": {
+      "id": "flower",
+      "label": "{name}",
+      "desc": "",
+      "say": "You lay a flower at the stone. The wind carries a soft cry.",
+      "reward": {
+       "xp": 1
+      }
+     }
     }
    ]
   },

@@ -97,7 +97,7 @@ export function finalizeRun(
     const museumResearch = recordMuseum(next, run, now);
     if (summary) summary.researchPoints += museumResearch;
   }
-  recordTownRun(content, next, { runId: run.runId, seed: run.seed, victory: run.victory === true, regionIndex: run.regionIndex, inventory: run.inventory, camp: run.camp });
+  recordTownRun(content, next, { runId: run.runId, seed: run.seed, victory: run.victory === true, regionIndex: run.regionIndex, inventory: run.inventory, camp: run.camp, nuzlocke: run.nuzlocke, party: run.party });
   archiveParty(content, next, run);
   archiveRivals(next, run);
   addRunToCodex(next, run);

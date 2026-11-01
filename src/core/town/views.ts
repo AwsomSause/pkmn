@@ -4,6 +4,7 @@ import { calcDamage, typeEffectiveness } from '../battle/damage';
 import { CAMP } from '../camp/schema';
 import type { Content } from '../contentSchema';
 import { calcStats, createPokemon } from '../pokemon';
+import { Rng } from '../rng';
 import type { Profile } from '../state';
 import { TOWN, freshTown, type TownProfile } from './schema';
 
@@ -158,9 +159,9 @@ export function guestbook(p: Profile): { from: string; text: string }[] {
   return [...ghosts, ...own];
 }
 
-export function theatreList(p: Profile): { id: string; title: string; lines: string[] }[] {
-  const ends = p.runHistory.filter((r) => r.victory).map((r) => ({ id: r.runId, title: `Ending: ${r.epitaph ?? 'A champion\'s run'}`, lines: r.moments.slice(0, 4) }));
-  const rivals = (p.rivalArchive ?? []).slice(0, 6).map((r, i) => ({ id: `rival-${i}`, title: `Rival arc: ${(r as { name?: string }).name ?? `Rival ${i + 1}`}`, lines: ['A rival you once faced is archived here.'] }));
+export function theatreList(p: Profile): { id: string; title: string; lines: string[]; species?: string[] }[] {
+  const ends = p.runHistory.filter((r) => r.victory).map((r) => ({ id: r.runId, title: `Ending: ${r.epitaph ?? 'A champion\'s run'}`, lines: r.moments.slice(0, 6), species: r.party.map((m) => m.speciesId) }));
+  const rivals = (p.rivalArchive ?? []).slice(0, 6).map((r, i) => ({ id: `rival-${i}`, title: `Rival arc: ${(r as { name?: string }).name ?? `Rival ${i + 1}`}`, lines: ['A rival you once faced is archived here.', `They are still out there, getting stronger.`] }));
   return [...ends, ...rivals];
 }
 
@@ -189,4 +190,42 @@ export function dummyHit(content: Content, speciesId: string, level: number, mov
   const min = calcDamage(content.ruleset, { ...input, randomFactor: content.ruleset.randomFactorMin });
   const max = calcDamage(content.ruleset, { ...input, randomFactor: 100 });
   return { min, max, pct: [Math.round((min / 200) * 100), Math.round((max / 200) * 100)], effectiveness: eff };
+}
+
+export interface Memorial { index: number; speciesId: string; name: string; level: number; ace: boolean; cause: string }
+/** Fallen Pokémon on the Memorial Wall: Nuzlocke losses and aces only. */
+export function memorialList(content: Content, p: Profile): Memorial[] {
+  return townOf(p).memorial.map((e, index) => {
+    const [speciesId = '', level = '1', ace = '0', ...cause] = e.split('|');
+    return { index, speciesId, name: content.species.get(speciesId)?.name ?? speciesId, level: Number(level), ace: ace === '1', cause: cause.join('|') };
+  });
+}
+
+export interface Duelist { speciesId: string; level: number }
+/**
+ * A small turn battle used by the Arcade, the Gym Replica and the Mirror Room: two Pokémon trade their strongest moves with the
+ * real damage formula, type chart and STAB. Faster goes first. No gameplay RNG: the caller passes a seeded generator.
+ */
+export function miniBattle(content: Content, a: Duelist, b: Duelist, rng: Rng): { win: boolean; log: string[]; rounds: number } {
+  const mk = (d: Duelist, uid: string) => { const mon = createPokemon(content, d.speciesId, d.level, uid); return { mon, stats: calcStats(content, mon), sp: content.species.get(d.speciesId)!, move: content.moves.get(bestMove(content, d.speciesId, d.level) ?? '') }; };
+  const x = mk(a, 'duel-a');
+  const y = mk(b, 'duel-b');
+  const hp = [x.stats.hp, y.stats.hp];
+  const log: string[] = [];
+  const hit = (att: typeof x, def: typeof x, from: 0 | 1): void => {
+    const move = att.move;
+    if (!move) { log.push(`${att.sp.name} has nothing to attack with.`); return; }
+    const physical = move.category === 'physical';
+    const eff = typeEffectiveness(content.typeChart, move.type, def.sp.types);
+    const dmg = calcDamage(content.ruleset, { level: att.mon.level, power: move.power ?? 40, attack: physical ? att.stats.atk : att.stats.spa, defense: physical ? def.stats.def : def.stats.spd, attackStage: 0, defenseStage: 0, stab: att.sp.types.includes(move.type), effectiveness: eff, crit: false, burned: false, physical, randomFactor: rng.int(content.ruleset.randomFactorMin, 100) });
+    hp[1 - from] = Math.max(0, hp[1 - from]! - dmg);
+    log.push(`${att.sp.name} uses ${move.name}: ${dmg} damage${eff > 1 ? ' (super effective)' : eff < 1 ? ' (not very effective)' : ''}. ${def.sp.name} has ${hp[1 - from]} HP left.`);
+  };
+  const firstIsA = x.stats.spe >= y.stats.spe;
+  let rounds = 0;
+  while (hp[0]! > 0 && hp[1]! > 0 && rounds < 20) {
+    rounds += 1;
+    if (firstIsA) { hit(x, y, 0); if (hp[1]! > 0) hit(y, x, 1); } else { hit(y, x, 1); if (hp[0]! > 0) hit(x, y, 0); }
+  }
+  return { win: hp[0]! > 0 && hp[1]! <= 0, log, rounds };
 }

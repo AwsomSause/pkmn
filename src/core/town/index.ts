@@ -9,7 +9,8 @@ import { GRADES, type Grade } from '../interaction/prompt';
 import { hashSeed, Rng } from '../rng';
 import type { Profile } from '../state';
 import { TOWN, freshTown, type Reward, type TownAction, type TownBuilding, type TownOption, type TownProfile } from './schema';
-import { bestMove, curseKnown, lastTeam, ownedSet, pedestalBonus, pets as petList, primaryType, relicList, trophies as trophyList } from './views';
+import { bestMove, curseKnown, lastTeam, memorialList, miniBattle, ownedSet, pedestalBonus, pets as petList, primaryType, relicList, trophies as trophyList } from './views';
+import { familyId } from '../mastery';
 
 export * from './schema';
 export * from './views';
@@ -154,6 +155,7 @@ export function optionsOf(content: Content, p: Profile, a: TownAction, now: Date
     case 'relics': return relicList(p).map((r) => from(r.key, r.name, r.cursed ? 'Cursed relic' : `Tier ${r.tier}`));
     case 'museum': return relicList(p).map((r) => { const on = (t.sets.pedestal ?? []).includes(r.key); return from(r.key, r.name, `${on ? 'On a pedestal · ' : ''}Tier ${r.tier}${r.cursed ? ' · cursed' : ''}`); });
     case 'pets': return petList(content, p).map((x) => from(x.speciesId, x.name, `Bond ${t.counts[`pet:${x.speciesId}`] ?? 0}/${TOWN.pets.bondAt}`));
+    case 'memorial': return memorialList(content, p).map((m) => from(String(m.index), `${m.name} Lv${m.level}${m.ace ? ' ★' : ''}`, `${m.cause} · ${t.counts[`flower:${m.index}`] ?? 0} flowers`));
     case 'items': return t.lost.map((id, i) => ({ id: `${i}:${id}`, label: id.replace(/-/g, ' '), desc: 'Left behind', say: 'It is waiting for you.', once: false }));
     case 'mail': return mailToday(content, p, now).map((m) => ({ id: m.id, label: `${m.from}${t.sets.mail?.includes(m.id) ? '' : ' (new)'}`, desc: m.text.slice(0, 70), say: m.text, once: true, reward: m.gift }));
     default: return a.options.map(base);
@@ -191,6 +193,11 @@ function runGrade(c: Ctx): string {
   if (c.a.id === 'trophy-polish') {
     const steps = { miss: 0, ok: 1, good: 2, perfect: 3 }[g];
     c.t.counts[`polish:${c.args.choice}`] = (c.t.counts[`polish:${c.args.choice}`] ?? 0) + steps;
+  }
+  if (c.a.id === 'dojo-spar') {
+    const mon = lastTeam(c.content, c.p).find((m) => m.speciesId === c.args.choice);
+    const move = mon ? bestMove(c.content, mon.speciesId, mon.level) : null;
+    if (move) { const uses = { miss: 1, ok: 3, good: 5, perfect: 8 }[g]; c.p.moveUses = { ...(c.p.moveUses ?? {}), [move]: (c.p.moveUses?.[move] ?? 0) + uses }; }
   }
   if (c.a.id === 'night-firefly') c.t.daily[c.a.id] = `${c.today}:${dayCount(c.t, c.a.id, c.today) + 1}`;
   let r = c.a.rewards![g];
@@ -240,8 +247,20 @@ function runPick(c: Ctx): string {
     return `Placed. Set bonus now: ₽${b.money}${b.items ? ` and ${Object.entries(b.items).map(([k, n]) => `${n} ${k}`).join(', ')}` : ''} each run.`;
   }
   if (id === 'daycare-collect') {
-    if ((c.t.counts.daycare ?? 0) < 2) fail('The egg is not ready. Leave a Pokémon and start two runs.');
-    c.t.counts.daycare = (c.t.counts.daycare ?? 0) - 2;
+    if (c.t.daycare.length === 0) fail('Nobody is staying at the Daycare. Leave a Pokémon first.');
+    if ((c.t.counts.dayAge ?? 0) < 2) fail('The egg is not ready. It takes two runs after you leave a Pokémon.');
+    const parent = rngFor(c.t, key).pick(c.t.daycare);
+    const species = familyId(c.content, parent);
+    c.t.boon.eggs.push(species);
+    c.t.daycare = [];
+    c.t.counts.dayAge = 0;
+    return `The caretaker hands you an egg from the ${c.content.species.get(species)?.name} family. It will be in your party at the start of the next run. ${reward(c, r)}`;
+  }
+  if (id === 'daycare-leave') {
+    if (c.t.daycare.length >= 2 && !c.t.daycare.includes(o.id)) fail('The Daycare holds two. Collect the egg first.');
+    if (!c.t.daycare.includes(o.id)) c.t.daycare.push(o.id);
+    c.t.counts.dayAge = 0;
+    return `${o.label} settles in at the Daycare. Come back two runs from now.`;
   }
   if (id === 'lost-claim') {
     const idx = Number(o.id.split(':')[0]);
@@ -267,16 +286,34 @@ function runPick(c: Ctx): string {
     c.t.done.push(key);
     return `${line} ${first ? reward(c, r) : ''}`.trim();
   }
+  if (id === 'arcade-duel' || id === 'replica-mirror') {
+    const mon = lastTeam(c.content, c.p).find((m) => m.speciesId === o.id);
+    if (!mon) return fail('Pick a Pokémon from your last team.');
+    const rng = rngFor(c.t, key);
+    const foe = id === 'replica-mirror' ? { speciesId: mon.speciesId, level: mon.level } : { speciesId: rng.pick([...c.content.species.values()].filter((x) => x.evolutionStage === 1 && !x.form).map((x) => x.id)), level: Math.max(5, mon.level - 2 + rng.int(0, 4)) };
+    const res = miniBattle(c.content, { speciesId: mon.speciesId, level: mon.level }, foe, rng);
+    const head = id === 'replica-mirror' ? `${mon.name}'s ghost steps out of the mirror.` : `${mon.name} faces a Lv${foe.level} ${c.content.species.get(foe.speciesId)?.name}.`;
+    return res.win ? `${head} ${res.log.slice(-2).join(' ')} You win in ${res.rounds} rounds! ${reward(c, r)}` : `${head} ${res.log.slice(-2).join(' ')} You lose this one after ${res.rounds} rounds.`;
+  }
+  if (id === 'memorial-flower') {
+    const dk = `flower:${o.id}`;
+    if (c.t.daily[dk] === c.today) fail('You already left a flower here today.');
+    c.t.daily[dk] = c.today;
+    c.t.counts[dk] = (c.t.counts[dk] ?? 0) + 1;
+    return `${o.say} ${c.t.counts[dk] === 1 ? reward(c, r) : ''}`.trim();
+  }
   if (id === 'replica-duel' || id === 'time-whatif' || id === 'cinema-play') {
     const run = c.p.runHistory.find((x) => x.runId === o.id);
     if (!run) return fail('That run is gone.');
     const rr = run!;
     if (id === 'cinema-play') { c.t.done.push(key); return `${rr.moments.slice(0, 3).join(' ') || 'A quiet run with no big moments.'} ${first ? reward(c, r) : ''}`.trim(); }
     if (id === 'time-whatif') { c.t.done.push(key); const alt = rngFor(c.t, key).pick(['You picked the other path at the fork. Everything was calmer, and a little duller.', 'You rested one more night. The rival you lost to never found you.', 'You switched your lead before the last fight. It almost, almost worked.', 'You skipped the shop and kept your money. It bought you one more Revive at the end.', 'You took the shortcut. A trainer was waiting. You won, but were late for supper.']); return `${alt} ${first ? reward(c, r) : ''}`.trim(); }
-    const level = rr.defeatedBy?.level ?? Math.max(5, ...rr.party.map((m) => m.level));
-    const team = rr.party.reduce((s, m) => s + m.level, 0) / Math.max(1, rr.party.length);
-    const win = rngFor(c.t, key).float() < Math.max(0.1, Math.min(0.9, 0.5 + (team - level) / 40));
-    return win ? `Practice win! Your average Lv${Math.round(team)} beat the ghost at Lv${level}. ${reward(c, r)}` : `The ghost (Lv${level}) wins this one against your Lv${Math.round(team)}. Try again next run.`;
+    const lead = [...rr.party].sort((a, b) => b.level - a.level)[0];
+    const ghost = rr.defeatedBy ? { speciesId: rr.defeatedBy.speciesId, level: rr.defeatedBy.level } : lead ? { speciesId: lead.speciesId, level: lead.level } : null;
+    if (!lead || !ghost || !c.content.species.has(ghost.speciesId)) return fail('That run left no ghost to face.');
+    const res = miniBattle(c.content, { speciesId: lead.speciesId, level: lead.level }, ghost, rngFor(c.t, key));
+    const tag = `${c.content.species.get(lead.speciesId)?.name} Lv${lead.level} vs the ghost ${c.content.species.get(ghost.speciesId)?.name} Lv${ghost.level}.`;
+    return res.win ? `${tag} ${res.log.slice(-2).join(' ')} Practice win in ${res.rounds} rounds! ${reward(c, r)}` : `${tag} ${res.log.slice(-2).join(' ')} The ghost wins this time. Try again next run.`;
   }
   if (id === 'mail-read') {
     c.t.sets.mail = [...new Set([...(c.t.sets.mail ?? []), o.id])];
@@ -288,7 +325,6 @@ function runPick(c: Ctx): string {
     if (first) c.t.done.push(key);
     return `${o.say} ${first ? reward(c, r) : ''}`.trim();
   }
-  if (id === 'daycare-leave') { r = r ? { ...r, say: 'You hand them over to the caretaker.' } : r; }
   if (o.once && !first) r = undefined;
   if (o.once) c.t.done.push(key);
   pay(c.p, c.t, cost);
@@ -503,7 +539,7 @@ function runPlace(c: Ctx): string {
     const allowed = 1 + winsOf(c.p);
     const signed = c.t.counts.signatures ?? 0;
     if (signed >= allowed) fail('One signature per win, plus one for visiting. Win a run for another.');
-    if (!/^#[0-9a-fA-F]{6}\|[a-z]+$/.test(choice)) fail('Pick a color and a stamp.');
+    if (!/^#[0-9a-fA-F]{6}\|(?:[a-z]+|d:[0-9.,;:]{1,700})$/.test(choice)) fail('Pick a color and a stamp, or draw something.');
     c.t.wall = [...c.t.wall, choice].slice(-TOWN.caps.graffiti);
     c.t.counts.signatures = signed + 1;
     return reward(c, { xp: 1, say: 'You tag the wall. It dries instantly.' });
@@ -584,12 +620,12 @@ export function visitBuilding(profile: Profile, buildingId: string): Profile {
 
 // ---------- run start and run end ----------
 
-export interface TownGrants { money: number; items: Record<string, number>; stuff: Record<string, number>; notes: string[] }
+export interface TownGrants { eggs: string[]; money: number; items: Record<string, number>; stuff: Record<string, number>; notes: string[] }
 
 /** What the town hands a new run: the waiting boon, the wishes, the badge case perks and the museum pedestals. */
 export function townStartGrants(content: Content, p: Profile): TownGrants {
   const t = townOf(p);
-  const out: TownGrants = { money: t.boon.money, items: { ...t.boon.items }, stuff: { ...t.boon.stuff }, notes: [...t.boon.notes, ...t.wishes] };
+  const out: TownGrants = { eggs: [...t.boon.eggs], money: t.boon.money, items: { ...t.boon.items }, stuff: { ...t.boon.stuff }, notes: [...t.boon.notes, ...t.wishes] };
   const add = (r: Reward | undefined): void => {
     if (!r) return;
     out.money += r.money ?? 0;
@@ -609,7 +645,8 @@ export function spendTownStart(profile: Profile): Profile {
   if (!profile.town) return profile;
   const p = structuredClone(profile);
   const t = p.town!;
-  t.boon = { money: 0, items: {}, stuff: {}, notes: [] };
+  t.boon = { eggs: [], money: 0, items: {}, stuff: {}, notes: [] };
+  if (t.daycare.length > 0) t.counts.dayAge = (t.counts.dayAge ?? 0) + 1;
   t.wishes = [];
   t.spent = [];
   for (const plot of Object.values(t.plots)) {
@@ -622,7 +659,7 @@ export function spendTownStart(profile: Profile): Profile {
 }
 
 /** At the end of a run: the town reacts (weather, relics seen, items left behind, track points). Mutates `profile`. */
-export function recordTownRun(content: Content, profile: Profile, run: { runId: string; seed: string; victory: boolean; regionIndex?: number; inventory: Record<string, number>; camp?: { relics: { id: string; cursed: boolean }[] } }): void {
+export function recordTownRun(content: Content, profile: Profile, run: { runId: string; seed: string; victory: boolean; regionIndex?: number; inventory: Record<string, number>; camp?: { relics: { id: string; cursed: boolean }[] }; nuzlocke?: { memorial: { speciesId: string; level: number; ace: boolean; cause: string }[] }; party?: { speciesId: string; level: number; hp: number; care?: { ace?: boolean } }[] }): void {
   const t = townOf(profile);
   profile.town = t;
   t.last = { victory: run.victory, cleared: run.regionIndex ?? 0, runId: run.runId };
@@ -634,6 +671,11 @@ export function recordTownRun(content: Content, profile: Profile, run: { runId: 
     const have = new Set([...(t.sets.relics ?? []), ...(t.sets.offered ?? [])]);
     if (!have.has(key) && !have.has(r.id) && !have.has(`${r.id}!`)) (t.sets.relics ??= []).push(key);
   }
+  // Memorial Wall: Nuzlocke losses, and aces that fell in any run.
+  const stone = (sp: string, lvl: number, ace: boolean, cause: string): string => `${sp}|${lvl}|${ace ? 1 : 0}|${cause}`;
+  for (const m of run.nuzlocke?.memorial ?? []) t.memorial.push(stone(m.speciesId, m.level, m.ace, m.cause));
+  for (const m of run.party ?? []) if (m.hp <= 0 && m.care?.ace === true && !(run.nuzlocke?.memorial ?? []).some((x) => x.speciesId === m.speciesId && x.level === m.level)) t.memorial.push(stone(m.speciesId, m.level, true, 'Fell in battle'));
+  t.memorial = t.memorial.slice(-60);
   const rng = new Rng(hashSeed(`town::lost::${run.seed}`));
   const left = Object.entries(run.inventory).filter(([id, n]) => n > 0 && (content.items.has(id) || content.catalog.has(id)));
   for (let i = 0; i < 2 && left.length > 0; i++) {

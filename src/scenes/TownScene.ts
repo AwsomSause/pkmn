@@ -3,7 +3,7 @@
 // (ui/townMenu.ts); every rule is in core/town. Presentation only: nothing here changes a result.
 
 import Phaser from 'phaser';
-import { currentSeason, ownedSet, pets, townOf, townWeather, TOWN, type TownBuilding } from '../core/town';
+import { buildingProblem, currentSeason, ownedSet, pets, townOf, townWeather, TOWN, type TownBuilding } from '../core/town';
 import { services } from '../game/services';
 import { playMusicLazy } from '../ui/audio';
 import { pokemonAssetIds } from '../assets/catalog';
@@ -12,7 +12,7 @@ import type { Picker } from '../ui/partyPanel';
 import { ArenaBackdrop } from '../ui/showcase';
 import { itemVisual, pokemonIcon } from '../ui/sprites';
 import { onInputAction } from '../ui/input';
-import { openTown, type TownHost } from '../ui/townMenu';
+import { openBuilding, openTown, type TownHost } from '../ui/townMenu';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 
 const TRAIL_COLORS: Record<string, number[]> = {
@@ -27,6 +27,12 @@ export class TownScene extends Phaser.Scene {
   private petSprites: { obj: Phaser.GameObjects.GameObject & { x: number; y: number }; lag: number }[] = [];
   private trail: Phaser.GameObjects.Arc[] = [];
   private pointer = { x: GAME_WIDTH / 2, y: 300 };
+  // The street: buildings stand along a scrolling road; the trainer walks it with the arrow keys.
+  private street: { b: TownBuilding; x: number; node: Phaser.GameObjects.Container; near: boolean }[] = [];
+  private walker!: Phaser.GameObjects.Container;
+  private keys!: Phaser.Types.Input.Keyboard.CursorKeys;
+  private host!: TownHost;
+  private streetHint!: Phaser.GameObjects.Text;
 
   constructor() {
     super('Town');
@@ -57,9 +63,9 @@ export class TownScene extends Phaser.Scene {
     if (night) this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0a1030, 0.5).setOrigin(0).setDepth(-17);
     if (weather === 'storm' && motion !== 'off') this.rain(motion);
     this.season(now, motion);
-    this.add.text(16, 8, 'Pocket Town', textStyle(30, COLORS.gold)).setDepth(5);
-    this.add.text(16, 44, `${{ sun: 'Sunny: your last run was a win.', storm: 'A storm hangs over the town after your last run.', cloud: 'Cloudy skies.', clear: 'A clear day.' }[weather]}${night ? ' It is night.' : ''}`, textStyle(15, COLORS.textMuted)).setDepth(5);
-    this.note = this.add.text(GAME_WIDTH / 2, 80, '', textStyle(18, COLORS.gold, { align: 'center', wordWrap: { width: GAME_WIDTH - 160 } })).setOrigin(0.5, 0).setDepth(2000);
+    this.add.text(16, 8, 'Pocket Town', textStyle(30, COLORS.gold)).setScrollFactor(0).setDepth(5);
+    this.add.text(16, 44, `${{ sun: 'Sunny: your last run was a win.', storm: 'A storm hangs over the town after your last run.', cloud: 'Cloudy skies.', clear: 'A clear day.' }[weather]}${night ? ' It is night.' : ''}`, textStyle(15, COLORS.textMuted)).setScrollFactor(0).setDepth(5);
+    this.note = this.add.text(GAME_WIDTH / 2, 80, '', textStyle(18, COLORS.gold, { align: 'center', wordWrap: { width: GAME_WIDTH - 160 } })).setOrigin(0.5, 0).setScrollFactor(0).setDepth(2000);
     this.drawDecor();
     this.addPets(motion);
     if (night) this.fireflies(motion);
@@ -73,12 +79,21 @@ export class TownScene extends Phaser.Scene {
       setDecorMode: (on) => this.setDecorMode(on),
       enter: (b) => this.bounce(b),
     };
-    onInputAction(this, (a) => this.picker?.handle(a));
-    openTown(host, () => this.scene.start('Hub'));
+    this.host = host;
+    host.home = () => { this.host.refresh(''); };
+    this.buildStreet(host);
+    this.drawWall();
+    onInputAction(this, (a) => {
+      if (this.picker) { this.picker.handle(a); return; }
+      if (a === 'confirm') this.enterNearest();
+      else if (a === 'up') openTown(host, () => this.host.refresh(''));
+      else if (a === 'back') this.scene.start('Hub');
+    });
   }
 
   override update(_t: number, dt: number): void {
     const { session } = services();
+    this.walk(dt);
     if (session.settings.battleAnimations === 'off') return;
     for (const pet of this.petSprites) {
       const k = 1 - Math.exp(-dt / (pet.lag * 16));
@@ -92,6 +107,90 @@ export class TownScene extends Phaser.Scene {
       this.tweens.add({ targets: dot, alpha: 0, scale: 0.2, duration: 500, onComplete: () => dot.destroy() });
       if (this.trail.length > 40) this.trail.shift();
     }
+  }
+
+  private buildStreet(host: TownHost): void {
+    const { session } = services();
+    const list = TOWN.buildings.filter((b) => !b.hidden || !buildingProblem(session.profile, b));
+    const width = 200 + list.length * 170;
+    this.cameras.main.setBounds(0, 0, width, GAME_HEIGHT);
+    this.add.rectangle(0, 430, width, 110, 0x3a3048, 0.85).setOrigin(0).setDepth(-6);
+    this.street = list.map((b, i) => {
+      const x = 140 + i * 170;
+      const node = this.add.container(x, 380).setDepth(-3);
+      node.add([this.add.rectangle(0, 0, 140, 90, 0x4a3b58, 0.95).setStrokeStyle(2, 0xffb745), this.add.text(0, 34, b.name, textStyle(13, '#f8f8f8', { align: 'center', wordWrap: { width: 130 } })).setOrigin(0.5)]);
+      node.add(itemVisual(this, b.icon, 0, -12, 2));
+      node.setSize(140, 90).setInteractive({ useHandCursor: true });
+      node.on('pointerdown', () => this.walkTo(i));
+      return { b, x, node, near: false };
+    });
+    this.walker = this.add.container(this.street[0]!.x, 455).setDepth(4);
+    this.walker.add([this.add.circle(0, 0, 14, 0xffb745).setStrokeStyle(3, 0xffffff), this.add.rectangle(0, 16, 16, 12, 0xc73625)]);
+    this.cameras.main.startFollow(this.walker, true, 0.12, 0.12);
+    this.keys = this.input.keyboard!.createCursorKeys();
+    this.streetHint = this.add.text(GAME_WIDTH / 2, 508, '← → walk · Enter go in · ↑ building list · Esc back to the Hub', textStyle(14, COLORS.textMuted)).setOrigin(0.5).setScrollFactor(0).setDepth(2100);
+    void host;
+  }
+
+  private walk(dt: number): void {
+    if (this.picker || !this.walker) return;
+    const dir = (this.keys.right?.isDown ? 1 : 0) - (this.keys.left?.isDown ? 1 : 0);
+    const maxX = this.street[this.street.length - 1]!.x + 60;
+    if (dir !== 0) this.walker.x = Phaser.Math.Clamp(this.walker.x + dir * dt * 0.35, 60, maxX);
+    for (const s of this.street) {
+      const near = Math.abs(this.walker.x - s.x) < 70;
+      if (near && !s.near) {
+        const motion = services().session.settings.battleAnimations;
+        if (motion !== 'off') this.tweens.add({ targets: s.node, scaleX: 1.12, scaleY: 0.9, duration: 120, yoyo: true, ease: 'Back.easeOut', onComplete: () => { s.node.setScale(1); } });
+        this.streetHint.setText(`Enter: ${s.b.name} — ${s.b.blurb}`.slice(0, 110));
+      }
+      s.near = near;
+    }
+    if (!this.street.some((s) => s.near)) this.streetHint.setText('← → walk · Enter go in · ↑ building list · Esc back to the Hub');
+  }
+
+  private walkTo(i: number): void {
+    const s = this.street[i]!;
+    if (this.picker) return;
+    const go = (): void => this.enterBuilding(s.b);
+    if (services().session.settings.battleAnimations === 'off') { this.walker.x = s.x; go(); return; }
+    this.tweens.add({ targets: this.walker, x: s.x, duration: Math.min(900, Math.abs(this.walker.x - s.x) * 1.2), onComplete: go });
+  }
+
+  private enterNearest(): void {
+    const s = this.street.find((x) => x.near);
+    if (s) this.enterBuilding(s.b);
+  }
+
+  private enterBuilding(b: TownBuilding): void {
+    services().session.visitTown(b.id);
+    this.bounce(b);
+    openBuilding(this.host, b, () => this.host.refresh(''), () => this.host.refresh(''));
+  }
+
+  /** The Wall of Fame: the signatures (stamps and freehand drawings) in the corner of the screen. */
+  private drawWall(): void {
+    const { session } = services();
+    const wall = townOf(session.profile).wall;
+    if (wall.length === 0) return;
+    const g = this.add.graphics().setScrollFactor(0).setDepth(-4);
+    g.fillStyle(0x2b2236, 0.7).fillRect(16, 90, 150, 100);
+    wall.slice(-8).forEach((sig, i) => {
+      const [color, what] = sig.split('|');
+      const col = Phaser.Display.Color.HexStringToColor(color ?? '#ffffff').color;
+      const ox = 20 + (i % 4) * 36, oy = 94 + Math.floor(i / 4) * 48;
+      g.lineStyle(2, col, 1);
+      if (what?.startsWith('d:')) {
+        for (const stroke of what.slice(2).split(':')) {
+          const pts = stroke.split(';').map((q) => q.split(',').map(Number) as [number, number]);
+          g.beginPath();
+          pts.forEach(([x, y], k) => (k === 0 ? g.moveTo(ox + (x! / 100) * 32, oy + (y! / 100) * 42) : g.lineTo(ox + (x! / 100) * 32, oy + (y! / 100) * 42)));
+          g.strokePath();
+        }
+      } else {
+        g.fillStyle(col, 1).fillCircle(ox + 16, oy + 20, 10);
+      }
+    });
   }
 
   private say(msg: string): void {
