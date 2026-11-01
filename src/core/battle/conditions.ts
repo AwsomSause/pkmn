@@ -3,7 +3,8 @@
 
 import { catchProbability } from '../capture';
 import { shinyMeterText } from '../wildLuck';
-import type { Content } from '../contentSchema';
+import { TYPE_NAMES, type Content } from '../contentSchema';
+import { typeEffectiveness } from './damage';
 import { calcStats, getSpecies } from '../pokemon';
 import { currentEnemy, type PokemonInstance, type RunState, type SideEffects, type Stages } from '../state';
 import { emotionOf } from '../story/emotions';
@@ -101,6 +102,13 @@ export function battleConditions(content: Content, run: RunState): Conditions {
     const now = catchProbability({ ...base, hp: foe.hp, statusMultiplier: foe.status ? content.ruleset.catchStatusMultipliers[foe.status.id] ?? 1 : 1 });
     out.foe.push(`Catch odds (plain ball): ${Math.round(now * 100)}% now, ${Math.round(full * 100)}% at full health${foe.status ? ' (status helps)' : ''}`);
   }
+  if (battle.scanned === 'ok') {
+    const weak = TYPE_NAMES.filter((t) => typeEffectiveness(content.typeChart, t, foeSpecies.types) > 1);
+    out.foe.push(`Scanned: weak to ${weak.map(cap).join(', ') || 'nothing special'}`);
+  } else if (battle.scanned === 'fail') out.foe.push('Scan unclear');
+  if (battle.mindRead) out.foe.push(`Mind-read: likely to use ${content.moves.get(battle.mindRead)?.name ?? battle.mindRead}`);
+  if (battle.spectator) out.field.push(`${battle.spectator.name} is watching${battle.spectator.used ? ' (already cheered)' : ''}`);
+  if (battle.arena) out.field.push(`Arena: ${battle.arena.kind}${battle.arena.spent ? ' (smashed)' : ' hazard every few turns; Smash it'}`);
   if (battle.alpha) out.foe.push('ALPHA: oversized and stronger, with a bigger prize');
   const foeStatus = statusWord(foe);
   if (foeStatus) out.foe.push(foeStatus);

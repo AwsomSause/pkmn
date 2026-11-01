@@ -2682,6 +2682,7 @@
   },
   {
    "id": "fight-or-flight-2",
+   "countdown": 8,
    "name": "Glowing Guardian",
    "group": "Wild Pokémon scenes",
    "scene": {
@@ -2996,6 +2997,7 @@
   },
   {
    "id": "fiery-fallout",
+   "countdown": 8,
    "name": "Fiery Fallout",
    "group": "Wild Pokémon scenes",
    "types": [
@@ -3130,6 +3132,7 @@
   },
   {
    "id": "stampede",
+   "countdown": 6,
    "name": "Pokémon Stampede",
    "group": "Wild Pokémon scenes",
    "scene": {
@@ -3564,6 +3567,7 @@
   },
   {
    "id": "rocket-ambush",
+   "countdown": 10,
    "name": "Team Rocket Ambush",
    "group": "Tricksters, villains and teams",
    "stop": "ambush",

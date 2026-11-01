@@ -207,6 +207,11 @@ export class Picker implements PickerLike {
     this.focus(config.start !== undefined && config.start < config.rows.length ? config.start : first >= 0 ? first : 0, false);
   }
 
+  /** The row now highlighted (used to pin Bag items to the hotbar). */
+  get current(): number {
+    return this.index;
+  }
+
   private focus(i: number, sound = true): void {
     if (i < 0 || i >= this.config.rows.length) return;
     if (sound && i !== this.index) playSfx(this.scene, 'ui.cursor', 0.5);

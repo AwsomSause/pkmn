@@ -4,6 +4,10 @@
 
 import { aeroMood, autoInterruption, cameraFocus, capFlash, hapticPattern } from '../core/presentation/uiPrefs';
 import { fitLine } from '../ui/fitText';
+import { HazardFloor, bossCinematic, critFreeze, runScan, tossArc, weaknessesOf } from '../ui/battleFx/skillMoments';
+import { aimable, dealOffer, type SkillInput } from '../core/battle/w1Play';
+import { promptById } from '../core/interaction/prompt';
+import { runInteractionPrompt } from '../ui/interactionPrompt';
 import { filterLog, LOG_TABS, type LogTab } from '../ui/logFilter';
 import { modeBattleLine } from '../core/modeObjectives';
 import { isUltimateBattle, ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
@@ -40,11 +44,9 @@ import { pickUieArena } from '../core/arenaStyle';
 import { uieArenaId } from '../assets/catalog';
 import { services } from '../game/services';
 import { launcherReady } from '../core/camp';
-import { promptById } from '../core/interaction/prompt';
-import { runInteractionPrompt } from '../ui/interactionPrompt';
 import { moveBlockReason } from '../core/battle/moveBlock';
 import { cheerProblem, raidDef } from '../core/raid/raid';
-import { playCry, playMusic, playSfx, playSfxLazy } from '../ui/audio';
+import { playCry, playMusic, playSfx, playSfxLazy, setMusicIntensity } from '../ui/audio';
 import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
 import { regionIdentity } from '../core/presentation/regionIdentity';
 import { ambienceFor, musicState } from '../core/presentation/musicLayers';
@@ -264,6 +266,10 @@ export class BattleScene extends Phaser.Scene {
     this.history = [];
     this.historyView = null;
     this.input.keyboard?.on('keydown-H', () => this.toggleHistory());
+    this.input.keyboard?.on('keydown-P', () => {
+      const id = this.bagIds[(this.picker as Picker | null)?.current ?? -1];
+      if (id) this.toggleHotbar(id);
+    });
     LOG_TABS.forEach((t, i) =>
       this.input.keyboard?.on(`keydown-${i + 1}`, () => {
         if (!this.historyView) return;
@@ -945,8 +951,14 @@ export class BattleScene extends Phaser.Scene {
   }
 
   /** Momentum Meter (yours; battle/spectacle.ts): plain text, always readable. */
+  private hazards: HazardFloor | null = null;
+  private bagIds: string[] = [];
+  private lastTransformTap = -10000;
   private updateSpectacleHud(): void {
     const battle = this.run.battle;
+    if (battle && !this.hazards) this.hazards = new HazardFloor(this);
+    if (battle) this.hazards?.draw(battle.sideEffects, { player: PLAYER_POS, enemy: ENEMY_POS });
+    this.adaptMusic();
     const spec = battle?.spectacle;
     if (!battle || !spec || battle.doubles) {
       this.momentumText.setText('');
@@ -1129,6 +1141,85 @@ export class BattleScene extends Phaser.Scene {
     refresh();
   }
 
+  /** Adaptive music (ideas W1): faster as your lead's HP drops. */
+  private adaptMusic(): void {
+    const settings = services().session.settings;
+    const mon = this.run.party[this.run.battle?.activeIndex ?? 0];
+    if (!settings.adaptiveMusic || !mon) return setMusicIntensity(1);
+    const share = mon.hp / Math.max(1, maxHp(services().session.content, mon));
+    setMusicIntensity(share < 0.25 ? 1.1 : share < 0.5 ? 1.05 : 1);
+  }
+
+  /** The skill prompt for a move, if the player turned skill prompts on: aim drag or a signature shout. */
+  private async moveSkill(moveId: string, signature: boolean): Promise<SkillInput | undefined> {
+    const { session } = services();
+    if (!session.settings.skillPrompts) return undefined;
+    const content = session.content;
+    const kind = aimable(content, moveId) ? 'aim' : signature ? 'shout' : null;
+    if (!kind) return undefined;
+    const result = await runInteractionPrompt(this, promptById(kind === 'aim' ? 'aim-drag' : 'shout-tap'), { motion: this.motion });
+    return { kind, grade: result.grade };
+  }
+
+  /** The trainer's deal: accept (the fight ends, bigger prize, no EXP) or refuse (no turn used). */
+  private showDealMenu(): void {
+    const battle = this.run.battle!;
+    const money = Math.round(services().session.content.balance.w1.play.deal.money * 100);
+    this.clearMenus();
+    this.message.setText(`${battle.trainer?.name ?? 'The trainer'} is nearly beaten and offers a deal: end the fight now for ${money}% prize money, but no EXP. Accept?`);
+    this.commandWindow.setVisible(true);
+    this.menu = new Menu(this, {
+      x: COMMAND_X + 24,
+      y: MESSAGE_Y + 26,
+      options: [{ label: 'Accept the deal' }, { label: 'Keep fighting' }],
+      columns: 2,
+      itemWidth: 170,
+      itemHeight: 50,
+      fontSize: 24,
+      color: COLORS.textLight,
+      glass: { tints: [0x1f9a52, 0xc8303c], motion: this.motion },
+      onSelect: (i) => this.submit({ kind: 'deal', accept: i === 0 }),
+      onBack: () => this.showRootMenu(),
+    });
+  }
+
+  /** The Pokédex scan mini-game: a right guess lists the foe's weaknesses in the info panel. */
+  private async scanFoe(): Promise<void> {
+    const content = services().session.content;
+    const battle = this.run.battle!;
+    const foe = currentEnemy(battle);
+    const species = getSpecies(content, foe.speciesId);
+    this.clearMenus();
+    const ok = await runScan(this, content, species.name, species.types, `${foe.uid}:${battle.turn}`);
+    battle.scanned = ok ? 'ok' : 'fail';
+    await this.say(ok ? `Scan complete! ${species.name} is weak to ${weaknessesOf(content, species.types).join(', ') || 'nothing in particular'}.` : `The scan came back unclear.`);
+    this.showRootMenu();
+  }
+
+  /** A Bag item with no target: a ball gets the optional skill throw once the foe is weakened; a berry toss arcs to the ally. */
+  private async useBagItem(itemId: string): Promise<void> {
+    const content = services().session.content;
+    const item = content.items.get(itemId);
+    const battle = this.run.battle!;
+    let skill: SkillInput | undefined;
+    if (item?.effect.kind === 'catch' && services().session.settings.skillPrompts && battle.kind === 'wild') {
+      const foe = currentEnemy(battle);
+      if (foe.hp / Math.max(1, maxHp(content, foe)) <= content.balance.w1.play.throw.weakenedBelow || foe.status) {
+        const result = await runInteractionPrompt(this, promptById('throw-ring'), { motion: this.motion });
+        skill = { kind: 'throw', grade: result.grade };
+      }
+    }
+    this.submit(skill ? { kind: 'item', itemId, throwSkill: skill } : { kind: 'item', itemId });
+  }
+
+  /** Pin or unpin the highlighted Bag item on the hotbar (P). */
+  private toggleHotbar(itemId: string): void {
+    const settings = services().session.settings;
+    const has = settings.hotbar.includes(itemId);
+    const next = has ? settings.hotbar.filter((x) => x !== itemId) : [...settings.hotbar, itemId].slice(-4);
+    services().session.saveSettings({ ...settings, hotbar: next });
+  }
+
   private clearMenus(): void {
     this.tweens.killTweensOf(this.reticle ?? []);
     this.reticle?.destroy();
@@ -1250,6 +1341,18 @@ export class BattleScene extends Phaser.Scene {
     // Bosses and rivals get a title card: who they are and what they specialise in.
     const boss = this.boss();
     const title = this.trainerTitle();
+    if (boss && battle.trainer && !services().session.settings.skippedIntros.includes(boss.title)) {
+      // A genuine boss entrance; skipping it once remembers the choice for this boss.
+      const aceId = battle.enemyTeam[battle.enemyTeam.length - 1]?.speciesId;
+      await bossCinematic(
+        this,
+        { name: boss.title, subtitle: boss.types.length ? `${boss.types.map((t) => t[0]!.toUpperCase() + t.slice(1)).join(' / ')} specialist` : '', ace: aceId ? getSpecies(services().session.content, aceId).name : '', at: { x: ENEMY_POS.x, y: ENEMY_POS.y }, motion: this.motion },
+        () => {
+          const s = services().session.settings;
+          if (!s.skippedIntros.includes(boss.title)) services().session.saveSettings({ ...s, skippedIntros: [...s.skippedIntros, boss.title] });
+        },
+      );
+    }
     if (boss) {
       const types = boss.types.map((t) => t[0]!.toUpperCase() + t.slice(1)).join(' / ');
       await this.playBeat(titleCard(this, boss.title, types ? `${types} specialist` : '', ROLE_RIMS[boss.role], this.motion));
@@ -1390,10 +1493,13 @@ export class BattleScene extends Phaser.Scene {
     const battle = this.run.battle!;
     const view = { battle, party: this.run.party };
     const choices: { label: string; target: NonNullable<SlotCommand['target']>; tint: number }[] = [];
-    for (const spot of [0, 1] as const) {
-      const foe = monAt(view, 'enemy', spot);
-      if (foe && foe.hp > 0 && !battle.doubles!.commanding.includes(foe.uid)) choices.push({ label: this.speciesName(foe), target: { side: 'enemy', spot }, tint: ROLE_RIMS.trainer });
-    }
+    // Smart-target arrow (ideas W1): the foe this move hits hardest by type is marked.
+    const content0 = services().session.content;
+    const eff = (foe: PokemonInstance): number => (move.power ? typeEffectiveness(content0.typeChart, move.type, getSpecies(content0, foe.speciesId).types) : 0);
+    const foes = ([0, 1] as const).map((spot) => ({ spot, foe: monAt(view, 'enemy', spot) })).filter((f): f is { spot: 0 | 1; foe: PokemonInstance } => !!f.foe && f.foe.hp > 0 && !battle.doubles!.commanding.includes(f.foe.uid));
+    const best = foes.length > 1 && move.power ? foes.reduce((a, b) => (eff(b.foe) > eff(a.foe) ? b : a)) : null;
+    const worth = best && eff(best.foe) > Math.min(...foes.map((f) => eff(f.foe)));
+    for (const { spot, foe } of foes) choices.push({ label: `${worth && best.spot === spot ? '▶ ' : ''}${this.speciesName(foe)}${worth && best.spot === spot ? ' (best)' : ''}`, target: { side: 'enemy', spot }, tint: ROLE_RIMS.trainer });
     const partnerSpot: Spot = this.cmdSpot === 0 ? 1 : 0;
     const partner = monAt(view, 'player', partnerSpot);
     if (partner && partner.hp > 0 && ALLY_AIMED.has(move.id)) choices.push({ label: `${this.speciesName(partner)} (ally)`, target: { side: 'player', spot: partnerSpot }, tint: AERO.sky });
@@ -1734,6 +1840,17 @@ export class BattleScene extends Phaser.Scene {
     if (cheerAt >= 0) options.push({ label: `Cheer ×${raid!.cheersLeft}` });
     const rallyAt = canRally ? options.length : -1;
     if (canRally) options.push({ label: this.rallyChoice ? 'Rally: ON' : 'Rally: OFF' });
+    // Ideas W1: a surrender deal, smashing the arena, the Pokédex scan and the item hotbar.
+    const foeNow = currentEnemy(battleNow);
+    const dealAt = !this.duo && dealOffer(content, battleNow, foeNow.hp, maxHp(content, foeNow)) ? options.length : -1;
+    if (dealAt >= 0) options.push({ label: 'Deal?' });
+    const smashAt = !this.duo && battleNow.arena && !battleNow.arena.spent ? options.length : -1;
+    if (smashAt >= 0) options.push({ label: `Smash ${battleNow.arena!.kind}` });
+    const scanAt = !this.duo && services().session.settings.skillPrompts && !battleNow.scanned && !battleNow.raid ? options.length : -1;
+    if (scanAt >= 0) options.push({ label: 'Scan' });
+    const hotbar = this.duo ? [] : services().session.settings.hotbar.filter((id) => (this.run.inventory[id] ?? 0) > 0 && content.items.get(id) && content.items.get(id)!.target !== 'party' && content.items.get(id)!.target !== 'fainted' && itemProblem(this.battleCtx(), id) === null).slice(0, 4);
+    const hotbarAt = options.length;
+    for (const id of hotbar) options.push({ label: `Quick: ${content.items.get(id)!.name}` });
     this.commandWindow.setVisible(true);
     this.menu = new Menu(this, {
       x: COMMAND_X + 24,
@@ -1747,7 +1864,11 @@ export class BattleScene extends Phaser.Scene {
       // Wii-style glossy buttons: Fight red, Bag gold, Pokémon green, transformations neon.
       glass: { tints: [0xc8303c, 0xc08a10, 0x1f9a52, 0x9a2cc8, 0x2c8ad8, 0x2cb8c8, 0xd8a020], motion: this.motion },
       onSelect: (i) => {
-        if (i === rallyAt) {
+        if (i === dealAt) this.showDealMenu();
+        else if (i === smashAt) this.submit({ kind: 'arena' });
+        else if (i === scanAt) void this.scanFoe();
+        else if (i >= hotbarAt && i < hotbarAt + hotbar.length) this.submit({ kind: 'item', itemId: hotbar[i - hotbarAt]! });
+        else if (i === rallyAt) {
           this.rallyChoice = !this.rallyChoice;
           this.showRootMenu();
         } else if (i === cheerAt) this.showCheerMenu();
@@ -1756,7 +1877,15 @@ export class BattleScene extends Phaser.Scene {
         else if (i === 2) this.openPartyPicker(false);
         else {
           const at = choices.findIndex((c) => same(this.transformChoice, c));
-          this.transformChoice = choices[at + 1] ?? null;
+          const next = choices[at + 1] ?? null;
+          // Ideas W1 gesture trigger: with skill prompts on, switching a transformation ON takes a quick double-tap, with a flashy confirm.
+          if (next && services().session.settings.skillPrompts && this.time.now - this.lastTransformTap > 700) {
+            this.lastTransformTap = this.time.now;
+            this.message.setText(`Tap again to confirm ${onLabel(next)}!`);
+            return;
+          }
+          this.transformChoice = next;
+          if (next && this.motion !== 'off') this.cameras.main.flash(180, 255, 240, 160);
           this.showRootMenu();
         }
       },
@@ -1868,8 +1997,13 @@ export class BattleScene extends Phaser.Scene {
         const action = { kind: 'move' as const, index: anyPp ? i : -1, ...(transform ? { transform } : {}), ...(rally ? { rally: true } : {}) };
         const slot = anyPp ? mon.moves[i] : undefined;
         const move = slot ? (zMoves?.[i] ?? content.moves.get(slot.id)) : undefined;
+        const sig = !!slot && !!mon.awakened?.includes(slot.id);
+        const withSkill = async () => {
+          const skill = slot && !this.duo ? await this.moveSkill(slot.id, sig) : undefined;
+          this.submit(skill ? { ...action, skill } : action);
+        };
         if (this.duo && move && needsTarget(move)) this.openTargetPicker(action, move);
-        else this.submit(action);
+        else void withSkill();
       },
       onBack: () => this.showRootMenu(),
     });
@@ -1914,6 +2048,7 @@ export class BattleScene extends Phaser.Scene {
     const content = services().session.content;
     const run = this.run;
     const ids = Object.keys(run.inventory).filter((id) => content.items.get(id)?.usableInBattle && run.inventory[id]! > 0);
+    this.bagIds = ids;
     // A Pokémon-targeted item is usable if it works on at least one party member.
     const problem = (id: string): string | null => {
       const item = content.items.get(id)!;
@@ -1927,7 +2062,7 @@ export class BattleScene extends Phaser.Scene {
     this.picker = new Picker(this, {
       glass: true,
       dock: true,
-      title: 'Bag',
+      title: 'Bag  (P pins to the hotbar)',
       columns: 2,
       rowHeight: 34,
       rows: ids.map((id) => bagRow(content, run.inventory, id, problem(id))),
@@ -1936,7 +2071,7 @@ export class BattleScene extends Phaser.Scene {
         const item = content.items.get(id)!;
         if (item.target === 'party' || item.target === 'fainted') this.openItemTarget(id);
         else if (item.category === 'ball' && !this.duo && launcherReady(services().session.run!)) void this.skillThrow(id);
-        else this.submit({ kind: 'item', itemId: id });
+        else void this.useBagItem(id);
       },
       onBack: () => this.showRootMenu(),
     });
@@ -1955,7 +2090,12 @@ export class BattleScene extends Phaser.Scene {
       columns: 3,
       rowHeight: 70,
       rows: partyRows(content, run.party, (i) => itemProblem(this.battleCtx(), itemId, i), (i) => (i === run.battle!.activeIndex ? 'IN BATTLE' : undefined)),
-      onSelect: (i) => this.submit({ kind: 'item', itemId, targetIndex: i }),
+      onSelect: (i) => {
+        const content = services().session.content;
+        const toss = content.catalog.get(itemId)?.family.includes('Berr') ?? false;
+        if (toss && this.playerSprite) void tossArc(this, { x: 90, y: 440 }, { x: this.playerSprite.x, y: this.playerSprite.y - 30 }, this.motion).then(() => this.submit({ kind: 'item', itemId, targetIndex: i }));
+        else this.submit({ kind: 'item', itemId, targetIndex: i });
+      },
       onBack: () => this.openBag(),
     });
   }
@@ -2265,6 +2405,7 @@ export class BattleScene extends Phaser.Scene {
         case 'weatherDamage':
           if (e.hpAfter < mon!.hp && services().session.settings.damageNumbers) this.floatDamage(sprite, mon!.hp - e.hpAfter);
           if (e.type === 'damage' && e.hpAfter < mon!.hp) this.buzz(this.lastMoveType, e.effectiveness > 1);
+          if (e.type === 'damage' && e.crit && e.side === 'enemy' && session.settings.skillPrompts && sprite) await critFreeze(this, { x: sprite.x, y: sprite.y }, this.motion);
           mon!.hp = e.hpAfter;
           if (e.type !== 'drain' && e.type !== 'heal') {
             playSfx(this, e.type === 'damage' && e.effectiveness > 1 ? 'se.hit_strong' : e.type === 'damage' && e.effectiveness < 1 ? 'se.hit_weak' : 'se.hit');

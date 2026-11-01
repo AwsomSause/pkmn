@@ -182,6 +182,29 @@ export class EventScene extends Phaser.Scene {
     this.focus(Math.max(0, view.choices.findIndex((c) => !c.locked)), false);
     onInputAction(this, (action) => this.handle(action));
     this.cameras.main.fadeIn(this.calm ? 1 : 300);
+    // Split-second choice (ideas W1): a countdown when timed prompts are on; at zero the fallback option is taken.
+    const seconds = view.event.countdown;
+    if (seconds && session.settings.skillPrompts) {
+      let left = seconds;
+      const clock = this.add.text(GAME_WIDTH / 2, 20, `Decide! ${left}`, textStyle(26, '#ffe060', { stroke: '#181818', strokeThickness: 5 })).setOrigin(0.5).setDepth(50);
+      this.time.addEvent({
+        delay: 1000,
+        repeat: seconds - 1,
+        callback: () => {
+          if (this.phase !== 'choose') return clock.destroy();
+          left -= 1;
+          clock.setText(`Decide! ${left}`).setColor(left <= 3 ? '#ff6a6a' : '#ffe060');
+          if (left > 0) return;
+          clock.destroy();
+          const open = view.choices.map((c, i) => (c.locked ? -1 : i)).filter((i) => i >= 0);
+          const pick = view.event.timeoutChoice !== undefined && open.includes(view.event.timeoutChoice) ? view.event.timeoutChoice : open[open.length - 1];
+          if (pick !== undefined) {
+            this.focus(pick, false);
+            this.confirm();
+          }
+        },
+      });
+    }
   }
 
   private handle(action: InputAction): void {

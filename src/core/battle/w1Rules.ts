@@ -4,6 +4,7 @@
 import { z } from 'zod';
 import type { Content } from '../contentSchema';
 import type { PokemonInstance } from '../state';
+import { PlayConfigSchema } from './w1Play';
 
 export const W1ConfigSchema = z.object({
   resonance: z.object({ minParty: z.number().int().min(2), bonus: z.number().min(1) }),
@@ -29,6 +30,7 @@ export const W1ConfigSchema = z.object({
     /** Prize money multiplier for beating or catching an Alpha. */
     alphaMoney: z.number().min(1),
   }),
+  play: PlayConfigSchema,
   bench: z.object({ minFriendship: z.number().int().min(0).max(255) }),
   underdog: z.object({ levels: z.number().int().min(1), xpBonus: z.number().min(1) }),
 });

@@ -84,6 +84,7 @@ import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
 import { addMomentum, cfgOf as spectacleCfg, duePhases, isBossFight, rallyProblem, rollLastStand, spectacleOf, spectacleRoll as spectacleRollExt, type SpectacleEvent } from './spectacle';
+import { ARENA_IMMUNE, aimAccuracy, arenaText, dealOffer, mindReader, shoutDamage, throwCatch, type SkillInput } from './w1Play';
 import { benchSupporter, addBleed, bleedDamage, causesBleed, curseMultiplier, resonanceMultiplier } from './w1Rules';
 import { sacrificeFor } from './sacrificeRule';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
@@ -216,10 +217,14 @@ export type BattleEvent =
 
 export type PlayerAction =
   /** `transform`: Mega Evolve (etc.) before moving this turn. */
-  | { kind: 'move'; index: number; transform?: TransformRequest; /** Spend a full Momentum Meter: this move is a Surge Strike. */ rally?: boolean }
+  | { kind: 'move'; index: number; transform?: TransformRequest; /** Spend a full Momentum Meter: this move is a Surge Strike. */ rally?: boolean; /** A prompt grade earned in the UI: aim drag or signature shout (ideas W1). */ skill?: SkillInput }
   | { kind: 'switch'; partyIndex: number }
-  /** `skill`: the grade of a Ball Launcher skill throw (core/camp); it scales the catch rate. */
-  | { kind: 'item'; itemId: string; targetIndex?: number; skill?: 'miss' | 'ok' | 'good' | 'perfect' }
+  /** `skill`: the grade of a Ball Launcher skill throw (core/camp); it scales the catch rate. `throwSkill`: the grade of the hand-aimed throw ring (ideas W1). */
+  | { kind: 'item'; itemId: string; targetIndex?: number; skill?: 'miss' | 'ok' | 'good' | 'perfect'; throwSkill?: SkillInput }
+  /** A trainer's surrender deal: accept ends the fight (no EXP, more money); refuse keeps fighting and does not use the turn (ideas W1). */
+  | { kind: 'deal'; accept: boolean }
+  /** Smash the arena (rocks, lava, flood): hurts the foe once per battle and uses the turn (ideas W1). */
+  | { kind: 'arena' }
   /** A raid cheer (Raid Battles pack): uses the turn, costs one of three cheers. */
   | { kind: 'cheer'; cheer: Cheer }
   /** The Pokémon refused its command and does nothing this turn (only the Bond Engine sends this). */
@@ -620,6 +625,14 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     if (forcedMoveId(battle.playerVolatile)) battle.playerVolatile = freshVolatileKeeping(battle.playerVolatile);
     validateAction(ctx, action);
   }
+  // Ideas W1: this turn's skill grade (a prompt result is an input, like the move itself); a surrender deal; smashing the arena.
+  battle.skill = action.kind === 'move' ? action.skill : action.kind === 'item' ? action.throwSkill : undefined;
+  if (action.kind === 'deal') return dealTurn(ctx, action.accept, events);
+  if (action.kind === 'arena') {
+    const problem = arenaProblem(ctx);
+    if (problem) throw new Error(problem);
+  }
+  w1StartOfTurn(ctx, events);
   ctx.doubleKoLoser = undefined;
   ctx.hyperUsed = false;
   ctx.enemyHyperUsed = false;
@@ -651,6 +664,13 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     resolveEntries(ctx, events);
   } else if (action.kind === 'cheer') {
     useCheer(ctx, action.cheer, events);
+  } else if (action.kind === 'arena') {
+    smashArena(ctx, events);
+    if (currentEnemy(battle).hp <= 0) {
+      settleFaints(ctx, events);
+      battle.turn += 1;
+      return events;
+    }
   } else if (action.kind === 'item') {
     const snaggedBefore = battle.snagged?.length ?? 0;
     useItemInBattle(ctx, action.itemId, action.targetIndex, events, action.skill);
@@ -1209,7 +1229,7 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
       catchRate: species.catchRate,
       ballMultiplier: ballBonus(ctx, item.effect, enemy, species),
       statusMultiplier: enemy.status ? content.ruleset.catchStatusMultipliers[enemy.status.id] ?? 1 : 1,
-      finalMultiplier: ctx.catchMultiplier * skillThrowFactor(skill),
+      finalMultiplier: ctx.catchMultiplier * skillThrowFactor(skill) * throwCatch(content, battle.skill, enemy.hp / Math.max(1, calcStats(content, enemy).hp), !!enemy.status),
     });
     const roll = resolveCatchRoll(probability, ctx.captureRng.float());
     events.push({ type: 'ball', itemId, shakes: roll.shakes, caught: roll.caught });
@@ -3004,6 +3024,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     const keenEye = (userAbility === 'keen-eye' || userAbility === 'minds-eye') && target.stages.eva > 0;
     const evaStage = fx.ignoreStages || userAbility === 'unaware' || keenEye ? 0 : target.stages.eva;
     accuracy = hitChance(baseAccuracy, accStage, evaStage) * itemAccuracy * perkAccuracy;
+    if (baseAccuracy !== null && user.side === 'player') accuracy *= aimAccuracy(content, ctx.battle.skill, move.id);
     if (baseAccuracy !== null) {
       if (user.side === 'player' && user.mon.moves.find((m) => m.id === move.id)?.star) accuracy *= 1.05;
       if (userAbility === 'compound-eyes') accuracy *= 1.3;
@@ -3198,6 +3219,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (userAbility === 'neuroforce' && effectiveness > 1) final *= 1.25;
       if (fx.superEffectiveBoost && effectiveness > 1) final *= 4 / 3;
       if (user.mon.awakened?.includes(move.id)) final *= content.story.awakening.boost;
+      if (user.side === 'player' && ctx.battle.comboUid === user.mon.uid) final *= content.balance.w1.play.combo.bonus;
+      if (user.side === 'player') final *= shoutDamage(content, ctx.battle.skill, !!user.mon.awakened?.includes(move.id));
       if ((foeAbility === 'fluffy' || foeAbility === 'aura-guard') && contact) final *= 0.5;
       if (parental && hit === 1) final *= 0.25;
       if (userAbility === 'stakeout' && target.vol.turnsOut === 0) final *= 2;
@@ -3873,6 +3896,7 @@ function endTurnMon(ctx: BattleContext, c: Combatant, foe: Combatant, events: Ba
 
 /** Field-wide counters at the end of a turn (Wonder Room, Gravity, Trick Room...). */
 function endTurnField(ctx: BattleContext, events: BattleEvent[]): void {
+  arenaHazard(ctx, events);
   ctx.battle.extra.ionDeluge = false;
   if (ctx.battle.extra.wonderRoom > 0 && --ctx.battle.extra.wonderRoom === 0) events.push({ type: 'fieldEnd', field: 'wonderRoom' });
   Held.tickItemRooms(ctx.battle);
@@ -5399,13 +5423,20 @@ const say = (side: Side, kind: SpectacleEvent['kind'], text: string, uid?: strin
 export function telegraphedAttack(ctx: Pick<BattleContext, 'content' | 'battle' | 'party'>): string | null {
   const { battle, content } = ctx;
   if (battle.outcome || battle.doubles || !(battle.raid || battle.totem || isBossFight(battle))) return null;
+  const best = foeBestMove(ctx);
+  return best && content.moves.get(best)?.category !== 'status' ? best : null;
+}
+
+/** The foe's highest-valued usable move against your Pokémon in front (no random numbers; used by telegraphs and Mind-read). */
+export function foeBestMove(ctx: Pick<BattleContext, 'content' | 'battle' | 'party'>): string | null {
+  const { battle, content } = ctx;
+  if (battle.outcome || battle.doubles) return null;
   const foe = currentEnemy(battle);
   const usable = foe.moves.filter((m) => m.pp > 0);
   const target = ctx.party[battle.activeIndex];
   if (foe.hp <= 0 || usable.length === 0 || !target) return null;
   const brain = { content, ai: Math.max(battle.ai, 0.7), target, stages: battle.enemyStages, battle, party: ctx.party };
-  const best = usable.map((m) => ({ id: m.id, v: moveValue(brain, foe, m.id) })).reduce((a, b) => (b.v > a.v ? b : a));
-  return content.moves.get(best.id)?.category === 'status' ? null : best.id;
+  return usable.map((m) => ({ id: m.id, v: moveValue(brain, foe, m.id) })).reduce((a, b) => (b.v > a.v ? b : a)).id;
 }
 
 /** Start of a turn: a Rally is set. */
@@ -5502,3 +5533,91 @@ function spectacleEndOfTurn(ctx: BattleContext, spec: NonNullable<BattleState['s
   }
 }
 
+
+// ---------- Ideas W1 play rules (battle/w1Play.ts) ----------
+
+/** A trainer's deal: refuse (no turn used) or accept (the fight ends as a win with no EXP; the prize money is bigger). */
+function dealTurn(ctx: BattleContext, accept: boolean, events: BattleEvent[]): BattleEvent[] {
+  const { battle, content } = ctx;
+  const foe = currentEnemy(battle);
+  if (!dealOffer(content, battle, foe.hp, maxHp(content, foe))) throw new Error('There is no deal on the table');
+  if (!accept) {
+    battle.dealRefused = true;
+    events.push(say('enemy', 'deal', `${battle.trainer?.name ?? 'The trainer'}'s offer was turned down. The fight goes on!`));
+    return events;
+  }
+  battle.deal = true;
+  battle.outcome = 'win';
+  events.push(say('enemy', 'deal', `${battle.trainer?.name ?? 'The trainer'} concedes the match and pays up!`));
+  return events;
+}
+
+function arenaProblem(ctx: BattleContext): string | null {
+  const arena = ctx.battle.arena;
+  if (!arena || ctx.battle.doubles) return 'There is nothing to smash here';
+  return arena.spent ? 'The arena has already been smashed' : null;
+}
+
+/** Start of a turn: a Psychic ally reads the foe's mind, a grudge rages, a spectator tosses a buff (each once). */
+function w1StartOfTurn(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const mine = ctx.party[battle.activeIndex]!;
+  if (battle.mindRead === undefined && !battle.raid && !battle.totem) {
+    const reader = mindReader(content, ctx.party);
+    const plan = reader ? foeBestMove(ctx) : null;
+    if (reader && plan) {
+      battle.mindRead = plan;
+      events.push(say('player', 'mindRead', `${nameOf(ctx, reader)} reads the foe's mind: it is most likely to use ${content.moves.get(plan)?.name ?? plan}!`, reader.uid));
+    }
+  }
+  if (battle.grudgeMons?.includes(mine.uid) && !battle.grudgeDone?.includes(mine.uid)) {
+    (battle.grudgeDone ??= []).push(mine.uid);
+    events.push(say('player', 'grudge', `${nameOf(ctx, mine)} remembers this foe's kind... and fights with a grudge!`, mine.uid));
+    const c: Combatant = { side: 'player', mon: mine, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false };
+    for (const [stat, n] of Object.entries(content.balance.w1.play.grudge.boost)) applyStageChange(ctx, c, stat as BoostStat, n, events);
+  }
+  if (battle.spectator && !battle.spectator.used) {
+    battle.spectator.used = true;
+    events.push(say('player', 'spectator', `${battle.spectator.name} cheers and tosses you a boost!`));
+    const c: Combatant = { side: 'player', mon: mine, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false };
+    for (const [stat, n] of Object.entries(content.balance.w1.play.spectator.boost)) applyStageChange(ctx, c, stat as BoostStat, n, events);
+  }
+  // A signature shout is announced when it will land.
+  if (battle.skill?.kind === 'shout' && battle.skill.grade !== 'miss') events.push(say('player', 'shout', `${nameOf(ctx, mine)} yells out! The trainer echoes it!`, mine.uid));
+}
+
+function hurtBoth(ctx: BattleContext, fraction: (side: Side) => number, immune: readonly string[], events: BattleEvent[]): void {
+  for (const side of ['player', 'enemy'] as const) {
+    const mon = side === 'player' ? ctx.party[ctx.battle.activeIndex]! : currentEnemy(ctx.battle);
+    if (mon.hp <= 0 || getSpecies(ctx.content, mon.speciesId).types.some((t) => immune.includes(t))) continue;
+    const c: Combatant = { side, mon, stages: side === 'player' ? ctx.battle.playerStages : ctx.battle.enemyStages, vol: side === 'player' ? ctx.battle.playerVolatile : ctx.battle.enemyVolatile, flinched: false, protected: false };
+    if (abilityIn(ctx, c) === 'magic-guard') continue;
+    const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(maxHp(ctx.content, mon) * fraction(side))));
+    events.push({ type: 'damage', side, amount: lost, hpAfter: mon.hp, effectiveness: 1, crit: false });
+    if (lastStand) events.push({ type: 'lastStand', side, itemId: lastStand });
+  }
+}
+
+/** Arena hazards (lava flow, falling rocks, flood): both sides take a hit every few turns until the arena is smashed. */
+function arenaHazard(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const arena = battle.arena;
+  if (!arena || arena.spent || battle.doubles || battle.outcome) return;
+  const cfg = content.balance.w1.play.arena;
+  if (battle.turn % cfg.every !== 0) return;
+  events.push(say('player', 'arena', arenaText(arena.kind)));
+  hurtBoth(ctx, () => cfg.fraction, ARENA_IMMUNE[arena.kind], events);
+}
+
+/** Smash the cliff / dam the lava / drain the flood: the foe takes a big hit and the hazard stops for good. */
+function smashArena(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const arena = battle.arena!;
+  arena.spent = true;
+  const foe = currentEnemy(battle);
+  const c: Combatant = { side: 'enemy', mon: foe, stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
+  events.push(say('player', 'arena', `${nameOf(ctx, ctx.party[battle.activeIndex]!)} smashes the arena! ${arenaText(arena.kind)}`));
+  if (getSpecies(content, foe.speciesId).types.some((t) => ARENA_IMMUNE[arena.kind].includes(t))) return;
+  const { lost } = takeHp(ctx, c, Math.max(1, Math.floor(maxHp(content, foe) * content.balance.w1.play.arena.interact)));
+  events.push({ type: 'damage', side: 'enemy', amount: lost, hpAfter: foe.hp, effectiveness: 1, crit: false });
+}

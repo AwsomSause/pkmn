@@ -2,6 +2,7 @@
 // Pure rules. Stock, visitors, rumours and events are drawn from the run seed, the region and the stage, so a plaza looks the
 // same on a reload and different from run to run. Nothing here uses the battle, encounter or reward streams.
 
+import { exhibitionFor } from '../exhibition';
 import { applyEffect, startClubBattle, tradeCandidates } from '../events';
 import { evilMarkup, plazaAgent, plazaVillain } from '../evil/plaza';
 import { evilTeam } from '../evil/teams';
@@ -619,6 +620,12 @@ export function sectionView(content: Content, run: RunState, sideId: string, sec
       } else {
         const theme = clubTheme(run);
         notes.push(`The board says today's Themed Cup is ${theme.toUpperCase()}-type foes only.`);
+        // Spectate (ideas W1): watch an exhibition match and back a trainer with a friendly wager (once a stage).
+        if (usedN(run, 'club:watch') === 0) {
+          const show = exhibitionFor(content, run, key(run));
+          const wager = Math.round(regionPrice(run, 200));
+          show.teams.forEach((t, i) => add(`club:watch${i === 0 ? 'A' : 'B'}`, `Back ${t.trainer}`, `Watch ${show.teams[0].trainer} face ${show.teams[1].trainer}. A winning wager pays double.`, wager));
+        }
         for (const f of clubFormats(run)) {
           add(`club:${f.id}`, `${f.name} (${f.rounds} match${f.rounds > 1 ? 'es' : ''})`, `${f.text} Prize: ${f.prizeText}.`, f.fee, f.minRep > run.plaza.rep ? `Needs reputation ${f.minRep} (${plazaRepTitle(f.minRep)})` : usedN(run, `club:${f.id}`) >= 2 ? 'Played twice already today.' : !fighting ? 'No Pokémon can fight.' : null);
         }
@@ -832,6 +839,16 @@ export function usePlaza(content: Content, current: RunState, sideId: string, se
       if (a === 'quit') {
         run.plaza.club = null;
         words.push('You walk away from the streak.');
+        break;
+      }
+      if (a === 'watchA' || a === 'watchB') {
+        const show = exhibitionFor(content, run, key(run));
+        markUsed(run, 'club:watch');
+        words.push(...show.lines);
+        if (show.winner === (a === 'watchA' ? 0 : 1)) {
+          run.money += option.cost * 2;
+          words.push(`Your pick won! The wager pays ₽${option.cost * 2}.`);
+        } else words.push('Your pick lost. The wager is gone.');
         break;
       }
       if (a !== 'next') {
