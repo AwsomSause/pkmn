@@ -5378,6 +5378,7 @@ function championsAura(ctx: BattleContext, events: BattleEvent[]): void {
 
 /** Engine steps the double-battle turn (battle/doubles.ts) drives. Not meant for other callers. */
 export const doublesSteps = {
+  w1DoublesStart,
   dealTurn,
   arenaProblem,
   smashArenaOn,
@@ -5439,14 +5440,50 @@ export function telegraphedAttack(ctx: Pick<BattleContext, 'content' | 'battle' 
 
 /** The foe's highest-valued usable move against your Pokémon in front (no random numbers; used by telegraphs and Mind-read). */
 export function foeBestMove(ctx: Pick<BattleContext, 'content' | 'battle' | 'party'>): string | null {
-  const { battle, content } = ctx;
+  const { battle } = ctx;
   if (battle.outcome || battle.doubles) return null;
-  const foe = currentEnemy(battle);
-  const usable = foe.moves.filter((m) => m.pp > 0);
   const target = ctx.party[battle.activeIndex];
-  if (foe.hp <= 0 || usable.length === 0 || !target) return null;
-  const brain = { content, ai: Math.max(battle.ai, 0.7), target, stages: battle.enemyStages, battle, party: ctx.party };
+  return target ? bestMoveOf(ctx, currentEnemy(battle), battle.enemyStages, target) : null;
+}
+
+/** The move the foe's AI values most for this Pokémon against this target (nothing is rolled). */
+function bestMoveOf(ctx: Pick<BattleContext, 'content' | 'battle' | 'party'>, foe: PokemonInstance, stages: Stages, target: PokemonInstance): string | null {
+  const { battle, content } = ctx;
+  const usable = foe.moves.filter((m) => m.pp > 0);
+  if (foe.hp <= 0 || usable.length === 0) return null;
+  const brain = { content, ai: Math.max(battle.ai, 0.7), target, stages, battle, party: ctx.party };
   return usable.map((m) => ({ id: m.id, v: moveValue(brain, foe, m.id) })).reduce((a, b) => (b.v > a.v ? b : a)).id;
+}
+
+/** Start of a double-battle turn: mind-read, grudges and a spectator buff, like singles but across both Pokémon on each side. */
+export function w1DoublesStart(ctx: BattleContext, players: Combatant[], foes: Combatant[], events: BattleEvent[], focus?: (c: Combatant) => void): void {
+  const { battle, content } = ctx;
+  if (battle.mindRead === undefined && !battle.raid && !battle.totem) {
+    const reader = mindReader(content, ctx.party);
+    const foe = foes[0];
+    const target = players[0];
+    const plan = reader && foe && target ? bestMoveOf(ctx, foe.mon, foe.stages, target.mon) : null;
+    if (reader && plan) {
+      battle.mindRead = plan;
+      events.push(say('player', 'mindRead', `${nameOf(ctx, reader)} reads the foe's mind: it is most likely to use ${content.moves.get(plan)?.name ?? plan}!`, reader.uid));
+    }
+  }
+  for (const c of players) {
+    if (battle.grudgeMons?.includes(c.mon.uid) && !battle.grudgeDone?.includes(c.mon.uid)) {
+      (battle.grudgeDone ??= []).push(c.mon.uid);
+      events.push(say('player', 'grudge', `${nameOf(ctx, c.mon)} remembers this foe's kind... and fights with a grudge!`, c.mon.uid));
+      focus?.(c);
+      for (const [stat, n] of Object.entries(content.balance.w1.play.grudge.boost)) applyStageChange(ctx, c, stat as BoostStat, n, events);
+    }
+  }
+  if (battle.spectator && !battle.spectator.used) {
+    battle.spectator.used = true;
+    events.push(say('player', 'spectator', `${battle.spectator.name} cheers and tosses you a boost!`));
+    for (const c of players) {
+      focus?.(c);
+      for (const [stat, n] of Object.entries(content.balance.w1.play.spectator.boost)) applyStageChange(ctx, c, stat as BoostStat, n, events);
+    }
+  }
 }
 
 /** The move an AI-controlled player-side Pokémon would pick (club exhibitions run both sides on the AI). */
