@@ -2107,6 +2107,28 @@
   }
  },
  {
+  "id": "streak-lens",
+  "name": "Streak Lens",
+  "family": "Battle held items",
+  "description": "Each critical hit in a row (up to 3) adds +1 critical-hit stage for the next hit. A rare lens.",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 1,
+  "how": "held",
+  "icon": "scope-lens",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "crit",
+     "stages": 0,
+     "streakStages": 1
+    }
+   ]
+  }
+ },
+ {
   "id": "scope-lens",
   "name": "Scope Lens",
   "family": "Battle held items",

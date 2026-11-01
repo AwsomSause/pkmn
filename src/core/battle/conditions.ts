@@ -1,6 +1,8 @@
 // What is going on in a battle, as short lines for the battle Info panel (spec §23): field, your Pokémon, the foe.
 // Pure and RNG-free; only things the player can already see.
 
+import { catchProbability } from '../capture';
+import { shinyMeterText } from '../wildLuck';
 import type { Content } from '../contentSchema';
 import { calcStats, getSpecies } from '../pokemon';
 import { currentEnemy, type PokemonInstance, type RunState, type SideEffects, type Stages } from '../state';
@@ -53,6 +55,7 @@ export function battleConditions(content: Content, run: RunState): Conditions {
   if (theirs) f.push(theirs);
   const sp = battle.spectacle;
   if (sp) f.push(`Momentum ${sp.momentum}${sp.streak ? ` · streak ${sp.streak}` : ''}`);
+  if (battle.kind === 'wild' && run.itemCounters?.['shiny-meter'] !== undefined) f.push(shinyMeterText(content, run, currentEnemy(battle).speciesId));
   if (battle.raid) f.push(`Raid: ${battle.raid.cheersLeft} cheers left`);
   if (battle.rivalId) f.push(battle.rivalNote ? `Rival: ${battle.rivalNote}` : 'A rival is watching');
   if (battle.nemesisNote) f.push(battle.nemesisNote);
@@ -84,10 +87,21 @@ export function battleConditions(content: Content, run: RunState): Conditions {
     const rival = Object.entries(hyper?.rivals ?? {}).find(([key]) => key.startsWith(`${mon.uid}|`));
     if (rival) out.yours.push(`Rival of the foe's kind: ${rival[1] === 'reckless' ? 'turning reckless' : 'calm'}`);
   }
+  if (battle.playerVolatile?.bleed) out.yours.push(`Bleeding x${battle.playerVolatile.bleed}`);
+  if (battle.playerVolatile?.curseTag) out.yours.push('Curse-tagged: Ghost and Dark moves hit harder');
   const foe = currentEnemy(battle);
   const foeSpecies = getSpecies(content, foe.speciesId);
   out.foe.push(`${foeSpecies.name} Lv.${foe.level}`);
   out.foe.push(`Type: ${foeSpecies.types.map(cap).join(' / ')}`);
+  if (battle.kind === 'wild') {
+    // Weakened capture bonus: show the numbers (a plain ball; HP and status both raise the odds).
+    const maxHp = calcStats(content, foe).hp;
+    const base = { maxHp, catchRate: foeSpecies.catchRate, ballMultiplier: 1, finalMultiplier: 1 };
+    const full = catchProbability({ ...base, hp: maxHp, statusMultiplier: 1 });
+    const now = catchProbability({ ...base, hp: foe.hp, statusMultiplier: foe.status ? content.ruleset.catchStatusMultipliers[foe.status.id] ?? 1 : 1 });
+    out.foe.push(`Catch odds (plain ball): ${Math.round(now * 100)}% now, ${Math.round(full * 100)}% at full health${foe.status ? ' (status helps)' : ''}`);
+  }
+  if (battle.alpha) out.foe.push('ALPHA: oversized and stronger, with a bigger prize');
   const foeStatus = statusWord(foe);
   if (foeStatus) out.foe.push(foeStatus);
   const foeStages = stageLine(battle.enemyStages);
@@ -95,6 +109,8 @@ export function battleConditions(content: Content, run: RunState): Conditions {
   const rage = battle.hyper?.rage[foe.uid];
   if (rage?.state === 'warned') out.foe.push('Riled up: about to unleash its rage (Brace to calm it)');
   else if (rage && rage.hits > 0 && rage.state === 'calm') out.foe.push(`Getting riled up (${rage.hits} hit${rage.hits > 1 ? 's' : ''} taken)`);
+  if (battle.enemyVolatile?.bleed) out.foe.push(`Bleeding x${battle.enemyVolatile.bleed}`);
+  if (battle.enemyVolatile?.curseTag) out.foe.push('Curse-tagged: Ghost and Dark moves hit harder');
   if (battle.autoUsed) out.foe.push('Auto-Battle was used: EXP and prize money at 35%');
   return out;
 }

@@ -83,6 +83,7 @@ import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
 import { addMomentum, cfgOf as spectacleCfg, duePhases, isBossFight, rallyProblem, rollLastStand, spectacleOf, spectacleRoll as spectacleRollExt, type SpectacleEvent } from './spectacle';
+import { benchSupporter, addBleed, bleedDamage, causesBleed, curseMultiplier, resonanceMultiplier } from './w1Rules';
 import { sacrificeFor } from './sacrificeRule';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
 import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveExtras, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
@@ -598,6 +599,15 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   // X items and Dire Hit take effect when a Pokémon is first in battle.
   enterField(ctx, { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false });
   enterField(ctx, { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false });
+  // Bench support (ideas W1): once per battle a well-liked benched Pokémon shouts a buff for the one in front.
+  if (!battle.benchShout && !battle.raid && !battle.totem) {
+    const support = benchSupporter(content, ctx.party, battle.activeIndex);
+    if (support) {
+      battle.benchShout = true;
+      events.push(say('player', 'benchShout', `${nameOf(ctx, support.mon)} cheers from the bench!`, support.mon.uid));
+      applyStageChange(ctx, { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false }, support.stat, 1, events);
+    }
+  }
   // A Pokémon in the middle of a two-turn or lock-in move must carry on with it.
   const forced = forcedMoveIndex(battle, ctx.party);
   if (forced !== null) {
@@ -3102,6 +3112,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       if (userAbility === 'merciless' && target.mon.status?.id === 'psn') crit = true;
       if (foeAbility === 'battle-armor' || foeAbility === 'shell-armor' || ctx.battle.sideEffects[target.side].luckyChant > 0) crit = false;
       if (crit) user.vol.laserFocus = false;
+      (ctx.battle.critStreak ??= {})[user.mon.uid] = crit ? (ctx.battle.critStreak[user.mon.uid] ?? 0) + 1 : 0;
       const randomFactor = rng.int(content.ruleset.randomFactorMin, 100);
       let power = fx.lowHpPower ? lowHpPower(user.mon.hp, userStats.hp) : (move.power ?? 0);
       if (fx.beatUp && beaters.length > 0) power = Math.floor(getSpecies(content, beaters[Math.min(hit, beaters.length - 1)]!.speciesId).baseStats.atk / 10) + 5;
@@ -3171,6 +3182,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
       // Abilities that change the final damage.
       let final = 1;
       if (target.vol.exposed) final *= 2;
+      if (user.side === 'player') final *= resonanceMultiplier(content, ctx.party, moveType);
+      final *= curseMultiplier(content, target.vol.curseTag, moveType);
       if (effectiveness > 1 && (foeAbility === 'filter' || foeAbility === 'solid-rock' || foeAbility === 'prism-armor')) final *= 0.75;
       if ((foeAbility === 'multiscale' || foeAbility === 'shadow-shield') && target.mon.hp >= targetStats.hp) final *= 0.5;
       if (!crit) {
@@ -3274,6 +3287,17 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   if (dealt > 0) {
     if (move.category === 'physical') target.vol.tookPhysical += dealt;
     else if (move.category === 'special') target.vol.tookSpecial += dealt;
+  }
+  if (landed > 0 && target.mon.hp > 0) {
+    // Ideas W1: slicing and some Steel moves stack Bleed; a Ghost move tags the target (Ghost/Dark follow-ups hit harder).
+    if (causesBleed(content, move.id) && abilityIn(ctx, target) !== 'magic-guard') {
+      target.vol.bleed = addBleed(content, target.vol.bleed);
+      events.push(say(target.side, 'bleed', `${nameOf(ctx, target.mon)} is bleeding! (x${target.vol.bleed})`, target.mon.uid));
+    }
+    if (moveType === 'ghost' && !target.vol.curseTag) {
+      target.vol.curseTag = true;
+      events.push(say(target.side, 'curseTag', `${nameOf(ctx, target.mon)} was tagged by a curse! Ghost and Dark moves will hurt more.`, target.mon.uid));
+    }
   }
   if (landed > 0 && target.mon.hp > 0) {
     // Smelling Salts and Wake-Up Slap use up the status they punish; Steel Roller and Ice Spinner clear the terrain.
@@ -4247,6 +4271,12 @@ function applyHazards(ctx: BattleContext, c: Combatant, events: BattleEvent[]): 
       tryInflictStatus(ctx, c, c, 'psn', undefined, events, false);
     }
   }
+  // Hazard layers 2.0: Spikes and Toxic Spikes together burst on a grounded switch-in.
+  if (fx.spikes && fx.toxicSpikes && grounded && c.mon.hp > 0 && abilityIn(ctx, c) !== 'magic-guard') {
+    const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(max * ctx.content.balance.w1.hazardBurst.fraction)));
+    events.push(say(c.side, 'hazardBurst', `Spikes and poison burst together! ${nameOf(ctx, c.mon)} lost ${lost} HP.`, c.mon.uid));
+    if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
+  }
   if (fx.stickyWeb && grounded && c.mon.hp > 0) {
     events.push({ type: 'hazard', side: c.side, hazard: 'stickyWeb', amount: 0, hpAfter: c.mon.hp });
     applyStageChange(ctx, c, 'spe', -1, events);
@@ -5168,6 +5198,11 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
     fraction = c.mon.status.turns / 16;
   }
   if (status === 'psn' && c.side === 'enemy') fraction *= poisonDamagePerk(ctx.perks);
+  if (c.mon.hp > 0 && c.vol.bleed > 0) {
+    const { lost, lastStand } = takeHp(ctx, c, bleedDamage(content, max, c.vol.bleed));
+    events.push(say(c.side, 'bleed', `${nameOf(ctx, c.mon)} is hurt by bleeding! (-${lost})`, c.mon.uid));
+    if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
+  }
   if (c.mon.hp > 0 && status && fraction > 0) {
     const { lost, lastStand } = hurt(fraction);
     events.push({ type: 'residual', side: c.side, status, amount: lost, hpAfter: c.mon.hp });

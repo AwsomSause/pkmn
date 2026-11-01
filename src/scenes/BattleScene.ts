@@ -5,6 +5,7 @@
 import { showCaption } from '../ui/overlays';
 import { aeroMood, autoInterruption, cameraFocus, capFlash, hapticPattern } from '../core/presentation/uiPrefs';
 import { fitLine } from '../ui/fitText';
+import { filterLog, LOG_TABS, type LogTab } from '../ui/logFilter';
 import { modeBattleLine } from '../core/modeObjectives';
 import { isUltimateBattle, ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
 import { buildEpilogue } from '../core/ending';
@@ -261,6 +262,15 @@ export class BattleScene extends Phaser.Scene {
     this.history = [];
     this.historyView = null;
     this.input.keyboard?.on('keydown-H', () => this.toggleHistory());
+    LOG_TABS.forEach((t, i) =>
+      this.input.keyboard?.on(`keydown-${i + 1}`, () => {
+        if (!this.historyView) return;
+        this.logTab = t.id;
+        this.historyView.destroy();
+        this.historyView = null;
+        this.toggleHistory();
+      }),
+    );
     // Presentation only: faster tweens and timers; the battle itself is unchanged.
     const speed = { showcase: 0.75, normal: 1, fast: 2, quick: 3 }[session.settings.battleSpeed];
     this.tweens.timeScale = speed;
@@ -1086,18 +1096,35 @@ export class BattleScene extends Phaser.Scene {
     });
   }
 
-  /** H: show or hide the last battle messages. */
+  /** H: show or hide the last battle messages, with filter tabs (ideas W1 F3). */
+  private logTab: LogTab = 'all';
   private toggleHistory(): void {
     if (this.historyView) {
       this.historyView.destroy();
       this.historyView = null;
       return;
     }
-    const lines = this.history.slice(-14);
     const bg = this.add.rectangle(0, 0, GAME_WIDTH - 80, 360, 0x0b1a2e, 0.92).setOrigin(0).setStrokeStyle(2, 0xbfe9ff);
-    const title = this.add.text(16, 8, 'Battle log (H to close)', textStyle(18, '#bfe9ff'));
-    const body = this.add.text(16, 38, lines.length ? lines.join('\n') : 'Nothing has been said yet.', textStyle(16, COLORS.textLight, { lineSpacing: 4, wordWrap: { width: GAME_WIDTH - 112 } }));
-    this.historyView = this.add.container(40, 60, [bg, title, body]).setDepth(2000);
+    const title = this.add.text(16, 8, 'Battle log (H to close, 1-5 or tabs to filter)', textStyle(18, '#bfe9ff'));
+    const body = this.add.text(16, 66, '', textStyle(16, COLORS.textLight, { lineSpacing: 4, wordWrap: { width: GAME_WIDTH - 112 } }));
+    const view = this.add.container(40, 60, [bg, title, body]).setDepth(2000);
+    this.historyView = view;
+    const buttons: Phaser.GameObjects.Text[] = [];
+    const refresh = () => {
+      const lines = filterLog(this.history, this.logTab).slice(-12);
+      body.setText(lines.length ? lines.join('\n') : 'Nothing here yet.');
+      buttons.forEach((b, i) => b.setColor(LOG_TABS[i]!.id === this.logTab ? '#ffe060' : '#bfe9ff'));
+    };
+    LOG_TABS.forEach((t, i) => {
+      const b = this.add.text(16 + i * 120, 36, `${i + 1} ${t.label}`, textStyle(18, '#bfe9ff', { backgroundColor: '#14304f', padding: { x: 8, y: 3 } })).setInteractive({ useHandCursor: true });
+      b.on('pointerdown', () => {
+        this.logTab = t.id;
+        refresh();
+      });
+      buttons.push(b);
+      view.add(b);
+    });
+    refresh();
   }
 
   private clearMenus(): void {
