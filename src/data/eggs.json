@@ -1,0 +1,21 @@
+{
+  "tiers": [
+    { "id": "ordinary", "name": "Ordinary", "color": "#f4ecd8", "extraDistance": 0, "shinyMultiplier": 1, "eggMoveCap": 2, "hiddenAbilityChance": 0, "bonusLevels": 0, "friendship": 120, "blissfulChance": 0, "line": "Oh?" },
+    { "id": "unusual", "name": "Unusual", "color": "#8fd3ff", "extraDistance": 1, "shinyMultiplier": 1.5, "eggMoveCap": 2, "hiddenAbilityChance": 0.15, "bonusLevels": 1, "friendship": 140, "blissfulChance": 0, "line": "Something shimmers inside..." },
+    { "id": "rare", "name": "Rare", "color": "#c58bff", "extraDistance": 1, "shinyMultiplier": 3, "eggMoveCap": 3, "hiddenAbilityChance": 0.5, "bonusLevels": 2, "friendship": 170, "blissfulChance": 0.05, "line": "A rare glow fills the room!" },
+    { "id": "exceptional", "name": "Exceptional", "color": "#ffd24a", "extraDistance": 2, "shinyMultiplier": 6, "eggMoveCap": 4, "hiddenAbilityChance": 1, "bonusLevels": 3, "friendship": 200, "blissfulChance": 0.25, "line": "The whole egg is blazing with light!" }
+  ],
+  "origins": {
+    "Mystery Egg": { "kind": "mystery", "weights": { "ordinary": 70, "unusual": 22, "rare": 7, "exceptional": 1 } },
+    "Regional Egg": { "kind": "regional", "weights": { "ordinary": 60, "unusual": 30, "rare": 9, "exceptional": 1 } },
+    "Legacy Egg": { "kind": "legacy", "weights": { "unusual": 60, "rare": 35, "exceptional": 5 } },
+    "Adopted Baby": { "kind": "standard", "weights": { "ordinary": 85, "unusual": 15 } },
+    "Event": { "kind": "event", "weights": { "ordinary": 80, "unusual": 17, "rare": 3 } },
+    "Rare Nest": { "kind": "event", "weights": { "unusual": 40, "rare": 50, "exceptional": 10 } },
+    "Hidden Nest": { "kind": "mystery", "weights": { "unusual": 30, "rare": 55, "exceptional": 15 } },
+    "Form Egg": { "kind": "special", "weights": { "unusual": 70, "rare": 28, "exceptional": 2 } }
+  },
+  "warmAbilities": ["flame-body", "magma-armor", "steam-engine"],
+  "warmPerStep": 2,
+  "revealAt": 0.5
+}

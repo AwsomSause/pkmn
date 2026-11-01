@@ -112,13 +112,14 @@ describe('selling and the Seal Bag', () => {
 });
 
 describe('Mystery Egg', () => {
-  it('hatches into a Pokémon after three stages, once', async () => {
+  it('hatches into a Pokémon after three stages (more for a rarer Egg), once', async () => {
     const { hatchEggs } = await import('../../src/core/run');
     const run = newRun('egg');
     take(run, 'mystery-egg');
     const before = run.pending.length;
-    hatchEggs(content, run);
-    hatchEggs(content, run);
+    const total = run.eggs[0]!.total!;
+    expect(total).toBeGreaterThanOrEqual(3);
+    for (let i = 0; i < total - 1; i++) hatchEggs(content, run);
     expect(run.pending.length).toBe(before);
     hatchEggs(content, run);
     expect(run.pending.length).toBe(before + 1);

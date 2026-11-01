@@ -68,6 +68,8 @@ export const PokemonInstanceSchema = z.object({
   perkHp: z.number().int().optional(),
   /** Hatched from an Egg this run (core/eggs.ts; Elm's perk gives these more experience). */
   hatched: z.boolean().optional(),
+  /** The Egg tier it hatched from (data/eggs.json), for the hatch screen. */
+  eggTier: z.string().optional(),
   /** Legacy Descendant (core/memories/heirloom.ts): the ancestor from an earlier run this Pokémon descends from. */
   lineage: LineageSchema.optional(),
   /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
@@ -928,12 +930,26 @@ export const EggSchema = z.object({
   /** Rolled when the Egg was found, so reloading never changes it. */
   shiny: z.boolean(),
   eggMoves: z.array(z.string()),
+  /** Egg category (data/eggs.json). Older Eggs are Ordinary. */
+  tier: z.string().default('ordinary'),
+  kind: z.enum(['standard', 'regional', 'event', 'special', 'mystery', 'legacy']).default('standard'),
+  /** Steps it needed in all (so menus can show progress); missing in older saves. */
+  total: z.number().int().min(1).optional(),
+  /** Warmth gathered from warm Pokémon; two make an extra step. */
+  heat: z.number().int().min(0).default(0),
+  /** Hatches with its hidden ability / as a Blissful Pokémon (rolled when laid). */
+  hidden: z.boolean().default(false),
+  blissful: z.boolean().default(false),
   /** Where it came from, for the party screen ("Egg Nest", "Mystery Egg"). */
   source: z.string(),
   /** Legacy Descendant: the ancestor it descends from (core/memories/heirloom.ts). */
   lineage: LineageSchema.optional(),
 });
 export type Egg = z.infer<typeof EggSchema>;
+
+/** A berry growing in the run's garden (core/berries.ts). Ripe when `left` reaches 0. */
+export const GardenPlotSchema = z.object({ uid: z.string(), berryId: z.string(), left: z.number().int().min(0), mutated: z.boolean() });
+export type GardenPlot = z.infer<typeof GardenPlotSchema>;
 
 export const RunStateSchema = z.object({
   runId: z.string(),
@@ -978,6 +994,8 @@ export const RunStateSchema = z.object({
   pending: z.array(PendingDecisionSchema),
   /** Eggs waiting to hatch (core/eggs.ts). */
   eggs: z.array(EggSchema).default([]),
+  /** Berries planted at a Berry Garden (core/berries.ts). */
+  garden: z.array(GardenPlotSchema).default([]),
   /** What this run knows of the player's earlier runs (core/memories/past.ts); null for runs started without history. */
   past: PastDigestSchema.nullable().default(null),
   /** Where the run goes once all pending decisions are made. */

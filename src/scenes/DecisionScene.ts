@@ -5,6 +5,7 @@
 
 import { fixedDamageLabel } from '../ui/battleText';
 import Phaser from 'phaser';
+import { EGG_TIERS, eggTier } from '../core/eggs';
 import { catchSummary } from '../core/catchSummary';
 import { masteryPreview } from '../core/mastery';
 import { candiesForRelease } from '../core/encounters';
@@ -365,7 +366,11 @@ export class DecisionScene extends Phaser.Scene {
     const shadow = this.add.ellipse(cx, cy + 70, 120, 22, 0x000000, 0.3);
     const egg = this.add.image(cx, cy, 'pack.ebdx.egg').setScale(4.6);
     const cracks = has('pack.ebdx.eggCracks') ? this.add.image(cx, cy, 'pack.ebdx.eggCracks', 0).setScale(4.6) : null;
-    const caption = this.add.text(cx, 64, 'Oh?', textStyle(32, COLORS.textLight)).setOrigin(0.5).setAlpha(0);
+    const tier = eggTier(mon.eggTier);
+    if (tier.id !== 'ordinary') {
+      egg.setTint(Phaser.Display.Color.HexStringToColor(tier.color).color);
+    }
+    const caption = this.add.text(cx, 64, tier.line, textStyle(tier.line.length > 22 ? 26 : 32, COLORS.textLight)).setOrigin(0.5).setAlpha(0);
     layer.add([shadow, egg, ...(cracks ? [cracks] : []), caption]);
     if (has('pack.ebdx.hatch.overlay')) layer.add(this.add.image(cx, GAME_HEIGHT / 2, 'pack.ebdx.hatch.overlay').setDisplaySize(GAME_WIDTH, GAME_HEIGHT).setAlpha(0.5));
     this.tweens.add({ targets: caption, alpha: 1, y: 80, duration: 400, ease: 'Back.easeOut' });
@@ -416,7 +421,7 @@ export class DecisionScene extends Phaser.Scene {
             const ring = this.add.image(200, 220, 'pack.ebdx.hatch.shine7').setBlendMode(Phaser.BlendModes.ADD).setDepth(205).setScale(1.2);
             this.tweens.add({ targets: ring, scale: 4.5, alpha: 0, angle: 90, duration: 900, ease: 'Cubic.easeOut', onComplete: () => ring.destroy() });
           }
-          sparkle(10);
+          sparkle(10 + EGG_TIERS.findIndex((t) => t.id === tier.id) * 6);
           this.tweens.add({ targets: flash, alpha: 0, duration: 520, ease: 'Sine.easeIn', onComplete: () => flash.destroy() });
         },
       });
@@ -441,13 +446,13 @@ export class DecisionScene extends Phaser.Scene {
     spot.fillStyle(0x4a3f5c, 0.9).fillEllipse(200, 298, 200, 32);
     fitHeight(this, pokemonVisual(this, species, 'front', 200, 300, 3.5, caught.shiny), 240);
     const past = reunion !== undefined;
-    const title = !past ? (caught.hatched ? `${species.name} hatched from the Egg!` : `You caught ${species.name}!`) : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
+    const title = !past ? (caught.hatched ? `${species.name} hatched from ${caught.eggTier && caught.eggTier !== 'ordinary' ? `a ${eggTier(caught.eggTier).name} Egg` : 'the Egg'}!` : `You caught ${species.name}!`) : reunion ? `${species.name} never forgot you!` : `${species.name} from a past run is here!`;
     this.add.text(400, 40, title, textStyle(past ? 32 : 40, COLORS.textLight));
     const profile = session.profile;
     const extras = {
       compact: session.settings.catchDetail === 'compact',
       firstDiscovery: !past && !profile.speciesCaught.includes(caught.speciesId),
-      source: past ? undefined : caught.hatched ? 'Hatched from an Egg' : 'Caught on this run',
+      source: past ? undefined : caught.hatched ? `Hatched from ${caught.eggTier && caught.eggTier !== 'ordinary' ? `a ${eggTier(caught.eggTier).name} Egg` : 'an Egg'}` : 'Caught on this run',
     };
     const summaryText = this.add.text(400, 92, '', textStyle(16, '#d8d0e0', { lineSpacing: 4, wordWrap: { width: 560 } }));
     let compareIdx = 0;

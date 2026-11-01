@@ -59,6 +59,7 @@ import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
+import { growGarden } from './berries';
 import { layEgg, tickEggs } from './eggs';
 import { addEventStops, continueEventChain, eventBattleWon, eventChainNext, eventGymPreview } from './events';
 import { advanceRoamers, convoyStep, applyFrontWeather, spawnRoamers } from './world';
@@ -243,6 +244,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     prep: { ...prep, campaignId: campaign.id, note: draft.note },
     party: [],
     eggs: [],
+    garden: [],
     past: null,
     money: Math.floor(resources.money * scale),
     inventory,
@@ -474,6 +476,7 @@ export function hatchEggs(content: Content, run: RunState): void {
     layEgg(content, run, species.id, { level, left, unit: 'stage', source: 'Mystery Egg', shinyMultiplier: runAttributeEffects(content, run).shinyChance * shiny }, rng);
   }
   tickEggs(content, run, 'stage');
+  growGarden(run);
 }
 
 /** Starts a stage (mutates `run`): picks a fresh theme and gym leader, generates the map, and shows it. */
