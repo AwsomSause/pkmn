@@ -39057,6 +39057,117 @@
    ]
   },
   {
+   "id": "camp-rival-trail",
+   "name": "A Rival's Trail",
+   "group": "Camp",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "monRival",
+     "state": "any"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c24",
+    "effect": "sparkle"
+   },
+   "intro": "A quiet clearing off the road. One of your Pokémon stops here and will not move on: something about its rival is on its mind.",
+   "choices": [
+    {
+     "label": "Remember the rival who took the blow",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "sacrificed"
+      }
+     ],
+     "success": {
+      "text": "Nobody plays tonight. The Pokémon it saved sits closest to the fire and watches the dark where its rival used to be. The others lean in around it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    },
+    {
+     "label": "Train for the rematch with its rival",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "open"
+      }
+     ],
+     "success": {
+      "text": "One of your Pokémon will not sit still. Somewhere out there is the one with the mark, and next time it means to win.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about the rival that joined a trainer",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "carried"
+      }
+     ],
+     "success": {
+      "text": "Its rival rides with another trainer now. Your Pokémon growls at the thought, then settles. It will be ready.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Move on",
+     "success": {
+      "text": "You coax it along. It looks back once.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "starving-wild",
    "name": "A Starving Poochyena",
    "group": "Emergent Stories",
@@ -43185,12 +43296,59 @@
      }
     },
     {
-     "label": "Talk about your rival (a friend)",
+     "label": "Talk about your rival",
      "requires": [
       {
        "kind": "rivalMet",
        "atLeast": 1
-      },
+      }
+     ],
+     "success": {
+      "text": "You think about the last time you crossed paths.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "camp-rival"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk with your mentor",
+     "requires": [
+      {
+       "kind": "mentor"
+      }
+     ],
+     "success": {
+      "text": "Your mentor has been watching the fire too.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "camp-mentor"
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "camp-rival",
+   "name": "About the Rival",
+   "group": "Camp",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#241c2a",
+    "effect": "hearts"
+   },
+   "intro": "The fire pops. Someone brings up your rival.",
+   "choices": [
+    {
+     "label": "Talk about your rival (a friend)",
+     "requires": [
       {
        "kind": "rivalPath",
        "path": "friend"
@@ -43225,10 +43383,6 @@
      "label": "Talk about your rival (a rival)",
      "requires": [
       {
-       "kind": "rivalMet",
-       "atLeast": 1
-      },
-      {
        "kind": "rivalPath",
        "path": "rival"
       }
@@ -43262,10 +43416,6 @@
      "label": "Talk about the rival who is unsure",
      "requires": [
       {
-       "kind": "rivalMet",
-       "atLeast": 1
-      },
-      {
        "kind": "rivalPath",
        "path": "between"
       }
@@ -43289,71 +43439,81 @@
    "room": true
   },
   {
-   "id": "camp-rival-trail",
-   "name": "A Rival's Trail",
+   "id": "camp-mentor",
+   "name": "Words with the Mentor",
    "group": "Camp",
-   "rarity": "uncommon",
-   "minStage": 2,
-   "requires": [
-    {
-     "kind": "monRival",
-     "state": "any"
-    }
-   ],
+   "rarity": "common",
+   "minStage": 1,
    "scene": {
     "cast": [],
-    "tint": "#2a1c24",
-    "effect": "sparkle"
+    "tint": "#1c2a24",
+    "effect": "hearts"
    },
-   "intro": "A quiet clearing off the road. One of your Pokémon stops here and will not move on: something about its rival is on its mind.",
+   "intro": "Your mentor talks best at night, when the road is quiet and nobody is watching.",
    "choices": [
     {
-     "label": "Remember the rival who took the blow",
-     "requires": [
-      {
-       "kind": "monRival",
-       "state": "sacrificed"
-      }
-     ],
+     "label": "Ask for advice",
      "success": {
-      "text": "Nobody plays tonight. The Pokémon it saved sits closest to the fire and watches the dark where its rival used to be. The others lean in around it.",
+      "text": "A few plain words, said slowly. You will remember them.",
       "effects": [
        {
-        "kind": "friendship",
-        "amount": 10,
-        "who": "party"
-       },
-       {
-        "kind": "heal",
-        "share": 0.3
-       },
-       {
-        "kind": "attribute",
-        "key": "goodEvil",
-        "amount": 1
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 1,
+        "rivalry": 0,
+        "disagree": false
        },
        {
         "kind": "research",
-        "amount": 40
+        "amount": 20
        }
       ]
      }
     },
     {
-     "label": "Train for the rematch with its rival",
-     "requires": [
-      {
-       "kind": "monRival",
-       "state": "open"
-      }
-     ],
+     "label": "Review the last battles together",
      "success": {
-      "text": "One of your Pokémon will not sit still. Somewhere out there is the one with the mark, and next time it means to win.",
+      "text": "Your mentor goes through each mistake without blame. By the end you see it too.",
       "effects": [
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 2,
+        "rivalry": 0,
+        "disagree": false
+       },
        {
         "kind": "levels",
         "amount": 1,
-        "who": "party"
+        "who": "lead"
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Admit a doubt",
+     "requires": [
+      {
+       "kind": "period",
+       "in": [
+        "evening",
+        "night"
+       ]
+      }
+     ],
+     "success": {
+      "text": "You say what you have not said to anyone. Your mentor does not hurry to fix it. They just stay.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 3,
+        "rivalry": 0,
+        "disagree": false
        },
        {
         "kind": "friendship",
@@ -43362,42 +43522,39 @@
        },
        {
         "kind": "research",
-        "amount": 20
+        "amount": 15
        }
       ]
      }
     },
     {
-     "label": "Talk about the rival that joined a trainer",
+     "label": "Ask about the mission",
      "requires": [
       {
-       "kind": "monRival",
-       "state": "carried"
+       "kind": "mentor",
+       "mission": "none"
       }
      ],
      "success": {
-      "text": "Its rival rides with another trainer now. Your Pokémon growls at the thought, then settles. It will be ready.",
+      "text": "Your mentor looks at you for a long moment, then nods. \"You are ready.\"",
       "effects": [
        {
-        "kind": "friendship",
-        "amount": 6,
-        "who": "party"
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 1,
+        "rivalry": 0,
+        "disagree": false,
+        "mission": "start"
        },
        {
         "kind": "research",
-        "amount": 20
+        "amount": 10
        }
       ]
      }
-    },
-    {
-     "label": "Move on",
-     "success": {
-      "text": "You coax it along. It looks back once.",
-      "effects": []
-     }
     }
-   ]
+   ],
+   "room": true
   },
   {
    "id": "camp-prepare",
