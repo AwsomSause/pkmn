@@ -98,6 +98,6 @@ describe('saves', () => {
     const { clock: _c, ...old } = newRun();
     const migrated = MIGRATIONS.run[27]!(old as never);
     expect(RunStateSchema.parse(migrated).clock).toEqual(freshClock());
-    expect(CURRENT_VERSIONS.run).toBe(28);
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(28);
   });
 });

@@ -7,7 +7,7 @@ import { bondOf } from '../../src/core/bond';
 import { createBattle } from '../../src/core/battle/engine';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
-import { CURRENT_VERSIONS } from '../../src/save/saveManager';
+import { CURRENT_VERSIONS, MIGRATIONS } from '../../src/save/saveManager';
 import type { RunState } from '../../src/core/state';
 import { openHistory } from '../../src/core/story/record';
 import { content } from './helpers';
@@ -146,8 +146,11 @@ describe('Auto-Battle EXP', () => {
     expect(back.battle!.autoUsed).toBe(true);
   });
   it('save versions were bumped', () => {
-    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(28);
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(29);
     expect(CURRENT_VERSIONS.settings).toBeGreaterThanOrEqual(10);
+    const run = fight();
+    expect(MIGRATIONS.run[28]!(run as never)).toEqual(run);
+    expect(MIGRATIONS.settings[9]!({ musicVolume: 0.5 } as never)).toMatchObject({ autoBattle: false, autoExplain: true });
   });
 });
 
