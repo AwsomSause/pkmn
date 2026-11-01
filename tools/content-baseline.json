@@ -17,10 +17,10 @@
  "invalid-entries": 0,
  "mechanics-without-proof": 0,
  "supported.species": 1025,
- "supported.form": 105,
+ "supported.form": 106,
  "supported.move": 839,
  "supported.ability": 285,
- "supported.item": 264,
+ "supported.item": 273,
  "supported.evolution": 611,
- "supported.mechanic": 35
+ "supported.mechanic": 40
 }
