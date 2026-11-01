@@ -197,6 +197,7 @@ export type BattleEvent =
   /** Bond Engine (core/bond): a Pokémon acted on its own before the turn. */
   | { type: 'refused'; side: Side; uid: string; moveId: string }
   | { type: 'initiative'; side: Side; uid: string; from: string; to: string }
+  | { type: 'teamwork'; side: Side; uid: string; partner: string; name: string; stats: string[] }
   | { type: 'combo'; side: Side; from: string; to: string; stat: 'atk' | 'spa' }
   | { type: 'newMove'; side: Side; uid: string; moveId: string; replaced: string | null }
   | { type: 'turningPoint'; side: Side; uid: string; emotion: string }
@@ -3002,6 +3003,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     const evaStage = fx.ignoreStages || userAbility === 'unaware' || keenEye ? 0 : target.stages.eva;
     accuracy = hitChance(baseAccuracy, accStage, evaStage) * itemAccuracy * perkAccuracy;
     if (baseAccuracy !== null) {
+      if (user.side === 'player' && user.mon.moves.find((m) => m.id === move.id)?.star) accuracy *= 1.05;
       if (userAbility === 'compound-eyes') accuracy *= 1.3;
       if (userAbility === 'victory-star') accuracy *= 1.1;
       if (userAbility === 'hustle' && move.category === 'physical') accuracy *= 0.8;

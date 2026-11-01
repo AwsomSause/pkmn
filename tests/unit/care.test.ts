@@ -1,7 +1,7 @@
 // Care & party life (W2): care actions, per-stop limits, mood/fatigue/talent/training stat nudges, saves.
 
 import { describe, expect, it } from 'vitest';
-import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careRest, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
+import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careRest, teamworkOnSwitch, careMoves, swapForms, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
 import { tradeCandidates } from '../../src/core/events';
 import { bondOf } from '../../src/core/bond';
 import { evolutionTarget } from '../../src/core/evolution';
@@ -257,4 +257,54 @@ describe('show off and hold evolution', () => {
     expect(careRest(run)).toEqual([run.party[0]!.uid]);
     expect(evolutionTarget(content, run.party[0]!)).toBe(before);
   });
+});
+
+describe('teamwork, stars, whistle, forms', () => {
+  it('whistle gives a next-fight boost, once per stop, only when trusted', () => {
+    const run = setup();
+    bondOf(run, run.party[0]!.uid).trust = 10;
+    expect(careProblem(content, run, 0, 'whistle', 'focus')).toMatch(/trust/);
+    bondOf(run, run.party[0]!.uid).trust = 80;
+    expect(careProblem(content, run, 0, 'whistle', 'bogus')).toMatch(/Pick/);
+    const out = careAction(content, run, 0, 'whistle', 'focus').run;
+    expect(out.party[0]!.boosts).toContainEqual({ kind: 'stage', stat: 'crit', stages: 1, turns: 4 });
+    expect(careProblem(content, out, 0, 'whistle', 'rush')).toMatch(/Already/);
+  });
+
+  it('teamwork boosts a pair member sent in beside its partner, once per battle', () => {
+    const run = setup();
+    run.party[0]!.speciesId = 'plusle';
+    run.party.push({ ...structuredClone(run.party[0]!), uid: 'minun', speciesId: 'minun' });
+    run.party.push({ ...structuredClone(run.party[0]!), uid: 'p3', speciesId: 'plusle' });
+    run.battle = { drama: { combos: [] }, playerStages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0, crit: 0 } } as never;
+    const first = teamworkOnSwitch(run, 'minun');
+    expect(first?.name).toBe('Double Spark');
+    expect((run.battle as unknown as { playerStages: { spa: number } }).playerStages.spa).toBe(1);
+    expect(teamworkOnSwitch(run, 'minun')).toBeNull();
+  });
+
+  it('a move earns a mastery star after enough uses', () => {
+    const run = setup();
+    const mon = run.party[0]!;
+    run.battle = { doubles: false, activeIndex: 0 } as never;
+    const ev = Array.from({ length: CARE.stars.usesForStar }, () => ({ type: 'move', side: 'player', moveId: mon.moves[0]!.id }));
+    expect(careMoves(run, ev)).toEqual([mon.moves[0]!.id]);
+    expect(mon.moves[0]!.star).toBe(true);
+  });
+
+  it('Castform takes the season form at a healing stop', () => {
+    const run = setup();
+    run.party[0]!.speciesId = 'castform';
+    run.clock.day = 1 + content.balance.clock.seasonLength; // Summer
+    expect(swapForms(content, run)).toBe(1);
+    expect(run.party[0]!.speciesId).toBe('castform-sunny');
+  });
+});
+
+it('sing-along is for singers and a good one protects the team from sleep', () => {
+  const run = setup();
+  expect(careProblem(content, run, 0, 'singalong')).toMatch(/singers/);
+  run.party[0]!.speciesId = 'jigglypuff';
+  const out = careAction(content, run, 0, 'singalong', `tap:${CARE.tap.goal}`).run;
+  expect(out.party[0]!.boosts).toContainEqual({ kind: 'immune', status: 'slp' });
 });

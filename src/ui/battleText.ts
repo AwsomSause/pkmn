@@ -281,6 +281,8 @@ export function eventText(content: Content, names: Names, e: RunEvent, details =
       return `${names.nameOf(e.uid)} refused to use ${content.moves.get(e.moveId)?.name ?? 'the move'}! It doesn't trust that order.`;
     case 'initiative':
       return `${names.nameOf(e.uid)} took the initiative and used ${content.moves.get(e.to)?.name ?? 'another move'} instead!`;
+    case 'teamwork':
+      return `${names.nameOf(e.uid)} and ${names.nameOf(e.partner)} work together: ${e.name}! ${e.stats.map((x) => x.toUpperCase()).join(' and ')} rose!`;
     case 'combo':
       return `${names.nameOf(e.to)} takes over exactly as practiced! Its ${e.stat === 'atk' ? 'Attack' : 'Sp. Atk'} rose!`;
     case 'newMove':

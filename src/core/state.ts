@@ -24,6 +24,9 @@ export const MoveSlotSchema = z.object({
   pp: z.number().int().min(0),
   /** PP Ups used on this move (each +20% max PP, at most 3; see pokemon.ts maxPp). */
   ppUps: z.number().int().min(0).max(3).optional(),
+  /** Times this Pokémon used the move this run, and the mastery star it earned (core/care: +1 PP, +5% accuracy). */
+  uses: z.number().int().min(0).optional(),
+  star: z.boolean().optional(),
 });
 export type MoveSlot = z.infer<typeof MoveSlotSchema>;
 

@@ -18,6 +18,10 @@ Favourite = never offered as trade fodder, cannot be swapped out of the party. A
 
 Also: I17 Show off (Hype/hyper readiness +8), F46/I51 Hold evolution (no evolving until the next healing stop, then it may).
 
+## Follow-up 2
+M52 **Teamwork** (`data/teamwork.json`, 12 pairs like Plusle + Minun): the newcomer gets +1 in the pair's stats when sent in beside its partner, once per pair per battle (a boost, not an attack move; the log says "X and Y work together: Double Spark!"). M62 **Mastery stars**: a move used 20 times by the lead earns a star (+1 PP, +5% accuracy). M64 **Seasonal forms**: Castform takes the run's season form at a healing stop. I14 **Cuddle**: a hug gives friendship evolvers (Pichu, Eevee, Togepi...) +15 friendship (a bonus, not a hard gate: a gate broke old-seed determinism). I11 **Whistle** (Focus = crit, Steady = accuracy, Rush = speed; trust 40+; next fight only; no Guard/Brace). I26 **Sing-along** (singers only; tap Enter; a good one gives the whole team sleep immunity next fight). Show off (I17) and Hold evolution (F46/I51).
+Already existing, so not rebuilt: M61 tutor and F35 relearner (`services.json` Move Tutor / relearn services).
+
 ## Earlier (see `docs/status/party-life.md`, Bond Engine)
 I4/I5 share snack and gifts · I12 Listen (initiative) · I13 disobedience (refusal) · I16 gifts · I29/I30 fear and pride (grudges, comfort) · I37 sleep-over chats · I40/I41 last words · I291 chats · I292 bickering · I294 mentor/apprentice (mentors system) · I295 pranks · I297 jealousy/newcomer · I298 sharing food · I299 group hug · I311 evolution cheers · I312 gather round fainted · I313 revenge pact · I318 formation/synergy badge · I326 practice together · I328 gossip · I345 Spirit Link · M57 quirks · F33 friendship hearts · F59 team synergy.
 

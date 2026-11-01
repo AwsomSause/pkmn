@@ -157,7 +157,7 @@ import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealM
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
-import { careAceFell, careRest, careFaint, careVictory, releaseGift } from './care';
+import { careMoves, teamworkOnSwitch, careAceFell, careRest, careFaint, careVictory, releaseGift } from './care';
 import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
 import { claimArea, nuzlockeCatchProblem, buryFallen, isHardcore } from './nuzlocke';
 import { applyMutator, mutatorCatch, mutatorDue, mutatorMoney, mutatorOffer, mutatorXp } from './mutators';
@@ -1710,7 +1710,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'heal' && noHealStops(run.rules)) return { run: current, message: 'Your No Rest contract forbids healing stops.' };
   if (side.kind === 'heal') {
     healParty(content, run);
-    careRest(run);
+    careRest(run, content);
     partyLifeCamp(run);
     runSide.used = true;
     count(run, 'healStopsUsed');
@@ -2015,6 +2015,12 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   if (wasForced && action.kind === 'switch' && outgoing) {
     const combo = playerCombo(content, run, outgoing, run.party[action.partyIndex]!.uid);
     if (combo) engineEvents.push(combo);
+  }
+  if (content.balance.careEffects) careMoves(run, engineEvents as { type: string; side?: string; moveId?: string }[]);
+  // Teamwork pairs (Plusle + Minun ...): a pair member sent in beside its partner gets a boost.
+  if (action.kind === 'switch' && content.balance.careEffects) {
+    const tw = teamworkOnSwitch(run, run.party[action.partyIndex]!.uid);
+    if (tw) engineEvents.push({ type: 'teamwork', side: 'player', ...tw });
   }
   const enemyCombo_ = enemyCombo(content, run, enemyBefore);
   if (enemyCombo_) engineEvents.push(enemyCombo_);

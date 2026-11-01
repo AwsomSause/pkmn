@@ -105,6 +105,9 @@
     "showoff": [
       "strikes a heroic pose!",
       "puffs up and flexes."
+    ],
+    "singalong": [
+      "belts out a tune, and the team sways along."
     ]
   },
   "accessories": {
@@ -154,5 +157,81 @@
   },
   "showoff": {
     "hyperReadiness": 8
+  },
+  "stars": {
+    "usesForStar": 20
+  },
+  "cuddleEvolve": [
+    "pichu",
+    "eevee",
+    "togepi",
+    "munchlax",
+    "riolu",
+    "budew",
+    "chingling",
+    "azurill",
+    "cleffa",
+    "igglybuff",
+    "happiny",
+    "mime-jr",
+    "woobat",
+    "swadloon",
+    "snom"
+  ],
+  "formSwaps": [
+    {
+      "family": [
+        "castform",
+        "castform-sunny",
+        "castform-rainy",
+        "castform-snowy"
+      ],
+      "bySeason": {
+        "Spring": "castform-rainy",
+        "Summer": "castform-sunny",
+        "Autumn": "castform",
+        "Winter": "castform-snowy"
+      }
+    }
+  ],
+  "cuddleBonus": 15,
+  "whistle": {
+    "minTrust": 40,
+    "commands": {
+      "focus": {
+        "stat": "crit",
+        "stages": 1,
+        "turns": 4,
+        "line": "narrows its eyes."
+      },
+      "steady": {
+        "stat": "acc",
+        "stages": 1,
+        "turns": 4,
+        "line": "settles its aim."
+      },
+      "rush": {
+        "stat": "spe",
+        "stages": 1,
+        "turns": 4,
+        "line": "crouches, ready to dash."
+      }
+    }
+  },
+  "singalong": {
+    "species": [
+      "jigglypuff",
+      "wigglytuff",
+      "igglybuff",
+      "loudred",
+      "exploud",
+      "whismur",
+      "chatot",
+      "kricketune",
+      "primarina",
+      "popplio",
+      "brionne"
+    ],
+    "friendship": 2
   }
 }

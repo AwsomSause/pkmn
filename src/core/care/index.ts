@@ -5,18 +5,19 @@
 
 import { adjustBond, bondOf } from '../bond';
 import type { Content } from '../contentSchema';
+import { seasonOf } from '../clock';
 import { warmEggs } from '../eggs';
 import { changeFriendship } from '../friendship';
 import { maxHp } from '../pokemon';
 import type { PokemonInstance, RunState } from '../state';
-import { CARE, careMultiplier, type Care } from './mods';
+import { CARE, TEAMWORK, careMultiplier, type Care } from './mods';
 
 export * from './mods';
 
 const PHASES: readonly RunState['phase'][] = ['reward', 'decision', 'map', 'shop'];
 const TRAIN_STATS = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 export type TrainStat = (typeof TRAIN_STATS)[number];
-export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'wake', 'showoff', 'hold', 'nickname', 'favourite', 'ace'] as const;
+export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'wake', 'showoff', 'hold', 'whistle', 'singalong', 'nickname', 'favourite', 'ace'] as const;
 export type CareAction = (typeof CARE_ACTIONS)[number];
 
 const hash = (text: string): number => {
@@ -100,6 +101,12 @@ export function careProblem(content: Content, run: RunState, partyIndex: number,
     case 'cheer': return n('cheer') >= 1 ? 'You already cheered it up at this stop.' : null;
     case 'train': return n('train') >= 1 ? 'Already training at this stop.' : !arg || !TRAIN_STATS.includes(arg as TrainStat) ? 'Pick a stat to train.' : null;
     case 'sing': return n('sing') >= 1 ? 'Already sang at this stop.' : run.eggs.length === 0 ? 'You carry no Eggs.' : null;
+    case 'singalong': return n('singalong') >= 1 ? 'Already sang along at this stop.' : !CARE.singalong.species.includes(mon.speciesId) ? 'Only singers (Jigglypuff and kin) can lead a sing-along.' : null;
+    case 'whistle': {
+      if (!arg || !CARE.whistle.commands[arg]) return 'Pick a command.';
+      if (n('whistle') >= 1) return 'Already whistled at this stop.';
+      return bondOf(run, mon.uid).trust < CARE.whistle.minTrust ? 'It does not trust you enough to listen.' : null;
+    }
     case 'showoff': return n('showoff') >= 1 ? 'Already showed off at this stop.' : null;
     case 'wake': return n('wake') >= 1 ? 'Already woken at this stop.' : care.fatigue <= 0 ? 'It is not tired.' : null;
     case 'fetch': return n('fetch') >= 1 ? 'Already played fetch at this stop.' : null;
@@ -114,7 +121,8 @@ export const tapsOf = (arg?: string): number => {
   const m = /^tap:(\d{1,3})$/.exec(arg ?? '');
   return m ? Math.min(99, Number(m[1])) : 0;
 };
-export const TAP_ACTIONS: readonly CareAction[] = ['cheer', 'groom', 'wake'];
+export const WHISTLES = Object.keys(CARE.whistle.commands);
+export const TAP_ACTIONS: readonly CareAction[] = ['cheer', 'groom', 'wake', 'singalong'];
 
 /** The accessory names, in menu order. */
 export const ACCESSORIES = Object.keys(CARE.accessories);
@@ -144,7 +152,8 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       break;
     case 'hug':
       tick();
-      changeFriendship(content, mon, CARE.hug.friendship);
+      care.hugs = (care.hugs ?? 0) + 1;
+      changeFriendship(content, mon, CARE.hug.friendship + (content.balance.careEffects && CARE.cuddleEvolve.includes(mon.speciesId) ? CARE.cuddleBonus : 0));
       adjustBond(bondOf(run, mon.uid), { affection: CARE.hug.affection });
       setMood(care, CARE.hug.mood);
       message = `${name} ${pickLine('hug', seed)}`;
@@ -193,6 +202,21 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       warmEggs(run, CARE.sing.eggSteps);
       changeFriendship(content, mon, 1);
       message = `${name} sings to the Eggs. They stir a little closer to hatching.`;
+      break;
+    }
+    case 'singalong': {
+      tick();
+      changeFriendship(content, mon, CARE.singalong.friendship);
+      const good = tapsOf(arg) >= CARE.tap.goal;
+      if (good) for (const m of run.party) m.boosts = [...(m.boosts ?? []), { kind: 'immune', status: 'slp' }];
+      message = `${name} ${pickLine('singalong', seed)}${good ? ' Everyone is wide awake to the beat: no sleep next fight!' : ' (Tap faster for the bonus.)'}`;
+      break;
+    }
+    case 'whistle': {
+      tick();
+      const cmd = CARE.whistle.commands[arg!]!;
+      mon.boosts = [...(mon.boosts ?? []), { kind: 'stage', stat: cmd.stat, stages: cmd.stages, turns: cmd.turns }];
+      message = `You whistle "${arg}". ${name} ${cmd.line} (${cmd.stat.toUpperCase()} +${cmd.stages} for its next fight)`;
       break;
     }
     case 'showoff':
@@ -295,11 +319,71 @@ export function healFirst(content: Content, run: RunState): PokemonInstance | nu
 }
 
 /** A healing stop: Pokémon that held back from evolving change their minds (F46). Returns their uids. */
-export function careRest(run: RunState): string[] {
+export function careRest(run: RunState, content?: Content): string[] {
   const out: string[] = [];
+  if (content?.balance.careEffects) swapForms(content, run);
   for (const m of run.party) if (m.care?.holdEvolve) { delete m.care.holdEvolve; out.push(m.uid); }
   return out;
 }
+
+/**
+ * Teamwork (M52): a pair member is sent in while its partner waits in the party: it gets +1 in the pair's stats,
+ * once per pair per battle. Returns what happened (for the battle log), or null.
+ */
+export function teamworkOnSwitch(run: RunState, incomingUid: string): { uid: string; partner: string; name: string; stats: string[] } | null {
+  const battle = run.battle;
+  const mon = run.party.find((m) => m.uid === incomingUid);
+  if (!battle || !mon) return null;
+  for (const pair of TEAMWORK.pairs) {
+    const partnerSpecies = pair.a === mon.speciesId ? pair.b : pair.b === mon.speciesId ? pair.a : null;
+    if (!partnerSpecies) continue;
+    const partner = run.party.find((m) => m.uid !== mon.uid && m.speciesId === partnerSpecies && m.hp > 0);
+    const key = `tw:${pair.id}`;
+    if (!partner || battle.drama.combos.includes(key)) continue;
+    battle.drama.combos.push(key);
+    for (const stat of pair.stats) battle.playerStages[stat] = Math.min(6, battle.playerStages[stat] + 1);
+    return { uid: mon.uid, partner: partner.uid, name: pair.name, stats: [...pair.stats] };
+  }
+  return null;
+}
+
+/** Mastery stars (M62): the lead counts the moves it used; at the threshold a move earns a star (+1 PP, +5% accuracy). Returns new stars. */
+export function careMoves(run: RunState, events: readonly { type: string; side?: string; moveId?: string }[]): string[] {
+  const battle = run.battle;
+  const mon = battle && !battle.doubles ? run.party[battle.activeIndex] : undefined;
+  const stars: string[] = [];
+  if (!mon) return stars;
+  for (const e of events) {
+    if (e.type !== 'move' || e.side !== 'player') continue;
+    const slot = mon.moves.find((m) => m.id === e.moveId);
+    if (!slot) continue;
+    slot.uses = (slot.uses ?? 0) + 1;
+    if (!slot.star && slot.uses >= CARE.stars.usesForStar) {
+      slot.star = true;
+      stars.push(slot.id);
+    }
+  }
+  return stars;
+}
+
+/** Seasonal forms (M64): at a healing stop a Pokémon of a form family takes the form of the run's current season. Returns how many changed. */
+export function swapForms(content: Content, run: RunState): number {
+  const season = seasonOf(content, run);
+  let changed = 0;
+  for (const mon of run.party) {
+    for (const rule of CARE.formSwaps) {
+      if (!rule.family.includes(mon.speciesId)) continue;
+      const to = rule.bySeason[season];
+      if (to && to !== mon.speciesId && content.species.has(to)) {
+        mon.speciesId = to;
+        mon.hp = Math.min(mon.hp, maxHp(content, mon));
+        changed += 1;
+      }
+    }
+  }
+  return changed;
+}
+
 
 /** The ace fell: the rest of the party is shaken (mood drops a step). */
 export function careAceFell(run: RunState, uid: string): void {
