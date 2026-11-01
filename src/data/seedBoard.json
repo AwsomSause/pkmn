@@ -1,0 +1,8 @@
+[
+  { "seed": "first-light", "archetypeId": "red", "label": "First Light", "note": "A calm seed to learn the game with Red." },
+  { "seed": "blue-moon", "archetypeId": "blue", "label": "Blue Moon", "note": "Blue's usual rival-heavy road." },
+  { "seed": "green-hill", "archetypeId": "green", "label": "Green Hill", "note": "Green on standard rules." },
+  { "seed": "pt7", "archetypeId": "red", "label": "Bot Test 7", "note": "One of the seeds the playtest bot plays in CI; a stable run to compare notes on." },
+  { "seed": "pt42", "archetypeId": "blue", "label": "Bot Test 42", "note": "Another CI seed; good for speed-run comparisons." },
+  { "seed": "daily-practice", "archetypeId": "green", "label": "Daily Practice", "note": "Warm-up seed for the daily set." }
+]

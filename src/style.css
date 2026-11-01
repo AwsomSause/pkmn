@@ -62,3 +62,38 @@ body {
   margin: 0;
   white-space: pre-wrap;
 }
+
+#update-notice {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  z-index: 50;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(20, 60, 130, 0.92);
+  color: #fff;
+  font: 14px system-ui, sans-serif;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+#update-notice button {
+  margin-left: 8px;
+  padding: 2px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #123;
+  cursor: pointer;
+}
+#fps-meter {
+  position: fixed;
+  top: 4px;
+  right: 6px;
+  z-index: 40;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #9f9;
+  font: 11px monospace;
+  pointer-events: none;
+  white-space: pre;
+}

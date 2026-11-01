@@ -50,6 +50,8 @@ import { installShareTools } from './ui/shareCard';
 import { interactionLog } from './core/presentation/uiPrefs';
 import { installOverlays } from './ui/overlays';
 import { enterTransition } from './ui/transitions';
+import { installErrorLog, packStore, registerOffline, watchForUpdates } from './game/deviceTools';
+import { loadStoredPacks } from './core/tools/modPacks';
 import './style.css';
 
 function showFatalError(message: string): void {
@@ -77,6 +79,9 @@ function openStorage(): { storage: StorageProvider; warning?: string } {
 }
 
 function start(): void {
+  installErrorLog();
+  const packs = loadStoredPacks(packStore);
+  for (const p of packs.problems) console.warn(`A stored mod pack was skipped: ${p}`);
   let session: GameSession;
   try {
     const { storage, warning } = openStorage();
@@ -168,6 +173,11 @@ function start(): void {
       return s ? loadAssets(s, [wipeAssetId(mask)]).then(() => ruleWipe(s, mask, ms)) : Promise.resolve();
     },
   };
+
+  if (import.meta.env.PROD) {
+    registerOffline();
+    watchForUpdates();
+  }
 
   const params = new URLSearchParams(window.location.search);
   if (import.meta.env.DEV || params.has('debug')) installDebugPanel(game, session);

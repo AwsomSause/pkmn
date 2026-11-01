@@ -8,6 +8,7 @@
 //   claim       — achievements are claimed automatically when a run ends;
 //                 trainers are claimed in the Trainer Archive (some cost Bank Credits)
 
+import { isAssisted } from './tools/assisted';
 import { directiveProgress, type DirectiveProgress } from './directive';
 import { legacyCard, runEpitaph } from './story/legacy';
 import { getArchetype, researchMultiplier } from './archetypes';
@@ -370,6 +371,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
       bankCredits: payout.total,
       researchPoints: researchPoints + achievements.reduce((sum, a) => sum + a.reward.researchPoints, 0),
       achievements: achievements.map((a) => a.id),
+      assisted: isAssisted(run),
       moments: topMoments(run.story).map((m) => m.text),
       journal: finalJournal(content, run),
       epitaph: runEpitaph(content, run),

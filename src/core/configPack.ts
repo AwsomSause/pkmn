@@ -4,8 +4,9 @@
 
 import { z } from 'zod';
 import { DIALOGUE_CATEGORIES, DRAMA } from './drama/schema';
+import { BoardEntrySchema, type BoardEntry } from './tools/seedBoard';
 
-export const PACK_LIMITS = { lines: 200, lineLength: 140, bytes: 64 * 1024 } as const;
+export const PACK_LIMITS = { lines: 200, lineLength: 140, bytes: 64 * 1024, seeds: 20 } as const;
 
 const Line = z
   .string()
@@ -21,6 +22,8 @@ export const ConfigPackSchema = z.object({
   author: z.string().min(1).max(60),
   /** Extra dialogue: tag (bond, arc or type tag the engine uses) -> category -> lines. */
   flavor: z.record(z.string().regex(/^[a-z]{2,20}$/), z.partialRecord(z.enum(DIALOGUE_CATEGORIES), z.array(Line).min(1))).default({}),
+  /** W12 F209: seeds the pack adds to the Seed Board (a seed and a trainer; never a rule change). */
+  seeds: z.array(BoardEntrySchema).max(PACK_LIMITS.seeds).default([]),
 });
 export type ConfigPack = z.infer<typeof ConfigPackSchema>;
 
@@ -53,4 +56,9 @@ export function applyConfigPack(pack: ConfigPack): number {
     }
   }
   return added;
+}
+
+/** Seed Board entries from the applied packs. */
+export function packSeeds(packs: ConfigPack[]): BoardEntry[] {
+  return packs.flatMap((p) => p.seeds);
 }

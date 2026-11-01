@@ -894,23 +894,23 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 
 | # | Idea | Note | Status | Evidence |
 |---|---|---|---|---|
-| F206 | Debug overlay (FPS, RNG stream positions) behind a flag. | ASK | PART | src/debug/debugPanel.ts behind ?debug=1 (no FPS/RNG positions) |
-| F207 | Save export/import as a file. | ASK | DONE | src/scenes/HubScene.ts:1604-1618 export/import save file |
-| F208 | Cloud-free backup reminder. | ASK | TODO |  |
-| F209 | Mod loader for JSON content packs validated by Zod. | ASK | PART | src/core/configPack.ts Zod-validated JSON packs (dialogue lines only) |
-| F210 | In-game content status viewer (supported/limited/disabled). | ASK | TODO |  |
-| F211 | Balance dashboard page from playtest logs. | ASK | PART | src/quality/dashboard.ts HTML dashboard (not from playtest logs) |
-| F212 | Bug-report button that bundles seed, log and version. | ASK | TODO |  |
-| F213 | Offline PWA install with cached assets. | ASK | TODO |  |
-| F214 | Performance preset (low/med/high) toggling particles. | ASK | PART | settingsRegistry.ts reduceParticles (no low/med/high preset) |
-| F215 | Asset preloader progress with per-pack status. | ASK | PART | src/scenes/BootScene.ts:79 loading progress bar |
-| F216 | Replay validator that re-runs a seed and checks results. | ASK | TODO |  |
-| F217 | Sandbox/Test mode with infinite gold and any Pokémon. | ASK | PART | src/debug/debugPanel.ts add Pokemon / give items (debug only) |
-| F218 | Level editor for custom events using the existing schema. | ASK | TODO |  |
-| F219 | Community seed board (static JSON, curated). | ASK | PART | HubScene Seed Shelf (user-kept seed codes, not curated board) |
-| F220 | Changelog screen shown after updates. | ASK | TODO |  |
-| F221 | Telemetry-free local analytics page for the player. | ASK | TODO |  |
-| F222 | Auto-update notice for the live site. | ASK | TODO |  |
-| F223 | Accessibility audit checklist page for releases. | ASK | TODO |  |
-| F224 | Cheat-detection flag that tags runs as "assisted". | ASK | TODO |  |
-| F225 | Press kit page generated from promo images. | ASK | TODO |  |
+| F206 | Debug overlay (FPS, RNG stream positions) behind a flag. | ASK | DONE | src/debug/debugPanel.ts FPS meter + RNG stream positions + run digest (?debug=1) |
+| F207 | Save export/import as a file. | ASK | DONE | src/scenes/HubScene.ts openSaveData export/import file (already built) |
+| F208 | Cloud-free backup reminder. | ASK | DONE | src/core/tools/backup.ts + hubArrivalNotice in src/scenes/hubTools.ts |
+| F209 | Mod loader for JSON content packs validated by Zod. | ASK | DONE | src/core/tools/modPacks.ts + configPack seeds; Tools > Mod packs |
+| F210 | In-game content status viewer (supported/limited/disabled). | ASK | DONE | src/core/tools/contentStatusView.ts; Tools > Content status |
+| F211 | Balance dashboard page from playtest logs. | ASK | DONE | tools/report-playtest.ts -> docs/quality/playtest/dashboard.html |
+| F212 | Bug-report button that bundles seed, log and version. | ASK | DONE | src/core/tools/bugReport.ts; Tools > Report a bug |
+| F213 | Offline PWA install with cached assets. | ASK | DONE | public/sw.js + manifest.webmanifest + icons |
+| F214 | Performance preset (low/med/high) toggling particles. | ASK | DONE | src/core/tools/perfPreset.ts; setting performancePreset |
+| F215 | Asset preloader progress with per-pack status. | ASK | DONE | src/core/tools/preload.ts + BootScene per-pack line |
+| F216 | Replay validator that re-runs a seed and checks results. | ASK | DONE | tools/replay-validate.ts + src/core/tools/replay.ts |
+| F217 | Sandbox/Test mode with infinite gold and any Pokémon. | ASK | DROPPED | Kice dropped Sandbox/Test mode (Q2) |
+| F218 | Level editor for custom events using the existing schema. | ASK | DROPPED | Kice dropped Level editor (Q2) |
+| F219 | Community seed board (static JSON, curated). | ASK | DONE | src/data/seedBoard.json + src/core/tools/seedBoard.ts; Tools > Seed board |
+| F220 | Changelog screen shown after updates. | ASK | DONE | src/data/changelog.json + Tools > What's new |
+| F221 | Telemetry-free local analytics page for the player. | ASK | DONE | src/core/tools/localStats.ts; Tools > My stats |
+| F222 | Auto-update notice for the live site. | ASK | DONE | src/core/tools/updateCheck.ts + version.json + deviceTools.watchForUpdates |
+| F223 | Accessibility audit checklist page for releases. | ASK | DONE | tools/a11y-checklist.ts -> docs/quality/a11y-checklist.md |
+| F224 | Cheat-detection flag that tags runs as "assisted". | ASK | DONE | src/core/tools/assisted.ts; RunRecord.assisted |
+| F225 | Press kit page generated from promo images. | ASK | DONE | tools/press-kit.ts -> docs/press-kit/index.html |

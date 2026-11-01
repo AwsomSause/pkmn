@@ -49,8 +49,10 @@ import { codexEntries, codexTotals } from '../core/story/codex';
 import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 import { WiiCursor } from '../ui/wiiMotion';
+import { hubArrivalNotice, openTools } from './hubTools';
+import { device } from '../game/deviceTools';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'nook' | 'options' | 'save' | 'town' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'nook' | 'options' | 'save' | 'tools' | 'town' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -82,6 +84,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'nook', label: 'Corner Nook', blurb: 'A fortune cookie each day, a wish upon the star, a note to your future self, poster codes and the donation drive (Enter).' },
   { room: 'options', label: 'Game settings', blurb: 'Display, audio, gameplay, animations, text and accessibility. The same settings as the title screen.' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
+  { room: 'tools', label: 'Tools & Community', blurb: "What's new, content status, your stats, the seed board, mod packs, bug report and backup." },
   { room: 'town', label: 'Pocket Town', blurb: 'Gardens, a dojo, a library, a shrine, a capsule machine and 40 more buildings (Enter).' },
   { room: 'back', label: 'Back to title', blurb: '' },
 ];
@@ -152,7 +155,7 @@ const CATEGORY_LABEL: Record<(typeof ACHIEVEMENT_CATEGORIES)[number], string> = 
 const BLURB_Y = 382;
 
 const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: string }[] = [
-  { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['options', 'save', 'back'], blurb: 'Game settings, save data, and the way back to the title screen.' },
+  { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['options', 'save', 'tools', 'back'], blurb: 'Game settings, save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
   { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'tales', 'intel', 'museum', 'seeds', 'mentors', 'nook'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
@@ -233,6 +236,7 @@ export class HubScene extends Phaser.Scene {
 
   create(data: { notice?: string; focus?: number } = {}): void {
     this.archiveOpen = false;
+    if (!data.notice) data = { ...data, notice: hubArrivalNotice()?.text };
     this.input.keyboard?.on('keydown-TAB', (e: KeyboardEvent) => {
       e.preventDefault();
       if (this.archiveOpen) this.resortArchive(e.shiftKey ? -1 : 1, false);
@@ -617,6 +621,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'town':
         this.scene.start('Town');
+        break;
+      case 'tools':
+        openTools({ open: (c) => this.openPicker(c), close: () => this.closePicker(), restart: (n) => this.restart(n, 'tools') });
         break;
       case 'back':
         this.scene.start('MainMenu');
@@ -1748,6 +1755,7 @@ export class HubScene extends Phaser.Scene {
       onSelect: (i) => {
         if (i === 0) {
           downloadText(`pkmn-save-${new Date().toISOString().slice(0, 10)}.json`, session.exportSave());
+          device.markExported(new Date().toISOString());
           this.restart('Save exported.', 'save');
         } else {
           pickTextFile((text) => this.restart(session.importSave(text), 'save'));

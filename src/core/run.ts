@@ -12,6 +12,7 @@
 // (Elite Four, then the champion); beating the champion moves the run to the
 // next region, or wins the run after the last one.
 
+import { markAssisted } from './tools/assisted';
 import { makeShadow, rollShadowHeart, soothePartyAfterBattle } from './shadow';
 import { advanceShadowWorld, addFlag, gangNotes, gangRaidWon, liberatedHpDiscount, outbreakShadow, placeGangDen } from './shadowWorld/world';
 import { blissfulAfterBattle, blissfulAtRest } from './shadowWorld/blissful';
@@ -2982,6 +2983,7 @@ export function withdrawFromBox(content: Content, current: RunState, boxIndex: n
 export function debugReplaceEnemy(content: Content, current: RunState, speciesId: string, level: number): RunState {
   assertPhase(current, 'battle');
   const run = structuredClone(current);
+  markAssisted(run);
   const enemy = newMon(content, run, speciesId, level, 'e');
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
   run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
@@ -2993,6 +2995,7 @@ export function debugReplaceEnemy(content: Content, current: RunState, speciesId
 export function debugAddToParty(content: Content, current: RunState, speciesId: string, level: number): RunState {
   if (current.party.length >= partyCapacity(content, current)) throw new Error('Your party is full');
   const run = structuredClone(current);
+  markAssisted(run);
   run.party.push(newMon(content, run, speciesId, level, 'p'));
   recordChanges(content, current, run, 'debug');
   return run;
@@ -3001,6 +3004,7 @@ export function debugAddToParty(content: Content, current: RunState, speciesId: 
 /** Debug: fully heals the party and restores PP. */
 export function debugHealParty(content: Content, current: RunState): RunState {
   const run = structuredClone(current);
+  markAssisted(run);
   healParty(content, run);
   return run;
 }
@@ -3010,6 +3014,7 @@ export function debugJumpToColumn(current: RunState, column: number): RunState {
   assertPhase(current, 'map');
   const stage = requireStage(current);
   const run = structuredClone(current);
+  markAssisted(run);
   if (column <= 1) {
     run.stage!.current = null;
     return run;
@@ -3024,6 +3029,7 @@ export function debugJumpToColumn(current: RunState, column: number): RunState {
 export function debugJumpToLeague(content: Content, current: RunState): RunState {
   assertPhase(current, 'map');
   const run = structuredClone(current);
+  markAssisted(run);
   enterLeague(content, run);
   return run;
 }
@@ -3032,6 +3038,7 @@ export function debugJumpToLeague(content: Content, current: RunState): RunState
 export function debugGiveItem(content: Content, current: RunState, itemId: string, quantity: number): RunState {
   getItem(content, itemId);
   const run = structuredClone(current);
+  markAssisted(run);
   addItem(run.inventory, itemId, quantity);
   return run;
 }

@@ -1,0 +1,13 @@
+[
+  { "id": "2026-11-01", "title": "Tools and community", "notes": [
+    "New Tools room in the Hub: what's new, content status, your stats, the seed board, mod packs and a bug report.",
+    "Performance preset (Low, Medium, High) in Settings.",
+    "Install the game as an app; it keeps working offline once loaded.",
+    "A notice appears when a newer version of the game is online.",
+    "Runs that used the debug tools are marked as assisted."
+  ] },
+  { "id": "2026-10-31", "title": "Majors and legacy", "notes": [
+    "Nemesis system, bank tiers, Totems with doubles, levels past 100.",
+    "Music and sound from the packs; the animation registry covers rivals and Hyper moments."
+  ] }
+]
