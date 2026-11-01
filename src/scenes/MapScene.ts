@@ -11,7 +11,6 @@ import { clockLabel, periodOf, PERIOD_LOOK } from '../core/clock';
 import { modeObjectives, objectivesLine } from '../core/modeObjectives';
 import { fieldHintId, licenseName, licenseNote } from '../core/license';
 import { SERVICES } from '../core/services/schema';
-import type { PlazaSectionId } from '../core/plaza/flow';
 import { stopIsHidden } from '../core/events';
 import { forecast, foggedAt, frontAt, isFogged, sightRange, visibleColumn } from '../core/world';
 import Phaser from 'phaser';
@@ -1043,90 +1042,10 @@ export class MapScene extends Phaser.Scene {
     this.picker = picker;
   }
 
-  /** The Trainer Plaza: a list of areas; each opens its own list of things to do. */
+  /** The Trainer Plaza has its own scene (districts, crowd, per-stage look). */
   private openPlaza(sideId: string, notice?: string): void {
-    const { session } = services();
-    const view = session.plazaView(sideId);
-    const head = `${view.event.name}: ${view.event.text}\n${view.atmosphere}${view.alleyHint ? `\n${view.alleyHint}` : ''}${view.errandsOpen > 0 ? `\nErrands open: ${view.errandsOpen}.` : ''}${notice ? `\n${notice}` : ''}`;
-    const picker: Picker = new Picker(this, {
-      glass: true,
-      title: `Trainer Plaza  ·  ${view.repTitle} (${view.rep})  ·  ₽${view.money}`,
-      columns: 1,
-      rowHeight: 64,
-      rows: [
-        { problem: head, draw: (scene, box, w) => box.add(scene.add.text(16, 8, head.split('\n')[0]!, textStyle(16, '#f0e0a0', { wordWrap: { width: w - 32 } }))) },
-        ...view.sections.map((sec) => ({
-          problem: sec.count === 0 ? 'Nothing here right now.' : null,
-          hint: sec.blurb,
-          draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
-            box.add(scene.add.text(16, 6, `${sec.title}   (${sec.count})`, textStyle(22)));
-            box.add(scene.add.text(16, 34, sec.blurb, textStyle(15, '#d8d0e0', { wordWrap: { width: w - 32 } })));
-          },
-        })),
-      ],
-      onSelect: (i) => {
-        picker.close();
-        this.picker = null;
-        playSfx(this, 'ui.select');
-        this.openPlazaSection(sideId, view.sections[i - 1]!.id);
-      },
-      onBack: () => {
-        picker.close();
-        this.picker = null;
-        this.scene.restart({ notice: notice ?? 'You leave the plaza.', focus: 0 });
-      },
-    });
-    this.picker = picker;
-  }
-
-  private openPlazaSection(sideId: string, section: PlazaSectionId, notice?: string): void {
-    const { session } = services();
-    const view = session.plazaSection(sideId, section);
-    const money = session.run!.money;
-    const notes = [...(notice ? [`» ${notice}`] : []), ...view.notes];
-    const rows = view.options;
-    const picker: Picker = new Picker(this, {
-      glass: true,
-      title: `Trainer Plaza  ·  ₽${money}`,
-      columns: 1,
-      rowHeight: 78,
-      rows: [
-        ...notes.map((note) => ({ problem: note, draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => box.add(scene.add.text(16, 6, note, textStyle(15, '#f0e0a0', { wordWrap: { width: w - 32 } }))) })),
-        ...rows.map((row) => ({
-          problem: row.problem,
-          hint: row.text,
-          draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
-            box.add(scene.add.text(16, 6, `${row.title}${row.cost > 0 ? `   ₽${row.cost}` : ''}`, textStyle(20, '#ffffff', { wordWrap: { width: w - 32 } })));
-            box.add(scene.add.text(16, 34, row.text, textStyle(14, '#d8d0e0', { wordWrap: { width: w - 32 } })));
-          },
-        })),
-      ],
-      onSelect: (i) => {
-        const row = rows[i - notes.length]!;
-        picker.close();
-        this.picker = null;
-        playSfx(this, 'ui.select');
-        let result;
-        try {
-          result = session.usePlaza(sideId, section, row.id);
-        } catch (err) {
-          playSfx(this, 'ui.error', 0.5);
-          return this.openPlazaSection(sideId, section, String(err instanceof Error ? err.message : err));
-        }
-        if (result.battle || session.run!.phase !== 'map') {
-          this.busy = true;
-          this.scene.start(sceneForRun(session.run!));
-          return;
-        }
-        this.openPlazaSection(sideId, section, result.message);
-      },
-      onBack: () => {
-        picker.close();
-        this.picker = null;
-        this.openPlaza(sideId, notice);
-      },
-    });
-    this.picker = picker;
+    this.busy = true;
+    this.scene.start('Plaza', { sideId, notice, focus: 0 });
   }
 
   private openService(sideId: string): void {

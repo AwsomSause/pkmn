@@ -435,6 +435,34 @@ export function noteFoe(run: RunState, name: string, classId: string): void {
 
 // ---------- the view ----------
 
+/** Who is standing around the plaza (for the plaza scene's crowd): regulars with the line they would say, the rival, an old foe, the caravan. */
+export interface PlazaVisitors {
+  regulars: { id: string; name: string; role: string; line: string; stall: boolean }[];
+  rival: { id: string; name: string; classId: string; state: string } | null;
+  foe: { name: string; classId: string } | null;
+  caravan: string | null;
+  openStalls: string[];
+  closed: boolean;
+}
+export function plazaVisitors(content: Content, run: RunState): PlazaVisitors {
+  const stallKeepers = new Set(openStallIds(run).map((id) => PLAZA.stalls.find((s) => s.id === id)!.keeper));
+  const regulars = presentRegulars(content, run).flatMap((id) => {
+    const r = regularOf(id);
+    if (!r) return [];
+    const line = [...r.lines].reverse().find((l) => friend(run, id) >= l.at)!.text;
+    return [{ id, name: r.name, role: r.role, line, stall: stallKeepers.has(id) }];
+  });
+  const ev = plazaEvent(run);
+  return {
+    regulars,
+    rival: rivalHere(run),
+    foe: foeHere(run),
+    caravan: ev.closed ? null : (caravanHere(run)?.name ?? null),
+    openStalls: openStallIds(run).map((id) => PLAZA.stalls.find((s) => s.id === id)!.name),
+    closed: Boolean(ev.closed),
+  };
+}
+
 export function plazaView(content: Content, run: RunState, sideId: string): PlazaView {
   findPlaza(run, sideId);
   const ev = plazaEvent(run);
