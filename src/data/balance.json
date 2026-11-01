@@ -715,6 +715,14 @@
  },
  "clock": {
   "ticksPerStep": 1,
+  "periodWildFactor": 2,
+  "shopHours": { "morning": 1, "afternoon": 0.9, "evening": 1, "night": 1.2 },
+  "periodTypes": {
+   "morning": ["bug", "flying", "grass"],
+   "afternoon": ["normal", "fire", "fighting"],
+   "evening": ["fairy", "psychic", "water"],
+   "night": ["ghost", "dark", "poison"]
+  },
   "milestoneDays": [
    7,
    14,

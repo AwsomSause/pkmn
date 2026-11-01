@@ -3,6 +3,7 @@
 // who can use it and what you own (ui/shopLook.ts); a row you can't afford
 // shows its price in red; the item you just bought gets a BOUGHT stamp.
 
+import { clockLabel, shopHoursMultiplier } from '../core/clock';
 import Phaser from 'phaser';
 import { itemCount } from '../core/items';
 import { mapItemSummary } from '../core/mapItems';
@@ -75,7 +76,7 @@ export class ShopScene extends Phaser.Scene {
     });
     this.picker = new Picker(this, {
       glass: true,
-      title: data.notice ? `Shop  ·  ₽${run.money}  ·  ${data.notice}` : `Shop  ·  ₽${run.money}`,
+      title: `Shop  ·  ₽${run.money}  ·  ${clockLabel(run)}${shopHoursMultiplier(content, run) === 1 ? '' : shopHoursMultiplier(content, run) < 1 ? ' (midday sale)' : ' (after-hours prices)'}${data.notice ? `  ·  ${data.notice}` : ''}`,
       columns: 2,
       rowHeight: 52,
       rows,
