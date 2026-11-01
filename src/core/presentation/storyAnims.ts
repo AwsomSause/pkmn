@@ -8,15 +8,15 @@ import { registerAnims } from './animRegistry';
 export type OverdriveAnimKind = 'toughened' | 'hung' | 'rise' | 'bond' | 'rivalry' | 'flair' | 'emotion' | 'rage' | 'moment';
 
 const HYPER_BY_KIND: Record<Exclude<OverdriveAnimKind, 'moment'>, string> = {
-  toughened: 'toughened-it-out',
+  toughened: 'toughened-it-out defiance',
   hung: 'hung-in-there second-wind not-given-up remembered-training broke-limits something-awakened instincts-took-over refused-weakness turned-pain',
   rise: 'pushed-back-up',
   bond:
-    'felt-a-bond make-you-proud came-to-aid more-than-teammates knows-you-believe learned-something student-surpassed last-lesson different-ways understand-each-other wont-let-friend-fight wants-to-prove feels-left-out',
+    'felt-a-bond make-you-proud protective-instinct came-to-aid more-than-teammates knows-you-believe learned-something student-surpassed last-lesson different-ways understand-each-other wont-let-friend-fight wants-to-prove feels-left-out',
   rivalry: 'heated-rivalry friendly-competition bitter-rivalry rivalry-mutual friendly-tag generational-rivalry',
   flair: 'mega-overdrive all-of-its-heart giant-resolve true-colors signature-awakening evolved-beyond',
   emotion:
-    'overdrive-determination overdrive-bravery overdrive-justice overdrive-kindness overdrive-patience overdrive-integrity overdrive-perseverance dual-emotion emotional-clash',
+    'overdrive-determination overdrive-bravery overdrive-justice overdrive-kindness overdrive-patience overdrive-integrity overdrive-perseverance dual-emotion emotional-clash emotional-awakening',
   rage: 'enemy-riled-up anger-dangerous fighting-beyond-limits lost-composure rival-resentment',
 };
 

@@ -1860,6 +1860,15 @@ export class BattleScene extends Phaser.Scene {
           if (e.cured) mon!.status = null;
           if (sprite && sprite.alpha < 1) sprite.setAlpha(1);
           await this.refreshInfoBox(box, mon!, true);
+          // Defiance struck the foe back; Protective Instinct hurt the teammate that stepped in.
+          if (e.foeHpAfter !== undefined && this.shown.enemy) {
+            this.shown.enemy.hp = e.foeHpAfter;
+            await this.refreshInfoBox(this.enemyBox, this.shown.enemy, true);
+          }
+          if (e.proxy) {
+            const mate = this.run.party.find((p) => p.uid === e.proxy!.uid);
+            if (mate) mate.hp = e.proxy.hpAfter;
+          }
           break;
         case 'selfKo':
           mon!.hp = 0;

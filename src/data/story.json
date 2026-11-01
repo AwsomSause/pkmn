@@ -4116,6 +4116,230 @@
         "kindness"
       ],
       "variants": {}
+    },
+    {
+      "cooldown": "oncePerBattlePerPokemon",
+      "duration": "battle",
+      "followUpEvents": [],
+      "eligibilityTags": [],
+      "variants": {
+        "again": {
+          "displayName": "Defiance Again!",
+          "messagePool": [
+            "{name} would not surrender, not again!"
+          ]
+        }
+      },
+      "id": "defiance",
+      "displayName": "Defiance!",
+      "messagePool": [
+        "{name} refused to surrender!",
+        "Overwhelmed, {name} still would not kneel!",
+        "{name} dug in its heels and struck back!"
+      ],
+      "category": "survival",
+      "triggerConditions": {
+        "trigger": "defiance",
+        "minFriendship": 120
+      },
+      "chance": {
+        "base": 0.12,
+        "attributes": [
+          "rage",
+          "strength"
+        ],
+        "perPoint": 0.001,
+        "cap": 2,
+        "again": 0.5
+      },
+      "effect": {
+        "kind": "defy",
+        "minHits": 2,
+        "retaliateShare": 0.25,
+        "cost": {
+          "spe": -1,
+          "def": -1
+        }
+      },
+      "memoryRecord": {
+        "importance": 75,
+        "text": "Refused to surrender against {enemy} and struck back"
+      },
+      "visualCue": {
+        "major": true,
+        "color": "#ff6a38",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "knockoutPrevention",
+      "emotions": [
+        "bravery",
+        "determination"
+      ]
+    },
+    {
+      "cooldown": "oncePerBattlePerPokemon",
+      "duration": "battle",
+      "followUpEvents": [],
+      "eligibilityTags": [],
+      "variants": {
+        "again": {
+          "displayName": "Protective Instinct Again!",
+          "messagePool": [
+            "A teammate stepped in front of {name} again!"
+          ]
+        }
+      },
+      "id": "protective-instinct",
+      "displayName": "Protective Instinct!",
+      "messagePool": [
+        "A teammate threw itself in front of {name}!",
+        "A teammate could not watch {name} fall and took the hit!"
+      ],
+      "category": "bond",
+      "triggerConditions": {
+        "trigger": "protectiveInstinct",
+        "minFriendship": 160
+      },
+      "chance": {
+        "base": 0.12,
+        "attributes": [
+          "love",
+          "good"
+        ],
+        "perPoint": 0.001,
+        "cap": 2,
+        "again": 0.5
+      },
+      "effect": {
+        "kind": "intercept",
+        "takeShare": 0.6
+      },
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Took a hit meant for a teammate against {enemy}"
+      },
+      "visualCue": {
+        "major": true,
+        "color": "#ff9ad5",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "bondRivalry",
+      "emotions": [
+        "kindness",
+        "justice"
+      ]
+    },
+    {
+      "cooldown": "oncePerBattlePerPokemon",
+      "duration": "battle",
+      "followUpEvents": [],
+      "eligibilityTags": [],
+      "variants": {
+        "again": {
+          "displayName": "Awakened Again!",
+          "messagePool": [
+            "{name} awakened once more!"
+          ]
+        }
+      },
+      "id": "emotional-awakening",
+      "displayName": "Emotional Awakening!",
+      "messagePool": [
+        "Something stirred in {name}. Its heart changed how it fights!",
+        "{name} felt its emotions surge and awakened!"
+      ],
+      "category": "emotion",
+      "triggerConditions": {
+        "trigger": "emotionalAwakening",
+        "lowHpShare": 0.35,
+        "minFriendship": 140
+      },
+      "chance": {
+        "base": 0.1,
+        "attributes": [
+          "love",
+          "rage",
+          "peace"
+        ],
+        "perPoint": 0.001,
+        "cap": 2,
+        "again": 0.5
+      },
+      "effect": {
+        "kind": "awaken",
+        "lines": {
+          "determination": {
+            "ability": "guts",
+            "cost": {
+              "spd": -1
+            }
+          },
+          "bravery": {
+            "ability": "adaptability",
+            "cost": {
+              "def": -1
+            }
+          },
+          "justice": {
+            "ability": "filter",
+            "cost": {
+              "spe": -1
+            }
+          },
+          "kindness": {
+            "ability": "regenerator",
+            "cost": {
+              "atk": -1
+            }
+          },
+          "patience": {
+            "ability": "unaware",
+            "cost": {
+              "spe": -1
+            }
+          },
+          "integrity": {
+            "ability": "thick-fat",
+            "cost": {
+              "atk": -1
+            }
+          },
+          "perseverance": {
+            "ability": "multiscale",
+            "cost": {
+              "spe": -1
+            }
+          }
+        },
+        "fallback": {
+          "ability": "guts",
+          "cost": {
+            "spd": -1
+          }
+        }
+      },
+      "memoryRecord": {
+        "importance": 80,
+        "text": "Awakened a new strength against {enemy}"
+      },
+      "visualCue": {
+        "major": true,
+        "color": "#b890ff",
+        "sound": "se.shiny",
+        "music": null,
+        "cutIn": false,
+        "shake": true
+      },
+      "priority": "emotionalOverdrive",
+      "emotions": [
+        "determination"
+      ]
     }
   ],
   "awakening": {
