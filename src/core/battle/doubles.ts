@@ -938,6 +938,10 @@ function endOfTurn(ctx: BattleContext, field: Field, commands: (SlotCommand | nu
   }
   each((c) => S.endTurnMon(ctx, c, field.alive(otherSide(c.side))[0] ?? c, events));
   S.endTurnField(ctx, events);
+  // Overdrive end-of-turn moments (a bond shaking off a status, Emotional Awakening, Guard Formation counting down).
+  each((c) => {
+    if (c.side === 'player') S.hyperEndOfTurn(ctx, c, events);
+  });
   each((c) => Held.endOfTurn(ctx, c, events as Held.HeldEvent[]));
   for (const c of field.alive()) c.vol.turnsOut += 1;
   tickDynamax(ctx.content, battle, ctx.party, events as TransformStepEvent[]);
