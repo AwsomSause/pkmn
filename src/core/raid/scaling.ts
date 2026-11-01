@@ -40,6 +40,7 @@ export function scaledRaid(content: Content, def: RaidDef, badges: number): Raid
   const b = effectiveBadges(s, def, badges);
   if (b === 0) return def;
   const out: RaidDef = structuredClone(def);
+  out.summons = s.reinforcements.filter((r) => b >= r.minBadges && def.tier >= r.minTier).map((r) => r.atHp).sort((x, y) => y - x);
   out.hpBoostPercent = def.hpBoostPercent + Math.min(s.maxHpPercent, Math.round(b * s.hpPercentPerBadge));
   if (out.shield) {
     out.shield.points = Math.min(0.5, out.shield.points + b * s.shieldPointsPerBadge);

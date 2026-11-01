@@ -535,6 +535,8 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
     damage: z.number().min(0).max(2),
     strain: z.number().min(0).max(0.5),
     maxHpShare: z.number().gt(0).max(1),
+    /** A move it normally cannot use: the Pokémon's move is replaced by this one, by the move's type (a move of a type not listed stays as it is). */
+    moves: z.record(z.string(), z.string()).default({}),
   }),
   z.object({
     kind: z.literal('boost'),

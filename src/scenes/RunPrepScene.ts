@@ -180,7 +180,7 @@ export class RunPrepScene extends Phaser.Scene {
       y: 134,
       options: rows.map((r) => ({ label: fitLabel(labels[r], 32), disabled: disabled(r) })),
       itemWidth: 410,
-      itemHeight: 52,
+      itemHeight: rows.length > 6 ? 44 : 52, // seven rows (Trainer page) still fit the panel
       fontSize: 20,
       glass: { tints: rows.map(() => def.tint), motion: motion as MotionLevel },
       onFocus: (i) => {

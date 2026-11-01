@@ -2,12 +2,13 @@
 
 import { describe, expect, it } from 'vitest';
 import { beginExpedition, expeditionPreview } from '../../src/core/expedition/flow';
-import { eligibleRentalTeams, pickRentalTeam, rentalLevel } from '../../src/core/expedition/rental';
+import { eligibleRentalTeams, offerPool, pickRentalTeam, rentalLevel } from '../../src/core/expedition/rental';
 import { ExpeditionFileSchema } from '../../src/core/expedition/schema';
-import { getRaid, pickRaidFor, raidDef } from '../../src/core/raid/raid';
+import { activeDenTriggers, absorbHit, getRaid, pickRaidFor, placeRaidDens, raidDef, reinforcementDue, takeExtraAction, triggerChanceBonus } from '../../src/core/raid/raid';
+import { maxHp } from '../../src/core/pokemon';
 import { badgeLevelBonus, scaledRaid, tierOpenAtBadges } from '../../src/core/raid/scaling';
-import { chooseStarter, createRun, enterRaid, raidPreview } from '../../src/core/run';
-import { RunStateSchema, type RunState } from '../../src/core/state';
+import { chooseStarter, createRun, enterRaid, raidPreview, takeTurn } from '../../src/core/run';
+import { RunStateSchema, currentEnemy, type RunState } from '../../src/core/state';
 import expeditionsJson from '../../src/data/expeditions.json';
 import { content } from './helpers';
 
@@ -132,5 +133,116 @@ describe('raids scale with badges', () => {
     const bare = gateRun('s2', 'borrowed-team', 0);
     bare.money = 5000;
     expect(enterRaid(content, bare, 'raid-test').battle!.enemyTeam[0]!.level).toBeLessThanOrEqual(prev.level);
+  });
+});
+
+describe('draft, recruit and combined offers scale with badges', () => {
+  const def = content.expeditions.expeditions.find((e) => e.partyMode === 'draft')!;
+  const stage = (id: string) => content.species.get(id)!.evolutionStage;
+  const avg = (ids: string[]) => ids.reduce((n, id) => n + stage(id), 0) / ids.length;
+
+  it('later badges offer more evolved Pokémon, always enough to fill the offer', () => {
+    for (const n of [0, 2, 3, 5, 6, 9, 30]) expect(offerPool(content, def, n, 6).length).toBeGreaterThanOrEqual(6);
+    expect(avg(offerPool(content, def, 9, 6))).toBeGreaterThanOrEqual(avg(offerPool(content, def, 0, 6)));
+    expect(offerPool(content, def, 9, 6).filter((id) => stage(id) >= 3).length).toBeGreaterThan(0);
+  });
+
+  it('a draft offers 6 different Pokémon from that pool and stays stable', () => {
+    const mk = (n: number) => {
+      const run = gateRun('d1', def.id, n);
+      return beginExpedition(content, run, 'gate-test').expedition!.choice!.options.map((o) => o.speciesId!);
+    };
+    const a = mk(9);
+    expect(new Set(a).size).toBe(6);
+    expect(mk(9)).toEqual(a);
+    for (const id of a) expect(offerPool(content, def, 9, 6)).toContain(id);
+  });
+});
+
+describe('raid reinforcements and world triggers', () => {
+  it('reinforcement lines come only from badges and tier', () => {
+    const def = getRaid(content, 'storm-gyarados');
+    expect(scaledRaid(content, def, 0).summons).toEqual([]);
+    expect(scaledRaid(content, def, 4).summons).toEqual([0.6]);
+    expect(scaledRaid(content, def, 8).summons).toEqual([0.6]);
+    const t4 = getRaid(content, 'sandstorm-tyranitar');
+    expect(scaledRaid(content, t4, 8).summons).toEqual([0.6, 0.3]);
+    expect(scaledRaid(content, getRaid(content, 'sleeping-snorlax'), 12).summons).toEqual([]);
+    expect(raidDef(content, { id: t4.id, badges: 8 }).summons).toHaveLength(2);
+  });
+
+  it('the boss calls a minion at the line; shields and phases wait; the boss returns', () => {
+    const run = gateRun('m1', 'borrowed-team', 8);
+    run.money = 9999;
+    const fought = enterRaid(content, run, 'raid-test');
+    const raid = fought.battle!.raid!;
+    const boss = fought.battle!.enemyTeam[0]!;
+    expect(raid.bossUid).toBe(boss.uid);
+    expect(reinforcementDue(content, fought.battle!)).toBeNull();
+    boss.hp = Math.floor(maxHp(content, boss) * 0.5);
+    const due = reinforcementDue(content, fought.battle!);
+    expect(due).not.toBeNull();
+    expect(content.species.has(due!.speciesId)).toBe(true);
+    // The minion is not shielded and does not move the boss's phases.
+    raid.minionUid = due!.uid;
+    const minion = { ...boss, uid: due!.uid };
+    raid.shieldHp = 50;
+    expect(absorbHit(content, fought.battle!, minion, 30)).toBe(30);
+    expect(raid.shieldHp).toBe(50);
+    expect(takeExtraAction(content, fought.battle!, minion)).toBe(false);
+    // Once used, the same line cannot fire again.
+    raid.summonsUsed = 1;
+    expect(reinforcementDue(content, fought.battle!)).toBeNull();
+    expect(RunStateSchema.safeParse(JSON.parse(JSON.stringify(fought))).success).toBe(true);
+  });
+
+  it('triggers read the world and never the real clock', () => {
+    const base = { story: { flags: {} } as RunState['story'], legendary: undefined, calendar: { today: null, startedOn: null }, regionIndex: 0 };
+    expect(activeDenTriggers(content, base)).toEqual([]);
+    const busy = { ...base, story: { flags: { 'ev:shadow-activity': 3 } } as unknown as RunState['story'] };
+    expect(activeDenTriggers(content, busy).map((t) => t.id)).toContain('shadow-unrest');
+    const sat = { ...base, calendar: { today: '2026-11-07', startedOn: null } };
+    expect(activeDenTriggers(content, sat).map((t) => t.id)).toEqual(expect.arrayContaining(['weekend-rush', 'harvest-season']));
+    const weekday = { ...base, calendar: { today: '2026-11-04', startedOn: null } };
+    expect(activeDenTriggers(content, weekday).map((t) => t.id)).not.toContain('weekend-rush');
+    expect(triggerChanceBonus(content, activeDenTriggers(content, { ...sat, regionIndex: 3, story: busy.story, legendary: { offered: ['x'], completed: [], failed: [], extracted: [], placed: {}, outcomes: [] } }))).toBeLessThanOrEqual(content.raids.maxTriggerBonus);
+  });
+
+  it('a trigger steers the kind of raid, and a den records why it is there', () => {
+    const run = { seed: 'tr', regionIndex: 2, badges: badges(20), raids: { entered: 0, won: 0, lost: 0, bestTier: 6, done: [], escaped: [], unlockedTier: 6 } };
+    for (let i = 0; i < 10; i++) expect(pickRaidFor(content, run, `k${i}`, 'anomaly').kind).toBe('anomaly');
+    let seen = 0;
+    for (let i = 0; i < 200 && seen === 0; i++) {
+      const r = structuredClone(chooseStarter(content, createRun(content, { runId: 'tr', seed: `trg${i}`, archetypeId: 'red' }), 0));
+      r.story.flags['ev:shadow-activity'] = 5;
+      placeRaidDens(content, r);
+      const den = r.stage!.map.nodes.flatMap((n) => n.sides).find((s) => s.id.startsWith('raid-') && !s.id.includes('grand'));
+      if (den?.triggers) { seen++; expect(den.triggers).toContain('shadow-unrest'); }
+    }
+    expect(seen).toBeGreaterThan(0);
+  });
+});
+
+describe('reinforcement in a real turn', () => {
+  it('the minion takes the field, and the boss returns when it faints', () => {
+    const run = gateRun('m2', 'borrowed-team', 8);
+    run.money = 9999;
+    const fought = enterRaid(content, run, 'raid-test');
+    const boss = fought.battle!.enemyTeam[0]!;
+    boss.hp = Math.floor(maxHp(content, boss) * 0.5);
+    fought.battle!.raid!.pendingShields = [];
+    fought.party[0]!.moves = [{ id: 'splash', pp: 40 }];
+    fought.party[0]!.level = 100;
+    fought.party[0]!.hp = maxHp(content, fought.party[0]!);
+    const res = takeTurn(content, fought, { kind: 'move', index: 0 });
+    const b = res.run.battle!;
+    expect(b.raid!.summonsUsed).toBe(1);
+    expect(currentEnemy(b).uid).toBe(b.raid!.minionUid);
+    expect(b.enemyTeam.some((e) => e.uid === boss.uid)).toBe(true);
+    // Beat the minion: the boss comes back.
+    currentEnemy(b).hp = 1;
+    res.run.party[0]!.moves = [{ id: 'tackle', pp: 35 }];
+    const next = takeTurn(content, res.run, { kind: 'move', index: 0 });
+    if (next.run.battle) expect(currentEnemy(next.run.battle).uid).toBe(boss.uid);
   });
 });

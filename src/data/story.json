@@ -4348,7 +4348,8 @@
       "displayName": "Pushed Beyond Its Limits!",
       "messagePool": [
         "{name} pushed past what its body should allow!",
-        "{name} gave everything. Its next attack cannot miss!"
+        "{name} gave everything. Its next attack cannot miss!",
+        "{name} reached for a power it should not have!"
       ],
       "category": "survival",
       "triggerConditions": {
@@ -4369,7 +4370,27 @@
         "kind": "limitBreak",
         "damage": 0.4,
         "strain": 0.15,
-        "maxHpShare": 0.5
+        "maxHpShare": 0.5,
+        "moves": {
+          "normal": "body-slam",
+          "grass": "leaf-storm",
+          "flying": "brave-bird",
+          "fighting": "close-combat",
+          "fire": "flamethrower",
+          "water": "hydro-pump",
+          "electric": "thunder",
+          "ice": "blizzard",
+          "psychic": "psychic",
+          "ground": "earthquake",
+          "ghost": "shadow-ball",
+          "dragon": "dragon-pulse",
+          "dark": "dark-pulse",
+          "steel": "flash-cannon",
+          "fairy": "moonblast",
+          "poison": "sludge-bomb",
+          "rock": "stone-edge",
+          "bug": "x-scissor"
+        }
       },
       "cooldown": "oncePerBattlePerPokemon",
       "duration": "battle",

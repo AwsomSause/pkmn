@@ -24,7 +24,7 @@ import type { Content, Item } from '../contentSchema';
 import type { ExpeditionState, MapNode, RunState } from '../state';
 import { generateRoute, validateRoute, type RouteNode } from './graph';
 import type { ExpeditionDef, ExpeditionNodeKind, RentalMember } from './schema';
-import { describeRental, outfitRental, pickRentalTeam, rentalLevel } from './rental';
+import { describeRental, offerPool, outfitRental, pickRentalTeam, rentalLevel } from './rental';
 
 export function getExpedition(content: Content, id: string): ExpeditionDef {
   const e = content.expeditions.expeditions.find((x) => x.id === id);
@@ -88,8 +88,8 @@ function gate(run: RunState, sideId: string) {
   return side;
 }
 
-function rentalOptions(def: ExpeditionDef, rng: Rng, count: number): string[] {
-  const pool = [...def.rentals];
+function rentalOptions(content: Content, run: Pick<RunState, 'badges'>, def: ExpeditionDef, rng: Rng, count: number): string[] {
+  const pool = offerPool(content, def, run.badges.length, count);
   const out: string[] = [];
   while (out.length < count && pool.length > 0) out.push(pool.splice(rng.int(0, pool.length - 1), 1)[0]!);
   return out;
@@ -132,10 +132,10 @@ export function beginExpedition(content: Content, current: RunState, sideId: str
     exp.stash = run.party;
     run.party = [];
     exp.status = 'choice';
-    exp.choice = { kind: 'draft', title: 'Draft your team: pick 3', left: 3, options: draftOptions(content, rentalOptions(def, pick, 6), exp.level) };
+    exp.choice = { kind: 'draft', title: 'Draft your team: pick 3', left: 3, options: draftOptions(content, rentalOptions(content, run, def, pick, 6), exp.level) };
   } else if (def.partyMode === 'combined') {
     exp.status = 'choice';
-    exp.choice = { kind: 'combined', title: 'Choose one recruit', left: 1, options: draftOptions(content, rentalOptions(def, pick, 3), exp.level) };
+    exp.choice = { kind: 'combined', title: 'Choose one recruit', left: 1, options: draftOptions(content, rentalOptions(content, run, def, pick, 3), exp.level) };
   }
   if (def.legendary) {
     const rec = legendaryRecord(run);
@@ -290,7 +290,7 @@ export function chooseExpeditionNode(content: Content, current: RunState, nodeId
     }
     case 'recruit': {
       exp.status = 'choice';
-      exp.choice = { kind: 'recruit', title: 'A Pokémon wants to join you', left: 1, options: [...draftOptions(content, rentalOptions(def, rng, 3), exp.level), { label: 'Move on', detail: 'Recruit no one.' }] };
+      exp.choice = { kind: 'recruit', title: 'A Pokémon wants to join you', left: 1, options: [...draftOptions(content, rentalOptions(content, run, def, rng, 3), exp.level), { label: 'Move on', detail: 'Recruit no one.' }] };
       break;
     }
   }

@@ -79,7 +79,7 @@ import { genderOf, oppositeGender, sameGender } from '../gender';
 import * as Held from './held';
 import { rivalStrikeDamage } from '../raid/rivalAlly';
 import { finaleStrikeDamage } from '../rivals/living';
-import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, takeExtraAction } from '../raid/raid';
+import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, reinforcementDue, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
 import { addMomentum, cfgOf as spectacleCfg, counterProblem, duePhases, guardDamage, isBossFight, rallyProblem, raiseGuard, rollLastStand, spectacleOf, spectacleRoll as spectacleRollExt, staggered, tickGuard, wearGuard, type SpectacleEvent } from './spectacle';
@@ -613,7 +613,8 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   if (battle.totem) {
     totemAura(ctx, events);
     totemCallAlly(ctx, events);
-  } else sosCall(ctx, events);
+  } else if (battle.raid) raidCallReinforcement(ctx, events);
+  else sosCall(ctx, events);
   const enemy: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
   const spec = spectacleStart(ctx, action, events);
   const enemyForced = forcedMoveId(enemy.vol);
@@ -942,6 +943,22 @@ function totemCallAlly(ctx: BattleContext, events: BattleEvent[]): void {
     battle.sideEffects.enemy.lightScreen = 5;
   }
   battle.enemyTeam.push(ally);
+  swapInEnemy(ctx, battle.enemyTeam.length - 1, events);
+  resolveEntries(ctx, events);
+}
+
+/** Start of a turn: a raid boss below a reinforcement line calls a minion, which takes the field until it faints (capped by the scaled raid's summons). */
+function raidCallReinforcement(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle, content } = ctx;
+  const raid = battle.raid;
+  const due = reinforcementDue(content, battle);
+  if (!raid || !due) return;
+  const minion = createPokemon(content, due.speciesId, due.level, due.uid);
+  raid.summonsUsed += 1;
+  raid.minionUid = minion.uid;
+  raid.charging = false;
+  events.push({ type: 'raid', tone: 'phase', text: due.text });
+  battle.enemyTeam.push(minion);
   swapInEnemy(ctx, battle.enemyTeam.length - 1, events);
   resolveEntries(ctx, events);
 }
@@ -2209,6 +2226,15 @@ function hyperAwaken(ctx: BattleContext, c: Combatant, events: BattleEvent[]): b
   return true;
 }
 
+/** The stronger move a Limit Break reaches for in place of `move` (same type), or null. */
+function limitBreakMove(ctx: BattleContext, move: Move): Move | null {
+  const def = ctx.content.story.definitions.find((d) => d.triggerConditions.trigger === 'limitBreak');
+  if (def?.effect?.kind !== 'limitBreak') return null;
+  const id = def.effect.moves[move.type];
+  const found = id ? ctx.content.moves.get(id) : undefined;
+  return found && found.supported && found.category !== 'status' && found.id !== move.id ? found : null;
+}
+
 /** The damage bonus of the Limit Break in progress (0 when none); set only while that one move runs. */
 let limitBreakDamage = 0;
 /** The Pokémon whose move is running (Defiance strikes back at it, also in double battles). */
@@ -2670,7 +2696,10 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   movingAttacker = user;
   try {
     limitBreakDamage = tryLimitBreak(ctx, user, move, events);
-    runMoveInner(ctx, user, target, move, movedFirst, events);
+    // Pushed Beyond Its Limits: it reaches for a stronger move it does not know.
+    const reached = limitBreakDamage > 0 ? limitBreakMove(ctx, move) : null;
+    if (reached) events.push({ type: 'move', side: user.side, moveId: reached.id });
+    runMoveInner(ctx, user, target, reached ?? move, movedFirst, events);
   } finally {
     moveIgnoresAbility = false;
     limitBreakDamage = 0;
