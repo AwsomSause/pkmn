@@ -148,8 +148,7 @@ describe('Weeks toggle', () => {
     session.newRun('red', 'old');
     const env = JSON.parse(storage.get('pkr.run')!);
     delete env.data.rules.weeks;
-    env.schemaVersion = 29;
-    storage.set('pkr.run', JSON.stringify(env));
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 29, savedAt: '', data: env.data }));
     const loaded = new SaveManager(storage, content).loadRun();
     expect(loaded.status).toBe('ok');
     if (loaded.status === 'ok') {
