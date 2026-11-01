@@ -679,6 +679,8 @@ export const BattleStateSchema = z.object({
   sos: SosBattleSchema.optional(),
   /** Battle Drama spectacle: Momentum, Counter, Guard, Last Stand, Revenge, boss phases (core/battle/spectacle.ts); absent until first used. */
   spectacle: SpectacleBattleSchema.optional(),
+  /** Auto-Battle (spec §32): the Pokémon chose at least one action this battle by themselves, so its EXP is reduced (core/run.ts awardExperience). Never cleared mid-battle. */
+  autoUsed: z.boolean().optional(),
   /** A fight on an expedition route: afterwards the run goes back to the expedition, not the map or a draft. */
   expedition: z.boolean().optional(),
   /** A double battle (core/battle/doubles.ts): the second Pokémon on each side. */
@@ -1431,6 +1433,10 @@ export const SettingsSchema = z.object({
   animationIntensity: z.enum(['reduced', 'normal', 'enhanced']).default('normal'),
   /** Master switch: turns every animation off without forgetting the individual ones above. */
   disableAllAnimations: z.boolean().default(false),
+  /** Auto-Battle (spec §32): the Pokémon pick their own actions (EXP is halved for such battles). Off by default. */
+  autoBattle: z.boolean().default(false),
+  /** Auto-Battle: say why a Pokémon chose its action. */
+  autoExplain: z.boolean().default(true),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

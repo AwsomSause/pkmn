@@ -87,6 +87,8 @@ export const SETTINGS: SettingDef[] = [
   { id: 'musicVolume', label: 'Music volume', description: 'How loud the music is.', category: 'audio', applies: 'now', ...level('musicVolume', [1, 0.75, 0.5, 0.25, 0]) },
   { id: 'sfxVolume', label: 'Effects volume', description: 'How loud sound effects and cries are.', category: 'audio', applies: 'now', ...level('sfxVolume', [1, 0.75, 0.5, 0.25, 0]) },
   // Gameplay
+  { id: 'autoBattle', label: 'Auto-Battle', description: 'Your Pokémon choose their own actions in battle (single battles). EXP from such battles is halved. Also on the battle screen.', category: 'gameplay', applies: 'now', ...toggle('autoBattle') },
+  { id: 'autoExplain', label: 'Auto-Battle explanations', description: 'Say why a Pokémon chose its action.', category: 'gameplay', applies: 'now', ...toggle('autoExplain') },
   { id: 'battleSpeed', label: 'Battle speed', description: 'How fast battles play. Outcomes never change.', category: 'gameplay', applies: 'now', ...choice('battleSpeed', { showcase: 'Showcase', normal: 'Normal', fast: 'Fast', quick: 'Quick' }, ['normal', 'fast', 'quick', 'showcase']) },
   { id: 'damageDetails', label: 'Damage details', description: 'Explains each hit: effectiveness, STAB and crits.', category: 'gameplay', also: ['accessibility'], applies: 'now', ...toggle('damageDetails') },
   // Animations & Effects

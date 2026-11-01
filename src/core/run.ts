@@ -2078,7 +2078,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
   const archetype = runArchetype(content, run);
   const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
-  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (getMode(run.rules.modeId)?.xpScale ?? 1) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
+  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (getMode(run.rules.modeId)?.xpScale ?? 1) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.autoUsed ? content.balance.difficulty.autoBattleXp : 1) * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);

@@ -116,6 +116,7 @@
   "capMargin": 5,
   "levelCapStep": 50,
   "xpScale": 2,
+  "autoBattleXp": 0.5,
   "stageCapMargin": 7,
   "benchXpPercent": 50,
   "variance": 1,

@@ -158,7 +158,9 @@ test('switch Pokémon from the party menu, and give a reward to a chosen Pokémo
   await page.keyboard.press('Enter');
   await page.waitForTimeout(200);
   await page.screenshot({ path: 'test-results/m2-party.png' });
-  // The cursor starts on the first Pokémon that can switch in: the second slot.
+  // The cursor starts on the first Pokémon that can switch in: the second slot. Enter opens its actions; "Send out" is the first.
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(150);
   await page.keyboard.press('Enter');
   await expect.poll(async () => (await run(page)).battle?.activeIndex ?? -1, { timeout: 10_000 }).toBe(1);
 
