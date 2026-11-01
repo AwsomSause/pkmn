@@ -15,12 +15,12 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I76 | Revenge moment: a fainted ally's partner gets a rage prompt with a dialogue line |  | DONE | src/core/battle/engine.ts:5436 revengeMoment (bonded teammate after a faint, +1 Atk/SpA); battle-drama-spectacle.md |
 | I77 | Mid-battle item toss: throw a berry to an ally in the field with animated arc |  | DONE | skillMoments.ts tossArc; BattleScene openItemTarget |
 | I78 | Lend-a-hand: spectator NPCs from the run can toss you one buff |  | DONE | run.ts addPlayFeatures spectator roll; engine.ts w1StartOfTurn; w1Play.test.ts |
-| I86 | Spectate button during AI vs AI exhibition matches, place a friendly wager |  | DONE | src/core/exhibition.ts + plaza/flow.ts Battle Club watch/wager (once per stage); tests/unit/exhibition.test.ts. Limit: power-score simulation, not a full engine battle |
+| I86 | Spectate button during AI vs AI exhibition matches, place a friendly wager |  | DONE | src/core/exhibition.ts + plaza/flow.ts Battle Club watch/wager (once per stage); tests/unit/exhibition.test.ts. A real 3v3 engine battle played by the AI (tests/unit/exhibition.test.ts) |
 | I88 | Foe analysis: scan a foe with a Pokédex mini-game, correct guesses reveal weaknesses |  | DONE | skillMoments.ts runScan; BattleScene scanFoe; conditions.ts panel lines |
 | I95 | Dramatic crit freeze-frame where you choose the camera angle |  | DONE | skillMoments.ts critFreeze; BattleScene playEvents (Skill prompts setting) |
 | I98 | Mind-read: Psychic-type allies reveal one foe move choice per battle |  | DONE | engine.ts w1StartOfTurn mind-read, foeBestMove; w1Play.test.ts |
 | I99 | Double-tap Mega/Z/Tera trigger with matching gesture and flashy confirm |  | DONE | BattleScene lastTransformTap double-tap confirm (Skill prompts setting) |
-| I102 | Environment interact: smash a cliff, drop rocks or flood tiles in some arenas |  | DONE | engine.ts smashArena/arenaHazard; w1Play.ts arenaFor; w1Play.test.ts. Limit: singles only |
+| I102 | Environment interact: smash a cliff, drop rocks or flood tiles in some arenas |  | DONE | engine.ts smashArena/arenaHazard; w1Play.ts arenaFor; w1Play.test.ts. Also works in doubles (tests/unit/w1Doubles.test.ts) |
 | I103 | Split-second decision: some events give a countdown choice instead of free time |  | DONE | events.json countdown; EventScene clock + timeoutChoice (Skill prompts setting) |
 | I106 | Pokémon remembers a past grudge vs a foe species and gets a rage buff with a line |  | DONE | run.ts grudge counters; engine.ts w1StartOfTurn; w1Play.test.ts |
 | M4 | **Guard break**: a shield bar on bosses; empty it with multi-hit moves to stagger them for a turn. | Y but only Champions or non gym/elite four bosses | DROPPED | Kice removed all Guard and Brace features (W13 PR #498) |

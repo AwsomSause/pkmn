@@ -5,7 +5,7 @@
 import { aeroMood, autoInterruption, cameraFocus, capFlash, hapticPattern } from '../core/presentation/uiPrefs';
 import { fitLine } from '../ui/fitText';
 import { HazardFloor, bossCinematic, critFreeze, runScan, tossArc, weaknessesOf } from '../ui/battleFx/skillMoments';
-import { aimable, dealOffer, type SkillInput } from '../core/battle/w1Play';
+import { aimable, dealOffer, foeStake, type SkillInput } from '../core/battle/w1Play';
 import { promptById } from '../core/interaction/prompt';
 import { runInteractionPrompt } from '../ui/interactionPrompt';
 import { filterLog, LOG_TABS, type LogTab } from '../ui/logFilter';
@@ -1178,7 +1178,10 @@ export class BattleScene extends Phaser.Scene {
       fontSize: 24,
       color: COLORS.textLight,
       glass: { tints: [0x1f9a52, 0xc8303c], motion: this.motion },
-      onSelect: (i) => this.submit({ kind: 'deal', accept: i === 0 }),
+      onSelect: (i) => {
+        this.commands = [];
+        void this.act({ kind: 'deal', accept: i === 0 });
+      },
       onBack: () => this.showRootMenu(),
     });
   }
@@ -1842,9 +1845,10 @@ export class BattleScene extends Phaser.Scene {
     if (canRally) options.push({ label: this.rallyChoice ? 'Rally: ON' : 'Rally: OFF' });
     // Ideas W1: a surrender deal, smashing the arena, the Pokédex scan and the item hotbar.
     const foeNow = currentEnemy(battleNow);
-    const dealAt = !this.duo && dealOffer(content, battleNow, foeNow.hp, maxHp(content, foeNow)) ? options.length : -1;
+    const stake = foeStake(content, battleNow);
+    const dealAt = (!this.duo || this.cmdSpot === 0) && dealOffer(content, battleNow, stake.hp, stake.max) ? options.length : -1;
     if (dealAt >= 0) options.push({ label: 'Deal?' });
-    const smashAt = !this.duo && battleNow.arena && !battleNow.arena.spent ? options.length : -1;
+    const smashAt = battleNow.arena && !battleNow.arena.spent && !this.commands.some((c) => c?.action.kind === 'arena') ? options.length : -1;
     if (smashAt >= 0) options.push({ label: `Smash ${battleNow.arena!.kind}` });
     const scanAt = !this.duo && services().session.settings.skillPrompts && !battleNow.scanned && !battleNow.raid ? options.length : -1;
     if (scanAt >= 0) options.push({ label: 'Scan' });
@@ -1999,11 +2003,12 @@ export class BattleScene extends Phaser.Scene {
         const move = slot ? (zMoves?.[i] ?? content.moves.get(slot.id)) : undefined;
         const sig = !!slot && !!mon.awakened?.includes(slot.id);
         const withSkill = async () => {
-          const skill = slot && !this.duo ? await this.moveSkill(slot.id, sig) : undefined;
-          this.submit(skill ? { ...action, skill } : action);
+          const skill = slot ? await this.moveSkill(slot.id, sig) : undefined;
+          const chosen = skill ? { ...action, skill } : action;
+          if (this.duo && move && needsTarget(move)) this.openTargetPicker(chosen, move);
+          else this.submit(chosen);
         };
-        if (this.duo && move && needsTarget(move)) this.openTargetPicker(action, move);
-        else void withSkill();
+        void withSkill();
       },
       onBack: () => this.showRootMenu(),
     });

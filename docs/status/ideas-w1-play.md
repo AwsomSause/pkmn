@@ -7,4 +7,4 @@ What the player can do now:
 - Pin 4 items to a **hotbar** (P in the Bag), see a best-target marker, adaptive music, skippable boss cinematics.
 - Type lures bias the next encounter; map nodes show a likely-species list; Battle Club lets you watch and wager on a 3v3 exhibition (once per stage).
 
-Limits: arena, deal and skill prompts are singles only. The exhibition is a power-score simulation. No save version bump (new fields have defaults).
+Follow-up: arena smash and hazards, deals and skill prompts also work in double battles (each Pokémon uses its own prompt grade; the hazard hits everyone on the field; a deal is offered when the whole foe team is nearly beaten). The Club exhibition is now a real 3v3 battle on the engine, played by the AI on both sides. Still singles only: Scan, the hotbar, mind-read, grudge and spectator buffs. No save version bump (new fields have defaults).

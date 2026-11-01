@@ -3,10 +3,11 @@
 // board never changes the result, and no gameplay stream is used.
 
 import type { Content } from './contentSchema';
-import { typeEffectiveness } from './battle/damage';
+import { createBattle, exhibitionMove, resolveTurn, type BattleContext, type PlayerAction } from './battle/engine';
+import { createPokemon, maxHp } from './pokemon';
 import { Rng, hashSeed } from './rng';
 import { pickThemeSpecies } from './themes';
-import type { RunState } from './state';
+import type { PokemonInstance, RunState } from './state';
 
 export interface ExhibitionFighter { speciesId: string; name: string; level: number }
 export interface ExhibitionTeam { trainer: string; fighters: ExhibitionFighter[] }
@@ -31,29 +32,41 @@ export function exhibitionFor(content: Content, run: Pick<RunState, 'seed' | 'st
   const a = make();
   let b = make();
   if (b.trainer === a.trainer) b = { ...b, trainer: TRAINERS[(TRAINERS.indexOf(a.trainer) + 1) % TRAINERS.length]! };
-  const power = (f: ExhibitionFighter, foe: ExhibitionFighter): number => {
-    const me = content.species.get(f.speciesId)!;
-    const them = content.species.get(foe.speciesId)!;
-    const bst = Object.values(me.baseStats).reduce((n, v) => n + v, 0);
-    const edge = Math.max(...me.types.map((t) => typeEffectiveness(content.typeChart, t, them.types)));
-    return (bst / 6 + f.level * 2) * (edge > 1 ? 1.3 : edge < 1 ? 0.75 : 1);
-  };
+  return { teams: [a, b], ...fight(content, run.seed, key, a, b) };
+}
+
+/** A real battle on the engine: both teams are played by the AI, three against three, with its own random stream. */
+function fight(content: Content, seed: string, key: string, a: ExhibitionTeam, b: ExhibitionTeam): { winner: 0 | 1; lines: string[] } {
+  const build = (team: ExhibitionTeam, tag: string): PokemonInstance[] =>
+    team.fighters.map((f, i) => {
+      const mon = createPokemon(content, f.speciesId, f.level, `ex-${tag}${i}`);
+      mon.hp = maxHp(content, mon);
+      return mon;
+    });
+  const mine = build(a, 'a');
+  const theirs = build(b, 'b');
+  const battle = createBattle('trainer', theirs, 0, mine[0]!.uid, { classId: 'ace-trainer', name: b.trainer, leaderId: null });
+  const ctx: BattleContext = { content, battle, party: mine, inventory: {}, rng: new Rng(hashSeed(`${seed}::exhibition-battle::${key}`)), captureRng: new Rng(hashSeed(`${seed}::exhibition-catch::${key}`)), catchMultiplier: 1 };
+  const owner = new Map<string, { name: string; trainer: string }>();
+  [...mine.map((m) => [m, a] as const), ...theirs.map((m) => [m, b] as const)].forEach(([m, t]) => owner.set(m.uid, { name: content.species.get(m.speciesId)?.name ?? m.speciesId, trainer: t.trainer }));
   const lines: string[] = [`${a.trainer} versus ${b.trainer}!`];
-  const idx: [number, number] = [0, 0];
-  while (idx[0] < 3 && idx[1] < 3) {
-    const fa = a.fighters[idx[0]]!;
-    const fb = b.fighters[idx[1]]!;
-    const pa = power(fa, fb) * (0.85 + rng.float() * 0.3);
-    const pb = power(fb, fa) * (0.85 + rng.float() * 0.3);
-    if (pa >= pb) {
-      lines.push(`${fa.name} (${a.trainer}) beats ${fb.name}!`);
-      idx[1] += 1;
-    } else {
-      lines.push(`${fb.name} (${b.trainer}) beats ${fa.name}!`);
-      idx[0] += 1;
+  let lastMove: { side: string; moveId: string } | null = null;
+  for (let turn = 0; turn < 300 && !battle.outcome; turn++) {
+    const alive = mine.findIndex((m, i) => m.hp > 0 && i !== battle.activeIndex);
+    const action: PlayerAction = battle.needsSwitch ? { kind: 'switch', partyIndex: alive } : { kind: 'move', index: exhibitionMove(ctx) };
+    if (action.kind === 'switch' && alive < 0) break;
+    for (const e of resolveTurn(ctx, action)) {
+      if (e.type === 'move') lastMove = { side: e.side, moveId: e.moveId };
+      else if (e.type === 'faint') {
+        const who = owner.get(e.uid);
+        const by = lastMove && lastMove.side !== e.side ? ` with ${content.moves.get(lastMove.moveId)?.name ?? lastMove.moveId}` : '';
+        if (who) lines.push(`${who.name} (${who.trainer}) is knocked out${by}!`);
+      }
     }
   }
-  const winner: 0 | 1 = idx[1] >= 3 ? 0 : 1;
+  // A stalemate (nobody can finish the other) goes to whoever has more HP left.
+  const left = (team: PokemonInstance[]): number => team.reduce((n, m) => n + Math.max(0, m.hp), 0);
+  const winner: 0 | 1 = battle.outcome ? (battle.outcome === 'win' ? 0 : 1) : left(mine) >= left(theirs) ? 0 : 1;
   lines.push(`${winner === 0 ? a.trainer : b.trainer} wins the exhibition!`);
-  return { teams: [a, b], winner, lines };
+  return { winner, lines };
 }

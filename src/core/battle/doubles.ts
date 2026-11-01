@@ -306,6 +306,7 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
     return events;
   }
 
+  if (action.kind === 'deal') return S.dealTurn(ctx, action.accept, events);
   if (action.kind !== 'double') throw new Error('A double battle needs a command for each Pokémon');
   ctx.doubleKoLoser = undefined;
   ctx.hyperUsed = false;
@@ -344,6 +345,10 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
         if (problem) throw new Error(problem);
         if (c.vol.trapped || c.vol.bound > 0) throw new Error(`${getSpecies(content, c.mon.speciesId).name} can't be switched out!`);
         switching.push(cmd.action.partyIndex);
+      } else if (cmd.action.kind === 'arena') {
+        const problem = S.arenaProblem(ctx);
+        if (problem) throw new Error(problem);
+        if (commands.some((o) => o?.action.kind === 'arena')) throw new Error('Only one Pokémon can smash the arena');
       } else S.validateAction(ctx, cmd.action);
     }
     commands.push(cmd);
@@ -369,7 +374,14 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
       turn.acted.add(fresh.mon.uid);
     } else if (cmd.action.kind === 'item') {
       field.on(c, events);
+      battle.skill = cmd.action.throwSkill;
       S.useItemInBattle(ctx, cmd.action.itemId, cmd.action.targetIndex, events);
+      battle.skill = undefined;
+      turn.acted.add(c.mon.uid);
+    } else if (cmd.action.kind === 'arena') {
+      field.on(c, events);
+      S.smashArenaOn(ctx, c.mon, field.alive('enemy'), events, (f) => field.on(f, events));
+      faintCheck(ctx, field, events);
       turn.acted.add(c.mon.uid);
     } else if (cmd.action.kind === 'idle') turn.acted.add(c.mon.uid);
   }
@@ -427,9 +439,17 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
   }
 
   // 4. Moves.
+  const skills = new Map<string, NonNullable<BattleState['skill']>>();
+  commands.forEach((cmd, spot) => {
+    const c = field.at('player', spot as Spot);
+    if (c && cmd?.action.kind === 'move' && cmd.action.skill) skills.set(c.mon.uid, cmd.action.skill);
+  });
   while (turn.queue.length > 0 && !battle.outcome) {
     const next = turn.queue.shift()!;
     if (next.user.mon.hp <= 0 || field.spotOf(next.user) === null) continue;
+    // Ideas W1: each Pokémon's own prompt grade counts for its own move.
+    battle.skill = next.user.side === 'player' ? skills.get(next.user.mon.uid) : undefined;
+    if (battle.skill?.kind === 'shout' && battle.skill.grade !== 'miss') events.push({ type: 'spectacle', kind: 'shout', side: 'player', uid: next.user.mon.uid, text: `${getSpecies(content, next.user.mon.speciesId).name} yells out! The trainer echoes it!` });
     runPlanned(ctx, field, turn, next, events);
     turn.acted.add(next.user.mon.uid);
     faintCheck(ctx, field, events);
@@ -437,8 +457,14 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
   }
 
   battle.comboUid = undefined;
+  battle.skill = undefined;
 
   // 5. End of turn.
+  if (!sideOut(field, 'player') && !sideOut(field, 'enemy')) {
+    // Ideas W1 arena hazard: everyone on the field takes the hit every few turns.
+    S.doublesArena(ctx, field.alive(), events, (c) => field.on(c, events));
+    faintCheck(ctx, field, events);
+  }
   if (!sideOut(field, 'player') && !sideOut(field, 'enemy')) {
     endOfTurn(ctx, field, commands, events);
     totemEndOfTurn(ctx, field, events);

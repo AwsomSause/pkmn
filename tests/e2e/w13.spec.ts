@@ -78,8 +78,8 @@ test('Settings > Game Summary lists topics and their entries', async ({ page }) 
   await page.evaluate(() => void (window as any).__pkr.game.scene.getScene('MainMenu').scene.start('Settings', { from: 'MainMenu' }));
   await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('Settings');
   await page.waitForTimeout(800);
-  // 7 categories, then Game Summary.
-  for (let i = 0; i < 7; i++) await page.keyboard.press('ArrowDown');
+  // 8 categories, then Game Summary.
+  for (let i = 0; i < 8; i++) await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Enter');
   await page.waitForTimeout(400);
   expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Settings').page)).toBe('summary');
