@@ -3,6 +3,9 @@
 // same on a reload and different from run to run. Nothing here uses the battle, encounter or reward streams.
 
 import { applyEffect, startClubBattle, tradeCandidates } from '../events';
+import { evilMarkup, plazaAgent, plazaVillain } from '../evil/plaza';
+import { evilTeam } from '../evil/teams';
+import { teamText } from '../evil/content';
 import { catalogTargetProblem, isFreeReroll } from '../catalog';
 import { changeFriendship } from '../friendship';
 import { count, discover } from '../progress';
@@ -254,7 +257,8 @@ function stallStock(content: Content, run: RunState, stallId: string): StockItem
   const stall = PLAZA.stalls.find((s) => s.id === stallId)!;
   const rng = rngFor(run, `stock:${stallId}`);
   const ev = plazaEvent(run);
-  const price = (base: number) => Math.max(1, Math.round(base * stall.markup * (1 + B.regionScale * run.regionIndex) * ev.priceScale * (1 - discountOf(run, stall.keeper)) * runAttributeEffects(content, run).price));
+  const evil = evilMarkup(content, run).factor;
+  const price = (base: number) => Math.max(1, Math.round(base * stall.markup * (1 + B.regionScale * run.regionIndex) * ev.priceScale * (1 - discountOf(run, stall.keeper)) * runAttributeEffects(content, run).price * evil));
   let pool: StockItem[];
   if (stall.families.includes('ball')) {
     pool = [...content.items.values()]
@@ -519,6 +523,8 @@ export function sectionView(content: Content, run: RunState, sideId: string, sec
   const attrs = effectiveAttributes(content, run);
   switch (section) {
     case 'stalls': {
+      const markup = evilMarkup(content, run).note;
+      if (markup) notes.push(markup);
       for (const id of openStallIds(run)) {
         const stall = PLAZA.stalls.find((s) => s.id === id)!;
         const d = discountOf(run, stall.keeper);
@@ -635,6 +641,19 @@ export function sectionView(content: Content, run: RunState, sideId: string, sec
           notes.push(`${rival.name} spots you across the plaza: "Still going? I'm further along than you think."`);
           add(`club:rival:${rival.id}`, `Take ${rival.name}'s challenge`, 'A battle on the spot. Win for a purse and respect; losing is friendly.', 0, usedN(run, `club:rival:${rival.id}`) > 0 ? 'Already fought today.' : !run.party.some((m) => m.hp > 0) ? 'No Pokémon can fight.' : null);
         }
+      }
+      // Evil Teams: a disguised member in the crowd, and the executive you have met.
+      const agent = plazaAgent(content, run);
+      if (agent) {
+        notes.push(`${agent.name}: "${agent.line}"`);
+        const done = usedN(run, 'evil:unmask') + usedN(run, 'evil:buy') > 0 ? 'They slipped away.' : null;
+        add('evil:unmask', `Unmask the ${agent.name}`, `You are sure they are with ${agent.team.name}. Call them out (the team will notice).`, 0, done);
+        add('evil:buy', `Buy from the ${agent.name}`, `Cheap goods, and your money goes to ${agent.team.name}.`, content.evilTeams.plaza.buyCost, done);
+      }
+      const villain = plazaVillain(content, run);
+      if (villain) {
+        notes.push(`${villain.name} is in the plaza. ${villain.allied ? villain.line : `"${villain.line.replace(/^"|"$/g, '')}"`}`);
+        if (villain.allied) add('evil:supplies', `Accept ${villain.name}'s supplies`, villain.line, 0, usedN(run, 'evil:supplies') > 0 ? 'Already taken.' : null);
       }
       const foe = foeHere(run);
       if (foe) {
@@ -822,6 +841,22 @@ export function usePlaza(content: Content, current: RunState, sideId: string, se
         });
         words.push(`${boss.title} uses ${boss.types.join('/')} Pokémon. ${lines.join('; ')}.`);
       }
+      break;
+    }
+    case 'evil': {
+      const team = evilTeam(content, run);
+      const cfg = content.evilTeams.plaza;
+      if (team && a === 'unmask') {
+        effects([{ kind: 'evil', beat: false, heat: 1, defect: false }, { kind: 'money', amount: regionPrice(run, cfg.unmaskMoney) }, { kind: 'choice', id: `${team.id}-plaza-unmask`, pick: 'yes', text: `Unmasked a disguised ${team.name} member in the Plaza`, weight: 1 }]);
+        addRep(run, 1);
+        words.unshift(teamText(team, cfg.unmask));
+      } else if (team && a === 'buy') {
+        effects([{ kind: 'itemFrom', ids: team.spoils, count: 1 }, { kind: 'evil', beat: false, heat: -1, defect: false }, { kind: 'attribute', key: 'goodEvil', amount: -3 }]);
+        words.unshift(teamText(team, cfg.buy));
+      } else if (team && a === 'supplies') {
+        effects([{ kind: 'itemFrom', ids: team.spoils, count: 1 }, { kind: 'item', id: 'super-potion', count: 2 }]);
+      }
+      markUsed(run, `evil:${a}`);
       break;
     }
     case 'gift': {

@@ -58,3 +58,8 @@ export function expandEvilEvents(file: EvilFile): Record<string, unknown>[] {
   }
   return out;
 }
+
+/** A line with the team's tokens ({team}, {front}, {exec}...) filled in. */
+export function teamText(team: EvilTeam, text: string, extra: Record<string, string> = {}): string {
+  return fill(text, { ...STRING_TOKENS(team), ...extra }, {}) as string;
+}
