@@ -68,6 +68,8 @@ export const PokemonInstanceSchema = z.object({
   perkHp: z.number().int().optional(),
   /** Hatched from an Egg this run (core/eggs.ts; Elm's perk gives these more experience). */
   hatched: z.boolean().optional(),
+  /** The Egg tier it hatched from (data/eggs.json), for the hatch screen. */
+  eggTier: z.string().optional(),
   /** Legacy Descendant (core/memories/heirloom.ts): the ancestor from an earlier run this Pokémon descends from. */
   lineage: LineageSchema.optional(),
   /** Battle effects waiting for (or running in) its next battles: X items, Dire Hit, Guard Spec., status healers. */
@@ -472,6 +474,8 @@ export const RaidBattleSchema = z.object({
   returning: z.boolean().default(false),
   rewardPercent: z.number().int().default(100),
   draftDelta: z.number().int().default(0),
+  /** The badge count this raid was scaled for (core/raid/scaling.ts); fixed when the fight starts, so a reload never changes the boss. */
+  badges: z.number().int().min(0).default(0),
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
@@ -542,6 +546,8 @@ export const ExpeditionStateSchema = z.object({
   /** Set when a fight ends: the expedition reads it the next time it is shown. */
   battleResult: z.enum(['win', 'lose']).nullable(),
   log: z.array(z.string()),
+  /** The rental team borrowed for this expedition (core/expedition/rental.ts); null when none. */
+  rentalTeam: z.string().nullable().default(null),
 });
 export type ExpeditionState = z.infer<typeof ExpeditionStateSchema>;
 
@@ -673,6 +679,8 @@ export const BattleStateSchema = z.object({
   sos: SosBattleSchema.optional(),
   /** Battle Drama spectacle: Momentum, Counter, Guard, Last Stand, Revenge, boss phases (core/battle/spectacle.ts); absent until first used. */
   spectacle: SpectacleBattleSchema.optional(),
+  /** Auto-Battle (spec §32): the Pokémon chose at least one action this battle by themselves, so its EXP is reduced (core/run.ts awardExperience). Never cleared mid-battle. */
+  autoUsed: z.boolean().optional(),
   /** A fight on an expedition route: afterwards the run goes back to the expedition, not the map or a draft. */
   expedition: z.boolean().optional(),
   /** A double battle (core/battle/doubles.ts): the second Pokémon on each side. */
@@ -928,12 +936,26 @@ export const EggSchema = z.object({
   /** Rolled when the Egg was found, so reloading never changes it. */
   shiny: z.boolean(),
   eggMoves: z.array(z.string()),
+  /** Egg category (data/eggs.json). Older Eggs are Ordinary. */
+  tier: z.string().default('ordinary'),
+  kind: z.enum(['standard', 'regional', 'event', 'special', 'mystery', 'legacy']).default('standard'),
+  /** Steps it needed in all (so menus can show progress); missing in older saves. */
+  total: z.number().int().min(1).optional(),
+  /** Warmth gathered from warm Pokémon; two make an extra step. */
+  heat: z.number().int().min(0).default(0),
+  /** Hatches with its hidden ability / as a Blissful Pokémon (rolled when laid). */
+  hidden: z.boolean().default(false),
+  blissful: z.boolean().default(false),
   /** Where it came from, for the party screen ("Egg Nest", "Mystery Egg"). */
   source: z.string(),
   /** Legacy Descendant: the ancestor it descends from (core/memories/heirloom.ts). */
   lineage: LineageSchema.optional(),
 });
 export type Egg = z.infer<typeof EggSchema>;
+
+/** A berry growing in the run's garden (core/berries.ts). Ripe when `left` reaches 0. */
+export const GardenPlotSchema = z.object({ uid: z.string(), berryId: z.string(), left: z.number().int().min(0), mutated: z.boolean(), soil: z.enum(['poor', 'fair', 'rich']).default('fair') });
+export type GardenPlot = z.infer<typeof GardenPlotSchema>;
 
 export const RunStateSchema = z.object({
   runId: z.string(),
@@ -978,6 +1000,8 @@ export const RunStateSchema = z.object({
   pending: z.array(PendingDecisionSchema),
   /** Eggs waiting to hatch (core/eggs.ts). */
   eggs: z.array(EggSchema).default([]),
+  /** Berries planted at a Berry Garden (core/berries.ts). */
+  garden: z.array(GardenPlotSchema).default([]),
   /** What this run knows of the player's earlier runs (core/memories/past.ts); null for runs started without history. */
   past: PastDigestSchema.nullable().default(null),
   /** Where the run goes once all pending decisions are made. */
@@ -1088,6 +1112,8 @@ export const RunStateSchema = z.object({
   materials: z.record(z.string(), z.number().int().min(0)).default(() => ({})),
   /** The Trainer Plaza's memory (core/plaza). */
   plaza: PlazaStateSchema.default(freshPlaza),
+  /** Rental teams borrowed this run (ids), so the next rental offers a different team while one is left for the badge count. */
+  rentalsUsed: z.array(z.string()).default(() => []),
   raids: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), bestTier: z.number().int().min(0), done: z.array(z.string()), /** Raids whose boss escaped (the timer ran out); each comes back as a stronger den in a later stage. */ escaped: z.array(z.string()).default([]), /** The best raid tier won in earlier runs (older saves: every tier open). */ unlockedTier: z.number().int().min(0).max(6).default(6) }).default(() => ({ entered: 0, won: 0, lost: 0, bestTier: 0, done: [], unlockedTier: 6, escaped: [] })),
   /** Revisit This Timeline (core/timeline/genesis.ts): set only on a replay of a lost run, which saves in its own slot and never touches the profile. */
   timeline: z.object({ replayId: z.string(), originRunId: z.string(), attempt: z.number().int().min(1) }).optional(),
@@ -1402,11 +1428,17 @@ export const SettingsSchema = z.object({
   rivalAnimations: z.boolean().default(true),
   evolutionAnimations: z.boolean().default(true),
   battleScreenEffects: z.boolean().default(true),
+  /** Menu motion (spec §24): the gliding cursor, button bounces and screen/popup transitions. */
+  menuAnimations: z.boolean().default(true),
   /** How fast animations play and how strong they look. */
   animationSpeed: z.enum(['slow', 'normal', 'fast']).default('normal'),
   animationIntensity: z.enum(['reduced', 'normal', 'enhanced']).default('normal'),
   /** Master switch: turns every animation off without forgetting the individual ones above. */
   disableAllAnimations: z.boolean().default(false),
+  /** Auto-Battle (spec §32): the Pokémon pick their own actions (EXP is halved for such battles). Off by default. */
+  autoBattle: z.boolean().default(false),
+  /** Auto-Battle: say why a Pokémon chose its action. */
+  autoExplain: z.boolean().default(true),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

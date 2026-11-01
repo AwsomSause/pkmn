@@ -36,7 +36,7 @@ import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './m
 import { scavengerBonus } from './bank';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, countShiny, discover } from './progress';
-import { eggStatus, layEgg } from './eggs';
+import { eggStatus, eggTier, layEgg, warmEggs } from './eggs';
 import { makeShadow, rollShadowHeart } from './shadow';
 import { addFlag } from './shadowWorld/world';
 import { grantBlessing, makeBlissful } from './shadowWorld/blissful';
@@ -51,6 +51,7 @@ import { focusIs, MYSTERY_EXTRA_STOPS, regionFocus } from './campaign/focus';
 import { emit } from './story/record';
 import { recordBattleStarted } from './story/hooks';
 import { celebrateToday, milestoneToday, periodOf, PERIOD_LABEL, restUntilMorning } from './clock';
+import { BERRIES } from './berries';
 import { getTheme, typesPool } from './themes';
 import { anyRoaming, endRoamer, healConvoy, startConvoy, partyHasAbility, placeCamp, scoutAhead, CAMP_EVENT_ID } from './world';
 
@@ -612,6 +613,8 @@ export function effectWords(content: Content, e: EventEffect): string {
       return `${e.who === 'lead' ? 'lead' : 'party'} +${e.amount} level${e.amount === 1 ? '' : 's'}`;
     case 'join':
       return e.shadow ? 'a Shadow Pokémon is rescued' : e.blissful ? 'a Blissful Pokémon joins' : 'a Pokémon joins';
+    case 'seedling':
+      return 'a seedling grows in the Berry Garden';
     case 'blessing':
       return content.shadowWorld.blessings.find((b) => b.id === e.id)?.name ?? 'a blessing';
     case 'awaken':
@@ -688,7 +691,7 @@ export function pickByRarity(content: Content, ids: readonly string[], rng: Rng)
   return rng.pick(tiers.get(tier)!);
 }
 
-function giveItem(content: Content, run: RunState, id: string, times: number, rng: Rng): string {
+export function giveItem(content: Content, run: RunState, id: string, times: number, rng: Rng): string {
   const name = itemName(content, id);
   if (content.items.has(id)) {
     addItem(run.inventory, id, times);
@@ -812,10 +815,18 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
         addFlag(run, 'rescued');
       }
       if (e.blissful) makeBlissful(content, mon);
+      if (e.hiddenAbility && content.species.get(mon.speciesId)?.abilities.hidden) mon.abilitySlot = -1;
       discover(run, mon.speciesId, true);
       count(run, 'pokemonCaught');
       run.pending.push({ kind: 'caught', mon });
       return `${content.species.get(mon.speciesId)?.name ?? mon.speciesId} ${e.shadow ? 'was rescued from the haze and' : ''} wants to join you!`.replace('  ', ' ');
+    }
+    case 'seedling': {
+      if (run.garden.length >= BERRIES.maxPlots || !content.catalog.has(e.berry)) return '';
+      const n = (run.itemCounters?.['plots-planted'] ?? 0) + 1;
+      run.itemCounters = { ...run.itemCounters, 'plots-planted': n };
+      run.garden = [...run.garden, { uid: `plot${n}`, berryId: e.berry, left: 1, mutated: e.mutated, soil: 'fair' }];
+      return `A ${e.mutated ? 'glowing ' : ''}${content.catalog.get(e.berry)!.name} seedling is planted in the Berry Garden`;
     }
     case 'blessing':
       return grantBlessing(content, run, e.id);
@@ -830,8 +841,8 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       const node = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
       const speciesId = pickSpecies(content, run, e.species, e.types, rng);
       const level = Math.max(1, eventLevel(content, run, node, rng) + e.levelBonus);
-      const made = layEgg(content, run, speciesId, { level, left: e.left, unit: e.unit, source: 'Event', shinyMultiplier: runAttributeEffects(content, run).shinyChance * e.shinyMultiplier }, rng);
-      return `You got an Egg! ${eggStatus(made)}.`;
+      const made = layEgg(content, run, speciesId, { level, left: e.left, unit: e.unit, source: 'Event', origin: e.origin, tier: e.tier, shinyMultiplier: runAttributeEffects(content, run).shinyChance * e.shinyMultiplier }, rng);
+      return `You got ${made.kind === 'mystery' ? 'a Mystery' : made.tier === 'ordinary' ? 'an' : `a ${eggTier(made.tier).name}`} Egg! ${eggStatus(made)}.`;
     }
     case 'eggMove': {
       const lead = run.party.find((m) => m.hp > 0);
@@ -909,9 +920,11 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
     case 'scout':
       scoutAhead(content, run, e.columns);
       return effectWords(content, e);
-    case 'rest':
+    case 'rest': {
       restUntilMorning(run);
-      return effectWords(content, e);
+      const warmed = warmEggs(run, 1);
+      return warmed > 0 ? `${effectWords(content, e)}; your Egg${warmed === 1 ? ' is' : 's are'} snug by the fire` : effectWords(content, e);
+    }
     case 'celebrate':
       celebrateToday(run);
       return effectWords(content, e);

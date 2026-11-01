@@ -34,6 +34,16 @@ export function advanceClock(run: RunState, ticks: number): void {
   run.clock.tick = total % PERIODS.length;
 }
 
+/** Wild weight for a species at this hour: its types that suit the time turn up more often (1 when none do). */
+export function periodWildWeight(content: Content, run: Pick<RunState, 'clock'>, speciesId: string): number {
+  const types = content.species.get(speciesId)?.types ?? [];
+  const liked = content.balance.clock.periodTypes[periodOf(run)];
+  return types.some((t) => liked.includes(t)) ? content.balance.clock.periodWildFactor : 1;
+}
+
+/** Merchants keep hours: cheaper early in the day, dearer after dark. */
+export const shopHoursMultiplier = (content: Content, run: Pick<RunState, 'clock'>): number => content.balance.clock.shopHours[periodOf(run)];
+
 /** One step on the map (mutates `run`). */
 export function stepClock(content: Content, run: RunState): void {
   advanceClock(run, content.balance.clock.ticksPerStep);

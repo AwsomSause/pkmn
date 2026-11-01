@@ -59,6 +59,7 @@ import { pickRunQuest } from './quests';
 import { masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
+import { growGarden } from './berries';
 import { layEgg, tickEggs } from './eggs';
 import { addEventStops, continueEventChain, eventBattleWon, eventChainNext, eventGymPreview } from './events';
 import { advanceRoamers, convoyStep, applyFrontWeather, spawnRoamers } from './world';
@@ -110,7 +111,8 @@ import {
   wildSpeciesWithItems,
 } from './mapItems';
 import { pickRaidRival } from './raid/rivalAlly';
-import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidDef, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { applyBossAbility, raidBadgeLevel, scaledRaid } from './raid/scaling';
 import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { placeLegendaryGate } from './legendary/legendary';
@@ -155,7 +157,7 @@ import { withChampionTeam } from './story/championDefense';
 import { grandGauntlet, gauntletRival, markGauntletFight } from './story/gauntlet';
 import { growCrisis } from './story/crisis';
 import { recapRegion, tellAct } from './campaign/director';
-import { freshClock, stepClock } from './clock';
+import { freshClock, periodWildWeight, shopHoursMultiplier, stepClock } from './clock';
 import { finalRivalLine, tellCampfire } from './story/highHype';
 import { ultimateRival } from './rivals/ultimate';
 import { applyGrandInfluence, endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
@@ -243,6 +245,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     prep: { ...prep, campaignId: campaign.id, note: draft.note },
     party: [],
     eggs: [],
+    garden: [],
     past: null,
     money: Math.floor(resources.money * scale),
     inventory,
@@ -286,6 +289,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     partyLife: createPartyLife(),
     clock: freshClock(),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
+    rentalsUsed: [],
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
     expedition: null,
@@ -474,6 +478,7 @@ export function hatchEggs(content: Content, run: RunState): void {
     layEgg(content, run, species.id, { level, left, unit: 'stage', source: 'Mystery Egg', shinyMultiplier: runAttributeEffects(content, run).shinyChance * shiny }, rng);
   }
   tickEggs(content, run, 'stage');
+  growGarden(run);
 }
 
 /** Starts a stage (mutates `run`): picks a fresh theme and gym leader, generates the map, and shows it. */
@@ -1007,9 +1012,11 @@ export function raidPreview(content: Content, current: RunState, sideId: string)
   const notes = def.grand ? grandNotes(content, current, speciesId) : gangNotes(content, current, def);
   const returning = Boolean(side.returning);
   if (returning) notes.push('It got away before, and it is back, stronger.');
+  const badges = current.badges.length;
+  const scaled = scaledRaid(content, def, badges);
   return {
-    id: def.id, name: def.name, tier: def.tier, blurb: [def.blurb, ...notes].join(' '), speciesId, level: level + (returning ? RETURNING_LEVEL_BONUS : 0),
-    entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def), kind: def.kind, returning,
+    id: def.id, name: def.name, tier: def.tier, blurb: [def.blurb, ...notes].join(' '), speciesId, level: raidBadgeLevel(content, current, def, level + (returning ? RETURNING_LEVEL_BONUS : 0)),
+    entryCost: def.entryCost, mechanics: describeMechanics(scaled, { content, badges }), rewards: describeRewards(scaled), kind: def.kind, returning,
     approaches: def.approaches.map((a) => ({ id: a.id, label: a.label, text: a.text, cost: a.cost, leave: a.leave })),
   };
 }
@@ -1055,9 +1062,14 @@ export function enterRaid(content: Content, current: RunState, sideId: string, a
 }
 
 /** Builds the raid battle (mutates `run`): the boss with its HP pool, the raid state and its field. */
-export function startRaidBattle(content: Content, run: RunState, def: RaidDef, speciesId: string, level: number, opts: { approach?: RaidApproach | null; returning?: boolean } = {}): void {
+export function startRaidBattle(content: Content, run: RunState, baseDef: RaidDef, speciesId: string, baseLevel: number, opts: { approach?: RaidApproach | null; returning?: boolean } = {}): void {
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
+  // Badges tune the boss and its mechanics (core/raid/scaling.ts); the count is kept on the fight so a reload never changes it.
+  const badges = run.badges.length;
+  const def = scaledRaid(content, baseDef, badges);
+  const level = raidBadgeLevel(content, run, baseDef, baseLevel);
   const boss = newMon(content, run, speciesId, level, 'e');
+  applyBossAbility(content, baseDef, boss, badges);
   auditEncounter(content, 'raid', boss, 'raid-boss');
   applyBossHp(def, boss);
   const approach = opts.approach ?? null;
@@ -1072,7 +1084,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   if (approach?.startHp) boss.hp = Math.max(1, Math.floor(boss.hp * approach.startHp));
   run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
   run.battle.ai = 0.6;
-  run.battle.raid = freshRaidBattle(def);
+  run.battle.raid = freshRaidBattle(def, badges);
   run.battle.raid.lead = run.party[activeIndex]!.uid;
   run.battle.raid.cheerLevel = cheerLevelFor(run.raids.won);
   const raidState = run.battle.raid;
@@ -1244,7 +1256,7 @@ function failRaid(content: Content, run: RunState): void {
 
 /** Raid victory: money, item rolls (a seeded generator), extra draft choices and maybe the boss joining (applies once: the battle is cleared right after). */
 function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number; notes?: string[] } {
-  const def = getRaid(content, battle.raid!.id);
+  const def = raidDef(content, battle.raid!);
   const boss = currentEnemy(battle);
   const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent * (battle.raid!.rivalFinished ? 0.5 : 1)) / 100);
   run.money += money;
@@ -1336,7 +1348,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const [lo, hi] = content.balance.difficulty.harderBonus;
       const bonus = (node.harder ? r.int(lo, hi) : 0) + wildLevelBonus(content, run, mods);
       const shiny = runAttributeEffects(content, run).shinyChance * wildShinyMultiplier(content, run, mods);
-      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], shiny);
+      return planWild(content, archetype, theme, scale, bonus, r, run.regionOrder[run.regionIndex], shiny, (id) => periodWildWeight(content, run, id));
     });
     let speciesId = lockSpecies(content, run, wildSpeciesWithItems(content, run, theme, plan.speciesId, mapItemRng(run, node.id), mods), `wild:${node.id}`);
     const legendary = rollLegendaryWild(content, new Rng(hashSeed(`${run.seed}:legendary:${run.encountersCompleted}:${node.id}`)), run.regionIndex, encounterWeightPerk(archetype.modifiers, 'legendary'));
@@ -1367,7 +1379,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     const doublesCfg = content.balance.doubles;
     const pairRng = new Rng(hashSeed(`${run.seed}::wild-doubles::${run.regionIndex}::${stage.index}::${node.id}::${run.encountersCompleted}`));
     if (!legendary && !run.battle.mapItems && stageNumber >= doublesCfg.fromStage && run.party.filter((m) => m.hp > 0).length >= 2 && pairRng.chance(doublesCfg.wildChance)) {
-      const second = planWild(content, archetype, theme, scale, 0, pairRng, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance);
+      const second = planWild(content, archetype, theme, scale, 0, pairRng, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance, (id) => periodWildWeight(content, run, id));
       const partner = newMon(content, run, lockSpecies(content, run, second.speciesId, `wild2:${node.id}`), Math.min(second.level, enemy.level + 2), 'e');
       partner.shiny = second.shiny;
       if (partner.shiny) countShiny(run, partner.speciesId);
@@ -1693,7 +1705,7 @@ export function shopSaleItem(content: Content, run: RunState): string | null {
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
   const markup = isBlackMarket(content, run, entry) ? blackMarketMarkup(runPerks(content, run))! : 1;
-  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run) * (shopSaleItem(content, run) === entry.item ? 1 - content.balance.shopSale.discount : 1));
+  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run) * shopHoursMultiplier(content, run) * (shopSaleItem(content, run) === entry.item ? 1 - content.balance.shopSale.discount : 1));
 }
 
 /** Base price for an item the shop doesn't list (urge items and other finds), by rarity. */
@@ -2066,7 +2078,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
   const archetype = runArchetype(content, run);
   const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
-  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (getMode(run.rules.modeId)?.xpScale ?? 1) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
+  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (getMode(run.rules.modeId)?.xpScale ?? 1) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.autoUsed ? content.balance.difficulty.autoBattleXp : 1) * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);
@@ -2766,6 +2778,17 @@ export function setLead(current: RunState, partyIndex: number): RunState {
   const run = structuredClone(current);
   const [mon] = run.party.splice(partyIndex, 1);
   run.party.unshift(mon!);
+  return run;
+}
+
+/** Moves the party member at `from` to position `to` (the others shift), so the party can be rearranged. Slot 0 leads. */
+export function moveParty(current: RunState, from: number, to: number): RunState {
+  assertPhase(current, 'reward', 'decision', 'map', 'shop');
+  if (!current.party[from]) throw new Error('No Pokémon in that slot');
+  if (to < 0 || to >= current.party.length) throw new Error('No such party slot');
+  const run = structuredClone(current);
+  const [mon] = run.party.splice(from, 1);
+  run.party.splice(to, 0, mon!);
   return run;
 }
 

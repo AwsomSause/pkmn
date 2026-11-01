@@ -135,8 +135,8 @@
       "status": "supported",
       "weight": 1,
       "minBadges": 0,
-      "reusable": false,
-      "blurb": "A berry grows here, picked by the seed. Pay a little to hand it to one Pokémon as its held berry."
+      "reusable": true,
+      "blurb": "A berry grows here, picked by the seed: pay a little to hand it to one Pokémon. Or plant a held berry in the garden (3 plots, ripe in 1-2 stages, mutations possible) and harvest it at any Berry Garden."
     },
     {
       "id": "safari",

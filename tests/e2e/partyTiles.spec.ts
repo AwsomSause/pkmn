@@ -29,7 +29,7 @@ test('party rows draw the icon tile behind each Pokémon', async ({ page }) => {
   const tiles = await page.evaluate(() => {
     let n = 0;
     const walk = (o: any) => {
-      if (o.name === 'party-icon-tile') n++;
+      if (o.name === 'party-row-0') n++;
       for (const c of o.list ?? []) walk(c);
     };
     for (const s of (window as any).__pkr.game.scene.getScenes(true)) for (const o of s.children.list) walk(o);

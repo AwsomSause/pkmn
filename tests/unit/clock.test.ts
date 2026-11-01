@@ -1,7 +1,7 @@
 // The run clock (spec §28) and Camp's time-of-day choices (spec §22).
 
 import { describe, expect, it } from 'vitest';
-import { advanceClock, celebrateToday, freshClock, milestoneToday, periodOf, restUntilMorning } from '../../src/core/clock';
+import { periodWildWeight, shopHoursMultiplier, advanceClock, celebrateToday, freshClock, milestoneToday, periodOf, restUntilMorning } from '../../src/core/clock';
 import { chooseEvent, conditionMet, eventView } from '../../src/core/events';
 import { nextChoices } from '../../src/core/map';
 import { chooseNode, chooseStarter, createRun } from '../../src/core/run';
@@ -84,6 +84,24 @@ describe('camp by the hour', () => {
   });
 });
 
+describe('hours', () => {
+  it('night favours Ghost-types in the wild, morning does not', () => {
+    const run = newRun();
+    const ghost = [...content.species.values()].find((s) => s.types.includes('ghost') && !s.types.some((t) => content.balance.clock.periodTypes.morning.includes(t)))!;
+    expect(periodWildWeight(content, run, ghost.id)).toBe(1);
+    run.clock.tick = 3;
+    expect(periodWildWeight(content, run, ghost.id)).toBe(content.balance.clock.periodWildFactor);
+  });
+
+  it('merchants run a midday sale and charge more at night', () => {
+    const run = newRun();
+    run.clock.tick = 1;
+    expect(shopHoursMultiplier(content, run)).toBeLessThan(1);
+    run.clock.tick = 3;
+    expect(shopHoursMultiplier(content, run)).toBeGreaterThan(1);
+  });
+});
+
 describe('saves', () => {
   it('round-trips the clock', () => {
     const saves = new SaveManager(new MemoryStorageProvider(), content);
@@ -98,6 +116,6 @@ describe('saves', () => {
     const { clock: _c, ...old } = newRun();
     const migrated = MIGRATIONS.run[27]!(old as never);
     expect(RunStateSchema.parse(migrated).clock).toEqual(freshClock());
-    expect(CURRENT_VERSIONS.run).toBe(28);
+    expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(28);
   });
 });

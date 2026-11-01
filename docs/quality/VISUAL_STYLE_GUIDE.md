@@ -27,6 +27,7 @@ Each region tints the sky (`regionIdentity(...).sky`) and each stage's map takes
 - Idle: `floatIdle` and `breathe` (Sine.easeInOut, 1.6–1.8 s, yoyo).
 - Ambience drift: Sine.easeInOut / Linear, 5–10 s, repeat.
 - Battle speed scales tweens and timers (Showcase 0.75×, Normal 1×, Fast 2×, Quick 3×); outcomes never depend on it.
+- Menu motion (spec §24, Wii-style): use `ui/wiiMotion.ts` (`WiiCursor`, `popIn`, `glideIn`, `revealPop`, `iconHop`, `nudge`) with timings from `core/presentation/uiMotion.ts` `UI_TIMING`; never hand-pick new durations. Hover/press/release on clickable things is automatic. Animate icons only when they are selected or revealed, never constantly. Menu animations off → no menu motion.
 - Settings that gate motion: Animations (Full / Reduced / Off), Flashes, Screen shake, Particles. The Reduced Motion preset turns all of them down.
 
 ## Rules

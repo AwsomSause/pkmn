@@ -1,0 +1,12 @@
+{
+  "maxPlots": 3,
+  "growStages": { "common": 1, "uncommon": 2, "rare": 2 },
+  "wateredFaster": 1,
+  "waterTypes": ["water", "grass"],
+  "harvestBase": 2,
+  "soil": { "rich": { "types": ["grass", "ground", "water", "bug"], "bonusYield": 1, "mutationMultiplier": 1 }, "poor": { "types": ["fire", "rock", "ice", "steel"], "bonusYield": 0, "mutationMultiplier": 0.5 } },
+  "mutationChance": 0.15,
+  "mutatedBonus": 1,
+  "crossChance": 0.3,
+  "crossPool": ["lansat-berry", "starf-berry", "custap-berry", "enigma-berry", "micle-berry", "jaboca-berry", "rowap-berry"]
+}

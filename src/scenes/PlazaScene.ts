@@ -14,6 +14,7 @@ import { AERO, drawGlass, type MotionLevel } from '../ui/aero';
 import { onInputAction } from '../ui/input';
 import { Picker } from '../ui/partyPanel';
 import { pokemonIcon } from '../ui/sprites';
+import { setAmbience, stopAmbience } from '../ui/procAudio';
 import { GAME_HEIGHT, GAME_WIDTH, mixColor, textStyle } from '../ui/theme';
 import { sceneForRun } from './routing';
 
@@ -74,6 +75,8 @@ export class PlazaScene extends Phaser.Scene {
     this.bubble = null;
     this.bubbleTimer = null;
     playMusicLazy(this, 'bgm.shop');
+    if (this.motion !== 'off') setAmbience(this, 'crowd');
+    this.events.once('shutdown', () => stopAmbience());
     const region = currentRegion(session.content, run);
     const identity = regionIdentity(region.id);
 
@@ -151,6 +154,8 @@ export class PlazaScene extends Phaser.Scene {
     g.fillStyle(0x7a8498, 1).fillEllipse(x, y, 130, 36);
     g.fillStyle(0x58b8e8, 0.9).fillEllipse(x, y - 2, 112, 28);
     g.fillStyle(0x9aa4b8, 1).fillRect(x - 6, y - 40, 12, 38);
+    const spot = this.add.zone(x, y - 10, 150, 70).setInteractive({ useHandCursor: true }).setDepth(-28);
+    spot.on('pointerdown', () => !this.picker && !this.busy && this.openDistrict(this.layout.districts.find((d) => d.id === 'gathering')!));
     if (this.motion === 'off') return;
     for (let i = 0; i < 6; i++) {
       const drop = this.add.circle(x, y - 40, 3, 0xbfe8ff, 0.9).setDepth(-29);
@@ -250,14 +255,20 @@ export class PlazaScene extends Phaser.Scene {
       } else {
         const g = this.add.graphics();
         g.fillStyle(0x000000, 0.25).fillEllipse(0, 2, 22, 8);
-        g.fillStyle(w.color, 1).fillRoundedRect(-7, -26, 14, 22, 5);
-        g.fillStyle(0xf4d8b8, 1).fillCircle(0, -32, 7);
-        if (w.kind === 'rare') g.lineStyle(2, 0xfff0a0, 1).strokeCircle(0, -32, 11);
         node.add(g);
+        const art = this.trainerArt(w.spriteId);
+        if (art) {
+          node.add(art);
+        } else {
+          g.fillStyle(w.color, 1).fillRoundedRect(-7, -26, 14, 22, 5);
+          g.fillStyle(0xf4d8b8, 1).fillCircle(0, -32, 7);
+        }
+        if (w.kind === 'rare') g.lineStyle(2, 0xfff0a0, 1).strokeEllipse(0, -26, 34, 56);
         if (w.kind === 'rival' || w.kind === 'foe' || w.kind === 'rare') node.add(this.add.text(0, -52, w.name, textStyle(11, '#ffffff', { stroke: '#101028', strokeThickness: 3 })).setOrigin(0.5));
       }
       node.setSize(28, 44).setInteractive({ useHandCursor: true });
       node.on('pointerdown', () => !this.picker && !this.busy && this.say(w.line, node.x, node.y - 60, 4000));
+      if (w.kind === 'rare') node.on('pointerup', () => !this.picker && !this.busy && this.time.delayedCall(1400, () => !this.picker && this.openDistrict(this.layout.districts.find((d) => d.id === 'gathering')!)));
       this.nodes.set(w.id, node);
       if (w.follows && byId.has(w.follows)) this.followers.push({ mon: node, owner: w.follows });
       else this.startWalk(node, w, hx, rng);
@@ -268,6 +279,18 @@ export class PlazaScene extends Phaser.Scene {
       }
     }
     this.chatLoop();
+  }
+
+  /** A trainer class's sprite, fitted to about 54 px tall; null when the art is not loaded (a drawn figure is used then). */
+  private trainerArt(assetId: string | undefined): Phaser.GameObjects.Sprite | Phaser.GameObjects.Image | null {
+    if (!assetId || !this.textures.exists(assetId)) return null;
+    const tex = this.textures.get(assetId);
+    if (tex.frameTotal === 0) return null;
+    const names = tex.getFrameNames().sort();
+    const art = names.length > 0 ? this.add.image(0, 4, assetId, names[0]) : this.add.image(0, 4, assetId);
+    art.setOrigin(0.5, 1);
+    art.setScale(54 / Math.max(1, art.height));
+    return art;
   }
 
   private startWalk(node: Phaser.GameObjects.Container, w: Wanderer, hx: number, rng: Rng): void {

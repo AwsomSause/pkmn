@@ -2275,6 +2275,103 @@
     "themed",
     "research"
    ]
+  },
+  {
+   "id": "berry-festival",
+   "version": 1,
+   "name": "Great Berry Festival",
+   "kind": "themed",
+   "description": "A spring berry festival: stalls, contests, thieves, a guardian tree and a berry research tent. Plant, harvest and breed rare berries.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "05-08",
+    "end": "05-22"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Berries heal 20% more, Grass-types appear 30% more often, and the festival stops (stalls, contest, thief, grove, research tent) join the map.",
+   "modifiers": [
+    {
+     "kind": "healingMultiplier",
+     "value": 1.2
+    },
+    {
+     "kind": "typeEncounterWeight",
+     "type": "grass",
+     "value": 1.3
+    }
+   ],
+   "mapEvents": [
+    "berry-fest-gates",
+    "berry-fest-contest",
+    "berry-fest-thief",
+    "berry-fest-guardian",
+    "berry-fest-research",
+    "berry-fest-merchant",
+    "berry-fest-shortage",
+    "berry-fest-grove"
+   ],
+   "objectives": [
+    {
+     "id": "stops",
+     "text": "Find 4 clues at the festival stops",
+     "counter": "eventClues",
+     "atLeast": 4,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "harvest",
+     "text": "Harvest 3 garden plots",
+     "counter": "berriesHarvested",
+     "atLeast": 3,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "hatch",
+     "text": "Hatch 1 Egg",
+     "counter": "eggsHatched",
+     "atLeast": 1,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "events",
+     "text": "Finish 8 map events",
+     "counter": "eventsCompleted",
+     "atLeast": 8,
+     "reward": {
+      "researchPoints": 80
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 350,
+    "candies": 25,
+    "title": "Berry Baron",
+    "pool": "type-grass"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 220,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#e0508a",
+    "icon": "item.sweet_apple"
+   },
+   "contentTags": [
+    "berries",
+    "festival"
+   ]
   }
  ]
 }

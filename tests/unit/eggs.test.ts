@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { createBattle } from '../../src/core/battle/engine';
 import { freshSos } from '../../src/core/battle/sos';
 import { applyCatalog, getCatalogEntry } from '../../src/core/catalog';
-import { eggStatus, hatchEgg, HATCH_FRIENDSHIP, layEgg, tickEggs } from '../../src/core/eggs';
+import { eggLabel, eggProgress, eggRevealed, eggStatus, eggWarmth, hatchEgg, HATCH_FRIENDSHIP, layEgg, tickEggs } from '../../src/core/eggs';
 import { chooseEvent } from '../../src/core/events';
 import { eggMoveOptions } from '../../src/core/mastery';
 import { createPokemon } from '../../src/core/pokemon';
@@ -114,5 +114,67 @@ describe('Eggs', () => {
     expect(run.itemCounters?.['egg:7']).toBeUndefined();
     expect(run.eggs).toHaveLength(1);
     expect(run.eggs[0]).toMatchObject({ left: 2, unit: 'stage', source: 'Mystery Egg' });
+  });
+});
+
+describe('Egg tiers, warmth and progress', () => {
+  it('only listed origins roll a tier; an unknown origin is always Ordinary', () => {
+    for (let i = 0; i < 20; i++) expect(layEgg(content, newRun(`o${i}`), 'charmander', { level: 5, left: 3, unit: 'stage', source: 'Test' }, rng()).tier).toBe('ordinary');
+  });
+
+  it('tiers come from the run seed alone: same seed, same tier, and the caller rng is not moved', () => {
+    const a = rng('x');
+    const b = rng('x');
+    const e1 = layEgg(content, newRun('t1'), 'charmander', { level: 5, left: 3, unit: 'stage', source: 'Mystery Egg' }, a);
+    const e2 = layEgg(content, newRun('t1'), 'charmander', { level: 5, left: 3, unit: 'stage', source: 'Mystery Egg' }, b);
+    expect(e1).toEqual(e2);
+    const tiers = new Set<string>();
+    for (let i = 0; i < 300; i++) tiers.add(layEgg(content, newRun(`t${i}`), 'charmander', { level: 5, left: 3, unit: 'stage', source: 'Mystery Egg' }, rng()).tier);
+    expect(tiers.has('ordinary')).toBe(true);
+    expect(tiers.has('rare') || tiers.has('exceptional')).toBe(true);
+  });
+
+  it('a forced rare Egg takes longer, carries more egg moves, and hatches stronger and friendlier', () => {
+    const run = newRun();
+    const egg = layEgg(content, run, 'charmander', { level: 8, left: 3, unit: 'stage', source: 'Test', tier: 'exceptional' }, rng());
+    expect(egg).toMatchObject({ tier: 'exceptional', left: 5, total: 5, hidden: true });
+    const mon = hatchEgg(content, run, egg);
+    expect(mon).toMatchObject({ eggTier: 'exceptional', level: 11, abilitySlot: -1 });
+    expect(mon.friendship).toBe(200);
+  });
+
+  it('a Mystery origin hides its tier until it is half hatched', () => {
+    const run = newRun();
+    const egg = layEgg(content, run, 'charmander', { level: 8, left: 4, unit: 'stage', source: 'Hidden Nest', tier: 'rare' }, rng());
+    expect(eggRevealed(egg)).toBe(false);
+    expect(eggLabel(egg)).toContain('Mystery Egg');
+    const half = { ...egg, left: Math.floor(egg.total! / 2) };
+    expect(eggRevealed(half)).toBe(true);
+    expect(eggLabel(half)).toContain('Rare Egg');
+    expect(eggProgress({ ...egg, left: egg.total! })).toBe(0);
+  });
+
+  it('a warm party Pokémon (Flame Body) hatches Eggs faster: two warmth make one extra step', () => {
+    const run = newRun();
+    const lead = run.party[0]!;
+    lead.speciesId = 'magmar';
+    lead.abilitySlot = 0;
+    expect(eggWarmth(content, run)).toBe(1);
+    layEgg(content, run, 'charmander', { level: 5, left: 4, unit: 'stage', source: 'Test' }, rng());
+    tickEggs(content, run, 'stage');
+    tickEggs(content, run, 'stage');
+    expect(run.eggs[0]!.left).toBe(1); // 4 - 2 steps - 1 bonus step
+    lead.hp = 0;
+    expect(eggWarmth(content, run)).toBe(0);
+  });
+
+  it('old Eggs without tier fields still load as Ordinary', () => {
+    const run = newRun();
+    layEgg(content, run, 'charmander', { level: 5, left: 3, unit: 'stage', source: 'Test' }, rng());
+    const raw = JSON.parse(JSON.stringify(run));
+    for (const k of ['tier', 'kind', 'total', 'heat', 'hidden', 'blissful']) delete raw.eggs[0][k];
+    const loaded = RunStateSchema.parse(raw);
+    expect(loaded.eggs[0]).toMatchObject({ tier: 'ordinary', kind: 'standard', heat: 0, hidden: false, blissful: false });
+    expect(eggProgress(loaded.eggs[0]!)).toBe(0);
   });
 });

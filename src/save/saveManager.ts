@@ -28,7 +28,7 @@ export const KEY_PREFIX = 'pkr';
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 28, settings: 9, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 29, settings: 11, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -282,6 +282,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     26: (data) => ({ ...(data as Json), partyLife: createPartyLife() }),
     // v28 (day counter): runs started before it begin at day 1, morning.
     27: (data) => ({ ...(data as Json), clock: { day: 1, tick: 0, celebrated: [] } }),
+    // v29 (Auto-Battle): an optional `autoUsed` on a battle; older runs have none.
+    28: (data) => data as Json,
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.
@@ -300,6 +302,10 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     7: (data) => ({ ...(data as Json), shakeIntensity: (data as { effectIntensity?: number }).effectIntensity ?? 1, reduceParticles: false }),
     // v9 (animation settings, spec 6.6): every animation switch starts on, speed and intensity normal.
     8: (data) => ({ ...(data as Json), abilityAnimations: true, battleTextAnimations: true, interactionAnimations: true, hyperAnimations: true, rivalAnimations: true, evolutionAnimations: true, battleScreenEffects: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false }),
+    // v10 (Auto-Battle): off by default, explanations on.
+    9: (data) => ({ ...(data as Json), autoBattle: false, autoExplain: true }),
+    // v11 (Wii-style menu motion, spec §24): menu animations start on.
+    10: (data) => ({ ...(data as Json), menuAnimations: true }),
   },
   meta: {},
   timeline: {},
@@ -322,7 +328,7 @@ export type LoadResult<T> =
 
 export type SaveResult = { ok: true } | { ok: false; reason: string };
 
-export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, shakeIntensity: 1, reduceParticles: false, textSpeed: 'instant', autoAdvance: false, messageDelay: 'normal', highContrast: false, typeMarkers: false, uiScale: 'full', spriteAnimations: true, damageNumbers: true, catchDetail: 'full', battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero', abilityAnimations: true, battleTextAnimations: true, interactionAnimations: true, hyperAnimations: true, rivalAnimations: true, evolutionAnimations: true, battleScreenEffects: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false };
+export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, shakeIntensity: 1, reduceParticles: false, textSpeed: 'instant', autoAdvance: false, messageDelay: 'normal', highContrast: false, typeMarkers: false, uiScale: 'full', spriteAnimations: true, damageNumbers: true, catchDetail: 'full', battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero', abilityAnimations: true, battleTextAnimations: true, interactionAnimations: true, hyperAnimations: true, rivalAnimations: true, evolutionAnimations: true, battleScreenEffects: true, menuAnimations: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false, autoBattle: false, autoExplain: true };
 
 /** True when the browser asks for less motion (then new players start with reduced battle animations). */
 function prefersReducedMotion(): boolean {

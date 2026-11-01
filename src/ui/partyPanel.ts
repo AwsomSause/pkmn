@@ -18,6 +18,7 @@ import { itemVisual, pokemonIcon } from './sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, STATUS_LABELS, textStyle } from './theme';
 import { Bar, drawPanel, focusFrame, paintWindow } from './widgets';
 import { AERO, drawGlass, ensureRowFrames, paintGlass } from './aero';
+import { glideIn, iconHop } from './wiiMotion';
 
 const DEPTH = 100;
 
@@ -55,10 +56,17 @@ export interface PickerConfig {
 const LIST_TOP = 82;
 const LIST_BOTTOM = GAME_HEIGHT - 84;
 
+/** What a screen needs from a modal menu: keyboard input and a way to close it (the Picker and the Pokémon screen). */
+export interface PickerLike {
+  handle(action: InputAction): void;
+  close(): void;
+}
+
 /** A modal list of rows. Keyboard: arrows to move, confirm to pick, back to cancel. Mouse: hover and click. */
-export class Picker {
+export class Picker implements PickerLike {
   private readonly root: Phaser.GameObjects.Container;
   private readonly highlights: Phaser.GameObjects.Graphics[] = [];
+  private readonly boxes: Phaser.GameObjects.Container[] = [];
   private readonly zones: Phaser.GameObjects.Zone[] = [];
   /** Rows sit in a scrolling list when there are more than fit on screen. */
   private readonly list: Phaser.GameObjects.Container;
@@ -68,6 +76,8 @@ export class Picker {
 
   constructor(private readonly scene: Phaser.Scene, private readonly config: PickerConfig) {
     this.root = scene.add.container(0, 0).setDepth(DEPTH);
+    // Popup opening (spec §24): the window rises into place and fades in; input works straight away.
+    glideIn(scene, this.root, 0, 14, 0, 'popupOpen');
     const shade = scene.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
     this.root.add(shade);
     const glass = config.glass === true;
@@ -140,6 +150,7 @@ export class Picker {
       box.add(zone);
       this.zones.push(zone);
       this.list.add(box);
+      this.boxes.push(box);
     });
 
     // The message box along the bottom, like the games' text window.
@@ -163,6 +174,8 @@ export class Picker {
     if (sound && i !== this.index) playSfx(this.scene, 'ui.cursor', 0.5);
     this.index = i;
     this.highlights.forEach((h, n) => h.setVisible(n === i));
+    // The row's icon hops when the player moves onto it (not on the first, automatic focus).
+    if (sound && this.boxes[i]) iconHop(this.scene, this.boxes[i]!);
     this.scrollTo(i);
     const row = this.config.rows[i]!;
     this.footer.setText(row.problem ?? row.hint ?? '');

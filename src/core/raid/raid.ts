@@ -13,11 +13,17 @@ import type { TypeName } from '../contentSchema';
 import { isUnlockedAt } from '../availability';
 import { levelCap } from '../regions';
 import type { RaidApproach, RaidDef, RaidPhase } from './schema';
+import { badgeLevelBonus, raidTierName, scaledRaid, tierOpenAtBadges } from './scaling';
 
 export function getRaid(content: Content, id: string): RaidDef {
   const raid = content.raids.raids.find((r) => r.id === id);
   if (!raid) throw new Error(`Unknown raid "${id}"`);
   return raid;
+}
+
+/** The raid as it is in this fight: the definition scaled for the badge count the fight started with. */
+export function raidDef(content: Content, raid: Pick<RaidBattle, 'id' | 'badges'>): RaidDef {
+  return scaledRaid(content, getRaid(content, raid.id), raid.badges);
 }
 
 /** The raid tiers a den can have in a region (the last list covers later regions). */
@@ -34,16 +40,20 @@ export function highestOpenTier(content: Content, run: Partial<Pick<RunState, 'r
 }
 
 /** Which raid sits in a den: a seeded pick among the raids of the allowed tiers (stable for a given run, stage and den). */
-export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regionIndex'> & Partial<Pick<RunState, 'raids'>>, key: string): RaidDef {
+export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regionIndex'> & Partial<Pick<RunState, 'raids' | 'badges'>>, key: string): RaidDef {
   const open = highestOpenTier(content, run);
-  const region = tiersForRegion(content, run.regionIndex).filter((t) => t <= open);
-  // A region whose tiers are all still closed gets the highest open tier instead.
-  const tiers = region.length > 0 ? region : [Math.max(...content.raids.raids.filter((r) => !r.grand && !r.gang && r.tier <= open && !r.legendary).map((r) => r.tier))];
+  // Badges open the tiers one by one (spec 31): a tier needs its badge count as well as its region.
+  const badges = run.badges?.length ?? Infinity;
+  const regionOpen = tiersForRegion(content, run.regionIndex).filter((t) => t <= open);
+  const region = regionOpen.filter((t) => tierOpenAtBadges(content.raids.badgeScaling, t, badges));
+  // A region whose tiers are all still closed gets the highest open tier instead (the badge gate still applies when the region has open tiers).
+  const usable = content.raids.raids.filter((r) => !r.grand && !r.gang && !r.legendary && r.tier <= open && (regionOpen.length === 0 || tierOpenAtBadges(content.raids.badgeScaling, r.tier, badges)));
+  const tiers = region.length > 0 ? region : [Math.max(1, ...usable.map((r) => r.tier))];
   const tiered = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand && !r.gang && !r.legendary);
   // Spreadsheet availability: a den's boss must be unlocked at the level it would fight at (else the tier's dens stay as they were).
   const cap = levelCap(content, run.regionIndex);
   const end = Math.max(1, cap - content.balance.difficulty.capMargin);
-  const unlocked = tiered.filter((r) => r.species.every((id) => isUnlockedAt(content, id, raidLevel(r, end, cap))));
+  const unlocked = tiered.filter((r) => r.species.every((id) => isUnlockedAt(content, id, raidLevel(r, end, cap) + (Number.isFinite(badges) ? Math.min(cap - raidLevel(r, end, cap), badgeLevelBonus(content.raids.badgeScaling, r, badges)) : 0))));
   const pool = unlocked.length > 0 ? unlocked : tiered;
   const rng = new Rng(hashSeed(`${run.seed}::raid-pick::${key}`));
   return rng.pick(pool.length > 0 ? pool : content.raids.raids.filter((r) => !r.gang && !r.legendary));
@@ -59,9 +69,10 @@ export function raidLevel(def: RaidDef, scaleEnd: number, cap: number): number {
   return Math.max(2, Math.min(cap, Math.round(scaleEnd) + def.levelBonus));
 }
 
-export function freshRaidBattle(def: RaidDef): RaidBattle {
+export function freshRaidBattle(def: RaidDef, badges = 0): RaidBattle {
   return {
     id: def.id,
+    badges,
     pendingShields: def.shield ? [...def.shield.at].sort((a, b) => b - a) : [],
     shieldHp: 0,
     shieldMax: 0,
@@ -109,7 +120,7 @@ export function absorbHit(content: Content, battle: BattleState, boss: PokemonIn
     return 0;
   }
   const next = raid.pendingShields[0];
-  const def = getRaid(content, raid.id);
+  const def = raidDef(content, raid);
   if (next !== undefined && def.shield) {
     const floorHp = Math.ceil(maxHp(content, boss) * next);
     if (boss.hp - amount < floorHp) {
@@ -178,7 +189,7 @@ export function raidItemProblem(content: Content, battle: BattleState, isHealing
 export function chargedDamage(content: Content, battle: BattleState, amount: number): number {
   const raid = battle.raid;
   if (!raid || !raid.charging) return amount;
-  const tele = getRaid(content, raid.id).telegraph;
+  const tele = raidDef(content, raid).telegraph;
   // Counterplay: a boss under sleep, paralysis or freeze loses its charge.
   const boss = battle.enemyTeam[battle.enemyIndex];
   const status = boss?.status?.id;
@@ -200,7 +211,7 @@ export type RaidAction =
 export function advanceRaid(content: Content, battle: BattleState, boss: PokemonInstance): RaidAction[] {
   const raid = battle.raid;
   if (!raid) return [];
-  const def = getRaid(content, raid.id);
+  const def = raidDef(content, raid);
   const actions: RaidAction[] = raid.notes.map((n) => ({ kind: 'note', tone: n.tone, text: n.text }));
   raid.notes = [];
   if (raid.cheerOffense > 0) raid.cheerOffense -= 1;
@@ -242,7 +253,7 @@ export function advanceRaid(content: Content, battle: BattleState, boss: Pokemon
 export function takeExtraAction(content: Content, battle: BattleState, boss: PokemonInstance): boolean {
   const raid = battle.raid;
   if (!raid || boss.hp <= 0) return false;
-  const extra = getRaid(content, raid.id).extraActions;
+  const extra = raidDef(content, raid).extraActions;
   if (!extra || raid.extraUsed >= extra.max || boss.hp / maxHp(content, boss) > extra.belowHp) return false;
   raid.extraUsed += 1;
   return true;
@@ -264,8 +275,9 @@ export interface RaidPreview {
   approaches: { id: string; label: string; text: string; cost: number; leave: boolean }[];
 }
 
-export function describeMechanics(def: RaidDef): string[] {
-  const out = [`HP pool ×${(1 + def.hpBoostPercent / 100).toFixed(1)}`];
+export function describeMechanics(def: RaidDef, scale?: { content: Content; badges: number }): string[] {
+  const out = scale ? [`${raidTierName(scale.content.raids.badgeScaling, def)} raid, scaled for ${scale.badges} badge${scale.badges === 1 ? '' : 's'}`] : [];
+  out.push(`HP pool ×${(1 + def.hpBoostPercent / 100).toFixed(1)}`);
   if (def.shield) out.push(`${def.shield.at.length} shield${def.shield.at.length > 1 ? 's' : ''}`);
   if (def.phases.length > 0) out.push(`${def.phases.length} phase${def.phases.length > 1 ? 's' : ''}`);
   if (def.telegraph) out.push(`charged attack (${def.telegraph.interruptedBy.map((s) => ({ slp: "sleep", par: "paralysis", frz: "freeze" })[s]).join(', ')} interrupts it)`);

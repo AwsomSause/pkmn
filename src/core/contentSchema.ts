@@ -483,6 +483,8 @@ export const PlainAttributeSchema = z.enum(PLAIN_ATTRIBUTES);
 
 /** Things the game counts during a run; each run's counts are added to the profile when it ends. */
 export const BASE_COUNTER_NAMES = [
+  'eggsHatched',
+  'berriesHarvested',
   'battlesWon',
   'wildDefeated',
   'trainersDefeated',
@@ -1994,6 +1996,8 @@ export const BalanceSchema = z.object({
     levelCapStep: z.number().int().positive(),
     /** Multiplies all experience gained (the single knob for how fast the party levels). */
     xpScale: z.number().positive(),
+    /** Auto-Battle (spec §32): a battle where the Pokémon chose their own actions gives this share of the EXP. */
+    autoBattleXp: z.number().min(0).max(1).default(0.5),
     /** Party levels stop at the stage's last enemy level plus this many (the region cap still applies). */
     stageCapMargin: z.number().int().min(0),
     /** Party members that did not battle always get this percent of the EXP (the Exp. Share item can raise it). */
@@ -2106,7 +2110,7 @@ export const BalanceSchema = z.object({
   /** Exploration (core/world.ts): fog of war, weather fronts, roaming Legendaries and checkpoint camps. */
   world: WorldBalanceSchema,
   /** The day counter and day/night cycle (core/clock.ts): four times of day, a step of the map takes `ticksPerStep` of them. */
-  clock: z.object({ ticksPerStep: z.number().int().min(0).max(4), milestoneDays: z.array(z.number().int().min(2)).min(1) }),
+  clock: z.object({ ticksPerStep: z.number().int().min(0).max(4), milestoneDays: z.array(z.number().int().min(2)).min(1), /** Types that turn up more in the wild at each time of day. */ periodTypes: z.object({ morning: z.array(TypeNameSchema), afternoon: z.array(TypeNameSchema), evening: z.array(TypeNameSchema), night: z.array(TypeNameSchema) }), periodWildFactor: z.number().min(1), /** Merchants' prices by the hour (1 = normal). */ shopHours: z.object({ morning: z.number().positive(), afternoon: z.number().positive(), evening: z.number().positive(), night: z.number().positive() }) }),
   attributeGrowth: z.array(
     z.object({
       attribute: AttributeKeySchema,
@@ -2455,7 +2459,9 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('research'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('levels'), amount: z.number().int().positive(), who: z.enum(['lead', 'party']).default('lead') }),
   /** A Pokémon joins (or goes to storage when the party is full): a listed species, or one of the types, or the stage's theme. */
-  z.object({ kind: z.literal('join'), species: z.array(z.string()).default([]), types: z.array(TypeNameSchema).default([]), levelBonus: z.number().int().default(0), shinyMultiplier: z.number().min(1).default(1), shadow: z.boolean().default(false), blissful: z.boolean().default(false) }),
+  z.object({ kind: z.literal('join'), species: z.array(z.string()).default([]), types: z.array(TypeNameSchema).default([]), levelBonus: z.number().int().default(0), shinyMultiplier: z.number().min(1).default(1), shadow: z.boolean().default(false), blissful: z.boolean().default(false), hiddenAbility: z.boolean().default(false) }),
+  /** A seedling grows in the Berry Garden (core/berries.ts): a held-berry plot, optionally mutated; the garden must have room. */
+  z.object({ kind: z.literal('seedling'), berry: z.string().min(1), mutated: z.boolean().default(false) }),
   /** A sanctuary's blessing (shadowWorld.json): a few battles of a small, narrow boost. */
   z.object({ kind: z.literal('blessing'), id: z.string().min(1) }),
   /** A Blissful awakening: the healthiest, fondest party Pokémon that is not Shadow becomes Blissful for good (needs friendship 150). */
@@ -2469,6 +2475,9 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
     shinyMultiplier: z.number().min(1).default(1),
     left: z.number().int().min(1).default(3),
     unit: z.enum(['battle', 'stage']).default('battle'),
+    /** Which row of data/eggs.json decides its tier odds (default "Event"); `tier` forces one. */
+    origin: z.string().optional(),
+    tier: z.string().optional(),
   }),
   /** The lead learns one of its family's egg moves it doesn't know yet. */
   z.object({ kind: z.literal('eggMove') }),

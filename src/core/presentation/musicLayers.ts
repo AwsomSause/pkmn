@@ -48,7 +48,7 @@ export function motifFor(id: string): number[] {
   return notes;
 }
 
-export type AmbienceId = 'wind' | 'water' | 'cave' | 'storm' | 'fire' | 'forest';
+export type AmbienceId = 'wind' | 'water' | 'cave' | 'storm' | 'fire' | 'forest' | 'crowd';
 
 const AMBIENCE_BY_TYPE: Record<string, AmbienceId> = {
   water: 'water', ice: 'wind', flying: 'wind', fire: 'fire', electric: 'storm', grass: 'forest', bug: 'forest',
@@ -77,4 +77,6 @@ export const AMBIENCE_VOICE: Record<AmbienceId, AmbienceVoice> = {
   storm: { cutoff: 900, swell: 0.2, level: 0.6 },
   fire: { cutoff: 2400, swell: 0.9, level: 0.4 },
   forest: { cutoff: 3000, swell: 0.15, level: 0.3 },
+  /** The Trainer Plaza: a soft murmur of voices with a slow ebb. */
+  crowd: { cutoff: 1100, swell: 0.4, level: 0.5 },
 };

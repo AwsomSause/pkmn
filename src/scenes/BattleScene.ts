@@ -36,7 +36,7 @@ import { pickUieArena } from '../core/arenaStyle';
 import { uieArenaId } from '../assets/catalog';
 import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
-import { cheerProblem, getRaid } from '../core/raid/raid';
+import { cheerProblem, raidDef } from '../core/raid/raid';
 import { playCry, playMusic, playSfx, playSfxLazy } from '../ui/audio';
 import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
 import { regionIdentity } from '../core/presentation/regionIdentity';
@@ -63,6 +63,10 @@ import { itemCount } from '../core/items';
 import { planCues } from '../core/presentation/cues';
 import { DRAMA_LIBRARY, type DramaLine } from '../core/drama';
 import { wouldRefuse } from '../core/bond';
+import { autoBattleProblem, autoProfile, chooseAutoAction, STANCES, STANCE_INFO, stanceOf, type Stance } from '../core/battle/autoBattle';
+import { battleConditions } from '../core/battle/conditions';
+import { moveDescription, moveFlagLabels } from '../core/battle/moveText';
+import { BattleTabs, type BattlePage, type TabsPlace } from '../ui/battleTabs';
 import { animChoice, presentationFor } from '../core/presentation/moveAnims';
 import { moveAnims } from '../data/presentation';
 import { BattleFx } from '../ui/battleFx/battleFx';
@@ -92,6 +96,8 @@ const MESSAGE_Y = 396;
 /** A Dynamaxed Pokémon is drawn this much larger (a stand-in until the M9.5 effect). */
 const DYNAMAX_SCALE = 1.35;
 const COMMAND_X = 588;
+/** How long Auto-Battle's chosen action stays on screen before it is played (Back cancels). */
+const AUTO_PICK_MS = 1100;
 /** Double battles: where each spot stands (left, right) and the databox spots. */
 const DUO_POS = {
   player: [
@@ -148,6 +154,18 @@ export class BattleScene extends Phaser.Scene {
   private history: string[] = [];
   private historyView: Phaser.GameObjects.Container | null = null;
   private menu: Menu | null = null;
+  /** The Attack · Party · Item · Auto tab strip (spec §23). */
+  private tabs!: BattleTabs;
+  /** Auto-Battle (spec §32): its pick is on screen for a moment; Back cancels it. */
+  private autoRunning = false;
+  private autoCancel = false;
+  /** The expanded move details (on the Attack page) or battle Info panel. */
+  private infoOpen = false;
+  private infoPanel: Phaser.GameObjects.Container | null = null;
+  private note!: Phaser.GameObjects.Text;
+  private panelClose: (() => void) | null = null;
+  /** The move highlighted on the Attack page (for the details panel). */
+  private focusedMove = 0;
   private picker: Picker | null = null;
   private moveInfo!: Phaser.GameObjects.Text;
   /** The focused move's type label and category icon (Essentials art). */
@@ -364,6 +382,17 @@ export class BattleScene extends Phaser.Scene {
     this.message = this.add.text(36, MESSAGE_Y + 24, '', textStyle(30, COLORS.textLight, { wordWrap: { width: 520 }, lineSpacing: 6 }));
     this.moveInfo = this.add.text(COMMAND_X + 30, MESSAGE_Y + 24, '', textStyle(24, COLORS.textLight, { lineSpacing: 8 })).setVisible(false);
 
+    this.autoRunning = false;
+    this.autoCancel = false;
+    this.infoOpen = false;
+    this.infoPanel = null;
+    this.tabs = new BattleTabs(this, { motion: this.motion, onPage: (p) => this.gotoPage(p), onAuto: () => this.toggleAuto(), onInfo: () => this.toggleInfo() }, COMMAND_X + 8, MESSAGE_Y + 1);
+    this.tabs.show(false);
+    this.note = this.add.text(12, 6, '', textStyle(18, COLORS.textLight, { stroke: '#181818', strokeThickness: 4, wordWrap: { width: 560 } })).setOrigin(0, 0).setDepth(130).setAlpha(0);
+    this.input.keyboard?.on('keydown-Q', () => this.gotoPage(this.tabs.neighbour(-1)));
+    this.input.keyboard?.on('keydown-E', () => this.gotoPage(this.tabs.neighbour(1)));
+    this.input.keyboard?.on('keydown-I', () => this.toggleInfo());
+    this.input.keyboard?.on('keydown-T', () => this.toggleAuto());
     onInputAction(this, (a) => this.handleInput(a));
     this.input.on('pointerdown', () => this.advance?.());
 
@@ -903,6 +932,14 @@ export class BattleScene extends Phaser.Scene {
   // ---------- input and messages ----------
 
   private handleInput(action: InputAction): void {
+    if (this.autoRunning) {
+      if (action === 'back') this.autoCancel = true;
+      return;
+    }
+    if (this.infoPanel) {
+      if (action === 'back' || action === 'confirm') this.closePanel();
+      return;
+    }
     if (this.fx.busy && (action === 'confirm' || action === 'back')) {
       this.fx.skip();
       return;
@@ -1007,6 +1044,9 @@ export class BattleScene extends Phaser.Scene {
     this.moveBadges = null;
     this.commandWindow.setVisible(false);
     this.message.setVisible(true);
+    this.tabs?.show(false);
+    this.infoPanel?.destroy();
+    this.infoPanel = null;
   }
 
   // ---------- intro ----------
@@ -1197,12 +1237,14 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (this.run.battle?.needsSwitch) {
-      this.openPartyPicker(true);
+      if (this.autoOn && !autoBattleProblem(this.run)) void this.runAuto();
+      else this.openPartyPicker(true);
       return;
     }
     // In the middle of a two-turn move or Thrash, the Pokémon carries on by itself.
     const forced = this.run.battle ? forcedMoveIndex(this.run.battle, this.run.party) : null;
     if (forced !== null) void this.act({ kind: 'move', index: forced });
+    else if (this.autoOn && !autoBattleProblem(this.run)) void this.runAuto();
     else this.showRootMenu();
   }
 
@@ -1284,6 +1326,253 @@ export class BattleScene extends Phaser.Scene {
     });
   }
 
+  // ---------- pages, Auto-Battle and the info panels (spec §23, §32) ----------
+
+  private get autoOn(): boolean {
+    return services().session.settings.autoBattle;
+  }
+
+  /** Shows the tab strip for the page being viewed (null: the main choice menu). */
+  private showTabs(page: BattlePage | null, where: TabsPlace = 'bar'): void {
+    this.tabs.place(where, COMMAND_X + 8, MESSAGE_Y + 1);
+    this.tabs.setPage(page);
+    this.tabs.setAuto(this.autoOn && !autoBattleProblem(this.run), Boolean(autoBattleProblem(this.run)));
+    this.tabs.show(true);
+  }
+
+  /** A short line at the top of the screen that fades by itself. */
+  private flash(text: string): void {
+    this.tweens.killTweensOf(this.note);
+    this.note.setText(text).setAlpha(1);
+    this.tweens.add({ targets: this.note, alpha: 0, delay: 2600, duration: 500 });
+  }
+
+  /** Jumps to a page (tab click, Q / E). Only while a page is up and the player is choosing. */
+  private gotoPage(page: BattlePage): void {
+    if (this.busy || this.autoRunning || !this.tabs.root.visible || this.advance) return;
+    if (this.infoPanel) this.closePanel();
+    if (page === this.tabs.current) return;
+    if (page === 'attack') this.showMoveMenu();
+    else if (page === 'party') this.openPartyPicker(false);
+    else this.openBag();
+  }
+
+  /** The Auto tab / T key: turn Auto-Battle on (after saying what it costs) or back to manual. */
+  private toggleAuto(): void {
+    if (this.autoRunning) {
+      this.autoCancel = true;
+      return;
+    }
+    if (this.busy || !this.tabs.root.visible || this.advance) return;
+    const problem = autoBattleProblem(this.run);
+    if (this.autoOn) {
+      this.setAuto(false);
+      this.flash('Manual control: you choose every action again.');
+      this.showTabs(this.tabs.current, this.tabs.current === 'party' || this.tabs.current === 'item' ? 'band' : 'bar');
+      return;
+    }
+    if (problem) {
+      this.flash(problem);
+      return;
+    }
+    if (this.run.battle?.autoUsed) {
+      this.setAuto(true);
+      this.nextPrompt();
+      return;
+    }
+    this.askAuto();
+  }
+
+  private setAuto(on: boolean): void {
+    const { session } = services();
+    session.saveSettings({ ...session.settings, autoBattle: on });
+  }
+
+  /** Says what Auto-Battle costs before it starts, and waits for a yes. */
+  private askAuto(): void {
+    const exp = Math.round((1 - services().session.content.balance.difficulty.autoBattleXp) * 100);
+    this.clearMenus();
+    this.message.setText(`Auto-Battle: your Pokémon choose their own actions from their nature, mood and training.\nEXP from this battle drops by ${exp}%, even if you take back control.`);
+    this.commandWindow.setVisible(true);
+    this.menu = new Menu(this, {
+      x: COMMAND_X + 24,
+      y: MESSAGE_Y + 40,
+      options: [{ label: 'Turn on' }, { label: 'Not now' }],
+      columns: 2,
+      itemWidth: 160,
+      itemHeight: 46,
+      fontSize: 26,
+      color: COLORS.textLight,
+      glass: { tints: [0x9a2cc8, 0x2c3a58], motion: this.motion },
+      onSelect: (i) => {
+        if (i === 0) {
+          this.setAuto(true);
+          this.nextPrompt();
+        } else this.showRootMenu();
+      },
+      onBack: () => this.showRootMenu(),
+    });
+    this.showTabs(null);
+  }
+
+  /** The Auto-Battle turn: shows what the Pokémon will do (and why), waits a beat (Back takes control), then plays it. */
+  private async runAuto(): Promise<void> {
+    const { session } = services();
+    const pick = chooseAutoAction(session.content, this.run);
+    if (!pick) {
+      this.showRootMenu();
+      return;
+    }
+    this.autoRunning = true;
+    this.autoCancel = false;
+    this.clearMenus();
+    this.showTabs(null);
+    const mon = this.activeMon();
+    const style = autoProfile(session.content, this.run, mon).style;
+    this.message.setText(`AUTO · ${style}\n${pick.intent}${session.settings.autoExplain ? `\n${pick.reason}` : ''}`);
+    this.flash(`Auto-Battle${this.run.battle?.autoUsed ? '' : ` · EXP -${Math.round((1 - session.content.balance.difficulty.autoBattleXp) * 100)}% this battle`} · Esc: take control`);
+    await new Promise<void>((done) => {
+      const timer = this.time.delayedCall(AUTO_PICK_MS, () => done());
+      const poll = this.time.addEvent({ delay: 60, loop: true, callback: () => {
+        if (this.autoCancel) {
+          timer.remove(false);
+          poll.remove(false);
+          done();
+        }
+      } });
+      this.time.delayedCall(AUTO_PICK_MS + 50, () => poll.remove(false));
+    });
+    this.autoRunning = false;
+    if (this.autoCancel) {
+      this.autoCancel = false;
+      this.setAuto(false);
+      this.flash('Manual control: you choose every action again.');
+      this.showRootMenu();
+      return;
+    }
+    await this.act(pick.action, true);
+  }
+
+  /** A glass panel across the bar with up to three text columns (battle Info, move details, party summary). */
+  private openPanel(columns: { head: string; text: string }[], onClose?: () => void): void {
+    this.panelClose = onClose ?? null;
+    this.infoPanel?.destroy();
+    // An opaque backing, so the menu underneath never shows through the text.
+    const backing = this.add.graphics().fillStyle(0x061528, 1).fillRoundedRect(8, MESSAGE_Y + 6, GAME_WIDTH - 16, GAME_HEIGHT - MESSAGE_Y - 12, 18);
+    const items: Phaser.GameObjects.GameObject[] = [backing, drawGlass(this, 8, MESSAGE_Y + 6, GAME_WIDTH - 16, GAME_HEIGHT - MESSAGE_Y - 12, { tint: AERO.glassLow, rim: AERO.sky, radius: 18 })];
+    const w = (GAME_WIDTH - 56) / columns.length;
+    columns.forEach((c, i) => {
+      const x = 24 + i * w;
+      items.push(this.add.text(x, MESSAGE_Y + 30, c.head, textStyle(16, COLORS.gold)));
+      items.push(this.add.text(x, MESSAGE_Y + 52, c.text, textStyle(15, COLORS.textLight, { wordWrap: { width: w - 20 }, lineSpacing: 3 })));
+    });
+    items.push(this.add.text(GAME_WIDTH - 20, MESSAGE_Y + 12, 'Esc / I: close', textStyle(13, COLORS.textMuted)).setOrigin(1, 0));
+    this.infoPanel = this.add.container(0, 0, items).setDepth(125);
+    bounceIn(this, this.infoPanel, this.motion);
+  }
+
+  private closePanel(): void {
+    this.infoPanel?.destroy();
+    this.infoPanel = null;
+    const done = this.panelClose;
+    this.panelClose = null;
+    done?.();
+  }
+
+  /** I key / the ⓘ tab: details of the focused move on the Attack page, otherwise what is going on in the battle. */
+  private toggleInfo(): void {
+    if (this.infoPanel) {
+      this.closePanel();
+      return;
+    }
+    if (this.busy || this.autoRunning || !this.tabs.root.visible || this.advance) return;
+    const content = services().session.content;
+    if (this.tabs.current === 'attack' && this.menu) {
+      const mon = this.activeMon();
+      const slot = mon.moves[this.focusedMove];
+      const move = slot ? content.moves.get(slot.id) : undefined;
+      if (move) {
+        const foeTypes = getSpecies(content, this.shown.enemy.speciesId).types as TypeName[];
+        const hint = move.category === 'status' ? null : effectivenessWord(typeEffectiveness(content.typeChart, move.type as TypeName, foeTypes));
+        const flags = moveFlagLabels(move);
+        const power = move.power ?? fixedDamageLabel(move.effects.fixedDamage);
+        this.openPanel([
+          { head: move.name, text: `${move.type.toUpperCase()} · ${move.category}\nPower ${power} · Accuracy ${move.accuracy ?? '—'} · PP ${slot!.pp}/${maxPp(content, slot!)}\nPriority ${move.priority > 0 ? '+' : ''}${move.priority}${hint ? `\nAgainst ${this.speciesName(this.shown.enemy)}: ${hint.text}` : ''}` },
+          { head: 'What it does', text: moveDescription(move) },
+          { head: 'Notes', text: `${flags.length ? flags.join('\n') : 'No special properties.'}${this.transformChoice ? `\nSpecial action ready: ${this.transformChoice.kind}` : ''}` },
+        ]);
+        return;
+      }
+    }
+    const c = battleConditions(content, this.run);
+    this.openPanel([
+      { head: 'Battlefield', text: c.field.join('\n') },
+      { head: 'Your Pokémon', text: c.yours.join('\n') },
+      { head: 'Opposing Pokémon', text: c.foe.join('\n') },
+    ]);
+  }
+
+  /** Party page: what the selected Pokémon is like and what can be done with it (send out, summary, Auto-Battle stance). */
+  private showPartyActions(i: number): void {
+    const { session } = services();
+    const content = session.content;
+    const run = this.run;
+    const mon = run.party[i]!;
+    const problem = switchProblem(this.battleCtx(), i);
+    const profile = autoProfile(content, run, mon);
+    const { stance, taught } = stanceOf(run, mon.uid);
+    const stats = calcStats(content, mon);
+    this.clearMenus();
+    this.message.setText(`${this.speciesName(mon)} Lv.${mon.level}  HP ${mon.hp}/${stats.hp}${mon.status ? `  ${mon.status.id.toUpperCase()}` : ''}\n${profile.style} · Stance: ${STANCE_INFO[stance].name}${taught ? ' (taught)' : ''}${problem ? `\n${problem}` : ''}`);
+    this.commandWindow.setVisible(true);
+    this.menu = new Menu(this, {
+      x: COMMAND_X + 20,
+      y: MESSAGE_Y + 34,
+      options: [{ label: 'Send out', disabled: problem !== null }, { label: 'Summary' }, { label: `Stance: ${STANCE_INFO[stance].name}` }, { label: 'Back' }],
+      columns: 2,
+      itemWidth: 170,
+      itemHeight: 38,
+      fontSize: 22,
+      color: COLORS.textLight,
+      glass: { tints: [0x1f9a52, 0x2c6ad8, 0x9a2cc8, 0x2c3a58], motion: this.motion },
+      onSelect: (n) => {
+        if (n === 0) void this.act({ kind: 'switch', partyIndex: i });
+        else if (n === 1) this.showPartySummary(i);
+        else if (n === 2) {
+          session.teachStance(mon.uid, STANCES[(STANCES.indexOf(stance) + 1) % STANCES.length]!);
+          this.showPartyActions(i);
+        } else this.openPartyPicker(false);
+      },
+      onFocus: () => undefined,
+      onBack: () => this.openPartyPicker(false),
+    });
+    this.showTabs('party');
+  }
+
+  /** A Pokémon's summary during battle: stats, moves, held items and how it fights. */
+  private showPartySummary(i: number): void {
+    const content = services().session.content;
+    const run = this.run;
+    const mon = run.party[i]!;
+    const species = getSpecies(content, mon.speciesId);
+    const stats = calcStats(content, mon);
+    const profile = autoProfile(content, run, mon);
+    const held = Object.entries(mon.held ?? {}).map(([id, n]) => `${content.items.get(id)?.name ?? id}${n > 1 ? ` ×${n}` : ''}`);
+    const ability = abilityOf(content, mon);
+    const moves = mon.moves.map((m) => {
+      const d = content.moves.get(m.id);
+      return d ? `${d.name} (${d.type}, ${d.category}) ${m.pp}/${maxPp(content, m)}` : m.id;
+    });
+    this.openPanel(
+      [
+        { head: `${species.name} Lv.${mon.level}`, text: `${species.types.join(' / ')}${mon.nature ? ` · ${mon.nature}` : ''}\nHP ${mon.hp}/${stats.hp}  Atk ${stats.atk}  Def ${stats.def}\nSpA ${stats.spa}  SpD ${stats.spd}  Spe ${stats.spe}\n${ability ? `Ability: ${content.abilities.get(ability)?.name ?? ability}` : ''}` },
+        { head: 'Moves', text: moves.join('\n') },
+        { head: 'How it fights', text: `${profile.style}\n${profile.notes.slice(0, 3).join('\n')}${held.length ? `\nHolding: ${held.join(', ')}` : ''}` },
+      ],
+      () => this.showPartyActions(i),
+    );
+  }
+
   // ---------- menus ----------
 
   private showRootMenu(): void {
@@ -1336,10 +1625,10 @@ export class BattleScene extends Phaser.Scene {
       x: COMMAND_X + 24,
       y: MESSAGE_Y + 26,
       options,
-      columns: 2,
-      itemWidth: 170,
-      itemHeight: 50,
-      fontSize: 30,
+      columns: options.length > 4 ? 3 : 2,
+      itemWidth: options.length > 4 ? 114 : 170,
+      itemHeight: options.length > 4 ? 36 : 50,
+      fontSize: options.length > 4 ? 20 : 30,
       color: COLORS.textLight,
       // Wii-style glossy buttons: Fight red, Bag gold, Pokémon green, transformations neon.
       glass: { tints: [0xc8303c, 0xc08a10, 0x1f9a52, 0x9a2cc8, 0x2c8ad8, 0x2cb8c8, 0xd8a020], motion: this.motion },
@@ -1361,6 +1650,7 @@ export class BattleScene extends Phaser.Scene {
       // Double battles: back from the second Pokémon's menu goes back to the first's.
       onBack: this.duo && this.cmdSpot === 1 && this.commands[0] ? () => this.promptSpot(0) : undefined,
     });
+    this.showTabs(null);
   }
 
   /** The three raid cheers: Offense, Defense, Healing (each costs one of three cheers and the turn). */
@@ -1435,6 +1725,7 @@ export class BattleScene extends Phaser.Scene {
         motion: this.motion,
       },
       onFocus: (i) => {
+        this.focusedMove = i;
         this.moveBadges?.destroy();
         this.moveBadges = null;
         const slot = mon.moves[i];
@@ -1470,6 +1761,7 @@ export class BattleScene extends Phaser.Scene {
       onBack: () => this.showRootMenu(),
     });
     this.moveInfo.setVisible(true);
+    this.showTabs('attack');
   }
 
   /**
@@ -1533,6 +1825,7 @@ export class BattleScene extends Phaser.Scene {
       },
       onBack: () => this.showRootMenu(),
     });
+    this.showTabs('item', 'band');
   }
 
   private openItemTarget(itemId: string): void {
@@ -1574,18 +1867,21 @@ export class BattleScene extends Phaser.Scene {
     }
     this.picker = new Picker(this, {
       glass: true,
-      title: forced ? 'Send out which Pokémon?' : 'Switch to which Pokémon?',
+      title: forced ? 'Send out which Pokémon?' : 'Party',
       columns: 2,
       rowHeight: 78,
-      rows: partyRows(content, run.party, (i) => switchProblem(this.battleCtx(), i), (i) => (i === run.battle!.activeIndex && !forced ? 'IN BATTLE' : undefined)),
-      onSelect: (i) => void this.act({ kind: 'switch', partyIndex: i }),
+      rows: partyRows(content, run.party, (i) => (forced ? switchProblem(this.battleCtx(), i) : null), (i) => (i === run.battle!.activeIndex && !forced ? 'IN BATTLE' : undefined)),
+      // The cursor starts on the first Pokémon that can switch in.
+      start: forced ? undefined : Math.max(0, run.party.findIndex((_, i) => switchProblem(this.battleCtx(), i) === null)),
+      onSelect: (i) => (forced ? void this.act({ kind: 'switch', partyIndex: i }) : this.showPartyActions(i)),
       onBack: forced ? undefined : () => this.showRootMenu(),
     });
+    if (!forced) this.showTabs('party', 'band');
   }
 
   // ---------- taking a turn ----------
 
-  private async act(action: PlayerAction): Promise<void> {
+  private async act(action: PlayerAction, auto = false): Promise<void> {
     if (this.busy) return;
     this.busy = true;
     this.clearMenus();
@@ -1597,7 +1893,11 @@ export class BattleScene extends Phaser.Scene {
     const bossWin = this.boss() ? { boss: this.boss()!, art: this.trainerArt(), turn: before.battle?.turn ?? 1, active: before.battle?.activeIndex ?? 0 } : null;
     let result: TurnResult;
     try {
-      result = session.takeTurn(action);
+      if (auto) {
+        const taken = session.takeAutoTurn();
+        if (!taken) throw new Error('Auto-Battle could not choose an action.');
+        result = taken.result;
+      } else result = session.takeTurn(action);
     } catch (err) {
       // The menus only offer legal choices, so this means a bug; show it rather than freeze.
       await this.say(String(err instanceof Error ? err.message : err));
@@ -1754,7 +2054,7 @@ export class BattleScene extends Phaser.Scene {
     }
     const raid = this.run.battle?.raid;
     if (e.type === 'raid' && e.tone === 'warn' && raid?.charging) {
-      const tele = getRaid(content, raid.id).telegraph;
+      const tele = raidDef(content, raid).telegraph;
       if (tele && tele.text === e.text) return { side: 'enemy', tint: 0xff4fd8, label: `Charged attack: next hit ×${tele.boost}` };
     }
     if (cue?.ids?.includes('gathering-everything')) return { side: cue.side, tint: 0xffb040, label: 'Next attack: Attack +2 (a status breaks it)' };

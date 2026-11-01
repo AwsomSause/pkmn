@@ -889,5 +889,606 @@
       "unlocks": null,
       "failureKeep": 0.25
     }
+  ],
+  "rentalLevel": {
+    "partyMargin": 3
+  },
+  "rentalTeams": [
+    {
+      "id": "basic-trio",
+      "name": "Starter Trio",
+      "strategy": "Fire, Water and Grass: hit hard with your best attack.",
+      "minBadges": 0,
+      "maxBadges": 1,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "ivysaur",
+          "moves": [
+            "razor-leaf",
+            "vine-whip",
+            "leech-seed",
+            "tackle"
+          ]
+        },
+        {
+          "species": "charmeleon",
+          "moves": [
+            "ember",
+            "slash",
+            "scratch",
+            "growl"
+          ]
+        },
+        {
+          "species": "wartortle",
+          "moves": [
+            "water-gun",
+            "bite",
+            "tackle",
+            "withdraw"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "quick-strikers",
+      "name": "Quick Strikers",
+      "strategy": "Fast Pokémon that hit first with simple moves.",
+      "minBadges": 0,
+      "maxBadges": 1,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "raticate",
+          "moves": [
+            "quick-attack",
+            "hyper-fang",
+            "bite",
+            "tackle"
+          ]
+        },
+        {
+          "species": "pidgeotto",
+          "moves": [
+            "wing-attack",
+            "quick-attack",
+            "gust",
+            "tackle"
+          ]
+        },
+        {
+          "species": "raichu",
+          "moves": [
+            "thunderbolt",
+            "quick-attack",
+            "thunder-wave",
+            "tackle"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sturdy-rocks",
+      "name": "Sturdy Rocks",
+      "strategy": "Tough Pokémon: soak up hits and answer with heavy blows.",
+      "minBadges": 0,
+      "maxBadges": 1,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "graveler",
+          "moves": [
+            "rock-throw",
+            "tackle",
+            "earthquake",
+            "defense-curl"
+          ]
+        },
+        {
+          "species": "kingler",
+          "moves": [
+            "crabhammer",
+            "bubble-beam",
+            "stomp",
+            "guillotine"
+          ]
+        },
+        {
+          "species": "muk",
+          "moves": [
+            "sludge-bomb",
+            "pound",
+            "poison-gas",
+            "minimize"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "elemental-spread",
+      "name": "Elemental Spread",
+      "strategy": "Four-way type coverage: always something super effective.",
+      "minBadges": 2,
+      "maxBadges": 3,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "arcanine",
+          "moves": [
+            "flamethrower",
+            "crunch",
+            "extreme-speed",
+            "howl"
+          ],
+          "item": "charcoal"
+        },
+        {
+          "species": "starmie",
+          "moves": [
+            "surf",
+            "ice-beam",
+            "thunderbolt",
+            "psychic"
+          ],
+          "item": "mystic-water"
+        },
+        {
+          "species": "venusaur",
+          "moves": [
+            "giga-drain",
+            "sludge-bomb",
+            "sleep-powder",
+            "earthquake"
+          ],
+          "item": "miracle-seed"
+        }
+      ]
+    },
+    {
+      "id": "bruiser-line",
+      "name": "Bruiser Line",
+      "strategy": "Heavy physical attackers with coverage for the types that resist them.",
+      "minBadges": 2,
+      "maxBadges": 3,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "machamp",
+          "moves": [
+            "cross-chop",
+            "rock-slide",
+            "ice-punch",
+            "bulk-up"
+          ],
+          "item": "muscle-band"
+        },
+        {
+          "species": "gengar",
+          "moves": [
+            "shadow-ball",
+            "sludge-bomb",
+            "thunderbolt",
+            "hypnosis"
+          ]
+        },
+        {
+          "species": "rhydon",
+          "moves": [
+            "earthquake",
+            "rock-blast",
+            "megahorn",
+            "fire-punch"
+          ],
+          "item": "hard-stone"
+        }
+      ]
+    },
+    {
+      "id": "fast-sweepers",
+      "name": "Fast Sweepers",
+      "strategy": "Fast attackers with items: strike first, strike twice.",
+      "minBadges": 2,
+      "maxBadges": 3,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "alakazam",
+          "moves": [
+            "psychic",
+            "shadow-ball",
+            "focus-blast",
+            "recover"
+          ],
+          "item": "expert-belt"
+        },
+        {
+          "species": "jolteon",
+          "moves": [
+            "thunderbolt",
+            "shadow-ball",
+            "volt-switch",
+            "thunder-wave"
+          ],
+          "item": "expert-belt"
+        },
+        {
+          "species": "scizor",
+          "moves": [
+            "bullet-punch",
+            "x-scissor",
+            "swords-dance",
+            "roost"
+          ],
+          "item": "muscle-band"
+        }
+      ]
+    },
+    {
+      "id": "rain-dance",
+      "name": "Rain Dance",
+      "strategy": "Set the rain: water moves hit harder and Thunder never misses.",
+      "minBadges": 4,
+      "maxBadges": 5,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "politoed",
+          "moves": [
+            "rain-dance",
+            "surf",
+            "ice-beam",
+            "hypnosis"
+          ],
+          "item": "damp-rock",
+          "ability": "hidden"
+        },
+        {
+          "species": "ludicolo",
+          "moves": [
+            "giga-drain",
+            "hydro-pump",
+            "ice-beam",
+            "rain-dance"
+          ],
+          "item": "leftovers"
+        },
+        {
+          "species": "lanturn",
+          "moves": [
+            "thunder",
+            "surf",
+            "ice-beam",
+            "volt-switch"
+          ],
+          "item": "sitrus-berry"
+        }
+      ]
+    },
+    {
+      "id": "sun-team",
+      "name": "Sunny Day",
+      "strategy": "Bring the sun: fire is stronger and Solar Beam is instant.",
+      "minBadges": 4,
+      "maxBadges": 5,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "ninetales",
+          "moves": [
+            "sunny-day",
+            "flamethrower",
+            "solar-beam",
+            "dark-pulse"
+          ],
+          "item": "heat-rock",
+          "ability": "hidden"
+        },
+        {
+          "species": "venusaur",
+          "moves": [
+            "solar-beam",
+            "sludge-bomb",
+            "sleep-powder",
+            "growth"
+          ],
+          "item": "life-orb",
+          "ability": "hidden"
+        },
+        {
+          "species": "torkoal",
+          "moves": [
+            "eruption",
+            "earth-power",
+            "rapid-spin",
+            "stealth-rock"
+          ],
+          "item": "charcoal"
+        }
+      ]
+    },
+    {
+      "id": "sand-team",
+      "name": "Sandstorm",
+      "strategy": "A sandstorm wears everyone down but your rock, ground and steel Pokémon.",
+      "minBadges": 4,
+      "maxBadges": 5,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "tyranitar",
+          "moves": [
+            "stone-edge",
+            "crunch",
+            "earthquake",
+            "dragon-dance"
+          ],
+          "item": "smooth-rock"
+        },
+        {
+          "species": "excadrill",
+          "moves": [
+            "earthquake",
+            "iron-head",
+            "rock-slide",
+            "swords-dance"
+          ],
+          "item": "life-orb",
+          "ability": "hidden"
+        },
+        {
+          "species": "hippowdon",
+          "moves": [
+            "earthquake",
+            "stealth-rock",
+            "slack-off",
+            "yawn"
+          ],
+          "item": "leftovers"
+        }
+      ]
+    },
+    {
+      "id": "pivot-core",
+      "name": "Pivot Core",
+      "strategy": "Switch with U-turn and Volt Switch to keep a free attack coming.",
+      "minBadges": 6,
+      "maxBadges": 8,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "scizor",
+          "moves": [
+            "u-turn",
+            "bullet-punch",
+            "swords-dance",
+            "roost"
+          ],
+          "item": "choice-band"
+        },
+        {
+          "species": "rotom-wash",
+          "moves": [
+            "volt-switch",
+            "hydro-pump",
+            "will-o-wisp",
+            "protect"
+          ],
+          "item": "leftovers"
+        },
+        {
+          "species": "garchomp",
+          "moves": [
+            "earthquake",
+            "dragon-claw",
+            "stealth-rock",
+            "swords-dance"
+          ],
+          "item": "life-orb"
+        }
+      ]
+    },
+    {
+      "id": "hazard-wall",
+      "name": "Hazard Wall",
+      "strategy": "Lay stealth rock and spikes, then wear the other side down.",
+      "minBadges": 6,
+      "maxBadges": 8,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "skarmory",
+          "moves": [
+            "stealth-rock",
+            "spikes",
+            "brave-bird",
+            "roost"
+          ],
+          "item": "rocky-helmet"
+        },
+        {
+          "species": "ferrothorn",
+          "moves": [
+            "leech-seed",
+            "gyro-ball",
+            "power-whip",
+            "protect"
+          ],
+          "item": "leftovers"
+        },
+        {
+          "species": "clefable",
+          "moves": [
+            "moonblast",
+            "calm-mind",
+            "soft-boiled",
+            "thunder-wave"
+          ],
+          "item": "leftovers"
+        }
+      ]
+    },
+    {
+      "id": "trick-room",
+      "name": "Trick Room",
+      "strategy": "Slow, strong Pokémon move first once Trick Room is up.",
+      "minBadges": 6,
+      "maxBadges": 8,
+      "levelOffset": 0,
+      "members": [
+        {
+          "species": "conkeldurr",
+          "moves": [
+            "close-combat",
+            "mach-punch",
+            "knock-off",
+            "bulk-up"
+          ],
+          "item": "assault-vest"
+        },
+        {
+          "species": "torkoal",
+          "moves": [
+            "trick-room",
+            "eruption",
+            "earth-power",
+            "protect"
+          ],
+          "item": "charcoal"
+        },
+        {
+          "species": "snorlax",
+          "moves": [
+            "body-slam",
+            "earthquake",
+            "crunch",
+            "belly-drum"
+          ],
+          "item": "sitrus-berry"
+        }
+      ]
+    },
+    {
+      "id": "dance-offense",
+      "name": "Dance Offense",
+      "strategy": "Set up with Dragon Dance, then sweep.",
+      "minBadges": 9,
+      "maxBadges": null,
+      "levelOffset": -1,
+      "members": [
+        {
+          "species": "dragonite",
+          "moves": [
+            "dragon-dance",
+            "outrage",
+            "extreme-speed",
+            "earthquake"
+          ],
+          "item": "lum-berry",
+          "ability": "hidden"
+        },
+        {
+          "species": "salamence",
+          "moves": [
+            "dragon-dance",
+            "outrage",
+            "earthquake",
+            "roost"
+          ],
+          "item": "life-orb"
+        },
+        {
+          "species": "lucario",
+          "moves": [
+            "swords-dance",
+            "close-combat",
+            "extreme-speed",
+            "crunch"
+          ],
+          "item": "expert-belt"
+        }
+      ]
+    },
+    {
+      "id": "stall-core",
+      "name": "Stall Core",
+      "strategy": "Poison, recover and out-last: a team that never runs out of steam.",
+      "minBadges": 9,
+      "maxBadges": null,
+      "levelOffset": 1,
+      "members": [
+        {
+          "species": "toxapex",
+          "moves": [
+            "toxic",
+            "recover",
+            "scald",
+            "haze"
+          ],
+          "item": "black-sludge",
+          "ability": "hidden"
+        },
+        {
+          "species": "corviknight",
+          "moves": [
+            "brave-bird",
+            "roost",
+            "u-turn",
+            "defog"
+          ],
+          "item": "leftovers"
+        },
+        {
+          "species": "blissey",
+          "moves": [
+            "soft-boiled",
+            "seismic-toss",
+            "toxic",
+            "thunder-wave"
+          ],
+          "item": "leftovers"
+        }
+      ]
+    },
+    {
+      "id": "hyper-offense",
+      "name": "Hyper Offense",
+      "strategy": "Three fast, hard hitters with a choice item each: win before they can answer.",
+      "minBadges": 9,
+      "maxBadges": null,
+      "levelOffset": -1,
+      "members": [
+        {
+          "species": "dragapult",
+          "moves": [
+            "dragon-darts",
+            "shadow-ball",
+            "thunderbolt",
+            "u-turn"
+          ],
+          "item": "choice-specs"
+        },
+        {
+          "species": "hydreigon",
+          "moves": [
+            "draco-meteor",
+            "dark-pulse",
+            "flamethrower",
+            "u-turn"
+          ],
+          "item": "choice-scarf"
+        },
+        {
+          "species": "volcarona",
+          "moves": [
+            "quiver-dance",
+            "fiery-dance",
+            "bug-buzz",
+            "giga-drain"
+          ],
+          "item": "lum-berry"
+        }
+      ]
+    }
   ]
 }

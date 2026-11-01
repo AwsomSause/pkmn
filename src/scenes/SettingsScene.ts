@@ -23,6 +23,8 @@ const APPLIES_TAG = { now: '', nextBattle: '  · next battle', restart: '  · re
 
 export class SettingsScene extends Phaser.Scene {
   private page: Page = 'home';
+  /** True until the current page's menu has been built once (its options slide in only then). */
+  private entering = true;
   private from: 'MainMenu' | 'Hub' = 'MainMenu';
   private query = '';
   private notice = '';
@@ -41,6 +43,7 @@ export class SettingsScene extends Phaser.Scene {
   create(data?: { from?: 'MainMenu' | 'Hub'; page?: Page; focus?: number }): void {
     this.from = data?.from ?? 'MainMenu';
     this.page = data?.page ?? 'home';
+    this.entering = true;
     this.query = '';
     this.notice = '';
     if (this.textures.exists('ui.optionsbg')) {
@@ -62,6 +65,7 @@ export class SettingsScene extends Phaser.Scene {
   }
 
   private go(page: Page, focus = 0): void {
+    this.entering = true;
     this.page = page;
     this.query = '';
     this.notice = '';
@@ -173,7 +177,10 @@ export class SettingsScene extends Phaser.Scene {
       fontSize: rowH >= 36 ? 24 : rowH >= 30 ? 20 : 17,
       onSelect: (i) => rows[i]!.action(),
       onFocus: (i) => this.hintText?.setText(rows[i]?.hint ?? ''),
+      // Options slide in on a new page only, not each time a setting changes.
+      animateIn: this.entering,
     });
+    this.entering = false;
     this.menu.focus(Math.min(focus, rows.length - 1), false);
     this.hintText.setText(rows[this.menu.index]?.hint ?? '');
   }

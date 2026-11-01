@@ -1,4 +1,37 @@
 {
+  "badgeScaling": {
+    "levelPerBadge": 0.5,
+    "maxLevelBonus": 4,
+    "hpPercentPerBadge": 5,
+    "maxHpPercent": 50,
+    "shieldPointsPerBadge": 0.01,
+    "telegraphBoostPerBadge": 0.02,
+    "fasterChargeBadges": 8,
+    "secondMoveBadges": 4,
+    "hiddenAbilityBadges": 6,
+    "extraActionBadges": 5,
+    "lastShieldBadges": 7,
+    "moneyPercentPerBadge": 4,
+    "maxMoneyPercent": 60,
+    "extraDraftBadges": 6,
+    "rareTokenBadges": 8,
+    "kindShare": {
+      "wild": 1,
+      "regional": 1,
+      "rival": 0.5,
+      "anomaly": 0.5
+    },
+    "tierBadges": [0, 0, 2, 4, 6, 8],
+    "tierNames": [
+      "Standard",
+      "Advanced",
+      "Elite",
+      "Exceptional",
+      "Exceptional",
+      "Legendary"
+    ],
+    "eventLabel": "Event"
+  },
   "denChance": 0.45,
   "tiersByRegion": [
     [
