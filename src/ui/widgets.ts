@@ -374,8 +374,17 @@ export class Menu {
     }
   }
 
+  /** Menu closing (spec §24): input stops at once; the options fade and drift away, then the menu is gone. */
   destroy(): void {
-    this.container.destroy();
+    this.enabled = false;
+    const c = this.container;
+    const t = uiTiming('popupClose');
+    if (!t.ms || !c.active || !c.visible) {
+      c.destroy();
+      return;
+    }
+    this.labels.forEach((l) => l.disableInteractive());
+    this.scene.tweens.add({ targets: c, alpha: 0, x: c.x + 10 * t.travel, duration: t.ms, ease: t.ease, onComplete: () => c.destroy() });
   }
 }
 
