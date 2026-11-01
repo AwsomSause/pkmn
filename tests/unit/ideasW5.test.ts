@@ -210,3 +210,28 @@ describe('the new NPC events', () => {
     expect(content.events.get('insurance-agent')!.mode).toBe('nuzlocke');
   });
 });
+
+describe('skill-prompt event choices (chef, dance-off)', () => {
+  it('use real prompts that exist, and the grade alone decides success', async () => {
+    const { chooseEvent } = await import('../../src/core/events');
+    for (const [id, prompt] of [['chef-cook-together', 'throw-ring'], ['dance-off', 'echo-rhythm']] as const) {
+      const ev = content.events.get(id)!;
+      const idx = ev.choices.findIndex((c) => c.prompt);
+      expect(ev.choices[idx]!.prompt!.id).toBe(prompt);
+      expect(ev.choices[idx]!.check).toBeUndefined();
+      const place = () => {
+        const run = newRun(`pr-${id}`);
+        const node = run.stage!.map.nodes[0]!;
+        run.stage!.current = node.id;
+        node.sides = [{ id: 'w5-side', kind: 'event', eventId: id, used: false } as never];
+        return { run, side: 'w5-side' };
+      };
+      const win = place();
+      expect(chooseEvent(content, win.run, win.side, idx, undefined, 'perfect').success).toBe(true);
+      const lose = place();
+      expect(chooseEvent(content, lose.run, lose.side, idx, undefined, 'ok').success).toBe(false);
+      const none = place();
+      expect(chooseEvent(content, none.run, none.side, idx).success).toBe(false);
+    }
+  });
+});

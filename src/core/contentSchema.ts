@@ -4,6 +4,7 @@
 
 import { NATURE_IDS } from './natures';
 import { z } from 'zod';
+import { GRADES as PROMPT_GRADES } from './interaction/prompt';
 import { SpectacleConfigSchema } from './battle/spectacleConfig';
 import { W1ConfigSchema } from './battle/w1Rules';
 import type { StoryConfig } from './story/schema';
@@ -2682,6 +2683,8 @@ export const EventChoiceSchema = z.object({
   check: PlainAttributeSchema.optional(),
   /** A plain chance of success (0–1), for luck rolls without an attribute. */
   chance: z.number().min(0).max(1).optional(),
+  /** Ideas W5: a skill prompt (core/interaction/prompt.ts, widget ui/interactionPrompt.ts) decides the outcome: success when the grade reaches `needs`. */
+  prompt: z.object({ id: z.string().min(1), needs: z.enum(PROMPT_GRADES).default('good') }).optional(),
   success: EventOutcomeSchema,
   /** What happens when the check or chance fails (needed when there is one). */
   failure: EventOutcomeSchema.optional(),
@@ -2789,7 +2792,7 @@ export const EventDefSchema = z.object({
   scene: EventSceneSchema.default({ cast: [], effect: 'none' }),
   intro: z.string(),
   choices: z.array(EventChoiceSchema).min(1).max(4),
-}).refine((e) => e.choices.every((c) => (c.check === undefined && c.chance === undefined) || c.failure), { message: 'a choice with a check or chance needs a failure outcome' });
+}).refine((e) => e.choices.every((c) => (c.check === undefined && c.chance === undefined && c.prompt === undefined) || c.failure), { message: 'a choice with a check, chance or prompt needs a failure outcome' });
 export type EventDef = z.infer<typeof EventDefSchema>;
 
 /** Ideas W5: story text banks (npcStory.json): lore fragments, trainer backstories, evolution diary, newspaper, ending hints, New Game+ variants. */
