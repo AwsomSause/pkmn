@@ -10,13 +10,8 @@ import type { SpectacleKind } from '../battle/spectacle';
 /** The registry id each spectacle event plays (none = just the message). */
 export const SPECTACLE_ANIM: Partial<Record<SpectacleKind, string>> = {
   lastStand: 'bond.survive',
-  counter: 'bond.protect',
   revenge: 'bond.enter',
   signature: 'bond.signature',
-  brace: 'drama.brace',
-  guardUp: 'drama.guardup',
-  guardRebuilt: 'drama.guardup',
-  guardBreak: 'drama.guardbreak',
   rally: 'drama.rally',
   momentumFull: 'drama.momentum',
 };
@@ -28,9 +23,6 @@ registerAnims([
   { id: 'bond.enter', category: 'interaction', ms: 1400, color: '#ff6a38', glyph: '⚔', shakes: true, flashes: true, particles: true },
   { id: 'bond.signature', category: 'interaction', ms: 1000, color: '#ff9ac8', glyph: '♥', flashes: true, particles: true },
   // Boss and momentum beats.
-  { id: 'drama.brace', category: 'interaction', ms: 600, color: '#9fe8ff', glyph: '⛨', particles: true },
-  { id: 'drama.guardup', category: 'interaction', ms: 700, color: '#b8b8d0', glyph: '⛨', particles: true },
-  { id: 'drama.guardbreak', category: 'interaction', ms: 1300, color: '#ffd040', glyph: '✸', shakes: true, flashes: true, particles: true },
   { id: 'drama.rally', category: 'interaction', ms: 1200, color: '#ffe060', glyph: '⚡', shakes: true, flashes: true, particles: true },
   { id: 'drama.momentum', category: 'interaction', ms: 800, color: '#ffe060', glyph: '▲', flashes: true, particles: true },
 ]);

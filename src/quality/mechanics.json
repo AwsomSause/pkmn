@@ -496,7 +496,7 @@
  },
  {
   "id": "battle-spectacle",
-  "name": "Battle Drama spectacle: Last Stand, Perfect Counter (Brace), Momentum Meter and Rally, Guard Break, Revenge Moment, boss phases",
+  "name": "Battle Drama spectacle: Last Stand, Momentum Meter and Rally, Revenge Moment, boss phases",
   "status": "supported",
   "code": [
    "src/core/battle/spectacle.ts",
@@ -506,7 +506,7 @@
   "tests": [
    "tests/unit/spectacle.test.ts"
   ],
-  "note": "Single battles only (off in doubles); the Guard is off for raids and Totems, which have their own shield and phases."
+  "note": "Single battles only (off in doubles). Guard and Brace were removed on Kice's order (2026-11-01); bosses still telegraph their strongest attack."
  },
  {
   "id": "boss-revenge-rematch",

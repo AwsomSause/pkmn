@@ -67,6 +67,14 @@ describe('a run keeps the rules it started with', () => {
     expect(start('lv', { modifierIds: ['no-transformations'] }).disabledMechanics.sort()).toEqual(['dynamax', 'mega', 'tera', 'zmove']);
   });
 
+  it('stage-1 wild Pokémon are never far below the starter (no Lv 1-2 fights)', () => {
+    const floor = content.balance.starterLevel - 1;
+    for (let i = 0; i < 12; i++) {
+      const run = toBattle(start(`floor-${i}`));
+      expect(run.battle!.enemyTeam[0]!.level).toBeGreaterThanOrEqual(floor);
+    }
+  });
+
   it('saves from before rules load as standard (migration v14)', () => {
     const storage = new MemoryStorageProvider();
     const { rules: _r, ...old } = start('mig');

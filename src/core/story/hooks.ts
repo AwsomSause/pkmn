@@ -141,7 +141,7 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         lastMove[e.side] = e.moveId;
         emit(content, run, 'moveUsed', { where, actors: active[e.side] ? [active[e.side]!] : [], data: { side: e.side, moveId: e.moveId } });
         if (e.side === 'player' && active.player) {
-          const t = signatureMove(content, run, active.player, e.moveId, i, triggers.length, battle.kind === 'trainer');
+          const t = signatureMove(content, run, active.player, e.moveId, i, triggers.length);
           if (t) triggers.push(t);
         }
         break;
@@ -346,17 +346,17 @@ function transformMoment(content: Content, run: RunState, e: Extract<RunEvent, {
 }
 
 /**
- * Signature Move Awakening ("It Mastered the Power Within!"): a damaging move used again and again in
- * trainer fights awakens for the rest of the run and hits harder. Counting is deterministic, uses no
+ * Signature Move Awakening ("It Mastered the Power Within!"): a damaging move used again and again (wild
+ * or trainer fights) becomes that Pokémon's signature move: it stays awakened, hits harder, and lives on the Pokémon. Counting is deterministic, uses no
  * random numbers and keeps the move's rules (type, accuracy, PP) as they were.
  */
-function signatureMove(content: Content, run: RunState, uid: string, moveId: string, at: number, order: number, trainerFight: boolean): StoryTrigger | null {
+function signatureMove(content: Content, run: RunState, uid: string, moveId: string, at: number, order: number): StoryTrigger | null {
   const def = content.story.definitions.find((d) => d.triggerConditions.trigger === 'signatureAwakening');
   const move = content.moves.get(moveId);
   const mon = run.party.find((m) => m.uid === uid);
   const history = run.story.histories[uid];
   const cfg = content.story.awakening;
-  if (!def || !move || !mon || !history || !trainerFight || !move.power || mon.awakened?.includes(moveId)) return null;
+  if (!def || !move || !mon || !history || !move.power || mon.awakened?.includes(moveId)) return null;
   history.moves[moveId] = (history.moves[moveId] ?? 0) + 1;
   if (history.moves[moveId]! < cfg.uses || (mon.awakened?.length ?? 0) >= cfg.perPokemon || !mon.moves.some((m) => m.id === moveId)) return null;
   mon.awakened = [...(mon.awakened ?? []), moveId];

@@ -189,6 +189,22 @@ export class GameSession {
     this.changed();
   }
 
+  /** Save the run now (it also saves after every step; this is the player's explicit Save). Returns whether it worked. */
+  saveRunNow(): boolean {
+    if (!this.run) return false;
+    this.persistRun();
+    this.refreshSavedRun();
+    return this.savedRun.status === 'ok';
+  }
+
+  /** Save, then leave the run without ending it: Continue on the title screen (or in this slot) resumes it. */
+  saveAndLeaveRun(): boolean {
+    if (!this.saveRunNow()) return false;
+    this.run = null;
+    this.changed();
+    return true;
+  }
+
   /** True when a valid saved run exists and can be continued. */
   get canContinue(): boolean {
     return this.savedRun.status === 'ok';

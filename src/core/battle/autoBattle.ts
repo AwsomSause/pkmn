@@ -17,7 +17,7 @@ import { mentorPathOf, mentorshipOf } from '../story/mentorship';
 import { typeEffectiveness } from './damage';
 import { estimateDamage, itemProblem, moveValue, switchProblem, telegraphedAttack, forcedMoveId, type EnemyBrain, type PlayerAction, type SlotAction, type SlotCommand } from './engine';
 import { moveBlockReason } from './moveBlock';
-import { counterProblem, rallyProblem } from './spectacle';
+import { rallyProblem } from './spectacle';
 import { canDynamax, teraOption, zMoveOptions, type TransformRequest } from './transform';
 
 /** What the trainer has taught a Pokémon to favour in Auto-Battle ("Trainer Instillment"); saved in the Pokémon's bond habits. */
@@ -440,11 +440,6 @@ function decide(content: Content, run: RunState, opts: DecideOpts = {}): AutoPic
     const rally = cheerProblem(content, probe, 'offense') === null && battle.turn <= 1 && profile.aggr > 0.2;
     const cheer = heal ? 'healing' : guard ? 'defense' : rally ? 'offense' : null;
     if (cheer) return { action: { kind: 'cheer', cheer }, intent: `${name} calls for a cheer!`, reason: `${name} wants backup: ${cheer}.`, tags: ['cheer'] };
-  }
-  const telegraphed = telegraphedAttack({ content, battle: probe, party: run.party }) !== null;
-  if (!opts.slot && counterProblem(content, probe, telegraphed) === null && telegraphed) {
-    const brace = 0.35 + 0.5 * profile.caution + 0.5 * profile.fear - 0.4 * profile.aggr + (hp < 0.4 ? 0.2 : 0);
-    if (brace > Math.max(0.55, best.score)) return { action: { kind: 'counter' }, intent: `${name} braces for the telegraphed attack!`, reason: `${name} reads the attack coming and braces to counter it.`, tags: ['brace', 'defensive'] };
   }
 
   // The move is chosen; now the special actions ride on it.

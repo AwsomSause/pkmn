@@ -88,11 +88,12 @@ describe('Signature Move Awakening', () => {
     expect(mon.awakened).toEqual(['tackle']);
   });
 
-  it('wild fights and status moves do not count', () => {
+  it('wild fights count too, but status moves do not', () => {
     const { run, mon } = trainerRun('awaken-2');
     run.battle!.kind = 'wild';
-    for (let n = 0; n < uses + 2; n++) recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')]);
-    expect(mon.awakened).toBeUndefined();
+    for (let n = 0; n < uses; n++) recordBattleTurn(content, structuredClone(run), run, [moveEvent('tackle')]);
+    expect(mon.awakened).toEqual(['tackle']);
+    mon.awakened = undefined;
     run.battle!.kind = 'trainer';
     for (let n = 0; n < uses + 2; n++) recordBattleTurn(content, structuredClone(run), run, [moveEvent('growl')]);
     expect(mon.awakened).toBeUndefined();

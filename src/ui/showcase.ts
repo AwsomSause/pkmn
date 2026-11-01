@@ -171,6 +171,18 @@ export function fitHeight(scene: Phaser.Scene, mon: Visual, maxHeight: number): 
   return mon;
 }
 
+/** Scales a picture to exactly `heightPx` tall (up or down), and again once late-loading art arrives. */
+export function sizeToHeight(scene: Phaser.Scene, visual: Visual, heightPx: number): Visual {
+  const fit = () => {
+    if (!visual.active) return;
+    const natural = visual instanceof Phaser.GameObjects.Sprite ? visual.height : visual.getBounds().height / visual.scaleY;
+    if (natural > 0) visual.setScale(heightPx / natural);
+  };
+  fit();
+  if (!(visual instanceof Phaser.GameObjects.Sprite)) scene.time.delayedCall(600, fit);
+  return visual;
+}
+
 /** A small rounded counter with an item icon, e.g. Bank Credits. Returns its width. */
 export function currencyChip(scene: Phaser.Scene, rightX: number, y: number, icon: string, value: string | number, label: string): number {
   const text = scene.add.text(0, 0, `${value}`, textStyle(22)).setOrigin(1, 0.5);

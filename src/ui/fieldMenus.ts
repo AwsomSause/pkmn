@@ -436,3 +436,32 @@ function openEvolutionChoice(host: FieldMenuHost, itemId: string, partyIndex: nu
   });
   host.setPicker(picker);
 }
+
+/** The in-run Save menu: Save, Save & Quit (title screen), Save & go back to the Hub. The run stays resumable (Continue). */
+export function openSaveMenu(host: FieldMenuHost, go: (to: 'MainMenu' | 'Hub') => void): void {
+  const { session } = services();
+  const choices: { label: string; hint: string; run: () => void }[] = [
+    { label: 'Save', hint: 'Write the run to this slot now. You keep playing.', run: () => host.changed(session.saveRunNow() ? 'Run saved.' : 'The run could not be saved.') },
+    { label: 'Save & Quit', hint: 'Save, then go to the title screen. Continue picks the run up right here.', run: () => (session.saveAndLeaveRun() ? go('MainMenu') : host.changed('The run could not be saved.')) },
+    { label: 'Save & go back to Hub', hint: 'Save, then visit the Hub. The run stays saved; Continue on the title screen resumes it.', run: () => (session.saveAndLeaveRun() ? go('Hub') : host.changed('The run could not be saved.')) },
+  ];
+  const picker: Picker = new Picker(host.scene, {
+    glass: true,
+    title: 'Save',
+    columns: 1,
+    rowHeight: 56,
+    rows: choices.map((c) => ({
+      problem: null,
+      hint: c.hint,
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 14, c.label, textStyle(22, '#ffffff', { fixedWidth: w - 28 })));
+      },
+    })),
+    onSelect: (i) => {
+      close(host, picker);
+      choices[i]!.run();
+    },
+    onBack: () => close(host, picker),
+  });
+  host.setPicker(picker);
+}

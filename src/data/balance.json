@@ -120,7 +120,7 @@
   "stageCapMargin": 7,
   "benchXpPercent": 50,
   "variance": 1,
-  "minLevel": 2,
+  "minLevel": 4,
   "maxLevel": 500,
   "partyStrength": { "enabled": true, "grace": 3, "factor": 0.5, "maxBonus": 4 },
   "trainerBonus": 1,
@@ -176,8 +176,8 @@
   "budgets": { "easy": { "base": 70, "perLevel": 1.2, "max": 170, "perLevelAbove100": 0.15 }, "standard": { "base": 80, "perLevel": 1.6, "max": 200, "perLevelAbove100": 0.25 }, "challenging": { "base": 90, "perLevel": 2.6, "max": 260, "perLevelAbove100": 0.3 }, "elite": { "base": 120, "perLevel": 3.5, "max": 320, "perLevelAbove100": 0.35 } },
   "sourceTiers": { "wild": "standard", "fishing": "standard", "trainer": "challenging", "event": "standard", "quest": "standard", "reward": "standard", "gym": "challenging", "elite": "elite", "champion": "elite", "raid": "elite" } },
   "availability": { "levelSlack": 6, "rarityWeights": { "common": 1, "uncommon": 0.75, "rare": 0.5, "veryRare": 0.3, "legendary": 0.2, "mythical": 0.1 } },
- "opening": { "encounters": 4, "maxBaseStats": 340, "levelOffset": 3, "minLevel": 2, "softMovesUntilLevel": 15,
-  "maxLevel": 4 },
+ "opening": { "encounters": 4, "maxBaseStats": 340, "levelOffset": 1, "minLevel": 4, "softMovesUntilLevel": 15,
+  "maxLevel": 6 },
  "rival": { "stage": 1, "level": 5, "depth": true, "starters": ["bulbasaur", "charmander", "squirtle", "chikorita", "cyndaquil", "totodile", "treecko", "torchic", "mudkip"] },
  "legendaryWildChance": 0.02,
  "legendaryMinRegion": 1,
@@ -523,10 +523,8 @@
  ],
  "spectacle": {
   "enabled": true,
-  "momentum": { "max": 100, "superEffective": 12, "streak": 8, "knockout": 25, "counter": 25, "faintKeeps": 0.5, "ralliesPerBattle": 2, "rallyDamage": 1.5 },
+  "momentum": { "max": 100, "superEffective": 12, "streak": 8, "knockout": 25, "faintKeeps": 0.5, "ralliesPerBattle": 2, "rallyDamage": 1.5 },
   "lastStand": { "chance": 0.3, "minBond": 60, "lastMonBonus": 20, "perBattle": 1, "boost": { "atk": 1, "spa": 1, "spe": 1 } },
-  "counter": { "perBattle": 3, "taken": 0.5, "reflect": 0.5 },
-  "guard": { "classes": { "gym-leader": 2, "elite-four": 3, "champion": 4 }, "finalBonus": 1, "taken": 0.75, "superEffective": 2, "staggerTurns": 2, "staggerDamage": 1.5, "rebuilds": 1 },
   "revenge": { "chance": 0.35, "minBond": 55, "boost": { "atk": 1, "spa": 1 } },
   "phases": {
    "classes": {
@@ -542,7 +540,7 @@
    },
    "final": [ { "atHp": 0.15, "text": "The finale demands everything: their ace burns with a last, blazing light!", "boost": { "atk": 1, "spa": 1 }, "cleanse": true } ]
   },
-  "rematch": { "enabled": true, "chance": 0.5, "levelBonus": 3, "guardBonus": 1, "ai": 0.85 }
+  "rematch": { "enabled": true, "chance": 0.5, "levelBonus": 3, "ai": 0.85 }
  },
  "sos": {
   "enabled": true

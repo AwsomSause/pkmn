@@ -1,9 +1,9 @@
-// Battle Drama spectacle (APPROVED section 7): Last Stand, Perfect Counter, Momentum and Rally, Guard Break,
+// Battle Drama spectacle (APPROVED section 7): Last Stand, Momentum and Rally,
 // Revenge Moment, boss phases, and the Boss Revenge Rematch. Rules are deterministic (own seeded streams).
 
 import { describe, expect, it } from 'vitest';
 import { createBattle, resolveTurn, telegraphedAttack, type BattleContext, type BattleEvent, type PlayerAction } from '../../src/core/battle/engine';
-import { freshSpectacle, rallyProblem, counterProblem, rollLastStand, spectacleOf } from '../../src/core/battle/spectacle';
+import { freshSpectacle, rallyProblem, rollLastStand, spectacleOf } from '../../src/core/battle/spectacle';
 import type { Content } from '../../src/core/contentSchema';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
@@ -39,61 +39,16 @@ function fight(o: Setup) {
 const kinds = (events: BattleEvent[]) => events.filter((e) => e.type === 'spectacle').map((e) => (e as { kind: string }).kind);
 const damageTo = (events: BattleEvent[], side: 'player' | 'enemy') => events.filter((e) => e.type === 'damage' && e.side === side).reduce((n, e) => n + (e as { amount: number }).amount, 0);
 
-describe('Perfect Counter', () => {
-  it('a boss telegraphs, bracing for it cuts the hit and reflects part of it, and builds Momentum', () => {
-    const idle = fight({ c: content });
-    const brace = fight({ c: content });
-    expect(telegraphedAttack(brace.ctx)).toBe('strength');
-    const base = idle.turn({ kind: 'idle' });
-    const ev = brace.turn({ kind: 'counter' });
-    expect(kinds(ev)).toEqual(expect.arrayContaining(['brace', 'counter']));
-    expect(damageTo(ev, 'player')).toBeLessThan(damageTo(base, 'player'));
-    expect(damageTo(ev, 'enemy')).toBeGreaterThan(0);
-    expect(brace.battle.spectacle!.momentum).toBe(content.balance.spectacle.momentum.counter);
-    expect(brace.battle.spectacle!.counters).toBe(1);
-  });
-  it('is refused against ordinary trainers and after the allowance is spent', () => {
-    const plain = fight({ c: content, classId: 'youngster' });
-    expect(telegraphedAttack(plain.ctx)).toBeNull();
-    expect(() => plain.turn({ kind: 'counter' })).toThrow();
+describe('Guard and Brace are gone (Kice, 2026-11-01)', () => {
+  it('bosses still telegraph, but there is no Brace action, no Guard bar and no stagger', () => {
     const f = fight({ c: content });
-    const spec = spectacleOf(content, f.battle)!;
-    spec.counters = content.balance.spectacle.counter.perBattle;
-    expect(counterProblem(content, f.battle, true)).toMatch(/No Counters/);
-    expect(() => f.turn({ kind: 'counter' })).toThrow();
-  });
-  it('braces in vain when the boss picks another move (a miss costs the turn)', () => {
-    let missed = false;
-    for (let i = 0; i < 40 && !missed; i++) {
-      const f = fight({ c: content, seed: `miss${i}`, ai: 0 });
-      missed = kinds(f.turn({ kind: 'counter' })).includes('counterMiss');
-    }
-    expect(missed).toBe(true);
-  });
-});
-
-describe('Guard Break', () => {
-  it('a boss Pokémon takes a guarded stance, a super effective hit breaks it, and the staggered boss skips its strongest move and takes more damage', () => {
-    const f = fight({ c: content });
-    const first = f.turn({ kind: 'move', index: 0 });
-    expect(kinds(first)).toEqual(expect.arrayContaining(['guardUp', 'guardBreak']));
-    const spec = f.battle.spectacle!;
-    expect(spec.guard).toMatchObject({ uid: 'foe1', hp: 0 });
-    expect(spec.guard!.stagger).toBeGreaterThan(0);
-    const second = f.turn({ kind: 'move', index: 0 });
-    const foeMoves = second.filter((e) => e.type === 'move' && e.side === 'enemy').map((e) => (e as { moveId: string }).moveId);
-    expect(foeMoves).not.toContain('strength');
-  });
-  it('ordinary trainers never raise a Guard', () => {
-    const f = fight({ c: content, classId: 'youngster' });
-    expect(kinds(f.turn({ kind: 'move', index: 0 }))).not.toContain('guardUp');
-  });
-  it('shaves damage while the guard stands', () => {
-    const guarded = fight({ c: content, party: [mon('blastoise', 50, ['tackle'], 'me')] });
-    const open = fight({ c: withSpectacle({ guard: { classes: {} } }), party: [mon('blastoise', 50, ['tackle'], 'me')] });
-    const a = damageTo(guarded.turn({ kind: 'move', index: 0 }), 'enemy');
-    const b = damageTo(open.turn({ kind: 'move', index: 0 }), 'enemy');
-    expect(a).toBeLessThan(b);
+    expect(telegraphedAttack(f.ctx)).toBe('strength');
+    expect(() => f.turn({ kind: 'counter' } as unknown as PlayerAction)).not.toThrow();
+    const ev = f.turn({ kind: 'move', index: 0 });
+    expect(kinds(ev).filter((k) => /brace|counter|guard/i.test(k))).toEqual([]);
+    expect('guard' in f.battle.spectacle!).toBe(false);
+    expect(content.balance.spectacle).not.toHaveProperty('guard');
+    expect(content.balance.spectacle).not.toHaveProperty('counter');
   });
 });
 
@@ -211,19 +166,5 @@ describe('Boss Revenge Rematch', () => {
     expect(plan.ai).toBeGreaterThanOrEqual(0.85);
     expect(Math.max(...plan.members.map((m) => m.level))).toBeGreaterThan(Math.max(...old.members.map((m) => m.level)) - 1);
     expect(note).toMatch(/Electric/);
-  });
-});
-
-describe('a counter through the whole run', () => {
-  it('takeTurn accepts Brace and Rally actions in a boss fight', () => {
-    const run = structuredClone(toBattle(chooseStarter(content, createRun(content, { runId: 'tt', seed: 'tt', archetypeId: 'red' }), 0)));
-    const lead = createPokemon(content, 'blastoise', 60, run.party[0]!.uid);
-    lead.moves = [{ id: 'surf', pp: 15 }];
-    run.party[0] = lead;
-    run.battle = createBattle('trainer', [mon('onix', 40, ['strength', 'tackle'], 'f1'), mon('onix', 40, ['strength'], 'f2')], 0, lead.uid, { classId: 'gym-leader', name: 'Brock', leaderId: 'brock' });
-    run.battle.ai = 1;
-    const res = takeTurn(content, run, { kind: 'counter' });
-    expect(res.events.some((e) => e.type === 'spectacle' && e.kind === 'brace')).toBe(true);
-    expect(res.run.battle?.spectacle?.counters).toBe(1);
   });
 });

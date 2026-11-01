@@ -15,8 +15,10 @@ import { holdToConfirm } from '../ui/pointerFx';
 import { framedScreenshot, runShareCard } from '../ui/shareCard';
 import { UI_THEMES, themeIsLight, FONT_SCALE } from '../core/presentation/uiPrefs';
 import { drawBackdrop, drawPanel, Menu, type MenuOption } from '../ui/widgets';
+import { Picker } from '../ui/partyPanel';
+import { gameSummary, type SummaryTopic } from '../core/encyclopedia';
 
-type Page = 'home' | 'search' | 'confirmReset' | SettingCategory;
+type Page = 'home' | 'search' | 'confirmReset' | 'summary' | SettingCategory;
 interface Row {
   option: MenuOption;
   hint: string;
@@ -33,6 +35,8 @@ export class SettingsScene extends Phaser.Scene {
   private query = '';
   private notice = '';
   private menu?: Menu;
+  private picker: Picker | null = null;
+  private topics: SummaryTopic[] | null = null;
   private ui?: Phaser.GameObjects.Container;
   private hintText?: Phaser.GameObjects.Text;
 
@@ -54,6 +58,7 @@ export class SettingsScene extends Phaser.Scene {
       this.add.image(0, 0, 'ui.optionsbg').setOrigin(0).setDisplaySize(GAME_WIDTH, GAME_HEIGHT).setAlpha(0.94).setName('options-bg');
     } else drawBackdrop(this);
     onInputAction(this, (a) => {
+      if (this.picker) return this.picker.handle(a);
       if (this.page === 'search') return; // typing is handled by the key listener below
       if (a === 'back') this.back();
       else this.menu?.handle(a);
@@ -79,7 +84,7 @@ export class SettingsScene extends Phaser.Scene {
   /** Types into the search box while the search page is open. */
   private typed(e: KeyboardEvent): void {
     if (this.page !== 'search') return;
-    if (e.code === 'Escape') return this.go('home', 7);
+    if (e.code === 'Escape') return this.go('home', 8);
     if (e.code === 'ArrowUp' || e.code === 'ArrowDown') return this.menu?.handle(e.code === 'ArrowUp' ? 'up' : 'down');
     if (e.code === 'Enter' || e.code === 'NumpadEnter') return this.menu?.handle('confirm');
     if (e.code === 'Backspace') this.query = this.query.slice(0, -1);
@@ -103,10 +108,15 @@ export class SettingsScene extends Phaser.Scene {
     if (this.page === 'home') {
       return [
         ...SETTING_CATEGORIES.map((c): Row => ({ option: { label: c.label }, hint: c.blurb, action: () => this.go(c.id) })),
+        { option: { label: 'Game Summary' }, hint: 'A readable summary of everything in the game: Pokémon, moves, items, trainers, events, modes and systems.', action: () => this.go('summary') },
         { option: { label: 'Search settings…' }, hint: 'Type to find a setting by name.', action: () => this.go('search') },
         { option: { label: 'Reset to defaults' }, hint: 'Puts every setting back to how it started. Your saves are not touched.', action: () => this.go('confirmReset') },
         { option: { label: this.from === 'Hub' ? 'Back to the Hub' : 'Back to the title screen' }, hint: '', action: () => this.back() },
       ];
+    }
+    if (this.page === 'summary') {
+      this.topics ??= gameSummary(session.content);
+      return [...this.topics.map((t): Row => ({ option: { label: t.label }, hint: t.blurb, action: () => this.openTopic(t) })), back];
     }
     if (this.page === 'search') {
       const found = searchSettings(this.query).map((d) => toggleRow(d, true));
@@ -129,6 +139,29 @@ export class SettingsScene extends Phaser.Scene {
       ];
     }
     return [...settingsIn(this.page).map((d) => toggleRow(d)), back];
+  }
+
+  /** A topic's entries in a scrolling list; the focused entry's full text shows below. */
+  private openTopic(topic: SummaryTopic): void {
+    const picker: Picker = new Picker(this, {
+      glass: true,
+      title: topic.label,
+      columns: 1,
+      rowHeight: 34,
+      rows: topic.entries.map((e) => ({
+        problem: null,
+        hint: e.text,
+        draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+          box.add(fitLine(scene.add.text(12, 4, `${e.name}  ·  ${e.short}`, textStyle(18, '#ffffff')), w - 24));
+        },
+      })),
+      onSelect: () => undefined,
+      onBack: () => {
+        picker.close();
+        this.picker = null;
+      },
+    });
+    this.picker = picker;
   }
 
   private change(id: string): void {
@@ -163,7 +196,7 @@ export class SettingsScene extends Phaser.Scene {
     const ui = (this.ui = this.add.container(0, 0));
     const rows = this.rows();
     const cat = SETTING_CATEGORIES.find((c) => c.id === this.page)?.label;
-    const title = this.page === 'home' ? 'Settings' : this.page === 'search' ? 'Search settings' : this.page === 'confirmReset' ? 'Reset to defaults?' : `Settings · ${cat}`;
+    const title = this.page === 'home' ? 'Settings' : this.page === 'summary' ? 'Game Summary' : this.page === 'search' ? 'Search settings' : this.page === 'confirmReset' ? 'Reset to defaults?' : `Settings · ${cat}`;
     // The UIE Options backdrop already has the word "Options" in its corner: the home page leaves the title to the art,
     // and sub-pages put theirs beside it, so the two never print over each other.
     const art = this.textures.exists('ui.optionsbg');

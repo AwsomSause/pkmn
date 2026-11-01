@@ -174,22 +174,6 @@ export async function playStoryAnim(t: StoryTools): Promise<void> {
       ring(t, x, y, 110, 30, 600);
       bounce(t, 1.06, 200);
       break;
-    case 'drama.brace':
-      ring(t, x, y, 70, 40, 450);
-      sparks(t, 'in', 6);
-      break;
-    case 'drama.guardup':
-      ring(t, x, y, 20, 100, 500);
-      ring(t, x, y, 20, 100, 500, 140);
-      break;
-    case 'drama.guardbreak':
-      // The guard shatters: a bright flash, a burst of shards and a heavy shake.
-      flash(t, 0.55);
-      ring(t, x, y, 20, 170, 600);
-      sparks(t, 'out', 14);
-      t.shake(Math.round(8 * t.plan.shake));
-      tremble(t, 7, 6);
-      break;
     case 'drama.rally':
       flash(t, 0.4);
       ring(t, x, y, 20, 140, 600);

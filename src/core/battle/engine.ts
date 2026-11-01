@@ -82,7 +82,7 @@ import { finaleStrikeDamage } from '../rivals/living';
 import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_TURNS, HEALING_CHEER, raidFieldMultiplier, raidItemProblem, reinforcementDue, takeExtraAction } from '../raid/raid';
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
-import { addMomentum, cfgOf as spectacleCfg, counterProblem, duePhases, guardDamage, isBossFight, rallyProblem, raiseGuard, rollLastStand, spectacleOf, spectacleRoll as spectacleRollExt, staggered, tickGuard, wearGuard, type SpectacleEvent } from './spectacle';
+import { addMomentum, cfgOf as spectacleCfg, duePhases, isBossFight, rallyProblem, rollLastStand, spectacleOf, spectacleRoll as spectacleRollExt, type SpectacleEvent } from './spectacle';
 import { sacrificeFor } from './sacrificeRule';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
 import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveExtras, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
@@ -214,8 +214,6 @@ export type BattleEvent =
 export type PlayerAction =
   /** `transform`: Mega Evolve (etc.) before moving this turn. */
   | { kind: 'move'; index: number; transform?: TransformRequest; /** Spend a full Momentum Meter: this move is a Surge Strike. */ rally?: boolean }
-  /** Brace for the telegraphed attack (Perfect Counter): uses the turn. */
-  | { kind: 'counter' }
   | { kind: 'switch'; partyIndex: number }
   | { kind: 'item'; itemId: string; targetIndex?: number }
   /** A raid cheer (Raid Battles pack): uses the turn, costs one of three cheers. */
@@ -628,8 +626,6 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
   const enemyChoiceIndex = enemyChoice ? enemy.mon.moves.findIndex((m) => m.id === enemyChoice) : -1;
   let enemyMoveIndex =
     enemyForcedIndex >= 0 ? enemyForcedIndex : enemyChoiceIndex >= 0 ? enemyChoiceIndex : chooseEnemyMove(enemy.mon, rng, { content, ai: battle.ai, target: ctx.party[battle.activeIndex]!, stages: battle.enemyStages, battle, party: ctx.party });
-  // Guard Break: a staggered boss cannot use its strongest move.
-  if (spec && staggered(spec, enemy.mon.uid) && enemyForcedIndex < 0 && enemyChoiceIndex < 0) enemyMoveIndex = staggerPick(ctx, enemy.mon, enemyMoveIndex);
   let enemyMove = resolveMove(content, enemy.mon, enemyMoveIndex);
 
   // 1. Switching and items go before any move.
@@ -1050,9 +1046,6 @@ function validateAction(ctx: BattleContext, action: PlayerAction): void {
       const problem = rallyProblem(ctx.content, ctx.battle) ?? (ctx.content.moves.get(slot.id)?.category === 'status' ? 'A Rally needs an attack' : null);
       if (problem) throw new Error(problem);
     }
-  } else if (action.kind === 'counter') {
-    const problem = counterProblem(ctx.content, ctx.battle, telegraphedAttack(ctx) !== null);
-    if (problem) throw new Error(problem);
   } else if (action.kind === 'switch') {
     const problem = switchProblem(ctx, action.partyIndex);
     if (problem) throw new Error(problem);
@@ -5376,19 +5369,13 @@ export function telegraphedAttack(ctx: Pick<BattleContext, 'content' | 'battle' 
   return content.moves.get(best.id)?.category === 'status' ? null : best.id;
 }
 
-/** Start of a turn: the boss's Guard goes up, a Brace or Rally is set. */
+/** Start of a turn: a Rally is set. */
 function spectacleStart(ctx: BattleContext, action: PlayerAction, events: BattleEvent[]) {
   const { battle, content } = ctx;
   const spec = spectacleOf(content, battle);
   if (!spec) return null;
-  const foe = currentEnemy(battle);
-  if (raiseGuard(content, battle, spec, foe)) events.push(say('enemy', 'guardUp', `${nameOf(ctx, foe)} took a guarded stance! Wear it down to break through.`, foe.uid));
   const mine = ctx.party[battle.activeIndex]!;
-  if (action.kind === 'counter') {
-    spec.bracing = telegraphedAttack(ctx);
-    spec.counters += 1;
-    events.push(say('player', 'brace', `${nameOf(ctx, mine)} braces for ${spec.bracing ? content.moves.get(spec.bracing)?.name ?? 'the attack' : 'the attack'}!`, mine.uid));
-  } else if (action.kind === 'move' && action.rally) {
+  if (action.kind === 'move' && action.rally) {
     spec.momentum = 0;
     spec.rallies += 1;
     spec.rallyOn = true;
@@ -5397,54 +5384,29 @@ function spectacleStart(ctx: BattleContext, action: PlayerAction, events: Battle
   return spec;
 }
 
-/** A staggered boss skips its strongest move: pick the next best one (or keep the choice if it has only one). */
-function staggerPick(ctx: BattleContext, enemy: PokemonInstance, chosen: number): number {
-  const brain = { content: ctx.content, ai: Math.max(ctx.battle.ai, 0.7), target: ctx.party[ctx.battle.activeIndex]!, stages: ctx.battle.enemyStages, battle: ctx.battle, party: ctx.party };
-  const ranked = enemy.moves.map((m, i) => ({ i, v: m.pp > 0 ? moveValue(brain, enemy, m.id) : -Infinity })).filter((m) => m.v > -Infinity).sort((a, b) => b.v - a.v || a.i - b.i);
-  if (ranked.length < 2 || ranked[0]!.i !== chosen) return chosen;
-  return ranked[1]!.i;
-}
-
-/** Damage changes from the Guard, a Rally and a landed Counter (applied to every damaging hit; no random numbers). */
+/** Damage changes from a Rally and a signature move (applied to every damaging hit; no random numbers). */
 function spectacleDamage(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, damage: number, events: BattleEvent[]): number {
   const spec = spectacleOf(ctx.content, ctx.battle);
   if (!spec || user === target || damage <= 0) return damage;
   const cfg = spectacleCfg(ctx.content);
   let out = damage;
   if (user.side === 'player') {
-    out *= guardDamage(ctx.content, spec, target.mon.uid);
     if (spec.rallyOn) out *= cfg.momentum.rallyDamage;
     if (user.mon.awakened?.includes(move.id) && !spec.signed.includes(user.mon.uid) && (ctx.bondScore?.(user.mon.uid) ?? 0) >= cfg.lastStand.minBond) {
       spec.signed.push(user.mon.uid);
       events.push(say('player', 'signature', `${nameOf(ctx, user.mon)} pours its bond into ${move.name}!`, user.mon.uid));
     }
-  } else if (spec.bracing !== null && move.id === spec.bracing) {
-    const taken = Math.max(1, Math.floor(damage * cfg.counter.taken));
-    spec.reflect += Math.floor((damage - taken) * cfg.counter.reflect);
-    if (!spec.countered) {
-      spec.countered = true;
-      events.push(say('player', 'counter', `Perfect Counter! ${nameOf(ctx, target.mon)} turned ${move.name} aside!`, target.mon.uid));
-    }
-    return taken;
   }
   return Math.max(1, Math.floor(out));
 }
 
-/** After a hit: super effective hits build Momentum and wear the Guard down; a countered hit reflects its share. */
+/** After a hit: super effective hits build Momentum. */
 function spectacleAfterHit(ctx: BattleContext, user: Combatant, target: Combatant, lost: number, effectiveness: number, events: BattleEvent[]): void {
   const spec = spectacleOf(ctx.content, ctx.battle);
   if (!spec || user === target || lost <= 0) return;
   const cfg = spectacleCfg(ctx.content);
   if (user.side === 'player') {
     if (effectiveness > 1 && addMomentum(ctx.content, spec, cfg.momentum.superEffective)) events.push(say('player', 'momentumFull', 'The Momentum Meter is full! Rally is ready!'));
-    if (wearGuard(ctx.content, spec, target.mon.uid, effectiveness > 1)) {
-      events.push(say('enemy', 'guardBreak', `Guard Break! ${nameOf(ctx, target.mon)} is staggered and cannot use its strongest move!`, target.mon.uid));
-    }
-  } else if (spec.reflect > 0 && user.mon.hp > 0) {
-    const amount = Math.min(spec.reflect, user.mon.hp);
-    spec.reflect = 0;
-    user.mon.hp -= amount;
-    events.push({ type: 'damage', side: user.side, amount, hpAfter: user.mon.hp, effectiveness: 1, crit: false });
   }
 }
 
@@ -5482,19 +5444,10 @@ function spectacleFaint(ctx: BattleContext, side: Side, uid: string, events: Bat
   } else if (addMomentum(ctx.content, spec, cfg.knockout)) events.push(say('player', 'momentumFull', 'The Momentum Meter is full! Rally is ready!'));
 }
 
-/** End of a turn: counters settle, the attack streak builds Momentum, the stagger runs down, boss phases play. */
+/** End of a turn: the attack streak builds Momentum and boss phases play. */
 function spectacleEndOfTurn(ctx: BattleContext, spec: NonNullable<BattleState['spectacle']>, action: PlayerAction, events: BattleEvent[]): void {
   const { content, battle } = ctx;
   const cfg = spectacleCfg(content);
-  const mine = ctx.party[battle.activeIndex]!;
-  if (action.kind === 'counter') {
-    if (spec.countered) {
-      if (addMomentum(content, spec, cfg.momentum.counter)) events.push(say('player', 'momentumFull', 'The Momentum Meter is full! Rally is ready!'));
-    } else events.push(say('player', 'counterMiss', `${nameOf(ctx, mine)} braced, but the telegraphed attack never came.`, mine.uid));
-  }
-  spec.bracing = null;
-  spec.countered = false;
-  spec.reflect = 0;
   spec.rallyOn = false;
   const landed = events.some((e) => e.type === 'damage' && e.side === 'enemy' && e.amount > 0);
   if (landed && action.kind === 'move') {
@@ -5503,7 +5456,6 @@ function spectacleEndOfTurn(ctx: BattleContext, spec: NonNullable<BattleState['s
   } else spec.streak = 0;
   const foe = currentEnemy(battle);
   if (battle.outcome || foe.hp <= 0) return;
-  if (tickGuard(content, spec, foe.uid)) events.push(say('enemy', 'guardRebuilt', `${nameOf(ctx, foe)} steadies itself and raises a weaker guard.`, foe.uid));
   const enemy: Combatant = { side: 'enemy', mon: foe, stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
   for (const due of duePhases(content, battle, spec, foe.hp / maxHp(content, foe))) {
     spec.phases.push(due.index);
