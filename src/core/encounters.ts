@@ -136,10 +136,12 @@ function wildWeightMod(content: Content, archetype: Archetype): ((speciesId: str
   };
 }
 
-export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string, shinyMultiplier = 1): WildPlan {
+const combineWeights = (a?: (id: string) => number, b?: (id: string) => number): ((id: string) => number) | undefined => (a && b ? (id) => a(id) * b(id) : a ?? b);
+
+export function planWild(content: Content, archetype: Archetype, theme: Theme, scale: LevelScale, bonus: number, rng: Rng, regionId?: string, shinyMultiplier = 1, hourWeight?: (speciesId: string) => number): WildPlan {
   const levelInfo = enemyLevel(content, archetype, scale, bonus, rng);
   const gate = curveLevel(content, scale);
-  const { speciesId } = directSpecies(content, { source: 'wild', level: levelInfo.level, cap: scale.cap, draw: () => pickThemeSpecies(content, theme, rng, undefined, regionId, wildWeightMod(content, archetype), gate) });
+  const { speciesId } = directSpecies(content, { source: 'wild', level: levelInfo.level, cap: scale.cap, draw: () => pickThemeSpecies(content, theme, rng, undefined, regionId, combineWeights(wildWeightMod(content, archetype), hourWeight), gate) });
   return { speciesId, level: levelInfo.level, levelInfo, shiny: rollShiny(content, rng, shinyMultiplier) };
 }
 

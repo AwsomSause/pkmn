@@ -59,7 +59,7 @@ export class GameOverScene extends Phaser.Scene {
           `Trainer: ${archetype}`,
           `Lead: ${leadName}`,
           `Regions cleared: ${run.regionsCleared.length} of ${run.regionOrder.length}`,
-          `Badges: ${run.badges.length}  ·  Encounters: ${run.encountersCompleted}`,
+          `Day ${run.clock.day}  ·  Badges: ${run.badges.length}  ·  Encounters: ${run.encountersCompleted}`,
           `Rewards taken: ${run.log.rewardsTaken.length}`,
           `Money left: ₽${run.money}`,
           `Candies earned: ${run.candies}`,

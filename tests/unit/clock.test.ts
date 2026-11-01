@@ -1,7 +1,7 @@
 // The run clock (spec §28) and Camp's time-of-day choices (spec §22).
 
 import { describe, expect, it } from 'vitest';
-import { advanceClock, celebrateToday, freshClock, milestoneToday, periodOf, restUntilMorning } from '../../src/core/clock';
+import { periodWildWeight, shopHoursMultiplier, advanceClock, celebrateToday, freshClock, milestoneToday, periodOf, restUntilMorning } from '../../src/core/clock';
 import { chooseEvent, conditionMet, eventView } from '../../src/core/events';
 import { nextChoices } from '../../src/core/map';
 import { chooseNode, chooseStarter, createRun } from '../../src/core/run';
@@ -81,6 +81,24 @@ describe('camp by the hour', () => {
     expect(done.clock.celebrated).toEqual([7]);
     const again = atEvent(structuredClone(done), 'camp-prepare');
     expect(() => chooseEvent(content, again, 'test-event', 3)).toThrow();
+  });
+});
+
+describe('hours', () => {
+  it('night favours Ghost-types in the wild, morning does not', () => {
+    const run = newRun();
+    const ghost = [...content.species.values()].find((s) => s.types.includes('ghost') && !s.types.some((t) => content.balance.clock.periodTypes.morning.includes(t)))!;
+    expect(periodWildWeight(content, run, ghost.id)).toBe(1);
+    run.clock.tick = 3;
+    expect(periodWildWeight(content, run, ghost.id)).toBe(content.balance.clock.periodWildFactor);
+  });
+
+  it('merchants run a midday sale and charge more at night', () => {
+    const run = newRun();
+    run.clock.tick = 1;
+    expect(shopHoursMultiplier(content, run)).toBeLessThan(1);
+    run.clock.tick = 3;
+    expect(shopHoursMultiplier(content, run)).toBeGreaterThan(1);
   });
 });
 
