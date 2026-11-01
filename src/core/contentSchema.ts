@@ -2773,6 +2773,9 @@ export const EventDefSchema = z.object({
   mode: z.string().nullable().default(null),
   /** With `mode`: always gets a stop on a stage where it is eligible, so a mode's objectives can't be missed by luck. */
   modeStop: z.boolean().default(false),
+  /** Split-second choice (ideas W1): seconds to decide when timed prompts are on; when time runs out the `timeoutChoice` (default the last option) is taken. */
+  countdown: z.number().int().min(3).max(30).optional(),
+  timeoutChoice: z.number().int().min(0).optional(),
   /** A room of a landmark, dungeon or tower: only opens from another event's `addEvent`, never drawn on its own. */
   room: z.boolean().default(false),
   /** A follow-up scene: gets a stop on the next stage where it is eligible (its `requires` hold), so a kindness shows up again later. */

@@ -14,6 +14,7 @@ import { ArchivedRivalSchema, StoryStateSchema } from './story/schema';
 import { PartyLifeStateSchema, createPartyLife } from './partyLife/schema';
 import { freshHyperBattle } from './battle/hyper';
 import { SpectacleBattleSchema } from './battle/spectacle';
+import { ArenaSchema, SkillInputSchema } from './battle/w1Play';
 
 const RngStateSchema = z.object({ a: z.number(), b: z.number(), c: z.number(), d: z.number() });
 export const RngStreamsSchema = z.object(
@@ -704,6 +705,24 @@ export const BattleStateSchema = z.object({
   alpha: z.boolean().optional(),
   /** A benched Pokémon already cheered this battle (ideas W1). */
   benchShout: z.boolean().optional(),
+  /** This turn's skill input (aim drag, shout, throw): set from the action each turn (ideas W1). */
+  skill: SkillInputSchema.optional(),
+  /** A surrender deal was accepted / refused (ideas W1). */
+  deal: z.boolean().optional(),
+  dealRefused: z.boolean().optional(),
+  /** The move a Psychic ally read from the foe's mind (ideas W1). */
+  mindRead: z.string().optional(),
+  /** Pokémon (uid) with a grudge against the foe's species, and those whose rage already played. */
+  grudgeMons: z.array(z.string()).optional(),
+  grudgeDone: z.array(z.string()).optional(),
+  /** A spectator who tosses you one buff, and whether they did. */
+  spectator: z.object({ name: z.string(), used: z.boolean().default(false) }).optional(),
+  /** Arena hazard (lava, rocks, flood) and whether it was smashed already. */
+  arena: ArenaSchema.optional(),
+  /** Types of the foe revealed by a Pokédex scan (ideas W1). */
+  scanned: z.enum(['ok', 'fail']).optional(),
+  /** Doubles: the ally whose hit this turn is the second half of a combo (ideas W1). */
+  comboUid: z.string().optional(),
   /** Critical hits in a row per Pokémon (uid); the Streak Lens reads it (ideas W1). */
   critStreak: z.record(z.string(), z.number().int().min(0)).optional(),
   /** Nuzlocke: this wild Pokémon is not the area's first encounter, so it can't be caught (core/nuzlocke.ts). */
@@ -1560,6 +1579,14 @@ export const SettingsSchema = z.object({
   dialogueFrequency: z.enum(['off', 'low', 'normal', 'high']),
   /** Show why damage came out as it did (effectiveness, STAB, crit) in the battle text. */
   damageDetails: z.boolean().default(false),
+  /** Optional skill prompts in battle: aim drag, signature shout, skill throw, foe scan (ideas W1). */
+  skillPrompts: z.boolean().default(false),
+  /** Four favourite bag items for one-tap use in battle (ideas W1). */
+  hotbar: z.array(z.string()).max(4).default([]),
+  /** Bosses whose intro cinematic the player chose to skip (ideas W1). */
+  skippedIntros: z.array(z.string()).default([]),
+  /** The battle music gets more intense as your Pokémon's HP drops (ideas W1). */
+  adaptiveMusic: z.boolean().default(true),
   /** The last accessibility preset applied ('custom' once any single setting is changed by hand). */
   accessibilityProfile: z.enum(['custom', 'reducedMotion', 'lowFlash', 'moreDetail', 'fastBattles']).default('custom'),
   /** How trainer lists are sorted (core/trainerSort.ts), and whether that order is flipped. */

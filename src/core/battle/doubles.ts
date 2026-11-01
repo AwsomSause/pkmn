@@ -418,6 +418,14 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
     return r === 'a' ? -1 : r === 'b' ? 1 : a.tie - b.tie;
   });
 
+  // Ideas W1 combo: two allies using damaging moves of the same type fire a joint attack; the second one hits harder.
+  battle.comboUid = undefined;
+  const mine = turn.queue.filter((p) => p.user.side === 'player' && p.move.category !== 'status' && p.move.power !== null);
+  if (mine.length === 2 && mine[0]!.move.type === mine[1]!.move.type) {
+    battle.comboUid = mine[1]!.user.mon.uid;
+    events.push({ type: 'spectacle', kind: 'combo', side: 'player', text: `${getSpecies(content, mine[0]!.user.mon.speciesId).name} and ${getSpecies(content, mine[1]!.user.mon.speciesId).name} line up a ${mine[0]!.move.type}-type combo attack!` });
+  }
+
   // 4. Moves.
   while (turn.queue.length > 0 && !battle.outcome) {
     const next = turn.queue.shift()!;
@@ -427,6 +435,8 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
     faintCheck(ctx, field, events);
     if (sideOut(field, 'player') || sideOut(field, 'enemy')) break;
   }
+
+  battle.comboUid = undefined;
 
   // 5. End of turn.
   if (!sideOut(field, 'player') && !sideOut(field, 'enemy')) {

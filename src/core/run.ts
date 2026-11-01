@@ -71,6 +71,7 @@ import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import { wildLuck } from './wildLuck';
+import { arenaFor } from './battle/w1Play';
 import { underdogXpMultiplier } from './battle/w1Rules';
 import { expShareUnlocked, FIRST_RIVAL_FLAG } from './firstRival';
 import { canonPlan, characterOf, majorNote, withAceProgress } from './rivals/major';
@@ -1371,6 +1372,27 @@ function claimRaidRewards(content: Content, run: RunState, battle: BattleState):
  * a generator of its own, so the encounter stream (and every later battle) is unchanged.
  */
 export function startEncounter(content: Content, run: RunState, node: MapNode, rematch?: Rng): void {
+  startEncounterBase(content, run, node, rematch);
+  addPlayFeatures(content, run, node);
+}
+
+/** Ideas W1: the arena hazard of this stage, grudges against the foe's species and a spectator, rolled from streams of their own. */
+function addPlayFeatures(content: Content, run: RunState, node: MapNode): void {
+  const battle = run.battle;
+  if (!battle || battle.doubles) return;
+  const play = content.balance.w1.play;
+  const arena = battle.raid || battle.totem ? null : arenaFor(content, run.stage?.themeId);
+  if (arena && new Rng(hashSeed(`${run.seed}:arena:${run.encountersCompleted}:${node.id}`)).chance(0.5)) battle.arena = { kind: arena, spent: false };
+  const foeSpecies = new Set(battle.enemyTeam.map((m) => m.speciesId));
+  const grudges = run.party.filter((p) => [...foeSpecies].some((sp) => (run.itemCounters?.[`grudge:${p.uid}:${sp}`] ?? 0) > 0)).map((p) => p.uid);
+  if (grudges.length > 0) battle.grudgeMons = grudges;
+  if (battle.kind === 'trainer' && new Rng(hashSeed(`${run.seed}:spectator:${run.encountersCompleted}:${node.id}`)).chance(play.spectator.chance)) {
+    const names = play.spectator.names;
+    battle.spectator = { name: names[new Rng(hashSeed(`${run.seed}:spectator-name:${node.id}`)).int(0, names.length - 1)]!, used: false };
+  }
+}
+
+function startEncounterBase(content: Content, run: RunState, node: MapNode, rematch?: Rng): void {
   const stage = run.stage!;
   const archetype = runArchetype(content, run);
   const theme = getTheme(content, stage.themeId);
@@ -2046,6 +2068,8 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
       changeFriendship(content, fainted, content.balance.friendship.perFaint);
       careFaint(fainted);
       if (fainted.care?.ace) careAceFell(run, fainted.uid);
+      // Ideas W1: it remembers the species that beat it (a grudge, used when that kind shows up again).
+      if (!battle.doubles) run.itemCounters = { ...run.itemCounters, [`grudge:${fainted.uid}:${currentEnemy(battle).speciesId}`]: 1 };
     }
   }
 
@@ -2290,6 +2314,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules) * mutatorMoney(run) * (battle.autoUsed ? content.balance.difficulty.autoBattleXp : 1));
   if (battle.kind === 'trainer') moneyGained += quickWinBonus(run.rules, battle.turn - 1);
   if (battle.alpha) moneyGained = Math.floor(moneyGained * content.balance.w1.luck.alphaMoney);
+  if (battle.deal) moneyGained = Math.floor(moneyGained * content.balance.w1.play.deal.money);
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
   // Powder Jar and Gooey Mulch: every Berry your side ate this battle.

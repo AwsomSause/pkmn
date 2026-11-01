@@ -2107,6 +2107,174 @@
   }
  },
  {
+  "id": "fire-lure",
+  "name": "Ember Lure",
+  "family": "Map and encounter items",
+  "description": "Set at a map stop: the next 2 wild Pokémon are likely fire types (70%)",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": 3,
+  "how": "use",
+  "icon": "bluk-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 2
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "fire"
+     ],
+     "percent": 70
+    }
+   ]
+  }
+ },
+ {
+  "id": "water-lure",
+  "name": "Ripple Lure",
+  "family": "Map and encounter items",
+  "description": "Set at a map stop: the next 2 wild Pokémon are likely water types (70%)",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": 3,
+  "how": "use",
+  "icon": "bluk-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 2
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "water"
+     ],
+     "percent": 70
+    }
+   ]
+  }
+ },
+ {
+  "id": "grass-lure",
+  "name": "Leaf Lure",
+  "family": "Map and encounter items",
+  "description": "Set at a map stop: the next 2 wild Pokémon are likely grass types (70%)",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": 3,
+  "how": "use",
+  "icon": "bluk-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 2
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "grass"
+     ],
+     "percent": 70
+    }
+   ]
+  }
+ },
+ {
+  "id": "electric-lure",
+  "name": "Spark Lure",
+  "family": "Map and encounter items",
+  "description": "Set at a map stop: the next 2 wild Pokémon are likely electric types (70%)",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": 3,
+  "how": "use",
+  "icon": "bluk-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 2
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "electric"
+     ],
+     "percent": 70
+    }
+   ]
+  }
+ },
+ {
+  "id": "rock-lure",
+  "name": "Pebble Lure",
+  "family": "Map and encounter items",
+  "description": "Set at a map stop: the next 2 wild Pokémon are likely rock types (70%)",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": 3,
+  "how": "use",
+  "icon": "bluk-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 2
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "rock"
+     ],
+     "percent": 70
+    }
+   ]
+  }
+ },
+ {
+  "id": "bug-lure",
+  "name": "Buzz Lure",
+  "family": "Map and encounter items",
+  "description": "Set at a map stop: the next 2 wild Pokémon are likely bug types (70%)",
+  "rarity": "uncommon",
+  "stacksOn": "player",
+  "max": 3,
+  "how": "use",
+  "icon": "bluk-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "encounter",
+   "lasts": {
+    "for": "battles",
+    "count": 2
+   },
+   "mods": [
+    {
+     "mod": "types",
+     "types": [
+      "bug"
+     ],
+     "percent": 70
+    }
+   ]
+  }
+ },
+ {
   "id": "streak-lens",
   "name": "Streak Lens",
   "family": "Battle held items",

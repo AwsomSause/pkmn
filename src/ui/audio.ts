@@ -48,6 +48,12 @@ export function playSfxLazy(scene: Phaser.Scene, id: string, volumeScale = 1): v
 
 let currentMusic: { id: string; sound: Phaser.Sound.BaseSound } | null = null;
 
+/** Adaptive music (ideas W1): the battle song plays a little faster as the HP of your Pokémon drops (1 = normal). */
+export function setMusicIntensity(rate: number): void {
+  const sound = currentMusic?.sound as (Phaser.Sound.BaseSound & { setRate?: (r: number) => void }) | undefined;
+  if (sound?.setRate) sound.setRate(Math.max(1, Math.min(1.12, rate)));
+}
+
 export function playMusic(scene: Phaser.Scene, id: string): void {
   const { session, assets } = services();
   if (currentMusic?.id === id && currentMusic.sound.isPlaying) return;
