@@ -49777,6 +49777,1689 @@
      }
     }
    ]
+  },
+  {
+   "id": "mentor-ravi-ironhand-story",
+   "name": "Ravi's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "ravi-ironhand",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Ravi stares at the horizon. \"Twenty years on the coast, and I lost one recruit to a storm I should have seen. I teach so no one else is unprepared.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You stay quiet and let him finish. He nods once.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Captain Ravi Ironhand shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You tell him about your own near miss. \"Then we both learned it,\" he says.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Captain Ravi Ironhand traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-ravi-ironhand-recruit",
+   "name": "Ravi's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "ravi-ironhand",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Captain Ravi Ironhand knows someone with a Pokémon that suits your team. \"That was clean. Do it again.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "fighting",
+         "steel"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-marigold-hatch-story",
+   "name": "Marigold's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "marigold-hatch",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Marigold turns an Egg in her hands. \"My first hatchling never came out. I kept the shell. I have raised every one since like it was that one.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You hold the Egg for a moment so she can breathe.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Marigold Hatch shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You tell her about your first Pokémon. She laughs, and wipes her eye.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Marigold Hatch traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-marigold-hatch-recruit",
+   "name": "Marigold's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "marigold-hatch",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Marigold Hatch knows someone with a Pokémon that suits your team. \"See how it leans on you? That is trust.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "normal",
+         "grass"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-linden-vale-story",
+   "name": "Linden's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "linden-vale",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.oak"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Linden closes the notebook. \"The lab wanted results. I wanted answers. They were not the same thing, so I left.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You ask what answer they found. \"That the question was better,\" they say.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Dr. Linden Vale shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You share your own odd observation. Linden writes it down, and credits you.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Dr. Linden Vale traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-linden-vale-recruit",
+   "name": "Linden's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "linden-vale",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.oak"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Dr. Linden Vale knows someone with a Pokémon that suits your team. \"Fascinating! You did exactly what the data said you would not.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "psychic",
+         "bug"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-juno-trailwind-story",
+   "name": "Juno's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "juno-trailwind",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Juno traces a route in the dirt. \"I was lost for nine days once. A wild Pokémon walked me out. I have been paying it back ever since.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You let the silence sit. Juno hums an old trail song.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Juno Trailwind shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You tell her about your wrong turn. \"Best way to learn a road,\" she says.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Juno Trailwind traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-juno-trailwind-recruit",
+   "name": "Juno's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "juno-trailwind",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Juno Trailwind knows someone with a Pokémon that suits your team. \"Now you are reading the ground. Good.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "flying",
+         "ground"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-celeste-ribbon-story",
+   "name": "Celeste's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "celeste-ribbon",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Celeste lowers her voice. \"I won my third Festival with a shaking hand. Nobody saw. I teach so others know that shaking is allowed.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You say nothing and hand her a glass of water.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Celeste Ribbon shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You admit you are nervous too. She squeezes your shoulder.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Celeste Ribbon traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-celeste-ribbon-recruit",
+   "name": "Celeste's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "celeste-ribbon",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Celeste Ribbon knows someone with a Pokémon that suits your team. \"Darling, that was a performance.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "fairy",
+         "water"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-sable-oakridge-story",
+   "name": "Sable's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "sable-oakridge",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.cynthia-masters"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Sable looks at their hands. \"I left the title because I stopped enjoying it. I was afraid that meant I had stopped being good.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You wait. Sable almost smiles.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Sable Oakridge shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You say you are afraid of the same thing. \"Good. Remember that,\" Sable says.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Sable Oakridge traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-sable-oakridge-recruit",
+   "name": "Sable's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "sable-oakridge",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.cynthia-masters"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Sable Oakridge knows someone with a Pokémon that suits your team. \"That is how a champion thinks.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "dragon",
+         "dark"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-dax-corvane-story",
+   "name": "Dax's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "dax-corvane",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.blue"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Dax scuffs his boot. \"I lost to you and I was furious for a week. Then I realised I had never been that interested in anything before.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You do not mention the loss. He looks grateful.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Dax Corvane shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You admit the win was luck. \"Liar,\" he says, grinning.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Dax Corvane traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-dax-corvane-recruit",
+   "name": "Dax's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "dax-corvane",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.blue"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Dax Corvane knows someone with a Pokémon that suits your team. \"Fine. That was... good. Do not let it go to your head.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "fire",
+         "electric"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-brook-tidewater-story",
+   "name": "Brook's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "brook-tidewater",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fisherman"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Brook watches the tide. \"My mother kept this gym. When the harbour flooded, we saved the Pokémon first. I took her badge, not her name.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You listen to the water with her.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Brook of Tidewater shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You tell her about your home. \"Then you know what a harbour is,\" she says.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Brook of Tidewater traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-brook-tidewater-recruit",
+   "name": "Brook's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "brook-tidewater",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fisherman"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Brook of Tidewater knows someone with a Pokémon that suits your team. \"You are starting to flow.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "water",
+         "ice"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-vesper-nox-story",
+   "name": "Vesper's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "vesper-nox",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Vesper adjusts their cloak. \"Every challenger who reaches me is better than I was. I teach because I would like, once, to lose well.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You nod. Vesper turns away, but not before you see the smile.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Vesper Nox shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You say you would like to be the one. \"Then do not telegraph it,\" Vesper says.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Vesper Nox traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-vesper-nox-recruit",
+   "name": "Vesper's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "vesper-nox",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Vesper Nox knows someone with a Pokémon that suits your team. \"Elegant. I almost did not see it.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "ghost",
+         "psychic"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-ysolde-marrow-story",
+   "name": "Ysolde's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "ysolde-marrow",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Ysolde unrolls a map. \"I saw one once, for three seconds, in a storm. I have written four hundred pages since to be sure I did not dream it.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You look at the map without a word.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Ysolde Marrow shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You tell her about a strange dream. She reaches for her pen.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Ysolde Marrow traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-ysolde-marrow-recruit",
+   "name": "Ysolde's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "ysolde-marrow",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Ysolde Marrow knows someone with a Pokémon that suits your team. \"Yes. That is what the third scroll said.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "dragon",
+         "psychic"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-tobias-satchel-story",
+   "name": "Tobias's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "tobias-satchel",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Tobias pats the satchel. \"My first customer was a girl with no money and a Pokémon with no berries. I gave her both. Worst deal I ever made.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You smile and let him ramble.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Tobias Satchel shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You offer to pay for something small. He refuses, and then accepts.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Tobias Satchel traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-tobias-satchel-recruit",
+   "name": "Tobias's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "tobias-satchel",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Tobias Satchel knows someone with a Pokémon that suits your team. \"You used that item perfectly. I would have charged for that.\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "normal",
+         "steel"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-fenwick-eon-story",
+   "name": "Fenwick's Story",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "fenwick-eon",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.bug_catcher"
+    ],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Fenwick touches the string on the wall. \"My Eevee never evolved. I used to think I failed it. Now I think it just did not need to.\"",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You sit beside him in silence.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Fenwick Eon shared a personal story",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own",
+     "success": {
+      "text": "You say your own team is still changing. \"Good. Stay curious,\" he says.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and Fenwick Eon traded stories",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-fenwick-eon-recruit",
+   "name": "Fenwick's Recommendation",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "fenwick-eon",
+     "trustAtLeast": 25
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.bug_catcher"
+    ],
+    "tint": "#2a2a44",
+    "effect": "sparkle"
+   },
+   "intro": "Fenwick Eon knows someone with a Pokémon that suits your team. \"Oh! It is starting. Do you see?\"",
+   "choices": [
+    {
+     "label": "Accept the introduction",
+     "success": {
+      "text": "A new teammate joins you, vouched for by your mentor.",
+      "effects": [
+       {
+        "kind": "join",
+        "types": [
+         "grass",
+         "normal"
+        ],
+        "levelBonus": 0
+       },
+       {
+        "kind": "mentor",
+        "trust": 1,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Politely refuse",
+     "success": {
+      "text": "Your mentor shrugs. \"Your team, your call.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-familiar-face",
+   "name": "A Familiar Face",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "fellow": "veteran"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a3a44",
+    "effect": "sparkle"
+   },
+   "intro": "Your fellow apprentice is someone you have trained beside before. They graduated, and came back to help. \"Look who it is. Still learning?\"",
+   "choices": [
+    {
+     "label": "Ask them to train with you",
+     "success": {
+      "text": "It feels like old times, only better.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "An old fellow apprentice came back to help",
+        "importance": 70
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3,
+        "rivalry": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spar for old times",
+     "success": {
+      "text": "They grin and take a stance. A friendly match.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Fellow apprentice",
+       "apprentice": true,
+       "size": 3,
+       "win": [
+        {
+         "kind": "mentor",
+         "trust": 3,
+         "rivalry": 3
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Just catch up",
+     "success": {
+      "text": "You talk until the fire burns low.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-rare-talent",
+   "name": "A Rare Talent",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "fellow": "prodigy"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#44442a",
+    "effect": "glint"
+   },
+   "intro": "Your fellow apprentice is a prodigy, the kind your mentor sees once in a generation. They ask quietly: \"Do you ever feel behind?\"",
+   "choices": [
+    {
+     "label": "Encourage them",
+     "success": {
+      "text": "They smile for the first time in days. Your mentor notices.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 3
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2,
+        "rivalry": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Admit you feel behind too",
+     "success": {
+      "text": "Honesty makes you friends.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and a prodigy admitted you felt behind",
+        "importance": 65
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Challenge them",
+     "success": {
+      "text": "They accept without blinking.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Fellow apprentice",
+       "apprentice": true,
+       "size": 3,
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "mentor",
+         "trust": 4,
+         "rivalry": 4
+        }
+       ]
+      }
+     }
+    }
+   ]
   }
  ]
 }

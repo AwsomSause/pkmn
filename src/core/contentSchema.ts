@@ -2383,6 +2383,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
     loyaltyAtLeast: z.number().int().min(0).max(100).optional(),
     lesson: z.string().optional(),
     mission: z.enum(['none', 'active', 'done']).optional(),
+    /** The fellow apprentice: a veteran who graduated before, or a prodigy (potential 5). */
+    fellow: z.enum(['veteran', 'prodigy']).optional(),
   }),
   /** A Blissful Pokémon is in the party / a Shadow Pokémon is in the party (APPROVED.md §12-14). */
   z.object({ kind: z.literal('partyBlissful') }),

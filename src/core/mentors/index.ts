@@ -10,7 +10,7 @@ import type { Content, EventCondition, EventEffect } from '../contentSchema';
 import { addItem } from '../items';
 import { maxHp } from '../pokemon';
 import { hashSeed, Rng } from '../rng';
-import type { Apprentice, MentorBond, MentorRun, Profile, RunState } from '../state';
+import type { Apprentice, MentorBond, MentorRun, PokemonInstance, Profile, RunState } from '../state';
 import { emit } from '../story/record';
 
 export const MENTOR_CATEGORIES = [
@@ -43,6 +43,8 @@ const LessonSchema = z.object({
   effects: z.array(ArchetypeModifierSchema).default([]),
   items: z.array(z.object({ id: z.string(), count: z.number().int().positive() })).default([]),
   money: z.number().int().min(0).default(0),
+  /** A move the mentor teaches the first party Pokémon that can learn it (taught after the next battle). */
+  teachMove: z.string().optional(),
 });
 export type MentorLesson = z.infer<typeof LessonSchema>;
 
@@ -77,6 +79,8 @@ const MentorSchema = z.object({
     reward: z.object({ item: z.string(), count: z.number().int().positive() }),
   }),
   graduation: z.object({ title: z.string(), text: z.string() }),
+  /** The mentor's personal storyline (an event once trust is 45): the telling, and the two ways to answer. */
+  story: z.object({ intro: z.string(), listen: z.string(), share: z.string() }),
 });
 export type Mentor = z.infer<typeof MentorSchema>;
 
@@ -128,6 +132,7 @@ export function mentorProblems(content: Content): string[] {
     if (m.unlock.kind === 'trust' && !ids.has(m.unlock.mentor)) problems.push(`mentors.json: "${m.id}" unlocks through unknown mentor "${m.unlock.mentor}"`);
     const items = [...m.lessons.flatMap((l) => l.items.map((i) => i.id)), m.mission.reward.item];
     for (const id of items) if (!content.items.has(id) && !content.catalog.has(id)) problems.push(`mentors.json: "${m.id}" gives unknown item "${id}"`);
+    for (const l of m.lessons) if (l.teachMove && content.moves.get(l.teachMove)?.supported !== true) problems.push(`mentors.json: "${m.id}" teaches unsupported or unknown move "${l.teachMove}"`);
     if (new Set(m.lessons.map((l) => l.id)).size !== m.lessons.length) problems.push(`mentors.json: "${m.id}" repeats a lesson id`);
   }
   const lessonIds = new Set(MENTORS.flatMap((m) => m.lessons.map((l) => l.id)));
@@ -185,12 +190,14 @@ export function makeFellow(seed: string, mentor: Mentor, bond: MentorBond): Appr
     const old = rng.pick(bond.apprentices);
     return { ...old, potential: Math.min(5, old.potential + 1), progress: Math.max(old.progress, 4), veteran: true };
   }
+  // A prodigy (a rare talent) turns up once you have graduated twice under this mentor.
+  const prodigy = bond.graduated >= 2 && rng.chance(0.3);
   const types = new Set<string>();
   if (mentor.leans.length > 0) types.add(rng.pick(mentor.leans));
   while (types.size < 2) types.add(rng.pick([...TYPE_NAMES]));
   return {
     name: rng.pick(pool.names),
-    potential: rng.int(1, 5),
+    potential: prodigy ? 5 : rng.int(1, 5),
     personality: rng.pick(pool.personalities).id,
     strength: rng.pick(pool.strengths),
     weakness: rng.pick(pool.weaknesses),
@@ -201,6 +208,8 @@ export function makeFellow(seed: string, mentor: Mentor, bond: MentorBond): Appr
     veteran: false,
   };
 }
+/** A prodigy: a fresh apprentice with the highest potential. */
+export const isProdigy = (a: Apprentice): boolean => a.potential >= 5 && !a.veteran;
 export const personalityText = (id: string) => MENTOR_DATA.apprentices.personalities.find((p) => p.id === id)?.text ?? id;
 const paceOf = (a: Apprentice) => MENTOR_DATA.apprentices.learning.find((l) => l.id === a.learning)?.pace ?? 2;
 /** How far along the fellow apprentice is, on the same scale as trust. */
@@ -248,6 +257,22 @@ const note = (m: MentorRun, line: string) => {
   m.log = [...m.log, line].slice(-12);
 };
 
+/** Whether the Pokémon could learn this move (its learnset, or its family's) and doesn't know it yet. */
+function canLearn(content: Content, mon: PokemonInstance, moveId: string): boolean {
+  const species = content.species.get(mon.speciesId);
+  if (!species || mon.moves.some((k) => k.id === moveId)) return false;
+  const pool = new Set([...(content.learnables.get(species.id) ?? (species.form ? content.learnables.get(species.form.base) : undefined) ?? []), ...species.learnset.map((e) => e.move)]);
+  return pool.has(moveId);
+}
+
+/** The mentor hands down a move: the first healthy party Pokémon that can learn it is taught it after the next battle. */
+function teachMentorMove(content: Content, run: RunState, moveId: string, mentorName: string): void {
+  const mon = run.party.find((m) => m.hp > 0 && canLearn(content, m, moveId));
+  if (!mon || run.pending.some((p) => p.kind === 'learnMove' && p.moveId === moveId)) return;
+  run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
+  if (run.mentor) note(run.mentor, `${mentorName} will teach ${content.moves.get(moveId)?.name ?? moveId} to ${content.species.get(mon.speciesId)?.name ?? mon.speciesId}.`);
+}
+
 /**
  * Learns every lesson the trust now allows (each applies once: its id is kept in the run). Returns the new lessons' names.
  * At the start of a run (`announce` false) nothing is written to the story.
@@ -265,6 +290,7 @@ export function applyLessons(content: Content, run: RunState, announce = true): 
     for (const it of l.items) addItem(run.inventory, it.id, it.count);
     run.money += l.money;
     learned.push(l.name);
+    if (l.teachMove) teachMentorMove(content, run, l.teachMove, mentor.name);
     note(m, `${mentor.name} taught you ${l.name}: "${l.text}"`);
     if (announce) emit(content, run, 'storyMoment', { actors: [], data: { def: 'mentor-lesson', suppressed: false }, importance: 55, text: `${mentor.name} taught: ${l.name}` });
   }
@@ -353,6 +379,8 @@ export function mentorConditionMet(run: RunState, c: Extract<EventCondition, { k
   if (c.loyaltyAtLeast !== undefined && m.loyalty < c.loyaltyAtLeast) return false;
   if (c.lesson !== undefined && !m.lessons.includes(c.lesson)) return false;
   if (c.mission !== undefined && m.mission.state !== c.mission) return false;
+  if (c.fellow === 'veteran' && !m.fellow.veteran) return false;
+  if (c.fellow === 'prodigy' && !isProdigy(m.fellow)) return false;
   return true;
 }
 
@@ -362,6 +390,7 @@ export function mentorConditionText(c: Extract<EventCondition, { kind: 'mentor' 
   if (c.trustAtLeast) return `Needs ${who} to trust you (${c.trustAtLeast}+)`;
   if (c.loyaltyAtLeast) return `Needs your loyalty to ${who} (${c.loyaltyAtLeast}+)`;
   if (c.lesson) return `Needs a lesson from ${who}`;
+  if (c.fellow) return c.fellow === 'veteran' ? 'Needs a fellow apprentice who has graduated before' : 'Needs a prodigy as your fellow apprentice';
   if (c.mission === 'none') return `Needs ${who} to have no mission for you yet`;
   if (c.mission === 'active') return `Needs ${who}'s mission under way`;
   return `Needs ${who}`;
@@ -440,7 +469,7 @@ export function mentorSummaryLines(run: Pick<RunState, 'mentor'>): string[] {
   return [
     `${mentor.name}, ${mentor.title} (${categoryName(mentor)})`,
     `${tierName(m.tier)}: trust ${m.trust}/${CFG.trustMax}, loyalty ${m.loyalty}/${CFG.loyaltyMax}`,
-    `Fellow apprentice ${m.fellow.name}${m.fellow.veteran ? ' (veteran)' : ''}: ${standing}`,
+    `Fellow apprentice ${m.fellow.name}${m.fellow.veteran ? ' (veteran)' : isProdigy(m.fellow) ? ' (prodigy)' : ''}: ${standing}`,
     m.mission.state === 'active' ? `Mission: ${mentor.mission.name}, ${m.mission.bossesLeft} badge${m.mission.bossesLeft === 1 ? '' : 's'} to go` : m.mission.state === 'done' ? `Mission done: ${mentor.mission.name}` : 'No mission yet',
   ];
 }

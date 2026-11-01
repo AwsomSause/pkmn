@@ -1,6 +1,7 @@
 // Mentors and apprentices (spec section 15): data, trust and loyalty, lessons, events, the fellow apprentice and the lasting bond.
 
 import { describe, expect, it } from 'vitest';
+import { createPokemon } from '../../src/core/pokemon';
 import { createProfile } from '../../src/core/profile';
 import { applyRunToProfile } from '../../src/core/progress';
 import { chooseStarter, createRun, takeTurn, type TurnResult } from '../../src/core/run';
@@ -13,6 +14,7 @@ import {
   bondOf,
   changeMentor,
   getMentor,
+  isProdigy,
   makeFellow,
   mentorBadgeWon,
   mentorHudLine,
@@ -298,5 +300,56 @@ describe('map HUD line', () => {
     changeMentor(content, run, { rivalry: 2 });
     expect(mentorHudLine(run)).toContain('+2');
     expect(mentorHudLine(run)).toContain('Mission 2');
+  });
+});
+
+describe('the rest of section 15', () => {
+  it('a lesson can teach a move: the first healthy Pokémon that can learn it gets it as a pending lesson', () => {
+    const run = start('g-move');
+    run.party[0] = createPokemon(content, 'machamp', 40, run.party[0]!.uid);
+    run.party[0]!.moves = run.party[0]!.moves.filter((m) => m.id !== 'close-combat');
+    changeMentor(content, run, { trust: 60 });
+    expect(run.mentor!.lessons).toContain('ravi-captain');
+    expect(run.pending.filter((p) => p.kind === 'learnMove' && p.moveId === 'close-combat')).toHaveLength(1);
+    changeMentor(content, run, { trust: 5 });
+    expect(run.pending.filter((p) => p.kind === 'learnMove' && p.moveId === 'close-combat')).toHaveLength(1);
+  });
+
+  it('every mentor has a personal storyline and a recommendation event, and the moves they teach are supported', () => {
+    for (const m of MENTORS) {
+      expect(content.events.has(`mentor-${m.id}-story`), m.id).toBe(true);
+      expect(content.events.has(`mentor-${m.id}-recruit`), m.id).toBe(true);
+      expect(m.lessons.some((l) => l.teachMove), m.id).toBe(true);
+    }
+    expect(mentorProblems(content)).toEqual([]);
+  });
+
+  it('a recommendation brings a new teammate', () => {
+    const run = start('g-recruit');
+    changeMentor(content, run, { trust: 30 });
+    const node = run.stage!.map.nodes[0]!;
+    run.stage!.current = node.id;
+    run.stage!.visited = [node.id];
+    node.sides.push({ id: 'test-event', kind: 'event', used: false, eventId: 'mentor-ravi-ironhand-recruit' });
+    const after = chooseEvent(content, run, 'test-event', 0).run;
+    expect(after.pending.some((d) => d.kind === 'caught')).toBe(true);
+  });
+
+  it('a graduate comes back as a veteran, and the veteran event waits for one; a prodigy needs two graduations', () => {
+    const bond = { ...bondOf({ mentorBonds: {} }, 'ravi-ironhand'), graduated: 2, apprentices: [makeFellow('seed-a', getMentor('ravi-ironhand')!, bondOf({ mentorBonds: {} }, 'x'))] };
+    const kinds = new Set<string>();
+    for (let i = 0; i < 60; i++) {
+      const f = makeFellow(`kind-${i}`, getMentor('ravi-ironhand')!, bond);
+      kinds.add(f.veteran ? 'veteran' : isProdigy(f) ? 'prodigy' : 'plain');
+    }
+    expect(kinds).toEqual(new Set(['veteran', 'prodigy', 'plain']));
+    const fresh = bondOf({ mentorBonds: {} }, 'ravi-ironhand');
+    for (let i = 0; i < 40; i++) expect(makeFellow(`kind-${i}`, getMentor('ravi-ironhand')!, { ...fresh, graduated: 1 }).potential).toBeLessThanOrEqual(5);
+    const run = start('g-vet');
+    expect(conditionMet(content, run, { kind: 'mentor', fellow: 'veteran' })).toBe(false);
+    run.mentor!.fellow = { ...run.mentor!.fellow, veteran: true };
+    expect(conditionMet(content, run, { kind: 'mentor', fellow: 'veteran' })).toBe(true);
+    run.mentor!.fellow = { ...run.mentor!.fellow, veteran: false, potential: 5 };
+    expect(conditionMet(content, run, { kind: 'mentor', fellow: 'prodigy' })).toBe(true);
   });
 });
