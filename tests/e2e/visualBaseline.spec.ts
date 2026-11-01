@@ -106,6 +106,10 @@ test('repeated battles do not pile up textures, objects or tweens', async ({ pag
   };
   await page.keyboard.press('Enter'); // the first node: a battle
   await waitForScene(page, 'Battle');
+  // Warm up: lazy art for the first battle (animation sheets, fallbacks) can still be arriving after the first restart on a
+  // slow runner. A real leak grows with every restart, so measure from the third restart on.
+  await restart();
+  await restart();
   await restart();
   const first = await sample();
   for (let i = 0; i < 5; i++) await restart();
