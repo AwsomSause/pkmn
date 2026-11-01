@@ -23,7 +23,8 @@ import { newMon, requireStage, startEncounter, startRaidBattle, startTotemBattle
 import type { Content, Item } from '../contentSchema';
 import type { ExpeditionState, MapNode, RunState } from '../state';
 import { generateRoute, validateRoute, type RouteNode } from './graph';
-import type { ExpeditionDef, ExpeditionNodeKind } from './schema';
+import type { ExpeditionDef, ExpeditionNodeKind, RentalMember } from './schema';
+import { describeRental, outfitRental, pickRentalTeam, rentalLevel } from './rental';
 
 export function getExpedition(content: Content, id: string): ExpeditionDef {
   const e = content.expeditions.expeditions.find((x) => x.id === id);
@@ -74,7 +75,7 @@ export function expeditionPreview(content: Content, run: RunState, sideId: strin
       speciesId: def.legendary.species, epithet: def.legendary.epithet, rarity: def.legendary.rarity, omen: def.legendary.omen, lore: def.legendary.lore, temporaryNote: def.legendary.temporaryNote,
       tint: def.legendary.visual.tint, accent: def.legendary.visual.accent, modifiers: def.legendary.modifiers, stage: stageRules(def, 0),
     },
-    rules: ['Loot is kept when you extract or finish.', `Losing a fight forfeits the loot (${Math.round(def.failureKeep * 100)}% of its money is kept).`, 'You never lose your own Pokémon.'],
+    rules: [...(def.partyMode === 'rental' ? [`Rental team for ${run.badges.length} badge${run.badges.length === 1 ? '' : 's'}: ${describeRental(pickRentalTeam(content, run, `${def.id}:${run.regionIndex}:${requireStage(run).index}`), content)}`] : []), 'Loot is kept when you extract or finish.', `Losing a fight forfeits the loot (${Math.round(def.failureKeep * 100)}% of its money is kept).`, 'You never lose your own Pokémon.'],
   };
 }
 
@@ -113,15 +114,20 @@ export function beginExpedition(content: Content, current: RunState, sideId: str
   if (problems.length > 0) throw new Error(`Generated an invalid expedition route: ${problems.join('; ')}`);
   const exp: ExpeditionState = {
     id: def.id, nodes, current: null, node: null, status: 'route', choice: null, stash: null, tempUids: [], loot: { money: 0, items: {}, energy: 0, research: 0 },
-    tempItems: [], level, battleResult: null, log: [`${def.name} begins.`],
+    tempItems: [], level, battleResult: null, log: [`${def.name} begins.`], rentalTeam: null,
   };
   run.expedition = exp;
   const pick = new Rng(hashSeed(`${run.seed}::expedition-party::${def.id}:${stage.index}`));
   if (def.partyMode === 'rental') {
+    // Spec 30: the team follows the badge count; its level follows the party (core/expedition/rental.ts).
+    const team = pickRentalTeam(content, run, `${def.id}:${run.regionIndex}:${stage.index}`);
+    const rentLevel = rentalLevel(content, exp.level, run.party, team);
     exp.stash = run.party;
     run.party = [];
-    for (const id of rentalOptions(def, pick, 3)) addTemp(content, run, exp, id);
-    exp.log.push('You borrowed three rental Pokémon.');
+    for (const member of team.members) addTemp(content, run, exp, member.species, rentLevel, member);
+    exp.rentalTeam = team.id;
+    run.rentalsUsed = [...run.rentalsUsed, team.id];
+    exp.log.push(`You borrowed ${team.name}: ${team.strategy}`);
   } else if (def.partyMode === 'draft') {
     exp.stash = run.party;
     run.party = [];
@@ -145,12 +151,13 @@ function draftOptions(content: Content, ids: string[], level: number) {
 }
 
 /** Adds an expedition-only Pokémon. If the party is full, the last own Pokémon waits in the stash. */
-function addTemp(content: Content, run: RunState, exp: ExpeditionState, speciesId: string): void {
+function addTemp(content: Content, run: RunState, exp: ExpeditionState, speciesId: string, level = exp.level, member?: RentalMember): void {
   if (run.party.length >= content.balance.partyMax) {
     const [displaced] = run.party.splice(run.party.length - 1, 1);
     exp.stash = [...(exp.stash ?? []), displaced!];
   }
-  const mon = newMon(content, run, speciesId, exp.level, 'p');
+  const mon = newMon(content, run, speciesId, level, 'p');
+  if (member) outfitRental(content, mon, member);
   exp.tempUids.push(mon.uid);
   run.party.push(mon);
   discover(run, speciesId, false);

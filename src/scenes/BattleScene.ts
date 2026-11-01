@@ -36,7 +36,7 @@ import { pickUieArena } from '../core/arenaStyle';
 import { uieArenaId } from '../assets/catalog';
 import { services } from '../game/services';
 import { moveBlockReason } from '../core/battle/moveBlock';
-import { cheerProblem, getRaid } from '../core/raid/raid';
+import { cheerProblem, raidDef } from '../core/raid/raid';
 import { playCry, playMusic, playSfx, playSfxLazy } from '../ui/audio';
 import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
 import { regionIdentity } from '../core/presentation/regionIdentity';
@@ -1754,7 +1754,7 @@ export class BattleScene extends Phaser.Scene {
     }
     const raid = this.run.battle?.raid;
     if (e.type === 'raid' && e.tone === 'warn' && raid?.charging) {
-      const tele = getRaid(content, raid.id).telegraph;
+      const tele = raidDef(content, raid).telegraph;
       if (tele && tele.text === e.text) return { side: 'enemy', tint: 0xff4fd8, label: `Charged attack: next hit ×${tele.boost}` };
     }
     if (cue?.ids?.includes('gathering-everything')) return { side: cue.side, tint: 0xffb040, label: 'Next attack: Attack +2 (a status breaks it)' };

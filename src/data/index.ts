@@ -386,6 +386,25 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     }
     if (e.partyMode === 'rental' && e.nodeWeights.recruit) problems.push(`expeditions.json "${e.id}": a rental expedition cannot have recruit nodes`);
   }
+  // Rental teams (spec 30): real species, moves and items, and at least two teams for every badge count (variety).
+  const teamIds = new Set<string>();
+  const lastMin = Math.max(...expeditions.rentalTeams.map((t) => t.minBadges)) + 1;
+  for (const t of expeditions.rentalTeams) {
+    if (teamIds.has(t.id)) problems.push(`expeditions.json rental team "${t.id}" is listed twice`);
+    teamIds.add(t.id);
+    if (t.maxBadges !== null && t.maxBadges < t.minBadges) problems.push(`expeditions.json rental team "${t.id}": maxBadges is below minBadges`);
+    for (const m of t.members) {
+      if (!content.species.has(m.species)) problems.push(`expeditions.json rental team "${t.id}" has unknown species "${m.species}"`);
+      for (const mv of m.moves) if (!content.moves.has(mv)) problems.push(`expeditions.json rental team "${t.id}" has unknown move "${mv}"`);
+      if (m.item && content.catalog.size > 0 && content.catalog.get(m.item)?.status !== 'supported') problems.push(`expeditions.json rental team "${t.id}" holds "${m.item}", which is not a supported catalog item`);
+    }
+  }
+  for (let b = 0; b <= lastMin; b++) {
+    const open = expeditions.rentalTeams.filter((t) => b >= t.minBadges && (t.maxBadges === null || b <= t.maxBadges)).length;
+    if (open < 2) problems.push(`expeditions.json: only ${open} rental team(s) for ${b} badges (need at least 2)`);
+  }
+  const tb = raids.badgeScaling.tierBadges;
+  if (tb.some((n, i) => i > 0 && n < tb[i - 1]!)) problems.push('raids.json badgeScaling.tierBadges must not go down');
   for (const g of minigames.games) {
     if (!(g.id in MINIGAMES)) problems.push(`minigames.json has no module for "${g.id}"`);
     for (const r of [g.rewardTable.bronze, g.rewardTable.silver, g.rewardTable.gold]) if (r.item && !content.items.has(r.item.item)) problems.push(`minigames.json "${g.id}" gives unknown item "${r.item.item}"`);

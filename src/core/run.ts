@@ -111,7 +111,8 @@ import {
   wildSpeciesWithItems,
 } from './mapItems';
 import { pickRaidRival } from './raid/rivalAlly';
-import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidDef, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
+import { applyBossAbility, raidBadgeLevel, scaledRaid } from './raid/scaling';
 import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
 import { placeLegendaryGate } from './legendary/legendary';
@@ -288,6 +289,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     partyLife: createPartyLife(),
     clock: freshClock(),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
+    rentalsUsed: [],
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
     expedition: null,
@@ -1010,9 +1012,11 @@ export function raidPreview(content: Content, current: RunState, sideId: string)
   const notes = def.grand ? grandNotes(content, current, speciesId) : gangNotes(content, current, def);
   const returning = Boolean(side.returning);
   if (returning) notes.push('It got away before, and it is back, stronger.');
+  const badges = current.badges.length;
+  const scaled = scaledRaid(content, def, badges);
   return {
-    id: def.id, name: def.name, tier: def.tier, blurb: [def.blurb, ...notes].join(' '), speciesId, level: level + (returning ? RETURNING_LEVEL_BONUS : 0),
-    entryCost: def.entryCost, mechanics: describeMechanics(def), rewards: describeRewards(def), kind: def.kind, returning,
+    id: def.id, name: def.name, tier: def.tier, blurb: [def.blurb, ...notes].join(' '), speciesId, level: raidBadgeLevel(content, current, def, level + (returning ? RETURNING_LEVEL_BONUS : 0)),
+    entryCost: def.entryCost, mechanics: describeMechanics(scaled, { content, badges }), rewards: describeRewards(scaled), kind: def.kind, returning,
     approaches: def.approaches.map((a) => ({ id: a.id, label: a.label, text: a.text, cost: a.cost, leave: a.leave })),
   };
 }
@@ -1058,9 +1062,14 @@ export function enterRaid(content: Content, current: RunState, sideId: string, a
 }
 
 /** Builds the raid battle (mutates `run`): the boss with its HP pool, the raid state and its field. */
-export function startRaidBattle(content: Content, run: RunState, def: RaidDef, speciesId: string, level: number, opts: { approach?: RaidApproach | null; returning?: boolean } = {}): void {
+export function startRaidBattle(content: Content, run: RunState, baseDef: RaidDef, speciesId: string, baseLevel: number, opts: { approach?: RaidApproach | null; returning?: boolean } = {}): void {
   const activeIndex = run.party.findIndex((p) => p.hp > 0);
+  // Badges tune the boss and its mechanics (core/raid/scaling.ts); the count is kept on the fight so a reload never changes it.
+  const badges = run.badges.length;
+  const def = scaledRaid(content, baseDef, badges);
+  const level = raidBadgeLevel(content, run, baseDef, baseLevel);
   const boss = newMon(content, run, speciesId, level, 'e');
+  applyBossAbility(content, baseDef, boss, badges);
   auditEncounter(content, 'raid', boss, 'raid-boss');
   applyBossHp(def, boss);
   const approach = opts.approach ?? null;
@@ -1075,7 +1084,7 @@ export function startRaidBattle(content: Content, run: RunState, def: RaidDef, s
   if (approach?.startHp) boss.hp = Math.max(1, Math.floor(boss.hp * approach.startHp));
   run.battle = createBattle('wild', [boss], activeIndex, run.party[activeIndex]!.uid);
   run.battle.ai = 0.6;
-  run.battle.raid = freshRaidBattle(def);
+  run.battle.raid = freshRaidBattle(def, badges);
   run.battle.raid.lead = run.party[activeIndex]!.uid;
   run.battle.raid.cheerLevel = cheerLevelFor(run.raids.won);
   const raidState = run.battle.raid;
@@ -1247,7 +1256,7 @@ function failRaid(content: Content, run: RunState): void {
 
 /** Raid victory: money, item rolls (a seeded generator), extra draft choices and maybe the boss joining (applies once: the battle is cleared right after). */
 function claimRaidRewards(content: Content, run: RunState, battle: BattleState): { items: string[]; draftExtra: number; money: number; notes?: string[] } {
-  const def = getRaid(content, battle.raid!.id);
+  const def = raidDef(content, battle.raid!);
   const boss = currentEnemy(battle);
   const money = Math.floor((def.rewards.moneyPerLevel * boss.level * battle.raid!.rewardPercent * (battle.raid!.rivalFinished ? 0.5 : 1)) / 100);
   run.money += money;
