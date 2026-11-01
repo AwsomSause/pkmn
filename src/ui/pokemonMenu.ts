@@ -56,6 +56,7 @@ const STATE_COLOR: Record<Readiness['state'], number> = { ready: 0x6ee87a, cauti
 const STATE_TEXT: Record<Readiness['state'], string> = { ready: '#9af0a8', caution: '#ffe08a', down: '#ff9a9a' };
 const MODE_TEXT: Record<HeldItemInfo['mode'], string> = { passive: 'Always on', activated: 'Triggers in battle', mixed: 'Always on + triggers' };
 
+const CRY_LEVELS = CARE.cry.levels;
 const ACCESSORY_CHOICES = ['', ...ACCESSORIES];
 const TRAIN_CHOICES = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 type Mode = 'list' | 'menu' | 'detail';
@@ -94,6 +95,7 @@ class PokemonScreen implements PickerLike {
   private trainStat = 0;
   private accIdx = 0;
   private whistleIdx = 0;
+  private cryIdx = CRY_LEVELS.length - 1;
   /** A tap mini-interaction in progress: tap Enter/click the goal number of times in the window. */
   private tap: { id: CareAction; count: number; until: number; timer?: Phaser.Time.TimerEvent } | null = null;
   private reordered = false;
@@ -245,7 +247,8 @@ class PokemonScreen implements PickerLike {
           this.menuIdx = 0;
         } else this.mode = 'list';
       } else if ((action === 'left' || action === 'right') && this.careMenu) {
-        if (this.menuOptions()[this.menuIdx]?.id === 'whistle') this.whistleIdx = (this.whistleIdx + (action === 'right' ? 1 : WHISTLES.length - 1)) % WHISTLES.length;
+        if (this.menuOptions()[this.menuIdx]?.id === 'cry') this.cryIdx = (this.cryIdx + (action === 'right' ? 1 : CRY_LEVELS.length - 1)) % CRY_LEVELS.length;
+        else if (this.menuOptions()[this.menuIdx]?.id === 'whistle') this.whistleIdx = (this.whistleIdx + (action === 'right' ? 1 : WHISTLES.length - 1)) % WHISTLES.length;
         else if (this.menuOptions()[this.menuIdx]?.id === 'dress') this.accIdx = (this.accIdx + (action === 'right' ? 1 : ACCESSORY_CHOICES.length - 1)) % ACCESSORY_CHOICES.length;
         else this.trainStat = (this.trainStat + (action === 'right' ? 1 : 4)) % 5;
       }
@@ -312,6 +315,10 @@ class PokemonScreen implements PickerLike {
       p('sing', 'Sing to Eggs', 'Hum to the Eggs you carry: they move 1 step closer to hatching (never hatch by it). Once per stop.'),
       p('dress', `Dress: ${this.mon.care?.accessory ?? 'none'} ‹ ›`, 'Left/right picks scarf, bow, glasses, band or anklet (+2% to one stat). Enter wears it; "none" takes it off.', ACCESSORY_CHOICES[this.accIdx] || ''),
       p('whistle', `Whistle: ${WHISTLES[this.whistleIdx]} ‹ ›`, 'Left/right picks focus (crit), steady (accuracy) or rush (speed). It listens only if it trusts you. Applies to its next fight.', WHISTLES[this.whistleIdx]),
+      p('birthday', 'Catch-day party', 'Every 28 days after it joined: friendship, mood and a berry "cake".'),
+      p('praise', 'Praise', 'Praise it: friendship and mood up, and cancels earlier scolding.'),
+      p('scold', 'Scold', 'Scold it: it obeys more, but three scolds in a row relax its nature to Docile.'),
+      p('cry', `Cry volume: ${CRY_LEVELS[this.cryIdx]}% ‹ ›`, 'Left/right sets how loudly its cry plays in battle.', String(CRY_LEVELS[this.cryIdx])),
       p('teamdance', 'Team dance', 'Everyone dances: tap Enter to the beat for a bigger mood boost. Once per stop.'),
       p('race', 'Camp race', 'The team races: the fastest wins a mood boost, the rest warm up a little.'),
       p('healcircle', 'Healing circle', 'Needs 3 Pokémon with healing moves: heals the whole team 40%.'),
@@ -385,6 +392,7 @@ class PokemonScreen implements PickerLike {
     try {
       let arg: string | undefined = forced;
       if (id === 'train' || id === 'spar') arg = TRAIN_CHOICES[this.trainStat];
+      if (id === 'cry') arg = String(CRY_LEVELS[this.cryIdx]);
       if (id === 'whistle') arg = WHISTLES[this.whistleIdx];
       if (id === 'dress') arg = ACCESSORY_CHOICES[this.accIdx] ?? '';
       if (id === 'nickname') {

@@ -656,7 +656,7 @@ export class BattleScene extends Phaser.Scene {
 
   private showSprite(side: 'player' | 'enemy', mon: PokemonInstance, cry = true): Visual {
     const species = getSpecies(services().session.content, mon.speciesId);
-    if (cry) playCry(this, species);
+    if (cry) playCry(this, species, side === 'player' ? mon.care?.cryVolume ?? 100 : 100);
     // Gigantamax art is already drawn huge, so only a plain Dynamax grows.
     const grow = mon.dynamaxed && species.form?.kind !== 'gigantamax' ? DYNAMAX_SCALE : 1;
     if (side === 'player') {

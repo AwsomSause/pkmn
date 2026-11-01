@@ -1,0 +1,1 @@
+- Care last batch (W2): catch-day party, praise/scold (nature relaxes to Docile), Pokédex tabs (All/Seen/Owned/Mastered), per-Pokémon cry volume, mastery stars counted in the engine for every party member incl. doubles (`MoveSlot.uses/star`, optional). No save bump. Tests `tests/unit/care.test.ts`.

@@ -16,6 +16,7 @@
 // after a hit (Static, Rough Skin), at the end of the turn (Speed Boost) and
 // when switching out (Regenerator).
 
+import { CARE } from '../care/mods';
 import { shadowDamageMultiplier, shadowResists } from '../shadow';
 import { championsAuraStages, firstStrikeBonus } from '../trainerEvolution';
 import { freshDrama } from '../drama/schema';
@@ -2534,6 +2535,11 @@ function executeMove(
   else if (!continuing) {
     const pp = user.mon.moves[slot]!;
     pp.pp = Math.max(0, pp.pp - (abilityIn(ctx, target) === 'pressure' && move.target === 'enemy' ? 2 : 1) - (user.side === 'player' ? ppCostExtra(ctx.perks, move.type) : 0));
+    // Mastery stars (core/care): every player Pokémon, in singles and doubles, counts its own uses of a move.
+    if (user.side === 'player' && ctx.content.balance.careEffects) {
+      pp.uses = (pp.uses ?? 0) + 1;
+      if (!pp.star && pp.uses >= CARE.stars.usesForStar) pp.star = true;
+    }
   }
   events.push({ type: 'move', side: user.side, moveId: move.id });
   // §29 an enraged Pokémon spends one of its first-strike moves.
