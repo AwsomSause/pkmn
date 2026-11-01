@@ -44,6 +44,7 @@ export const CampDataSchema = z.object({
   photo: z.object({ firstMoney: z.number().int(), friendship: z.number().int(), mood: z.number().int() }),
   net: z.object({ silk: z.number().int(), friendshipBug: z.number().int() }),
   mirror: z.object({ luck: z.number().int() }),
+  rummage: z.object({ rats: z.number(), bite: z.number(), nothing: z.number(), finds: z.array(z.object({ kind: z.enum(['mat', 'item', 'stuff']), id: z.string(), amount: z.number().int().positive(), weight: z.number() })).min(1) }),
   shake: z.object({ chance: z.number(), money: Range }),
   well: z.object({ coin: z.number().int(), wealth: Range, health: z.number(), friends: z.number().int(), luckGood: z.number().int(), luckBad: z.number().int(), chance: z.number() }),
   vending: z.object({ price: z.number().int(), jam: z.number(), thief: z.number(), stolen: z.number().int(), table: z.array(z.object({ item: z.string(), weight: z.number() })).min(1) }),

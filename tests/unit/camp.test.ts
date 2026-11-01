@@ -269,6 +269,19 @@ describe('market, finds and relics', () => {
     expect(map.ok).toBe(true);
     expect(map.run.camp!.stuff['scrap-piece']).toBe(0);
   });
+  it('rummaging is seeded and once per stage; rats bite but never faint the lead', () => {
+    const run = setup();
+    const a = act(run, 'rummage');
+    expect(a.ok).toBe(true);
+    expect(act(run, 'rummage').message).toBe(a.message);
+    expect(act(a.run, 'rummage').message).toMatch(/Already done/);
+    for (let i = 0; i < 40; i++) {
+      const r = setup(); r.seed = `rat${i}`;
+      const out = act(r, 'rummage');
+      expect(out.ok).toBe(true);
+      expect(out.run.party[0]!.hp).toBeGreaterThan(0);
+    }
+  });
   it('the stall sells, haggles and bluffs; an alarm tag stops a thief', () => {
     const run = setup();
     run.inventory.potion = 3;
