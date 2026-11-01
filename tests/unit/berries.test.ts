@@ -1,7 +1,8 @@
 // Berry cultivation (spec §27): plant a held berry, it grows over stages, harvest it; mutations and cross-pollination are seeded.
 
 import { describe, expect, it } from 'vitest';
-import { BERRIES, growGarden, growTime, harvestPlot, plantBerry, plantableBerries, plantProblem, plotLabel } from '../../src/core/berries';
+import { BERRIES, growGarden, growTime, harvestPlot, plantBerry, plantableBerries, plantProblem, plotLabel, soilHere } from '../../src/core/berries';
+import { layEgg, warmEggs } from '../../src/core/eggs';
 import { applyEffect } from '../../src/core/events';
 import { hashSeed, Rng } from '../../src/core/rng';
 import { chooseStarter, createRun, hatchEggs } from '../../src/core/run';
@@ -150,5 +151,35 @@ describe('Berry Garden stop and Berry Festival', () => {
     for (let i = 0; i < BERRIES.maxPlots; i++) applyEffect(content, run, effect, rng);
     expect(run.garden).toHaveLength(BERRIES.maxPlots);
     expect(applyEffect(content, run, effect, rng)).toBe('');
+  });
+});
+
+describe('Soil quality and camp warming', () => {
+  it('soil follows the stage theme: rich, poor or fair, and rich soil yields one more berry', () => {
+    const run = newRun('soil');
+    const themes = [...content.themes.values()];
+    const rich = themes.find((t) => t.types.some((x) => BERRIES.soil.rich!.types.includes(x)));
+    const poor = themes.find((t) => !t.types.some((x) => BERRIES.soil.rich!.types.includes(x)) && t.types.some((x) => BERRIES.soil.poor!.types.includes(x)));
+    run.stage!.themeId = rich!.id;
+    expect(soilHere(content, run)).toBe('rich');
+    if (poor) {
+      run.stage!.themeId = poor.id;
+      expect(soilHere(content, run)).toBe('poor');
+    }
+    run.stage!.themeId = rich!.id;
+    holdBerry(run, 'oran-berry', 1);
+    const plot = plantBerry(content, run, run.party[0]!, 'oran-berry');
+    expect(plot.soil).toBe('rich');
+    expect(plotLabel(content, plot)).toContain('rich soil');
+  });
+
+  it('a night of camp warms Eggs one step but never hatches them', () => {
+    const run = newRun('camp');
+    layEgg(content, run, 'charmander', { level: 5, left: 3, unit: 'stage', source: 'Test' }, new Rng(hashSeed('e')));
+    expect(warmEggs(run, 1)).toBe(1);
+    expect(run.eggs[0]!.left).toBe(2);
+    warmEggs(run, 5);
+    expect(run.eggs[0]!.left).toBe(1);
+    expect(warmEggs(run, 1)).toBe(0);
   });
 });
