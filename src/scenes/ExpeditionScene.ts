@@ -16,6 +16,8 @@ import type { ExpeditionState, RunState } from '../core/state';
 import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { playMusic, playSfx } from '../ui/audio';
+import { legendMusic } from '../core/legendary/identity';
+import { setAmbience, setMusicState, setRegionKey, stopProceduralAudio } from '../ui/procAudio';
 import { loadAssets } from '../ui/lazyAssets';
 import { EXPEDITION_TRACK_IDS, expeditionTrack } from '../core/presentation/battleMusic';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
@@ -63,7 +65,15 @@ export class ExpeditionScene extends Phaser.Scene {
     }
     const exp = run.expedition;
     const def = getExpedition(session.content, exp.id);
-    const song = def.legendary?.music ?? expeditionTrack(def.tier);
+    const music = legendMusic(session.content, def);
+    const song = music?.route ?? expeditionTrack(def.tier);
+    if (music) {
+      // The event's own key and ambience bed under its song (synth layers; silent when audio is unavailable).
+      setRegionKey(music.key);
+      setAmbience(this, music.ambience);
+      setMusicState(this, 'tense');
+      this.events.once('shutdown', () => stopProceduralAudio());
+    }
     void loadAssets(this, [song]).then(() => { if (this.scene.isActive()) playMusic(this, song); });
     if (this.textures.exists('ui.raid.adv_header')) this.add.image(GAME_WIDTH / 2, 22, 'ui.raid.adv_header').setDisplaySize(GAME_WIDTH * 0.7, 56).setAlpha(0.5);
     const legend = def.legendary;

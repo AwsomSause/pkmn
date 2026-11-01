@@ -2,6 +2,7 @@
 // Every node is reachable, every non-final node has a way forward, and the same seed gives the same route.
 
 import { Rng } from '../rng';
+import { legendLayout } from '../legendary/identity';
 import type { ExpeditionDef, ExpeditionNodeKind } from './schema';
 
 export interface RouteNode {
@@ -19,6 +20,9 @@ const RESOURCE: ExpeditionNodeKind[] = ['rest', 'cache', 'research', 'megaEnergy
 
 /** Layer sizes: 1 (start), 1–2 per middle layer, 1 (finale); the total is within the def's node range. */
 export function layerSizes(def: ExpeditionDef, rng: Rng): number[] {
+  // A Legendary event has an authored layout of its own.
+  const authored = legendLayout(def);
+  if (authored) return [...authored.sizes];
   for (let tries = 0; tries < 50; tries++) {
     const middle = rng.int(2, 5);
     const sizes = [1, ...Array.from({ length: middle }, () => rng.int(1, 2)), 1];
@@ -30,6 +34,7 @@ export function layerSizes(def: ExpeditionDef, rng: Rng): number[] {
 
 export function generateRoute(def: ExpeditionDef, rng: Rng): RouteNode[] {
   const sizes = layerSizes(def, rng);
+  const cross = legendLayout(def)?.cross ?? 0.4;
   const layers: RouteNode[][] = sizes.map((size, layer) =>
     Array.from({ length: size }, (_, i) => ({ id: `n${layer}-${i}`, layer, kind: 'wild' as ExpeditionNodeKind, next: [] as string[], done: false })),
   );
@@ -42,7 +47,7 @@ export function generateRoute(def: ExpeditionDef, rng: Rng): RouteNode[] {
       const j = Math.min(to.length - 1, from.length === to.length ? i : rng.int(0, to.length - 1));
       node.next.push(to[j]!.id);
       reached.add(j);
-      if (to.length > 1 && rng.chance(0.4)) {
+      if (to.length > 1 && rng.chance(cross)) {
         const k = rng.int(0, to.length - 1);
         if (!node.next.includes(to[k]!.id)) {
           node.next.push(to[k]!.id);
