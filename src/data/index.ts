@@ -84,6 +84,7 @@ import { MinigameFileSchema } from '../core/minigame/schema';
 import { MINIGAMES } from '../core/minigame/games';
 import { TotemFileSchema } from '../core/totem/schema';
 import { RaidFileSchema } from '../core/raid/schema';
+import { PROMPTS } from '../core/interaction/prompt';
 import eventsJson from './events.json';
 import eventsW5Json from './eventsW5.json';
 import npcStoryJson from './npcStory.json';
@@ -378,6 +379,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const blessingIds = new Set(shadowWorld.blessings.map((b) => b.id));
   for (const ev of eventsFile.events) {
     for (const ch of ev.choices) {
+      if (ch.prompt && !PROMPTS.some((d) => d.id === ch.prompt!.id)) problems.push(`events.json "${ev.id}" uses unknown prompt "${ch.prompt.id}"`);
       for (const o of [ch.success, ch.failure]) {
         for (const e of [...(o?.effects ?? []), ...(o?.battle?.win ?? [])]) if (e.kind === 'blessing' && !blessingIds.has(e.id)) problems.push(`events.json "${ev.id}" gives unknown blessing "${e.id}"`);
       }

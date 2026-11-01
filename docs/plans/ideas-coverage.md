@@ -345,7 +345,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I124 | Wedding encounter: sign the guestbook, gain luck |  | DONE | eventsW5.json wedding-guestbook |
 | I125 | Funeral encounter: pay respects, unlock lore and a relic |  | DONE | eventsW5.json funeral-respects (lore + Mourner's Token relic) |
 | I126 | Street performer: tip to hear a song that applies a team-wide aura |  | DONE | eventsW5.json street-performer (tip for a blessing) |
-| I127 | Chef NPC: cook together with a timing minigame to produce buff meals |  | PART | eventsW5.json chef-cook-together: Speed check stands in for a timing minigame |
+| I127 | Chef NPC: cook together with a timing minigame to produce buff meals |  | DONE | eventsW5.json chef-cook-together: timing game (throw-ring prompt) decides the meal |
 | I128 | Doctor NPC: negotiate priced treatments for status ailments |  | DONE | eventsW5.json traveling-doctor (priced cures, haggle) |
 | I129 | Professor check-in: bring discoveries and receive research rewards |  | DONE | events.json professors-lab (show Pokedex for research) |
 | I130 | Gym leader dialogue trees before the badge fight affect their lead choice |  | PART | core/drama/flavor.ts tags newcomer/veteran + eventsW5.json gym-eve-tone; the leader's lead choice does not change |
@@ -360,7 +360,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I139 | Offer a swap: pick a Pokémon to trade with an NPC who has a quirky history |  | DONE | eventsW5.json swap-quirky |
 | I140 | NPC asks you to hold their egg, hatch it for a reward |  | DONE | events.json egg-cradle-find/night/hatch |
 | I141 | Cooking contest judge scores your dish with a reaction montage |  | PART | eventsW5.json cooking-contest: check instead of a reaction montage |
-| I142 | Dance-off with a festival NPC, matching arrows for a boon |  | PART | events.json dancing-lessons + eventsW5.json dance-off (Speed check, no arrow minigame) |
+| I142 | Dance-off with a festival NPC, matching arrows for a boon |  | DONE | eventsW5.json dance-off: rhythm game (echo-rhythm prompt) |
 | I143 | Carnival game booths: ring toss, shooting gallery, bobbing for berries |  | DONE | eventsW5.json carnival-booths (ring toss, shooting gallery, berry bobbing) + events.json ball-toss |
 | I144 | Fishing buddy NPC shares tips and locations of rare spawns |  | DONE | eventsW5.json fishing-buddy (opens a fishing stop) |
 | I145 | Detective NPC: gather clues across nodes to solve a small mystery |  | DONE | eventsW5.json detective-case + detective-clue-2/3 (three-room mystery) |

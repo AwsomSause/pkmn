@@ -17,6 +17,7 @@ import { awardLiveAchievements, claimTrainer, setActiveTitle, type RunEndSummary
 import { setCardFrame, setCryTheme, setMenuArena } from '../core/wardrobe';
 import { buyNote } from '../core/researchNotes';
 import { makeRandomSeed } from '../core/rng';
+import type { Grade } from '../core/interaction/prompt';
 import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
@@ -317,8 +318,8 @@ export class GameSession {
   }
 
   /** Makes a choice at an event ("?") stop; a battle outcome starts the battle. */
-  chooseEvent(sideId: string, choiceIndex: number, tradeUid?: string): EventResult {
-    const result = chooseEvent(this.content, this.requireRun(), sideId, choiceIndex, tradeUid);
+  chooseEvent(sideId: string, choiceIndex: number, tradeUid?: string, promptGrade?: Grade): EventResult {
+    const result = chooseEvent(this.content, this.requireRun(), sideId, choiceIndex, tradeUid, promptGrade);
     this.run = result.run;
     this.persistRun();
     return result;

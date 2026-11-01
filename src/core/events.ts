@@ -18,6 +18,7 @@ import { createBattle } from './battle/engine';
 import type { Content, EventBattle, EventChoice, EventCondition, EventDef, EventEffect, EventOutcome, TradeWant, TypeName } from './contentSchema';
 import { curveLevel, enemyLevel, evolvedFormAt, levelScale, rollShiny, withPartyStrength } from './encounters';
 import { changeFriendship } from './friendship';
+import { atLeast, type Grade, type PromptResult } from './interaction/prompt';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
 import { makeDoubles } from './battle/doubles';
@@ -521,7 +522,8 @@ export interface EventResult {
 }
 
 /** Makes a choice at an event stop. The stop is used up; a battle outcome starts the battle. */
-export function chooseEvent(content: Content, current: RunState, sideId: string, choiceIndex: number, tradeUid?: string): EventResult {
+/** `promptGrade`: how the player did in the choice's skill prompt (missing = miss). The grade is the only input, so a reload gives the same result. */
+export function chooseEvent(content: Content, current: RunState, sideId: string, choiceIndex: number, tradeUid?: string, promptGrade?: Grade): EventResult {
   if (current.phase !== 'map') throw new Error(`Action needs phase "map" but run is in "${current.phase}"`);
   const { node, side } = findSide(current, sideId);
   if (side.used) throw new Error('This event is over');
@@ -545,8 +547,8 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   if (insight) spendUse(run, insight);
   count(run, 'eventsCompleted');
   const rng = new Rng(hashSeed(`${run.seed}::event::${stageKey(run)}::${node.id}::${sideId}`));
-  const chance = choiceChance(content, run, choice);
-  const success = chance === null || rng.float() < chance;
+  const chance = choice.prompt ? 1 : choiceChance(content, run, choice);
+  const success = choice.prompt ? atLeast({ grade: promptGrade ?? 'miss' } as PromptResult, choice.prompt.needs) : chance === null || rng.float() < chance;
   const outcome = success ? choice.success : choice.failure!;
   // The Event Director remembers important choices (and whether you took a risk).
   const risky = chance !== null;

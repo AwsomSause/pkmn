@@ -1847,8 +1847,11 @@
    "intro": "A chef offers you the second pan. \"Fast hands, steady heart. Can you keep up?\"",
    "choices": [
     {
-     "label": "Cook along (Speed)",
-     "check": "speed",
+     "label": "Cook along (timing game)",
+     "prompt": {
+      "id": "throw-ring",
+      "needs": "good"
+     },
      "success": {
       "text": "Timing is everything. The meal is perfect.",
       "effects": [
@@ -2621,8 +2624,11 @@
    "intro": "Lanterns, drums, a crowd. A dancer points at you and the circle opens. \"Follow my arrows!\"",
    "choices": [
     {
-     "label": "Match the arrows (Speed)",
-     "check": "speed",
+     "label": "Match the beat (rhythm game)",
+     "prompt": {
+      "id": "echo-rhythm",
+      "needs": "good"
+     },
      "success": {
       "text": "You hit every beat. The crowd roars.",
       "effects": [

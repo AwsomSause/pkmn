@@ -19,6 +19,8 @@ import { clockLabel, periodOf, PERIOD_LOOK, seasonOf, specialDateToday } from '.
 import { eventView, type ChoiceView, type EventResult } from '../core/events';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
+import { promptById, type Grade } from '../core/interaction/prompt';
+import { runInteractionPrompt } from '../ui/interactionPrompt';
 import { playMusic, playSfx, playMusicLazy, startAmbient } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
 import { loadAssets } from '../ui/lazyAssets';
@@ -53,6 +55,7 @@ export class EventScene extends Phaser.Scene {
   private cards: Card[] = [];
   private index = 0;
   private phase: 'choose' | 'pick' | 'outcome' = 'choose';
+  private busy = false;
   private picker: { box: Phaser.GameObjects.Container; rows: Phaser.GameObjects.Text[]; picks: { uid: string; label: string }[]; at: number } | null = null;
   private result: EventResult | null = null;
   private calm = false;
@@ -291,11 +294,24 @@ export class EventScene extends Phaser.Scene {
     }
   }
 
-  private commit(tradeUid?: string): void {
+  private async commit(tradeUid?: string): Promise<void> {
+    if (this.busy) return;
     this.picker?.box.destroy();
     this.picker = null;
     const { session } = services();
-    this.result = session.chooseEvent(this.sideId, this.index, tradeUid);
+    // Ideas W5: a choice with a skill prompt plays it first; the grade alone decides the outcome.
+    const def = eventView(session.content, session.run!, this.sideId).event.choices[this.index]?.prompt;
+    let grade: Grade | undefined;
+    if (def) {
+      this.busy = true;
+      try {
+        grade = (await runInteractionPrompt(this, promptById(def.id), { motion: session.settings.battleAnimations, assist: { skipGrade: 'good' } })).grade;
+      } catch {
+        grade = 'ok';
+      }
+      this.busy = false;
+    }
+    this.result = session.chooseEvent(this.sideId, this.index, tradeUid, grade);
     this.phase = 'outcome';
     playSfx(this, 'ui.select', 0.6);
     // The picked card squashes and flies up; the rest drop away.
