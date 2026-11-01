@@ -3,6 +3,7 @@
 
 import { z } from 'zod';
 import { TotemDefSchema } from '../totem/schema';
+import { RaidDefSchema } from '../raid/schema';
 import { EventConditionSchema, TerrainSchema, TypeNameSchema, WeatherSchema } from '../contentSchema';
 
 export const NODE_KINDS = ['wild', 'trainer', 'elite', 'rest', 'cache', 'research', 'mystery', 'recruit', 'megaEnergy', 'totem', 'raid', 'finale'] as const;
@@ -154,5 +155,7 @@ export const LegendaryFileSchema = z.object({
   events: z.array(ExpeditionDefSchema.extend({ legendary: LegendaryBlockSchema })).min(1),
   /** The finale Totem of each event (`legendary: true`). */
   totems: z.array(TotemDefSchema).min(1),
+  /** Raid finales (`legendary: true`) for the events that end in a Raid battle instead of a Totem fight. */
+  raids: z.array(RaidDefSchema).default([]),
 });
 export type LegendaryFile = z.infer<typeof LegendaryFileSchema>;

@@ -240,12 +240,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const trainerTiers = parse(TrainerTiersSchema, raw.trainerTiers, 'trainerTiers.json', problems);
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
-  const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
+  const baseRaids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
   const baseTotems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
   const shadowWorld = parse(ShadowWorldFileSchema, raw.shadowWorld, 'shadowWorld.json', problems);
   const eventsFile = parse(EventsFileSchema, raw.events, 'events.json', problems);
   const baseExpeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
   const legend = parse(LegendaryFileSchema, raw.legendaryEvents, 'legendaryEvents.json', problems);
+  const raids = baseRaids && legend ? { ...baseRaids, raids: [...baseRaids.raids, ...legend.raids] } : null;
   const totems = baseTotems && legend ? { ...baseTotems, totems: [...baseTotems.totems, ...legend.totems] } : null;
   const expeditions = baseExpeditions && legend ? { ...baseExpeditions, expeditions: [...baseExpeditions.expeditions, ...legend.events] } : null;
   const minigames = parse(MinigameFileSchema, raw.minigames, 'minigames.json', problems);
@@ -380,7 +381,9 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
       const l = e.legendary;
       for (const id of [l.species, ...l.wild]) if (!content.species.has(id)) problems.push(`legendaryEvents.json "${e.id}" has unknown species "${id}"`);
       for (const n of l.npcs) for (const o of n.options) if (o.effect.item && !content.items.has(o.effect.item)) problems.push(`legendaryEvents.json "${e.id}" NPC "${n.id}" gives unknown item`);
-      if (fin.kind !== 'totem') problems.push(`legendaryEvents.json "${e.id}" must end with a Totem finale`);
+      if (fin.kind === 'raid') {
+        if (!raids.raids.find((r) => r.id === fin.raidId)?.legendary) problems.push(`legendaryEvents.json "${e.id}" finale Raid must be a legendary one`);
+      } else if (fin.kind !== 'totem') problems.push(`legendaryEvents.json "${e.id}" must end with a Totem or Raid finale`);
       else if (!totems.totems.find((t) => t.id === fin.totemId)?.legendary) problems.push(`legendaryEvents.json "${e.id}" finale Totem must be a legendary one`);
       if (e.partyMode !== 'own') problems.push(`legendaryEvents.json "${e.id}" must use your own party`);
     }

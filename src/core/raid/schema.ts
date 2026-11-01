@@ -118,6 +118,8 @@ export const RaidDefSchema = z.object({
     /** Operations of the faction that fall when you win. */
     heatDrop: z.number().int().min(1).max(3).default(1),
   }).optional(),
+  /** The finale of a Legendary world event (core/legendary): never drawn for a den or an ordinary expedition. */
+  legendary: z.boolean().default(false),
   /** The Grand-Enemy's own fights (core/story/grandEnemy): placed by the campaign, never in the random den pool. */
   grand: z.enum(['contact', 'reckoning']).optional(),
 });

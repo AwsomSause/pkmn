@@ -38,15 +38,15 @@ export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regi
   const open = highestOpenTier(content, run);
   const region = tiersForRegion(content, run.regionIndex).filter((t) => t <= open);
   // A region whose tiers are all still closed gets the highest open tier instead.
-  const tiers = region.length > 0 ? region : [Math.max(...content.raids.raids.filter((r) => !r.grand && !r.gang && r.tier <= open).map((r) => r.tier))];
-  const tiered = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand && !r.gang);
+  const tiers = region.length > 0 ? region : [Math.max(...content.raids.raids.filter((r) => !r.grand && !r.gang && r.tier <= open && !r.legendary).map((r) => r.tier))];
+  const tiered = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand && !r.gang && !r.legendary);
   // Spreadsheet availability: a den's boss must be unlocked at the level it would fight at (else the tier's dens stay as they were).
   const cap = levelCap(content, run.regionIndex);
   const end = Math.max(1, cap - content.balance.difficulty.capMargin);
   const unlocked = tiered.filter((r) => r.species.every((id) => isUnlockedAt(content, id, raidLevel(r, end, cap))));
   const pool = unlocked.length > 0 ? unlocked : tiered;
   const rng = new Rng(hashSeed(`${run.seed}::raid-pick::${key}`));
-  return rng.pick(pool.length > 0 ? pool : content.raids.raids.filter((r) => !r.gang));
+  return rng.pick(pool.length > 0 ? pool : content.raids.raids.filter((r) => !r.gang && !r.legendary));
 }
 
 /** Which species the boss is, from a seeded generator (so reloading never changes it). */

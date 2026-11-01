@@ -131,6 +131,35 @@ for (const s of legends) {
   });
 }
 
+// Raid versions: the same stage, but the finale is a Raid battle (shields, a charged attack, a timer) instead of a Totem fight.
+const RAID_VARIANTS = ['kyogre', 'groudon', 'rayquaza', 'giratina', 'dialga', 'palkia', 'mewtwo', 'arceus', 'reshiram', 'zekrom', 'lugia', 'ho-oh'];
+const raids: any[] = [];
+for (const sid of RAID_VARIANTS) {
+  const base = events.find((e) => e.id === `legend-${sid}`);
+  const totem = totems.find((t) => t.id === `legend-${sid}`);
+  if (!base || !totem) throw new Error(`no event for ${sid}`);
+  const grand = bst(byId.get(sid)) >= 660;
+  const raidId = `legend-raid-${sid}`;
+  const env = totem.environment ?? {};
+  raids.push({
+    id: raidId, name: `${nice(sid)} Raid`, tier: grand ? 6 : 5, legendary: true, blurb: `${nice(sid)} makes a stand with shields and a charged attack.`,
+    species: [sid], levelBonus: 6, hpBoostPercent: grand ? 520 : 440, entryCost: 0,
+    shield: { at: [0.75, 0.4], points: 0.15 },
+    phases: totem.phases.slice(0, 3).map((p: any) => ({ ...p })),
+    telegraph: { everyTurns: 3, boost: 1.6, text: `${nice(sid)} is gathering its power for a crushing blow!` },
+    extraActions: { belowHp: 0.35, max: 2 }, timerTurns: 30, weather: env.weather ?? null, kind: 'wild', approaches: [],
+    modifiers: { ...(env.terrain ? { terrain: env.terrain } : {}), noHealing: true }, extraMoves: [],
+    rewards: { moneyPerLevel: 200, items: [{ item: 'full-restore', chance: 1 }, { item: `${byId.get(sid).types[0]}-tera-shard`, chance: 1 }], draftExtra: 2, joinChance: 0.25, megaStones: grand ? 1 : 0, rareEncounters: 1 },
+  });
+  const lg = structuredClone(base.legendary);
+  lg.epithet = `${lg.epithet} (Raid)`;
+  lg.rarity = 'veryRare';
+  lg.trigger.weight = 0.5;
+  lg.finale = { intro: `${base.legendary.finale.intro} This time it will not be held to a duel: the whole stage joins the fight.`, win: base.legendary.finale.win, lose: base.legendary.finale.lose };
+  lg.modifiers = [...lg.modifiers, 'The finale is a Raid battle: shields, a charged attack and a timer'];
+  events.push({ ...structuredClone(base), id: `legend-raid-${sid}-event`, name: `${nice(sid)}: ${lg.epithet}`, finale: { kind: 'raid', raidId }, legendary: lg, rewards: { ...base.rewards, moneyPerLevel: 240 } });
+}
+
 const file = new URL('../src/data/legendaryEvents.json', import.meta.url);
-writeFileSync(file, JSON.stringify({ gateChance: 0.12, perRegion: 1, events, totems }, null, 1) + '\n');
+writeFileSync(file, JSON.stringify({ gateChance: 0.12, perRegion: 1, events, totems, raids }, null, 1) + '\n');
 console.log(`legendaryEvents.json: ${events.length} events (${Object.keys(BESPOKE).length} hand-designed) and ${totems.length} legendary finale Totems (${nice('mewtwo')} included)`);
