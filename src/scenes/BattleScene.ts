@@ -77,6 +77,8 @@ import { environmentStory } from '../core/presentation/environmentStory';
 import { crisisLevel } from '../core/story/crisis';
 import { moveRank } from '../core/moveMastery';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
+import { legendKit } from '../core/legendary/visuals';
+import { addLegendLook } from '../ui/legendFx';
 import { bossVictoryCard, burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, moveFlagNames, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
@@ -306,6 +308,13 @@ export class BattleScene extends Phaser.Scene {
     const stageTypes = bossType ? [bossType] : run.stage ? getTheme(session.content, run.stage.themeId).types : [arenaType(bg)];
     this.arenaTypes = stageTypes.length > 0 ? stageTypes : [arenaType(bg)];
     addAmbience(this, this.field, this.field.length, this.arenaTypes, this.motion);
+    // A Legendary world event's own look over its fights (colour wash and drifting particles).
+    const legendDef = run.battle?.expedition && run.expedition ? session.content.expeditions.expeditions.find((e) => e.id === run.expedition!.id) : undefined;
+    if (legendDef?.legendary) {
+      const layer = run.expedition!.node ? run.expedition!.nodes.find((n) => n.id === run.expedition!.node)?.layer ?? 0 : 0;
+      const kit = legendKit(session.content, legendDef, layer);
+      if (kit) addLegendLook(this, kit, this.motion, 0, this.field);
+    }
     if (this.motion !== 'off' && !battle.doubles) {
       const edge = TYPE_COLORS[this.arenaTypes[0] ?? 'normal'] ?? 0xffffff;
       for (const at of [ENEMY_POS, PLAYER_POS]) {
