@@ -4,6 +4,7 @@
 // reads or changes battle state, and the spread of the particles is a fixed
 // hash, not the gameplay random streams.
 
+import { capFlash } from '../../core/presentation/uiPrefs';
 import Phaser from 'phaser';
 import { ebdxAssetIds } from '../../assets/catalog';
 import { EBDX_SCALE, ease, lifeAlpha, scatter, type ScriptAnim, type ScriptLayer, type ScriptPoint } from '../../core/presentation/scriptAnim';
@@ -27,7 +28,9 @@ const colour = (hex: string) => Phaser.Display.Color.HexStringToColor(hex).color
 export function playScript(stage: Stage, name: string, script: ScriptAnim): PlayHandle {
   const { scene, field } = stage;
   const settings = services().session.settings;
-  const strength = Math.max(0.25, settings.effectIntensity);
+  const flash = capFlash(settings.effectIntensity, settings.reducedFlash);
+  const shakeAmt = capFlash(settings.shakeIntensity, settings.reducedFlash);
+  const strength = Math.max(0.25, flash);
   const user = stage.user;
   const target = stage.target;
   const sameMon = user === target;
@@ -178,9 +181,9 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
           const k = Math.sin((Math.PI * since) / 300) * hit.squash * strength;
           target.setScale(startTarget.sx * (1 + k * 0.5), startTarget.sy * (1 - k));
         } else if (hit.squash > 0) target.setScale(startTarget.sx, startTarget.sy);
-        if (hit.shake && settings.shakeIntensity > 0 && since < hit.shake.ms) {
+        if (hit.shake && shakeAmt > 0 && since < hit.shake.ms) {
           const decay = 1 - since / hit.shake.ms;
-          target.x = startTarget.x + Math.sin(since / 22) * hit.shake.amp * EBDX_SCALE * decay * settings.shakeIntensity;
+          target.x = startTarget.x + Math.sin(since / 22) * hit.shake.amp * EBDX_SCALE * decay * shakeAmt;
         } else if (hit.shake) target.x = startTarget.x;
         if (hit.flash && target instanceof Phaser.GameObjects.Sprite) {
           if (since < hit.flash.ms) {
@@ -196,7 +199,7 @@ export function playScript(stage: Stage, name: string, script: ScriptAnim): Play
     const us = script.userShake;
     if (us && user.active) {
       const since = t - us.at;
-      if (since >= 0 && since < us.ms && settings.shakeIntensity > 0) user.x = startUser.x + (Math.floor(since / 25) % 2 ? -1 : 1) * us.amp * EBDX_SCALE * settings.shakeIntensity;
+      if (since >= 0 && since < us.ms && shakeAmt > 0) user.x = startUser.x + (Math.floor(since / 25) % 2 ? -1 : 1) * us.amp * EBDX_SCALE * shakeAmt;
       else if (since >= us.ms) user.x = startUser.x;
     }
     if (!settings.muted) {

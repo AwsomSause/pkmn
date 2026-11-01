@@ -150,6 +150,8 @@ export interface MenuOption {
   disabled?: boolean;
   /** Optional extra line shown under the label (e.g. "PP 20/25"). */
   detail?: string;
+  /** Tooltip shown after the hover delay (Settings > Tooltip delay). */
+  tip?: string;
 }
 
 export interface MenuConfig {
@@ -216,6 +218,7 @@ export class Menu {
         .setAlpha(opt.disabled ? 0.4 : 1)
         .setInteractive({ useHandCursor: !opt.disabled })
         .setData('noJuice', true);
+      if (opt.tip) text.setData('tooltip', opt.tip);
       // A long label stops at the item's edge (and at the next column) instead of running over its neighbour.
       fitLine(text, this.itemWidth - 40);
       text.on('pointerover', () => {

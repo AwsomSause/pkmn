@@ -2,6 +2,7 @@
 // Pure. Outcomes never depend on any of these settings.
 
 import type { Settings } from './state';
+import { capFlash } from './presentation/uiPrefs';
 import type { AnimSettings } from './presentation/animRegistry';
 
 export type AccessibilityProfile = Settings['accessibilityProfile'];
@@ -57,8 +58,8 @@ export function animSettingsFrom(s: Settings): AnimSettings {
   const flags = animationFlags(s);
   return {
     mode: s.battleAnimations,
-    intensity: s.effectIntensity,
-    shake: s.shakeIntensity,
+    intensity: capFlash(s.effectIntensity, s.reducedFlash),
+    shake: capFlash(s.shakeIntensity, s.reducedFlash),
     reduceParticles: s.reduceParticles,
     enabled: { ability: flags.abilityAnimations, text: flags.battleTextAnimations, interaction: flags.interactionAnimations, overdrive: flags.hyperAnimations, rival: flags.rivalAnimations, ui: flags.menuAnimations },
     timeScale: animationTimeScale(s),

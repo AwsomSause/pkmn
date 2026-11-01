@@ -8,6 +8,7 @@
 // network), the fallback plays or the cue is skipped; battle state is never
 // touched. Animation files are loaded the first time a move is used.
 
+import { capFlash } from '../../core/presentation/uiPrefs';
 import Phaser from 'phaser';
 import { MASTERY_VFX, type MoveRank } from '../../core/moveMastery';
 import { animAssetIds, ebdxAssetIds } from '../../assets/catalog';
@@ -340,7 +341,7 @@ export class BattleFx {
   /** When no animation file can play: the move's family effect (Visual Bible §4.4) in its type colour. */
   private async familyFallback(user: Visual, target: Visual, color: string, family: FamilyId): Promise<void> {
     // speed 1: the battle scene's clock already runs at the battle speed.
-    const done = playFamily({ scene: this.scene, field: this.opts.field, from: this.centre(user), to: this.centre(target), user, color: hex(color), intensity: this.settings.effectIntensity, speed: 1 }, family);
+    const done = playFamily({ scene: this.scene, field: this.opts.field, from: this.centre(user), to: this.centre(target), user, color: hex(color), intensity: capFlash(this.settings.effectIntensity, this.settings.reducedFlash), speed: 1 }, family);
     // Skipping cuts the wait; the effect cleans itself up.
     await Promise.race([done, new Promise<void>((resolve) => { const check = () => (this.skipping ? resolve() : this.scene.time.delayedCall(50, check)); check(); })]);
   }
