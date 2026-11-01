@@ -117,14 +117,6 @@ export class Picker implements PickerLike {
     }
     const title = !dock && !(backdrop && config.titleInArt) ? scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5) : null;
     if (title) this.root.add(title);
-    if (!dock && config.badge) {
-      const id = config.badge;
-      const put = (): void => {
-        if (!this.closed) this.root.add(scene.add.image(hint.x - hint.width - 40, 47, id).setDisplaySize(44, 44).setName('picker-badge'));
-      };
-      if (scene.textures.exists(id)) put();
-      else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && put());
-    }
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
     const hintRight = config.onBack ? GAME_WIDTH - 150 : GAME_WIDTH - 48;
     const hint = scene.add.text(hintRight, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5).setVisible(!dock);
@@ -133,6 +125,15 @@ export class Picker implements PickerLike {
     if (title) {
       const badgeRoom = config.badge ? 64 : 0;
       fitLine(title, hint.x - hint.width - 16 - badgeRoom - title.x);
+    }
+    // The badge sits left of the hint, so it is placed once the hint exists (a loaded texture places it at once).
+    if (!dock && config.badge) {
+      const id = config.badge;
+      const put = (): void => {
+        if (!this.closed) this.root.add(scene.add.image(hint.x - hint.width - 40, 47, id).setDisplaySize(44, 44).setName('picker-badge'));
+      };
+      if (scene.textures.exists(id)) put();
+      else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && put());
     }
     if (config.onBack) {
       // A clickable Back button, so every page can be left with the mouse or touch too.
