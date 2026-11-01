@@ -10,6 +10,10 @@ import { topMoments } from '../core/story/record';
 import { getTheme, themePool } from '../core/themes';
 import type { GameSession } from '../game/GameSession';
 import { services } from '../game/services';
+import { startFpsMeter } from '../game/deviceTools';
+import { STREAM_NAMES } from '../core/rng';
+import { isAssisted } from '../core/tools/assisted';
+import { runDigest } from '../core/tools/replay';
 
 function el<K extends keyof HTMLElementTagNameMap>(tag: K, props: Partial<HTMLElementTagNameMap[K]> = {}, children: (Node | string)[] = []): HTMLElementTagNameMap[K] {
   const node = Object.assign(document.createElement(tag), props);
@@ -88,6 +92,9 @@ export function installDebugPanel(game: Phaser.Game, session: GameSession): void
       if (run.pending.length) lines.push(`pending: ${run.pending.map((d) => d.kind).join(', ')}`);
       if (run.draft) lines.push(`draft: ${run.draft.join(', ')}`);
       panel.append(el('pre', { textContent: lines.join('\n') }));
+      // F206: where each named random stream is now (changes with every roll from it), and the run digest the replay validator compares.
+      const streamLines = STREAM_NAMES.map((n) => { const r = run.rng[n]; return `${n.padEnd(9)} ${[r.a, r.b].map((v) => v.toString(16).padStart(8, '0')).join(' ')}`; });
+      panel.append(el('h3', { textContent: `RNG streams${isAssisted(run) ? '  ·  run is ASSISTED' : ''}` }), el('pre', { textContent: `${streamLines.join('\n')}\ndigest ${runDigest(run)}` }));
 
       const regionLines = [
         `campaign: ${run.campaignId}  ·  region ${run.regionIndex + 1}/${run.regionOrder.length}: ${run.regionOrder[run.regionIndex] ?? '-'}  ·  level cap ${runLevelCap(content, run)}`,
@@ -172,4 +179,9 @@ export function installDebugPanel(game: Phaser.Game, session: GameSession): void
     }
   });
   session.onChange(render);
+
+  // Frame rate, top right, while the debug flag is on.
+  const fps = el('div', { id: 'fps-meter', textContent: '-- fps' });
+  document.body.append(fps);
+  startFpsMeter((n) => { fps.textContent = `${n} fps`; });
 }

@@ -3,6 +3,7 @@
 // ui/lazyAssets.ts), with a progress bar. Assets that are missing or fail to
 // load are recorded and replaced by placeholders.
 
+import { PreloadTracker } from '../core/tools/preload';
 import Phaser from 'phaser';
 import { buildCatalog, type AssetManifest } from '../assets/catalog';
 import { bossSpriteIds } from '../core/regions';
@@ -73,11 +74,18 @@ export class BootScene extends Phaser.Scene {
     this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 - 40, 'Loading…', textStyle(28, COLORS.textLight)).setOrigin(0.5);
     this.loadingExtras();
 
+    const tracker = new PreloadTracker();
+    const packText = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 24, '', textStyle(13, COLORS.textMuted)).setOrigin(0.5);
     for (const entry of assets.entries()) {
       if (entry.lazy) continue;
       if (entry.kind === 'font') continue; // handled by loadFont
+      tracker.add(entry.id, entry.path);
       queueAsset(this, entry);
     }
+    this.load.on('filecomplete', (key: string) => {
+      tracker.complete(key);
+      packText.setText(tracker.line());
+    });
     this.load.on('progress', (p: number) => (bar.width = 400 * p));
     this.load.on('loaderror', (file: Phaser.Loader.File) => {
       console.warn(`Failed to load asset ${file.key} (${String(file.url)})`);

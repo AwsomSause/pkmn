@@ -4,6 +4,7 @@
 
 import { applyProfile, nextProfile, PROFILE_INFO } from './accessibility';
 import type { Settings } from './state';
+import { applyPerfPreset, nextPerfPreset, PERF_INFO } from './tools/perfPreset';
 import { nextPadButton, PAD_ACTIONS, PAD_ACTION_LABEL, POPUP_SCALES, PAD_BUTTON_NAMES, remapPad, TOOLTIP_DELAY_MS, TRANSITION_INFO, UI_THEME_ORDER, UI_THEMES } from './presentation/uiPrefs';
 
 export type SettingCategory = 'display' | 'audio' | 'gameplay' | 'animations' | 'text' | 'accessibility' | 'controls' | 'data';
@@ -94,6 +95,7 @@ export const SETTINGS: SettingDef[] = [
   { id: 'autoExplain', label: 'Auto-Battle explanations', description: 'Say why a Pokémon chose its action.', category: 'gameplay', applies: 'now', ...toggle('autoExplain') },
   { id: 'battleSpeed', label: 'Battle speed', description: 'How fast battles play. Outcomes never change.', category: 'gameplay', applies: 'now', ...choice('battleSpeed', { showcase: 'Showcase', normal: 'Normal', fast: 'Fast', quick: 'Quick' }, ['normal', 'fast', 'quick', 'showcase']) },
   { id: 'skillPrompts', label: 'Skill prompts', description: 'Optional mini-moments: draw your aim, echo a signature shout, time a skill throw, scan a foe, a countdown on a few events, double-tap to Mega/Z/Tera. Never required; results are only small bonuses.', category: 'gameplay', applies: 'nextBattle', ...toggle('skillPrompts') },
+  { id: 'performancePreset', label: 'Performance preset', description: 'Low, Medium or High: sets particles, effect and shake strength and sprite idle animation together.', category: 'display', also: ['accessibility'], applies: 'now', show: (s) => PERF_INFO[s.performancePreset].label, next: (s) => applyPerfPreset(s, nextPerfPreset(s.performancePreset)) },
   { id: 'adaptiveMusic', label: 'Adaptive music', description: 'Battle music speeds up a little as your Pokémon get low on HP.', category: 'audio', applies: 'now', ...toggle('adaptiveMusic') },
   { id: 'damageDetails', label: 'Damage details', description: 'Explains each hit: effectiveness, STAB and crits.', category: 'gameplay', also: ['accessibility'], applies: 'now', ...toggle('damageDetails') },
   // Animations & Effects

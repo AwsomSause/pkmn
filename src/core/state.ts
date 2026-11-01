@@ -1305,6 +1305,8 @@ export const RunRecordSchema = z.object({
   bankCredits: z.number().int().min(0),
   researchPoints: z.number().int().min(0),
   achievements: z.array(z.string()),
+  /** W12 F224: the run used the debug tools (core/tools/assisted.ts). */
+  assisted: z.boolean().optional(),
   /** The run's top chronicle moments, most memorable first. */
   moments: z.array(z.string()),
   /** Journal: the run's map, stage by stage (empty without the Journal). */
@@ -1603,6 +1605,8 @@ export const SettingsSchema = z.object({
   skippedIntros: z.array(z.string()).default([]),
   /** The battle music gets more intense as your Pokémon's HP drops (ideas W1). */
   adaptiveMusic: z.boolean().default(true),
+  /** W12 F214: Low / Medium / High effects preset (core/tools/perfPreset.ts). */
+  performancePreset: z.enum(['low', 'medium', 'high']).default('high'),
   /** The last accessibility preset applied ('custom' once any single setting is changed by hand). */
   accessibilityProfile: z.enum(['custom', 'reducedMotion', 'lowFlash', 'moreDetail', 'fastBattles']).default('custom'),
   /** How trainer lists are sorted (core/trainerSort.ts), and whether that order is flipped. */
