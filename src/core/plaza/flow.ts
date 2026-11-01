@@ -25,6 +25,7 @@ import { TYPE_NAMES, type Content, type EventBattle, type EventEffect, type Type
 import type { MapNode, RunState, SideStop } from '../state';
 import { PLAZA, type PlazaData, type PlazaNeed } from './schema';
 import { PLAZA_LIFE } from './life';
+import { changeMentor, getMentor, personalityText } from '../mentors';
 
 const B = PLAZA.balance;
 /** Most Eggs a trainer carries at once (a Trading Post purchase is refused above this). */
@@ -163,6 +164,13 @@ function foeHere(run: RunState): { name: string; classId: string } | null {
   if (foes.length === 0 || !rngFor(run, 'foe').chance(B.foeChance)) return null;
   const f = rngFor(run, 'foe-pick').pick(foes);
   return { name: f.name, classId: f.classId };
+}
+
+/** The run's mentor and fellow apprentice (core/mentors), for the plaza's practice ground. */
+export function mentorOf(run: RunState): { mentor: NonNullable<ReturnType<typeof getMentor>>; fellow: NonNullable<RunState['mentor']>['fellow'] } | null {
+  const m = run.mentor;
+  const mentor = getMentor(m?.id);
+  return m && mentor ? { mentor, fellow: m.fellow } : null;
 }
 
 /** Open mentor/apprentice pairs in the party, for the plaza's practice ground. */
@@ -651,6 +659,12 @@ export function sectionView(content: Content, run: RunState, sideId: string, sec
       notes.push(atmosphereOf(content, run), ...reactionNotes(content, run));
       if (ev.gift.length > 0) add('gift', `The ${ev.name}: ${ev.giftText}`, ev.text, 0, usedN(run, 'gift') > 0 ? 'Already collected.' : null);
       // Mini-events: a rare visitor, the fountain, the street performer.
+      const mentorHere = mentorOf(run);
+      if (mentorHere) {
+        const { mentor, fellow } = mentorHere;
+        add('mentor:advice', `Ask ${mentor.name} for advice`, `${mentor.title}. ${mentor.lines.greet}`, 0, usedN(run, 'mentor:advice') > 0 ? 'Already talked this stage.' : null);
+        add('mentor:spar', `Practice with ${fellow.name}`, `Your fellow apprentice (${personalityText(fellow.personality)}). A friendly bout on the practice ground.`, 0, usedN(run, 'mentor:spar') > 0 ? 'Already practised this stage.' : null);
+      }
       for (const m of mentorPairs(content, run)) {
         add(`lesson:${m.relId}`, `Training lesson: ${m.mentor} and ${m.prote}`, `${m.mentor} shows ${m.prote} the ropes on the practice ground. (${m.path})`, 0, usedN(run, `lesson:${m.relId}`) > 0 ? 'Lesson done for this stage.' : null);
       }
@@ -907,6 +921,18 @@ export function usePlaza(content: Content, current: RunState, sideId: string, se
       effects(ev.gift);
       markUsed(run, 'gift');
       words.unshift(ev.giftText);
+      break;
+    }
+    case 'mentor': {
+      if (a === 'advice') {
+        const note = changeMentor(content, run, { trust: 2 });
+        words.unshift(`The mentor gives you pointers. ${note}`.trim());
+      } else {
+        const note = changeMentor(content, run, { rivalry: 1 });
+        words.unshift(`A friendly bout on the practice ground; you come out a little ahead. ${note}`.trim());
+      }
+      markUsed(run, `mentor:${a}`);
+      addRep(run, 1);
       break;
     }
     case 'lesson': {

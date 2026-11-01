@@ -7,6 +7,7 @@ import { rareVisitorHere, sectionView, usePlaza } from '../../src/core/plaza/flo
 import { isGiftable } from '../../src/core/events';
 import { createPokemon } from '../../src/core/pokemon';
 import { answerMentorship, planMentorship } from '../../src/core/story/mentorship';
+import { startMentorship, MENTORS } from '../../src/core/mentors';
 import { openHistory } from '../../src/core/story/record';
 import { chooseStarter, createRun } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
@@ -147,5 +148,22 @@ describe('plaza mentors', () => {
     const done = usePlaza(content, run, side, 'people', lesson.id);
     expect(done.run.plaza.rep).toBeGreaterThan(run.plaza.rep);
     expect(() => usePlaza(content, done.run, side, 'people', lesson.id)).toThrow();
+  });
+});
+
+describe('plaza mentor and fellow apprentice', () => {
+  it('your mentor and fellow apprentice stand on the terrace; advice and practice work once a stage', () => {
+    const run = plazaRun('mentor-npc');
+    run.mentor = startMentorship(run.seed, MENTORS[0]!.id, { trust: 0, graduated: 0, apprentices: [] } as never);
+    const side = sideOf(run);
+    const l = plazaLayout(content, run, side);
+    expect(l.crowd.some((w) => w.id.startsWith('mentor:') && w.kind === 'regular')).toBe(true);
+    expect(l.crowd.some((w) => w.id.startsWith('fellow:'))).toBe(true);
+    const before = run.mentor!.trust;
+    const a = usePlaza(content, run, side, 'people', 'mentor:advice');
+    expect(a.run.mentor!.trust).toBe(before + 2);
+    expect(() => usePlaza(content, a.run, side, 'people', 'mentor:advice')).toThrow();
+    const b = usePlaza(content, a.run, side, 'people', 'mentor:spar');
+    expect(b.run.mentor!.rivalry).toBe(a.run.mentor!.rivalry + 1);
   });
 });
