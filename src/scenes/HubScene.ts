@@ -42,6 +42,7 @@ import { Menu, paintWindow } from '../ui/widgets';
 import { codexEntries, codexTotals } from '../core/story/codex';
 import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
+import { WiiCursor } from '../ui/wiiMotion';
 
 type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
 
@@ -193,6 +194,8 @@ export class HubScene extends Phaser.Scene {
   private dexInfo: DexInfo | null = null;
   private tiles: Tile[] = [];
   private tileIndex = 2;
+  /** The Wii-style glowing cursor that glides between the bottom tiles (spec §24). */
+  private tileCursor: WiiCursor | null = null;
   /** The page of a tile with several rooms, while it is open; room pages open on top of it. */
   private section: Picker | null = null;
   private blurb!: Phaser.GameObjects.Text;
@@ -230,6 +233,7 @@ export class HubScene extends Phaser.Scene {
     this.picker = null;
     this.section = null;
     this.tiles = [];
+    this.tileCursor = null;
     playMusicLazy(this, 'bgm.hub');
     const p = session.profile;
 
@@ -340,6 +344,15 @@ export class HubScene extends Phaser.Scene {
       tile.icon.y = iconY;
       if (on) this.tweens.add({ targets: tile.icon, y: iconY - 5, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     });
+    const tile = this.tiles[i];
+    if (tile) {
+      const h = TILES[i]!.id === 'run' ? TILE_H + 12 : TILE_H;
+      const box: [number, number, number, number] = [tile.x - 6, TILE_Y - h / 2 - TILE_RISE - 6, tile.w + 12, h + 12];
+      if (!this.tileCursor) {
+        this.tileCursor = new WiiCursor(this, null, ...box, 18);
+        this.tileCursor.g.setDepth(5).setName('hub-cursor');
+      } else this.tileCursor.moveTo(...box);
+    }
     const t = TILES[i]!;
     this.setBlurb(t.blurb);
     const mon = this.tileMons[i];

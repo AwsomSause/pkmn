@@ -35373,6 +35373,679 @@
    ]
   },
   {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-gates",
+   "name": "Berry Festival Gates",
+   "scene": {
+    "cast": [],
+    "tint": "#3a1030",
+    "effect": "sparkle"
+   },
+   "intro": "Bunting, music and the sweet smell of a thousand berries. A banner reads: THE GREAT BERRY FESTIVAL.",
+   "choices": [
+    {
+     "label": "Browse the stalls (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "Fresh berries for everyone, and a free sample for your team.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Watch the parade",
+     "success": {
+      "text": "Berry-shaped floats drift by. Your team is delighted.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-contest",
+   "name": "Berry Contest",
+   "stop": "event",
+   "scene": {
+    "cast": [],
+    "tint": "#4a2a08",
+    "effect": "sparkle"
+   },
+   "intro": "Judges grade berries on size, flavour and shine. The prize table gleams with rare berries.",
+   "choices": [
+    {
+     "label": "Enter your best berry",
+     "check": "charisma",
+     "success": {
+      "text": "Grand champion! The judges hand over two rare berries.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Not this year, but a runner-up berry is yours.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Judge the contest",
+     "success": {
+      "text": "You taste test your way through. Delicious work.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 400
+       },
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-thief",
+   "name": "Berry Thief",
+   "scene": {
+    "cast": [],
+    "tint": "#101828",
+    "effect": "none"
+   },
+   "intro": "A Pokémon bolts from a stall with its cheeks stuffed with berries. The vendor wails.",
+   "choices": [
+    {
+     "label": "Chase it down",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It turns on you!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "greedent",
+        "skwovet",
+        "munchlax",
+        "zigzagoon"
+       ],
+       "types": [],
+       "levelBonus": 0,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventClues",
+         "amount": 1
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "lansat-berry",
+          "starf-berry",
+          "custap-berry",
+          "enigma-berry",
+          "lum-berry"
+         ]
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Pay the vendor back (₽400)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 400
+      }
+     ],
+     "success": {
+      "text": "The vendor is grateful. The thief grins, and drops one berry for you.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -400
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look away",
+     "success": {
+      "text": "Not your problem.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-guardian",
+   "name": "The Guardian Tree",
+   "rarity": "rare",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#103018",
+    "effect": "sparkle"
+   },
+   "intro": "A great old berry tree. A Pokémon sits among its branches and watches you with calm eyes.",
+   "choices": [
+    {
+     "label": "Challenge the guardian",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It stands to defend its tree.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "tropius",
+        "cherrim",
+        "shuckle",
+        "applin"
+       ],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventClues",
+         "amount": 1
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "lansat-berry",
+          "starf-berry",
+          "custap-berry",
+          "enigma-berry",
+          "lum-berry"
+         ]
+        },
+        {
+         "kind": "join",
+         "species": [
+          "tropius",
+          "shuckle",
+          "applin",
+          "greedent"
+         ],
+         "types": [],
+         "levelBonus": 0,
+         "shinyMultiplier": 2,
+         "shadow": false,
+         "blissful": false,
+         "hiddenAbility": true
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Offer it a berry",
+     "success": {
+      "text": "The guardian accepts, and lets a Pokémon of the grove follow you.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "join",
+        "species": [
+         "tropius",
+         "shuckle",
+         "applin",
+         "greedent"
+        ],
+        "types": [],
+        "levelBonus": -3,
+        "shinyMultiplier": 1,
+        "shadow": false,
+        "blissful": true,
+        "hiddenAbility": true
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-research",
+   "name": "Berry Research Tent",
+   "scene": {
+    "cast": [],
+    "tint": "#102a30",
+    "effect": "sparkle"
+   },
+   "intro": "Botanists compare mutations under glass. One offers you a seedling and asks for your help.",
+   "choices": [
+    {
+     "label": "Plant the glowing seedling",
+     "success": {
+      "text": "You plant it in your Berry Garden. It will ripen in a stage.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       },
+       {
+        "kind": "seedling",
+        "berry": "lansat-berry",
+        "mutated": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade notes",
+     "success": {
+      "text": "Hours of notes later, you know a little more.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-merchant",
+   "name": "Traveling Berry Merchant",
+   "stop": "merchant",
+   "scene": {
+    "cast": [],
+    "tint": "#40280c",
+    "effect": "sparkle"
+   },
+   "intro": "A wagon of rare berries from far regions. \"Never tasted anything like them, friend.\"",
+   "choices": [
+    {
+     "label": "Buy a rare bundle (₽600)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 600
+      }
+     ],
+     "success": {
+      "text": "Three rare berries, wrapped in leaves.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -600
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Haggle",
+     "check": "charisma",
+     "success": {
+      "text": "A fair price, and a bonus berry.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "The merchant waves you off.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-shortage",
+   "name": "Berry Shortage",
+   "scene": {
+    "cast": [],
+    "tint": "#2a1018",
+    "effect": "none"
+   },
+   "intro": "The stalls are nearly empty. A drought hit the orchards, and everyone is asking for berries.",
+   "choices": [
+    {
+     "label": "Share your berries",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "Word spreads. The festival thanks you with a prized seedling.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -200
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 8
+       },
+       {
+        "kind": "seedling",
+        "berry": "sitrus-berry",
+        "mutated": false
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sell berries at the premium",
+     "success": {
+      "text": "Prices are high. Your wallet is not.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 700
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -8
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-grove",
+   "name": "The Hidden Berry Grove",
+   "rarity": "rare",
+   "minStage": 2,
+   "secret": [
+    {
+     "kind": "partyType",
+     "type": "grass"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#143a1e",
+    "effect": "sparkle"
+   },
+   "intro": "Behind the festival grounds, the berry trees grow wild and heavy. Something is nesting in the roots.",
+   "choices": [
+    {
+     "label": "Pick the grove",
+     "success": {
+      "text": "Heavy branches, rare fruit.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the nesting egg",
+     "success": {
+      "text": "A warm egg, wrapped in berry leaves.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "egg",
+        "species": [],
+        "types": [
+         "grass",
+         "bug"
+        ],
+        "levelBonus": 0,
+        "shinyMultiplier": 1,
+        "left": 3,
+        "unit": "stage",
+        "origin": "Rare Nest"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "starving-wild",
    "name": "A Starving Poochyena",
    "group": "Emergent Stories",
@@ -35627,7 +36300,6 @@
       "effects": [
        {
         "kind": "egg",
-        "origin": "Hidden Nest",
         "species": [
          "togepi",
          "pichu",
@@ -39433,6 +40105,34 @@
      }
     },
     {
+     "label": "Sit and talk with someone",
+     "success": {
+      "text": "The fire burns low. Who do you want to talk to?",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "camp-talk"
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "camp-talk",
+   "name": "Quiet Talk",
+   "group": "Camp",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#241c2a",
+    "effect": "hearts"
+   },
+   "intro": "Away from the others, the night is long enough for a real conversation.",
+   "choices": [
+    {
      "label": "Talk with your partner",
      "success": {
       "text": "You sit with your lead for a while. Not much is said. It is enough.",
@@ -39445,6 +40145,107 @@
        {
         "kind": "research",
         "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about your rival (a friend)",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "friend"
+      }
+     ],
+     "success": {
+      "text": "You wonder aloud where they are camped tonight. Your party agrees: they would probably share the fire. You feel less alone on the road.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about your rival (a rival)",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "rival"
+      }
+     ],
+     "success": {
+      "text": "You go over every move they made against you. Your party listens, and by the end you all know what to do next time. Tension and focus.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about the rival who is unsure",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "between"
+      }
+     ],
+     "success": {
+      "text": "You do not know what they want yet. Neither do they. You decide to leave the door open.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 15
        }
       ]
      }
@@ -39545,7 +40346,7 @@
      }
     },
     {
-     "label": "Celebrate the milestone",
+     "label": "Celebrate the occasion",
      "requires": [
       {
        "kind": "milestone"
@@ -40313,7 +41114,6 @@
         },
         {
          "kind": "egg",
-         "origin": "Hidden Nest",
          "species": [],
          "types": [
           "water"
@@ -42501,7 +43301,6 @@
       "effects": [
        {
         "kind": "egg",
-        "origin": "Rare Nest",
         "species": [],
         "types": [
          "fire",
@@ -45609,679 +46408,6 @@
        {
         "kind": "research",
         "amount": 20
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-gates",
-   "name": "Berry Festival Gates",
-   "scene": {
-    "cast": [],
-    "tint": "#3a1030",
-    "effect": "sparkle"
-   },
-   "intro": "Bunting, music and the sweet smell of a thousand berries. A banner reads: THE GREAT BERRY FESTIVAL.",
-   "choices": [
-    {
-     "label": "Browse the stalls (₽300)",
-     "requires": [
-      {
-       "kind": "money",
-       "atLeast": 300
-      }
-     ],
-     "success": {
-      "text": "Fresh berries for everyone, and a free sample for your team.",
-      "effects": [
-       {
-        "kind": "money",
-        "amount": -300
-       },
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "oran-berry",
-         "sitrus-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "heal",
-        "share": 0.3
-       },
-       {
-        "kind": "friendship",
-        "amount": 3,
-        "who": "party"
-       }
-      ]
-     }
-    },
-    {
-     "label": "Watch the parade",
-     "success": {
-      "text": "Berry-shaped floats drift by. Your team is delighted.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "friendship",
-        "amount": 5,
-        "who": "party"
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-contest",
-   "name": "Berry Contest",
-   "stop": "event",
-   "scene": {
-    "cast": [],
-    "tint": "#4a2a08",
-    "effect": "sparkle"
-   },
-   "intro": "Judges grade berries on size, flavour and shine. The prize table gleams with rare berries.",
-   "choices": [
-    {
-     "label": "Enter your best berry",
-     "check": "charisma",
-     "success": {
-      "text": "Grand champion! The judges hand over two rare berries.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       }
-      ]
-     },
-     "failure": {
-      "text": "Not this year, but a runner-up berry is yours.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "oran-berry",
-         "sitrus-berry",
-         "lum-berry"
-        ]
-       }
-      ]
-     }
-    },
-    {
-     "label": "Judge the contest",
-     "success": {
-      "text": "You taste test your way through. Delicious work.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "money",
-        "amount": 400
-       },
-       {
-        "kind": "heal",
-        "share": 0.2
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-thief",
-   "name": "Berry Thief",
-   "scene": {
-    "cast": [],
-    "tint": "#101828",
-    "effect": "none"
-   },
-   "intro": "A Pokémon bolts from a stall with its cheeks stuffed with berries. The vendor wails.",
-   "choices": [
-    {
-     "label": "Chase it down",
-     "requires": [
-      {
-       "kind": "noTrainerTag",
-       "tag": "pacifist"
-      }
-     ],
-     "success": {
-      "text": "It turns on you!",
-      "effects": [],
-      "battle": {
-       "kind": "wild",
-       "species": [
-        "greedent",
-        "skwovet",
-        "munchlax",
-        "zigzagoon"
-       ],
-       "types": [],
-       "levelBonus": 0,
-       "shinyMultiplier": 1,
-       "win": [
-        {
-         "kind": "count",
-         "counter": "eventClues",
-         "amount": 1
-        },
-        {
-         "kind": "itemFrom",
-         "ids": [
-          "lansat-berry",
-          "starf-berry",
-          "custap-berry",
-          "enigma-berry",
-          "lum-berry"
-         ]
-        },
-        {
-         "kind": "attribute",
-         "key": "goodEvil",
-         "amount": 5
-        }
-       ]
-      }
-     }
-    },
-    {
-     "label": "Pay the vendor back (₽400)",
-     "requires": [
-      {
-       "kind": "money",
-       "atLeast": 400
-      }
-     ],
-     "success": {
-      "text": "The vendor is grateful. The thief grins, and drops one berry for you.",
-      "effects": [
-       {
-        "kind": "money",
-        "amount": -400
-       },
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "oran-berry",
-         "sitrus-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "attribute",
-        "key": "goodEvil",
-        "amount": 5
-       }
-      ]
-     }
-    },
-    {
-     "label": "Look away",
-     "success": {
-      "text": "Not your problem.",
-      "effects": [
-       {
-        "kind": "attribute",
-        "key": "goodEvil",
-        "amount": -5
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-guardian",
-   "name": "The Guardian Tree",
-   "rarity": "rare",
-   "minStage": 2,
-   "scene": {
-    "cast": [],
-    "tint": "#103018",
-    "effect": "sparkle"
-   },
-   "intro": "A great old berry tree. A Pokémon sits among its branches and watches you with calm eyes.",
-   "choices": [
-    {
-     "label": "Challenge the guardian",
-     "requires": [
-      {
-       "kind": "noTrainerTag",
-       "tag": "pacifist"
-      }
-     ],
-     "success": {
-      "text": "It stands to defend its tree.",
-      "effects": [],
-      "battle": {
-       "kind": "wild",
-       "species": [
-        "tropius",
-        "cherrim",
-        "shuckle",
-        "applin"
-       ],
-       "types": [],
-       "levelBonus": 2,
-       "shinyMultiplier": 2,
-       "win": [
-        {
-         "kind": "count",
-         "counter": "eventClues",
-         "amount": 1
-        },
-        {
-         "kind": "itemFrom",
-         "ids": [
-          "lansat-berry",
-          "starf-berry",
-          "custap-berry",
-          "enigma-berry",
-          "lum-berry"
-         ]
-        },
-        {
-         "kind": "join",
-         "species": [
-          "tropius",
-          "shuckle",
-          "applin",
-          "greedent"
-         ],
-         "types": [],
-         "levelBonus": 0,
-         "shinyMultiplier": 2,
-         "shadow": false,
-         "blissful": false,
-         "hiddenAbility": true
-        }
-       ]
-      }
-     }
-    },
-    {
-     "label": "Offer it a berry",
-     "success": {
-      "text": "The guardian accepts, and lets a Pokémon of the grove follow you.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "join",
-        "species": [
-         "tropius",
-         "shuckle",
-         "applin",
-         "greedent"
-        ],
-        "types": [],
-        "levelBonus": -3,
-        "shinyMultiplier": 1,
-        "shadow": false,
-        "blissful": true,
-        "hiddenAbility": true
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-research",
-   "name": "Berry Research Tent",
-   "scene": {
-    "cast": [],
-    "tint": "#102a30",
-    "effect": "sparkle"
-   },
-   "intro": "Botanists compare mutations under glass. One offers you a seedling and asks for your help.",
-   "choices": [
-    {
-     "label": "Plant the glowing seedling",
-     "success": {
-      "text": "You plant it in your Berry Garden. It will ripen in a stage.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "research",
-        "amount": 20
-       },
-       {
-        "kind": "seedling",
-        "berry": "lansat-berry",
-        "mutated": true
-       }
-      ]
-     }
-    },
-    {
-     "label": "Trade notes",
-     "success": {
-      "text": "Hours of notes later, you know a little more.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "research",
-        "amount": 40
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-merchant",
-   "name": "Traveling Berry Merchant",
-   "stop": "merchant",
-   "scene": {
-    "cast": [],
-    "tint": "#40280c",
-    "effect": "sparkle"
-   },
-   "intro": "A wagon of rare berries from far regions. \"Never tasted anything like them, friend.\"",
-   "choices": [
-    {
-     "label": "Buy a rare bundle (₽600)",
-     "requires": [
-      {
-       "kind": "money",
-       "atLeast": 600
-      }
-     ],
-     "success": {
-      "text": "Three rare berries, wrapped in leaves.",
-      "effects": [
-       {
-        "kind": "money",
-        "amount": -600
-       },
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       }
-      ]
-     }
-    },
-    {
-     "label": "Haggle",
-     "check": "charisma",
-     "success": {
-      "text": "A fair price, and a bonus berry.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "oran-berry",
-         "sitrus-berry",
-         "lum-berry"
-        ]
-       }
-      ]
-     },
-     "failure": {
-      "text": "The merchant waves you off.",
-      "effects": []
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-shortage",
-   "name": "Berry Shortage",
-   "scene": {
-    "cast": [],
-    "tint": "#2a1018",
-    "effect": "none"
-   },
-   "intro": "The stalls are nearly empty. A drought hit the orchards, and everyone is asking for berries.",
-   "choices": [
-    {
-     "label": "Share your berries",
-     "requires": [
-      {
-       "kind": "money",
-       "atLeast": 200
-      }
-     ],
-     "success": {
-      "text": "Word spreads. The festival thanks you with a prized seedling.",
-      "effects": [
-       {
-        "kind": "money",
-        "amount": -200
-       },
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "attribute",
-        "key": "goodEvil",
-        "amount": 8
-       },
-       {
-        "kind": "seedling",
-        "berry": "sitrus-berry",
-        "mutated": false
-       }
-      ]
-     }
-    },
-    {
-     "label": "Sell berries at the premium",
-     "success": {
-      "text": "Prices are high. Your wallet is not.",
-      "effects": [
-       {
-        "kind": "money",
-        "amount": 700
-       },
-       {
-        "kind": "attribute",
-        "key": "goodEvil",
-        "amount": -8
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-grove",
-   "name": "The Hidden Berry Grove",
-   "rarity": "rare",
-   "minStage": 2,
-   "secret": [
-    {
-     "kind": "partyType",
-     "type": "grass"
-    }
-   ],
-   "scene": {
-    "cast": [],
-    "tint": "#143a1e",
-    "effect": "sparkle"
-   },
-   "intro": "Behind the festival grounds, the berry trees grow wild and heavy. Something is nesting in the roots.",
-   "choices": [
-    {
-     "label": "Pick the grove",
-     "success": {
-      "text": "Heavy branches, rare fruit.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       }
-      ]
-     }
-    },
-    {
-     "label": "Take the nesting egg",
-     "success": {
-      "text": "A warm egg, wrapped in berry leaves.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "egg",
-        "species": [],
-        "types": [
-         "grass",
-         "bug"
-        ],
-        "levelBonus": 0,
-        "shinyMultiplier": 1,
-        "left": 3,
-        "unit": "stage",
-        "origin": "Rare Nest"
        }
       ]
      }

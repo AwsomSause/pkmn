@@ -65,14 +65,29 @@ export const seasonOf = (content: Content, run: Pick<RunState, 'clock'>): (typeo
 export const seasonStartToday = (content: Content, run: Pick<RunState, 'clock'>): boolean =>
   run.clock.day > 1 && (run.clock.day - 1) % content.balance.clock.seasonLength === 0;
 
+/** The host passes the real-world date in (the core reads no clock): month 1-12, day 1-31. Remembers the first date the run saw (mutates `run`). */
+export function setCalendar(run: RunState, month: number, day: number): void {
+  const md = `${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  run.calendar.today = md;
+  run.calendar.startedOn ??= md;
+}
+
+/** The special real-world date today is, if the host gave one and it has not been celebrated in this run. */
+export function specialDateToday(content: Content, run: Pick<RunState, 'calendar' | 'itemCounters'>): { id: string; label: string } | null {
+  const hit = content.balance.clock.specialDates.find((d) => d.on === run.calendar.today);
+  return hit && !(run.itemCounters?.[`date-celebrated:${hit.id}`] ?? 0) ? hit : null;
+}
+
 /** Today is a milestone day (7th day, 14th, 30th... or a new season) that has not been celebrated yet. */
 export function milestoneToday(content: Content, run: RunState): boolean {
   const special = content.balance.clock.milestoneDays.includes(run.clock.day) || seasonStartToday(content, run);
-  return special && !run.clock.celebrated.includes(run.clock.day);
+  return (special && !run.clock.celebrated.includes(run.clock.day)) || specialDateToday(content, run) !== null;
 }
 
-export function celebrateToday(run: RunState): void {
+export function celebrateToday(content: Content, run: RunState): void {
   if (!run.clock.celebrated.includes(run.clock.day)) run.clock.celebrated.push(run.clock.day);
+  const date = specialDateToday(content, run);
+  if (date) run.itemCounters = { ...run.itemCounters, [`date-celebrated:${date.id}`]: 1 };
 }
 
 /** Scenery for a time of day: a tint laid over the backdrop and how strongly. Presentation only. */

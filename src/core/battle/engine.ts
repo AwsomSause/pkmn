@@ -1940,7 +1940,7 @@ function applyTypeModifiers(ctx: BattleContext, user: Combatant, target: Combata
   const mods = ctx.typeModifiers;
   const attrs = ctx.attributes;
   const perks = ctx.perks;
-  const rivalry = rivalryMultiplier(ctx, user, target) * raidFieldMultiplier(ctx.content, ctx.battle, user.side, moveType) * doublesDamageMultiplier(ctx, user, target, physical, moveType) * shadowDamageMultiplier(user.mon, target.mon);
+  const rivalry = rivalryMultiplier(ctx, user, target) * raidFieldMultiplier(ctx.content, ctx.battle, user.side, moveType) * doublesDamageMultiplier(ctx, user, target, physical, moveType) * shadowDamageMultiplier(user.mon, target.mon) * guardMultiplier(ctx, target);
   if (!mods && !attrs && !perks && rivalry === 1) return damage;
   let multiplier = rivalry;
   const weather = weatherNow(ctx);
@@ -2177,6 +2177,7 @@ function hyperIntercept(ctx: BattleContext, c: Combatant, amount: number): { hpA
     const e = tryHyper(ctx, 'protectiveInstinct', mate);
     if (!e) return null;
     mate.hp -= absorbed;
+    if (e.def.effect?.kind === 'intercept' && e.def.effect.guardTurns > 0) (ctx.battle.hyper.guard ??= {})[c.mon.uid] = e.def.effect.guardTurns;
     const hpAfter = c.mon.hp - (amount - absorbed);
     return {
       hpAfter,
@@ -2363,6 +2364,13 @@ function friendlyFinish(ctx: BattleContext, finisher: PokemonInstance, events: B
   }
 }
 
+/** Guard Formation: a guarded Pokémon of yours takes less damage while the condition lasts. */
+function guardMultiplier(ctx: BattleContext, target: Combatant): number {
+  if (target.side !== 'player' || !((ctx.battle.hyper?.guard?.[target.mon.uid] ?? 0) > 0)) return 1;
+  const def = ctx.content.story.definitions.find((d) => d.triggerConditions.trigger === 'protectiveInstinct');
+  return def?.effect?.kind === 'intercept' ? 1 - def.effect.guardReduction : 1;
+}
+
 /** The rivalry damage bonuses for your Pokémon's hit. */
 function rivalryMultiplier(ctx: BattleContext, user: Combatant, target: Combatant): number {
   const h = ctx.battle.hyper;
@@ -2384,6 +2392,8 @@ function rivalryMultiplier(ctx: BattleContext, user: Combatant, target: Combatan
 function hyperEndOfTurn(ctx: BattleContext, c: Combatant, events: BattleEvent[]): void {
   const { battle } = ctx;
   const state = battle.hyper;
+  const guard = (state.guard ??= {});
+  if ((guard[c.mon.uid] ?? 0) > 0) guard[c.mon.uid]! -= 1;
   if (c.mon.hp <= 0) {
     state.lowHp = null;
     return;
