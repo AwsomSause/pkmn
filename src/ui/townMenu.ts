@@ -6,13 +6,15 @@ import { contractBoard, contractDone } from '../core/contracts';
 import { promptById } from '../core/interaction/prompt';
 import { basementCode, buildingProblem, currentSeason, dummyHit, dummyMoves, elevatorFloors, forecast, getBuilding, guestbook, jukeboxTracks, lastTeam, ledger, LEDGER_FILTERS, LEDGER_SORTS, collections, optionsOf, ownedSet, quizQuestion, rosterOpen, statueTarget, theatreList, TOWN, todaysQuests, townOf, townProblem, townStats, townWeather, trackView, trophies, localDay, type LedgerFilter, type LedgerSort, type TownAction, type TownBuilding } from '../core/town';
 import { services } from '../game/services';
+import { pokemonAssetIds } from '../assets/catalog';
 import { playCry, playMusicLazy } from './audio';
+import { pokemonIcon } from './sprites';
 import { runInteractionPrompt } from './interactionPrompt';
 import { Picker, type PickerRow } from './partyPanel';
 import { COLORS, textStyle } from './theme';
 
 interface Choice { label: string; desc?: string; problem?: string | null }
-export interface TownHost { scene: Phaser.Scene; setPicker(p: Picker | null): void; refresh(note: string): void; setDecorMode?(on: boolean): void; enter?(b: TownBuilding): void }
+export interface TownHost { scene: Phaser.Scene; setPicker(p: Picker | null): void; refresh(note: string): void; setDecorMode?(on: boolean): void; enter?(b: TownBuilding): void; /** Where Esc from a building goes (the street); defaults to the building list. */ home?: () => void }
 
 const motion = () => services().session.settings.battleAnimations as 'full' | 'reduced' | 'off';
 
@@ -63,7 +65,7 @@ export function openTown(host: TownHost, leave: () => void, note = ''): void {
   }, leave, { columns: 2 });
 }
 
-function openBuilding(host: TownHost, b: TownBuilding, back: () => void, leave: () => void, note = ''): void {
+export function openBuilding(host: TownHost, b: TownBuilding, back: () => void, leave: () => void, note = ''): void {
   const { session } = services();
   const rows = b.actions.map((a) => ({ label: a.name, desc: a.desc, problem: townProblem(session.content, session.profile, a, now()) }));
   const again = (msg: string) => { host.refresh(msg); openBuilding(host, b, back, leave, msg); };
@@ -83,7 +85,7 @@ function call(a: TownAction, args: Parameters<ReturnType<typeof services>['sessi
 function runAction(host: TownHost, b: TownBuilding, a: TownAction, done: (msg: string) => void): void {
   const { session } = services();
   const p = session.profile;
-  const again = () => openBuilding(host, b, () => openTown(host, () => host.refresh('')), () => host.refresh(''));
+  const again = () => openBuilding(host, b, host.home ?? (() => openTown(host, () => host.refresh(''))), () => host.refresh(''));
   const grade = async (choice?: string): Promise<void> => {
     const g = a.prompt ? (await runInteractionPrompt(host.scene, promptById(a.prompt), { motion: motion() })).grade : 'ok';
     call(a, { grade: g, ...(choice ? { choice } : {}) }, done);
@@ -96,6 +98,25 @@ function runAction(host: TownHost, b: TownBuilding, a: TownAction, done: (msg: s
     }
     case 'pick': {
       const opts = optionsOf(session.content, p, a, now());
+      if (a.id === 'cinema-play') {
+        return choose(host, a.name, opts.map((o) => ({ label: o.label, desc: o.desc })), (i) => {
+          const r = p.runHistory.find((x) => x.runId === opts[i]!.id);
+          call(a, { choice: opts[i]!.id }, () => undefined);
+          reel(host, opts[i]!.label, r?.moments.length ? r.moments : ['A quiet run with no big moments.'], r?.party.map((m) => m.speciesId) ?? [], () => done(''));
+        }, again);
+      }
+      if (a.id === 'time-whatif') {
+        return choose(host, a.name, opts.map((o) => ({ label: o.label, desc: o.desc })), (i) => {
+          const id = opts[i]!.id;
+          const lost = p.legacyRuns.find((r) => r.runId === id && r.outcome === 'defeat');
+          const canReplay = !!lost && !session.replayProblem(id);
+          choose(host, 'What do you change?', [{ label: 'Imagine a different choice', desc: 'A short story. Nothing is replayed.' }, { label: 'Revisit This Timeline', desc: canReplay ? 'Play this lost run again from its seed (the record stays as it was).' : 'Only a lost run with a saved start can be played again.', problem: canReplay ? null : 'Not available for this run.' }], (k) => {
+            if (k === 0) return call(a, { choice: id }, done);
+            session.startReplay(id);
+            host.scene.scene.start('StarterSelect');
+          }, again);
+        }, again);
+      }
       return choose(host, a.name, opts.map((o) => ({ label: o.label, desc: o.desc || (o.cost ? costText(o.cost) : ''), problem: null })), (i) => call(a, { choice: opts[i]!.id }, done), again);
     }
     case 'buy': {
@@ -257,7 +278,7 @@ function place(host: TownHost, a: TownAction, done: (m: string) => void, again: 
     const colors = ['#ff5a5a', '#ffb745', '#f8d030', '#78e080', '#5ac8fa', '#a78bfa', '#ff7ad9', '#f8f8f8'];
     const stamps = ['star', 'heart', 'bolt', 'flame', 'leaf', 'drop', 'skull', 'crown'];
     const sigs = t.wall.length;
-    return choose(host, `Sign the wall (${sigs} on it, ${Math.max(0, 1 + p.runHistory.filter((r) => r.victory).length - (t.counts.signatures ?? 0))} left to sign)`, colors.map((c) => ({ label: c, desc: 'Stylus color' })), (i) => choose(host, 'Pick a stamp', stamps.map((s) => ({ label: s })), (k) => call(a, { choice: `${colors[i]}|${stamps[k]}` }, done), again), again);
+    return choose(host, `Sign the wall (${sigs} on it, ${Math.max(0, 1 + p.runHistory.filter((r) => r.victory).length - (t.counts.signatures ?? 0))} left to sign)`, colors.map((c) => ({ label: c, desc: 'Stylus color' })), (i) => choose(host, 'Pick a stamp, or draw freehand', [{ label: '✎ Draw freehand', desc: 'Drag on the wall with the stylus.' }, ...stamps.map((s) => ({ label: s }))], (k) => (k === 0 ? drawPad(host, (d) => call(a, { choice: `${colors[i]}|d:${d}` }, done), again) : call(a, { choice: `${colors[i]}|${stamps[k - 1]}` }, done)), again), again);
   }
   // decor
   const owned = ownedSet(p, 'decor');
@@ -293,7 +314,7 @@ function view(host: TownHost, a: TownAction, done: (m: string) => void, again: (
     }
     case 'theatre': {
       const list = theatreList(p);
-      return show(host, 'Cutscene theatre', list.map((x) => ({ label: x.title, desc: x.lines[0] ?? '' })), again, (i) => show(host, list[i]!.title, list[i]!.lines.map((l) => ({ label: l })), again));
+      return show(host, 'Cutscene theatre', list.map((x) => ({ label: x.title, desc: x.lines[0] ?? '' })), again, (i) => reel(host, list[i]!.title, list[i]!.lines.length ? list[i]!.lines : ['The scene fades to a quiet end.'], list[i]!.species ?? [], again));
     }
     case 'forecast': return show(host, 'Forecast', forecast(now()).map((f) => ({ label: f.label, desc: f.tip })), again);
     case 'jokes': return call(a, {}, done);
@@ -343,3 +364,66 @@ function openLedger(host: TownHost, filter: LedgerFilter, sort: LedgerSort, back
 }
 
 export { currentSeason, getBuilding };
+
+
+/** A reel: slides of text with the run's Pokémon on top, advancing by itself. Enter skips ahead, Esc closes. */
+function reel(host: TownHost, title: string, lines: string[], species: string[], back: () => void): void {
+  const { session } = services();
+  const scene = host.scene;
+  const root = scene.add.container(0, 0).setDepth(2500);
+  root.add(scene.add.rectangle(0, 0, 960, 540, 0x0a0812, 0.94).setOrigin(0));
+  root.add(scene.add.text(480, 40, title, textStyle(26, COLORS.gold)).setOrigin(0.5));
+  species.slice(0, 6).forEach((id, i) => {
+    const sp = session.content.species.get(id);
+    if (sp && scene.textures.exists(pokemonAssetIds(sp.assets).icon)) root.add(pokemonIcon(scene, sp, 300 + i * 70, 130, 1.6));
+  });
+  const text = scene.add.text(480, 270, '', textStyle(22, COLORS.text, { align: 'center', wordWrap: { width: 720 } })).setOrigin(0.5);
+  const hint = scene.add.text(480, 500, 'Enter: next · Esc: close', textStyle(14, COLORS.textMuted)).setOrigin(0.5);
+  root.add([text, hint]);
+  let at = 0;
+  let timer: Phaser.Time.TimerEvent | null = null;
+  const close = (): void => { timer?.remove(); scene.input.keyboard?.off('keydown-ENTER', next); scene.input.keyboard?.off('keydown-ESC', close); root.destroy(); back(); };
+  const show1 = (): void => {
+    const line = lines[at]!;
+    text.setText('');
+    if (motion() === 'off') { text.setText(line); return; }
+    let k = 0;
+    scene.time.addEvent({ delay: 25, repeat: line.length - 1, callback: () => { k += 1; text.setText(line.slice(0, k)); } });
+  };
+  function next(): void { at += 1; if (at >= lines.length) return close(); show1(); timer?.remove(); timer = scene.time.addEvent({ delay: 3500, callback: next }); }
+  scene.input.keyboard?.on('keydown-ENTER', next);
+  scene.input.keyboard?.on('keydown-ESC', close);
+  show1();
+  timer = scene.time.addEvent({ delay: 3500, callback: next });
+}
+
+/** The graffiti pad: drag to draw. Strokes are saved as small 0-99 coordinates ("x,y;x,y:next stroke"). */
+function drawPad(host: TownHost, onDone: (strokes: string) => void, cancel: () => void): void {
+  const scene = host.scene;
+  const root = scene.add.container(0, 0).setDepth(2500);
+  const box = { x: 280, y: 110, w: 400, h: 300 };
+  const bg = scene.add.rectangle(box.x, box.y, box.w, box.h, 0x2b2236, 1).setOrigin(0).setStrokeStyle(3, 0xffb745).setInteractive();
+  root.add([scene.add.rectangle(0, 0, 960, 540, 0x000000, 0.7).setOrigin(0), bg, scene.add.text(480, 70, 'Draw on the wall · Enter saves · Esc cancels', textStyle(18, COLORS.gold)).setOrigin(0.5)]);
+  const g = scene.add.graphics().lineStyle(4, 0xffffff, 1);
+  root.add(g);
+  const strokes: string[][] = [];
+  let total = 0;
+  let down = false;
+  const toPad = (px: number, py: number): [number, number] => [Math.max(0, Math.min(99, Math.floor(((px - box.x) / box.w) * 100))), Math.max(0, Math.min(99, Math.floor(((py - box.y) / box.h) * 100)))];
+  bg.on('pointerdown', (p: Phaser.Input.Pointer) => { down = true; strokes.push([]); const [x, y] = toPad(p.x, p.y); strokes[strokes.length - 1]!.push(`${x},${y}`); g.beginPath(); g.moveTo(p.x, p.y); });
+  scene.input.on('pointermove', (p: Phaser.Input.Pointer) => { if (!down || total > 140) return; const [x, y] = toPad(p.x, p.y); strokes[strokes.length - 1]!.push(`${x},${y}`); total += 1; g.lineTo(p.x, p.y); g.strokePath(); });
+  scene.input.on('pointerup', () => { down = false; });
+  const done = (save: boolean): void => {
+    scene.input.keyboard?.off('keydown-ENTER', onEnter);
+    scene.input.keyboard?.off('keydown-ESC', onEsc);
+    scene.input.off('pointermove');
+    scene.input.off('pointerup');
+    root.destroy();
+    const out = strokes.map((s) => s.join(';')).join(':').slice(0, 700);
+    if (save && out.length > 2) onDone(out); else cancel();
+  };
+  const onEnter = (): void => done(true);
+  const onEsc = (): void => done(false);
+  scene.input.keyboard?.on('keydown-ENTER', onEnter);
+  scene.input.keyboard?.on('keydown-ESC', onEsc);
+}

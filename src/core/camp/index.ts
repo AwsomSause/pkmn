@@ -640,6 +640,8 @@ export function giveGadget(run: RunState, id: string): void {
   const g = getGadget(id)!;
   const camp = campOf(run);
   camp.wear[id] = g.uses === 1 ? (camp.wear[id] ?? 0) + 1 : g.uses;
+  // A tune-up from the Town's Workshop adds 3 uses to a new gadget.
+  if (g.uses > 1 && (camp.stuff['tune-up'] ?? 0) > 0) { camp.stuff['tune-up'] = (camp.stuff['tune-up'] ?? 0) - 1; camp.wear[id] = (camp.wear[id] ?? 0) + 3; }
 }
 
 // ---------- market ----------

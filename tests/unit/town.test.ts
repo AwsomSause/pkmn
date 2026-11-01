@@ -28,7 +28,7 @@ describe('town data', () => {
     expect(new Set(ids).size).toBe(ids.length);
     expect(new Set(TOWN.buildings.map((b) => b.id)).size).toBe(TOWN.buildings.length);
     const rows = new Set(TOWN.buildings.flatMap((b) => b.actions.flatMap((a) => a.rows)));
-    const want = [...Array.from({ length: 51 }, (_, i) => `I${240 + i}`).filter((r) => !['I264', 'I265'].includes(r)), 'F29', 'F96', 'F97', 'F98', 'F99', 'F102', 'F105', 'F106', 'F110', 'F112', 'F114', 'F120', 'F121', 'F127', 'F130', 'I214'];
+    const want = [...Array.from({ length: 51 }, (_, i) => `I${240 + i}`).filter((r) => !['I264', 'I265'].includes(r)), 'F29', 'F96', 'F97', 'F98', 'F99', 'F102', 'F105', 'F106', 'F110', 'F112', 'F114', 'F120', 'F121', 'F127', 'F130', 'I214', 'I42'];
     expect(want.filter((r) => !rows.has(r))).toEqual([]);
   });
   it('every item, species, prompt and kind named in the data is real', () => {
@@ -163,6 +163,58 @@ describe('town actions', () => {
     expect(collections(p).length).toBeGreaterThan(4);
     expect(townWeather(p)).toBe('clear');
     expect(mailToday(content, p, DAY).length).toBeGreaterThanOrEqual(3);
+  });
+});
+
+describe('town upgrades', () => {
+  const withRun = (): Profile => {
+    const p = rich();
+    p.runHistory.unshift({ runId: 'r1', endedAt: '2026-11-01', seed: 's1', archetypeId: 'red', campaignId: 'full', victory: false, regionsCleared: 1, regions: 3, badges: 2, encounters: 20, defeatedBy: { speciesId: 'pidgey', level: 12, trainer: null }, party: [{ speciesId: 'pikachu', level: 20, shiny: false }, { speciesId: 'eevee', level: 18, shiny: false }], bankCredits: 0, researchPoints: 0, achievements: [], moments: ['A big moment.'], journal: [], epitaph: null, legacy: [] });
+    return p;
+  };
+  it('the dojo spar adds real Move Research uses to the Pokémon\'s strongest move', () => {
+    const p = ok(withRun(), 'dojo-spar', { grade: 'perfect', choice: 'pikachu' }).profile;
+    expect(Object.values(p.moveUses ?? {}).reduce((a, b) => a + b, 0)).toBe(8);
+  });
+  it('mini battles use the real damage rules and repeat for the same seed', () => {
+    const p = withRun();
+    const a = ok(p, 'replica-duel', { choice: 'r1' }).message;
+    const b = ok(p, 'replica-duel', { choice: 'r1' }).message;
+    expect(a).toBe(b);
+    expect(a).toMatch(/Practice win|ghost wins/);
+    expect(ok(p, 'replica-mirror', { choice: 'pikachu' }).message).toContain('ghost');
+    expect(ok(p, 'arcade-duel', { choice: 'pikachu' }).message).toContain('faces');
+  });
+  it('daycare: leave, wait two runs, collect a real egg that starts the next run', () => {
+    let p = ok(withRun(), 'daycare-leave', { choice: 'pikachu' }).profile;
+    expect(act(p, 'daycare-collect', { choice: 'collect-egg' }).ok).toBe(false);
+    p = spendTownStart(spendTownStart(p));
+    p = ok(p, 'daycare-collect', { choice: 'collect-egg' }).profile;
+    expect(townStartGrants(content, p).eggs.length).toBe(1);
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'dc', seed: 'dc', archetypeId: 'red' }), 0));
+    applyStartGrants(content, run, p);
+    expect(run.eggs.length).toBe(1);
+  });
+  it('hot spring bond and workshop tune-ups ride into the run as camp stuff', () => {
+    let p = ok(withRun(), 'hotspring-soak', { grade: 'perfect', choice: 'pikachu' }).profile;
+    p = ok(p, 'workshop-repair', { choice: 'repair-gear' }).profile;
+    const g = startGrants(content, p, 'red');
+    expect(g.stuff['spa-bond']).toBe(3);
+    expect(g.stuff['tune-up']).toBe(2);
+  });
+  it('Memorial Wall keeps Nuzlocke losses and fallen aces only, one flower per grave per day', () => {
+    const p = rich();
+    recordTownRun(content, p, { runId: 'm', seed: 'm', victory: false, inventory: {}, nuzlocke: { memorial: [{ speciesId: 'pikachu', level: 9, ace: true, cause: 'Lost to a rival' }] }, party: [{ speciesId: 'eevee', level: 7, hp: 0 }, { speciesId: 'pidgey', level: 5, hp: 0, care: { ace: true } }] });
+    expect(townOf(p).memorial.length).toBe(2);
+    expect(townOf(p).memorial[0]).toContain('pikachu');
+    const first = ok(p, 'memorial-flower', { choice: '0' }).profile;
+    expect(act(first, 'memorial-flower', { choice: '0' }).ok).toBe(false);
+    expect(ok(first, 'memorial-flower', { choice: '1' }).ok).toBe(true);
+  });
+  it('freehand graffiti is accepted, bad input is not', () => {
+    const p = rich();
+    expect(act(p, 'wall-sign', { choice: '#ff5a5a|d:1,1;2,2;3,3:5,5;6,6' }).ok).toBe(true);
+    expect(act(p, 'wall-sign', { choice: '#ff5a5a|<script>' }).ok).toBe(false);
   });
 });
 
