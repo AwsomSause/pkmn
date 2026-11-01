@@ -2086,6 +2086,8 @@ export const BalanceSchema = z.object({
   }),
   /** Exploration (core/world.ts): fog of war, weather fronts, roaming Legendaries and checkpoint camps. */
   world: WorldBalanceSchema,
+  /** The day counter and day/night cycle (core/clock.ts): four times of day, a step of the map takes `ticksPerStep` of them. */
+  clock: z.object({ ticksPerStep: z.number().int().min(0).max(4), milestoneDays: z.array(z.number().int().min(2)).min(1) }),
   attributeGrowth: z.array(
     z.object({
       attribute: AttributeKeySchema,
@@ -2318,6 +2320,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('meter'), key: z.enum(['ragePeace', 'goodEvil']), side: z.enum(['positive', 'negative']), atLeast: z.number().int().min(0) }),
   z.object({ kind: z.literal('item'), id: z.string() }),
   z.object({ kind: z.literal('partyType'), type: TypeNameSchema }),
+  /** The run clock (core/clock.ts): it is one of these times of day. */
+  z.object({ kind: z.literal('period'), in: z.array(z.enum(['morning', 'afternoon', 'evening', 'night'])).min(1) }),
+  /** The run clock: today is a milestone day whose celebration has not been held yet. */
+  z.object({ kind: z.literal('milestone') }),
   /** A species in the party. */
   z.object({ kind: z.literal('partySpecies'), species: z.string() }),
   /** A party member whose current emotion is this one (Overdrive emotions: kindness, bravery...). */
@@ -2417,6 +2423,10 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   /** A ferry: jump to a node next to the gym (SS Ticket). */
   z.object({ kind: z.literal('skipAhead') }),
   z.object({ kind: z.literal('heal'), share: z.number().min(0).max(1) }),
+  /** The run clock: sleep until the next morning (a new day begins). */
+  z.object({ kind: z.literal('rest') }),
+  /** The run clock: today's milestone celebration is held (so it pays once). */
+  z.object({ kind: z.literal('celebrate') }),
   z.object({ kind: z.literal('damage'), share: z.number().min(0).max(1) }),
   z.object({ kind: z.literal('cure') }),
   z.object({ kind: z.literal('status'), status: z.enum(['poison', 'burn', 'paralysis', 'sleep']) }),

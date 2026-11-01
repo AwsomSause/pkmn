@@ -135,6 +135,14 @@ export const isRage = (atLeast: number): Json => ({ kind: 'meter', key: 'ragePea
 export const isPeace = (atLeast: number): Json => ({ kind: 'meter', key: 'ragePeace', side: 'negative', atLeast });
 export const has = (id: string): Json => ({ kind: 'item', id });
 export const feels = (id: string): Json => ({ kind: 'emotion', id });
+/** The run clock: the time of day is one of these. */
+export const at = (...periods: string[]): Json => ({ kind: 'period', in: periods });
+/** The run clock: today is an uncelebrated milestone day. */
+export const milestone: Json = { kind: 'milestone' };
+/** Sleep until the next morning (a new day begins). */
+export const rest = (): Json => ({ kind: 'rest' });
+/** Today's milestone celebration is held (pays once per milestone). */
+export const celebrate = (): Json => ({ kind: 'celebrate' });
 export const ptype = (type: string): Json => ({ kind: 'partyType', type });
 /** Aggressive choices N (tag "pacifist") won't make. */
 export const fierce: Json = { kind: 'noTrainerTag', tag: 'pacifist' };

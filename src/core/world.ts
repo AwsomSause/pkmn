@@ -219,12 +219,14 @@ export function anyRoaming(run: RunState): boolean {
 
 // ---------- checkpoint camps ----------
 
-/** Whether this stage has a camp: one every `campEvery` stages, never the first. */
+/** Whether this stage has a camp: one every `campEvery` stages (every stage when 1). */
 export function stageHasCamp(content: Content, run: RunState): boolean {
   const stage = run.stage;
   if (!stage || stage.kind !== 'stage') return false;
   const n = stagesDone(content, run);
-  return n > 0 && n % worldOf(content).campEvery === 0;
+  const every = worldOf(content).campEvery;
+  // Every stage has a camp when `campEvery` is 1 (spec §22); otherwise one every few stages, never the first.
+  return (n > 0 || every === 1) && n % every === 0;
 }
 
 export const CAMP_EVENT_ID = 'camp-checkpoint';

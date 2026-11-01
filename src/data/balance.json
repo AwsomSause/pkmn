@@ -706,10 +706,20 @@
   ],
   "convoyReward": 200,
   "convoyRewardPerHp": 100,
-  "campEvery": 2,
+  "campEvery": 1,
   "campColumns": [
    9,
    12
+  ]
+ },
+ "clock": {
+  "ticksPerStep": 1,
+  "milestoneDays": [
+   7,
+   14,
+   30,
+   50,
+   100
   ]
  }
 }

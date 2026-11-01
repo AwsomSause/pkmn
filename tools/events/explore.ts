@@ -5,7 +5,7 @@
 // Rival events (Rival Clash, Rival Gauntlet) belong to the rival work.
 
 import { readFileSync } from 'node:fs';
-import { $, ability, any, att, ch, convoy, convoyHeal, cure, egg, ev, ferry, fight, flag, escorting, flagIs, fr, front, good, gym, has, heal, hurt, item, join, leave, lose, out, ptype, reveal, room, roomFrom, rp, scout, trainer, wild, type Json, HELD, TREASURE, VITAMINS, BERRIES, SNACKS, HEALING } from './dsl.ts';
+import { $, at, celebrate, lv, milestone, rest, ability, any, att, ch, convoy, convoyHeal, cure, egg, ev, ferry, fight, flag, escorting, flagIs, fr, front, good, gym, has, heal, hurt, item, join, leave, lose, out, ptype, reveal, room, roomFrom, rp, scout, trainer, wild, type Json, HELD, TREASURE, VITAMINS, BERRIES, SNACKS, HEALING } from './dsl.ts';
 
 const balance = JSON.parse(readFileSync(new URL('../../src/data/balance.json', import.meta.url), 'utf8')) as { world: { roamers: { species: string; name: string; gameEvent: string | null }[] } };
 const clue = (amount = 1): Json => ({ kind: 'count', counter: 'eventClues', amount });
@@ -29,12 +29,26 @@ const roamerEvents = (): Json[] =>
 
 // ---------- Checkpoint Camps (§5) ----------
 export const CAMP_EVENTS: Json[] = [
-  ev('camp-checkpoint', 'Checkpoint Camp', 'Checkpoint Camps', { stop: 'camp', rarity: 'common', minStage: 1, effect: 'sparkle', tint: '#1c2a1c' },
-    'A tidy camp with a firepit and a tent. Other travelers have left it clean. There is time for one thing before you move on.', [
-      ch('Make camp (full rest)', out('Everyone sleeps, and anyone in your care too. In the morning, all of you are whole again.', heal(1), cure(), convoyHeal(4), fr(3, 'party'))),
-      ch('Plan the route', out('You spread a map and study the road ahead.', scout(6), gym(), rp(15))),
-      ch('Sit by the fire', out('Stories, a song, and someone\'s joke you will remember. Everyone feels closer.', heal(0.3), fr(9, 'party'), rp(30), good(1))),
+  ev('camp-checkpoint', 'Camp', 'Camp', { stop: 'camp', rarity: 'common', minStage: 1, effect: 'sparkle', tint: '#1c2a1c' },
+    'A tidy camp with a firepit and a tent, set up for travelers. There is time for one thing before you move on. What you can do depends on the hour, and on who is with you.', [
+      ch('Make camp (full rest until morning)', out('Everyone sleeps, and anyone in your care too. A new day begins, and all of you are whole again.', heal(1), cure(), convoyHeal(4), fr(3, 'party'), rest())),
+      ch('Spend time with the party', out('The party gathers round. Who wants to do what?', room('camp-party'))),
+      ch('Prepare for the road', out('You lay out the map and your gear.', room('camp-prepare'))),
       ch('Resupply', out('The camp keeps a small store for travelers.', any(...HEALING), any(...BERRIES), item('poke-ball', 3))),
+    ]),
+  ev('camp-party', 'Around the Fire', 'Camp', { rarity: 'common', minStage: 1, effect: 'sparkle', tint: '#2a1c1c' },
+    'The Pokémon drift toward each other: some play, some argue, some just want company. The hour decides what feels right.', [
+      ch('Morning play (morning)', out('Rolling, racing and wrestling in the dew. A few scraped knees, a lot of laughter.', fr(6, 'party'), rp(15)), { requires: [at('morning')] }),
+      ch('Sunny-afternoon contest (afternoon)', out('A friendly contest in the warm light. Winners crow, losers promise a rematch. Everyone is closer for it.', fr(5, 'party'), heal(0.15), rp(20)), { requires: [at('afternoon')] }),
+      ch('Stories by the fire (evening or night)', out('Stories, a song, and someone\'s joke you will remember. Everyone feels closer.', heal(0.3), fr(9, 'party'), rp(30), good(1)), { requires: [at('evening', 'night')] }),
+      ch('Talk with your partner', out('You sit with your lead for a while. Not much is said. It is enough.', fr(8, 'lead'), rp(10))),
+    ]),
+  ev('camp-prepare', 'Before You Go', 'Camp', { rarity: 'common', minStage: 1, effect: 'sparkle', tint: '#1c242a' },
+    'The road ahead is quiet, and what you can do with it changes as the day wears on.', [
+      ch('Plan the route', out('You spread a map and study the road ahead.', scout(6), gym(), rp(15))),
+      ch('Morning drills (morning)', out('Moves practised until they are second nature.', lv(1, 'party'), rp(20)), { requires: [at('morning', 'afternoon')] }),
+      ch('Stargaze (night)', out('Under a wide sky nobody says much. Your party feels calm and sure.', fr(4, 'party'), rp(40), good(1), heal(0.2)), { requires: [at('night')] }),
+      ch('Celebrate the milestone', out('A day to remember. The whole party feasts, and a stranger leaves a small gift by the fire.', celebrate(), fr(10, 'party'), heal(1), any(...TREASURE), any(...VITAMINS), rp(60), good(1)), { requires: [milestone] }),
     ]),
 ];
 

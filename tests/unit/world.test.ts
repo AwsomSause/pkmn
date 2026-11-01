@@ -174,12 +174,10 @@ describe('roaming Legendaries', () => {
 });
 
 describe('checkpoint camps', () => {
-  it('a camp turns up every other stage, in the middle of the map, and gives one free service', () => {
+  it('a camp turns up in every stage, in the middle of the map, and gives one free service', () => {
     const run = newRun();
-    expect(stageHasCamp(content, run)).toBe(false); // the first stage has none
-    run.stage!.index = 2;
-    expect(stageHasCamp(content, run)).toBe(true);
-    placeCamp(content, run);
+    expect(stageHasCamp(content, run)).toBe(true); // spec §22: never missing, even in the first stage
+    expect(stageHasCamp(withWorld({ campEvery: 2 }), run)).toBe(false); // an older cadence still skips the first
     const camps = eventStops(run).filter((s) => s.side.eventId === 'camp-checkpoint');
     expect(camps).toHaveLength(1);
     const [lo, hi] = content.balance.world.campColumns;
@@ -189,7 +187,9 @@ describe('checkpoint camps', () => {
     there.party[0]!.hp = 1;
     const after = chooseEvent(content, there, 'test-event', 0).run;
     expect(after.party[0]!.hp).toBe(maxHp(content, after.party[0]!));
-    const planned = chooseEvent(content, atEvent(newRun(), 'camp-checkpoint'), 'test-event', 1).run;
+    expect(after.clock.day).toBe(2); // resting takes the night
+    expect(after.clock.tick).toBe(0);
+    const planned = chooseEvent(content, atEvent(newRun(), 'camp-prepare'), 'test-event', 0).run;
     expect(planned.stage!.scoutedTo).toBeGreaterThan(0);
   });
 

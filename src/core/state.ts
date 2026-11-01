@@ -1046,6 +1046,8 @@ export const RunStateSchema = z.object({
   story: StoryStateSchema,
   /** Personalities in play: pair chemistry, grudges, pacts, the scene waiting on the map and the scrapbook (core/partyLife). */
   partyLife: PartyLifeStateSchema.default(() => createPartyLife()),
+  /** The day counter and time of day (core/clock.ts); time passes only with the player's actions. */
+  clock: z.object({ day: z.number().int().min(1), tick: z.number().int().min(0).max(3), celebrated: z.array(z.number().int()) }).default(() => ({ day: 1, tick: 0, celebrated: [] })),
   /** An earlier run's rival whose character may shape one of this run's rivals (picked at the start from the account archive; null: none). */
   legacyRival: ArchivedRivalSchema.nullable().default(null),
   /** Raid record this run (dens entered, won, lost) and the dens already finished. */

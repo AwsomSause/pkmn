@@ -14,6 +14,7 @@
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
+import { clockLabel, periodOf, PERIOD_LOOK } from '../core/clock';
 import { eventView, type ChoiceView, type EventResult } from '../core/events';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
@@ -85,6 +86,12 @@ export class EventScene extends Phaser.Scene {
     const tint = Phaser.Display.Color.HexStringToColor(scene.tint ?? '#1d1a24').color;
     const shade = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, tint, 0.45).setOrigin(0);
     if (!this.calm) this.tweens.add({ targets: shade, alpha: 0.3, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    // Camp changes with the hour: a wash of the time of day and a small day label.
+    if (view.event.group === 'Camp') {
+      const look = PERIOD_LOOK[periodOf(run)];
+      if (look.alpha > 0) this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, look.tint, look.alpha).setOrigin(0).setName('time-wash');
+      this.add.text(GAME_WIDTH - 24, 14, `${clockLabel(run)}  ·  ${look.ambient}`, textStyle(16, '#f4ecd0', { stroke: '#101010', strokeThickness: 3 })).setOrigin(1, 0).setName('camp-clock');
+    }
     const rim = COLORS.rarity[view.event.rarity] ?? AERO.rim;
     this.illustrationFrame(view.event.group, view.event.rarity, rim, scene.cast.length === 0 && !scene.pokemon);
     this.moneyPill(run.money);

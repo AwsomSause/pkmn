@@ -154,6 +154,7 @@ import { withChampionTeam } from './story/championDefense';
 import { grandGauntlet, gauntletRival, markGauntletFight } from './story/gauntlet';
 import { growCrisis } from './story/crisis';
 import { recapRegion, tellAct } from './campaign/director';
+import { freshClock, stepClock } from './clock';
 import { finalRivalLine, tellCampfire } from './story/highHype';
 import { ultimateRival } from './rivals/ultimate';
 import { applyGrandInfluence, endGrandBattle, grandNotes, startGrandBattle } from './story/grandEnemy';
@@ -282,6 +283,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], speciesShiny: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
     story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
     partyLife: createPartyLife(),
+    clock: freshClock(),
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
     totems: { entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 },
@@ -651,6 +653,7 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   if (mode && (mode !== 'machBike' || node.kind === 'wild')) markUsedThisStage(run, perkItem(content, run, mode)!);
   stage.current = nodeId;
   stage.visited.push(nodeId);
+  stepClock(content, run);
   // Bridge Mail adds a stop beside the node the player reaches.
   addBridgeStops(content, run, nodeId);
   // Roaming Legendaries move on as you do.
