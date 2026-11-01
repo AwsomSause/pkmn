@@ -47,6 +47,7 @@ import { showAchievementToasts } from '../ui/achievementToast';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { badge, focusFrame } from '../ui/widgets';
 import { AERO, drawGlass, floatIdle, glassPanel as drawPanel, typeLabel, type MotionLevel } from '../ui/aero';
+import { uiTiming } from '../ui/wiiMotion';
 import { addAmbience } from '../ui/battleFx/ambience';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
@@ -577,7 +578,7 @@ export class MapScene extends Phaser.Scene {
   }
 
   private ringCursor(layer: Phaser.GameObjects.Container, x: number, y: number, r: number): Phaser.GameObjects.Graphics {
-    const g = this.add.graphics({ x, y });
+    const g = this.add.graphics({ x, y }).setData('home', { x, y });
     g.lineStyle(10, AERO.rim, 0.3);
     g.strokeCircle(0, 0, r + 2);
     g.lineStyle(4, AERO.white, 1);
@@ -649,8 +650,18 @@ export class MapScene extends Phaser.Scene {
   private focus(i: number, sound = true): void {
     if (i < 0) return;
     if (sound && i !== this.index) playSfx(this, 'ui.cursor', 0.5);
+    const from = this.cursors[this.index];
     this.index = i;
     this.cursors.forEach((c, n) => c.setVisible(n === i));
+    // Wii-style (spec §24): the node ring glides over from the node it left instead of jumping.
+    const to = this.cursors[i];
+    const home = to?.getData('home') as { x: number; y: number } | undefined;
+    const tm = uiTiming('cursor');
+    if (to && home && from && from !== to && from.getData('home') && sound && tm.ms) {
+      (to.getData('glide') as Phaser.Tweens.Tween | undefined)?.stop();
+      to.setPosition(from.x, from.y);
+      to.setData('glide', this.tweens.add({ targets: to, x: home.x, y: home.y, duration: tm.ms * 1.3, ease: tm.bounce ? 'Back.easeOut' : tm.ease }));
+    } else if (to && home) to.setPosition(home.x, home.y);
     const option = this.options[i];
     if (option) this.info?.setText(this.describe(option));
   }

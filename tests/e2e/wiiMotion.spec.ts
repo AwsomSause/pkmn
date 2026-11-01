@@ -86,3 +86,41 @@ test('with Menu animations off the cursor jumps straight to the option', async (
   expect(next).toBeGreaterThan(start);
   expect(await cursorY(page)).toBe(next);
 });
+
+/** Records one named object's x every frame for `ms` while `press` runs. */
+async function glidePath(page: Page, sceneKey: string, name: string, press: () => Promise<void>, ms = 900): Promise<{ start: number; end: number; path: number[] }> {
+  const start = await page.evaluate(([k, n]) => (window as any).__pkr.game.scene.getScene(k).children.getByName(n)?.x ?? null, [sceneKey, name]);
+  await page.evaluate(([k, n, t]) => {
+    const w = window as any;
+    const o = w.__pkr.game.scene.getScene(k).children.getByName(n);
+    w.__glide = [];
+    const t0 = performance.now();
+    const rec = () => {
+      w.__glide.push(o.x);
+      if (performance.now() - t0 < (t as number)) requestAnimationFrame(rec);
+    };
+    requestAnimationFrame(rec);
+  }, [sceneKey, name, ms] as const);
+  await press();
+  await page.waitForTimeout(ms + 200);
+  const path: number[] = await page.evaluate(() => (window as any).__glide);
+  return { start, end: path[path.length - 1]!, path };
+}
+
+test('the Hub tiles and Trainer Select grid share the gliding cursor', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await openSettings(page, {});
+  for (const [key, name, keyName] of [['Hub', 'hub-cursor', 'ArrowRight'], ['TrainerSelect', 'trainer-cursor', 'ArrowRight']] as const) {
+    await page.evaluate((k) => void (window as any).__pkr.game.scene.getScenes(true)[0].scene.start(k), key);
+    await expect.poll(() => scene(page), { timeout: 20_000 }).toBe(key);
+    await page.waitForTimeout(1500);
+    const { start, end, path } = await glidePath(page, key, name, () => page.keyboard.press(keyName));
+    expect(start, key).not.toBeNull();
+    expect(end, key).toBeGreaterThan(start);
+    expect(path.filter((x) => x > start + 1 && x < end - 1).length, key).toBeGreaterThan(0);
+    await page.screenshot({ path: `test-results/wii-${key.toLowerCase()}-cursor.png` });
+  }
+  expect(errors).toEqual([]);
+});

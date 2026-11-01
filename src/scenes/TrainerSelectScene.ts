@@ -13,7 +13,8 @@ import { onInputAction } from '../ui/input';
 import { ArenaBackdrop } from '../ui/showcase';
 import { trainerVisual, type Visual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, TYPE_COLORS, textStyle } from '../ui/theme';
-import { badge, focusFrame, paintWindow } from '../ui/widgets';
+import { badge, paintWindow } from '../ui/widgets';
+import { WiiCursor } from '../ui/wiiMotion';
 
 const COLS = 4;
 const ROWS = 3;
@@ -33,7 +34,8 @@ export class TrainerSelectScene extends Phaser.Scene {
   private slots: Slot[] = [];
   private page = 0;
   private pageText!: Phaser.GameObjects.Text;
-  private frames: Phaser.GameObjects.Graphics[] = [];
+  /** The Wii-style glowing cursor that glides between cells (spec §24); replaces the per-cell gold frames. */
+  private cursor: WiiCursor | null = null;
   private cells: Phaser.GameObjects.Container[] = [];
   private profileLayer!: Phaser.GameObjects.Container;
   private tooltip!: Phaser.GameObjects.Container;
@@ -50,8 +52,8 @@ export class TrainerSelectScene extends Phaser.Scene {
     const { session } = services();
     const p = session.profile;
     this.index = 0;
-    this.frames = [];
     this.cells = [];
+    this.cursor = null;
     // Every trainer, in data order (Red first), then empty slots for trainers still to come.
     // Each Trainer Evolution sits right after its base trainer.
     this.sortKey = session.settings.trainerSort;
@@ -145,7 +147,6 @@ export class TrainerSelectScene extends Phaser.Scene {
   private buildPage(): void {
     this.cells.forEach((c) => c.destroy());
     this.cells = [];
-    this.frames = [];
     const first = this.page * PAGE;
     for (let n = 0; n < PAGE; n++) this.buildCell(this.slots[first + n] ?? null, n, first + n);
   }
@@ -176,8 +177,6 @@ export class TrainerSelectScene extends Phaser.Scene {
       cell.add(this.add.text(CELL_W / 2, CELL_H / 2 - 8, '?', textStyle(64, COLORS.textLight)).setOrigin(0.5));
       if (slot?.status === 'claimable') cell.add(this.add.text(CELL_W / 2, 8, 'Ready to claim!', textStyle(14, COLORS.gold)).setOrigin(0.5, 0));
     }
-    const frame = focusFrame(this, 0, 0, CELL_W, CELL_H).setVisible(false);
-    this.frames.push(frame);
     const zone = this.add.zone(0, 0, CELL_W, CELL_H).setOrigin(0).setInteractive({ useHandCursor: true });
     zone.on('pointerover', () => {
       this.focus(globalIndex);
@@ -188,7 +187,7 @@ export class TrainerSelectScene extends Phaser.Scene {
       this.focus(globalIndex, false);
       this.choose();
     });
-    cell.add([frame, zone]);
+    cell.add(zone);
     this.cells.push(cell);
   }
 
@@ -207,7 +206,12 @@ export class TrainerSelectScene extends Phaser.Scene {
       this.updatePageText();
     }
     const local = i - this.page * PAGE;
-    this.frames.forEach((f, n) => f.setVisible(n === local));
+    const at = this.cellPos(local);
+    const box: [number, number, number, number] = [at.x - 5, at.y - 9, CELL_W + 10, CELL_H + 10];
+    if (!this.cursor) {
+      this.cursor = new WiiCursor(this, null, ...box, 14);
+      this.cursor.g.setDepth(5).setName('trainer-cursor');
+    } else this.cursor.moveTo(...box);
     this.cells.forEach((c, n) => {
       const { y } = this.cellPos(n);
       this.tweens.killTweensOf(c);
