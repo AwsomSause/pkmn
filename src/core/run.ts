@@ -1377,10 +1377,13 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     speciesId = opened.speciesId;
     // The gentle opening caps the wild level after the difficulty bonus too, so Nightmare's first fight is not a level 9 against a level 5 starter.
     // A wild nemesis takes this encounter instead (built from the planned level, so no roll changes).
-    const nemesis = legendary ? null : dueNemesis(content, run, 'wild');
+    // §11 "at least once every stage": on the stage's last wild column a waiting Pokémon rival goes ahead of a legendary or a nemesis.
+    const lastWild = !!run.stage && !run.stage.map.nodes.some((n) => n.kind === 'wild' && n.column > node.column);
+    const mustMeet = lastWild ? dueMonRival(content, run) : null;
+    const nemesis = legendary || mustMeet ? null : dueNemesis(content, run, 'wild');
     const back = nemesis ? nemesisMember(content, nemesis, opened.level) : null;
     // §11 a Pokémon rival takes the stage's first wild battle (built from the planned level, so no roll changes).
-    const monRival = legendary || nemesis ? null : dueMonRival(content, run);
+    const monRival = mustMeet ?? (legendary || nemesis ? null : dueMonRival(content, run));
     const mrBack = monRival ? monRivalMember(content, monRival, opened.level) : null;
     const enemy = mrBack
       ? newMon(content, run, mrBack.speciesId, mrBack.level, 'e', content.balance.difficulty.maxLevel)

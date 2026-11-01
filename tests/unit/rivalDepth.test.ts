@@ -6,7 +6,7 @@ import { chooseEnemyMove, createBattle, itemProblem } from '../../src/core/battl
 import { sacrificeFor } from '../../src/core/battle/sacrificeRule';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
-import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
+import { chooseStarter, createRun, startEncounter, takeTurn } from '../../src/core/run';
 import type { PokemonInstance, RunState } from '../../src/core/state';
 import { familyId } from '../../src/core/mastery';
 import { adaptMove, canonPlan, characterOf, createMajorRival, learnFromBattle, MAJOR, majorNote, recordAce, withAceProgress } from '../../src/core/rivals/major';
@@ -204,6 +204,30 @@ describe('Pokémon rivals across stages (§11)', () => {
     expect(run.battle.enemyStages.atk).toBe(MAJOR.monRival.atkBoost);
     expect(dueMonRival(content, run)).toBeNull();
     expect(itemProblem({ content, battle: run.battle, party: run.party, inventory: { 'poke-ball': 5 } as never }, 'poke-ball')).toContain("won't be caught");
+  });
+
+  it('appears every stage: on the last wild column it goes ahead of a waiting nemesis', () => {
+    const setup = (column: 'first' | 'last') => {
+      const run = baseRun();
+      run.encountersCompleted = 10;
+      run.stage = { ...run.stage!, index: 2, current: null, visited: [] };
+      run.battle = null;
+      run.phase = 'map';
+      run.story.nemeses.push({
+        id: 'nemesis-0-0-1', speciesId: 'pidgey', level: 5, source: 'wild', trainer: null, archetype: 'stalker', cause: 'starterKo', phase: 'return',
+        formedAt: where, lastMet: { region: 0, stage: 0 }, beat: ['bulbasaur'], foeTypes: ['grass'], wins: 0, changes: [], partner: null, settledAs: null,
+      } as never);
+      const m = monRival(run);
+      const wild = run.stage.map.nodes.filter((n) => n.kind === 'wild');
+      const node = column === 'first' ? wild[0]! : wild[wild.length - 1]!;
+      startEncounter(content, run, node);
+      return { run, m };
+    };
+    const early = setup('first');
+    expect(early.run.battle?.monRival).toBeUndefined();
+    const last = setup('last');
+    expect(last.run.battle?.monRival?.id).toBe(last.m.id);
+    expect(familyId(content, last.run.battle!.enemyTeam[0]!.speciesId)).toBe(familyId(content, 'rattata'));
   });
 
   it('a hostile trainer rival may catch it, and then always carries it', () => {
