@@ -1,10 +1,10 @@
 import { expect, test, type Page } from '@playwright/test';
 
-// Party rows show the UIE status badge and held-item mark.
+// The Pokémon screen's party list marks a burned lead as needing care.
 
 const scene = (page: Page) => page.evaluate(() => (window as any).__pkr?.activeScene() ?? null);
 
-test('party rows draw a status badge and a held-item mark', async ({ page }) => {
+test('the Pokémon screen marks a burned lead as needing care', async ({ page }) => {
   test.setTimeout(120_000);
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
@@ -35,9 +35,9 @@ test('party rows draw a status badge and a held-item mark', async ({ page }) => 
       for (const c of o.list ?? []) walk(c);
     };
     for (const s of (window as any).__pkr.game.scene.getScenes(true)) for (const o of s.children.list) walk(o);
-    return { badge: names.has('status-badge'), held: names.has('held-icon') };
+    return { caution: names.has('ready-caution'), row: names.has('party-row-0') };
   });
-  expect(found).toEqual({ badge: true, held: true });
+  expect(found).toEqual({ caution: true, row: true });
   await page.screenshot({ path: 'test-results/party-badges.png' });
   expect(errors).toEqual([]);
 });

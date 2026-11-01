@@ -2781,6 +2781,17 @@ export function setLead(current: RunState, partyIndex: number): RunState {
   return run;
 }
 
+/** Moves the party member at `from` to position `to` (the others shift), so the party can be rearranged. Slot 0 leads. */
+export function moveParty(current: RunState, from: number, to: number): RunState {
+  assertPhase(current, 'reward', 'decision', 'map', 'shop');
+  if (!current.party[from]) throw new Error('No Pokémon in that slot');
+  if (to < 0 || to >= current.party.length) throw new Error('No such party slot');
+  const run = structuredClone(current);
+  const [mon] = run.party.splice(from, 1);
+  run.party.splice(to, 0, mon!);
+  return run;
+}
+
 /** Moves a party Pokémon into the PC (between battles). The party keeps at least one Pokémon. */
 export function depositToBox(content: Content, current: RunState, partyIndex: number): RunState {
   assertPhase(current, 'map');

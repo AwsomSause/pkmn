@@ -19,13 +19,13 @@ import { legacyCard } from '../core/story/legacy';
 import { chronicleStories } from '../core/story/storybook';
 import { EMOTION_NAMES } from '../core/story/emotions';
 import { services } from '../game/services';
-import { bagRow, emotionDot, partyRows, Picker, speciesRow } from './partyPanel';
+import { bagRow, emotionDot, partyRows, Picker, speciesRow, type PickerLike } from './partyPanel';
 import { textStyle } from './theme';
 
 export interface FieldMenuHost {
   scene: Phaser.Scene;
   /** The screen shows this picker (null when it closes) and sends it keyboard input. */
-  setPicker: (picker: Picker | null) => void;
+  setPicker: (picker: PickerLike | null) => void;
   /** Called after something changed, with a message for the player. */
   changed: (notice: string) => void;
 }
@@ -33,26 +33,6 @@ export interface FieldMenuHost {
 function close(host: FieldMenuHost, picker: Picker): void {
   picker.close();
   host.setPicker(null);
-}
-
-export function openPartyMenu(host: FieldMenuHost): void {
-  const { session } = services();
-  const run = session.run!;
-  const picker: Picker = new Picker(host.scene, {
-    glass: true,
-    title: `Choose a Pokémon to lead the next battle  ·  Level cap ${runLevelCap(session.content, run)}`,
-    columns: 2,
-    rowHeight: 78,
-    rows: partyRows(session.content, run.party, (i) => (i === 0 ? 'Already leading.' : null), (i) => (i === 0 ? 'LEAD' : undefined), () => 'Move this Pokémon to the front.'),
-    onSelect: (i) => {
-      const name = session.content.species.get(run.party[i]!.speciesId)!.name;
-      session.setLead(i);
-      close(host, picker);
-      host.changed(`${name} will lead the next battle.`);
-    },
-    onBack: () => close(host, picker),
-  });
-  host.setPicker(picker);
 }
 
 /** The PC: party Pokémon on the left list go in, PC Pokémon come out. One picker, party first, then the PC. */

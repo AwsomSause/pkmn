@@ -55,8 +55,14 @@ export interface PickerConfig {
 const LIST_TOP = 82;
 const LIST_BOTTOM = GAME_HEIGHT - 84;
 
+/** What a screen needs from a modal menu: keyboard input and a way to close it (the Picker and the Pokémon screen). */
+export interface PickerLike {
+  handle(action: InputAction): void;
+  close(): void;
+}
+
 /** A modal list of rows. Keyboard: arrows to move, confirm to pick, back to cancel. Mouse: hover and click. */
-export class Picker {
+export class Picker implements PickerLike {
   private readonly root: Phaser.GameObjects.Container;
   private readonly highlights: Phaser.GameObjects.Graphics[] = [];
   private readonly zones: Phaser.GameObjects.Zone[] = [];

@@ -455,6 +455,12 @@ export class GameSession {
     return ok;
   }
 
+  /** Rearranges the party: the Pokémon at `from` moves to `to`. */
+  moveParty(from: number, to: number): void {
+    this.run = Run.moveParty(this.requireRun(), from, to);
+    this.persistRun();
+  }
+
   setLead(partyIndex: number): void {
     this.run = Run.setLead(this.requireRun(), partyIndex);
     this.persistRun();
