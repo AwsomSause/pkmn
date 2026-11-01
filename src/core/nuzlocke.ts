@@ -48,7 +48,7 @@ export function buryFallen(content: Content, run: RunState, cause: string): stri
   const nz = (run.nuzlocke ??= { areas: [], memorial: [] });
   const top = Math.max(...run.party.map((m) => m.level));
   for (const m of fallen) {
-    nz.memorial.push({ uid: m.uid, speciesId: m.speciesId, level: m.level, shiny: m.shiny, ace: m.uid === run.log.starterUid || m.level === top, area: areaKey(run), cause });
+    nz.memorial.push({ uid: m.uid, speciesId: m.speciesId, level: m.level, shiny: m.shiny, ace: m.uid === run.log.starterUid || m.level === top || m.care?.ace === true, area: areaKey(run), cause });
   }
   const gone = new Set(fallen.map((m) => m.uid));
   run.party = run.party.filter((m) => !gone.has(m.uid));

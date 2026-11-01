@@ -1,0 +1,1 @@
+- Care follow-up (W2): Favourite and Ace now have effects (no trade/swap; memorial ace + team mood), map follower with piggyback rider and idle nap (`MapScene.addFollower`), team photo poses in the Scrapbook, evolution preview and heal-first hint, 12 more party scenes (87 total). No save change. Tests `tests/unit/care.test.ts`. Still open: see `docs/plans/w2-coverage.md`.

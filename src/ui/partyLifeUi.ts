@@ -1,6 +1,7 @@
 // Party Personality & Chemistry screens: the scene that waits on the map between nodes, the team
 // Scrapbook (and its team photo), and the lines the Bonds screen adds (personality, relationships, culture).
 
+import { traitOf } from '../core/bond';
 import { relationLines, partyCulture, personalityOf } from '../core/partyLife';
 import type { Scene } from '../core/partyLife';
 import { services } from '../game/services';
@@ -45,6 +46,14 @@ export function openPartyScene(host: FieldMenuHost, scene: Scene, done: (lines: 
   host.setPicker(picker);
 }
 
+/** A looping pose per personality (scale, tilt or hop) for the team photo. */
+function poseTween(trait: string): Record<string, number> {
+  if (['proud', 'competitive', 'brave'].includes(trait)) return { scale: 1.45 };
+  if (['playful', 'curious'].includes(trait)) return { y: 50 };
+  if (['anxious', 'cautious'].includes(trait)) return { angle: 8 };
+  return { angle: -6 };
+}
+
 /** The run scrapbook: team photos and notable moments, newest first. The first row takes a team photo. */
 export function openScrapbook(host: FieldMenuHost): void {
   const { session } = services();
@@ -67,6 +76,18 @@ export function openScrapbook(host: FieldMenuHost): void {
       draw: (s, box, w) => {
         box.add(s.add.text(16, 8, `${e.kind === 'photo' ? 'Photo' : e.kind === 'milestone' ? 'Milestone' : 'Moment'} · region ${e.region + 1}, stage ${e.stage + 1}${e.delta > 0 ? `  ·  chemistry +${e.delta}` : ''}`, textStyle(14, '#bfe9ff')));
         box.add(s.add.text(16, 30, e.caption, textStyle(17, '#ffffff', wrap(w - 32))));
+        if (e.kind === 'photo') {
+          // The photo shows the team: each Pokémon strikes the pose of its personality (W2 I18).
+          const full = session.settings.battleAnimations === 'full';
+          e.uids.slice(0, 6).forEach((uid, k) => {
+            const m = [...run.party, ...run.box].find((x) => x.uid === uid);
+            const sp = m && content.species.get(m.speciesId);
+            if (!m || !sp) return;
+            const icon = pokemonIcon(s, sp, w - 40 - k * 40, 62, 1.2) as Phaser.GameObjects.Sprite;
+            box.add(icon);
+            if (full) s.tweens.add({ targets: icon, ...poseTween(traitOf(uid)), duration: 600 + k * 70, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+          });
+        }
         box.add(s.add.text(16, 72, e.poses.length > 0 ? e.poses.join('  ·  ') : e.uids.map(nameOf).join(' & '), textStyle(14, '#e8f6ff', wrap(w - 32))));
       },
     })),
