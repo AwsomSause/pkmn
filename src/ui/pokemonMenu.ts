@@ -309,6 +309,8 @@ class PokemonScreen implements PickerLike {
       p('train', `Train ${stat.toUpperCase()} ‹ ›`, 'Left/right picks the stat. +8% for its next 3 fights, once per stop.', stat),
       p('sing', 'Sing to Eggs', 'Hum to the Eggs you carry: they move 1 step closer to hatching (never hatch by it). Once per stop.'),
       p('dress', `Dress: ${this.mon.care?.accessory ?? 'none'} ‹ ›`, 'Left/right picks scarf, bow, glasses, band or anklet (+2% to one stat). Enter wears it; "none" takes it off.', ACCESSORY_CHOICES[this.accIdx] || ''),
+      p('showoff', 'Show off', 'Strike a pose: builds Hype (hyper readiness) for the big fights. Once per stop.'),
+      { id: 'hold', label: this.mon.care?.holdEvolve ? 'Allow evolving' : 'Hold evolution', problem: null, hint: 'Hold back from evolving until your next healing stop (no regrets).' },
       p('wake', 'Wake up', 'Tap Enter fast to shake off tiredness (1 less, 2 with a good tapping). Once per stop.'),
       p('fetch', 'Play fetch', 'Throw a ball: it may bring back a berry. Once per stop.'),
       p('story', 'Bedtime story', 'Once per run, for Pokémon that trust you: friendship and mood rise.'),
@@ -612,7 +614,7 @@ class PokemonScreen implements PickerLike {
   private drawMenu(scene: Phaser.Scene): void {
     const opts = this.menuOptions();
     const w = 214;
-    const rh = opts.length > 8 ? 26 : 34;
+    const rh = opts.length > 15 ? 22 : opts.length > 8 ? 26 : 34;
     const h = opts.length * rh + 20;
     const x = RIGHT_X + 16;
     const y = BODY_Y + 8;
@@ -626,7 +628,7 @@ class PokemonScreen implements PickerLike {
         hl.lineStyle(2, 0xfff2b0, 0.9).strokeRoundedRect(8, oy, w - 16, rh - 4, 10);
         box.add(hl);
       }
-      box.add(scene.add.text(22, oy + (rh - 4) / 2, o.label, textStyle(rh < 30 ? 15 : 18, o.problem ? '#7f93a8' : '#ffffff')).setOrigin(0, 0.5));
+      box.add(scene.add.text(22, oy + (rh - 4) / 2, o.label, textStyle(rh < 24 ? 14 : rh < 30 ? 15 : 18, o.problem ? '#7f93a8' : '#ffffff')).setOrigin(0, 0.5));
       const zone = scene.add.zone(8, oy, w - 16, rh - 4).setOrigin(0).setInteractive({ useHandCursor: true });
       zone.on('pointerover', () => {
         if (this.menuIdx === i || this.closed) return;

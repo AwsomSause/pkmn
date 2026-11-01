@@ -16,7 +16,7 @@ export * from './mods';
 const PHASES: readonly RunState['phase'][] = ['reward', 'decision', 'map', 'shop'];
 const TRAIN_STATS = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 export type TrainStat = (typeof TRAIN_STATS)[number];
-export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'wake', 'nickname', 'favourite', 'ace'] as const;
+export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'wake', 'showoff', 'hold', 'nickname', 'favourite', 'ace'] as const;
 export type CareAction = (typeof CARE_ACTIONS)[number];
 
 const hash = (text: string): number => {
@@ -100,6 +100,7 @@ export function careProblem(content: Content, run: RunState, partyIndex: number,
     case 'cheer': return n('cheer') >= 1 ? 'You already cheered it up at this stop.' : null;
     case 'train': return n('train') >= 1 ? 'Already training at this stop.' : !arg || !TRAIN_STATS.includes(arg as TrainStat) ? 'Pick a stat to train.' : null;
     case 'sing': return n('sing') >= 1 ? 'Already sang at this stop.' : run.eggs.length === 0 ? 'You carry no Eggs.' : null;
+    case 'showoff': return n('showoff') >= 1 ? 'Already showed off at this stop.' : null;
     case 'wake': return n('wake') >= 1 ? 'Already woken at this stop.' : care.fatigue <= 0 ? 'It is not tired.' : null;
     case 'fetch': return n('fetch') >= 1 ? 'Already played fetch at this stop.' : null;
     case 'story': return care.storyHeard ? 'It has heard its bedtime story.' : mon.friendship < CARE.story.minFriendship ? 'It does not trust you enough to listen yet.' : null;
@@ -194,6 +195,15 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       message = `${name} sings to the Eggs. They stir a little closer to hatching.`;
       break;
     }
+    case 'showoff':
+      tick();
+      bondOf(run, mon.uid).hyperReadiness = Math.min(100, bondOf(run, mon.uid).hyperReadiness + CARE.showoff.hyperReadiness);
+      message = `${name} ${pickLine('showoff', seed)} Hype builds.`;
+      break;
+    case 'hold':
+      care.holdEvolve = !care.holdEvolve;
+      message = care.holdEvolve ? `${name} will not evolve until your next healing stop.` : `${name} is ready to evolve again.`;
+      break;
     case 'wake':
       tick();
       care.fatigue = Math.max(0, care.fatigue - CARE.tap.wakeFatigue - (tapsOf(arg) >= CARE.tap.goal ? CARE.tap.wakeBonusFatigue : 0));
@@ -282,6 +292,13 @@ export function evolutionPreview(content: Content, mon: PokemonInstance): string
 export function healFirst(content: Content, run: RunState): PokemonInstance | null {
   const hurt = run.party.filter((m) => m.hp > 0 && m.hp < maxHp(content, m)).sort((a, b) => a.hp / maxHp(content, a) - b.hp / maxHp(content, b));
   return hurt[0] ?? null;
+}
+
+/** A healing stop: Pokémon that held back from evolving change their minds (F46). Returns their uids. */
+export function careRest(run: RunState): string[] {
+  const out: string[] = [];
+  for (const m of run.party) if (m.care?.holdEvolve) { delete m.care.holdEvolve; out.push(m.uid); }
+  return out;
 }
 
 /** The ace fell: the rest of the party is shaken (mood drops a step). */

@@ -30,6 +30,7 @@ const CareDataSchema = z.object({
   fetch: z.object({ chance: z.number().min(0).max(1), friendship: z.number().int() }),
   story: z.object({ friendship: z.number().int(), mood: z.number().int(), minFriendship: z.number().int() }),
   tap: z.object({ goal: z.number().int(), windowMs: z.number().int(), cheerBonusMood: z.number().int(), groomBonusFriendship: z.number().int(), wakeFatigue: z.number().int(), wakeBonusFatigue: z.number().int() }),
+  showoff: z.object({ hyperReadiness: z.number().int() }),
   sing: z.object({ eggSteps: z.number().int().min(1) }),
   releaseGift: z.object({ candiesPerLevels: z.number().int().min(1) }),
   quips: z.record(z.string(), z.array(z.string()).min(1)),
@@ -54,6 +55,8 @@ export const CareSchema = z.object({
   /** Refuses food until this stop clock value (a hated flavor). */
   sulkUntil: z.number().int().default(-1),
   favourite: z.boolean().optional(),
+  /** Evolution on hold (B-cancel): it stays as it is until the next healing stop, then may evolve (F46, I51). */
+  holdEvolve: z.boolean().optional(),
   ace: z.boolean().optional(),
   sparkle: z.boolean().optional(),
   /** Heard its bedtime story this run. */

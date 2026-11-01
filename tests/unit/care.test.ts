@@ -1,8 +1,10 @@
 // Care & party life (W2): care actions, per-stop limits, mood/fatigue/talent/training stat nudges, saves.
 
 import { describe, expect, it } from 'vitest';
-import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
+import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careRest, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
 import { tradeCandidates } from '../../src/core/events';
+import { bondOf } from '../../src/core/bond';
+import { evolutionTarget } from '../../src/core/evolution';
 import { calcStats } from '../../src/core/pokemon';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { RunStateSchema, type RunState } from '../../src/core/state';
@@ -232,5 +234,27 @@ describe('favourite, ace, previews', () => {
     expect(healFirst(content, run)).toBeNull();
     mon.hp = 1;
     expect(healFirst(content, run)?.uid).toBe(mon.uid);
+  });
+});
+
+describe('show off and hold evolution', () => {
+  it('show-off raises hyper readiness once per stop', () => {
+    const run = setup();
+    const before = bondOf(run, run.party[0]!.uid).hyperReadiness;
+    const out = careAction(content, run, 0, 'showoff').run;
+    expect(bondOf(out, out.party[0]!.uid).hyperReadiness).toBe(before + CARE.showoff.hyperReadiness);
+    expect(careProblem(content, out, 0, 'showoff')).toMatch(/Already/);
+  });
+
+  it('a held evolution does not happen until a healing stop', () => {
+    let run = setup();
+    const mon = run.party[0]!;
+    mon.level = 100;
+    mon.friendship = 255;
+    const before = evolutionTarget(content, mon);
+    run = careAction(content, run, 0, 'hold').run;
+    expect(evolutionTarget(content, run.party[0]!)).toBeNull();
+    expect(careRest(run)).toEqual([run.party[0]!.uid]);
+    expect(evolutionTarget(content, run.party[0]!)).toBe(before);
   });
 });

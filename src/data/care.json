@@ -101,6 +101,10 @@
     ],
     "wake": [
       "blinks awake and stretches."
+    ],
+    "showoff": [
+      "strikes a heroic pose!",
+      "puffs up and flexes."
     ]
   },
   "accessories": {
@@ -147,5 +151,8 @@
     "groomBonusFriendship": 2,
     "wakeFatigue": 1,
     "wakeBonusFatigue": 1
+  },
+  "showoff": {
+    "hyperReadiness": 8
   }
 }

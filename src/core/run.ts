@@ -157,7 +157,7 @@ import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealM
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
-import { careAceFell, careFaint, careVictory, releaseGift } from './care';
+import { careAceFell, careRest, careFaint, careVictory, releaseGift } from './care';
 import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
 import { claimArea, nuzlockeCatchProblem, buryFallen, isHardcore } from './nuzlocke';
 import { applyMutator, mutatorCatch, mutatorDue, mutatorMoney, mutatorOffer, mutatorXp } from './mutators';
@@ -1710,6 +1710,7 @@ export function visitSide(content: Content, current: RunState, sideId: string): 
   if (side.kind === 'heal' && noHealStops(run.rules)) return { run: current, message: 'Your No Rest contract forbids healing stops.' };
   if (side.kind === 'heal') {
     healParty(content, run);
+    careRest(run);
     partyLifeCamp(run);
     runSide.used = true;
     count(run, 'healStopsUsed');
