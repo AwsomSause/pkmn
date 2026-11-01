@@ -20,6 +20,7 @@ import {
   type Settings,
 } from '../core/state';
 import { emptyTimelineStore, TimelineStoreSchema, type TimelineStore } from '../core/timeline/schema';
+import { freshEvil } from '../core/evil/schema';
 import { StorageUnavailableError, type StorageProvider } from './storage';
 
 export const SAVE_FORMAT = 'pkmn-roguelike';
@@ -35,7 +36,7 @@ export const ACTIVE_SLOT_KEY = `${KEY_PREFIX}.slot`;
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 31, settings: 11, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 32, settings: 11, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -298,6 +299,11 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v31 (real-date celebrations): runs started before it know no real-world date yet.
     30: (data) => ({ ...(data as Json), calendar: { today: null, startedOn: null } }),
+    // v32 (Evil Teams and permanent choices): runs started before it have met no team and made no recorded choices.
+    31: (data) => {
+      const d = data as Json & { story?: Json };
+      return d.story ? { ...d, story: { evil: freshEvil(), choices: [], ...d.story } } : d;
+    },
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.

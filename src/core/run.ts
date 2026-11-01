@@ -181,6 +181,7 @@ import { freshSpectacle } from './battle/spectacle';
 import { memoryPick } from './memories/encounters';
 import { noteReplayTurn, sealReplay } from './memories/replay';
 import { noteSkips, worldStageStart } from './memories/world';
+import { evilStageStart } from './evil/teams';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
 import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
@@ -512,6 +513,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   tellCampfire(content, run);
   tellAct(content, run);
   worldStageStart(content, run);
+  evilStageStart(content, run);
   applyGrandInfluence(content, run);
   growCrisis(content, run);
   grandGauntlet(content, run);

@@ -71,6 +71,9 @@ import storyJson from './story.json';
 import raidsJson from './raids.json';
 import totemsJson from './totems.json';
 import shadowWorldJson from './shadowWorld.json';
+import evilTeamsJson from './evilTeams.json';
+import { EvilFileSchema } from '../core/evil/schema';
+import { expandEvilEvents } from '../core/evil/content';
 import { ShadowWorldFileSchema } from '../core/shadowWorld/schema';
 import expeditionsJson from './expeditions.json';
 import legendaryJson from './legendaryEvents.json';
@@ -120,6 +123,7 @@ export interface RawContent {
   events: unknown;
   totems: unknown;
   shadowWorld: unknown;
+  evilTeams: unknown;
   expeditions: unknown;
   legendaryEvents: unknown;
   minigames: unknown;
@@ -174,6 +178,7 @@ export const RAW_CONTENT: RawContent = {
   events: eventsJson,
   totems: totemsJson,
   shadowWorld: shadowWorldJson,
+  evilTeams: evilTeamsJson,
   expeditions: expeditionsJson,
   legendaryEvents: legendaryJson,
   minigames: minigamesJson,
@@ -243,7 +248,9 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const baseRaids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
   const baseTotems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
   const shadowWorld = parse(ShadowWorldFileSchema, raw.shadowWorld, 'shadowWorld.json', problems);
-  const eventsFile = parse(EventsFileSchema, raw.events, 'events.json', problems);
+  const evilTeams = parse(EvilFileSchema, raw.evilTeams, 'evilTeams.json', problems);
+  // Evil Team storyline and operation stops are expanded from templates into ordinary events (core/evil/content.ts).
+  const eventsFile = parse(EventsFileSchema, evilTeams ? { events: [...(raw.events as { events: unknown[] }).events, ...expandEvilEvents(evilTeams)] } : raw.events, 'events.json', problems);
   const baseExpeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
   const legend = parse(LegendaryFileSchema, raw.legendaryEvents, 'legendaryEvents.json', problems);
   const raids = baseRaids && legend ? { ...baseRaids, raids: [...baseRaids.raids, ...legend.raids] } : null;
@@ -252,7 +259,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const minigames = parse(MinigameFileSchema, raw.minigames, 'minigames.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!quests || !gameEventsFile || !eventsFile || !story || !raids || !totems || !shadowWorld || !expeditions || !legend || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
+  if (!quests || !evilTeams || !gameEventsFile || !eventsFile || !story || !raids || !totems || !shadowWorld || !expeditions || !legend || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
     throw new ContentError(problems);
   }
 
@@ -290,6 +297,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     events: toMap(eventsFile.events, 'events.json', problems),
     totems,
     shadowWorld,
+    evilTeams,
     expeditions,
     legendaryGate: { gateChance: legend.gateChance, perRegion: legend.perRegion },
     minigames,
@@ -349,6 +357,13 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const factionIds = new Set(shadowWorld.factions.map((f) => f.id));
   for (const raid of raids.raids) if (raid.gang && !factionIds.has(raid.gang.faction)) problems.push(`raids.json "${raid.id}" belongs to unknown faction "${raid.gang.faction}"`);
   for (const f of shadowWorld.factions) if (!raids.raids.some((r) => r.gang?.faction === f.id)) problems.push(`shadowWorld.json faction "${f.id}" has no gang raid`);
+  // Evil Teams: every Pokémon, spoil and Legendary must exist; every operation kind needs a consequence.
+  for (const t of evilTeams.teams) {
+    for (const r of Object.values(t.ranks)) for (const id of r.species) if (!content.species.has(id)) problems.push(`evilTeams.json "${t.id}" ${r.name} has unknown species "${id}"`);
+    for (const id of t.legendary) if (!content.species.has(id)) problems.push(`evilTeams.json "${t.id}" has unknown Legendary "${id}"`);
+    for (const id of t.spoils) if (!content.items.has(id) && !content.catalog.has(id)) problems.push(`evilTeams.json "${t.id}" gives unknown item "${id}"`);
+    for (const op of t.ops) if (!evilTeams.consequences[op.kind]) problems.push(`evilTeams.json "${t.id}" operation "${op.id}" (${op.kind}) has no consequence`);
+  }
   const blessingIds = new Set(shadowWorld.blessings.map((b) => b.id));
   for (const ev of eventsFile.events) {
     for (const ch of ev.choices) {
