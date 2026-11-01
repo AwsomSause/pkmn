@@ -43,6 +43,9 @@ export function legendKit(content: Content, def: ExpeditionDef, layer: number): 
 export interface LegendCards {
   intro: { title: string; sub: string };
   finale: { title: string; sub: string };
+  /** Shown when the stage ends after the finale fight. */
+  won: { title: string; sub: string };
+  lost: { title: string; sub: string };
 }
 
 /** Title cards: one when the stage opens, one before the finale. */
@@ -50,7 +53,7 @@ export function legendCards(content: Content, def: ExpeditionDef): LegendCards |
   const l = def.legendary;
   if (!l) return null;
   const name = (content.species.get(l.species)?.name ?? l.species).toUpperCase();
-  return { intro: { title: 'LEGENDARY EVENT', sub: l.epithet }, finale: { title: `${name} AWAKENS`, sub: l.epithet } };
+  return { intro: { title: 'LEGENDARY EVENT', sub: l.epithet }, finale: { title: `${name} AWAKENS`, sub: l.epithet }, won: { title: `${name} YIELDS`, sub: 'The omen fades. The stage is yours.' }, lost: { title: `${name} PREVAILS`, sub: 'The omen passes. It will not return.' } };
 }
 
 /** Each hand-designed event has its own signature flourish and battleback; the rest follow their type. */

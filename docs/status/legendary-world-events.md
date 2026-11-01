@@ -6,3 +6,4 @@
 ## Per-event art and signature animations (PR 5)
 - Every legendary event gets its own UIE battleback (`legendLook`, 26 species + type fallback) shown behind the expedition stage, and a signature flourish (12 shapes, registry category `legend`, ids `legend.<shape>`) played with the title card. Respects motion level, `reduceParticles`, `disableAllAnimations`. Fixed particle positions (golden-ratio spread), no gameplay RNG.
 - Legendary event fights (finale Totem/Raid included) now use the event's own UIE battleback instead of the type arena or Raid arena (`BattleScene.uieArena`, `legendArenaOn`).
+- Every Legendary stage now ends with its own victory ("X YIELDS") or defeat ("X PREVAILS") title card before the map (`legendCards().won/lost`, `ExpeditionScene`); skipped when animations are off. Still limited: per-event music reuses the tier's expedition track (the `music` field is ready for per-event tracks), no hand-drawn custom maps.

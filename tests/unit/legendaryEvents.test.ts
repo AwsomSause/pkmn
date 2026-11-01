@@ -356,4 +356,12 @@ describe('legendary presentation cues', () => {
     const species = new Set(evs.map((d) => legendLook(content, d)!.arena + '/' + legendLook(content, d)!.shape));
     expect(species.size).toBeGreaterThan(15);
   });
+
+  it('every event has victory and defeat cards', () => {
+    for (const def of legendaryEvents(content)) {
+      const c = legendCards(content, def)!;
+      expect(c.won.title).toMatch(/YIELDS$/);
+      expect(c.lost.title).toMatch(/PREVAILS$/);
+    }
+  });
 });
