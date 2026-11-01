@@ -1537,6 +1537,19 @@ export const ProfileSchema = z.object({
   mentorBonds: z.record(z.string(), MentorBondSchema).default({}),
   /** Legacy runs (core/legacyRuns.ts): every finished run's immutable record, newest first (profile v14). */
   legacyRuns: z.array(LegacyRunSchema).default([]),
+  /** Ideas W10 Corner Nook (core/hubNook.ts): fortune cookie, wish star, note to your future self, gift codes, donation drive. Optional: older profiles load with the defaults (no version bump). */
+  nook: z.object({
+    cookieDay: z.string().nullable().default(null),
+    cookies: z.number().int().min(0).default(0),
+    wishDay: z.string().nullable().default(null),
+    wishPaid: z.boolean().default(true),
+    wishes: z.number().int().min(0).default(0),
+    note: z.string().nullable().default(null),
+    noteDelivered: z.boolean().default(true),
+    codesUsed: z.array(z.string()).default([]),
+    donated: z.number().int().min(0).default(0),
+    jokes: z.number().int().min(0).default(0),
+  }).prefault({}),
   /** Heirlooms, Lost-and-Found claims and cameos seen across runs (core/memories). */
   memories: MemoriesSchema.default({ heirlooms: [], claimed: [], cameos: [] }),
   /** Ideas W5: what NPCs remember about you, lore fragments found, epilogues seen, newspaper issues, wins that unlock New Game+ (core/npcMemory.ts; profile v16). */

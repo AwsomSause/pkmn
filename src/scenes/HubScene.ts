@@ -7,6 +7,8 @@ import { fitLine } from '../ui/fitText';
 import { candyPerkProblem } from '../core/candyShop';
 import { researchLines } from '../core/trainerResearch';
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
+import { notify } from '../ui/overlays';
+import { NOOK, collectWish, konamiJoke, konamiStep, cookieReady, crackCookie, donate, donationNext, donationProblem, fortuneFor, makeWish, nookOf, redeemCode, wishProblem, writeNote } from '../core/hubNook';
 import { LEGACY, legacySummary, ascend, buyNode, contactProblem, intelLevel, legacyOf, networkSlots, nextPrestige, nodeProblem, nodeStatus, prestigeProblem, prestigeRank, regionBoard, serviceFor, shelfProblem, shelveSeed, toggleContact, trainMove, trainProblem, unshelveSeed } from '../core/legacy';
 import { STANDARD_CHOICE } from '../core/rules';
 import { decodeSeedCode, encodeSeedCode } from '../core/seedCode';
@@ -48,7 +50,7 @@ import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 import { WiiCursor } from '../ui/wiiMotion';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'nook' | 'options' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -77,6 +79,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'intel', label: 'Intelligence Board', blurb: 'What you know about each region and its League. Grows with visits and the Tree.' },
   { room: 'moves', label: 'Move Research', blurb: 'Your moves, their mastery, and training with Research Points (Enter).' },
   { room: 'seeds', label: 'Seed Shelf', blurb: 'Keep shared seed codes and start a run from one (Enter).' },
+  { room: 'nook', label: 'Corner Nook', blurb: 'A fortune cookie each day, a wish upon the star, a note to your future self, poster codes and the donation drive (Enter).' },
   { room: 'options', label: 'Game settings', blurb: 'Display, audio, gameplay, animations, text and accessibility. The same settings as the title screen.' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
   { room: 'back', label: 'Back to title', blurb: '' },
@@ -151,7 +154,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['options', 'save', 'back'], blurb: 'Game settings, save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'tales', 'intel', 'museum', 'seeds', 'mentors'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
+  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'tales', 'intel', 'museum', 'seeds', 'mentors', 'nook'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe', 'card'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
@@ -237,6 +240,21 @@ export class HubScene extends Phaser.Scene {
     });
     const { session } = services();
     session.closeRun();
+    // W10 Corner Nook: a wish made on an earlier day pays its small gift; a Konami sequence gets a harmless joke.
+    const wished = collectWish(session.profile, new Date().toISOString().slice(0, 10));
+    if (wished.text) {
+      session.changeProfile(() => wished.profile);
+      notify(wished.text);
+    }
+    let konami = 0;
+    this.input.keyboard?.on('keydown', (e: KeyboardEvent) => {
+      const step = konamiStep(konami, e.key);
+      konami = step.position;
+      if (!step.done) return;
+      const joke = konamiJoke(session.profile);
+      session.changeProfile(() => joke.profile);
+      notify(joke.text);
+    });
     this.picker = null;
     this.section = null;
     this.tiles = [];
@@ -476,6 +494,8 @@ export class HubScene extends Phaser.Scene {
       }
       case 'events':
         return `${activeGameEvents(c, new Date()).length} events on now`;
+      case 'nook':
+        return `${nookOf(p).cookies} cookies cracked, ${nookOf(p).donated} credits donated`;
       case 'tree':
       case 'prestige':
       case 'network':
@@ -584,6 +604,7 @@ export class HubScene extends Phaser.Scene {
       case 'intel':
       case 'moves':
       case 'seeds':
+      case 'nook':
         this.openLegacy(room);
         break;
       case 'options':
@@ -1327,6 +1348,55 @@ export class HubScene extends Phaser.Scene {
           const rank = moveRank(uses);
           entries.push({ label: `${content.moves.get(id)?.name ?? id}: ${uses} uses (${rank})`, sub: `Train: ${LEGACY.training.researchPerLot} RP for ${LEGACY.training.usesPerLot} uses, up to ${LEGACY.training.maxRank}.`, right: rank === 'none' ? '' : rank, problem: trainProblem(content, p, id), run: () => apply((pr) => trainMove(content, pr, id), `Trained ${content.moves.get(id)?.name ?? id}.`) });
         }
+        break;
+      }
+      case 'nook': {
+        const day = now.slice(0, 10);
+        const hour = new Date().getHours();
+        const nk = nookOf(p);
+        title = `Corner Nook  ·  ${p.bankCredits} Bank Credits`;
+        entries.push({
+          label: cookieReady(p, day) ? 'Crack today\'s fortune cookie' : 'Today\'s fortune',
+          sub: cookieReady(p, day) ? `Pays ${NOOK.cookie.credits} credits once a day.` : fortuneFor(p.profileId, day),
+          right: cookieReady(p, day) ? 'Crack' : '',
+          on: !cookieReady(p, day),
+          run: cookieReady(p, day) ? () => { const r = crackCookie(session.profile, day); session.changeProfile(() => r.profile); return `Crack! "${r.fortune}"`; } : undefined,
+        });
+        entries.push({
+          label: nk.wishPaid || nk.wishDay === null ? 'Wish upon the star' : 'Your wish is on its way',
+          sub: wishProblem(p, day, hour) ?? `Make a wish tonight; a small gift appears tomorrow (+${NOOK.wish.credits} credits).`,
+          problem: wishProblem(p, day, hour),
+          run: () => apply((pr) => makeWish(pr, day, hour), 'You wish on the Hub star. See what is there tomorrow.'),
+        });
+        entries.push({
+          label: 'Write a note to your future self',
+          sub: nk.note !== null ? `${nk.noteDelivered ? 'Last note' : 'Waiting for your next run'}: "${nk.note}"` : 'It is read to you when your next run begins.',
+          run: () => {
+            const text = window.prompt(`A note to your next run (up to ${NOOK.note_rules.maxLength} letters):`, '')?.trim();
+            if (!text) return;
+            return apply((pr) => writeNote(pr, text), 'The note is sealed. You will read it at your next run start.');
+          },
+        });
+        entries.push({
+          label: 'Enter a poster code',
+          sub: `${nk.codesUsed.length}/${NOOK.giftCodes.length} codes used. Codes unlock titles.`,
+          run: () => {
+            const code = window.prompt('Poster code:', '')?.trim();
+            if (!code) return;
+            const r = redeemCode(session.profile, code);
+            session.changeProfile(() => r.profile);
+            return r.text;
+          },
+        });
+        const nextGoal = donationNext(p);
+        entries.push({
+          label: nextGoal ? `Donation drive: ${nk.donated}/${nextGoal.total}` : `Donation drive: ${nk.donated} (complete)`,
+          sub: nextGoal ? `Give ${NOOK.donation.step} Bank Credits. Next: ${nextGoal.text}` : 'Every Nook upgrade is funded.',
+          right: nextGoal ? `${NOOK.donation.step} credits` : '',
+          problem: donationProblem(p),
+          on: !nextGoal,
+          run: () => { const r = donate(session.profile); session.changeProfile(() => r.profile); return r.text; },
+        });
         break;
       }
       case 'seeds': {

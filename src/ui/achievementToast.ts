@@ -8,6 +8,19 @@ import type { MotionLevel } from './aero';
 import { COLORS, GAME_WIDTH, textStyle } from './theme';
 import { drawPanel } from './widgets';
 
+/** One warm line per achievement category for the tap-open story (presentation only). */
+const CATEGORY_STORY: Record<string, string> = {
+  campaign: 'You went further than you did before.',
+  collection: 'Each Pokémon you meet becomes part of the world you are mapping.',
+  battle: "Every win on the road is one more chapter in your team's story.",
+  exploration: 'The map has a few more names on it now, thanks to you.',
+  economy: 'Coins come and go. This one counts.',
+  roguelike: 'Not many choose the hard way. You did.',
+  relationship: 'Friends make the road shorter.',
+  secret: 'Some things only show themselves to the curious.',
+  endgame: 'You stood at the top and looked down the road behind you.',
+};
+
 export function showAchievementToasts(scene: Phaser.Scene, list: readonly Achievement[], motion: MotionLevel): void {
   list.forEach((a) => interactionLog.add(`Achievement: ${a.name}`));
   list.slice(0, 3).forEach((a, i) => {
@@ -17,13 +30,24 @@ export function showAchievementToasts(scene: Phaser.Scene, list: readonly Achiev
     const reward = a.reward.bankCredits ? `+${a.reward.bankCredits} credits${a.reward.title ? ` · title ${a.reward.title}` : ''}` : a.reward.title ? `Title ${a.reward.title}` : '';
     const sub = scene.add.text(-214, 28, `${a.description}${reward ? `  ${reward}` : ''}`, textStyle(13, COLORS.textMuted, { wordWrap: { width: 430 } }));
     box.add([panel, title, sub]);
+    // W10 (I407): tapping a toast opens the story behind it and keeps it up until tapped again.
+    let open = false;
+    const story = scene.add.text(-214, 56, `${CATEGORY_STORY[a.category] ?? 'A milestone on your road.'}  Tap to close.`, textStyle(12, '#c8e0ff', { wordWrap: { width: 430 } })).setVisible(false);
+    box.add(story);
+    box.setSize(460, 52).setInteractive(new Phaser.Geom.Rectangle(-230, 0, 460, 52), Phaser.Geom.Rectangle.Contains);
+    box.on('pointerdown', () => {
+      open = !open;
+      story.setVisible(open);
+      if (open) scene.tweens.killTweensOf(box);
+      else box.destroy();
+    });
     const y = 8 + i * 58;
     if (motion === 'off') {
       box.setY(y);
-      scene.time.delayedCall(3500, () => box.destroy());
+      scene.time.delayedCall(3500, () => { if (!open) box.destroy(); });
       return;
     }
     scene.tweens.add({ targets: box, y, duration: motion === 'full' ? 420 : 1, ease: 'Back.easeOut', delay: i * 350 });
-    scene.tweens.add({ targets: box, y: -70, alpha: 0, duration: 300, delay: 3800 + i * 350, onComplete: () => box.destroy() });
+    scene.tweens.add({ targets: box, y: -70, alpha: 0, duration: 300, delay: 3800 + i * 350, onComplete: () => { if (!open) box.destroy(); } });
   });
 }

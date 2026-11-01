@@ -1,0 +1,134 @@
+{
+ "note": "Ideas W10 Corner Nook (Hub): fortune cookie (I401), wish star (I509), note to your future self (I501), poster gift codes (I404), donation drive (I406), Konami jokes (I410). Cosmetic text and small credit payouts; nothing changes battles.",
+ "cookie": {
+  "credits": 5,
+  "shakes": 3
+ },
+ "wish": {
+  "credits": 5,
+  "fromHour": 18,
+  "toHour": 6
+ },
+ "note_rules": {
+  "maxLength": 140
+ },
+ "fortunes": [
+  "A brave start beats a perfect plan.",
+  "Today, a Water type will save the day.",
+  "The next berry you find will be the one you need.",
+  "Someone on the road is thinking of you. It is probably a Pidgey.",
+  "Do not trust a gym leader who smiles first.",
+  "Rest is also progress.",
+  "A shiny waits in the tall grass. It does not mind being late.",
+  "Your lead is prouder of you than it shows.",
+  "A rival is only a friend who has not met you properly yet.",
+  "Something you lost will turn up in a Bag you forgot.",
+  "Luck is a muscle. Keep using it.",
+  "The third door is always the right one. Or the fourth.",
+  "A Poké Ball thrown with kindness lands softer.",
+  "You will meet a stranger. Say hello first.",
+  "Fire melts, water flows, grass grows. Pick your day.",
+  "Beware of Zubats before breakfast.",
+  "Your team has more heart than a gym has badges.",
+  "A small step today is a long road tomorrow.",
+  "The legend you chase is chasing you back.",
+  "Good things come to those who stop to read the sign.",
+  "Even a Magikarp has a very good day, once.",
+  "Do not fear the dark cave. It is only quiet.",
+  "Your next evolution is closer than you think.",
+  "A friend will share their last berry with you.",
+  "The weather will change. So will you.",
+  "Speak softly and carry a Revive.",
+  "Your first Pokémon remembers your first promise.",
+  "Today is a good day to try the other path.",
+  "The one who waits is not the one who loses.",
+  "Take a photo. You will want it later."
+ ],
+ "wishGifts": [
+  "A shooting star left a feather at the door.",
+  "In the morning, a small ribbon is tied to the gate.",
+  "A glimmer of stardust settled on your trainer card.",
+  "A note on the doorstep: \"Thanks for the wish.\"",
+  "Somebody left a warm berry pie on the sill."
+ ],
+ "giftCodes": [
+  {
+   "code": "PIKA-2026",
+   "title": "Poster Fan",
+   "text": "A poster code from the wall of the plaza."
+  },
+  {
+   "code": "MAGIKARP",
+   "title": "Splash Specialist",
+   "text": "A poster code hidden behind a fish tank."
+  },
+  {
+   "code": "LANTERN",
+   "title": "Lantern Keeper",
+   "text": "A poster code from the festival board."
+  },
+  {
+   "code": "ROCKETS",
+   "title": "Blast Off",
+   "text": "A poster code from an old villain poster."
+  },
+  {
+   "code": "TEATIME",
+   "title": "Tea Connoisseur",
+   "text": "A poster code from the cafe window."
+  }
+ ],
+ "donation": {
+  "step": 50,
+  "milestones": [
+   {
+    "total": 100,
+    "title": "Hub Friend",
+    "text": "The Nook gets a candle on the shelf."
+   },
+   {
+    "total": 300,
+    "title": "Hub Patron",
+    "text": "The Nook gets a little garden bench."
+   },
+   {
+    "total": 700,
+    "title": "Hub Benefactor",
+    "text": "The Nook gets string lights."
+   },
+   {
+    "total": 1500,
+    "title": "Hub Founder",
+    "text": "The Nook gets a star lamp. Thank you!"
+   }
+  ]
+ },
+ "konami": {
+  "keys": [
+   "ArrowUp",
+   "ArrowUp",
+   "ArrowDown",
+   "ArrowDown",
+   "ArrowLeft",
+   "ArrowRight",
+   "ArrowLeft",
+   "ArrowRight",
+   "b",
+   "a"
+  ],
+  "jokes": [
+   "+30 lives. (We do not have lives. Enjoy the sentiment.)",
+   "Cheat code accepted. Nothing happens. Perfectly harmless.",
+   "A Magikarp somewhere splashes in celebration.",
+   "You found the secret. The secret is: well done.",
+   "A distant Slowpoke finally gets the joke."
+  ]
+ },
+ "goodbyes": [
+  "Your Pokémon waves from the Hub gate: \"Come back soon!\"",
+  "A little wave from the gate. Your team waves back.",
+  "The gate keeper tips a hat while your Pokémon wave goodbye.",
+  "Everyone at the Hub gate waves. Your lead waves back with both paws.",
+  "A Pidgey on the gate post flaps once. That is a wave."
+ ]
+}

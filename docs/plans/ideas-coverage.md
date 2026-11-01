@@ -767,66 +767,66 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I397 | Choose-your-own-adventure chains with branching consequences |  | DONE | events chains: stranded-trainer (src/data/events.json:36049) -friend/-revenge, rival-asks-help-repaid/-grudge |
 | I398 | Quest board hand-ins with a stamp ceremony |  | PART | plaza Errands/Trade board (src/core/plaza/flow.ts) + trainer quests |
 | I399 | Bounty hunts: track a named wild Pokémon through map rumors |  | DONE | src/data/events.json:24307 hunt-clue-* + hunt-lair chain |
-| I400 | Contract negotiation: pick between risky/safe contracts with sliders |  | TODO |  |
-| I401 | Daily fortune cookie at the Hub, tap to crack |  | TODO |  |
-| I404 | Community gift codes from posters unlock cosmetics |  | TODO |  |
-| I406 | Meta-currency donation drive: spend to fund Hub upgrades with progress bar |  | TODO |  |
-| I407 | Achievement toast taps open the story behind them |  | TODO |  |
+| I400 | Contract negotiation: pick between risky/safe contracts with sliders |  | DONE | src/data/events.json (tools/events/w10.ts) contract-desk (safe / standard / risky / negotiate levels) |
+| I401 | Daily fortune cookie at the Hub, tap to crack |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: fortune cookie, once a day |
+| I404 | Community gift codes from posters unlock cosmetics |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: poster codes unlock titles (src/data/nook.json) |
+| I406 | Meta-currency donation drive: spend to fund Hub upgrades with progress bar |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: donation drive with milestones and titles |
+| I407 | Achievement toast taps open the story behind them |  | DONE | src/ui/achievementToast.ts: tap opens the story line; tap again closes |
 | I408 | Photo contest events using the album |  | TODO |  |
-| I410 | Konami-style code entries produce harmless jokes |  | TODO |  |
-| I412 | Ritual summoning with ingredient selection for boss variants |  | TODO |  |
-| I413 | Oath system: swear a challenge oath at a shrine for extra rewards |  | TODO |  |
-| I414 | Trade-in tokens for exotic events |  | TODO |  |
-| I415 | Voting booth events where Pokémon vote on direction |  | TODO |  |
-| I416 | Court case event: you defend a Pokémon accused of damage |  | TODO |  |
-| I417 | Treasure hunts based on riddles in lore books |  | PART | src/data/minigames.json treasure-hunt (hints), not lore books |
-| I418 | Seasonal festivals with mini-games per day |  | TODO |  |
-| I419 | Festival fireworks require lighting sequence correct |  | TODO |  |
+| I410 | Konami-style code entries produce harmless jokes |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: Konami sequence on the Hub shows a harmless joke |
+| I412 | Ritual summoning with ingredient selection for boss variants |  | DONE | src/data/events.json (tools/events/w10.ts) ritual-circle (Fire / Moon / Dusk Stone choose the guardian) |
+| I413 | Oath system: swear a challenge oath at a shrine for extra rewards |  | DONE | src/data/events.json (tools/events/w10.ts) oath-shrine + oath-reckoning-* (relic when called) |
+| I414 | Trade-in tokens for exotic events |  | DONE | src/data/events.json (tools/events/w10.ts) token-exchange |
+| I415 | Voting booth events where Pokémon vote on direction |  | DONE | src/data/events.json (tools/events/w10.ts) voting-booth |
+| I416 | Court case event: you defend a Pokémon accused of damage |  | DONE | src/data/events.json (tools/events/w10.ts) court-case |
+| I417 | Treasure hunts based on riddles in lore books |  | DONE | src/data/events.json (tools/events/w10.ts) lore-riddle-1..3 (riddle chain ending in a treasure) |
+| I418 | Seasonal festivals with mini-games per day |  | DONE | src/data/events.json (tools/events/w10.ts) festival-day (ring toss, drum rhythm, fireworks) |
+| I419 | Festival fireworks require lighting sequence correct |  | DONE | src/data/events.json (tools/events/w10.ts) festival-fireworks (rhythm prompt, perfect for the blessing) |
 | I420 | Fishing tournament with leaderboard |  | PART | src/data/events.json:16739 fishing-derby + fishing-challenge minigame (no leaderboard) |
-| I421 | Cooking tournament with ingredient draft |  | TODO |  |
-| I422 | Dance competition using rhythm arrows |  | PART | minigames.json rhythm-challenge + src/data/events.json:11567 dancing-lessons |
-| I423 | Hide-and-seek event with a legendary Pokémon |  | TODO |  |
-| I424 | Escape room event with locked doors and clues |  | TODO |  |
-| I425 | Heist event: plan roles and execute in steps |  | TODO |  |
-| I426 | Trial of choices: the Hall of Mirrors reflects your past decisions |  | TODO |  |
-| I427 | Charity events where giving earns future favor |  | TODO |  |
-| I428 | Mercy event: spare a wounded rare Pokémon or catch it |  | PART | src/data/events.json:33720 hurt-wanderer carry/leave choice |
-| I429 | Haunted trade event: ghost trader demands a sacrifice |  | PART | src/data/events.json:41284 ghost-town-market trade a memory |
-| I430 | Black-market auction: bid with items against NPC bidders |  | PART | services.json auction (bid money; no NPC bidders) |
-| I431 | Game show: answer Pokémon trivia questions with lifelines |  | PART | src/data/events.json:13604 quiz-master + minigames.json knowledge-quiz (no lifelines) |
-| I432 | Lottery stand: scratch card minigame |  | PART | src/data/events.json:16524 scratch-card event |
-| I433 | Detective mystery: examine scene, interview NPCs, accuse the culprit |  | TODO |  |
-| I434 | Time-loop village: relive the day until you solve a puzzle |  | TODO |  |
+| I421 | Cooking tournament with ingredient draft |  | DONE | src/data/events.json (tools/events/w10.ts) cooking-draft + cooking-final (ingredient draft decides the dish) |
+| I422 | Dance competition using rhythm arrows |  | DONE | src/data/events.json (tools/events/w10.ts) dance-competition (echo-rhythm prompt) |
+| I423 | Hide-and-seek event with a legendary Pokémon |  | DONE | src/data/events.json (tools/events/w10.ts) hide-and-seek (Celebi) |
+| I424 | Escape room event with locked doors and clues |  | DONE | src/data/events.json (tools/events/w10.ts) escape-room + escape-room-2 |
+| I425 | Heist event: plan roles and execute in steps |  | DONE | src/data/events.json (tools/events/w10.ts) heist-plan + heist-go (roles, then three endings) |
+| I426 | Trial of choices: the Hall of Mirrors reflects your past decisions |  | DONE | src/data/events.json (tools/events/w10.ts) hall-of-mirrors (mirrors depend on your good/evil meter) |
+| I427 | Charity events where giving earns future favor |  | DONE | src/data/events.json (tools/events/w10.ts) charity-drive + charity-favor (callback pays later) |
+| I428 | Mercy event: spare a wounded rare Pokémon or catch it |  | DONE | src/data/events.json (tools/events/w10.ts) wounded-rare (catch, heal and release, or carry) |
+| I429 | Haunted trade event: ghost trader demands a sacrifice |  | DONE | src/data/events.json (tools/events/w10.ts) ghost-trader (trade a Pokémon for a Ghost, or pay) |
+| I430 | Black-market auction: bid with items against NPC bidders |  | DONE | src/data/events.json (tools/events/w10.ts) black-market-auction (low / medium / high bid vs NPC bidders) |
+| I431 | Game show: answer Pokémon trivia questions with lifelines |  | DONE | src/data/events.json (tools/events/w10.ts) game-show-1..3 (three lifelines, one use each) |
+| I432 | Lottery stand: scratch card minigame |  | DONE | src/data/events.json scratch-card |
+| I433 | Detective mystery: examine scene, interview NPCs, accuse the culprit |  | DONE | src/data/eventsW5.json detective-case + detective-clue-2/3 (W5) |
+| I434 | Time-loop village: relive the day until you solve a puzzle |  | DONE | src/data/events.json (tools/events/w10.ts) time-loop-village + time-loop-2/3 |
 | I435 | Tutorial skipping dialogue where the Prof reacts to your skip |  | TODO |  |
 | I436 | Reputation system with towns: greetings and discounts shift |  | PART | src/core/plaza reputation with discounts (plaza.json) |
-| I437 | Karma interactions: kindness/cruelty choices recorded and echoed in endings |  | PART | src/core/attributes.ts goodEvil meter + src/data/events.json:20383 it-saw-what-you-did |
-| I438 | Oracle prophecies that come true in later nodes if conditions are met |  | TODO |  |
-| I439 | Dream sequences revealing memories after rest |  | PART | src/data/events.json:5868 weird-dream / dream-mist events |
-| I440 | Cursed treasure event with moral choice |  | TODO |  |
+| I437 | Karma interactions: kindness/cruelty choices recorded and echoed in endings |  | PART | src/core/attributes.ts goodEvil meter + src/data/events.json:20383 it-saw-what-you-did; src/data/events.json karma-echo (W10) reflects the meter mid-run; ending echoes not built |
+| I438 | Oracle prophecies that come true in later nodes if conditions are met |  | DONE | src/data/events.json (tools/events/w10.ts) oracle + prophecy-friend / prophecy-win / prophecy-loss |
+| I439 | Dream sequences revealing memories after rest |  | DONE | src/data/events.json (tools/events/w10.ts) dream-memory (after rest, evening/night) + weird-dream |
+| I440 | Cursed treasure event with moral choice |  | DONE | src/data/events.json (tools/events/w10.ts) cursed-treasure |
 | I441 | Rescue mission: save captured Pokémon from poachers |  | DONE | src/data/events.json:27261 poacher-hideout free-the-Pokemon + trapped-pokemon |
 | I442 | Poacher confrontation with dialogue options and combat |  | DONE | src/data/events.json:27261 poacher-hideout Challenge the poachers (dialogue + battle) |
-| I443 | Archaeology dig with brush-and-chisel minigame |  | PART | minigames.json fossil-excavation dig minigame |
-| I444 | Museum heist reversal: return stolen relics |  | TODO |  |
-| I445 | Legendary shrine puzzle where Pokémon cries are used as keys |  | TODO |  |
-| I446 | Sky pillar ascent with obstacle dodging |  | TODO |  |
-| I447 | Final boss pre-fight conversation tree changing the fight's rules |  | TODO |  |
-| I495 | Weather-based petting: rain makes Pokémon snuggle under the trainer's umbrella |  | TODO |  |
-| I496 | Tap a wild Pokémon silhouette on the map to hear its cry before engaging |  | TODO |  |
+| I443 | Archaeology dig with brush-and-chisel minigame |  | DONE | src/data/events.json (tools/events/w10.ts) archaeology-dig (aim-drag and hold prompts) + minigames.json fossil-excavation |
+| I444 | Museum heist reversal: return stolen relics |  | DONE | src/data/events.json (tools/events/w10.ts) museum-return |
+| I445 | Legendary shrine puzzle where Pokémon cries are used as keys |  | DONE | src/data/events.json (tools/events/w10.ts) cry-shrine (a Pokémon of the right type cries as the key) |
+| I446 | Sky pillar ascent with obstacle dodging |  | DONE | src/data/events.json (tools/events/w10.ts) sky-pillar + sky-pillar-top |
+| I447 | Final boss pre-fight conversation tree changing the fight's rules |  | DONE | src/data/events.json (tools/events/w10.ts) final-conversation (three answers become relics that change later fights; limited: not the final boss only) |
+| I495 | Weather-based petting: rain makes Pokémon snuggle under the trainer's umbrella |  | PART | src/data/events.json (tools/events/w10.ts) umbrella-share (rain, party snuggles in): an event, no petting animation |
+| I496 | Tap a wild Pokémon silhouette on the map to hear its cry before engaging |  | PART | src/data/events.json (tools/events/w10.ts) tap-the-silhouette (event: listen to the cry); no tap target on the map |
 | I497 | Rename a node on the map; the label shows up in later runs' ghost data |  | TODO |  |
-| I498 | Share an umbrella with an NPC during a storm event for a friendship bump |  | TODO |  |
-| I499 | Pokémon waves goodbye at the Hub gate as you depart on a new run |  | TODO |  |
-| I500 | Tap-to-wave at passing NPC caravans; each wave may drop a trinket |  | TODO |  |
-| I501 | Letter-writing: write a short note to your future self, read it on the next run's start |  | TODO |  |
-| I502 | Teach a parrot-like Pokémon a phrase that it repeats at random battle moments |  | TODO |  |
-| I503 | Hand over your last berry to a hungry foe to end a fight peacefully |  | PART | src/data/events.json:39232 starving-wild Feed it a berry |
+| I498 | Share an umbrella with an NPC during a storm event for a friendship bump |  | DONE | src/data/events.json (tools/events/w10.ts) umbrella-share |
+| I499 | Pokémon waves goodbye at the Hub gate as you depart on a new run |  | DONE | src/core/hubNook.ts goodbyeLine, shown as the run starts (RunPrepScene) |
+| I500 | Tap-to-wave at passing NPC caravans; each wave may drop a trinket |  | DONE | src/data/events.json (tools/events/w10.ts) passing-caravan (wave, maybe a trinket) |
+| I501 | Letter-writing: write a short note to your future self, read it on the next run's start |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: note read at the next run start (GameSession.newRun) |
+| I502 | Teach a parrot-like Pokémon a phrase that it repeats at random battle moments |  | PART | src/data/events.json (tools/events/w10.ts) parrot-teacher + parrot-repeats: phrase stored and rewarded; not spoken in battle |
+| I503 | Hand over your last berry to a hungry foe to end a fight peacefully |  | DONE | src/data/events.json (tools/events/w10.ts) hungry-foe-berry + events.json starving-wild |
 | I504 | Return a lost item to its owner NPC for a surprise reward later |  | DONE | src/data/events.json:25156 return-lost-item + src/data/events.json:35335 lost-and-found-desk |
-| I505 | Group chant before the final boss: all party members voice a line in sequence |  | TODO |  |
-| I507 | Hold the lead Pokémon's hand (pointer) while crossing scary nodes for a fear shield |  | TODO |  |
-| I509 | Wish upon a Hub star at night; next morning a small gift appears |  | TODO |  |
-| I510 | Tap a sleeping NPC to eavesdrop on their dream, giving a hint |  | TODO |  |
-| I511 | Ring a bell at shrines with timing for a stronger blessing |  | TODO |  |
-| I512 | Give the egg a name; the hatched Pokémon greets you by it |  | TODO |  |
-| I513 | Cheer from the sidelines in a rival-vs-rival match to affect their morale |  | TODO |  |
+| I505 | Group chant before the final boss: all party members voice a line in sequence |  | DONE | src/data/events.json (tools/events/w10.ts) final-chant (rhythm prompt, whole party) |
+| I507 | Hold the lead Pokémon's hand (pointer) while crossing scary nodes for a fear shield |  | PART | src/data/events.json (tools/events/w10.ts) hold-the-hand (hold prompt gives a blessing); no pointer-hold on the map |
+| I509 | Wish upon a Hub star at night; next morning a small gift appears |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: wish at night, gift the next day; src/data/events.json (tools/events/w10.ts) wish-upon-star at camp |
+| I510 | Tap a sleeping NPC to eavesdrop on their dream, giving a hint |  | DONE | src/data/events.json (tools/events/w10.ts) sleeping-npc |
+| I511 | Ring a bell at shrines with timing for a stronger blessing |  | DONE | src/data/events.json (tools/events/w10.ts) shrine-bell (timing prompt) |
+| I512 | Give the egg a name; the hatched Pokémon greets you by it |  | PART | src/data/events.json (tools/events/w10.ts) name-the-egg: the name is kept as a flag; hatch greeting not built |
+| I513 | Cheer from the sidelines in a rival-vs-rival match to affect their morale |  | PART | src/data/events.json (tools/events/w10.ts) cheer-rival-match (shout prompt sets a morale flag); rival morale not wired to the rival engine |
 
 ## W11 UI, accessibility & presentation (57)
 

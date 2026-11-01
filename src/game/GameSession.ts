@@ -7,6 +7,8 @@
 //   - when the run ends (profile first, then the run record is cleared)
 
 import { setCalendar } from '../core/clock';
+import { deliverNote, pendingNote } from '../core/hubNook';
+import { emit } from '../core/story/record';
 import { giveHeld, takeOffHeld } from '../core/bag';
 import { campAction, freshCampProfile, recordFirstUse, wearLauncher, type CampArgs } from '../core/camp';
 import { careAction, type CareAction } from '../core/care';
@@ -241,6 +243,13 @@ export class GameSession {
     this.timeline = Timeline.rememberGenesis(this.timeline, Timeline.captureGenesis(this.run, opts, grants, new Date().toISOString(), heirloomUsed));
     this.checkSave(this.saves.saveTimeline(this.timeline));
     this.profile = recordRunStarted(this.profile);
+    // W10 Corner Nook: the note you wrote to your future self is read at this run's start (kept in the story log).
+    const note = pendingNote(this.profile);
+    if (note !== null) {
+      emit(this.content, this.run, 'storyMoment', { actors: [], data: { def: 'future-note', suppressed: false }, importance: 40, text: `A note from your past self: "${note}"` });
+      interactionLog.add(`Note to your future self: ${note}`);
+      this.profile = deliverNote(this.profile);
+    }
     if (prep?.vaultItem) {
       const profile = structuredClone(this.profile);
       vaultTake(profile, prep.vaultItem);
