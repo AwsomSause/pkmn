@@ -1415,6 +1415,27 @@ export const LegacySchema = z.object({
 });
 export type LegacyState = z.infer<typeof LegacySchema>;
 
+/** Ideas W5: lasting NPC memory (profile v16). NPCs remember a spared or crushed trainer, a helped traveller, trust earned; lore fragments are codex pages. */
+export const NpcMemorySchema = z.object({
+  npcs: z.record(z.string(), z.object({
+    spared: z.number().int().min(0).default(0),
+    crushed: z.number().int().min(0).default(0),
+    helped: z.number().int().min(0).default(0),
+    trust: z.number().int().min(0).default(0),
+  })).default({}),
+  lore: z.array(z.string()).default([]),
+  epilogues: z.array(z.string()).default([]),
+  /** Newest first, at most NEWS_KEPT issues of "the paper" about the last runs. */
+  news: z.array(z.string()).default([]),
+  /** Runs won: each one unlocks the next New Game+ story variant. */
+  ngPlus: z.number().int().min(0).default(0),
+  /** Secret-ending hints already shown. */
+  hintsSeen: z.array(z.string()).default([]),
+  /** Map events read in earlier runs (capped), for "skip seen dialogue". */
+  seenEvents: z.array(z.string()).default([]),
+});
+export type NpcMemory = z.infer<typeof NpcMemorySchema>;
+
 export const ProfileSchema = z.object({
   profileId: z.string(),
   unlockedArchetypes: z.array(z.string()),
@@ -1499,6 +1520,8 @@ export const ProfileSchema = z.object({
   legacyRuns: z.array(LegacyRunSchema).default([]),
   /** Heirlooms, Lost-and-Found claims and cameos seen across runs (core/memories). */
   memories: MemoriesSchema.default({ heirlooms: [], claimed: [], cameos: [] }),
+  /** Ideas W5: what NPCs remember about you, lore fragments found, epilogues seen, newspaper issues, wins that unlock New Game+ (core/npcMemory.ts; profile v16). */
+  npcMemory: NpcMemorySchema.default({ npcs: {}, lore: [], epilogues: [], news: [], ngPlus: 0, hintsSeen: [], seenEvents: [] }),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 
@@ -1579,6 +1602,8 @@ export const SettingsSchema = z.object({
   gamepadMap: z.object({ up: z.number().int().min(0).max(16), down: z.number().int().min(0).max(16), left: z.number().int().min(0).max(16), right: z.number().int().min(0).max(16), confirm: z.number().int().min(0).max(16), back: z.number().int().min(0).max(16) }).default({ up: 12, down: 13, left: 14, right: 15, confirm: 0, back: 1 }),
   /** Custom sound bank (I475): which jingle plays when a badge is won. */
   victoryJingle: z.enum(['badge', 'item_get', 'pkmn_get', 'evo_success', 'tm_get']).default('badge'),
+  /** Ideas W5 (F180): map-event text you have read in an earlier run shows at once instead of typing out. */
+  skipSeenDialogue: z.boolean().default(false),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

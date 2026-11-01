@@ -1,0 +1,5695 @@
+{
+ "events": [
+  {
+   "id": "shopkeeper-regular",
+   "name": "The Shopkeeper Who Knows You",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2b2a1e",
+    "effect": "none"
+   },
+   "intro": "\"Back again? Marta says regulars get the good stool.\" The shopkeeper wipes the counter and waits to see what you do.",
+   "choices": [
+    {
+     "label": "Buy a little something (₽100)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "success": {
+      "text": "\"A fair customer!\" She writes your name in the little book by the till.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "flag",
+        "key": "shop-loyalty",
+        "amount": 1
+       },
+       {
+        "kind": "item",
+        "id": "potion",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Chat about the road",
+     "success": {
+      "text": "You swap stories. She marks you down as a friend, not just a customer.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "shop-loyalty",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "trust-shopkeeper",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just browse",
+     "success": {
+      "text": "She shrugs. \"Window shoppers pay in smiles.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "shopkeeper-discount",
+   "name": "Loyalty Has Its Perks",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "shop-loyalty",
+     "atLeast": 2,
+     "atMost": 99
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2b2a1e",
+    "effect": "none"
+   },
+   "intro": "\"For regulars only.\" The shopkeeper slides a plain box across the counter. \"Mystery discount. Do not tell the others.\"",
+   "choices": [
+    {
+     "label": "Take the box (₽150)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 150
+      }
+     ],
+     "success": {
+      "text": "Inside: something useful, at a price you will not forget.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -150
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "hyper-potion",
+         "full-heal",
+         "revive",
+         "ultra-ball"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Thank her and leave it",
+     "success": {
+      "text": "\"You are too honest for this business.\" She presses a berry into your hand anyway.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "sitrus-berry",
+        "count": 1
+       },
+       {
+        "kind": "flag",
+        "key": "shop-loyalty",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "trust-shopkeeper",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "gift-the-keeper",
+   "name": "A Gift for the Back Room",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "shop-loyalty",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2b2a1e",
+    "effect": "none"
+   },
+   "intro": "The shopkeeper is polishing a shelf that has nothing on it. \"Someone is missing from this shelf,\" she says, not looking at you.",
+   "choices": [
+    {
+     "label": "Give her a Nugget",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "nugget"
+      }
+     ],
+     "success": {
+      "text": "Her eyes go wide. She unlocks a door behind the counter. \"Secret stock. Come in.\"",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "nugget"
+       },
+       {
+        "kind": "flag",
+        "key": "secret-shop",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "shop-loyalty",
+        "amount": 2
+       },
+       {
+        "kind": "moment",
+        "text": "The shopkeeper opened a secret back room for you.",
+        "importance": 45
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give her a Big Pearl",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "big-pearl"
+      }
+     ],
+     "success": {
+      "text": "She weighs it in her palm and smiles. The back room is yours.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "big-pearl"
+       },
+       {
+        "kind": "flag",
+        "key": "secret-shop",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "shop-loyalty",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "\"Another time,\" she says, and the shelf stays empty.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-merchants",
+   "name": "Two Stalls, One Grudge",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.guitarist",
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2c2a22",
+    "effect": "none"
+   },
+   "intro": "Two merchants have set up carts ten steps apart and are shouting prices at each other. Each one wants you to buy from them first.",
+   "choices": [
+    {
+     "label": "Buy from the one in red (₽120)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 120
+      }
+     ],
+     "success": {
+      "text": "The one in red beams. The other one mutters about \"traitors\", but waves anyway.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -120
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "super-potion",
+         "great-ball"
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "merchant-red",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "shop-loyalty",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy from the one in green (₽120)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 120
+      }
+     ],
+     "success": {
+      "text": "The one in green bows. The other pretends not to see.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -120
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "great-ball",
+         "super-potion"
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "merchant-green",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "shop-loyalty",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Make them split a deal (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "You get them to share a stall for a day. Both are grudgingly impressed.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "hyper-potion",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "They both lose patience and shout at you instead.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -60
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "secret-market-barter",
+   "name": "The Barter Market",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#241f30",
+    "effect": "flicker"
+   },
+   "intro": "In a cellar, nobody takes money. A sign says: THINGS FOR THINGS. A figure in a cloak points at your Bag.",
+   "choices": [
+    {
+     "label": "Trade a Big Mushroom for a Rare Candy",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "big-mushroom"
+      }
+     ],
+     "success": {
+      "text": "No questions asked. The figure nods once.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "big-mushroom"
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a Pearl for a Focus Sash",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "pearl"
+      }
+     ],
+     "success": {
+      "text": "The cloak slides a sash across the table. \"Keep it hidden.\"",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "pearl"
+       },
+       {
+        "kind": "item",
+        "id": "focus-sash",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a Star Piece for Leftovers",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "star-piece"
+      }
+     ],
+     "success": {
+      "text": "A good trade by anyone's count.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "star-piece"
+       },
+       {
+        "kind": "item",
+        "id": "leftovers",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk back up",
+     "success": {
+      "text": "The cellar door closes behind you.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "peddler-1",
+   "name": "The Peddler Returns: Her First Cart",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "merchant-arc",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "\"Hello! I am Wicker, and I sell everything that fell off other people's wagons.\" She has a cart, a limp, and a very good laugh.",
+   "choices": [
+    {
+     "label": "Buy her jam (₽80)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 80
+      }
+     ],
+     "success": {
+      "text": "\"Best in the region. Possibly the only.\" She hums as she packs it.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -80
+       },
+       {
+        "kind": "item",
+        "id": "oran-berry",
+        "count": 2
+       },
+       {
+        "kind": "flag",
+        "key": "merchant-arc",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "trust-wicker",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Help fix her wheel",
+     "success": {
+      "text": "It takes an hour. She remembers it.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "merchant-arc",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "trust-wicker",
+        "amount": 2
+       },
+       {
+        "kind": "flag",
+        "key": "mem-wicker-helped",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "peddler-2",
+   "name": "The Peddler Returns: A Better Cart",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "rare",
+   "minStage": 2,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "merchant-arc",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "Wicker's cart has a new wheel and a new sign. \"Look who I found on the road! I have been telling everyone about you.\"",
+   "choices": [
+    {
+     "label": "Hear her story",
+     "success": {
+      "text": "She was a Champion's assistant once, she says, until the Champion stopped needing help. She laughs it off. You do not.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "merchant-arc",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "trust-wicker",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "lore-ledger-tide",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask for a favour (trust)",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "trust-wicker",
+       "atLeast": 2,
+       "atMost": 99
+      }
+     ],
+     "success": {
+      "text": "She gives you the good stock, quietly.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "merchant-arc",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "hyper-potion"
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "trust-wicker",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "peddler-3",
+   "name": "The Peddler Returns: The Last Delivery",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "rare",
+   "minStage": 3,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "merchant-arc",
+     "atLeast": 2,
+     "atMost": 2
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "Wicker waits at a crossroads with a wrapped box. \"Last delivery of my career. I want you to have the reason I started.\"",
+   "choices": [
+    {
+     "label": "Accept the box",
+     "success": {
+      "text": "Inside: an old map and a charm. \"Go see everything. Then tell me.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "merchant-arc",
+        "amount": 1
+       },
+       {
+        "kind": "relic",
+        "id": "wicker-charm",
+        "name": "Wicker's Charm",
+        "effects": [
+         {
+          "kind": "moneyMultiplier",
+          "value": 1.15
+         }
+        ]
+       },
+       {
+        "kind": "moment",
+        "text": "Wicker the peddler gave you her lucky charm.",
+        "importance": 60
+       },
+       {
+        "kind": "flag",
+        "key": "mem-wicker-helped",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Insist she keep it",
+     "success": {
+      "text": "She laughs until she cries, then gives you a hug instead.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "merchant-arc",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "mem-wicker-helped",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rumour-seller",
+   "name": "Rumours for Sale",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fisherman"
+    ],
+    "tint": "#2a2630",
+    "effect": "none"
+   },
+   "intro": "A man with a satchel full of folded notes: \"Rumours, ₽100 apiece! Some are even true.\"",
+   "choices": [
+    {
+     "label": "Buy a rumour about the road (₽100)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "success": {
+      "text": "\"The next fork is safer to the left.\" You glimpse the road ahead.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "scout",
+        "columns": 3
+       },
+       {
+        "kind": "flag",
+        "key": "gossip-road",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Buy a rumour about the gym (₽200)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "\"The leader favours a certain type.\" He is almost certainly right.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -200
+       },
+       {
+        "kind": "gymPreview"
+       },
+       {
+        "kind": "flag",
+        "key": "gossip-gym",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a rumour of your own",
+     "success": {
+      "text": "You tell him something true. He writes it down and gives you change.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 60
+       },
+       {
+        "kind": "flag",
+        "key": "gossip-yours",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "pawn-appraiser",
+   "name": "The Pawn Shop Loupe",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "tint": "#2a2530",
+    "effect": "none"
+   },
+   "intro": "A pawn shop with a tiny brass loupe on a chain. \"Bring me anything old. I will tell you what it is worth, and what it really is.\"",
+   "choices": [
+    {
+     "label": "Appraise your Relic Gold",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "relic-gold"
+      }
+     ],
+     "success": {
+      "text": "He squints, whistles, and offers a fair price.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "relic-gold"
+       },
+       {
+        "kind": "money",
+        "amount": 900
+       }
+      ]
+     }
+    },
+    {
+     "label": "Appraise a Rare Bone",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "rare-bone"
+      }
+     ],
+     "success": {
+      "text": "The loupe says it is older than the town.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "rare-bone"
+       },
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "research",
+        "amount": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Learn how to use the loupe (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You spot the tiny cracks that make a fake. The owner is impressed.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 5
+       }
+      ]
+     },
+     "failure": {
+      "text": "You squint until your eyes water and learn nothing.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "barkeep-usual",
+   "name": "The Usual",
+   "group": "NPC Stories",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2a2018",
+    "effect": "none"
+   },
+   "intro": "The barkeep looks you up and down. \"The usual? Or have a look at the special. It changes every day. Nobody knows how.\"",
+   "choices": [
+    {
+     "label": "The usual",
+     "success": {
+      "text": "A bowl of something warm. Your party feels it too.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Today's special (₽100)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "chance": 0.65,
+     "success": {
+      "text": "The barkeep grins. \"Chef's luck.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "super-potion",
+         "full-heal",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "It is, uh, memorable. Mostly the smell.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just water",
+     "success": {
+      "text": "Fine. Water is fine.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "share-a-meal",
+   "name": "A Meal on the Road",
+   "group": "NPC Stories",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#2d2a1c",
+    "effect": "none"
+   },
+   "intro": "A traveller is cooking over a tiny fire. \"There is always enough for one more. Sit.\"",
+   "choices": [
+    {
+     "label": "Share a berry from your Bag",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "oran-berry"
+      }
+     ],
+     "success": {
+      "text": "He tells you about a shortcut on the road ahead.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "oran-berry"
+       },
+       {
+        "kind": "scout",
+        "columns": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "gossip-meal",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Offer ₽100 for the pot",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "success": {
+      "text": "Fair is fair. He tells you what he knows.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "scout",
+        "columns": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just listen",
+     "success": {
+      "text": "He talks about everywhere he has been. It is enough.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ask-directions",
+   "name": "Which Way?",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#2a2438",
+    "effect": "none"
+   },
+   "intro": "A local leans on a fence. They point confidently in two directions at once. \"Depends who is asking.\"",
+   "choices": [
+    {
+     "label": "Ask politely (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "They soften and tell you the way, exactly.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 3
+       },
+       {
+        "kind": "revealStops"
+       }
+      ]
+     },
+     "failure": {
+      "text": "They send you the long way round, grinning.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -40
+       }
+      ]
+     }
+    },
+    {
+     "label": "Offer ₽50 for the truth",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 50
+      }
+     ],
+     "success": {
+      "text": "Money loosens everyone's memory.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -50
+       },
+       {
+        "kind": "scout",
+        "columns": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow your gut",
+     "success": {
+      "text": "Sometimes the right way is the one you did not ask about.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "guide-for-hire",
+   "name": "A Guide With Opinions",
+   "group": "NPC Stories",
+   "stop": "scout",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#22291e",
+    "effect": "none"
+   },
+   "intro": "\"Fifty and I show you the quiet way.\" The guide taps a map. \"Two hundred and I show you the secret one.\"",
+   "choices": [
+    {
+     "label": "Hire for ₽50",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 50
+      }
+     ],
+     "success": {
+      "text": "The quiet way is quiet. It shows you where the trainers are.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -50
+       },
+       {
+        "kind": "scout",
+        "columns": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hire for ₽200",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "The secret way is a little steep, and worth it.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -200
+       },
+       {
+        "kind": "scout",
+        "columns": 5
+       },
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "flag",
+        "key": "lore-salt-road",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline",
+     "success": {
+      "text": "He shrugs. \"Your feet.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "tour-landmark",
+   "name": "The Tour Guide",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#2a2a3a",
+    "effect": "none"
+   },
+   "intro": "A tour guide in a bright cap is narrating a worn-down statue. \"Stay for the whole story, and I add a secret at the end!\"",
+   "choices": [
+    {
+     "label": "Stay for the whole tour",
+     "success": {
+      "text": "It takes a while. The secret at the end is real, and a little sad.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 6
+       },
+       {
+        "kind": "flag",
+        "key": "lore-twin-flames",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Catch the highlights",
+     "success": {
+      "text": "You get the best part and none of the dates.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Skip it",
+     "success": {
+      "text": "The guide waves. \"The statue will be here.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "spy-trade",
+   "name": "The Masked Stranger",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#1c1c28",
+    "effect": "fog"
+   },
+   "intro": "A masked figure falls into step beside you. \"A secret for a secret. You first.\" They never stop walking.",
+   "choices": [
+    {
+     "label": "Tell a small secret",
+     "success": {
+      "text": "They nod. \"Mine is worth more.\" They whisper the gym's weakness and vanish.",
+      "effects": [
+       {
+        "kind": "gymPreview"
+       },
+       {
+        "kind": "flag",
+        "key": "gossip-spy",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "A masked stranger traded you a secret.",
+        "importance": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Tell a big secret (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "They pause. \"Now we are even.\" You learn where the stops hide.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "scout",
+        "columns": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "They laugh, thin and unkind. \"Nice try.\" Your pocket is lighter.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -80
+       }
+      ]
+     }
+    },
+    {
+     "label": "Refuse",
+     "success": {
+      "text": "The stranger tips an invisible hat and is gone.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "apprentice-follows",
+   "name": "The Apprentice",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "A kid has been following you for an hour. \"Please, may I watch? I will carry your bag. I will not talk.\" They already are talking.",
+   "choices": [
+    {
+     "label": "Let them follow",
+     "success": {
+      "text": "They watch every choice you make. It is slightly unnerving.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "apprentice",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Teach them a trick",
+     "success": {
+      "text": "They beam and show you a neat thing in return.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "apprentice",
+        "amount": 2
+       },
+       {
+        "kind": "flag",
+        "key": "trust-apprentice",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "lore-lantern-oath",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Send them home",
+     "success": {
+      "text": "They go, shoulders low.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "apprentice-kind",
+   "name": "The Apprentice Remembers Your Kindness",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "apprentice",
+     "atLeast": 1,
+     "atMost": 99
+    },
+    {
+     "kind": "meter",
+     "key": "goodEvil",
+     "side": "positive",
+     "atLeast": 2
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "The kid from before catches up, taller somehow. \"I copied what you did for the stranded Pokémon. It worked!\"",
+   "choices": [
+    {
+     "label": "Congratulate them",
+     "success": {
+      "text": "They glow. A grateful parent hands you a thank-you gift.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "mem-apprentice-helped",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "apprentice-sly",
+   "name": "The Apprentice Learned Your Tricks",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "apprentice",
+     "atLeast": 1,
+     "atMost": 99
+    },
+    {
+     "kind": "meter",
+     "key": "goodEvil",
+     "side": "negative",
+     "atLeast": 2
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "The kid from before blocks your path with an innocent look. \"I copied what you did to that shopkeeper. Want to see?\"",
+   "choices": [
+    {
+     "label": "Wince and pay them off (₽150)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 150
+      }
+     ],
+     "success": {
+      "text": "You buy their silence. A good lesson, for both of you.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -150
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the lesson to heart",
+     "success": {
+      "text": "You catch yourself in their mirror. You do not like it.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "moment",
+        "text": "The apprentice copied your worst habit.",
+        "importance": 55
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "wedding-guestbook",
+   "name": "A Wedding on the Hill",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#3a2f3a",
+    "effect": "sparkle"
+   },
+   "intro": "Bells, ribbons, a crowd, two Pokémon wearing tiny bowties. A guestbook sits open at the gate. \"Sign, and be lucky!\"",
+   "choices": [
+    {
+     "label": "Sign the guestbook",
+     "success": {
+      "text": "Everyone cheers. A little luck follows you out.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "lore-egg-song",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give a small gift (₽100)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "success": {
+      "text": "The couple presses a lucky charm into your hand.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       },
+       {
+        "kind": "item",
+        "id": "soda-pop",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Watch from the back",
+     "success": {
+      "text": "It is lovely. You leave quietly.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "funeral-respects",
+   "name": "A Quiet Funeral",
+   "group": "NPC Stories",
+   "stop": "shrine",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#1c1c24",
+    "effect": "float"
+   },
+   "intro": "A small funeral for a Pokémon, with candles and few words. The family looks up as you stop.",
+   "choices": [
+    {
+     "label": "Bow your head",
+     "success": {
+      "text": "They nod. An elder presses something into your hand: a small relic.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "mourners-token",
+        "name": "Mourner's Token",
+        "effects": [
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "lore-hollow-bell",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You paid your respects at a stranger's funeral.",
+        "importance": 55
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask to share a memory",
+     "success": {
+      "text": "You say a few words about a Pokémon you never met. They are grateful.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "lore-last-lullaby",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Move on respectfully",
+     "success": {
+      "text": "You do not intrude.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "street-performer",
+   "name": "The Street Performer",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "tint": "#2c2640",
+    "effect": "sparkle"
+   },
+   "intro": "A guitarist plays a song that makes the whole street slow down. A hat sits open on the ground.",
+   "choices": [
+    {
+     "label": "Tip ₽150 for a song",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 150
+      }
+     ],
+     "success": {
+      "text": "The song settles into your team like a warm coat.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -150
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-hearth"
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Tip ₽300 for the long version",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "It goes on for a while. Everyone feels lighter.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-bloom"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just listen",
+     "success": {
+      "text": "You stay till the last chord. They nod at you.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "chef-cook-together",
+   "name": "Cook Together",
+   "group": "NPC Stories",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#322418",
+    "effect": "none"
+   },
+   "intro": "A chef offers you the second pan. \"Fast hands, steady heart. Can you keep up?\"",
+   "choices": [
+    {
+     "label": "Cook along (Speed)",
+     "check": "speed",
+     "success": {
+      "text": "Timing is everything. The meal is perfect.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-bloom"
+       },
+       {
+        "kind": "heal",
+        "share": 0.4
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "You burn the sauce. The chef pretends not to notice.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Taste-test only",
+     "success": {
+      "text": "The chef grins. \"Honest critic.\"",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Move on",
+     "success": {
+      "text": "The kitchen smells wonderful behind you.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "cooking-contest",
+   "name": "The Cooking Contest",
+   "group": "NPC Stories",
+   "stop": "contest",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#3a2a1c",
+    "effect": "sparkle"
+   },
+   "intro": "A judge in a tall hat is scoring dishes. \"A trainer! Cook something your team would eat.\"",
+   "choices": [
+    {
+     "label": "Enter a berry stew (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "The judge's eyes close. Slowly, he smiles. A short montage of stars follows.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "research",
+        "amount": 6
+       },
+       {
+        "kind": "item",
+        "id": "lum-berry",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The judge tastes it, pauses, and writes something short.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Enter your Pokémon's favourite (Love)",
+     "check": "love",
+     "success": {
+      "text": "It is simple and good. The judge tears up.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 400
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "It was good, but nobody got it. You eat it yourself.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Cheer from the audience",
+     "success": {
+      "text": "Great show.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "traveling-doctor",
+   "name": "The Travelling Doctor",
+   "group": "NPC Stories",
+   "stop": "heal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#1e2c2c",
+    "effect": "none"
+   },
+   "intro": "A doctor with a leather bag and a very honest price list. \"Statuses cured. Hurts healed. No fee for the weeping.\"",
+   "choices": [
+    {
+     "label": "Cure all statuses (₽150)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 150
+      }
+     ],
+     "success": {
+      "text": "A quick tonic. Everyone sits up straighter.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -150
+       },
+       {
+        "kind": "cure"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Full treatment (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "Two hours of care. Everyone is healed and a little sleepy.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "cure"
+       },
+       {
+        "kind": "heal",
+        "share": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Haggle (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "The doctor sighs and halves the price.",
+      "effects": [
+       {
+        "kind": "cure"
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     },
+     "failure": {
+      "text": "The doctor does not haggle with the unwell. Your pride takes the hit.",
+      "effects": []
+     }
+    },
+    {
+     "label": "No thanks",
+     "success": {
+      "text": "The doctor nods and puts the bag away.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-quiz",
+   "name": "The Trivia Mentor",
+   "group": "NPC Stories",
+   "stop": "tutor",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#241f3a",
+    "effect": "none"
+   },
+   "intro": "A silver-haired mentor folds her hands. \"Answer three questions about Pokémon and I will teach you a move nobody remembers. The first: which type is immune to Normal?\"",
+   "choices": [
+    {
+     "label": "Ghost",
+     "success": {
+      "text": "\"Correct. Second: which is immune to Electric?\" You say Ground. \"Correct.\" She teaches you a trick.",
+      "effects": [
+       {
+        "kind": "eggMove"
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Steel",
+     "success": {
+      "text": "\"No.\" She sighs. \"Try again in your next life.\"",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Psychic",
+     "success": {
+      "text": "\"No. But a good guess.\" She nods kindly.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bluff (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You talk your way through. She sees through you, and approves.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "She frowns at the bluff.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "registration-desk",
+   "name": "Tournament Registration",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#232430",
+    "effect": "none"
+   },
+   "intro": "A clerk with a clipboard glances up. \"Name? Ah. I have your file.\" He flips a page and raises an eyebrow. \"You have quite a record.\"",
+   "choices": [
+    {
+     "label": "Register for the exhibition (₽100)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "success": {
+      "text": "He stamps a card. \"Good luck. The bracket will remember you.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "research",
+        "amount": 5
+       },
+       {
+        "kind": "flag",
+        "key": "registered",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about your past runs",
+     "requires": [
+      {
+       "kind": "pastTeams",
+       "atLeast": 1
+      }
+     ],
+     "success": {
+      "text": "He reads out highlights, and a few things you wish he would not.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "He pencils a question mark by your name.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "coverage-judge",
+   "name": "The Team Appraiser",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [],
+    "tint": "#242430",
+    "effect": "none"
+   },
+   "intro": "A critic steps out of a cafe, takes one look at your team, and starts talking without being asked.",
+   "choices": [
+    {
+     "label": "Show off your Fire-types",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      }
+     ],
+     "success": {
+      "text": "\"Hot-headed, but I admire the commitment.\"",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Show off your Water-types",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      }
+     ],
+     "success": {
+      "text": "\"Deep and steady. A lovely line.\"",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Show off your Grass-types",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "grass"
+      }
+     ],
+     "success": {
+      "text": "\"A whole garden. I could stay here all day.\"",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let them talk",
+     "success": {
+      "text": "He criticises your coverage for a full minute. Some of it is useful.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "pen-pal-mailbox",
+   "name": "A Mailbox With Your Name",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#2c2a38",
+    "effect": "none"
+   },
+   "intro": "A mailbox leans on a post, a name chalked on it that looks suspiciously like a pen-pal's. A letter sticks out, unsigned.",
+   "choices": [
+    {
+     "label": "Write back",
+     "success": {
+      "text": "You scribble something honest. It will find its way.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "mem-penpal-helped",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "trust-penpal",
+        "amount": 1
+       },
+       {
+        "kind": "item",
+        "id": "oran-berry",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave a small gift",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "oran-berry"
+      }
+     ],
+     "success": {
+      "text": "A berry, a stamp, and a doodle.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "oran-berry"
+       },
+       {
+        "kind": "flag",
+        "key": "mem-penpal-helped",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "trust-penpal",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ignore it",
+     "success": {
+      "text": "You walk on. The mailbox stays.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "pen-pal-letter",
+   "name": "A Letter Waiting",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "remembers-penpal-helped",
+     "atLeast": 1,
+     "atMost": 99
+    },
+    {
+     "kind": "flag",
+     "key": "pen-pal-read",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#2c2a38",
+    "effect": "none"
+   },
+   "intro": "A courier presses a small envelope into your hand. \"From someone who remembers you. They left this at the post office.\"",
+   "choices": [
+    {
+     "label": "Open it",
+     "success": {
+      "text": "A short letter, a pressed leaf, and a few coins. \"Keep going. I am reading about you.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "pen-pal-read",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "lore-paper-crane",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "swap-quirky",
+   "name": "The Collector's Swap",
+   "group": "NPC Stories",
+   "stop": "trade",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2b2230",
+    "effect": "none"
+   },
+   "intro": "A collector with pockets full of Poké Balls: \"This one has a history. It has been in a flood, a fire and a quiz show. Swap?\"",
+   "choices": [
+    {
+     "label": "Swap your newest Pokémon",
+     "requires": [
+      {
+       "kind": "partySize",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "You trade. The new one arrives with a note: \"Likes naps. Hates doors.\"",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "any Pokémon",
+         "species": []
+        }
+       },
+       {
+        "kind": "join",
+        "types": [
+         "psychic"
+        ],
+        "levelBonus": 3
+       },
+       {
+        "kind": "moment",
+        "text": "A collector swapped you a Pokémon with a quirky past.",
+        "importance": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look but do not swap",
+     "success": {
+      "text": "He shows you its photo album. It is charming.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "hold-the-egg",
+   "name": "Hold This Egg",
+   "group": "NPC Stories",
+   "stop": "daycare",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [],
+    "tint": "#2e2a22",
+    "effect": "none"
+   },
+   "intro": "A harried stranger thrusts a warm egg at you. \"Please! Five minutes! Hold it!\" They are gone before you can answer.",
+   "choices": [
+    {
+     "label": "Hold the egg",
+     "success": {
+      "text": "It is warm and a little heavy. It hatches when you least expect.",
+      "effects": [
+       {
+        "kind": "egg",
+        "types": [],
+        "left": 3,
+        "unit": "battle",
+        "origin": "Event"
+       },
+       {
+        "kind": "flag",
+        "key": "egg-sitter",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it with a villager",
+     "success": {
+      "text": "They look relieved. \"I will tell the owner.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "dance-off",
+   "name": "Festival Dance-Off",
+   "group": "NPC Stories",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#3a2a3a",
+    "effect": "sparkle"
+   },
+   "intro": "Lanterns, drums, a crowd. A dancer points at you and the circle opens. \"Follow my arrows!\"",
+   "choices": [
+    {
+     "label": "Match the arrows (Speed)",
+     "check": "speed",
+     "success": {
+      "text": "You hit every beat. The crowd roars.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-wild-grace"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "money",
+        "amount": 200
+       }
+      ]
+     },
+     "failure": {
+      "text": "You trip on the last step. Everyone laughs warmly.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Dance your own way (Luck)",
+     "check": "luck",
+     "success": {
+      "text": "It is not the dance, but it is something.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "They politely clap.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Watch",
+     "success": {
+      "text": "It looks like fun. You make a note of the steps.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "carnival-booths",
+   "name": "Carnival Booths",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#3a2a22",
+    "effect": "sparkle"
+   },
+   "intro": "Three booths: ring toss, a shooting gallery, and a tub of berries to bob for. A barker waves at you. \"Each ₽50. Win, and something shiny.\"",
+   "choices": [
+    {
+     "label": "Ring toss (₽50)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 50
+      }
+     ],
+     "chance": 0.55,
+     "success": {
+      "text": "The ring spins, lands, and clinks. A prize!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -50
+       },
+       {
+        "kind": "item",
+        "id": "super-potion",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Close! The ring bounces off.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Shooting gallery (₽50)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 50
+      }
+     ],
+     "check": "speed",
+     "success": {
+      "text": "Bullseye. The barker is delighted.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -50
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "great-ball",
+         "ultra-ball"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You miss by a mile.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bob for berries (₽50)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 50
+      }
+     ],
+     "chance": 0.6,
+     "success": {
+      "text": "A berry between your teeth. Everyone claps.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -50
+       },
+       {
+        "kind": "seedling",
+        "berry": "oran",
+        "mutated": false
+       },
+       {
+        "kind": "item",
+        "id": "sitrus-berry",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "You surface soaked and berry-less.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just watch",
+     "success": {
+      "text": "The barker sighs.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "fishing-buddy",
+   "name": "The Fishing Buddy",
+   "group": "NPC Stories",
+   "stop": "fish",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fisherman"
+    ],
+    "tint": "#1e2c3a",
+    "effect": "rain"
+   },
+   "intro": "An old fisher shares his bench. \"Fish bite when you stop trying to catch them. Also: the east bend has the big ones.\"",
+   "choices": [
+    {
+     "label": "Listen to the tips",
+     "success": {
+      "text": "He tells you where the rare ones hide. A fishing spot opens beside the road.",
+      "effects": [
+       {
+        "kind": "addStop",
+        "stop": "fish"
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "trust-fisher",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fish together",
+     "success": {
+      "text": "You catch nothing, and enjoy it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Move on",
+     "success": {
+      "text": "He tips his hat.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "detective-case",
+   "name": "The Case of the Missing Lantern",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "boss.Spr_Pt_Looker"
+    ],
+    "tint": "#20242e",
+    "effect": "fog"
+   },
+   "intro": "A detective in a long coat is crouched over a tiny footprint. \"A lantern is missing from the village square. Three clues, three stops. Will you help?\"",
+   "choices": [
+    {
+     "label": "Take the case",
+     "success": {
+      "text": "He hands you a notebook. \"First clue is by the well.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "detective-case",
+        "amount": 1
+       },
+       {
+        "kind": "addEvent",
+        "eventId": "detective-clue-2"
+       },
+       {
+        "kind": "moment",
+        "text": "You joined a detective on the Case of the Missing Lantern.",
+        "importance": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "He nods and goes back to the footprint.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "detective-clue-2",
+   "name": "Clue: The Well",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "room": true,
+   "scene": {
+    "cast": [
+     "boss.Spr_Pt_Looker"
+    ],
+    "tint": "#20242e",
+    "effect": "none"
+   },
+   "intro": "By the old well there is a wet paw print and a scrap of ribbon. The detective peers at it. \"What does it tell you?\"",
+   "choices": [
+    {
+     "label": "A small Pokémon took it",
+     "success": {
+      "text": "He nods, and points toward the next clue.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "detective-clue-3"
+       },
+       {
+        "kind": "flag",
+        "key": "detective-clue",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "A person took it",
+     "success": {
+      "text": "He frowns. \"Hm. Maybe.\"",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "detective-clue-3"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "detective-clue-3",
+   "name": "Clue: The Rooftop",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "room": true,
+   "scene": {
+    "cast": [
+     "boss.Spr_Pt_Looker"
+    ],
+    "tint": "#20242e",
+    "effect": "none"
+   },
+   "intro": "On the roof, a Pokémon sleeps with the lantern in its arms. The detective whispers: \"Our thief. What do we do?\"",
+   "choices": [
+    {
+     "label": "Let it keep the lantern",
+     "success": {
+      "text": "The detective smiles. \"A kind ending.\" He gives you a keepsake.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "detectives-badge",
+        "name": "Detective's Badge",
+        "effects": [
+         {
+          "kind": "researchMultiplier",
+          "value": 1.2
+         }
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "mem-detective-helped",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "lore-mirror-trainer",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Return the lantern",
+     "success": {
+      "text": "The village cheers. The sleeper sulks.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "research",
+        "amount": 6
+       },
+       {
+        "kind": "flag",
+        "key": "mem-detective-helped",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tavern-gossip",
+   "name": "The Gossip Table",
+   "group": "NPC Stories",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fisherman",
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2218",
+    "effect": "none"
+   },
+   "intro": "Two regulars at a long table are trading stories, and cannot decide whose are better. \"Settle this: which one is true?\"",
+   "choices": [
+    {
+     "label": "Listen to the first",
+     "success": {
+      "text": "You hear about a shiny seen near the old bridge.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "gossip-shiny",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Listen to the second",
+     "success": {
+      "text": "You hear about a lantern burning at the summit.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "gossip-lantern",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Add a story of your own",
+     "success": {
+      "text": "They love it. It will be retold, and gradually ruined.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "gossip-yours",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "quarrel-sides",
+   "name": "A Loud Argument",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.roughneck",
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#2c2024",
+    "effect": "none"
+   },
+   "intro": "Two villagers are arguing about who owns a prize-winning berry bush. They both turn to you at once. \"Whose side are you on?\"",
+   "choices": [
+    {
+     "label": "Side with the older one",
+     "success": {
+      "text": "The younger storms off. The elder gives you the best berries.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "lum-berry",
+        "count": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "mem-elder-helped",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Side with the younger one",
+     "success": {
+      "text": "The elder grumbles. The younger gifts you a coin pouch.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Propose they share (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "It takes a while. Neither is happy; both are grateful.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       },
+       {
+        "kind": "item",
+        "id": "sitrus-berry",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "They both turn on you, then turn back to each other.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "risky-loan",
+   "name": "A Generous Loan",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "tint": "#2a2024",
+    "effect": "none"
+   },
+   "intro": "A man in a sharp coat leans on a pillar. \"Short on funds? I lend. Pay me back at the next stage, with a bit extra.\"",
+   "choices": [
+    {
+     "label": "Borrow ₽800",
+     "success": {
+      "text": "He counts it out. \"A pleasure. See you soon.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "flag",
+        "key": "debt",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You took a loan from a stranger with a sharp coat.",
+        "importance": 55
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline",
+     "success": {
+      "text": "He shrugs. \"Offer stands. For a while.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "debt-collector",
+   "name": "The Debt Collector",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "debt",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "tint": "#2a1c20",
+    "effect": "none"
+   },
+   "intro": "Three burly trainers block the road. \"Boss says time is up. Pay ₽1000, or we settle this the other way.\"",
+   "choices": [
+    {
+     "label": "Pay ₽1000",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1000
+      }
+     ],
+     "success": {
+      "text": "They count it slowly and leave. The debt is cleared.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1000
+       },
+       {
+        "kind": "flag",
+        "key": "debt",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fight them",
+     "success": {
+      "text": "They come in hard.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "roughneck",
+       "name": "Debt Collectors",
+       "size": 3,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "debt",
+         "amount": -1
+        },
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "flag",
+         "key": "mem-collector-crushed",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Sneak away (Speed)",
+     "check": "speed",
+     "success": {
+      "text": "You slip past. The debt follows you.",
+      "effects": []
+     },
+     "failure": {
+      "text": "They catch you and take a cut.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "repay-banker",
+   "name": "The Banker's Window",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "debt",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#23232a",
+    "effect": "none"
+   },
+   "intro": "A clerk at a window mutters: \"Are you here to repay a loan? I can clear it before the collectors show up.\"",
+   "choices": [
+    {
+     "label": "Repay ₽900",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 900
+      }
+     ],
+     "success": {
+      "text": "He stamps the paper. Debt cleared.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -900
+       },
+       {
+        "kind": "flag",
+        "key": "debt",
+        "amount": -1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Come back later",
+     "success": {
+      "text": "He shrugs. \"They will find you first.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "insurance-agent",
+   "name": "The Insurance Agent",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "mode": "nuzlocke",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#22262e",
+    "effect": "none"
+   },
+   "intro": "A smiling agent in a tidy suit opens a briefcase. \"Nobody likes to talk about losing a Pokémon. Lucky for you, I do. One policy, one Pokémon, one saved memorial.\"",
+   "choices": [
+    {
+     "label": "Insure one Pokémon (₽700)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 700
+      }
+     ],
+     "success": {
+      "text": "He stamps a paper. \"If it falls, it does not stay lost. Terms apply.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -700
+       },
+       {
+        "kind": "flag",
+        "key": "insured",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You bought a policy for your Pokémon.",
+        "importance": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Haggle (Charisma)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 350
+      }
+     ],
+     "check": "charisma",
+     "success": {
+      "text": "He sighs and halves the premium.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -350
+       },
+       {
+        "kind": "flag",
+        "key": "insured",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "He closes the briefcase. \"Not a good day for you.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "No thanks",
+     "success": {
+      "text": "He tips his hat. \"Everyone comes round.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "riddle-guard",
+   "name": "The Riddling Guard",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#2a2824",
+    "effect": "none"
+   },
+   "intro": "A guard blocks the gate. \"I speak without a mouth and hear without ears. I have no body, but come alive with wind. What am I?\"",
+   "choices": [
+    {
+     "label": "An echo",
+     "success": {
+      "text": "\"Correct.\" He opens the gate. Inside, a small tribute awaits.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "super-potion",
+        "count": 1
+       },
+       {
+        "kind": "money",
+        "amount": 200
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "A shadow",
+     "success": {
+      "text": "\"No.\" He crosses his arms.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "A cloud",
+     "success": {
+      "text": "\"No.\" He keeps the gate shut.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "sign-language-market",
+   "name": "Hands Across the Market",
+   "group": "NPC Stories",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#2a2830",
+    "effect": "none"
+   },
+   "intro": "A trader who does not speak your language gestures: three fingers, a flat palm, a circle. The market is loud. You are the only customer.",
+   "choices": [
+    {
+     "label": "Decode the signs (Intelligence)",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "potion"
+      }
+     ],
+     "check": "intelligence",
+     "success": {
+      "text": "Three berries for one potion. Fair. You both beam.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "potion"
+       },
+       {
+        "kind": "item",
+        "id": "lum-berry",
+        "count": 3
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "You buy the wrong thing. They are kind about it.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Draw pictures",
+     "success": {
+      "text": "It works, kind of. You laugh together.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Nod and smile",
+     "success": {
+      "text": "A pleasant misunderstanding.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "blind-describer",
+   "name": "Describe the View",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#252a38",
+    "effect": "none"
+   },
+   "intro": "An old woman sits at a viewpoint. \"I cannot see it, but I can hear it. Tell me what is out there?\"",
+   "choices": [
+    {
+     "label": "Describe the colours",
+     "success": {
+      "text": "She smiles. \"I can almost see them.\" She hands you a small gift.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "item",
+        "id": "oran-berry",
+        "count": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Describe the sounds",
+     "success": {
+      "text": "She sighs happily. \"That is right. That is what it is.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Describe your Pokémon",
+     "success": {
+      "text": "She pats the air where they stand. \"Good company.\"",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "lore-whisper-wood",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "retired-champion-spar",
+   "name": "The Retired Champion",
+   "group": "NPC Stories",
+   "stop": "dojo",
+   "rarity": "rare",
+   "minStage": 2,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "boss.cynthia-masters"
+    ],
+    "tint": "#24243a",
+    "effect": "none"
+   },
+   "intro": "A woman in a worn coat leans on a fence. \"I used to hold a title. Spar with me, and if you can stand your ground, I will tell you something no one tells.\"",
+   "choices": [
+    {
+     "label": "Spar",
+     "success": {
+      "text": "She smiles. \"Let us see.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "veteran",
+       "name": "Retired Champion",
+       "size": 3,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "eggMove"
+        },
+        {
+         "kind": "research",
+         "amount": 8
+        },
+        {
+         "kind": "flag",
+         "key": "lore-champions-chair",
+         "amount": 1
+        },
+        {
+         "kind": "flag",
+         "key": "mem-champion-helped",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Just talk",
+     "success": {
+      "text": "She tells you about the day she lost, and what she did next.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 4
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Bow and leave",
+     "success": {
+      "text": "She nods. \"Next time.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-pair-setup",
+   "name": "Two Rivals, One Bench",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2428",
+    "effect": "none"
+   },
+   "intro": "Two young trainers sit on opposite ends of a bench, pretending not to look at each other. They both turn to you. \"Tell us. Are we friends, or are we rivals?\"",
+   "choices": [
+    {
+     "label": "\"Friends.\"",
+     "success": {
+      "text": "They exchange a glance. Slowly, they smile.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-pair-friends",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "mem-benchpair-helped",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"Rivals.\"",
+     "success": {
+      "text": "They grin and shake hands, fiercely. Something in the air gets competitive.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-pair-rivals",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 200
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"Both.\"",
+     "success": {
+      "text": "They laugh. \"That sounds right.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-pair-friends",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-pair-rivals",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ranger-trust-1",
+   "name": "The Old Ranger: Strangers",
+   "group": "NPC Stories",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "trust-ranger",
+     "atLeast": 0,
+     "atMost": 1
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#22291e",
+    "effect": "none"
+   },
+   "intro": "The ranger squints at you from behind his fire. \"Mind the fire. And the bear. The bear is friendly.\"",
+   "choices": [
+    {
+     "label": "Sit and listen",
+     "success": {
+      "text": "He says little, but he moves over to make room.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "trust-ranger",
+        "amount": 1
+       },
+       {
+        "kind": "heal",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Offer a berry",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "oran-berry"
+      }
+     ],
+     "success": {
+      "text": "He takes it without a word. It is a start.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "oran-berry"
+       },
+       {
+        "kind": "flag",
+        "key": "trust-ranger",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "He lets you go.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "ranger-trust-2",
+   "name": "The Old Ranger: Acquaintances",
+   "group": "NPC Stories",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "trust-ranger",
+     "atLeast": 2,
+     "atMost": 4
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#22291e",
+    "effect": "none"
+   },
+   "intro": "\"Back again.\" The ranger puts the kettle on without asking. \"Tell me about the road.\"",
+   "choices": [
+    {
+     "label": "Tell him honestly",
+     "success": {
+      "text": "He nods slowly. \"Honest is rare.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "trust-ranger",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       },
+       {
+        "kind": "flag",
+        "key": "lore-lantern-oath",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask for advice",
+     "success": {
+      "text": "He tells you which stops to trust, and which to skip.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "trust-ranger",
+        "amount": 1
+       },
+       {
+        "kind": "revealStops"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just sit",
+     "success": {
+      "text": "He hums quietly.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "trust-ranger",
+        "amount": 1
+       },
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ranger-trust-3",
+   "name": "The Old Ranger: Friends",
+   "group": "NPC Stories",
+   "stop": "rest",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "trust-ranger",
+     "atLeast": 5,
+     "atMost": 99
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#22291e",
+    "effect": "none"
+   },
+   "intro": "The ranger has a spare bedroll out. \"For you. I made it last winter. Thought you might turn up.\"",
+   "choices": [
+    {
+     "label": "Accept with thanks",
+     "success": {
+      "text": "You sleep better than you have in days.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "relic",
+        "id": "rangers-bedroll",
+        "name": "Ranger's Bedroll",
+        "effects": [
+         {
+          "kind": "healingMultiplier",
+          "value": 1.15
+         }
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "mem-ranger-helped",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share a story",
+     "success": {
+      "text": "He nods, and for once, speaks at length.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 5
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "mem-ranger-helped",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mara-gatekeeper",
+   "name": "Gatekeeper Mara",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#2a2224",
+    "effect": "none"
+   },
+   "intro": "Mara guards a bridge and fights every traveller who wants to cross. She is good. She is also tired.",
+   "choices": [
+    {
+     "label": "Beat her and spare her",
+     "success": {
+      "text": "She yields. You help her up and say nothing about it.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "black-belt",
+       "name": "Mara",
+       "size": 2,
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "mem-mara-spared",
+         "amount": 1
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 1
+        },
+        {
+         "kind": "money",
+         "amount": 300
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Beat her and take your due",
+     "success": {
+      "text": "You win and take what is on the bridge. She does not forget it.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "black-belt",
+       "name": "Mara",
+       "size": 2,
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "mem-mara-crushed",
+         "amount": 1
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -1
+        },
+        {
+         "kind": "money",
+         "amount": 700
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Talk your way across (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "She lets you pass with a nod.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "mem-mara-helped",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "She blocks the bridge. \"No.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "mara-remembers-kind",
+   "name": "Mara Remembers You",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "remembers-mara-spared",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#2a2824",
+    "effect": "none"
+   },
+   "intro": "Mara is waiting at the next bridge with a package. \"I do not know why. I feel like I owe you.\"",
+   "choices": [
+    {
+     "label": "Accept the package",
+     "success": {
+      "text": "A small trove of supplies. She will not say why.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "hyper-potion",
+         "revive",
+         "ultra-ball"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "mem-mara-helped",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mara-remembers-grudge",
+   "name": "Mara Remembers You, Too",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "remembers-mara-crushed",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#2a1c1c",
+    "effect": "none"
+   },
+   "intro": "Mara's eyes lock on you from across the bridge. \"I know you. I do not know how. I just know I do not like you.\"",
+   "choices": [
+    {
+     "label": "Apologise",
+     "success": {
+      "text": "She does not answer. But she lets you pass.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "mem-mara-helped",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fight her again",
+     "success": {
+      "text": "She is stronger. So are you.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "black-belt",
+       "name": "Mara",
+       "size": 3,
+       "levelBonus": 4,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 600
+        },
+        {
+         "kind": "flag",
+         "key": "mem-mara-crushed",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "farmers-quest-1",
+   "name": "The Farmer's Long Errand",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "remembers-farmer-helped",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "A farmer you have never met asks: \"Would you carry this seed to a field three towns away? I would do it myself, but my knees.\" He does not seem to expect an answer.",
+   "choices": [
+    {
+     "label": "Take the seed",
+     "success": {
+      "text": "It weighs almost nothing. You promise yourself to remember.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "mem-farmer-helped",
+        "amount": 1
+       },
+       {
+        "kind": "item",
+        "id": "oran-berry",
+        "count": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You took a farmer's seed on a long errand.",
+        "importance": 45
+       }
+      ]
+     }
+    },
+    {
+     "label": "Decline",
+     "success": {
+      "text": "He nods. \"That is fine. Someone else, then.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "farmers-quest-2",
+   "name": "The Farmer's Long Errand: Second Field",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "remembers-farmer-helped",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "The same farmer is waiting, though he does not know you. \"A seed? To the field? Nice of you to offer. I once asked another stranger, long ago.\"",
+   "choices": [
+    {
+     "label": "Plant it for him",
+     "success": {
+      "text": "You plant it. A tiny green shoot catches the light.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "mem-farmer-helped",
+        "amount": 1
+       },
+       {
+        "kind": "seedling",
+        "berry": "sitrus",
+        "mutated": false
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "farmers-quest-3",
+   "name": "The Farmer's Long Errand: Harvest",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "remembers-farmer-helped",
+     "atLeast": 2,
+     "atMost": 99
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "The farmer's fields are green all the way to the horizon. He does not know your face. \"Take what you like,\" he says. \"I seem to have been lucky.\"",
+   "choices": [
+    {
+     "label": "Take a basket",
+     "success": {
+      "text": "It is full of everything.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "sitrus-berry",
+        "count": 3
+       },
+       {
+        "kind": "item",
+        "id": "lum-berry",
+        "count": 2
+       },
+       {
+        "kind": "money",
+        "amount": 600
+       },
+       {
+        "kind": "flag",
+        "key": "lore-first-ember",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just thank him",
+     "success": {
+      "text": "He shrugs. \"For what?\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "playstyle-mentor",
+   "name": "The Mentor's Tips",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2838",
+    "effect": "none"
+   },
+   "intro": "A mentor you half-recognise falls into step. \"I watched your last few choices. Here is what I noticed.\"",
+   "choices": [
+    {
+     "label": "Hear the tip (you lean kind)",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "positive",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "\"You are good to your team. Remember they are also soldiers.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hear the tip (you lean ruthless)",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "negative",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "\"Your edge is sharp. Do not dull your friends on it.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hear the tip (you lean fiery)",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "ragePeace",
+       "side": "positive",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "\"You push hard. Rest sometimes.\"",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.2
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hear the general tip",
+     "success": {
+      "text": "\"Check your team before every gym. Trust the small things.\"",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cameo-ally-assist",
+   "name": "A Familiar Face Steps In",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "cameo-used",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#2a2428",
+    "effect": "none"
+   },
+   "intro": "A veteran of one of your earlier runs appears at the roadside. \"Need a hand?\" They nod toward two trainers eyeing your party.",
+   "choices": [
+    {
+     "label": "Accept their help (once per run)",
+     "success": {
+      "text": "They step in beside your lead.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "cameo-used",
+        "amount": 1
+       }
+      ],
+      "battle": {
+       "kind": "trainer",
+       "classId": "ace-trainer",
+       "name": "Rival Duo",
+       "size": 2,
+       "levelBonus": 1,
+       "ally": "machoke",
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "friendship",
+         "amount": 3,
+         "who": "party"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Decline politely",
+     "success": {
+      "text": "They tip their cap. \"Another time.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "gym-eve-tone",
+   "name": "Eve of the Gym",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2830",
+    "effect": "none"
+   },
+   "intro": "The night before the gym, a stranger sits beside you on the steps. \"Nervous? You can walk in loud, or quiet, or ask for advice.\"",
+   "choices": [
+    {
+     "label": "Walk in loud",
+     "success": {
+      "text": "The hall will remember it.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 1
+       },
+       {
+        "kind": "betterDraft",
+        "extra": 0
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk in quiet",
+     "success": {
+      "text": "Calm settles over your team.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -1
+       },
+       {
+        "kind": "heal",
+        "share": 0.25
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask for advice",
+     "success": {
+      "text": "The stranger tells you what to expect from the leader.",
+      "effects": [
+       {
+        "kind": "gymPreview"
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ng-plus-old-friends",
+   "name": "Old Friends, New Run",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "ng-plus",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#2a2a3a",
+    "effect": "none"
+   },
+   "intro": "A stranger smiles like they know you. \"I read about the last time. You really did that?\"",
+   "choices": [
+    {
+     "label": "Tell the tale",
+     "success": {
+      "text": "They lean in. By the end, a small crowd has gathered.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 4
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       }
+      ]
+     }
+    },
+    {
+     "label": "Deny everything",
+     "success": {
+      "text": "They wink. \"Of course you did not.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "fortune-three-cards",
+   "name": "Three Cards",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#301848",
+    "effect": "float"
+   },
+   "intro": "The fortune teller fans three cards face down on a velvet cloth. \"Pick one. It will follow you for a while, whether you like it or not.\"",
+   "choices": [
+    {
+     "label": "The left card: the Sun",
+     "success": {
+      "text": "A bright card. Your team will learn faster, and the road will push back.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "card-sun",
+        "name": "The Sun",
+        "effects": [
+         {
+          "kind": "xpMultiplier",
+          "value": 1.15
+         },
+         {
+          "kind": "enemyLevelOffset",
+          "value": 1
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "The middle card: the Moon",
+     "success": {
+      "text": "A quiet card. Wild Pokémon trust you more, and healing is a little slower.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "card-moon",
+        "name": "The Moon",
+        "effects": [
+         {
+          "kind": "captureMultiplier",
+          "value": 1.25
+         },
+         {
+          "kind": "healingMultiplier",
+          "value": 0.9
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "The right card: the Star",
+     "success": {
+      "text": "A kind card. Your team grows closer, and your pockets grow lighter.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "card-star",
+        "name": "The Star",
+        "effects": [
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.2
+         },
+         {
+          "kind": "moneyMultiplier",
+          "value": 0.9
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave the cards",
+     "success": {
+      "text": "\"They will wait,\" she says.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "glove-duel",
+   "name": "The Glove on the Ground",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#2a2024",
+    "effect": "none"
+   },
+   "intro": "A trainer throws a white glove at your feet. \"I challenge you. Properly. Accept it or refuse it, but do it in front of everybody.\"",
+   "choices": [
+    {
+     "label": "Pick up the glove",
+     "success": {
+      "text": "A hush falls. Then a roar.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "veteran",
+       "name": "Glove Challenger",
+       "size": 2,
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 400
+        },
+        {
+         "kind": "attribute",
+         "key": "charisma",
+         "amount": 1
+        },
+        {
+         "kind": "flag",
+         "key": "mem-glove-spared",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Refuse politely",
+     "success": {
+      "text": "They sneer, then bow. \"Another day.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Refuse with a joke (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "The crowd laughs, and so does the challenger.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The joke lands badly. The glove stays on the ground.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "beg-for-mercy",
+   "name": "Out-levelled",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c1c",
+    "effect": "none"
+   },
+   "intro": "A veteran blocks the path, their team clearly stronger than yours. \"You are in my way. Is there a reason I should not crush you?\"",
+   "choices": [
+    {
+     "label": "Plead your case (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "They hear you out. \"Fine. Go.\" They step aside.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "mem-veteran-spared",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "\"Not good enough.\" They send out their team.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "veteran",
+       "name": "Stronger Veteran",
+       "size": 3,
+       "levelBonus": 4,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 600
+        },
+        {
+         "kind": "research",
+         "amount": 6
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Stand and fight",
+     "success": {
+      "text": "You choose the harder way.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "veteran",
+       "name": "Stronger Veteran",
+       "size": 3,
+       "levelBonus": 4,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 600
+        },
+        {
+         "kind": "research",
+         "amount": 6
+        },
+        {
+         "kind": "attribute",
+         "key": "strength",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Turn back",
+     "success": {
+      "text": "You find another road.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "recommend-returns-fire",
+   "name": "Your Fire-type Pick",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "rare",
+   "minStage": 2,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "rec-fire",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#2a2830",
+    "effect": "none"
+   },
+   "intro": "The trainer you advised is back with a Fire-type team. \"I took your advice! Want to see if it was any good?\"",
+   "choices": [
+    {
+     "label": "Battle them",
+     "success": {
+      "text": "They are proud, and so well drilled that it stings.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "ace-trainer",
+       "name": "Advised Trainer",
+       "size": 2,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "friendship",
+         "amount": 2,
+         "who": "party"
+        },
+        {
+         "kind": "research",
+         "amount": 4
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Congratulate them",
+     "success": {
+      "text": "They glow. \"Thanks for believing in me.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 150
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "recommend-returns-water",
+   "name": "Your Water-type Pick",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "rare",
+   "minStage": 2,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "rec-water",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#2a2830",
+    "effect": "none"
+   },
+   "intro": "The trainer you advised is back with a Water-type team. \"I took your advice! Want to see if it was any good?\"",
+   "choices": [
+    {
+     "label": "Battle them",
+     "success": {
+      "text": "They are proud, and so well drilled that it stings.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "ace-trainer",
+       "name": "Advised Trainer",
+       "size": 2,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "friendship",
+         "amount": 2,
+         "who": "party"
+        },
+        {
+         "kind": "research",
+         "amount": 4
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Congratulate them",
+     "success": {
+      "text": "They glow. \"Thanks for believing in me.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 150
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "recommend-returns-grass",
+   "name": "Your Grass-type Pick",
+   "group": "NPC Stories",
+   "stop": "ambush",
+   "rarity": "rare",
+   "minStage": 2,
+   "types": [],
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "rec-grass",
+     "atLeast": 1,
+     "atMost": 99
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#2a2830",
+    "effect": "none"
+   },
+   "intro": "The trainer you advised is back with a Grass-type team. \"I took your advice! Want to see if it was any good?\"",
+   "choices": [
+    {
+     "label": "Battle them",
+     "success": {
+      "text": "They are proud, and so well drilled that it stings.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "ace-trainer",
+       "name": "Advised Trainer",
+       "size": 2,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "friendship",
+         "amount": 2,
+         "who": "party"
+        },
+        {
+         "kind": "research",
+         "amount": 4
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Congratulate them",
+     "success": {
+      "text": "They glow. \"Thanks for believing in me.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 150
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "recommend-team",
+   "name": "Pick a Team for Me",
+   "group": "NPC Stories",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#2a2830",
+    "effect": "none"
+   },
+   "intro": "A young trainer is staring at a list. \"I have to pick a team and I cannot decide. What type would you build around?\"",
+   "choices": [
+    {
+     "label": "Fire",
+     "success": {
+      "text": "\"Bold. I like it.\" They write it down.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rec-fire",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Water",
+     "success": {
+      "text": "\"Reliable. I like it.\" They write it down.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rec-water",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Grass",
+     "success": {
+      "text": "\"Gentle and sharp. I like it.\" They write it down.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rec-grass",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lore-scribe-1",
+   "name": "The Scribe's Table: Badges and Rivals",
+   "group": "NPC Stories",
+   "stop": "library",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#262a3a",
+    "effect": "float"
+   },
+   "intro": "A scribe copies old pages by candlelight. \"Take a page. They go to whoever reads them.\"",
+   "choices": [
+    {
+     "label": "Read about the ninth badge",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "lore-ninth-badge",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "A page about a badge nobody can name.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "lore-ninth-badge",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Read about the gym that lost",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "lore-gym-ghost",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "A short page about a sign hung face down.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "lore-gym-ghost",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Read about the rival's scar",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "lore-rival-scar",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "A page about matching scars.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "lore-rival-scar",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Close the book",
+     "success": {
+      "text": "You leave it open for the next traveller.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "lore-scribe-2",
+   "name": "The Scribe's Table: Storms and Markets",
+   "group": "NPC Stories",
+   "stop": "library",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#262a3a",
+    "effect": "float"
+   },
+   "intro": "Another scribe, another table. \"Pages on the left are warnings. Pages on the right are lies. They look the same.\"",
+   "choices": [
+    {
+     "label": "Read the storm letter",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "lore-storm-letter",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "A page pinned to a gatepost, long ago.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "lore-storm-letter",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Read about the ash market",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "lore-ash-market",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "A page about a market that appears after battles.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "lore-ash-market",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Read the deep register",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "lore-deep-register",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "A page with more paw prints than names.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "lore-deep-register",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Close the book",
+     "success": {
+      "text": "You leave it open for the next traveller.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "lore-scribe-3",
+   "name": "The Scribe's Table: Legends",
+   "group": "NPC Stories",
+   "stop": "library",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [],
+   "requires": [],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#262a3a",
+    "effect": "float"
+   },
+   "intro": "The last scribe is nearly asleep. \"Take a page, if you can find one that is not blank.\"",
+   "choices": [
+    {
+     "label": "Read about legends' wakes",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "lore-legend-wake",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "A page about weather that follows legends.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "lore-legend-wake",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Read the unwritten ending",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "lore-unwritten-ending",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "A page with a blank back and a single line on the front.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "lore-unwritten-ending",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Close the book",
+     "success": {
+      "text": "You leave it open for the next traveller.",
+      "effects": []
+     }
+    }
+   ]
+  }
+ ]
+}

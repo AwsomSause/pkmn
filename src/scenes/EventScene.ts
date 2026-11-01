@@ -134,7 +134,7 @@ export class EventScene extends Phaser.Scene {
     // A long intro is cut with "..." to the four lines the box has room for, then typed out.
     const introFit = fitBlock(intro, DIALOGUE_W - 36, 92, view.event.intro).text;
     intro.setText('');
-    this.typeOut(intro, introFit);
+    this.typeOut(intro, introFit, services().session.settings.skipSeenDialogue && services().session.profile.npcMemory.seenEvents.includes(view.event.id));
     const rule = this.add.graphics();
     rule.lineStyle(1, AERO.rim, 0.35).lineBetween(42, BOTTOM_Y + 100, 24 + DIALOGUE_W - 18, BOTTOM_Y + 100);
     this.detailOdds = this.add.text(42, BOTTOM_Y + 106, '', textStyle(13, '#f8e8a0', { wordWrap: { width: DIALOGUE_W - 36 }, maxLines: 1 })).setOrigin(0, 0);
@@ -436,8 +436,8 @@ export class EventScene extends Phaser.Scene {
     this.time.delayedCall(this.calm ? 10 : 270, () => this.scene.start(sceneForRun(run)));
   }
 
-  private typeOut(text: Phaser.GameObjects.Text, full: string): void {
-    if (this.calm) {
+  private typeOut(text: Phaser.GameObjects.Text, full: string, seen = false): void {
+    if (this.calm || seen) {
       text.setText(full);
       return;
     }

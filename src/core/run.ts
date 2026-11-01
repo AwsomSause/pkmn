@@ -159,6 +159,8 @@ import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from 
 import { createStoryState, emit } from './story/record';
 import { careMoves, teamworkOnSwitch, careAceFell, careRest, careFaint, careVictory, releaseGift } from './care';
 import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
+import { diaryLine, seedNpcMemory } from './npcMemory';
+import { npcShopFactor, secretTierEntries } from './npcShop';
 import { claimArea, nuzlockeCatchProblem, buryFallen, isHardcore } from './nuzlocke';
 import { applyMutator, mutatorCatch, mutatorDue, mutatorMoney, mutatorOffer, mutatorXp } from './mutators';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, quickWinBonus, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
@@ -229,6 +231,8 @@ export interface NewRunOptions {
   ownedTrainers?: readonly string[];
   /** The profile's bonds with mentors (core/mentors): lasting trust, graduations and the fellow apprentices who return. */
   mentorBonds?: Profile['mentorBonds'];
+  /** Ideas W5: what NPCs remember (core/npcMemory.ts); it seeds the run's `remembers-*` flags. */
+  npcMemory?: Profile['npcMemory'];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -302,7 +306,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     rng,
     nextUid: 1,
     log: { rewardsTaken: [], battlesWon: 0, counters: {}, speciesSeen: [], speciesCaught: [], speciesShiny: [], charmUsedInRegion: false, defeatedBy: null, starterUid: null },
-    story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
+    story: seedNpcMemory(withChampionTeam(createStoryState(), opts.runHistory ?? []), opts.npcMemory),
     partyLife: createPartyLife(),
     clock: freshClock(),
     calendar: { today: null, startedOn: null },
@@ -1750,7 +1754,7 @@ export function healParty(content: Content, run: RunState): void {
  * and the Member Card and Wepear Berry put the next locked entries on sale early.
  * Key items you own aren't sold again.
  */
-export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules' | 'perkEffects' | 'licenses'>> & MapItemRun): Content['shop'] {
+export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'archetypeId'> & Partial<Pick<RunState, 'inventory' | 'rules' | 'perkEffects' | 'licenses' | 'story'>> & MapItemRun): Content['shop'] {
   const noRevive = run.rules ? noRevives(run.rules) : false;
   const owned = (e: Content['shop'][number]) => !!run.inventory && ownsKeepsake(content, run.inventory, e.item);
   const open = (e: Content['shop'][number]) => run.badges.length >= shopBadgesNeeded(content, run, e);
@@ -1767,7 +1771,8 @@ export function shopStock(content: Content, run: Pick<RunState, 'badges' | 'arch
   // Rocket Boss Giovanni's Black Market sells everything, locked stock at a markup (shopPrice).
   const black = blackMarketMarkup(runPerks(content, run)) !== null;
   const modeStock = (content.balance.modeShops[run.rules?.modeId ?? ''] ?? []).filter((x) => content.items.has(x.item) && !content.shop.some((e) => e.item === x.item));
-  const stock = [...content.shop, ...bankShopEntries(content, run.licenses).filter((x) => !content.shop.some((e) => e.item === x.item)), ...modeStock];
+  const secret = secretTierEntries(content, run.story).filter((x) => !content.shop.some((e) => e.item === x.item) && !modeStock.some((e) => e.item === x.item));
+  const stock = [...content.shop, ...bankShopEntries(content, run.licenses).filter((x) => !content.shop.some((e) => e.item === x.item)), ...modeStock, ...secret];
   return stock.filter((e) => (black || open(e) || early.includes(e)) && !owned(e) && !(noRevive && content.items.get(e.item)?.category === 'revive'));
 }
 
@@ -1802,7 +1807,7 @@ export function shopSaleItem(content: Content, run: RunState): string | null {
 export function shopPrice(content: Content, run: RunState, entry: Content['shop'][number]): number {
   // Coupons lower the price; a full Point Card makes it free.
   const markup = isBlackMarket(content, run, entry) ? blackMarketMarkup(runPerks(content, run))! : 1;
-  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run) * shopHoursMultiplier(content, run) * (shopSaleItem(content, run) === entry.item ? 1 - content.balance.shopSale.discount : 1));
+  return Math.round(entry.price * markup * priceMultiplier(runArchetype(content, run), entry.item, content.items.get(entry.item)?.category === 'ball') * runAttributeEffects(content, run).price * priceMultiplierFromItems(content, run) * minigameDiscount(run) * shopHoursMultiplier(content, run) * (shopSaleItem(content, run) === entry.item ? 1 - content.balance.shopSale.discount : 1) * npcShopFactor(content, run.story));
 }
 
 /** Base price for an item the shop doesn't list (urge items and other finds), by rarity. */
@@ -2377,6 +2382,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   for (const mon of noEvolution(run.rules) ? [] : run.party) {
     for (const evo of evolveFully(content, mon, run.regionOrder[run.regionIndex], evolutionLevelOffset(runArchetype(content, run).modifiers), bondEvolves(content, run, mon))) {
       evolutions.push({ ...evo, uid: mon.uid });
+      // Ideas W5 (F171): a diary snippet in the Chronicle; text only, no state change.
+      emit(content, run, 'storyMoment', { actors: [], data: { def: 'evolution-diary', suppressed: false }, importance: 35, text: diaryLine(content, mon.uid, content.species.get(evo.from)?.name ?? evo.from, content.species.get(evo.to)?.name ?? evo.to) });
       for (const moveId of evo.wantsToLearn) run.pending.push({ kind: 'learnMove', uid: mon.uid, moveId });
     }
   }

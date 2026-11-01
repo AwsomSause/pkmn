@@ -11,6 +11,7 @@ import { archiveParty } from './story/reunion';
 import { addRunToCodex } from './story/codex';
 import { recordLegacyRun } from './legacyRuns';
 import { recordHeirloom } from './memories/heirloom';
+import { foldNpcMemory } from './npcMemory';
 import { claimPast } from './memories/past';
 import { ATTRIBUTE_NAMES, type Profile, type RunState } from './state';
 
@@ -54,6 +55,7 @@ export function createProfile(content: Content, profileId: string): Profile {
     gameEvents: {},
     momentCodex: {},
     mentorBonds: {},
+    npcMemory: { npcs: {}, lore: [], epilogues: [], news: [], ngPlus: 0, hintsSeen: [], seenEvents: [] },
     legacyRuns: [],
     memories: { heirlooms: [], claimed: [], cameos: [] },
   };
@@ -100,6 +102,7 @@ export function finalizeRun(
   next.legacy = recordBoardRun(next, run, now).legacy;
   recordHeirloom(content, next, legacyRecord);
   claimPast(next, run);
+  next.npcMemory = foldNpcMemory(content, next.npcMemory, run);
   next.finalizedRunIds = [...next.finalizedRunIds, run.runId].slice(-FINALIZED_HISTORY);
   return { profile: next, applied: true, summary };
 }

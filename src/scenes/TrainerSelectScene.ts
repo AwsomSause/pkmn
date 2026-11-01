@@ -3,6 +3,7 @@
 // on the right. Locked trainers show as a "?" silhouette that tells you how to
 // unlock them.
 
+import { backstoryFor } from '../core/npcMemory';
 import Phaser from 'phaser';
 import type { Archetype } from '../core/contentSchema';
 import { trainerStatus, type TrainerStatus } from '../core/progress';
@@ -294,7 +295,9 @@ export class TrainerSelectScene extends Phaser.Scene {
         y += 30;
       }
       const summary = addLow(this.add.text(36, y, a.description, textStyle(16, COLORS.textMuted, { wordWrap: { width: LEFT_W - 44 } })));
-      y += summary.height + 12;
+      y += summary.height + 6;
+      const story = addLow(this.add.text(36, y, backstoryFor(services().session.content, a), textStyle(14, COLORS.textMuted, { wordWrap: { width: LEFT_W - 44 }, fontStyle: 'italic' })));
+      y += story.height + 12;
       // This trainer's record from past runs.
       const runs = services().session.profile.runHistory.filter((r) => r.archetypeId === a.id);
       const best = runs.reduce((m, r) => Math.max(m, r.regionsCleared), 0);

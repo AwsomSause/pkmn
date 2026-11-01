@@ -36,7 +36,7 @@ export const ACTIVE_SLOT_KEY = `${KEY_PREFIX}.slot`;
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 15, run: 33, settings: 13, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 16, run: 33, settings: 14, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -120,6 +120,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     },
     // v15 (mentors, spec section 15): older profiles have no mentor bonds yet.
     14: (data) => ({ ...(data as Json), mentorBonds: {} }),
+    // v16 (ideas W5): older profiles remember no NPCs, lore, epilogues or newspaper issues yet.
+    15: (data) => ({ ...(data as Json), npcMemory: { npcs: {}, lore: [], epilogues: [], news: [], ngPlus: 0, hintsSeen: [], seenEvents: [] } }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -341,6 +343,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       const { gamepadConfirm, gamepadBack, ...rest } = data as Json & { gamepadConfirm?: number; gamepadBack?: number };
       return { ...rest, gamepadMap: { up: 12, down: 13, left: 14, right: 15, confirm: gamepadConfirm ?? 0, back: gamepadBack ?? 1 } };
     },
+    // v14 (ideas W5): skip-seen-dialogue is off until chosen.
+    13: (data) => ({ ...(data as Json), skipSeenDialogue: false }),
   },
   meta: {},
   timeline: {},
@@ -370,7 +374,7 @@ export interface SlotPeek {
 
 export type SaveResult = { ok: true } | { ok: false; reason: string };
 
-export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, shakeIntensity: 1, reduceParticles: false, textSpeed: 'instant', autoAdvance: false, messageDelay: 'normal', highContrast: false, typeMarkers: false, uiScale: 'full', spriteAnimations: true, damageNumbers: true, catchDetail: 'full', battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero', abilityAnimations: true, battleTextAnimations: true, interactionAnimations: true, hyperAnimations: true, rivalAnimations: true, evolutionAnimations: true, battleScreenEffects: true, menuAnimations: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false, autoBattle: false, autoExplain: true, uiTheme: 'classic', fontSize: 'normal', dyslexiaFont: false, reducedFlash: false, tooltipDelay: 'normal', popupScale: 1, transitionStyle: 'fade', cursorTrail: false, holdToConfirm: false, haptics: false, oneHanded: 'off', gamepadMap: { up: 12, down: 13, left: 14, right: 15, confirm: 0, back: 1 }, victoryJingle: 'badge' };
+export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, shakeIntensity: 1, reduceParticles: false, textSpeed: 'instant', autoAdvance: false, messageDelay: 'normal', highContrast: false, typeMarkers: false, uiScale: 'full', spriteAnimations: true, damageNumbers: true, catchDetail: 'full', battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero', abilityAnimations: true, battleTextAnimations: true, interactionAnimations: true, hyperAnimations: true, rivalAnimations: true, evolutionAnimations: true, battleScreenEffects: true, menuAnimations: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false, autoBattle: false, autoExplain: true, uiTheme: 'classic', fontSize: 'normal', dyslexiaFont: false, reducedFlash: false, tooltipDelay: 'normal', popupScale: 1, transitionStyle: 'fade', cursorTrail: false, holdToConfirm: false, haptics: false, oneHanded: 'off', gamepadMap: { up: 12, down: 13, left: 14, right: 15, confirm: 0, back: 1 }, victoryJingle: 'badge', skipSeenDialogue: false };
 
 /** True when the browser asks for less motion (then new players start with reduced battle animations). */
 function prefersReducedMotion(): boolean {
