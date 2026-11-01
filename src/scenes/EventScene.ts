@@ -11,6 +11,7 @@
 // (core choiceRisk), and an outcome that visibly lands: chips pop with a
 // burst and the money pill counts to the new total.
 
+import { fitBlock, fitLine } from '../ui/fitText';
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
@@ -102,7 +103,7 @@ export class EventScene extends Phaser.Scene {
     const band = this.add.graphics();
     paintGlass(band, 0, 0, 420, 44, { rim, radius: 22 });
     title.add(band);
-    title.add(this.add.text(20, 22, view.event.name, textStyle(24, COLORS.textLight, { wordWrap: { width: 384 }, maxLines: 1 })).setOrigin(0, 0.5));
+    title.add(fitLine(this.add.text(20, 22, view.event.name, textStyle(24, COLORS.textLight)).setOrigin(0, 0.5), 384));
     this.tweens.add({ targets: title, x: 24, duration: this.calm ? 1 : 600, ease: 'Back.easeOut' });
 
     // The cast slides in from the right, then bobs; a Pokémon hops in from the left.
@@ -130,7 +131,10 @@ export class EventScene extends Phaser.Scene {
     const panel = this.add.graphics();
     paintGlass(panel, 24, BOTTOM_Y, DIALOGUE_W, BOTTOM_H, { tint: AERO.glassLow, glow: false, alpha: 0.95, radius: 18 });
     const intro = this.add.text(42, BOTTOM_Y + 14, '', textStyle(16, COLORS.textLight, { wordWrap: { width: DIALOGUE_W - 36 }, lineSpacing: 4 })).setOrigin(0, 0);
-    this.typeOut(intro, view.event.intro);
+    // A long intro is cut with "..." to the four lines the box has room for, then typed out.
+    const introFit = fitBlock(intro, DIALOGUE_W - 36, 92, view.event.intro).text;
+    intro.setText('');
+    this.typeOut(intro, introFit);
     const rule = this.add.graphics();
     rule.lineStyle(1, AERO.rim, 0.35).lineBetween(42, BOTTOM_Y + 100, 24 + DIALOGUE_W - 18, BOTTOM_Y + 100);
     this.detailOdds = this.add.text(42, BOTTOM_Y + 106, '', textStyle(13, '#f8e8a0', { wordWrap: { width: DIALOGUE_W - 36 }, maxLines: 1 })).setOrigin(0, 0);
@@ -154,7 +158,7 @@ export class EventScene extends Phaser.Scene {
         box.add(badge);
         box.add(this.add.text(-w / 2 + 14, 0, ATTRIBUTE_LABELS[c.attribute as AttributeKey]?.[0] ?? '?', textStyle(11, '#181818')).setOrigin(0.5));
       }
-      box.add(this.add.text(-w / 2 + 34, 0, c.label, textStyle(15, c.locked ? COLORS.textMuted : COLORS.textLight, { wordWrap: { width: w - 112 }, maxLines: 2 })).setOrigin(0, 0.5));
+      box.add(fitBlock(this.add.text(-w / 2 + 34, 0, c.label, textStyle(15, c.locked ? COLORS.textMuted : COLORS.textLight, { wordWrap: { width: w - 112 } })).setOrigin(0, 0.5), w - 112, 38));
       if (tag) box.add(this.add.text(w / 2 - 14, 0, tag, textStyle(14, c.locked ? COLORS.bad : '#f8e8a0')).setOrigin(1, 0.5));
       const arrow = this.add.text(-w / 2 + 14, 0, '▶', textStyle(14, '#ffffff')).setOrigin(0.5).setVisible(false).setDepth(5);
       box.add(arrow);
@@ -224,10 +228,9 @@ export class EventScene extends Phaser.Scene {
       : c.chance !== null
         ? `${c.attribute ? `${ATTRIBUTE_LABELS[c.attribute as AttributeKey]}: ` : ''}${Math.round(c.chance * 100)}%`
         : '';
-    this.detailOdds?.setText(odds).setColor(c.locked ? COLORS.bad : '#f8e8a0');
-    if (!c.locked) this.detailRisk?.setText(c.preview ? `${c.risk}\n${c.preview}` : c.risk);
-    else this.detailRisk?.setText(c.preview ?? '');
-    this.detailCost?.setText(c.cost && !c.locked ? `Costs ${c.cost}` : '');
+    if (this.detailOdds) fitBlock(this.detailOdds, DIALOGUE_W - 36, 18, odds).setColor(c.locked ? COLORS.bad : '#f8e8a0');
+    if (this.detailRisk) fitBlock(this.detailRisk, DIALOGUE_W - 36, 30, c.locked ? (c.preview ?? '') : c.preview ? `${c.risk}\n${c.preview}` : c.risk);
+    if (this.detailCost) fitBlock(this.detailCost, DIALOGUE_W - 36, 18, c.cost && !c.locked ? `Costs ${c.cost}` : '');
   }
 
   private confirm(): void {
