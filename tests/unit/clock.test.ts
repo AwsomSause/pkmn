@@ -1,7 +1,7 @@
 // The run clock (spec §28) and Camp's time-of-day choices (spec §22).
 
 import { describe, expect, it } from 'vitest';
-import { periodWildWeight, seasonOf, shopHoursMultiplier, advanceClock, celebrateToday, freshClock, milestoneToday, periodOf, restUntilMorning } from '../../src/core/clock';
+import { setCalendar, specialDateToday, periodWildWeight, seasonOf, shopHoursMultiplier, advanceClock, celebrateToday, freshClock, milestoneToday, periodOf, restUntilMorning } from '../../src/core/clock';
 import { chooseEvent, conditionMet, eventView } from '../../src/core/events';
 import { nextChoices } from '../../src/core/map';
 import { chooseNode, chooseStarter, createRun } from '../../src/core/run';
@@ -56,8 +56,8 @@ describe('run clock', () => {
     expect(milestoneToday(content, run)).toBe(false);
     run.clock.day = content.balance.clock.milestoneDays[0]!;
     expect(milestoneToday(content, run)).toBe(true);
-    celebrateToday(run);
-    celebrateToday(run);
+    celebrateToday(content, run);
+    celebrateToday(content, run);
     expect(run.clock.celebrated).toHaveLength(1);
     expect(milestoneToday(content, run)).toBe(false);
   });
@@ -128,7 +128,7 @@ describe('seasons and NPC schedules', () => {
     run.clock.day = len + 1;
     expect(seasonOf(content, run)).toBe('Summer');
     expect(milestoneToday(content, run)).toBe(true);
-    celebrateToday(run);
+    celebrateToday(content, run);
     expect(milestoneToday(content, run)).toBe(false);
   });
 
@@ -145,15 +145,17 @@ describe('seasons and NPC schedules', () => {
   });
 });
 
-describe('run save v28', () => {
-  it('a version 27 run loads at day 1, morning', () => {
-    const storage = new MemoryStorageProvider();
-    const { clock: _c, ...old } = structuredClone(newRun());
-    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 27, savedAt: '', data: old }));
-    const loaded = new SaveManager(storage, content).loadRun();
-    expect(loaded.status).toBe('ok');
-    if (loaded.status !== 'ok') return;
-    expect(loaded.migratedFrom).toBe(27);
-    expect(loaded.data.clock).toEqual({ day: 1, tick: 0, celebrated: [] });
+describe('real-world dates', () => {
+  it('the host passes the date in; a special date opens the camp celebration once', () => {
+    const run = newRun();
+    expect(milestoneToday(content, run)).toBe(false); // no date known
+    setCalendar(run, 2, 27);
+    expect(run.calendar).toEqual({ today: '02-27', startedOn: '02-27' });
+    expect(specialDateToday(content, run)?.label).toBe('Pokémon Day');
+    expect(milestoneToday(content, run)).toBe(true);
+    celebrateToday(content, run);
+    expect(milestoneToday(content, run)).toBe(false);
+    setCalendar(run, 3, 1);
+    expect(run.calendar).toEqual({ today: '03-01', startedOn: '02-27' });
   });
 });

@@ -6,6 +6,7 @@
 //   - on entering a map node, using a side stop, or buying at a shop
 //   - when the run ends (profile first, then the run record is cleared)
 
+import { setCalendar } from '../core/clock';
 import type { Achievement, Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { awardLiveAchievements, claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
@@ -207,6 +208,7 @@ export class GameSession {
     const grants = startGrants(this.content, this.profile, archetypeId);
     applyStartGrants(this.content, this.run, this.profile);
     // Memories: what earlier runs left behind (ghosts, keepsakes, old friends, the chosen heirloom). Picked from the profile, not rolled.
+    this.syncCalendar();
     this.run.past = pastDigest(this.content, this.profile);
     const heirloomUsed = pendingHeirloom(this.profile);
     const heirloom = applyHeirloom(this.content, this.run, this.profile);
@@ -230,10 +232,18 @@ export class GameSession {
     this.refreshSavedRun();
     if (this.savedRun.status !== 'ok') throw new Error('No saved run to continue');
     this.run = Run.prepareLoadedRun(this.content, this.savedRun.data);
+    this.syncCalendar();
     if (this.run !== this.savedRun.data) this.persistRun();
     if (this.run.phase === 'over') this.finishRun();
     this.changed();
     return this.run;
+  }
+
+  /** Gives the run today's real-world date (the core reads no clock; camp celebrations on special dates use it). */
+  private syncCalendar(): void {
+    if (!this.run) return;
+    const now = new Date();
+    setCalendar(this.run, now.getMonth() + 1, now.getDate());
   }
 
   /** Keeps a backup copy of a damaged run save, then removes it so a new run can start. */
@@ -266,6 +276,7 @@ export class GameSession {
 
   chooseNode(nodeId: string): RunState {
     this.run = Run.chooseNode(this.content, this.requireRun(), nodeId);
+    this.syncCalendar();
     this.persistRun();
     return this.run;
   }

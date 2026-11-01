@@ -926,7 +926,7 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       return warmed > 0 ? `${effectWords(content, e)}; your Egg${warmed === 1 ? ' is' : 's are'} snug by the fire` : effectWords(content, e);
     }
     case 'celebrate':
-      celebrateToday(run);
+      celebrateToday(content, run);
       return effectWords(content, e);
     case 'addEvent': {
       const here = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
