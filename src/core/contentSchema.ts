@@ -2622,6 +2622,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     ally: z.string().optional(),
     /** Evil Teams: a member of the run's team at this rank (their Pokémon, name and battle rule; core/evil). */
     evil: z.enum(['grunt', 'specialist', 'executive', 'leader']).optional(),
+    /** Mentors: the team is your fellow apprentice's (their preferred types; they take the name). A loss is friendly: nobody is out and the run goes on. */
+    apprentice: z.boolean().optional(),
     name: z.string(),
     size: z.number().int().min(1).max(6).default(2),
     /** How many of the trainer's Pokémon (the first ones) are Shadow Pokémon a Snag Ball can take. */

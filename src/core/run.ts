@@ -61,7 +61,7 @@ import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { growGarden } from './berries';
 import { layEgg, tickEggs } from './eggs';
-import { addEventStops, continueEventChain, eventBattleWon, eventChainNext, eventGymPreview } from './events';
+import { addEventStops, continueEventChain, eventBattleWon, eventChainNext, eventGymPreview, isApprenticeBattle } from './events';
 import { advanceRoamers, convoyStep, applyFrontWeather, spawnRoamers } from './world';
 import { currentColumn, findNode, generateLeagueMap, generateStageMap, nextChoices, validateLeagueMap, validateStageMap } from './map';
 import { addItemAttribute, addRunAttribute, attributeText, luckWeights, readAttributes, runAttributeEffects, zeroAttributes } from './attributes';
@@ -185,7 +185,7 @@ import { evilStageStart } from './evil/teams';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
 import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
-import { applyLessons, bondOf, mentorBadgeWon, startMentorship } from './mentors';
+import { apprenticeLost, applyLessons, bondOf, mentorBadgeWon, startMentorship } from './mentors';
 import { answerAskLead, planAskLead } from './story/askLead';
 import { planReunion, reunionPokemon } from './story/reunion';
 
@@ -2048,6 +2048,11 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     failRaid(content, run);
     recordChanges(content, current, run, 'battle');
     return { run, events, end: null, defeated: false, cues, drama, raidFailed: true };
+  }
+  if (battle.outcome === 'lose' && battle.event && isApprenticeBattle(content, battle.event)) {
+    apprenticeLost(content, run);
+    recordChanges(content, current, run, 'battle');
+    return { run, events, end: null, defeated: false, cues, drama, clubLost: true };
   }
   if (battle.outcome === 'lose' && battle.event?.eventId === 'plaza:club') {
     plazaClubLost(content, run);

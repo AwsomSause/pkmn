@@ -3,8 +3,8 @@
 import { describe, expect, it } from 'vitest';
 import { createProfile } from '../../src/core/profile';
 import { applyRunToProfile } from '../../src/core/progress';
-import { chooseStarter, createRun } from '../../src/core/run';
-import { applyEffect, conditionMet, eligibleEvents } from '../../src/core/events';
+import { chooseStarter, createRun, takeTurn, type TurnResult } from '../../src/core/run';
+import { applyEffect, chooseEvent, conditionMet, eligibleEvents, eventBattleWon, isApprenticeBattle } from '../../src/core/events';
 import { Rng, hashSeed } from '../../src/core/rng';
 import {
   MENTORS,
@@ -223,5 +223,63 @@ describe('saves', () => {
     expect(migrated.mentor).toBeNull();
     expect(migrated.prep.mentorId).toBeNull();
     expect((MIGRATIONS.profile[14]!({ profileId: 'x' }) as { mentorBonds: unknown }).mentorBonds).toEqual({});
+  });
+});
+
+describe('the fellow apprentice as a real battle', () => {
+  const atEvent = (run: ReturnType<typeof start>, eventId: string) => {
+    const node = run.stage!.map.nodes[0]!;
+    run.stage!.current = node.id;
+    run.stage!.visited = [node.id];
+    node.sides.push({ id: 'test-event', kind: 'event', used: false, eventId });
+    return run;
+  };
+  const duel = (seed: string) => {
+    const run = start(seed);
+    const index = content.events.get('mentor-fellow-duel')!.choices.findIndex((c) => c.label === 'Spar for real');
+    return { run, result: chooseEvent(content, atEvent(run, 'mentor-fellow-duel'), 'test-event', index) };
+  };
+
+  it('sparring starts a trainer battle with the fellow apprentice, named and leaning on their types', () => {
+    const { run, result } = duel('f-battle');
+    const b = result.run.battle!;
+    expect(b.kind).toBe('trainer');
+    expect(b.trainer!.name).toBe(run.mentor!.fellow.name);
+    expect(b.enemyTeam).toHaveLength(2);
+    expect(isApprenticeBattle(content, b.event!)).toBe(true);
+    const types = new Set(b.enemyTeam.flatMap((m) => content.species.get(m.speciesId)!.types));
+    expect(run.mentor!.fellow.types.some((t) => types.has(t))).toBe(true);
+  });
+
+  it('winning raises trust and rivalry; losing is friendly: the party is healed, the run goes on, the apprentice pulls ahead', () => {
+    const won = duel('f-win');
+    const t0 = won.run.mentor!.trust;
+    const r0 = won.run.mentor!.rivalry;
+    eventBattleWon(content, won.result.run, won.result.run.battle!.event!);
+    expect(won.result.run.mentor!.trust).toBe(t0 + 2);
+    expect(won.result.run.mentor!.rivalry).toBe(r0 + 2);
+
+    const lost = duel('f-lose');
+    const run = lost.result.run;
+    run.party[0]!.hp = 1;
+    for (const m of run.battle!.enemyTeam) m.level = 100;
+    let turn: TurnResult | null = null;
+    let cur = run;
+    for (let i = 0; i < 80 && cur.phase === 'battle'; i++) {
+      turn = takeTurn(content, cur, { kind: 'move', index: 0 });
+      cur = turn.run;
+    }
+    expect(turn?.clubLost).toBe(true);
+    expect(turn?.defeated).toBe(false);
+    expect(cur.phase).toBe('map');
+    expect(cur.battle).toBeNull();
+    expect(cur.party.every((m) => m.hp > 0)).toBe(true);
+    expect(cur.mentor!.rivalry).toBe(-2);
+  });
+
+  it('there is a bigger showdown later, gated by trust and stage', () => {
+    const ev = content.events.get('mentor-apprentice-showdown')!;
+    expect(ev.minStage).toBe(4);
+    expect(ev.choices[0]!.success.battle).toMatchObject({ kind: 'trainer', apprentice: true, size: 3 });
   });
 });

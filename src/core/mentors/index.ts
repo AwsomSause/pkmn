@@ -8,6 +8,7 @@ import mentorsJson from '../../data/mentors.json';
 import { ArchetypeModifierSchema, TYPE_NAMES, TypeNameSchema } from '../contentSchema';
 import type { Content, EventCondition, EventEffect } from '../contentSchema';
 import { addItem } from '../items';
+import { maxHp } from '../pokemon';
 import { hashSeed, Rng } from '../rng';
 import type { Apprentice, MentorBond, MentorRun, Profile, RunState } from '../state';
 import { emit } from '../story/record';
@@ -204,6 +205,21 @@ export const personalityText = (id: string) => MENTOR_DATA.apprentices.personali
 const paceOf = (a: Apprentice) => MENTOR_DATA.apprentices.learning.find((l) => l.id === a.learning)?.pace ?? 2;
 /** How far along the fellow apprentice is, on the same scale as trust. */
 export const fellowScore = (a: Apprentice) => a.potential * 4 + a.progress * 2 + (a.veteran ? 10 : 0);
+
+/** How much stronger the fellow apprentice's team is: potential and being a veteran. */
+export const apprenticeLevelBonus = (a: Apprentice): number => (a.potential >= 4 ? 1 : 0) + (a.veteran ? 1 : 0) + Math.floor(a.progress / 6);
+
+/** A sparring match with the fellow apprentice was lost: the party is on its feet, the run goes on, and they pull ahead. */
+export function apprenticeLost(content: Content, run: RunState): void {
+  for (const m of run.party) {
+    if (m.hp <= 0) m.hp = Math.max(1, Math.floor(maxHp(content, m) / 4));
+    m.status = null;
+  }
+  changeMentor(content, run, { loyalty: 1, rivalry: -2 });
+  if (run.mentor) note(run.mentor, `${run.mentor.fellow.name} won the sparring match.`);
+  run.battle = null;
+  run.phase = 'map';
+}
 
 // ---------- starting a mentorship ----------
 

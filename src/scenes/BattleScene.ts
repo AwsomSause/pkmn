@@ -1967,7 +1967,7 @@ export class BattleScene extends Phaser.Scene {
       return;
     }
     if (result.clubLost) {
-      await this.say('The match is over. The club patches your team up: no hard feelings.');
+      await this.say('The match is over. Your team is patched up: no hard feelings.');
       await exitWipe(this, this.motion, this.wipeMask());
       this.scene.start(sceneForRun(result.run));
       return;
