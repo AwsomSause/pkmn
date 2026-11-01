@@ -5,7 +5,7 @@
 import { Rng, hashSeed } from '../rng';
 import type { Content } from '../contentSchema';
 import type { PokemonInstance, RunState } from '../state';
-import type { RentalMember, RentalTeam } from './schema';
+import type { ExpeditionDef, RentalMember, RentalTeam } from './schema';
 
 /** Teams open at this badge count. */
 export function eligibleRentalTeams(content: Content, badges: number): RentalTeam[] {
@@ -38,4 +38,19 @@ export function outfitRental(content: Content, mon: PokemonInstance, member: Ren
 export function describeRental(team: RentalTeam, content: Content): string {
   const names = team.members.map((m) => content.species.get(m.species)?.name ?? m.species).join(', ');
   return `${team.name} (${names}): ${team.strategy}`;
+}
+
+/**
+ * Who a draft, recruit or combined expedition offers (spec 30 variety): the expedition's own list plus the Pokémon of the
+ * rental teams open at this badge count, kept to the evolution stage the badges call for. Stable order, so the seeded pick is stable.
+ */
+export function offerPool(content: Content, def: Pick<ExpeditionDef, 'rentals'>, badges: number, need: number): string[] {
+  const all = [...new Set([...def.rentals, ...eligibleRentalTeams(content, badges).flatMap((t) => t.members.map((m) => m.species))])];
+  const stages = content.expeditions.offerStages.filter((o) => badges >= o.minBadges);
+  let floor = Math.max(1, ...stages.map((o) => o.minStage));
+  for (; floor >= 1; floor--) {
+    const ok = all.filter((id) => (content.species.get(id)?.evolutionStage ?? 1) >= floor);
+    if (ok.length >= need) return ok;
+  }
+  return all;
 }

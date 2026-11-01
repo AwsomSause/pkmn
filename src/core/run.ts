@@ -1026,6 +1026,10 @@ export function raidPreview(content: Content, current: RunState, sideId: string)
   const notes = def.grand ? grandNotes(content, current, speciesId) : gangNotes(content, current, def);
   const returning = Boolean(side.returning);
   if (returning) notes.push('It got away before, and it is back, stronger.');
+  for (const id of side.triggers ?? []) {
+    const t = content.raids.denTriggers.find((x) => x.id === id);
+    if (t) notes.push(t.text);
+  }
   const badges = current.badges.length;
   const scaled = scaledRaid(content, def, badges);
   return {
@@ -1100,6 +1104,7 @@ export function startRaidBattle(content: Content, run: RunState, baseDef: RaidDe
   run.battle.ai = 0.6;
   run.battle.raid = freshRaidBattle(def, badges);
   run.battle.raid.lead = run.party[activeIndex]!.uid;
+  run.battle.raid.bossUid = boss.uid;
   run.battle.raid.cheerLevel = cheerLevelFor(run.raids.won);
   const raidState = run.battle.raid;
   if (approach) {
