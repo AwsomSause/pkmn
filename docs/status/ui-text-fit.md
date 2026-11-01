@@ -4,9 +4,9 @@
 
 **Run screen layout (§3).** The map's bottom panel has two zones: row one holds the party and eggs (left, spacing shrinks past 9) and the buttons in the width that is left (one tall row, or two short rows when crowded); row two holds the info line (3 lines) and the notice. Nothing is placed over anything else.
 
-**Shared text fit (§12).** `src/ui/fitText.ts`: `fitLine` (smaller crisp size, then "..."), `fitBlock` (wrap, cut by height), `clampTexts` (keeps every text in a box inside it and clear of the text to its right; turns hard `fixedWidth` cuts into "..."). Used by the Picker (all Hub pages, Party, Bag, Bonds, Summary: title vs key hint, footer, rows, ▲/▼ scroll marks), the `Menu` widget (battle move menu, Settings...), battle name boxes, Hub tiles, map buttons.
+**Shared text fit (§12).** `src/ui/fitText.ts`: `fitLine` (smaller crisp size, then "..."), `fitBlock` (wrap, cut by height), `clampTexts` (keeps every text in a box inside it and clear of the text to its right; turns hard `fixedWidth` cuts into "..."). Used by the Picker (all Hub pages, Party, Bag, Bonds, Pokémon screen: title vs key hint, footer, rows, ▲/▼ scroll marks), the `Menu` widget (battle move menu, Settings...), battle name boxes, Hub tiles, map buttons.
 
-**Other fixes.** Settings title no longer prints over the Options art; Run Prep menu fits its panel; Hub "New Run" label sits inside its tile; Bag badge no longer covers the key hint.
+**Other fixes.** Settings title no longer prints over the Options art; Hub "New Run" label sits inside its tile; Bag badge no longer covers the key hint.
 
 **Test.** `tests/e2e/textClipping.spec.ts` (no level text on nodes, map panel in bounds with 6 Pokémon + 4 eggs, long names on Shop/Party/Bag/Summary/Bonds).
 
