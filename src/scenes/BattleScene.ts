@@ -78,7 +78,7 @@ import { environmentStory } from '../core/presentation/environmentStory';
 import { crisisLevel } from '../core/story/crisis';
 import { moveRank } from '../core/moveMastery';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
-import { legendKit } from '../core/legendary/visuals';
+import { legendKit, legendLook } from '../core/legendary/visuals';
 import { addLegendLook } from '../ui/legendFx';
 import { bossVictoryCard, burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, moveFlagNames, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
@@ -288,8 +288,9 @@ export class BattleScene extends Phaser.Scene {
     // The Final Rival fights in the arena of the stage where you first met (rebuilt from the run's stage themes).
     const metTheme = finalRivalArenaTheme(session.content, run, battle.rivalId, ultimateRival(run)?.id === battle.rivalId);
     const arena = bossType ? session.content.arenas[bossType] : metTheme ? arenaFor(session.content, getTheme(session.content, metTheme)) : run.stage ? arenaFor(session.content, getTheme(session.content, run.stage.themeId)) : undefined;
-    const raidArena = this.raidArena(battle);
-    const uie = raidArena || metTheme ? null : this.uieArena();
+    const legendArena = this.legendArenaOn();
+    const raidArena = legendArena ? null : this.raidArena(battle);
+    const uie = raidArena || (metTheme && !legendArena) ? null : this.uieArena();
     const bg = raidArena ?? (uie && this.textures.exists(uie) ? uie : arena && assets.has(arena) && this.textures.exists(arena) ? arena : 'bg.battle');
     this.field = this.add.container(0, 0);
     const backLayers: Phaser.GameObjects.Image[] = [];
@@ -832,12 +833,25 @@ export class BattleScene extends Phaser.Scene {
     if (this.motion === 'full') this.tweens.add({ targets: g, alpha: 0.25, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
+  /** True when this fight belongs to a Legendary world event (it then uses the event's own battleback). */
+  private legendArenaOn(): boolean {
+    const { session } = services();
+    const run = session.run;
+    const def = run?.battle?.expedition && run.expedition ? session.content.expeditions.expeditions.find((e) => e.id === run.expedition!.id) : undefined;
+    return Boolean(def?.legendary && legendLook(session.content, def));
+  }
+
   /** The UIE battleback for this fight (league halls, evening/night fields, distortion), or null for the type's own arena. */
   private uieArena(): string | null {
     const { session } = services();
     const run = session.run;
     const battle = run?.battle;
-    if (!run || !battle || battle.raid || battle.totem) return null;
+    if (!run || !battle) return null;
+    // A Legendary world event's fights (finale included) take place in that event's own battleback.
+    const legendDef = battle.expedition && run.expedition ? session.content.expeditions.expeditions.find((e) => e.id === run.expedition!.id) : undefined;
+    const look = legendDef?.legendary ? legendLook(session.content, legendDef) : null;
+    if (look) return uieArenaId(look.arena);
+    if (battle.raid || battle.totem) return null;
     const boss = this.boss();
     const foe = battle.enemyTeam[battle.enemyIndex];
     const type = boss ? boss.types[0] : run.stage ? getTheme(session.content, run.stage.themeId).types[0] : undefined;
