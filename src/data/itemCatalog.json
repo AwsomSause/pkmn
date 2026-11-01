@@ -13779,6 +13779,95 @@
   }
  },
  {
+  "id": "roseli-berry",
+  "name": "Roseli Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Halves one super-effective Fairy hit",
+  "rarity": "common",
+  "stacksOn": "pokemon",
+  "max": 3,
+  "how": "held",
+  "icon": "roseli-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "fairy"
+    }
+   ]
+  }
+ },
+ {
+  "id": "hyper-roseli-berry",
+  "name": "Hyper Roseli Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Cuts to a quarter one super-effective Fairy hit",
+  "rarity": "rare",
+  "stacksOn": "pokemon",
+  "max": 2,
+  "how": "held",
+  "icon": "hyper-roseli-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryResist",
+     "type": "fairy",
+     "through": 0.25
+    }
+   ]
+  }
+ },
+ {
+  "id": "kee-berry",
+  "name": "Kee Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Hit by a physical move: Defense +1",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 3,
+  "how": "held",
+  "icon": "kee-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryRetaliate",
+     "category": "physical",
+     "stat": "def",
+     "stages": 1
+    }
+   ]
+  }
+ },
+ {
+  "id": "maranga-berry",
+  "name": "Maranga Berry",
+  "family": "Berries (held, eaten in battle)",
+  "description": "Hit by a special move: Sp. Def +1",
+  "rarity": "uncommon",
+  "stacksOn": "pokemon",
+  "max": 3,
+  "how": "held",
+  "icon": "maranga-berry",
+  "status": "supported",
+  "effect": {
+   "kind": "held",
+   "hooks": [
+    {
+     "hook": "berryRetaliate",
+     "category": "special",
+     "stat": "spd",
+     "stages": 1
+    }
+   ]
+  }
+ },
+ {
   "id": "adamant-mint",
   "name": "Adamant Mint",
   "family": "Natures and Mints",

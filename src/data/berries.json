@@ -8,5 +8,5 @@
   "mutationChance": 0.15,
   "mutatedBonus": 1,
   "crossChance": 0.3,
-  "crossPool": ["lansat-berry", "starf-berry", "custap-berry", "enigma-berry", "micle-berry", "jaboca-berry", "rowap-berry"]
+  "crossPool": ["lansat-berry", "starf-berry", "custap-berry", "enigma-berry", "micle-berry", "jaboca-berry", "rowap-berry", "kee-berry", "maranga-berry"]
 }

@@ -1251,7 +1251,8 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   /** Hit by a super-effective move: heal a share of max HP (Enigma). */
   z.object({ hook: z.literal('berrySuper'), fraction: z.number().positive() }),
   /** Hit by a physical (or special) move: the attacker loses a share of its max HP (Jaboca, Rowap). */
-  z.object({ hook: z.literal('berryRetaliate'), category: z.enum(['physical', 'special']), fraction: z.number().positive() }),
+  /** Hit by this category: the attacker loses `fraction` of its HP (Jaboca, Rowap), or the holder raises `stat` (Kee, Maranga). */
+  z.object({ hook: z.literal('berryRetaliate'), category: z.enum(['physical', 'special']), fraction: z.number().positive().optional(), stat: z.enum(['def', 'spd']).optional(), stages: z.number().int().positive().default(1) }),
   /** While this terrain is up: a stat rises once, then the seed is used up (Electric, Grassy, Misty and Psychic Seed). */
   z.object({ hook: z.literal('terrainSeed'), terrain: TerrainSchema, stat: z.enum(['def', 'spd']), stages: z.number().int().positive() }),
 ]);
