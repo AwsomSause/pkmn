@@ -26,6 +26,7 @@ import { HallOfFameScene } from './scenes/HallOfFameScene';
 import { LegacyGalleryScene } from './scenes/LegacyGalleryScene';
 import { MemoriesScene } from './scenes/MemoriesScene';
 import { HubScene } from './scenes/HubScene';
+import { TownScene } from './scenes/TownScene';
 import { MainMenuScene } from './scenes/MainMenuScene';
 import { SaveSlotsScene } from './scenes/SaveSlotsScene';
 import { SettingsScene } from './scenes/SettingsScene';
@@ -95,7 +96,7 @@ function start(): void {
     backgroundColor: '#1d1a24',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MainMenuScene, SaveSlotsScene, SettingsScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, PlazaScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, CreditsScene, HallOfFameScene, LegacyGalleryScene, MemoriesScene],
+    scene: [BootScene, MainMenuScene, SaveSlotsScene, SettingsScene, HubScene, TownScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, PlazaScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, CreditsScene, HallOfFameScene, LegacyGalleryScene, MemoriesScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {
@@ -118,7 +119,7 @@ function start(): void {
         g.canvas.setAttribute('aria-label', 'Pocket Raiders, a Pokémon roguelike. Keyboard: arrows, Z/Enter to confirm, X/Esc to go back.');
         // Every screen fades in. Screens without their own scenery get a dimmed,
         // slowly changing battlefield behind them (the battle and map draw their own).
-        const ownScenery = new Set(['Boot', 'Battle', 'Map', 'Hub', 'MainMenu', 'TrainerSelect']);
+        const ownScenery = new Set(['Boot', 'Battle', 'Map', 'Hub', 'Town', 'MainMenu', 'TrainerSelect']);
         // Gameplay screens in the Aero look (M10) get the glossy sky-and-bubbles backdrop instead.
         const aeroScenery = new Set(['SaveSlots', 'Reward', 'Shop', 'Event', 'Decision', 'Briefing', 'Expedition', 'Minigame', 'StarterSelect', 'RunPrep', 'GameOver', 'HallOfFame', 'LegacyGallery', 'Memories', 'Credits']);
         for (const scene of g.scene.getScenes(false)) {

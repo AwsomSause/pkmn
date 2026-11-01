@@ -7,6 +7,7 @@ import { CareSchema } from './care/mods';
 import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
 import { CampProfileSchema, CampStateSchema } from './camp/schema';
+import { TownProfileSchema } from './town/schema';
 import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { LineageSchema, BattleReplaySchema, MemoriesSchema, PastDigestSchema, WorldMemorySchema } from './memories/schema';
 import { STREAM_NAMES, type StreamName } from './rng';
@@ -1493,6 +1494,8 @@ export const ProfileSchema = z.object({
   vault: z.array(z.string()).default([]),
   /** Camp (core/camp, W3): cookbook, photo album, item journal and the time capsule. Optional: older profiles load without it. */
   camp: CampProfileSchema.optional(),
+  /** Pocket Town (core/town, W7): boon waiting for the next run, collections, plots, puzzles. Optional: older profiles load without it. */
+  town: TownProfileSchema.optional(),
   /** Candy Shop perks bought with candies (balance.candyShop): they add to every run's starting Bag. */
   candyPerks: z.array(z.string()).default([]),
   runHistory: z.array(RunRecordSchema),

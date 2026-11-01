@@ -6,6 +6,7 @@
 //   - on entering a map node, using a side stop, or buying at a shop
 //   - when the run ends (profile first, then the run record is cleared)
 
+import { spendTownStart, townAction, visitBuilding, type TownArgs, type TownResult } from '../core/town';
 import { setCalendar } from '../core/clock';
 import { deliverNote, pendingNote } from '../core/hubNook';
 import { emit } from '../core/story/record';
@@ -242,7 +243,7 @@ export class GameSession {
     // Everything needed to rebuild this run later if it is lost (Revisit This Timeline).
     this.timeline = Timeline.rememberGenesis(this.timeline, Timeline.captureGenesis(this.run, opts, grants, new Date().toISOString(), heirloomUsed));
     this.checkSave(this.saves.saveTimeline(this.timeline));
-    this.profile = recordRunStarted(this.profile);
+    this.profile = spendTownStart(recordRunStarted(this.profile));
     // W10 Corner Nook: the note you wrote to your future self is read at this run's start (kept in the story log).
     const note = pendingNote(this.profile);
     if (note !== null) {
@@ -564,6 +565,22 @@ export class GameSession {
     this.checkSave(this.saves.saveProfile(this.profile));
     this.persistRun();
     return { message: result.message, ok: true };
+  }
+
+  /** A Pocket Town action (core/town): the profile changes, saves, and the message comes back. */
+  town(id: string, args: TownArgs = {}): { message: string; ok: boolean; detail?: TownResult['detail'] } {
+    const result = townAction(this.content, this.profile, id, args, new Date());
+    if (!result.ok) return { message: result.message, ok: false };
+    this.profile = result.profile;
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.changed();
+    return { message: result.message, ok: true, detail: result.detail };
+  }
+
+  /** Counts a visit to a Town building. */
+  visitTown(buildingId: string): void {
+    this.profile = visitBuilding(this.profile, buildingId);
+    this.checkSave(this.saves.saveProfile(this.profile));
   }
 
   /** Spends one Ball Launcher use for a skill throw. */

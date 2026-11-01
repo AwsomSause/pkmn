@@ -50,7 +50,7 @@ import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 import { WiiCursor } from '../ui/wiiMotion';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'nook' | 'options' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'nook' | 'options' | 'save' | 'town' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -82,6 +82,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'nook', label: 'Corner Nook', blurb: 'A fortune cookie each day, a wish upon the star, a note to your future self, poster codes and the donation drive (Enter).' },
   { room: 'options', label: 'Game settings', blurb: 'Display, audio, gameplay, animations, text and accessibility. The same settings as the title screen.' },
   { room: 'save', label: 'Save data', blurb: 'Export your profile to a file, or import one.' },
+  { room: 'town', label: 'Pocket Town', blurb: 'Gardens, a dojo, a library, a shrine, a capsule machine and 40 more buildings (Enter).' },
   { room: 'back', label: 'Back to title', blurb: '' },
 ];
 
@@ -156,6 +157,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
   { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'tales', 'intel', 'museum', 'seeds', 'mentors', 'nook'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe', 'card'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
+  { id: 'town', label: 'Town', icon: 'item.sitrus_berry', rooms: ['town'], blurb: 'Pocket Town: gardens, shrine, library, capsule machine and more.' },
 ];
 
 const ROOM_ICON: Partial<Record<Room, string>> = {
@@ -327,7 +329,7 @@ export class HubScene extends Phaser.Scene {
   }
 
   private buildTiles(ready: number): void {
-    const widths = [164, 172, 220, 172, 164];
+    const widths = [140, 150, 200, 140, 140, 110];
     const gap = (GAME_WIDTH - 32 - widths.reduce((a, b) => a + b, 0)) / (widths.length - 1);
     let x = 16;
     TILES.forEach((t, i) => {
@@ -612,6 +614,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'save':
         this.openSaveData();
+        break;
+      case 'town':
+        this.scene.start('Town');
         break;
       case 'back':
         this.scene.start('MainMenu');
