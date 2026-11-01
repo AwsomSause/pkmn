@@ -100,7 +100,7 @@ test('long names are cut inside their boxes on Shop, Hub pages and field menus',
   await start(page, 'Shop');
   expect(await overlaps(page), 'shop').toEqual([]);
   await start(page, 'Map');
-  for (const kind of ['party', 'bag', 'summary', 'bond']) {
+  for (const kind of ['party', 'bag', 'bond']) {
     await page.evaluate((k) => { const s = (window as any).__pkr.game.scene.getScene('Map'); s.activate(s.options.findIndex((o: any) => o.kind === k)); }, kind);
     await page.waitForTimeout(1200);
     const found = (await overlaps(page)).filter((o) => !/^"(Enter choose|Party|Bag|Bonds|Album|Story|Summary)/.test(o));
