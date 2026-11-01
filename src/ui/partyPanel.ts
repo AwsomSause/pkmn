@@ -51,9 +51,12 @@ export interface PickerConfig {
   backdrop?: string;
   /** The backdrop art already carries the title (e.g. the Bag plate), so the title text is left out. */
   titleInArt?: boolean;
+  /** Pocket tabs above the list (the Bag): Left/Right or a click switches; the host reopens the picker with that pocket's rows. One-column pickers only. */
+  tabs?: { labels: readonly string[]; index: number; onChange: (index: number) => void };
 }
 
 const LIST_TOP = 82;
+const TAB_H = 40;
 const LIST_BOTTOM = GAME_HEIGHT - 84;
 
 /** What a screen needs from a modal menu: keyboard input and a way to close it (the Picker and the Pokémon screen). */
@@ -74,7 +77,11 @@ export class Picker implements PickerLike {
   private index = 0;
   private closed = false;
 
+  /** Where the list starts (lower when there are tabs). */
+  private readonly top: number;
+
   constructor(private readonly scene: Phaser.Scene, private readonly config: PickerConfig) {
+    this.top = config.tabs ? LIST_TOP + TAB_H + 8 : LIST_TOP;
     this.root = scene.add.container(0, 0).setDepth(DEPTH);
     // Popup opening (spec §24): the window rises into place and fades in; input works straight away.
     glideIn(scene, this.root, 0, 14, 0, 'popupOpen');
@@ -120,14 +127,15 @@ export class Picker implements PickerLike {
       this.root.add(back);
     }
 
+    if (config.tabs) this.drawTabs(config.tabs);
     const colW = config.columns === 2 ? (GAME_WIDTH - 112) / 2 : GAME_WIDTH - 96;
     this.list = scene.add.container(0, 0);
     this.root.add(this.list);
-    const maskShape = scene.make.graphics({}, false).fillRect(0, LIST_TOP - 6, GAME_WIDTH, LIST_BOTTOM - LIST_TOP + 12);
+    const maskShape = scene.make.graphics({}, false).fillRect(0, this.top - 6, GAME_WIDTH, LIST_BOTTOM - this.top + 12);
     this.list.setMask(maskShape.createGeometryMask());
     config.rows.forEach((row, i) => {
       const x = 48 + (i % config.columns) * (colW + 16);
-      const y = LIST_TOP + Math.floor(i / config.columns) * (config.rowHeight + 10);
+      const y = this.top + Math.floor(i / config.columns) * (config.rowHeight + 10);
       const box = scene.add.container(x, y);
       const bg = glass
         ? paintGlass(scene.add.graphics(), 0, 0, colW, config.rowHeight, { rim: row.problem ? 0x5a6a80 : 0x9fd8f0, alpha: row.problem ? 0.55 : 0.9, glow: false, radius: 14 })
@@ -162,7 +170,7 @@ export class Picker implements PickerLike {
     this.footer = scene.add.text(52, GAME_HEIGHT - 48, '', textStyle(16, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 104 } })).setOrigin(0, 0.5);
     this.root.add(this.footer);
     if (config.rows.length === 0) {
-      this.root.add(scene.add.text(GAME_WIDTH / 2, (LIST_TOP + LIST_BOTTOM) / 2, 'Nothing here yet', textStyle(32, COLORS.textMuted)).setOrigin(0.5));
+      this.root.add(scene.add.text(GAME_WIDTH / 2, (this.top + LIST_BOTTOM) / 2, 'Nothing here yet', textStyle(32, COLORS.textMuted)).setOrigin(0.5));
       this.footer.setText(config.onBack ? 'Press Esc to go back.' : '');
     }
     const first = config.rows.findIndex((r) => !r.problem);
@@ -185,13 +193,13 @@ export class Picker implements PickerLike {
   /** Scrolls the list so row i is on screen; rows out of view can't be clicked. */
   private scrollTo(i: number): void {
     const step = this.config.rowHeight + 10;
-    const rowTop = (n: number) => LIST_TOP + Math.floor(n / this.config.columns) * step;
+    const rowTop = (n: number) => this.top + Math.floor(n / this.config.columns) * step;
     const top = rowTop(i) + this.list.y;
-    if (top < LIST_TOP) this.list.y += LIST_TOP - top;
+    if (top < this.top) this.list.y += this.top - top;
     else if (top + this.config.rowHeight > LIST_BOTTOM) this.list.y -= top + this.config.rowHeight - LIST_BOTTOM;
     this.zones.forEach((zone, n) => {
       const y = rowTop(n) + this.list.y;
-      const visible = y >= LIST_TOP - 1 && y + this.config.rowHeight <= LIST_BOTTOM + 1;
+      const visible = y >= this.top - 1 && y + this.config.rowHeight <= LIST_BOTTOM + 1;
       if (zone.input) zone.input.enabled = visible;
     });
   }
@@ -220,9 +228,11 @@ export class Picker implements PickerLike {
         break;
       case 'left':
         if (cols > 1 && n) this.focus((this.index - 1 + n) % n);
+        else if (this.config.tabs) this.switchTab(-1);
         break;
       case 'right':
         if (cols > 1 && n) this.focus((this.index + 1) % n);
+        else if (this.config.tabs) this.switchTab(1);
         break;
       case 'confirm':
         this.confirm();
@@ -234,6 +244,31 @@ export class Picker implements PickerLike {
         }
         break;
     }
+  }
+
+  private switchTab(step: number): void {
+    const tabs = this.config.tabs!;
+    playSfx(this.scene, 'ui.cursor', 0.5);
+    tabs.onChange((tabs.index + step + tabs.labels.length) % tabs.labels.length);
+  }
+
+  /** The pocket strip: one pill per label, the current one lit; a click switches. Pills shrink to fit the width. */
+  private drawTabs(tabs: NonNullable<PickerConfig['tabs']>): void {
+    const left = 48;
+    const width = GAME_WIDTH - 96;
+    const gap = 6;
+    const w = (width - gap * (tabs.labels.length - 1)) / tabs.labels.length;
+    const size = w < 110 ? 14 : 16;
+    tabs.labels.forEach((label, i) => {
+      const x = left + i * (w + gap);
+      const on = i === tabs.index;
+      this.root.add(paintGlass(this.scene.add.graphics(), x, LIST_TOP, w, TAB_H, { rim: on ? 0xffe08a : 0x6a8aa8, alpha: on ? 0.95 : 0.5, glow: false, radius: 12 }));
+      const text = this.scene.add.text(x + w / 2, LIST_TOP + TAB_H / 2, label, textStyle(size, on ? COLORS.gold : COLORS.textLight, { wordWrap: { width: w - 8 } })).setOrigin(0.5).setName(`picker-tab-${i}`);
+      this.root.add(text);
+      const zone = this.scene.add.zone(x, LIST_TOP, w, TAB_H).setOrigin(0).setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => !on && !this.closed && tabs.onChange(i));
+      this.root.add(zone);
+    });
   }
 
   close(): void {

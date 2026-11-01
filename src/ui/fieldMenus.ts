@@ -3,8 +3,9 @@
 
 import type Phaser from 'phaser';
 import { itemEvolutionTargets } from '../core/evolution';
-import { attributeText } from '../core/attributes';
-import type { AttributeKey } from '../core/contentSchema';
+import type { Content } from '../core/contentSchema';
+import { BAG_POCKETS, bagEntries, bagEntryText, giveHeldProblem, POCKET_NAMES, type BagEntry, type BagPocket } from '../core/bag';
+import type { RunState } from '../core/state';
 import { itemUseProblem } from '../core/items';
 import { rivalChronicle } from '../core/rivals/chronicle';
 import { monRivalLines } from '../core/rivals/monRivals';
@@ -20,8 +21,9 @@ import { legacyCard } from '../core/story/legacy';
 import { chronicleStories } from '../core/story/storybook';
 import { EMOTION_NAMES } from '../core/story/emotions';
 import { services } from '../game/services';
-import { bagRow, emotionDot, partyRows, Picker, speciesRow, type PickerLike } from './partyPanel';
-import { textStyle } from './theme';
+import { emotionDot, partyRows, Picker, speciesRow, type PickerLike, type PickerRow } from './partyPanel';
+import { itemVisual } from './sprites';
+import { COLORS, textStyle } from './theme';
 
 export interface FieldMenuHost {
   scene: Phaser.Scene;
@@ -29,6 +31,8 @@ export interface FieldMenuHost {
   setPicker: (picker: PickerLike | null) => void;
   /** Called after something changed, with a message for the player. */
   changed: (notice: string) => void;
+  /** The map's item actions and intel; the Bag shows them and runs the action when one is picked. */
+  mapItems?: { rows: () => MapItemRow[]; use: (row: MapItemRow) => void };
 }
 
 function close(host: FieldMenuHost, picker: Picker): void {
@@ -188,36 +192,175 @@ export function openStoryMenu(host: FieldMenuHost): void {
   host.setPicker(picker);
 }
 
-export function openBagMenu(host: FieldMenuHost): void {
+/** A row of the map's item actions or intel (bikes, Escape Rope, Fame Checker, gym preview), shown in the Bag. */
+export interface MapItemRow {
+  action: string | null;
+  itemId: string;
+  title: string;
+  text: string;
+  problem: string | null;
+}
+
+interface BagRowData {
+  entry: BagEntry | null;
+  map: MapItemRow | null;
+  pocket: BagPocket | 'map';
+}
+
+/** The pocket shown last, so coming back from a sub-menu lands on it (a fresh open starts on All). */
+let lastPocket = 0;
+
+/**
+ * The unified Bag (Major Update §4/§7): every item the run owns in pockets, held items too
+ * (listed with their holders, never counted twice). The map adds its item actions and intel.
+ */
+export function openBagMenu(host: FieldMenuHost, pocketIndex = 0): void {
   const { session } = services();
   const run = session.run!;
   const content = session.content;
-  const allIds = Object.keys(run.inventory).filter((id) => run.inventory[id]! > 0);
   const regionId = run.regionOrder[run.regionIndex];
+  const entries = bagEntries(content, run);
+  const mapRows = host.mapItems?.rows() ?? [];
+  const all: BagRowData[] = entries.map((entry) => ({ entry, map: mapRows.find((m) => m.action && m.itemId === entry.itemId) ?? null, pocket: entry.pocket }));
+  for (const m of mapRows) if (!all.some((r) => r.map === m)) all.push({ entry: null, map: m, pocket: 'map' });
+  const pockets = [...BAG_POCKETS.filter((p) => p === 'all' || all.some((r) => r.pocket === p)), ...(mapRows.length > 0 ? (['map'] as const) : [])];
+  const index = Math.min(pocketIndex, pockets.length - 1);
+  lastPocket = index;
+  const pocket = pockets[index]!;
+  const shown = all.filter((r) => pocket === 'all' || r.pocket === pocket || (pocket === 'map' && r.map !== null));
+  const problemFor = (r: BagRowData): string | null => {
+    if (r.map) return r.map.problem && !r.entry ? r.map.problem : r.map.action ? r.map.problem : null;
+    const e = r.entry!;
+    if (e.source !== 'bag') return null;
+    if (canCashIn(content, run, e.itemId)) return null;
+    const item = content.items.get(e.itemId)!;
+    if (!item.usableOutside) return bagEntryText(e);
+    return run.party.some((mon) => itemUseProblem(content, item, mon, regionId) === null) ? null : `${bagEntryText(e)} No Pokémon needs it right now.`;
+  };
   const picker: Picker = new Picker(host.scene, {
     glass: true,
     title: 'Bag',
     badge: 'ui.bag.main',
     backdrop: 'ui.bag.bg',
     titleInArt: true,
-    columns: 2,
-    rowHeight: 48,
-    rows: allIds.map((id) => {
-      const item = content.items.get(id)!;
-      const anyTarget = item.usableOutside && run.party.some((mon) => itemUseProblem(content, item, mon, regionId) === null);
-      if (canCashIn(content, run, id)) {
-        const gives = Object.entries(item.cashIn!).map(([key, amount]) => attributeText(key as AttributeKey, amount)).join(', ');
-        return { ...bagRow(content, run.inventory, id, null), hint: `Nobody can use it. Choose it to cash it in for ${gives}.` };
-      }
-      const problem = !item.usableOutside ? `${item.name}: ${item.description}` : anyTarget ? null : `No Pokémon needs the ${item.name} right now.`;
-      return bagRow(content, run.inventory, id, problem);
-    }),
+    columns: 1,
+    rowHeight: 64,
+    tabs: {
+      labels: pockets.map((p) => (p === 'map' ? 'Map' : POCKET_NAMES[p])),
+      index,
+      onChange: (i) => {
+        close(host, picker);
+        openBagMenu(host, i);
+      },
+    },
+    rows: shown.map((r) => bagEntryRow(content, run, r, problemFor(r))),
     onSelect: (i) => {
+      const r = shown[i]!;
+      if (r.map?.action) {
+        close(host, picker);
+        host.mapItems!.use(r.map);
+        return;
+      }
+      const e = r.entry;
+      if (!e) return;
+      if (e.source === 'held') {
+        close(host, picker);
+        openHolders(host, e);
+        return;
+      }
+      if (e.source === 'loose') {
+        close(host, picker);
+        openGiveHeld(host, e);
+        return;
+      }
+      if (e.source !== 'bag') return;
       close(host, picker);
-      if (canCashIn(content, run, allIds[i]!)) host.changed(session.cashIn(allIds[i]!));
-      else openItemTarget(host, allIds[i]!);
+      if (canCashIn(content, run, e.itemId)) host.changed(session.cashIn(e.itemId));
+      else openItemTarget(host, e.itemId);
     },
     onBack: () => close(host, picker),
+  });
+  host.setPicker(picker);
+}
+
+/** One Bag row: icon, name, rarity, count, and who holds it or what it does. */
+function bagEntryRow(content: Content, run: RunState, r: BagRowData, problem: string | null): PickerRow {
+  const e = r.entry;
+  if (!e) {
+    const m = r.map!;
+    return {
+      problem,
+      hint: m.text,
+      draw: (scene, box, w, h) => {
+        const icon = content.rewards.get(`item:${m.itemId}`)?.iconAssetId;
+        if (icon) box.add(itemVisual(scene, icon, 26, h / 2, 2));
+        box.add(scene.add.text(56, 6, m.title, textStyle(20)));
+        box.add(scene.add.text(56, 34, m.text, textStyle(14, '#d8d0e0', { wordWrap: { width: w - 72 }, maxLines: 1 })));
+      },
+    };
+  }
+  const tag = e.source === 'held' ? `Held by ${e.holders.map((h) => h.name).join(', ')}` : e.source === 'loose' ? 'Not held: give it to a Pokémon' : e.source === 'bag' ? (content.items.get(e.itemId)?.usableOutside ? 'Usable' : 'Battle use') : e.source === 'map' ? 'Working now' : 'Always on';
+  return {
+    problem,
+    hint: r.map ? `${bagEntryText(e, { action: true })} Choose it: ${r.map.text}` : bagEntryText(e) + (canCashIn(content, run, e.itemId) ? ' Nobody can use it: choose it to cash it in.' : ''),
+    draw: (scene, box, w, h) => {
+      if (e.iconAssetId) box.add(itemVisual(scene, e.iconAssetId, 26, h / 2, 2));
+      box.add(scene.add.text(56, 6, e.name, textStyle(20)));
+      const right = w - 16;
+      const count = scene.add.text(right, 6, `×${e.quantity}`, textStyle(20)).setOrigin(1, 0);
+      box.add(count);
+      if (e.rarity) {
+        const pill = scene.add.text(right - count.width - 12, 9, e.rarity.toUpperCase(), textStyle(12, `#${(COLORS.rarity[e.rarity] ?? 0xffffff).toString(16).padStart(6, '0')}`)).setOrigin(1, 0);
+        box.add(pill);
+      }
+      box.add(scene.add.text(56, 36, `${tag}  ·  ${e.description}`, textStyle(14, e.equipped ? '#a0e0c0' : '#d8d0e0', { wordWrap: { width: w - 72 }, maxLines: 1 })));
+    },
+  };
+}
+
+/** A held item's holders: pick one to take the item off it (into the Bag). */
+function openHolders(host: FieldMenuHost, e: BagEntry): void {
+  const { session } = services();
+  const run = session.run!;
+  const content = session.content;
+  const holders = e.holders;
+  const picker: Picker = new Picker(host.scene, {
+    glass: true,
+    title: `Take the ${e.name} off which Pokémon?`,
+    columns: 2,
+    rowHeight: 78,
+    rows: holders.map((h) => partyRows(content, [run.party[h.index]!], () => null, () => `×${h.copies}`, () => `${bagEntryText(e)} Choose to take it off (it waits in the Bag); Esc keeps it.`)[0]!),
+    onSelect: (i) => {
+      close(host, picker);
+      host.changed(session.takeOffHeld(holders[i]!.index, e.itemId));
+    },
+    onBack: () => {
+      close(host, picker);
+      openBagMenu(host, lastPocket);
+    },
+  });
+  host.setPicker(picker);
+}
+
+/** A loose held item: pick the Pokémon to give it to. */
+function openGiveHeld(host: FieldMenuHost, e: BagEntry): void {
+  const { session } = services();
+  const run = session.run!;
+  const content = session.content;
+  const picker: Picker = new Picker(host.scene, {
+    glass: true,
+    title: `Give the ${e.name} to which Pokémon?`,
+    columns: 2,
+    rowHeight: 78,
+    rows: partyRows(content, run.party, (i) => giveHeldProblem(content, run, e.itemId, i)),
+    onSelect: (i) => {
+      close(host, picker);
+      host.changed(session.giveHeld(e.itemId, i));
+    },
+    onBack: () => {
+      close(host, picker);
+      openBagMenu(host, lastPocket);
+    },
   });
   host.setPicker(picker);
 }
@@ -245,7 +388,7 @@ function openItemTarget(host: FieldMenuHost, itemId: string): void {
     },
     onBack: () => {
       close(host, picker);
-      openBagMenu(host);
+      openBagMenu(host, lastPocket);
     },
   });
   host.setPicker(picker);

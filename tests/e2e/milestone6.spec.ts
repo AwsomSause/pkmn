@@ -99,7 +99,7 @@ test('an evolution stone from the Bag evolves a Pokémon; Eevee asks which evolu
 
   // Bag → Soothe Bell (second row) → Eevee → choose the second result (Umbreon).
   await openBag(page);
-  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown'); // one column: Down reaches the second row (Left/Right switch pockets)
   await page.keyboard.press('Enter');
   await page.waitForTimeout(200);
   await page.keyboard.press('Enter'); // Eevee

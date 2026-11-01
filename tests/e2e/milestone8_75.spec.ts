@@ -231,11 +231,13 @@ test('map movement items: the Items menu puts you on a Bicycle, and the Devon Sc
   await expect.poll(async () => (await map()).info).toMatch(/Devon Scope: .+ Lv\d+/);
   await page.screenshot({ path: 'test-results/m875-map-previews.png' });
 
-  // Items → Bicycle: the stops on offer move two columns ahead.
-  const itemsIndex = before.options.indexOf('items');
-  expect(itemsIndex).toBeGreaterThanOrEqual(0);
-  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), itemsIndex);
+  // Bag → Map pocket (the last tab, Left wraps to it) → Bicycle: the stops on offer move two columns ahead.
+  const bagIndex = before.options.indexOf('bag');
+  expect(before.options).not.toContain('items');
+  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), bagIndex);
   await page.keyboard.press('Enter');
+  await page.waitForTimeout(250);
+  await page.keyboard.press('ArrowLeft');
   await page.waitForTimeout(250);
   await page.screenshot({ path: 'test-results/m875-map-items-menu.png' });
   await page.keyboard.press('Enter');
@@ -257,9 +259,11 @@ test('map movement items: the Items menu puts you on a Bicycle, and the Devon Sc
   });
   await expect.poll(async () => (await map()).busy, { timeout: 10_000 }).toBe(false);
   await page.screenshot({ path: 'test-results/m875-map-gym-preview.png' });
-  const items = (await map()).options.indexOf('items');
-  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), items);
+  const bag = (await map()).options.indexOf('bag');
+  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), bag);
   await page.keyboard.press('Enter');
+  await page.waitForTimeout(250);
+  await page.keyboard.press('ArrowLeft');
   await page.waitForTimeout(250);
   await page.screenshot({ path: 'test-results/m875-map-items-info.png' });
   const rows = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').itemRows().map((r: any) => r.title));

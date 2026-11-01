@@ -6,6 +6,7 @@
 //   - on entering a map node, using a side stop, or buying at a shop
 //   - when the run ends (profile first, then the run record is cleared)
 
+import { giveHeld, takeOffHeld } from '../core/bag';
 import type { Achievement, Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { awardLiveAchievements, claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
@@ -445,6 +446,22 @@ export class GameSession {
 
   cashIn(itemId: string): string {
     const result = Run.cashInItem(this.content, this.requireRun(), itemId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  /** Takes a held item off a party Pokémon into the Bag (Major Update §4). */
+  takeOffHeld(partyIndex: number, itemId: string): string {
+    const result = takeOffHeld(this.content, this.requireRun(), partyIndex, itemId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  /** Gives a held item waiting in the Bag to a party Pokémon. */
+  giveHeld(itemId: string, partyIndex: number): string {
+    const result = giveHeld(this.content, this.requireRun(), itemId, partyIndex);
     this.run = result.run;
     this.persistRun();
     return result.message;

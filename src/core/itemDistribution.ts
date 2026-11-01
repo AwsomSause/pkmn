@@ -53,9 +53,9 @@ export function itemTypes(entry: CatalogEntry): string[] {
   return [...out];
 }
 
-/** Copies of a catalog item the run already owns: held across the party, or as a team/player item. */
+/** Copies of a catalog item the run already owns: held across the party or loose in the Bag, or as a team/player item. */
 export function catalogCopies(run: RunState, entry: CatalogEntry): number {
-  if (entry.stacksOn === 'pokemon' && entry.effect?.kind === 'held') return run.party.reduce((n, p) => n + (p.held?.[entry.id] ?? 0), 0);
+  if (entry.stacksOn === 'pokemon' && entry.effect?.kind === 'held') return run.party.reduce((n, p) => n + (p.held?.[entry.id] ?? 0), run.looseHeld?.[entry.id] ?? 0);
   if (entry.stacksOn === 'pokemon') return 0;
   return ownedCopies(run, entry);
 }
