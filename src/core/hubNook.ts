@@ -16,13 +16,16 @@ const NookDataSchema = z.object({
   wishGifts: z.array(z.string().min(1)).min(3),
   giftCodes: z.array(z.object({ code: z.string().regex(/^[A-Z0-9-]+$/), title: z.string().min(1), text: z.string() })).min(3),
   donation: z.object({ step: z.number().int().min(1), milestones: z.array(z.object({ total: z.number().int().min(1), title: z.string(), text: z.string() })).min(2) }),
+  stamps: z.object({ everyRuns: z.number().int().min(1), max: z.number().int().min(1), credits: z.number().int().min(0), title: z.string(), ceremony: z.string() }),
+  leaderboard: z.object({ size: z.number().int().min(1) }),
+  reputation: z.array(z.object({ score: z.number().int().min(0), rank: z.string(), greeting: z.string() })).min(2),
   goodbyes: z.array(z.string().min(1)).min(3),
   konami: z.object({ keys: z.array(z.string()).min(4), jokes: z.array(z.string()).min(3) }),
 });
 export const NOOK = NookDataSchema.parse(nookJson);
 
 export type Nook = Profile['nook'];
-export const nookOf = (p: Pick<Profile, 'nook'>): Nook => p.nook ?? { cookieDay: null, cookies: 0, wishDay: null, wishPaid: true, wishes: 0, note: null, noteDelivered: true, codesUsed: [], donated: 0, jokes: 0 };
+export const nookOf = (p: Pick<Profile, 'nook'>): Nook => p.nook ?? { cookieDay: null, cookies: 0, wishDay: null, wishPaid: true, wishes: 0, note: null, noteDelivered: true, codesUsed: [], donated: 0, jokes: 0, stamps: 0 };
 
 /** A stable small number from text (never gameplay RNG). */
 export function hashText(text: string): number {
@@ -145,4 +148,36 @@ export function renameNode<R extends { stage: { map: { nodes: Array<{ id: string
   const clean = text.replace(/\s+/g, ' ').trim().slice(0, 24);
   if (clean) node.name = clean; else delete node.name;
   return next;
+}
+
+/** Stamps earned so far: one per `everyRuns` finished runs, up to `max` (I398). */
+export const stampsEarned = (p: Pick<Profile, 'stats'>): number => Math.min(NOOK.stamps.max, Math.floor(p.stats.runsEnded / NOOK.stamps.everyRuns));
+export const stampsOwed = (p: Pick<Profile, 'stats' | 'nook'>): number => Math.max(0, stampsEarned(p) - nookOf(p).stamps);
+
+/** The stamp ceremony: every owed stamp goes on the card at once; the last one earns the title. */
+export function stampCeremony(p: Profile): { profile: Profile; text: string } {
+  const owed = stampsOwed(p);
+  if (owed === 0) throw new Error('No stamp is waiting.');
+  const n = nookOf(p);
+  const stamps = n.stamps + owed;
+  const titles = stamps >= NOOK.stamps.max && !p.titles.includes(NOOK.stamps.title) ? [...p.titles, NOOK.stamps.title] : p.titles;
+  const text = `${NOOK.stamps.ceremony} ${owed} stamp${owed === 1 ? '' : 's'} (${stamps}/${NOOK.stamps.max}).${titles !== p.titles ? ` Title "${NOOK.stamps.title}" earned.` : ''}`;
+  return { profile: { ...p, bankCredits: p.bankCredits + owed * NOOK.stamps.credits, titles, nook: { ...n, stamps } }, text };
+}
+
+/** The local leaderboard (I420): your best finished runs on this device, by encounters then badges. No network. */
+export function localLeaderboard(p: Pick<Profile, 'runHistory'>): Array<{ rank: number; label: string; encounters: number; badges: number; victory: boolean }> {
+  return [...p.runHistory]
+    .sort((a, b) => b.encounters - a.encounters || b.badges - a.badges || a.endedAt.localeCompare(b.endedAt))
+    .slice(0, NOOK.leaderboard.size)
+    .map((r, i) => ({ rank: i + 1, label: `${r.archetypeId} · seed ${r.seed}`, encounters: r.encounters, badges: r.badges, victory: r.victory }));
+}
+
+/** Reputation with the Hub (I436): grows with wins, donations and visits; sets the greeting. */
+export function reputationOf(p: Pick<Profile, 'stats' | 'nook'>): { score: number; rank: string; greeting: string; next: number | null } {
+  const n = nookOf(p);
+  const score = Math.floor(p.stats.battlesWon / 10) + Math.floor(n.donated / 25) + n.cookies + n.stamps * 2;
+  const tiers = [...NOOK.reputation].sort((a, b) => a.score - b.score);
+  const here = [...tiers].reverse().find((t) => score >= t.score) ?? tiers[0]!;
+  return { score, rank: here.rank, greeting: here.greeting, next: tiers.find((t) => t.score > score)?.score ?? null };
 }

@@ -11,6 +11,7 @@ import { z } from 'zod';
 import eggsJson from '../data/eggs.json';
 import { abilityOf } from './pokemon';
 import { makeBlissful } from './shadowWorld/blissful';
+import { CareSchema } from './care/mods';
 import { hatchLevelOffset } from './trainerPerks';
 import { runPerks } from './archetypes';
 
@@ -102,6 +103,9 @@ function rollTier(weights: Record<string, number>, rng: Rng): string {
   return entries[entries.length - 1]![0];
 }
 
+/** Names the daycare offers for an egg (event name-the-egg sets the flag to 1-3). */
+export const EGG_NAMES: Record<number, string> = { 1: 'Sunny', 2: 'Midnight', 3: 'Pebble' };
+
 /** Turns an Egg into its Pokémon (does not touch the run's egg list). */
 export function hatchEgg(content: Content, run: RunState, egg: Egg): PokemonInstance {
   const tier = eggTier(egg.tier);
@@ -119,6 +123,12 @@ export function hatchEgg(content: Content, run: RunState, egg: Egg): PokemonInst
     mon.lineage = egg.lineage;
     if (egg.lineage.nature && (NATURE_IDS as readonly string[]).includes(egg.lineage.nature)) mon.nature = egg.lineage.nature as (typeof NATURE_IDS)[number];
     if (egg.lineage.moveId) teachEggMove(content, mon, egg.lineage.moveId, [...egg.eggMoves, egg.lineage.moveId]);
+  }
+  // W10 (I512): an egg you named at the daycare hatches already knowing its name.
+  const named = EGG_NAMES[Number(run.story.flags['ev:egg-name'] ?? 0)];
+  if (named) {
+    mon.care = { ...(mon.care ?? CareSchema.parse({})), nickname: named };
+    run.story.flags['ev:egg-name'] = 0;
   }
   mon.hp = maxHp(content, mon);
   return mon;

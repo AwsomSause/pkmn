@@ -8,7 +8,7 @@ import { candyPerkProblem } from '../core/candyShop';
 import { researchLines } from '../core/trainerResearch';
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
 import { notify } from '../ui/overlays';
-import { NOOK, collectWish, konamiJoke, konamiStep, cookieReady, crackCookie, donate, donationNext, donationProblem, fortuneFor, makeWish, nookOf, redeemCode, wishProblem, writeNote } from '../core/hubNook';
+import { NOOK, collectWish, localLeaderboard, reputationOf, stampCeremony, stampsOwed, konamiJoke, konamiStep, cookieReady, crackCookie, donate, donationNext, donationProblem, fortuneFor, makeWish, nookOf, redeemCode, wishProblem, writeNote } from '../core/hubNook';
 import { LEGACY, legacySummary, ascend, buyNode, contactProblem, intelLevel, legacyOf, networkSlots, nextPrestige, nodeProblem, nodeStatus, prestigeProblem, prestigeRank, regionBoard, serviceFor, shelfProblem, shelveSeed, toggleContact, trainMove, trainProblem, unshelveSeed } from '../core/legacy';
 import { STANDARD_CHOICE } from '../core/rules';
 import { decodeSeedCode, encodeSeedCode } from '../core/seedCode';
@@ -1393,6 +1393,18 @@ export class HubScene extends Phaser.Scene {
             return r.text;
           },
         });
+        const rep = reputationOf(p);
+        entries.push({ label: `Reputation: ${rep.rank}`, sub: `${rep.greeting}  Score ${rep.score}${rep.next !== null ? ` (next rank at ${rep.next})` : ''}. Wins, donations, cookies and stamps raise it.`, on: rep.next === null });
+        const owed = stampsOwed(p);
+        entries.push({
+          label: `Stamp card: ${nk.stamps}/${NOOK.stamps.max}`,
+          sub: owed > 0 ? `${owed} stamp${owed === 1 ? '' : 's'} waiting. Hand them in for the ceremony (+${NOOK.stamps.credits} credits each).` : `One stamp per ${NOOK.stamps.everyRuns} finished runs.`,
+          right: owed > 0 ? 'Stamp!' : '',
+          problem: owed > 0 ? null : 'No stamp is waiting.',
+          run: () => { const r = stampCeremony(session.profile); session.changeProfile(() => r.profile); return r.text; },
+        });
+        const board = localLeaderboard(p);
+        entries.push({ label: 'Local leaderboard (this device)', sub: board.length ? board.map((b) => `${b.rank}. ${b.label}: ${b.encounters} encounters, ${b.badges} badges${b.victory ? ', won' : ''}`).join('   ') : 'Finish a run to appear here.' });
         const nextGoal = donationNext(p);
         entries.push({
           label: nextGoal ? `Donation drive: ${nk.donated}/${nextGoal.total}` : `Donation drive: ${nk.donated} (complete)`,

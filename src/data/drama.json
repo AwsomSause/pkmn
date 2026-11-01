@@ -488,6 +488,11 @@
     }
   },
   "flavor": {
+    "cheered": {
+      "opening": ["I heard you cheering at my match. Do not think I forgot."],
+      "victory": ["That cheer of yours was still in my ears. Thank you."],
+      "defeat": ["Even with your cheer I lost. Next time, cheer louder."]
+    },
     "devoted": {
       "opening": [
         "{name}, we do this together, as always.",

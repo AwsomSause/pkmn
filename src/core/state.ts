@@ -1554,6 +1554,7 @@ export const ProfileSchema = z.object({
     codesUsed: z.array(z.string()).default([]),
     donated: z.number().int().min(0).default(0),
     jokes: z.number().int().min(0).default(0),
+    stamps: z.number().int().min(0).default(0),
   }).prefault({}),
   /** Heirlooms, Lost-and-Found claims and cameos seen across runs (core/memories). */
   memories: MemoriesSchema.default({ heirlooms: [], claimed: [], cameos: [] }),

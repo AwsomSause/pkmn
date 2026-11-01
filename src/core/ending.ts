@@ -2,6 +2,7 @@
 
 import type { Content } from './contentSchema';
 import type { RunState } from './state';
+import { effectiveAttributes } from './attributes';
 import { runStamps } from './recap';
 
 export type EndingId = 'storm' | 'untouched' | 'rivals' | 'champion';
@@ -25,5 +26,14 @@ export function buildEpilogue(content: Content, run: RunState): string[] {
     rivals: `Your rivals were there at the end of ${grand}, and for once nobody wanted to fight.`,
     champion: `You stand at the top of ${grand}: the last champion, and the first of a new age.`,
   };
-  return [lines[endingFor(run)]];
+  const out = [lines[endingFor(run)]];
+  // W10 (I437): the road you took is remembered: kindness, cruelty, and the small promises you kept.
+  const f = run.story.flags;
+  const good = effectiveAttributes(content, run).goodEvil ?? 0;
+  if (good >= 5) out.push('People along the road still tell stories of your kindness.');
+  else if (good <= -5) out.push('People along the road still speak of you in low voices.');
+  if (Number(f['ev:charity'] ?? 0) > 0) out.push('The orphanage ledger keeps your name at the top of its page.');
+  if (Number(f['ev:oath-steel'] ?? 0) > 0 || Number(f['ev:oath-mercy'] ?? 0) > 0) out.push('The shrine keeper marks your oath as kept.');
+  if (Number(f['ev:umbrella-friend'] ?? 0) > 0) out.push('Somewhere, a stranger remembers the umbrella you shared.');
+  return out;
 }

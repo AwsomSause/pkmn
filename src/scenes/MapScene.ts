@@ -36,7 +36,8 @@ import { blindMap } from '../core/rules';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
-import { playMusic, playSfx, playSfxLazy, playMusicLazy } from '../ui/audio';
+import { playCry, playMusic, playSfx, playSfxLazy, playMusicLazy } from '../ui/audio';
+import { notify } from '../ui/overlays';
 import { mapTrack } from '../core/presentation/battleMusic';
 import { openBondMenu } from '../ui/bondMenu';
 import { openPartyScene, openScrapbook } from '../ui/partyLifeUi';
@@ -182,6 +183,26 @@ export class MapScene extends Phaser.Scene {
     this.endArmed = false;
     const { session } = services();
     const run = session.run!;
+    // W10 (I496): C plays the cry of a Pokémon that lives on this stage, without saying which.
+    this.input.keyboard?.on('keydown-C', () => {
+      const names = habitatList(content, run);
+      if (names.length === 0) return;
+      const pick = names[Math.floor(Math.random() * names.length)]!; // presentation only, never gameplay RNG
+      const sp = [...content.species.values()].find((s) => s.name === pick);
+      if (sp) playCry(this, sp);
+    });
+    // W10 (I507): H holds your lead's paw on the node you stand on: its friendship grows once per node.
+    this.input.keyboard?.on('keydown-H', () => {
+      const lead = run.party[0];
+      const cur = run.stage?.current;
+      if (!lead || !cur) return;
+      const key = `hand:${cur}`;
+      if (run.story.flags[key]) return void notify('You are already holding paws here.');
+      run.story.flags[key] = 1;
+      lead.friendship = Math.min(255, (lead.friendship ?? 0) + 2);
+      session.saveRunNow();
+      notify(`${content.species.get(lead.speciesId)?.name ?? 'Your lead'} squeezes your hand. It feels braver.`);
+    });
     // W10 (I497): N names the node you stand on; the name shows in its description.
     this.input.keyboard?.on('keydown-N', () => {
       const cur = run.stage?.current;
