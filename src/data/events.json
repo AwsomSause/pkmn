@@ -40105,6 +40105,34 @@
      }
     },
     {
+     "label": "Sit and talk with someone",
+     "success": {
+      "text": "The fire burns low. Who do you want to talk to?",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "camp-talk"
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "camp-talk",
+   "name": "Quiet Talk",
+   "group": "Camp",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#241c2a",
+    "effect": "hearts"
+   },
+   "intro": "Away from the others, the night is long enough for a real conversation.",
+   "choices": [
+    {
      "label": "Talk with your partner",
      "success": {
       "text": "You sit with your lead for a while. Not much is said. It is enough.",
@@ -40117,6 +40145,107 @@
        {
         "kind": "research",
         "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about your rival (a friend)",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "friend"
+      }
+     ],
+     "success": {
+      "text": "You wonder aloud where they are camped tonight. Your party agrees: they would probably share the fire. You feel less alone on the road.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about your rival (a rival)",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "rival"
+      }
+     ],
+     "success": {
+      "text": "You go over every move they made against you. Your party listens, and by the end you all know what to do next time. Tension and focus.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about the rival who is unsure",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "between"
+      }
+     ],
+     "success": {
+      "text": "You do not know what they want yet. Neither do they. You decide to leave the door open.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 15
        }
       ]
      }
