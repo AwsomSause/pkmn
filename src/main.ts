@@ -4,6 +4,8 @@ import { ruleWipe, wipeAssetId, type WipeMask } from './ui/battleFx/ruleWipe';
 import { loadAssets } from './ui/lazyAssets';
 import { installTouchControls } from './ui/touchControls';
 import { sheenSweep } from './ui/battleFx/transitions';
+import { installUiJuice, pageEnter, setUiMotion } from './ui/wiiMotion';
+import { uiMotionFrom } from './core/presentation/uiMotion';
 import Phaser from 'phaser';
 import { regionIdentity } from './core/presentation/regionIdentity';
 import { getContent } from './data';
@@ -89,7 +91,11 @@ function start(): void {
       postBoot: (g) => {
         // Screen readers get a name for the game area (the game itself is drawn on the canvas).
         applyDisplaySettings(g, session.settings);
-        session.onChange(() => applyDisplaySettings(g, session.settings));
+        setUiMotion(uiMotionFrom(session.settings));
+        session.onChange(() => {
+          applyDisplaySettings(g, session.settings);
+          setUiMotion(uiMotionFrom(session.settings));
+        });
         g.canvas.setAttribute('role', 'application');
         g.canvas.setAttribute('aria-label', 'Pocket Raiders, a Pokémon roguelike. Keyboard: arrows, Z/Enter to confirm, X/Esc to go back.');
         // Every screen fades in. Screens without their own scenery get a dimmed,
@@ -102,6 +108,9 @@ function start(): void {
             if (scene.scene.key !== 'Boot') {
               scene.cameras.main.fadeIn(220, 14, 11, 18);
               sheenSweep(scene, session.settings.battleAnimations);
+              // Wii-style menu motion (spec §24): a soft zoom settle and hover/press bounces on everything clickable.
+              if (scene.scene.key !== 'Battle') pageEnter(scene);
+              installUiJuice(scene);
             }
             if (aeroScenery.has(scene.scene.key)) {
               // Each region tints the sky its own way (catalog 62).

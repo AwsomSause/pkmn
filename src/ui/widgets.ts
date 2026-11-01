@@ -5,6 +5,9 @@ import { BAR_SHADES, COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, mixColor, tex
 import { playSfx } from './audio';
 import type { InputAction } from './input';
 import { AERO, paintGlass, type MotionLevel } from './aero';
+import { glideIn, nudge, popIn, uiTiming, WiiCursor } from './wiiMotion';
+import { staggerDelay } from '../core/presentation/uiMotion';
+import { uiMotion } from './wiiMotion';
 
 const U = PIXEL_SCALE;
 
@@ -64,10 +67,13 @@ export function drawPanel(
  * given box). Hidden or shown by the caller.
  */
 export function focusFrame(scene: Phaser.Scene, x: number, y: number, w: number, h: number, color: number = COLORS.accent): Phaser.GameObjects.Graphics {
-  const g = scene.add.graphics();
+  // Drawn around its centre so it can scale in place (the Wii-style snap below).
+  const cx = x + w / 2;
+  const cy = y + h / 2;
+  const g = scene.add.graphics().setPosition(cx, cy);
   const t = 2 * U;
-  const ox = x - t - U;
-  const oy = y - t - U;
+  const ox = x - t - U - cx;
+  const oy = y - t - U - cy;
   const ow = w + 2 * (t + U);
   const oh = h + 2 * (t + U);
   g.fillStyle(0x181818, 1);
@@ -82,11 +88,26 @@ export function focusFrame(scene: Phaser.Scene, x: number, y: number, w: number,
   g.fillRect(ox + ow - U - t, oy + U, t, oh - 2 * U);
   // Bright corner pixels, like PokeRogue's selection cursor.
   g.fillStyle(0xffffff, 1);
-  for (const [cx, cy] of [[ox + U, oy + U], [ox + ow - 2 * U, oy + U], [ox + U, oy + oh - 2 * U], [ox + ow - 2 * U, oy + oh - 2 * U]] as const) {
-    g.fillRect(cx, cy, U, U);
+  for (const [px, py] of [[ox + U, oy + U], [ox + ow - 2 * U, oy + U], [ox + U, oy + oh - 2 * U], [ox + ow - 2 * U, oy + oh - 2 * U]] as const) {
+    g.fillRect(px, py, U, U);
   }
   // A slow pulse so the focus stands out even next to gold-trimmed cards.
   scene.tweens.add({ targets: g, alpha: 0.55, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  // Wii-style snap (spec §24): each time the frame is shown it springs out a little and settles,
+  // so moving the selection feels like a cursor landing on the card.
+  const show = g.setVisible.bind(g);
+  g.setVisible = (value: boolean) => {
+    const was = g.visible;
+    show(value);
+    if (value && !was) {
+      const tm = uiTiming('cursor');
+      if (tm.bounce) {
+        g.setScale(1.08);
+        scene.tweens.add({ targets: g, scale: 1, duration: tm.ms * 1.4, ease: 'Back.easeOut' });
+      }
+    }
+    return g;
+  };
   return g;
 }
 
@@ -147,6 +168,8 @@ export interface MenuConfig {
    * tinted per option) and the focused one glows and bounces.
    */
   glass?: { tints?: (number | undefined)[]; motion?: MotionLevel };
+  /** Options slide in when the menu is built (default). Screens that rebuild the same menu after every change pass false. */
+  animateIn?: boolean;
 }
 
 /**
@@ -164,6 +187,10 @@ export class Menu {
   private readonly itemWidth: number;
   private readonly itemHeight: number;
   private readonly pills: Phaser.GameObjects.Graphics[] = [];
+  /** The Wii-style glowing frame that glides between options (spec §24). */
+  private readonly wii: WiiCursor;
+  private readonly baseX: number[] = [];
+  private fresh = true;
 
   constructor(private readonly scene: Phaser.Scene, private readonly config: MenuConfig) {
     this.columns = config.columns ?? 1;
@@ -178,12 +205,16 @@ export class Menu {
         this.container.add(pill);
       });
     }
+    this.wii = new WiiCursor(scene, this.container, 0, 0, 1, 1);
+    this.wii.g.setData('noJuice', true).setName('wii-cursor');
     config.options.forEach((opt, i) => {
       const { x, y } = this.position(i);
+      this.baseX.push(x + 28);
       const text = scene.add
         .text(x + 28, y, opt.detail ? `${opt.label}\n${opt.detail}` : opt.label, textStyle(size, config.color ?? COLORS.text, { lineSpacing: -4 }))
         .setAlpha(opt.disabled ? 0.4 : 1)
-        .setInteractive({ useHandCursor: !opt.disabled });
+        .setInteractive({ useHandCursor: !opt.disabled })
+        .setData('noJuice', true);
       text.on('pointerover', () => {
         if (!opt.disabled && this.enabled) this.focus(i, false);
       });
@@ -194,6 +225,8 @@ export class Menu {
       });
       this.labels.push(text);
       this.container.add(text);
+      // Menu opening: options slide in one after another.
+      if (config.animateIn !== false) glideIn(scene, text, -18, 0, staggerDelay(i, uiMotion().level, uiMotion().timeScale), 'popupOpen');
     });
     // PokeRogue's white pointer, sized to the text; a ▶ if the picture is missing.
     if (scene.textures.exists('ui.cursor')) {
@@ -204,9 +237,14 @@ export class Menu {
       this.cursor = scene.add.text(0, 0, '▶', textStyle(size, COLORS.cursor));
       this.cursorOffsetY = 0;
     }
+    this.cursor.setData('noJuice', true);
     this.container.add(this.cursor);
     const first = config.options.findIndex((o) => !o.disabled);
     this.focus(first >= 0 ? first : 0, false);
+    this.wii.moveTo(...this.frameBox(this.index), true);
+    if (config.animateIn !== false) this.wii.show();
+    // Focus changes in the same frame the menu is built (a screen restoring its place) jump, not glide.
+    scene.time.delayedCall(0, () => (this.fresh = false));
   }
 
   /** Top-left of option i inside the menu's container (for icons drawn on top). */
@@ -232,6 +270,15 @@ export class Menu {
     });
   }
 
+  /** The box the glowing cursor wraps around option i. */
+  private frameBox(i: number): [number, number, number, number] {
+    const { x, y } = this.position(i);
+    const label = this.labels[i];
+    const h = Math.max((label?.height ?? this.itemHeight) + 10, Math.min(this.itemHeight - 6, 44));
+    // Wide enough on the left to hold the ▶ pointer inside the glow.
+    return [x - 10, y - 5, Math.max(48, this.itemWidth - 2), h];
+  }
+
   private position(i: number): { x: number; y: number } {
     return { x: (i % this.columns) * this.itemWidth, y: Math.floor(i / this.columns) * this.itemHeight };
   }
@@ -239,14 +286,28 @@ export class Menu {
   focus(i: number, sound = true): void {
     if (i < 0 || i >= this.config.options.length) return;
     if (sound && i !== this.index) playSfx(this.scene, 'ui.cursor', 0.5);
+    const prev = this.index;
     this.index = i;
     const { x, y } = this.position(i);
-    this.cursor.setPosition(x + 4, y + this.cursorOffsetY);
+    // The pointer and the glowing frame glide to the new option (interrupted by the next press).
+    const tm = uiTiming('cursor');
+    this.scene.tweens.killTweensOf(this.cursor);
+    if (tm.ms && this.cursor.active && !this.fresh) this.scene.tweens.add({ targets: this.cursor, x: x + 4, y: y + this.cursorOffsetY, duration: tm.ms, ease: tm.bounce ? 'Back.easeOut' : tm.ease });
+    else this.cursor.setPosition(x + 4, y + this.cursorOffsetY);
+    if (this.labels.length === this.config.options.length) this.wii.moveTo(...this.frameBox(i), this.fresh);
+    // The focused label leans in a little; the one it left settles back.
+    const lean = uiTiming('hover');
+    for (const n of new Set([prev, i])) {
+      const label = this.labels[n];
+      if (!label || this.baseX[n] === undefined) continue;
+      const targetX = this.baseX[n]! + (n === i && lean.bounce ? 6 : 0);
+      if (lean.bounce && label.alpha > 0.99 && !this.fresh) this.scene.tweens.add({ targets: label, x: targetX, duration: lean.ms, ease: 'Back.easeOut' });
+      else label.setX(targetX);
+    }
     if (this.config.glass) {
       this.paintPills(i);
       const label = this.labels[i];
       if (label && this.config.glass.motion === 'full') {
-        this.scene.tweens.killTweensOf(label);
         label.setScale(1);
         this.scene.tweens.add({ targets: label, scale: 1.08, duration: 110, yoyo: true, ease: 'Back.easeOut' });
       }
@@ -256,11 +317,14 @@ export class Menu {
 
   confirm(): void {
     const opt = this.config.options[this.index];
+    const label = this.labels[this.index];
     if (!opt || opt.disabled) {
       playSfx(this.scene, 'ui.error');
+      if (label) nudge(this.scene, label);
       return;
     }
     playSfx(this.scene, 'ui.select');
+    this.wii.press();
     this.config.onSelect(this.index);
   }
 
@@ -298,8 +362,13 @@ export class Menu {
   }
 
   setVisible(visible: boolean): void {
+    const was = this.container.visible;
     this.container.setVisible(visible);
     this.enabled = visible;
+    if (visible && !was) {
+      this.wii.show();
+      popIn(this.scene, this.cursor as Phaser.GameObjects.Image, 0, 'hover');
+    }
   }
 
   destroy(): void {

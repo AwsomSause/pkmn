@@ -20,6 +20,7 @@ import { AERO, drawGlass, paintGlass, type MotionLevel } from '../ui/aero';
 import { burstReveal } from '../ui/battleFx/spectacle';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
+import { revealPop } from '../ui/wiiMotion';
 
 export class RewardScene extends Phaser.Scene {
   /** False for the first 220 ms of game time, while a held key could still pick a card (tests wait for it). */
@@ -77,7 +78,10 @@ export class RewardScene extends Phaser.Scene {
       glow.fillRoundedRect(-cardW / 2 - 8, -143, cardW + 16, 286, 24);
       card.add([glow, paintGlass(this.add.graphics(), -cardW / 2, -135, cardW, 270, { rim: rarityColor, radius: 18 })]);
       this.cursors.push(glow);
-      card.add(itemVisual(this, reward.iconAssetId, 0, -89, 2.5));
+      // Reward presentation (spec §24): the item pops out of its card with a little wobble.
+      const icon = itemVisual(this, reward.iconAssetId, 0, -89, 2.5) as Phaser.GameObjects.Image;
+      card.add(icon);
+      revealPop(this, icon, 120 + i * 70);
       card.add(this.add.text(0, -51, reward.name, textStyle(24, COLORS.text, { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0));
       card.add(this.add.text(0, -17, reward.rarity.toUpperCase(), textStyle(16, Phaser.Display.Color.IntegerToColor(rarityColor).rgba)).setOrigin(0.5, 0));
       // A team or player item already at its max: picking it re-rolls the draft for free.

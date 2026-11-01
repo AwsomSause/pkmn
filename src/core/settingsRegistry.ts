@@ -72,6 +72,7 @@ const ANIM_SWITCHES: [Key, string, string][] = [
   ['rivalAnimations', 'Rival animations', 'Rival introductions, send-outs and poses.'],
   ['evolutionAnimations', 'Evolution animations', 'The evolution and Mega Evolution scenes.'],
   ['battleScreenEffects', 'Battle screen effects', 'Full-screen flashes, tints and impacts in battle.'],
+  ['menuAnimations', 'Menu animations', 'The gliding cursor, button bounces and screen transitions.'],
 ];
 
 export const SETTINGS: SettingDef[] = [
