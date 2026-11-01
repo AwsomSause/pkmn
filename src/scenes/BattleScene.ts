@@ -2179,7 +2179,7 @@ export class BattleScene extends Phaser.Scene {
           if (sprite && sprite.alpha < 1) sprite.setAlpha(1);
           await this.refreshInfoBox(box, mon!, true);
           // Defiance struck the foe back; Protective Instinct hurt the teammate that stepped in.
-          if (e.foeHpAfter !== undefined && this.shown.enemy) {
+          if (e.foeHpAfter !== undefined && this.shown.enemy && (!e.foeUid || e.foeUid === this.shown.enemy.uid)) {
             this.shown.enemy.hp = e.foeHpAfter;
             await this.refreshInfoBox(this.enemyBox, this.shown.enemy, true);
           }

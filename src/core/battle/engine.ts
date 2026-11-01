@@ -176,6 +176,7 @@ export type BattleEvent =
       cured: boolean;
       /** Defiance: the foe's HP after the Pokémon struck back. */
       foeHpAfter?: number;
+      foeUid?: string;
       /** Protective Instinct: the teammate that took the hit, and its HP afterwards. */
       proxy?: { uid: string; hpAfter: number };
       /** Stages the moment gave or cost (already applied). */
@@ -2149,14 +2150,14 @@ function hyperDefiance(ctx: BattleContext, c: Combatant): { hpAfter: number; rev
   if ((ctx.battle.hyper.taken?.[c.mon.uid] ?? 0) < spec.minHits) return null;
   const e = tryHyper(ctx, 'defiance', c.mon);
   if (!e || e.def.effect?.kind !== 'defy') return null;
-  const foe = currentEnemy(ctx.battle);
+  const foe = movingAttacker && movingAttacker.side === 'enemy' ? movingAttacker.mon : currentEnemy(ctx.battle);
   const foeMax = calcStats(ctx.content, foe).hp;
   if (foe.hp > 1) foe.hp = Math.max(1, foe.hp - Math.max(1, Math.floor(foeMax * e.def.effect.retaliateShare)));
   const stageChanges = payStageCosts(c, e.def.effect.cost);
   return {
     hpAfter: 1,
     revived: false,
-    event: { type: 'hyper', side: c.side, uid: c.mon.uid, defId: e.def.id, variant: e.variant, hpAfter: 1, cured: false, foeHpAfter: foe.hp, stageChanges },
+    event: { type: 'hyper', side: c.side, uid: c.mon.uid, defId: e.def.id, variant: e.variant, hpAfter: 1, cured: false, foeHpAfter: foe.hp, foeUid: foe.uid, stageChanges },
   };
 }
 
@@ -2210,6 +2211,8 @@ function hyperAwaken(ctx: BattleContext, c: Combatant, events: BattleEvent[]): b
 
 /** The damage bonus of the Limit Break in progress (0 when none); set only while that one move runs. */
 let limitBreakDamage = 0;
+/** The Pokémon whose move is running (Defiance strikes back at it, also in double battles). */
+let movingAttacker: Combatant | null = null;
 
 /**
  * Pushed Beyond Its Limits (Overdrive, spec 8): a badly hurt Pokémon's damaging move cannot miss
@@ -2664,12 +2667,14 @@ function powerFromRule(ctx: BattleContext, rule: PowerRule, base: number, user: 
 function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, movedFirst: boolean, events: BattleEvent[]): void {
   moveIgnoresAbility = Boolean(move.effects.ignoreAbility) || (move.category === 'status' && abilityIn(ctx, user) === 'mycelium-might');
   limitBreakDamage = 0;
+  movingAttacker = user;
   try {
     limitBreakDamage = tryLimitBreak(ctx, user, move, events);
     runMoveInner(ctx, user, target, move, movedFirst, events);
   } finally {
     moveIgnoresAbility = false;
     limitBreakDamage = 0;
+    movingAttacker = null;
   }
 }
 
@@ -5287,6 +5292,7 @@ export const doublesSteps = {
   statusCureAbility,
   applyResidual,
   endTurnMon,
+  hyperEndOfTurn,
   endTurnField,
   tickDelayed,
   syncForms,
