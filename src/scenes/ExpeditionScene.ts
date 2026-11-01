@@ -4,6 +4,9 @@
 import Phaser from 'phaser';
 import { availableNodes, getExpedition, nodeLabel } from '../core/expedition/flow';
 import { stageRules } from '../core/legendary/legendary';
+import { legendCards, legendKit } from '../core/legendary/visuals';
+import { addLegendLook } from '../ui/legendFx';
+import { titleCard } from '../ui/battleFx/spectacle';
 import { maxHp } from '../core/pokemon';
 import type { ExpeditionState, RunState } from '../core/state';
 import { services } from '../game/services';
@@ -46,7 +49,16 @@ export class ExpeditionScene extends Phaser.Scene {
     const legend = def.legendary;
     if (legend) {
       // A Legendary stage has its own colour wash and accent line.
-      this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, Number.parseInt(legend.visual.tint.slice(1), 16), 0.28).setDepth(-1);
+      const layerNow = exp.current ? exp.nodes.find((n) => n.id === exp.current)!.layer + 1 : 0;
+      const kit = legendKit(session.content, def, layerNow)!;
+      const motion = session.settings.battleAnimations;
+      // Wash and particles in the event's own look; with motion off, just the plain wash.
+      if (addLegendLook(this, kit, motion).length === 0) this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, kit.tint, 0.28).setDepth(-1);
+      // Title cards: the stage opening, and the finale once it is the only stop left.
+      const cards = legendCards(session.content, def)!;
+      const finaleNext = !exp.choice && exp.status === 'route' && availableNodes(exp).some((n) => n.kind === 'finale');
+      const opening = exp.current === null && !exp.choice;
+      if (opening || finaleNext) titleCard(this, finaleNext ? cards.finale.title : cards.intro.title, finaleNext ? cards.finale.sub : cards.intro.sub, kit.accent, motion);
       this.add.text(GAME_WIDTH / 2, 8, `LEGENDARY EVENT  ·  ${legend.epithet}`, textStyle(12, legend.visual.accent)).setOrigin(0.5, 0);
     }
     this.add.text(GAME_WIDTH / 2, 22, legend ? def.name : `${def.name}  ·  Tier ${def.tier}`, textStyle(32, COLORS.textLight)).setOrigin(0.5);

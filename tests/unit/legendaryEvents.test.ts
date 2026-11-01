@@ -6,6 +6,7 @@ import { availableNodes, beginExpedition, chooseExpeditionNode, expeditionPrevie
 import { LegendaryFileSchema } from '../../src/core/expedition/schema';
 import { eligibleLegendary, envAt, legendaryEvents, legendaryProblem, placeLegendaryGate } from '../../src/core/legendary/legendary';
 import { placeExpeditionGate } from '../../src/core/expedition/gate';
+import { LEGEND_PARTICLES, legendCards, legendKit } from '../../src/core/legendary/visuals';
 import { pickRaidFor } from '../../src/core/raid/raid';
 import { pickTotemFor } from '../../src/core/totem/totem';
 import { maxHp } from '../../src/core/pokemon';
@@ -318,5 +319,22 @@ describe('a legendary stage', () => {
         expect(validateRoute(def, run.expedition!.nodes as never)).toEqual([]);
       }
     }
+  });
+});
+
+describe('legendary presentation cues', () => {
+  it('every event has a look and title cards, and the particles follow the stage weather', () => {
+    for (const def of legendaryEvents(content)) {
+      const kit = legendKit(content, def, 0)!;
+      expect(LEGEND_PARTICLES).toContain(kit.particle);
+      expect(legendCards(content, def)!.finale.title).toMatch(/AWAKENS$/);
+    }
+    const get = (s: string) => legendaryEvents(content).find((e) => e.id === `legend-${s}`)!;
+    expect(legendKit(content, get('kyogre'), 0)!.particle).toBe('rain');
+    expect(legendKit(content, get('groudon'), 0)!.particle).toBe('embers');
+    expect(legendKit(content, get('groudon'), 2)!.particle).toBe('sand');
+    expect(legendKit(content, get('rayquaza'), 0)!.particle).toBe('sparks');
+    expect(legendKit(content, get('articuno'), 0)!.particle).toBe('snow');
+    expect(legendKit(content, legendaryEvents(content)[0]!, 0)).toEqual(legendKit(content, legendaryEvents(content)[0]!, 0));
   });
 });
