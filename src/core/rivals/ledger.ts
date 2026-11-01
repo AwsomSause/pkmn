@@ -64,6 +64,9 @@ export function rivalNickname(runs: readonly Pick<LegacyRun, 'outcome' | 'runId'
 export type RivalMood = 'smug' | 'irked' | 'steady' | 'impressed';
 export interface MoodView { mood: RivalMood; expression: string; streak: number }
 
+/** The portrait face drawn beside a rival's note in the Hub (plain characters, so no art asset is needed). */
+export const MOOD_FACE: Record<RivalMood, string> = { smug: '(¬‿¬)', irked: '(`⌒´)', steady: '(•_•)', impressed: '(°o°)' };
+
 /** I176: the rival's mood follows your current streak of won (or lost) runs, newest first. The Hub shows it as an expression. */
 export function rivalMood(runs: readonly Pick<LegacyRun, 'outcome'>[]): MoodView {
   const first = runs[0]?.outcome;

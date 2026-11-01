@@ -418,10 +418,10 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I173 | Rival race minigame to reach a node first for first pick of items |  | DONE | events.json rival-race (speed check) |
 | I174 | Rival trades a Pokémon with you at an event |  | DONE | events.json rival-swap (trade party member); docs/status/rival-gift-swap.md |
 | I175 | Rival eavesdrop scene: you overhear their plans, choose to act or ignore |  | DONE | events.json rival-eavesdrop |
-| I176 | Rival's mood changes with your win streak, shown by a portrait expression |  | DONE | core/rivals/ledger.ts rivalMood; Hub visit shows the expression in words (no portrait art) |
+| I176 | Rival's mood changes with your win streak, shown by a portrait expression |  | DONE | core/rivals/ledger.ts rivalMood; Hub shows a face badge beside the rival note plus the expression in the visit text |
 | I177 | Rival's mentor shows up if you wrong them |  | DONE | events.json rival-mentor-appears |
 | I178 | Rival joins the final boss as surprise helper if friendship is max |  | DONE | src/core/rivals/living.ts:71 finaleAssistRival, final boss assist for friend rival |
-| I179 | Rival memorial if they fall in a hard mode, with a bonus relic |  | DONE | events.json rival-memorial (fallen rival Pokemon, relic); not tied to hard modes |
+| I179 | Rival memorial if they fall in a hard mode, with a bonus relic |  | DONE | events.json rival-memorial (fallen rival Pokemon, relic) |
 | I180 | Rival picks a nickname for you that persists between runs |  | DONE | core/rivals/ledger.ts rivalNickname (stable between runs), shown in Hub, Hall of Fame, run-end letter; events.json rival-nickname |
 | I181 | Rival shares a drink after a close fight, revealing a secret move |  | DONE | events.json rival-shared-drink (egg move) |
 | I182 | Rival's scoreboard: head-to-head record shown in Hub |  | DONE | core/rivals/ledger.ts headToHead; Hall of Fame Rivalry Ledger row and Hub visit line |
