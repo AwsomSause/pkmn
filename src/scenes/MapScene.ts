@@ -107,7 +107,6 @@ type Option =
   | { kind: 'side'; side: SideStop }
   | { kind: 'party' }
   | { kind: 'bag' }
-  | { kind: 'items' }
   | { kind: 'story' }
   | { kind: 'bond' }
   | { kind: 'scrapbook' }
@@ -471,7 +470,6 @@ export class MapScene extends Phaser.Scene {
       if (side.kind !== 'shop' && side.used && !(side.kind === 'service' && serviceReusable(side))) continue;
       buttons.push({ option: { kind: 'side', side }, label: side.kind === 'expedition' && legendOf(side.expeditionId) ? 'Legendary' : SIDE_LABEL[side.kind], color: side.kind === 'expedition' && legendOf(side.expeditionId) ? LEGEND_STYLE.color : side.kind === 'event' && !stopIsHidden(content, run, currentNode!, side) ? stopStyle(content.events.get(side.eventId ?? '')?.stop).color : SIDE_STYLE[side.kind].color });
     }
-    if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
     buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'scrapbook' }, label: 'Album', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
     if (wipeStatus(services().session.run!)) buttons.push({ option: { kind: 'endRun' }, label: 'End run', color: 0x6a2a38 });
@@ -646,9 +644,7 @@ export class MapScene extends Phaser.Scene {
       case 'party':
         return ['Your Pokémon: rearrange the party, make one lead, and read stats, moves, held items, bonds and history.', ...services().session.run!.eggs.map((e) => `${eggLabel(e)}.`)].join(' ');
       case 'bag':
-        return 'Use medicine or evolution items on your Pokémon.';
-      case 'items':
-        return 'Use map items (bikes, Escape Rope, VS Seeker) or check what they show.';
+        return 'Everything you own in one place: medicine, balls, held items (and who holds them), passive items and map items.';
       case 'bond':
         return 'See how each Pokémon feels about you: trust, affection, sync and more, plus its personality and friendships.';
       case 'scrapbook':
@@ -682,7 +678,12 @@ export class MapScene extends Phaser.Scene {
   }
 
   private fieldHost(): FieldMenuHost {
-    return { scene: this, setPicker: (p) => (this.picker = p), changed: (notice) => this.scene.restart({ notice, focus: this.index }) };
+    return {
+      scene: this,
+      setPicker: (p) => (this.picker = p),
+      changed: (notice) => this.scene.restart({ notice, focus: this.index }),
+      mapItems: { rows: () => this.itemRows(), use: (row) => this.useMapItem(row.action as MapActionKind) },
+    };
   }
 
   private activate(i: number): void {
@@ -764,9 +765,6 @@ export class MapScene extends Phaser.Scene {
         break;
       case 'bag':
         openBagMenu(this.fieldHost());
-        break;
-      case 'items':
-        this.openItems();
         break;
       case 'bond':
         openBondMenu(this.fieldHost());
@@ -1101,47 +1099,19 @@ export class MapScene extends Phaser.Scene {
     this.picker = picker;
   }
 
-  private openItems(): void {
+  /** Runs a map item action picked in the Bag (bike, Escape Rope, VS Seeker...). */
+  private useMapItem(action: MapActionKind): void {
     const { session } = services();
-    const content = session.content;
-    const rows = this.itemRows();
-    const picker: Picker = new Picker(this, {
-      glass: true,
-      title: 'Map items',
-      columns: 1,
-      rowHeight: 78,
-      rows: rows.map((row) => ({
-        problem: row.problem,
-        hint: row.text,
-        draw: (scene, box, w, h) => {
-          const icon = content.rewards.get(`item:${row.itemId}`)?.iconAssetId;
-          if (icon) box.add(itemVisual(scene, icon, 26, h / 2, 2));
-          box.add(scene.add.text(56, 6, row.title, textStyle(22)));
-          box.add(scene.add.text(56, 34, row.text, textStyle(15, '#d8d0e0', { wordWrap: { width: w - 72 } })));
-        },
-      })),
-      onSelect: (i) => {
-        const row = rows[i]!;
-        picker.close();
-        this.picker = null;
-        if (!row.action) return;
-        playSfx(this, 'ui.select');
-        const notice = session.useMapAction(row.action);
-        const run = session.run!;
-        if (run.phase !== 'map') {
-          this.busy = true;
-          this.cameras.main.fadeOut(250);
-          this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
-          return;
-        }
-        this.scene.restart({ notice, focus: 0 });
-      },
-      onBack: () => {
-        picker.close();
-        this.picker = null;
-      },
-    });
-    this.picker = picker;
+    playSfx(this, 'ui.select');
+    const notice = session.useMapAction(action);
+    const run = session.run!;
+    if (run.phase !== 'map') {
+      this.busy = true;
+      this.cameras.main.fadeOut(250);
+      this.time.delayedCall(260, () => this.scene.start(sceneForRun(run)));
+      return;
+    }
+    this.scene.restart({ notice, focus: 0 });
   }
 
   private showBanner(top: string, title: string, sub: string): void {

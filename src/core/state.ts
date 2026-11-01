@@ -1049,6 +1049,8 @@ export const RunStateSchema = z.object({
   inventory: z.record(z.string(), z.number().int().min(0)),
   /** Team and player catalog items owned this run (catalog id → copies): passives like the Amulet Coin. */
   passives: z.record(z.string(), z.number().int().min(1)).optional(),
+  /** Held items taken off a Pokémon, waiting in the Bag to be given to another (catalog id → copies; Major Update §4). Optional: older saves load without it. */
+  looseHeld: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Running totals some items need across a run (a Scarf's knockout bonus so far). */
   itemCounters: z.record(z.string(), z.number().int().min(0)).optional(),
   /** A bike chosen from the map's Items menu for the next move (see core/mapItems.ts). */

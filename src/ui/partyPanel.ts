@@ -54,11 +54,14 @@ export interface PickerConfig {
   backdrop?: string;
   /** The backdrop art already carries the title (e.g. the Bag plate), so the title text is left out. */
   titleInArt?: boolean;
+  /** Pocket tabs above the list (the Bag): Left/Right or a click switches; the host reopens the picker with that pocket's rows. One-column pickers only. */
+  tabs?: { labels: readonly string[]; index: number; onChange: (index: number) => void };
   /** Battle: draw the list only inside the bottom bar (no full-screen panel), so the arena, sprites and HP boxes stay visible. */
   dock?: boolean;
 }
 
 const LIST_TOP = 82;
+const TAB_H = 40;
 const LIST_BOTTOM = GAME_HEIGHT - 84;
 const FOOTER_W = GAME_WIDTH - 144;
 /** The docked list sits in the battle bar: its top, bottom and where the message line goes. */
@@ -83,6 +86,7 @@ export class Picker implements PickerLike {
   private readonly more: Phaser.GameObjects.Text;
   private index = 0;
   private closed = false;
+  /** Where the list starts (lower when there are tabs) and ends. */
   private readonly top: number;
   private readonly bottom: number;
 
@@ -91,7 +95,7 @@ export class Picker implements PickerLike {
     // Popup opening (spec §24): the window rises into place and fades in; input works straight away.
     if (!justRedrawn()) glideIn(scene, this.root, 0, config.dock ? 8 : 14, 0, 'popupOpen');
     const dock = config.dock === true;
-    this.top = dock ? DOCK.top : LIST_TOP;
+    this.top = dock ? DOCK.top : config.tabs ? LIST_TOP + TAB_H + 8 : LIST_TOP;
     this.bottom = dock ? DOCK.bottom : LIST_BOTTOM;
     if (!dock) this.root.add(scene.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive());
     const glass = config.glass === true || dock;
@@ -115,14 +119,6 @@ export class Picker implements PickerLike {
     }
     const title = !dock && !(backdrop && config.titleInArt) ? scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5) : null;
     if (title) this.root.add(title);
-    if (!dock && config.badge) {
-      const id = config.badge;
-      const put = (): void => {
-        if (!this.closed) this.root.add(scene.add.image(hint.x - hint.width - 40, 47, id).setDisplaySize(44, 44).setName('picker-badge'));
-      };
-      if (scene.textures.exists(id)) put();
-      else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && put());
-    }
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
     const hintRight = config.onBack ? GAME_WIDTH - 150 : GAME_WIDTH - 48;
     const hint = scene.add.text(hintRight, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5).setVisible(!dock);
@@ -131,6 +127,15 @@ export class Picker implements PickerLike {
     if (title) {
       const badgeRoom = config.badge ? 64 : 0;
       fitLine(title, hint.x - hint.width - 16 - badgeRoom - title.x);
+    }
+    // The badge sits left of the hint, so it is placed once the hint exists (a loaded texture places it at once).
+    if (!dock && config.badge) {
+      const id = config.badge;
+      const put = (): void => {
+        if (!this.closed) this.root.add(scene.add.image(hint.x - hint.width - 40, 47, id).setDisplaySize(44, 44).setName('picker-badge'));
+      };
+      if (scene.textures.exists(id)) put();
+      else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && put());
     }
     if (config.onBack) {
       // A clickable Back button, so every page can be left with the mouse or touch too.
@@ -145,6 +150,7 @@ export class Picker implements PickerLike {
       this.root.add(back);
     }
 
+    if (config.tabs) this.drawTabs(config.tabs);
     const gap = dock ? DOCK.gap : 10;
     const x0 = dock ? DOCK.x : 48;
     const colW = dock ? (GAME_WIDTH - 2 * DOCK.x - (config.columns - 1) * 8) / config.columns : config.columns === 2 ? (GAME_WIDTH - 112) / 2 : GAME_WIDTH - 96;
@@ -254,9 +260,11 @@ export class Picker implements PickerLike {
         break;
       case 'left':
         if (cols > 1 && n) this.focus((this.index - 1 + n) % n);
+        else if (this.config.tabs) this.switchTab(-1);
         break;
       case 'right':
         if (cols > 1 && n) this.focus((this.index + 1) % n);
+        else if (this.config.tabs) this.switchTab(1);
         break;
       case 'confirm':
         this.confirm();
@@ -268,6 +276,31 @@ export class Picker implements PickerLike {
         }
         break;
     }
+  }
+
+  private switchTab(step: number): void {
+    const tabs = this.config.tabs!;
+    playSfx(this.scene, 'ui.cursor', 0.5);
+    tabs.onChange((tabs.index + step + tabs.labels.length) % tabs.labels.length);
+  }
+
+  /** The pocket strip: one pill per label, the current one lit; a click switches. Pills shrink to fit the width. */
+  private drawTabs(tabs: NonNullable<PickerConfig['tabs']>): void {
+    const left = 48;
+    const width = GAME_WIDTH - 96;
+    const gap = 6;
+    const w = (width - gap * (tabs.labels.length - 1)) / tabs.labels.length;
+    const size = w < 110 ? 14 : 16;
+    tabs.labels.forEach((label, i) => {
+      const x = left + i * (w + gap);
+      const on = i === tabs.index;
+      this.root.add(paintGlass(this.scene.add.graphics(), x, LIST_TOP, w, TAB_H, { rim: on ? 0xffe08a : 0x6a8aa8, alpha: on ? 0.95 : 0.5, glow: false, radius: 12 }));
+      const text = this.scene.add.text(x + w / 2, LIST_TOP + TAB_H / 2, label, textStyle(size, on ? COLORS.gold : COLORS.textLight, { wordWrap: { width: w - 8 } })).setOrigin(0.5).setName(`picker-tab-${i}`);
+      this.root.add(text);
+      const zone = this.scene.add.zone(x, LIST_TOP, w, TAB_H).setOrigin(0).setInteractive({ useHandCursor: true });
+      zone.on('pointerdown', () => !on && !this.closed && tabs.onChange(i));
+      this.root.add(zone);
+    });
   }
 
   close(): void {
