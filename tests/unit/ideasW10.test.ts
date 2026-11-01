@@ -144,3 +144,22 @@ describe('Corner Nook', () => {
     expect(j2.profile.nook.jokes).toBe(2);
   });
 });
+
+describe('W10 follow-ups', () => {
+  it('photo contest needs camp photos; profLine only for the first run; renameNode names and clears', async () => {
+    const { profLine, renameNode } = await import('../../src/core/hubNook');
+    const run = newRun('photo');
+    expect(content.events.has('photo-contest')).toBe(true);
+    const node = run.stage!.map.nodes[0]!;
+    node.sides = [{ id: 'ph', kind: 'event', eventId: 'photo-contest', used: false } as never];
+    run.stage!.current = node.id;
+    expect(() => chooseEvent(content, run, 'ph', 0)).toThrow();
+    run.camp = { photos: ['pikachu', 'eevee', 'mew'] } as never;
+    expect(chooseEvent(content, run, 'ph', 0).success).toBe(true);
+    expect(profLine(0)).toBeTruthy();
+    expect(profLine(3)).toBeNull();
+    const named = renameNode(run, node.id, '  Cozy   Hill ');
+    expect(named.stage!.map.nodes[0]!.name).toBe('Cozy Hill');
+    expect(renameNode(named, node.id, '').stage!.map.nodes[0]!.name).toBeUndefined();
+  });
+});

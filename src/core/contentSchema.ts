@@ -2418,6 +2418,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('partyShadow') }),
   /** Event Director: two of your Pokémon share an open bond. */
   z.object({ kind: z.literal('bond') }),
+  /** W10: Pokémon photographed at camp this run. */
+  z.object({ kind: z.literal('photos'), atLeast: z.number().int().min(1) }),
   /** Event Director: the region's focus (mystery, rivals, raids, exploration). */
   z.object({ kind: z.literal('focus'), focus: z.enum(['mystery', 'rivals', 'raids', 'exploration']) }),
   /** Regional crisis: this region's meter is at least / at most this (0 to 5). */

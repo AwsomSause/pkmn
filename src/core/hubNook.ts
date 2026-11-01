@@ -133,3 +133,16 @@ export function konamiJoke(p: Profile): { profile: Profile; text: string } {
 
 /** The wave at the Hub gate as a run begins (I499): one line, picked from the seed so it is the same on a replay. */
 export const goodbyeLine = (seed: string): string => NOOK.goodbyes[hashText(`${seed}:goodbye`) % NOOK.goodbyes.length]!;
+
+/** The Professor's word when a first run starts straight away (I435). Later runs get none. */
+export const profLine = (runsStarted: number): string | null => runsStarted === 0 ? 'Professor: "No briefing? Straight to the road. I like your nerve, but read the signs." (Tip: the Hub has a room for everything.)' : null;
+
+/** Gives a map node a name (I497); an empty name clears it. Returns a new run. */
+export function renameNode<R extends { stage: { map: { nodes: Array<{ id: string; name?: string }> } } | null }>(run: R, nodeId: string, text: string): R {
+  const next = structuredClone(run);
+  const node = next.stage?.map.nodes.find((n) => n.id === nodeId);
+  if (!node) throw new Error('No such node');
+  const clean = text.replace(/\s+/g, ' ').trim().slice(0, 24);
+  if (clean) node.name = clean; else delete node.name;
+  return next;
+}
