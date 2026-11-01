@@ -568,3 +568,8 @@ export function thirdBossLevels(perks: Perks | undefined): number {
 export function megaCraftCost(perks: Perks | undefined): number {
   return product(perks, 'megaCraftCost');
 }
+
+/** Event toolkit: the rules that hold at the start of every battle (weather, Gravity, Trick Room, Tailwind). */
+export function battleStartRules(perks: Perks | undefined): Kind<'battleStart'>[] {
+  return of(perks, 'battleStart');
+}
