@@ -37,10 +37,10 @@ import { playMusic, playSfx, playSfxLazy, playMusicLazy } from '../ui/audio';
 import { mapTrack } from '../core/presentation/battleMusic';
 import { openBondMenu } from '../ui/bondMenu';
 import { openPartyScene, openScrapbook } from '../ui/partyLifeUi';
-import { openSummaryMenu } from '../ui/summaryMenu';
-import { openBagMenu, openBoxMenu, openPartyMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
+import { openPokemonMenu } from '../ui/pokemonMenu';
+import { openBagMenu, openBoxMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
-import { Picker, speciesRow } from '../ui/partyPanel';
+import { Picker, speciesRow, type PickerLike } from '../ui/partyPanel';
 import { stopStyle } from '../ui/stopIcons';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { showAchievementToasts } from '../ui/achievementToast';
@@ -108,7 +108,6 @@ type Option =
   | { kind: 'story' }
   | { kind: 'bond' }
   | { kind: 'scrapbook' }
-  | { kind: 'summary' }
   | { kind: 'box' }
   | { kind: 'endRun' };
 
@@ -116,7 +115,7 @@ export class MapScene extends Phaser.Scene {
   private options: Option[] = [];
   private cursors: Phaser.GameObjects.Graphics[] = [];
   private index = 0;
-  private picker: Picker | null = null;
+  private picker: PickerLike | null = null;
   private info: Phaser.GameObjects.Text | null = null;
   private notice: Phaser.GameObjects.Text | null = null;
   private endArmed = false;
@@ -464,7 +463,7 @@ export class MapScene extends Phaser.Scene {
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
-    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'scrapbook' }, label: 'Album', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel }, { option: { kind: 'summary' }, label: 'Summary', color: COLORS.panel });
+    buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'scrapbook' }, label: 'Album', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
     if (wipeStatus(services().session.run!)) buttons.push({ option: { kind: 'endRun' }, label: 'End run', color: 0x6a2a38 });
     // Narrower buttons when there are many, so they never run into the info line.
     const bw = buttons.length > 7 ? Math.max(76, Math.floor((GAME_WIDTH - 48) / buttons.length) - 8) : 92;
@@ -629,13 +628,11 @@ export class MapScene extends Phaser.Scene {
         }
         return option.side.kind === 'heal' ? 'Healing spot: fully heals your party and restores PP (once).' : 'Shop: buy Poké Balls and medicine with your money.';
       case 'party':
-        return ['Choose which Pokémon leads the next battle.', ...services().session.run!.eggs.map((e) => `${eggLabel(e)}.`)].join(' ');
+        return ['Your Pokémon: rearrange the party, make one lead, and read stats, moves, held items, bonds and history.', ...services().session.run!.eggs.map((e) => `${eggLabel(e)}.`)].join(' ');
       case 'bag':
         return 'Use medicine or evolution items on your Pokémon.';
       case 'items':
         return 'Use map items (bikes, Escape Rope, VS Seeker) or check what they show.';
-      case 'summary':
-        return 'Look at each Pokémon: types, ability, held items, stats, moves and its story this run.';
       case 'bond':
         return 'See how each Pokémon feels about you: trust, affection, sync and more, plus its personality and friendships.';
       case 'scrapbook':
@@ -737,16 +734,13 @@ export class MapScene extends Phaser.Scene {
         break;
       }
       case 'party':
-        openPartyMenu(this.fieldHost());
+        openPokemonMenu(this.fieldHost());
         break;
       case 'bag':
         openBagMenu(this.fieldHost());
         break;
       case 'items':
         this.openItems();
-        break;
-      case 'summary':
-        openSummaryMenu(this.fieldHost());
         break;
       case 'bond':
         openBondMenu(this.fieldHost());

@@ -10,8 +10,9 @@ import { draftItemUses, type DraftItemKind } from '../core/run';
 import { services } from '../game/services';
 import { playSfx, playSfxLazy } from '../ui/audio';
 import { onInputAction } from '../ui/input';
-import { openBagMenu, openPartyMenu, type FieldMenuHost } from '../ui/fieldMenus';
-import { partyRows, Picker } from '../ui/partyPanel';
+import { openBagMenu, type FieldMenuHost } from '../ui/fieldMenus';
+import { openPokemonMenu } from '../ui/pokemonMenu';
+import { partyRows, Picker, type PickerLike } from '../ui/partyPanel';
 import { itemVisual, pokemonIcon } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { focusFrame } from '../ui/widgets';
@@ -31,7 +32,7 @@ export class RewardScene extends Phaser.Scene {
   /** Each reward card, so the focused one can lift and the chosen one fly off. */
   private cards: Phaser.GameObjects.Container[] = [];
   private cardY = 92;
-  private picker: Picker | null = null;
+  private picker: PickerLike | null = null;
   private notice: Phaser.GameObjects.Text | null = null;
   private chosen = false;
 
@@ -243,7 +244,7 @@ export class RewardScene extends Phaser.Scene {
   }
 
   private openParty(): void {
-    openPartyMenu(this.fieldHost());
+    openPokemonMenu(this.fieldHost());
   }
 
   private openBag(): void {
