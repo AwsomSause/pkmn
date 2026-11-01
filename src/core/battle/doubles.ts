@@ -88,6 +88,11 @@ export function monAt(ctx: Pick<BattleContext, 'battle' | 'party'>, side: Side, 
   return slotView(ctx, side, spot)?.mon ?? null;
 }
 
+/** The stat changes of the Pokémon in a spot. */
+export function stagesAt(ctx: Pick<BattleContext, 'battle' | 'party'>, side: Side, spot: Spot): Stages | null {
+  return slotView(ctx, side, spot)?.stages ?? null;
+}
+
 /** The party / team index in a spot, or -1. */
 export function indexAt(ctx: Pick<BattleContext, 'battle' | 'party'>, side: Side, spot: Spot): number {
   return slotView(ctx, side, spot)?.index ?? -1;
