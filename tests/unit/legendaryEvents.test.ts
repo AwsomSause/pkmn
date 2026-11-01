@@ -6,7 +6,12 @@ import { availableNodes, beginExpedition, chooseExpeditionNode, expeditionPrevie
 import { LegendaryFileSchema } from '../../src/core/expedition/schema';
 import { eligibleLegendary, envAt, legendaryEvents, legendaryProblem, placeLegendaryGate } from '../../src/core/legendary/legendary';
 import { placeExpeditionGate } from '../../src/core/expedition/gate';
-import { LEGEND_PARTICLES, legendCards, legendKit } from '../../src/core/legendary/visuals';
+import { UIE_ARENAS } from '../../src/assets/catalog';
+import { LEGEND_SHAPES, legendAnimId } from '../../src/core/presentation/legendAnims';
+import { resolveAnim } from '../../src/core/presentation/animRegistry';
+import { animSettingsFrom } from '../../src/core/accessibility';
+import { DEFAULT_SETTINGS } from '../../src/save/saveManager';
+import { LEGEND_PARTICLES, legendCards, legendKit, legendLook } from '../../src/core/legendary/visuals';
 import { pickRaidFor } from '../../src/core/raid/raid';
 import { pickTotemFor } from '../../src/core/totem/totem';
 import { maxHp } from '../../src/core/pokemon';
@@ -336,5 +341,19 @@ describe('legendary presentation cues', () => {
     expect(legendKit(content, get('rayquaza'), 0)!.particle).toBe('sparks');
     expect(legendKit(content, get('articuno'), 0)!.particle).toBe('snow');
     expect(legendKit(content, legendaryEvents(content)[0]!, 0)).toEqual(legendKit(content, legendaryEvents(content)[0]!, 0));
+  });
+
+  it('every event has a signature shape and a real battleback', () => {
+    const evs = legendaryEvents(content);
+    expect(evs.length).toBeGreaterThanOrEqual(27);
+    for (const def of evs) {
+      const look = legendLook(content, def)!;
+      expect(look, def.id).toBeTruthy();
+      expect(UIE_ARENAS, def.id).toContain(look.arena);
+      expect(LEGEND_SHAPES).toContain(look.shape);
+    }
+    for (const sh of LEGEND_SHAPES) expect(resolveAnim(legendAnimId(sh), animSettingsFrom(DEFAULT_SETTINGS)), sh).toBeTruthy();
+    const species = new Set(evs.map((d) => legendLook(content, d)!.arena + '/' + legendLook(content, d)!.shape));
+    expect(species.size).toBeGreaterThan(15);
   });
 });

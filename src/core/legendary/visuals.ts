@@ -3,6 +3,7 @@
 
 import type { Content } from '../contentSchema';
 import type { ExpeditionDef } from '../expedition/schema';
+import type { LegendShape } from '../presentation/legendAnims';
 
 export const LEGEND_PARTICLES = ['rain', 'embers', 'snow', 'sand', 'sparks', 'mist', 'wind', 'motes'] as const;
 export type LegendParticle = (typeof LEGEND_PARTICLES)[number];
@@ -50,4 +51,31 @@ export function legendCards(content: Content, def: ExpeditionDef): LegendCards |
   if (!l) return null;
   const name = (content.species.get(l.species)?.name ?? l.species).toUpperCase();
   return { intro: { title: 'LEGENDARY EVENT', sub: l.epithet }, finale: { title: `${name} AWAKENS`, sub: l.epithet } };
+}
+
+/** Each hand-designed event has its own signature flourish and battleback; the rest follow their type. */
+const SIGNATURE: Record<string, { shape: LegendShape; arena: string }> = {
+  kyogre: { shape: 'wave', arena: 'underwater' }, groudon: { shape: 'stone', arena: 'rocky' }, rayquaza: { shape: 'gale', arena: 'field_eve' },
+  giratina: { shape: 'warp', arena: 'distortion' }, dialga: { shape: 'steel', arena: 'indoor3' }, palkia: { shape: 'warp', arena: 'water_night' },
+  lugia: { shape: 'wave', arena: 'water' }, 'ho-oh': { shape: 'light', arena: 'rocky_eve' }, mewtwo: { shape: 'dream', arena: 'cave3' },
+  articuno: { shape: 'frost', arena: 'snow' }, zapdos: { shape: 'bolt', arena: 'city_night' }, moltres: { shape: 'flame', arena: 'rocky_night' },
+  raikou: { shape: 'bolt', arena: 'field_night' }, entei: { shape: 'flame', arena: 'rocky_eve' }, suicune: { shape: 'wave', arena: 'water_eve' },
+  latias: { shape: 'dream', arena: 'field_eve' }, latios: { shape: 'gale', arena: 'field' }, regirock: { shape: 'stone', arena: 'cave1' },
+  regice: { shape: 'frost', arena: 'snow_night' }, registeel: { shape: 'steel', arena: 'indoor2' }, heatran: { shape: 'flame', arena: 'cave2' },
+  cresselia: { shape: 'dream', arena: 'field_night' }, darkrai: { shape: 'shadow', arena: 'forest_night' }, arceus: { shape: 'light', arena: 'champion2' },
+  reshiram: { shape: 'flame', arena: 'champion1' }, zekrom: { shape: 'bolt', arena: 'city_night' }, celebi: { shape: 'leaf', arena: 'forest' },
+};
+const TYPE_LOOK: Record<string, { shape: LegendShape; arena: string }> = {
+  water: { shape: 'wave', arena: 'water' }, fire: { shape: 'flame', arena: 'rocky_eve' }, electric: { shape: 'bolt', arena: 'city_night' }, ice: { shape: 'frost', arena: 'snow' },
+  grass: { shape: 'leaf', arena: 'forest' }, rock: { shape: 'stone', arena: 'rocky' }, ground: { shape: 'stone', arena: 'rocky' }, steel: { shape: 'steel', arena: 'indoor2' },
+  ghost: { shape: 'shadow', arena: 'forest_night' }, dark: { shape: 'shadow', arena: 'city_night' }, psychic: { shape: 'dream', arena: 'cave3' }, flying: { shape: 'gale', arena: 'field' },
+  dragon: { shape: 'gale', arena: 'cave2' }, fairy: { shape: 'light', arena: 'forest_eve' }, poison: { shape: 'shadow', arena: 'cave1' }, fighting: { shape: 'stone', arena: 'indoor1' },
+  bug: { shape: 'leaf', arena: 'forest' }, normal: { shape: 'light', arena: 'field' },
+};
+
+/** The event's own signature flourish and battleback (a UIE arena name from assets/catalog UIE_ARENAS). */
+export function legendLook(content: Content, def: ExpeditionDef): { shape: LegendShape; arena: string } | null {
+  const l = def.legendary;
+  if (!l) return null;
+  return SIGNATURE[l.species] ?? TYPE_LOOK[content.species.get(l.species)?.types[0] ?? 'normal'] ?? TYPE_LOOK.normal!;
 }

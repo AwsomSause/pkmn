@@ -7,7 +7,7 @@
 // Pure data and maths: no Phaser, no random numbers, so previews and hovers
 // can't disturb gameplay and the same inputs always give the same plan.
 
-export type AnimCategory = 'ability' | 'text' | 'interaction' | 'overdrive' | 'rival' | 'ui';
+export type AnimCategory = 'ability' | 'text' | 'interaction' | 'overdrive' | 'rival' | 'ui' | 'legend';
 
 export interface AnimDef {
   /** Unique, dotted: 'ability.weather', 'text.crit' … */
