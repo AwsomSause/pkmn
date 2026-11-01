@@ -18,7 +18,7 @@ import { itemVisual, pokemonIcon } from './sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, STATUS_LABELS, textStyle } from './theme';
 import { Bar, drawPanel, focusFrame, paintWindow } from './widgets';
 import { AERO, drawGlass, ensureRowFrames, paintGlass } from './aero';
-import { glideIn, iconHop } from './wiiMotion';
+import { glideIn, iconHop, justRedrawn, uiTiming } from './wiiMotion';
 
 const DEPTH = 100;
 
@@ -77,7 +77,7 @@ export class Picker implements PickerLike {
   constructor(private readonly scene: Phaser.Scene, private readonly config: PickerConfig) {
     this.root = scene.add.container(0, 0).setDepth(DEPTH);
     // Popup opening (spec §24): the window rises into place and fades in; input works straight away.
-    glideIn(scene, this.root, 0, 14, 0, 'popupOpen');
+    if (!justRedrawn()) glideIn(scene, this.root, 0, 14, 0, 'popupOpen');
     const shade = scene.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
     this.root.add(shade);
     const glass = config.glass === true;
@@ -238,7 +238,20 @@ export class Picker implements PickerLike {
 
   close(): void {
     this.closed = true;
-    this.root.destroy();
+    // Popup closing (spec §24): it stops taking input at once, then sinks and fades out.
+    const root = this.root;
+    const t = uiTiming('popupClose');
+    if (!t.ms || !root.active) {
+      root.destroy();
+      return;
+    }
+    const off = (c: Phaser.GameObjects.Container): void =>
+      c.list.forEach((o) => {
+        if (o.input) o.disableInteractive();
+        if (o instanceof Phaser.GameObjects.Container) off(o);
+      });
+    off(root);
+    this.scene.tweens.add({ targets: root, alpha: 0, y: root.y + 12 * t.travel, duration: t.ms, ease: t.ease, onComplete: () => root.destroy() });
   }
 }
 
