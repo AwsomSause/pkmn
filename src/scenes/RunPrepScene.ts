@@ -20,7 +20,6 @@ import {
   tokenLockText,
 } from '../core/runPrep';
 import { availableMentors, getMentor, mentorBlurb, mentorUnlocked, MENTORS } from '../core/mentors';
-import { availableMentors, getMentor, mentorBlurb, mentorUnlocked, MENTORS } from '../core/mentors';
 import type { LoadoutPreset, RunPrep } from '../core/state';
 import { services } from '../game/services';
 import { playSfx } from '../ui/audio';
@@ -163,7 +162,6 @@ export class RunPrepScene extends Phaser.Scene {
       directive: `Research Directive: ${this.prep.directive ? capitalise(this.prep.directive) : 'none'}`,
       license: `Field License: ${this.prep.license ? licenseName(this.prep.license) : 'none'}`,
       loan: `Bank loan: ${this.prep.loan ? `ON (+₽${content.balance.bank.loan.money})` : 'off'}`,
-      mentor: `Mentor: ${getMentor(this.prep.mentorId)?.name ?? 'none'}`,
       mentor: `Mentor: ${getMentor(this.prep.mentorId)?.name ?? 'none'}`,
       vault: `Vault item: ${this.prep.vaultItem ? content.items.get(this.prep.vaultItem)?.name ?? this.prep.vaultItem : 'none'}`,
       mode: `Mode: ${getMode(this.rules.modeId)?.name}`,
@@ -363,11 +361,6 @@ export class RunPrepScene extends Phaser.Scene {
         if (problem) return this.refresh({}, { notice: problem });
         const l = content.balance.bank.loan;
         return this.refresh({ loan: !this.prep.loan }, { notice: this.prep.loan ? undefined : `Loan: +₽${l.money} now; finish with ${l.badges}+ badges or lose ${l.penalty} credits.` });
-      }
-      case 'mentor': {
-        // None, then each unlocked mentor (spec section 15).
-        const ids: (string | null)[] = [null, ...availableMentors(profile).map((m) => m.id)];
-        return this.refresh({ mentorId: next(ids, this.prep.mentorId) });
       }
       case 'vault': {
         if (profile.vault.length === 0) return this.refresh({}, { notice: 'The Collector\'s Vault is empty (Bank tier 5 keeps a rare held item from each finished run).' });

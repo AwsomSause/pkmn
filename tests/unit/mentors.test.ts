@@ -219,7 +219,7 @@ describe('saves', () => {
     settleMentor(profile, run);
     expect(ProfileSchema.parse(JSON.parse(JSON.stringify(profile))).mentorBonds).toEqual(profile.mentorBonds);
     const old = { ...JSON.parse(JSON.stringify(run)), mentor: undefined, prep: { ...run.prep, mentorId: undefined } };
-    const migrated = MIGRATIONS.run[29]!(old) as { mentor: unknown; prep: { mentorId: unknown } };
+    const migrated = MIGRATIONS.run[30]!(old) as { mentor: unknown; prep: { mentorId: unknown } };
     expect(migrated.mentor).toBeNull();
     expect(migrated.prep.mentorId).toBeNull();
     expect((MIGRATIONS.profile[14]!({ profileId: 'x' }) as { mentorBonds: unknown }).mentorBonds).toEqual({});
