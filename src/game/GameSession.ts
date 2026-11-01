@@ -8,6 +8,7 @@
 
 import { setCalendar } from '../core/clock';
 import { giveHeld, takeOffHeld } from '../core/bag';
+import { careAction, type CareAction } from '../core/care';
 import type { Achievement, Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { awardLiveAchievements, claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
@@ -541,6 +542,14 @@ export class GameSession {
   /** Takes a held item off a party Pokémon into the Bag (Major Update §4). */
   takeOffHeld(partyIndex: number, itemId: string): string {
     const result = takeOffHeld(this.content, this.requireRun(), partyIndex, itemId);
+    this.run = result.run;
+    this.persistRun();
+    return result.message;
+  }
+
+  /** A care action on a party Pokémon (pet, hug, feed, groom, lullaby, cheer, train, nickname, favourite, ace). */
+  care(partyIndex: number, action: CareAction, arg?: string): string {
+    const result = careAction(this.content, this.requireRun(), partyIndex, action, arg);
     this.run = result.run;
     this.persistRun();
     return result.message;

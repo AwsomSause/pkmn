@@ -155,6 +155,7 @@ import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealM
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
+import { careFaint, careVictory, releaseGift } from './care';
 import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
 import { claimArea, nuzlockeCatchProblem, buryFallen, isHardcore } from './nuzlocke';
 import { applyMutator, mutatorCatch, mutatorDue, mutatorMoney, mutatorOffer, mutatorXp } from './mutators';
@@ -2015,7 +2016,10 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   applyHeldAttributes(content, run, engineEvents);
   for (const e of engineEvents) {
     const fainted = e.type === 'faint' && e.side === 'player' ? run.party.find((p) => p.uid === e.uid) : undefined;
-    if (fainted) changeFriendship(content, fainted, content.balance.friendship.perFaint);
+    if (fainted) {
+      changeFriendship(content, fainted, content.balance.friendship.perFaint);
+      careFaint(fainted);
+    }
   }
 
   const events = awardExperience(content, run, engineEvents);
@@ -2032,6 +2036,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   events.push(...trackFeelings(content, current, run, events as BattleEvent[]));
   if (battle.outcome === 'win') bondVictory(run, Object.values(run.story.histories).filter((h) => h.lastBattle === run.encountersCompleted && run.party.some((m) => m.uid === h.uid)).map((h) => h.uid));
   if (battle.outcome === 'win') partyLifeVictory(content, run);
+  if (battle.outcome === 'win') careVictory(run, Object.values(run.story.histories).filter((h) => h.lastBattle === run.encountersCompleted && run.party.some((m) => m.uid === h.uid)).map((h) => h.uid));
   const cues = recordBattleTurn(content, current, run, events);
   // Trainer dialogue for what just happened (presentation only: it never changes the battle).
   const drama = planDrama(content, run, current.battle!, events as BattleEvent[], dialogue);
@@ -2687,7 +2692,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
       message = `${name} was sent to the PC.`;
     } else if (choice.kind === 'release') {
       assertCanRelease(content, run, joinProblem(content, run, caught.speciesId) !== null);
-      const candies = candiesForRelease(content, caught.level);
+      const candies = candiesForRelease(content, caught.level) + releaseGift(content, caught.level);
       run.candies += candies;
       count(run, 'candiesEarned', candies);
       count(run, 'caughtToCandies');

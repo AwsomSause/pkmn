@@ -1894,6 +1894,8 @@ export const BalanceSchema = z.object({
   /** SOS calls (core/battle/sos.ts): hurt wild Pokémon may call a friend. Off = never (old-seed checks switch it off). */
   /** Campaign Director focus effects (mystery: more event stops; rivals: sooner returns). */
   focusEffects: z.boolean().default(true),
+  /** Care & party life (core/care): mood, fatigue, talent and training nudge stats. Off keeps old seeds identical. */
+  careEffects: z.boolean().default(true),
   /** Gym, Elite Four and champion aces may start a stage lower and evolve mid-battle (Battle Drama P5). */
   bossEvolution: z.boolean().default(true),
   /** Rival battle styles (berserker, revenge-striker, last-stand) do something in the fight (Living Rivalry §3). */

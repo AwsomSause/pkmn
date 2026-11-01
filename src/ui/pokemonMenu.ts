@@ -25,6 +25,7 @@ import { playSfx } from './audio';
 import { loadAssets } from './lazyAssets';
 import type { FieldMenuHost } from './fieldMenus';
 import type { InputAction } from './input';
+import { ACCESSORIES, CARE, CARE_ACTIONS, TAP_ACTIONS, moodWord, careProblem, favoriteFlavor, hatedFlavor, type CareAction } from '../core/care';
 import { emotionDot, type PickerLike } from './partyPanel';
 import { bondView, compareStats, compareTarget, historyView, moveEffectLines, readiness, traitLines, xpProgress, type Readiness } from './pokemonInfo';
 import { itemVisual, pokemonIcon } from './sprites';
@@ -51,9 +52,11 @@ const STATE_COLOR: Record<Readiness['state'], number> = { ready: 0x6ee87a, cauti
 const STATE_TEXT: Record<Readiness['state'], string> = { ready: '#9af0a8', caution: '#ffe08a', down: '#ff9a9a' };
 const MODE_TEXT: Record<HeldItemInfo['mode'], string> = { passive: 'Always on', activated: 'Triggers in battle', mixed: 'Always on + triggers' };
 
+const ACCESSORY_CHOICES = ['', ...ACCESSORIES];
+const TRAIN_CHOICES = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 type Mode = 'list' | 'menu' | 'detail';
 interface MenuOption {
-  id: 'lead' | 'up' | 'down' | 'moves' | 'items' | 'cancel';
+  id: 'lead' | 'up' | 'down' | 'moves' | 'items' | 'cancel' | 'care' | 'back' | CareAction;
   label: string;
   problem: string | null;
   hint: string;
@@ -82,6 +85,12 @@ class PokemonScreen implements PickerLike {
   private tab = 0;
   private cursor = 0;
   private menuIdx = 0;
+  /** The Care sub-menu is open (pet, hug, feed...). */
+  private careMenu = false;
+  private trainStat = 0;
+  private accIdx = 0;
+  /** A tap mini-interaction in progress: tap Enter/click the goal number of times in the window. */
+  private tap: { id: CareAction; count: number; until: number; timer?: Phaser.Time.TimerEvent } | null = null;
   private reordered = false;
   private notice = 'Party order updated.';
   private closed = false;
@@ -139,6 +148,14 @@ class PokemonScreen implements PickerLike {
   // ---------- input ----------
   handle(action: InputAction): void {
     if (this.closed) return;
+    if (this.tap) {
+      if (action === 'confirm') {
+        this.tap.count += 1;
+        if (this.tap.count >= CARE.tap.goal) this.finishTap();
+      } else if (action === 'back') this.finishTap();
+      this.render();
+      return;
+    }
     this.flash = '';
     const n = this.party.length;
     if (this.mode === 'menu') {
@@ -146,7 +163,15 @@ class PokemonScreen implements PickerLike {
       if (action === 'up') this.menuIdx = (this.menuIdx - 1 + opts.length) % opts.length;
       else if (action === 'down') this.menuIdx = (this.menuIdx + 1) % opts.length;
       else if (action === 'confirm') return this.chooseMenu(opts[this.menuIdx]!);
-      else if (action === 'back') this.mode = 'list';
+      else if (action === 'back') {
+        if (this.careMenu) {
+          this.careMenu = false;
+          this.menuIdx = 0;
+        } else this.mode = 'list';
+      } else if ((action === 'left' || action === 'right') && this.careMenu) {
+        if (this.menuOptions()[this.menuIdx]?.id === 'dress') this.accIdx = (this.accIdx + (action === 'right' ? 1 : ACCESSORY_CHOICES.length - 1)) % ACCESSORY_CHOICES.length;
+        else this.trainStat = (this.trainStat + (action === 'right' ? 1 : 4)) % 5;
+      }
       this.render();
       return;
     }
@@ -193,13 +218,41 @@ class PokemonScreen implements PickerLike {
     this.render();
   }
 
+  private careOptions(): MenuOption[] {
+    const run = this.run;
+    const i = this.sel;
+    const stat = TRAIN_CHOICES[this.trainStat]!;
+    const p = (id: CareAction, label: string, hint: string, arg?: string): MenuOption => ({ id, label, hint, problem: careProblem(this.content, run, i, id, arg) });
+    const care = this.mon.care;
+    return [
+      p('pet', 'Pet', 'A little pat: tiny friendship, up to 3 times per stop.'),
+      p('hug', 'Hug', 'Once per stop: friendship, affection and a better mood.'),
+      p('feed', 'Feed berry', `Feeds a loose Bag berry (likes ${favoriteFlavor(this.mon)}, hates ${hatedFlavor(this.mon)}).`),
+      p('groom', 'Groom', 'Brush away a status condition and add some sparkle.'),
+      p('lullaby', 'Lullaby', 'Tuck it in: heals 20% of its HP, once per stop.'),
+      p('cheer', 'Cheer up', 'Lift its mood (more when it is down). Mood nudges stats by 1% a step.'),
+      p('train', `Train ${stat.toUpperCase()} ‹ ›`, 'Left/right picks the stat. +8% for its next 3 fights, once per stop.', stat),
+      p('sing', 'Sing to Eggs', 'Hum to the Eggs you carry: they move 1 step closer to hatching (never hatch by it). Once per stop.'),
+      p('dress', `Dress: ${this.mon.care?.accessory ?? 'none'} ‹ ›`, 'Left/right picks scarf, bow, glasses, band or anklet (+2% to one stat). Enter wears it; "none" takes it off.', ACCESSORY_CHOICES[this.accIdx] || ''),
+      p('wake', 'Wake up', 'Tap Enter fast to shake off tiredness (1 less, 2 with a good tapping). Once per stop.'),
+      p('fetch', 'Play fetch', 'Throw a ball: it may bring back a berry. Once per stop.'),
+      p('story', 'Bedtime story', 'Once per run, for Pokémon that trust you: friendship and mood rise.'),
+      p('nickname', 'Nickname', 'Give it a name (up to 12 letters). Leave it empty to clear.'),
+      { id: 'favourite', label: care?.favourite ? 'Unfavourite' : 'Favourite', problem: null, hint: 'Favourites are never offered as swap or trade fodder.' },
+      { id: 'ace', label: care?.ace ? 'Unmark ace' : 'Mark ace', problem: null, hint: 'Your ace is remembered on the Hub memorial wall if it falls.' },
+      { id: 'back', label: 'Back', problem: null, hint: 'Back to the Pokémon menu.' },
+    ];
+  }
+
   private menuOptions(): MenuOption[] {
+    if (this.careMenu) return this.careOptions();
     const n = this.party.length;
     const held = Object.keys(this.mon.held ?? {}).length;
     return [
       { id: 'lead', label: 'Make lead', problem: this.sel === 0 ? 'Already leading.' : null, hint: 'Move this Pokémon to the front: it leads the next battle.' },
       { id: 'up', label: 'Move up', problem: this.sel === 0 ? 'Already first.' : null, hint: 'Swap places with the Pokémon above.' },
       { id: 'down', label: 'Move down', problem: this.sel >= n - 1 ? 'Already last.' : null, hint: 'Swap places with the Pokémon below.' },
+      { id: 'care', label: 'Care…', problem: null, hint: 'Pet, hug, feed, groom, tuck in, cheer up, train or name this Pokémon.' },
       { id: 'moves', label: 'Review moves', problem: null, hint: 'Step through its moves: power, accuracy, PP and what they do.' },
       { id: 'items', label: 'Review items', problem: held === 0 ? 'It holds nothing.' : null, hint: 'Step through its held items and read what each really does.' },
       { id: 'cancel', label: 'Cancel', problem: null, hint: 'Close this menu.' },
@@ -214,7 +267,11 @@ class PokemonScreen implements PickerLike {
       return;
     }
     playSfx(this.host.scene, 'ui.select');
-    if (o.id === 'lead') this.reorder(0);
+    if (o.id === 'care' || o.id === 'back') {
+      this.careMenu = o.id === 'care';
+      this.menuIdx = 0;
+    } else if ((CARE_ACTIONS as readonly string[]).includes(o.id)) this.doCare(o.id as CareAction);
+    else if (o.id === 'lead') this.reorder(0);
     else if (o.id === 'up') this.reorder(this.sel - 1);
     else if (o.id === 'down') this.reorder(this.sel + 1);
     else if (o.id === 'moves' || o.id === 'items') {
@@ -223,6 +280,39 @@ class PokemonScreen implements PickerLike {
       this.mode = 'detail';
     } else this.mode = 'list';
     this.render();
+  }
+
+  private finishTap(): void {
+    const t = this.tap;
+    if (!t) return;
+    t.timer?.remove(false);
+    this.tap = null;
+    this.doCare(t.id, `tap:${t.count}`);
+    this.render();
+  }
+
+  private doCare(id: CareAction, forced?: string): void {
+    if (!forced && (TAP_ACTIONS as readonly string[]).includes(id)) {
+      const timer = this.host.scene.time.delayedCall(CARE.tap.windowMs, () => this.finishTap());
+      this.tap = { id, count: 0, until: Date.now() + CARE.tap.windowMs, timer };
+      return;
+    }
+    try {
+      let arg: string | undefined = forced;
+      if (id === 'train') arg = TRAIN_CHOICES[this.trainStat];
+      if (id === 'dress') arg = ACCESSORY_CHOICES[this.accIdx] ?? '';
+      if (id === 'nickname') {
+        const answer = typeof window !== 'undefined' && typeof window.prompt === 'function' ? window.prompt('Nickname (up to 12 letters, empty clears):', this.mon.care?.nickname ?? '') : null;
+        if (answer === null) return;
+        arg = answer;
+      }
+      this.flash = services().session.care(this.sel, id, arg);
+      this.notice = this.flash;
+      this.reordered = true;
+    } catch (e) {
+      playSfx(this.host.scene, 'ui.error');
+      this.flash = e instanceof Error ? e.message : 'That did not work.';
+    }
   }
 
   private reorder(to: number): void {
@@ -256,7 +346,7 @@ class PokemonScreen implements PickerLike {
   }
 
   private nameOf(mon: PokemonInstance): string {
-    return lookSpecies(this.content, mon).name;
+    return mon.care?.nickname || lookSpecies(this.content, mon).name;
   }
 
   private leave(): void {
@@ -309,6 +399,7 @@ class PokemonScreen implements PickerLike {
   }
 
   private footerText(): string {
+    if (this.tap) return `Tap Enter! ${this.tap.count}/${CARE.tap.goal} (Esc to stop)`;
     if (this.flash) return this.flash;
     if (this.pick && this.mode === 'list') return this.pick.problemFor(this.sel) ?? `Enter: choose ${this.nameOf(this.mon)}.  Up/down Pokémon · left/right tab.`;
     const r = readiness(this.content, this.mon);
@@ -418,21 +509,22 @@ class PokemonScreen implements PickerLike {
   private drawMenu(scene: Phaser.Scene): void {
     const opts = this.menuOptions();
     const w = 214;
-    const h = opts.length * 34 + 20;
+    const rh = opts.length > 8 ? 26 : 34;
+    const h = opts.length * rh + 20;
     const x = RIGHT_X + 16;
     const y = BODY_Y + 8;
     const box = scene.add.container(x, y).setName('pokemon-action-menu');
     box.add(drawGlass(scene, 0, 0, w, h, { tint: AERO.glassLow, rim: AERO.sky, glow: false, radius: 16 }));
     opts.forEach((o, i) => {
-      const oy = 10 + i * 34;
+      const oy = 10 + i * rh;
       if (i === this.menuIdx) {
         const hl = scene.add.graphics();
-        hl.fillStyle(0xfff2b0, 0.22).fillRoundedRect(8, oy, w - 16, 30, 10);
-        hl.lineStyle(2, 0xfff2b0, 0.9).strokeRoundedRect(8, oy, w - 16, 30, 10);
+        hl.fillStyle(0xfff2b0, 0.22).fillRoundedRect(8, oy, w - 16, rh - 4, 10);
+        hl.lineStyle(2, 0xfff2b0, 0.9).strokeRoundedRect(8, oy, w - 16, rh - 4, 10);
         box.add(hl);
       }
-      box.add(scene.add.text(22, oy + 15, o.label, textStyle(18, o.problem ? '#7f93a8' : '#ffffff')).setOrigin(0, 0.5));
-      const zone = scene.add.zone(8, oy, w - 16, 30).setOrigin(0).setInteractive({ useHandCursor: true });
+      box.add(scene.add.text(22, oy + (rh - 4) / 2, o.label, textStyle(rh < 30 ? 15 : 18, o.problem ? '#7f93a8' : '#ffffff')).setOrigin(0, 0.5));
+      const zone = scene.add.zone(8, oy, w - 16, rh - 4).setOrigin(0).setInteractive({ useHandCursor: true });
       zone.on('pointerover', () => {
         if (this.menuIdx === i || this.closed) return;
         this.menuIdx = i;
@@ -495,6 +587,10 @@ class PokemonScreen implements PickerLike {
     y = this.field(box, rx, y, rw, 'Nature', info.nature ?? 'Unknown', '#ffffff', 15, 2);
     const bv = bondView(this.content, this.run, mon);
     {
+      const c = mon.care;
+      const extra = [c?.talent ? `talent ${c.talent.toUpperCase()}` : '', c?.fatigue ? `tired ×${c.fatigue}` : '', c?.favourite ? '★ favourite' : '', c?.ace ? 'ace' : ''].filter(Boolean).join(' · ');
+      y = this.field(box, rx, y, rw, 'Mood', `${moodWord(c?.mood ?? 0)}${extra ? ` · ${extra}` : ''}`, (c?.mood ?? 0) < 0 ? '#ffb0a0' : '#ffffff', 14, 1);
+      y = this.field(box, rx, y, rw, 'Journal', `${c?.fights ?? 0} fights · ${c?.falls ?? 0} falls`, '#ffffff', 14, 1);
       y = this.field(box, rx, y, rw, 'Feeling', bv.emotion ? bv.emotion.name : 'Calm', bv.emotion?.color ?? '#ffffff', 16, 1);
       y = this.field(box, rx, y, rw, 'Bond', `${bv.mood.text}  ${'♥'.repeat(bv.hearts)}${'♡'.repeat(5 - bv.hearts)}`, bv.hearts === 5 ? '#ff80a0' : '#ffffff', 16, 1);
     }
@@ -543,6 +639,32 @@ class PokemonScreen implements PickerLike {
         this.text(box, RIGHT_W - 8, y, c.delta === 0 ? '=' : `${c.delta > 0 ? '+' : ''}${c.delta}`, 18, col).setOrigin(1, 0.5);
       }
     });
+    {
+      // Stat radar (F41): base stats against the scale, drawn small beside the nature line.
+      const cx = RIGHT_W - 48;
+      const cy = 266;
+      const rad = 26;
+      const g = scene.add.graphics();
+      const pt = (i: number, f: number) => ({ x: cx + Math.sin((i / 6) * Math.PI * 2) * rad * f, y: cy - Math.cos((i / 6) * Math.PI * 2) * rad * f });
+      g.lineStyle(1, AERO.rim, 0.5);
+      [1, 0.5].forEach((f) => {
+        g.beginPath();
+        info.stats.forEach((_, i) => (i === 0 ? g.moveTo(pt(i, f).x, pt(i, f).y) : g.lineTo(pt(i, f).x, pt(i, f).y)));
+        g.closePath();
+        g.strokePath();
+      });
+      g.fillStyle(0x7fd8ff, 0.45).lineStyle(2, 0xbfe9ff, 0.9);
+      g.beginPath();
+      info.stats.forEach((s, i) => {
+        const f = Math.max(0.08, Math.min(1, s.base / BASE_STAT_SCALE));
+        if (i === 0) g.moveTo(pt(i, f).x, pt(i, f).y);
+        else g.lineTo(pt(i, f).x, pt(i, f).y);
+      });
+      g.closePath();
+      g.fillPath();
+      g.strokePath();
+      box.add(g);
+    }
     this.panel(box, 0, 292, RIGHT_W, 40, 0.4);
     this.text(box, 12, 302, `Nature: ${info.nature ?? 'unknown'}`, 15, '#ffffff', { fixedWidth: RIGHT_W - 24 });
   }
