@@ -3,6 +3,7 @@
 // Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
+import { fitLine } from '../ui/fitText';
 import { candyPerkProblem } from '../core/candyShop';
 import { researchLines } from '../core/trainerResearch';
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
@@ -42,6 +43,7 @@ import { Menu, paintWindow } from '../ui/widgets';
 import { codexEntries, codexTotals } from '../core/story/codex';
 import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
+import { WiiCursor } from '../ui/wiiMotion';
 
 type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
 
@@ -193,6 +195,8 @@ export class HubScene extends Phaser.Scene {
   private dexInfo: DexInfo | null = null;
   private tiles: Tile[] = [];
   private tileIndex = 2;
+  /** The Wii-style glowing cursor that glides between the bottom tiles (spec §24). */
+  private tileCursor: WiiCursor | null = null;
   /** The page of a tile with several rooms, while it is open; room pages open on top of it. */
   private section: Picker | null = null;
   private blurb!: Phaser.GameObjects.Text;
@@ -230,6 +234,7 @@ export class HubScene extends Phaser.Scene {
     this.picker = null;
     this.section = null;
     this.tiles = [];
+    this.tileCursor = null;
     playMusicLazy(this, 'bgm.hub');
     const p = session.profile;
 
@@ -307,7 +312,7 @@ export class HubScene extends Phaser.Scene {
       const lit = paintWindow(this.add.graphics(), 0, 0, w, h, { fill: 0x3a3048, border: COLORS.accent }).setVisible(false);
       const icon = itemVisual(this, t.icon, w / 2, big ? 42 : 38, big ? 3 : 2) as Tile['icon'];
       const text = t.id === 'trainers' && ready > 0 ? `${t.label} (${ready}!)` : t.label;
-      const label = this.add.text(w / 2, h - 26, text, textStyle(big ? 28 : 24)).setOrigin(0.5, 0.5);
+      const label = fitLine(this.add.text(w / 2, h - (big ? 34 : 30), text, textStyle(big ? 28 : 24)).setOrigin(0.5, 0.5), w - 24);
       root.add([idle, lit, icon, label]);
       const zone = this.add.zone(0, 0, w, h).setOrigin(0).setInteractive({ useHandCursor: true });
       zone.on('pointerover', () => {
@@ -340,6 +345,15 @@ export class HubScene extends Phaser.Scene {
       tile.icon.y = iconY;
       if (on) this.tweens.add({ targets: tile.icon, y: iconY - 5, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     });
+    const tile = this.tiles[i];
+    if (tile) {
+      const h = TILES[i]!.id === 'run' ? TILE_H + 12 : TILE_H;
+      const box: [number, number, number, number] = [tile.x - 6, TILE_Y - h / 2 - TILE_RISE - 6, tile.w + 12, h + 12];
+      if (!this.tileCursor) {
+        this.tileCursor = new WiiCursor(this, null, ...box, 18);
+        this.tileCursor.g.setDepth(5).setName('hub-cursor');
+      } else this.tileCursor.moveTo(...box);
+    }
     const t = TILES[i]!;
     this.setBlurb(t.blurb);
     const mon = this.tileMons[i];

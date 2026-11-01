@@ -20,15 +20,23 @@ import {
   type Settings,
 } from '../core/state';
 import { emptyTimelineStore, TimelineStoreSchema, type TimelineStore } from '../core/timeline/schema';
+import { freshEvil } from '../core/evil/schema';
 import { StorageUnavailableError, type StorageProvider } from './storage';
 
 export const SAVE_FORMAT = 'pkmn-roguelike';
 export const KEY_PREFIX = 'pkr';
 
+/** Save slots: slot 1 keeps the original keys (so every older save is slot 1), slots 2 and 3 use `pkr.s2.*` and `pkr.s3.*`. */
+export const SLOT_COUNT = 3;
+export type SlotNumber = 1 | 2 | 3;
+export const SLOTS: readonly SlotNumber[] = [1, 2, 3];
+/** Which slot is in use, stored apart from the slots (plain text "1" to "3"). */
+export const ACTIVE_SLOT_KEY = `${KEY_PREFIX}.slot`;
+
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 29, settings: 11, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 32, settings: 11, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -284,6 +292,18 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     27: (data) => ({ ...(data as Json), clock: { day: 1, tick: 0, celebrated: [] } }),
     // v29 (Auto-Battle): an optional `autoUsed` on a battle; older runs have none.
     28: (data) => data as Json,
+    // v30 (Weeks toggle): every older run was started with Weeks on.
+    29: (data) => {
+      const run = data as Json;
+      return { ...run, rules: run.rules && typeof run.rules === 'object' ? { ...(run.rules as Json), weeks: true } : run.rules };
+    },
+    // v31 (real-date celebrations): runs started before it know no real-world date yet.
+    30: (data) => ({ ...(data as Json), calendar: { today: null, startedOn: null } }),
+    // v32 (Evil Teams and permanent choices): runs started before it have met no team and made no recorded choices.
+    31: (data) => {
+      const d = data as Json & { story?: Json };
+      return d.story ? { ...d, story: { evil: freshEvil(), choices: [], ...d.story } } : d;
+    },
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.
@@ -326,6 +346,13 @@ export type LoadResult<T> =
   | { status: 'incompatible'; reason: string }
   | { status: 'unavailable'; reason: string };
 
+export interface SlotPeek {
+  slot: SlotNumber;
+  profile: LoadResult<Profile>;
+  run: LoadResult<RunState>;
+  savedAt: string | null;
+}
+
 export type SaveResult = { ok: true } | { ok: false; reason: string };
 
 export const DEFAULT_SETTINGS: Settings = { musicVolume: 0.5, sfxVolume: 0.7, muted: false, battleAnimations: 'full', effectIntensity: 1, shakeIntensity: 1, reduceParticles: false, textSpeed: 'instant', autoAdvance: false, messageDelay: 'normal', highContrast: false, typeMarkers: false, uiScale: 'full', spriteAnimations: true, damageNumbers: true, catchDetail: 'full', battleSpeed: 'normal', dialogueFrequency: 'normal', damageDetails: false, accessibilityProfile: 'custom', trainerSort: 'default', trainerSortReverse: false, battleUi: 'aero', abilityAnimations: true, battleTextAnimations: true, interactionAnimations: true, hyperAnimations: true, rivalAnimations: true, evolutionAnimations: true, battleScreenEffects: true, menuAnimations: true, animationSpeed: 'normal', animationIntensity: 'normal', disableAllAnimations: false, autoBattle: false, autoExplain: true };
@@ -344,6 +371,7 @@ export class SaveManager {
     private readonly storage: StorageProvider,
     private readonly content: Content,
     private readonly now: () => Date = () => new Date(),
+    readonly slot: SlotNumber = 1,
   ) {}
 
   get storageName(): string {
@@ -362,7 +390,30 @@ export class SaveManager {
   }
 
   key(record: RecordName): string {
-    return `${KEY_PREFIX}.${record}`;
+    // Settings belong to the player, not to a slot.
+    if (record === 'settings' || this.slot === 1) return `${KEY_PREFIX}.${record}`;
+    return `${KEY_PREFIX}.s${this.slot}.${record}`;
+  }
+
+  /** What a slot holds, read without writing anything (a slot you only look at stays empty). */
+  peekSlot(): SlotPeek {
+    return { slot: this.slot, profile: this.read('profile', ProfileSchema), run: this.loadRun(), savedAt: this.lastSavedAt() };
+  }
+
+  /** Empties this slot. A copy of every record is kept under `pkr[.sN].deleted.<record>` (one copy; the next delete replaces it). */
+  deleteSlot(): SaveResult {
+    try {
+      const names: RecordName[] = ['profile', 'run', 'meta', 'timeline'];
+      for (const name of names) {
+        const raw = this.storage.get(this.key(name));
+        if (raw !== null) this.storage.set(`${this.key(name).replace(/\.([a-z]+)$/, '.deleted.$1')}`, raw);
+      }
+      for (const name of names) this.storage.remove(this.key(name));
+      this.storage.remove(this.replayKey);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+    }
   }
 
   // ---------- generic envelope handling ----------
@@ -376,7 +427,10 @@ export class SaveManager {
       data,
     };
     try {
-      this.storage.set(key, JSON.stringify(envelope));
+      const text = JSON.stringify(envelope);
+      this.storage.set(key, text);
+      // Read it back: a write that was cut short must not pass as saved.
+      if (this.storage.get(key) !== text) return { ok: false, reason: 'The save could not be verified after writing.' };
       if (record !== 'meta') {
         this.storage.set(
           this.key('meta'),
@@ -505,7 +559,7 @@ export class SaveManager {
 
   /** Where a replayed timeline lives: a run record (same versions and migrations) under its own key, apart from the normal run. */
   get replayKey(): string {
-    return `${KEY_PREFIX}.replay`;
+    return this.slot === 1 ? `${KEY_PREFIX}.replay` : `${KEY_PREFIX}.s${this.slot}.replay`;
   }
 
   loadReplay(): LoadResult<RunState> {
@@ -643,4 +697,23 @@ export class SaveManager {
 
 function isBoss(c: Content, id: string): boolean {
   return c.bosses.has(id);
+}
+
+/** The slot the player last used (1 when none was recorded or the record is invalid). */
+export function readActiveSlot(storage: StorageProvider): SlotNumber {
+  try {
+    const n = Number(storage.get(ACTIVE_SLOT_KEY));
+    return n === 2 || n === 3 ? n : 1;
+  } catch {
+    return 1;
+  }
+}
+
+export function writeActiveSlot(storage: StorageProvider, slot: SlotNumber): SaveResult {
+  try {
+    storage.set(ACTIVE_SLOT_KEY, String(slot));
+    return { ok: true };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
 }

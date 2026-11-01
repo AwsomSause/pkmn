@@ -157,3 +157,14 @@ describe('Pushed Beyond Its Limits', () => {
     expect(hypers(resolveTurn(ctx, { kind: 'move', index: 0 }))).toHaveLength(0);
   });
 });
+
+describe('Guard Formation', () => {
+  it('Protective Instinct guards the protected Pokémon for the next turns', () => {
+    const player = pidgey();
+    const mate = createPokemon(content, 'snorlax', 100, 'p2');
+    const ctx = ctxFor([player, mate], foe('cross-chop', 25), certain(['protectiveInstinct']));
+    resolveTurn(ctx, { kind: 'move', index: 0 });
+    // Created this turn, one turn used up at its end.
+    expect(ctx.battle.hyper.guard[player.uid]).toBe(2);
+  });
+});

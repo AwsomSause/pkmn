@@ -1,0 +1,2628 @@
+{
+ "config": {
+  "beatEvery": 3,
+  "firstStage": 2,
+  "heatMax": 10,
+  "reinforceAt": 6,
+  "ambushAt": 4,
+  "heatPerLevel": 3,
+  "levelsPerSuccess": 1,
+  "levelsPerMeeting": 1
+ },
+ "consequences": {
+  "facility": {
+   "stopped": {
+    "text": "The freed facility patches up trainers cheaply: healing works better for the rest of the run.",
+    "effects": [
+     {
+      "kind": "healingMultiplier",
+      "value": 1.1
+     }
+    ]
+   },
+   "through": {
+    "text": "They keep the facility: healing works worse for the rest of the run.",
+    "effects": [
+     {
+      "kind": "healingMultiplier",
+      "value": 0.9
+     }
+    ]
+   }
+  },
+  "steal": {
+   "stopped": {
+    "text": "The rescued Pokémon spread the word: wild Pokémon trust you more (better catch rate).",
+    "effects": [
+     {
+      "kind": "captureMultiplier",
+      "value": 1.1
+     }
+    ]
+   },
+   "through": {
+    "text": "Stolen Poké Balls flood the market and wild Pokémon grow wary (worse catch rate).",
+    "effects": [
+     {
+      "kind": "captureMultiplier",
+      "value": 0.92
+     }
+    ]
+   }
+  },
+  "research": {
+   "stopped": {
+    "text": "Their stolen research is now yours: more Research Points for the rest of the run.",
+    "effects": [
+     {
+      "kind": "researchMultiplier",
+      "value": 1.15
+     }
+    ]
+   },
+   "through": {
+    "text": "Their research pays off: enemy Pokémon reach Hyper states more often.",
+    "effects": [
+     {
+      "kind": "enemyHyperChanceMultiplier",
+      "value": 1.2
+     }
+    ]
+   }
+  },
+  "legendary": {
+   "stopped": {
+    "text": "The guardian is safe and grateful: Legendary Pokémon turn up more often.",
+    "effects": [
+     {
+      "kind": "encounterWeightMultiplier",
+      "group": "legendary",
+      "value": 1.3
+     }
+    ]
+   },
+   "through": {
+    "text": "The guardian has fled into hiding: Legendary Pokémon turn up less often.",
+    "effects": [
+     {
+      "kind": "encounterWeightMultiplier",
+      "group": "legendary",
+      "value": 0.7
+     }
+    ]
+   }
+  },
+  "trade": {
+   "stopped": {
+    "text": "With the black market shut, honest merchants lower their prices.",
+    "effects": [
+     {
+      "kind": "priceMultiplier",
+      "group": "all",
+      "value": 0.95
+     }
+    ]
+   },
+   "through": {
+    "text": "The black market drives up prices in every shop.",
+    "effects": [
+     {
+      "kind": "priceMultiplier",
+      "group": "all",
+      "value": 1.1
+     }
+    ]
+   }
+  },
+  "recruit": {
+   "stopped": {
+    "text": "Trainers who almost joined them train with you instead: a little more EXP.",
+    "effects": [
+     {
+      "kind": "xpMultiplier",
+      "value": 1.05
+     }
+    ]
+   },
+   "through": {
+    "text": "Their ranks swell: every enemy is a level higher.",
+    "effects": [
+     {
+      "kind": "enemyLevelOffset",
+      "value": 1
+     }
+    ]
+   }
+  },
+  "interfere": {
+   "stopped": {
+    "text": "The grateful organizers pay you well: more prize money.",
+    "effects": [
+     {
+      "kind": "moneyMultiplier",
+      "value": 1.1
+     }
+    ]
+   },
+   "through": {
+    "text": "Events are cancelled and prize money dries up.",
+    "effects": [
+     {
+      "kind": "moneyMultiplier",
+      "value": 0.9
+     }
+    ]
+   }
+  },
+  "control": {
+   "stopped": {
+    "text": "The town is free again and its people help your Pokémon feel at home (more friendship).",
+    "effects": [
+     {
+      "kind": "friendshipMultiplier",
+      "value": 1.15
+     }
+    ]
+   },
+   "through": {
+    "text": "They charge a toll everywhere they rule: Poké Balls cost more.",
+    "effects": [
+     {
+      "kind": "priceMultiplier",
+      "group": "balls",
+      "value": 1.15
+     }
+    ]
+   }
+  },
+  "experiment": {
+   "stopped": {
+    "text": "The experiment is shut down: enemy Pokémon lose their edge (fewer Hyper states).",
+    "effects": [
+     {
+      "kind": "enemyHyperChanceMultiplier",
+      "value": 0.8
+     }
+    ]
+   },
+   "through": {
+    "text": "The experiment worked: enemy Pokémon reach Hyper states more often.",
+    "effects": [
+     {
+      "kind": "enemyHyperChanceMultiplier",
+      "value": 1.25
+     }
+    ]
+   }
+  },
+  "artificial": {
+   "stopped": {
+    "text": "You saved the artificial Pokémon's blueprints: more Research Points.",
+    "effects": [
+     {
+      "kind": "researchMultiplier",
+      "value": 1.1
+     }
+    ]
+   },
+   "through": {
+    "text": "Their creation guards the bosses: boss Pokémon take less damage.",
+    "effects": [
+     {
+      "kind": "bossDamageTakenMultiplier",
+      "value": 0.95
+     }
+    ]
+   }
+  },
+  "habitat": {
+   "stopped": {
+    "text": "The habitat recovers: rare Pokémon turn up more often.",
+    "effects": [
+     {
+      "kind": "encounterWeightMultiplier",
+      "group": "rare",
+      "value": 1.2
+     }
+    ]
+   },
+   "through": {
+    "text": "The habitat is ruined: rare Pokémon turn up less often.",
+    "effects": [
+     {
+      "kind": "encounterWeightMultiplier",
+      "group": "rare",
+      "value": 0.8
+     }
+    ]
+   }
+  }
+ },
+ "teams": [
+  {
+   "id": "rocket",
+   "name": "Team Rocket",
+   "color": "#b01030",
+   "style": "open",
+   "front": "Silph Surplus Co.",
+   "philosophy": "Pokémon are tools, and profit is the only law.",
+   "motivation": "Giovanni wants a criminal empire that answers to no one.",
+   "goal": "steal the strongest Pokémon in every region and sell them to the highest bidder",
+   "ranks": {
+    "grunt": {
+     "name": "Rocket Grunt",
+     "sprite": "boss.npc_teamrocket_m",
+     "species": [
+      "rattata",
+      "zubat",
+      "ekans",
+      "koffing",
+      "grimer",
+      "raticate"
+     ],
+     "lines": {
+      "first": "\"Hey! This is Team Rocket business. Scram!\"",
+      "beaten": "\"You again? The boss chewed me out because of you!\"",
+      "winning": "\"Back for another beating? Team Rocket never forgets a face.\"",
+      "respect": "\"...Okay, you're tough. I'm just doing my job, all right?\""
+     }
+    },
+    "specialist": {
+     "name": "Rocket Scientist",
+     "sprite": "boss.npc_scientist",
+     "species": [
+      "magnemite",
+      "voltorb",
+      "koffing",
+      "porygon",
+      "electrode",
+      "porygon2"
+     ],
+     "lines": {
+      "first": "\"A trainer with a healthy team. You'd make a fine test subject.\"",
+      "beaten": "\"My numbers said you would lose. I need new numbers.\"",
+      "winning": "\"As predicted. Your Pokémon are data now.\"",
+      "respect": "\"Fascinating. You keep breaking my models.\""
+     }
+    },
+    "executive": {
+     "name": "Executive Archer",
+     "sprite": "boss.teamrocket",
+     "species": [
+      "houndour",
+      "zubat",
+      "koffing",
+      "houndoom",
+      "golbat",
+      "weezing"
+     ],
+     "lines": {
+      "first": "\"So you're the brat sticking your nose into our affairs.\"",
+      "beaten": "\"You embarrassed me last time. I don't get embarrassed twice.\"",
+      "winning": "\"Remember how that ended? Walk away while you can.\"",
+      "respect": "\"Giovanni has heard your name. That is not a compliment... mostly.\""
+     }
+    },
+    "leader": {
+     "name": "Boss Giovanni",
+     "sprite": "boss.giovanni-rocketboss",
+     "species": [
+      "persian",
+      "nidoqueen",
+      "nidoking",
+      "kangaskhan",
+      "rhyperior",
+      "garchomp"
+     ],
+     "lines": {
+      "first": "\"So this is the child who has been ruining my business.\"",
+      "beaten": "\"You beat me once. Do you think the world changes because of it?\"",
+      "winning": "\"You lost to me before. Kneel, and keep what you have left.\"",
+      "respect": "\"You remind me of someone. Very well. Show me everything.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "swarm",
+    "text": "Rocket never fights fair: one more Pokémon in every battle."
+   },
+   "spoils": [
+    "leftovers",
+    "focus-sash",
+    "life-orb",
+    "choice-band",
+    "smoke-ball"
+   ],
+   "legendary": [
+    "mewtwo"
+   ],
+   "ops": [
+    {
+     "id": "pokemon-heist",
+     "kind": "steal",
+     "name": "Pokémon Heist",
+     "text": "Rocket grunts are loading stolen Poké Balls into an unmarked van."
+    },
+    {
+     "id": "black-market",
+     "kind": "trade",
+     "name": "Black Market",
+     "text": "A back-alley stall sells Pokémon with no papers and no questions."
+    },
+    {
+     "id": "radio-tower",
+     "kind": "facility",
+     "name": "Radio Tower Takeover",
+     "text": "Rocket has seized the local radio tower and is broadcasting a strange signal."
+    },
+    {
+     "id": "evolution-signal",
+     "kind": "experiment",
+     "name": "Forced Evolution Lab",
+     "text": "A hidden machine is forcing wild Pokémon to evolve, and it hurts them."
+    }
+   ]
+  },
+  {
+   "id": "aqua",
+   "name": "Team Aqua",
+   "color": "#1060c0",
+   "style": "open",
+   "front": "Ocean Conservation Fund",
+   "philosophy": "The sea gave birth to all life, so the sea should cover the land.",
+   "motivation": "Archie believes the land crowds out the ocean's Pokémon.",
+   "goal": "wake Kyogre and raise the seas over the land",
+   "ranks": {
+    "grunt": {
+     "name": "Aqua Grunt",
+     "sprite": "boss.npc_sailor",
+     "species": [
+      "poochyena",
+      "carvanha",
+      "zubat",
+      "wailmer",
+      "mightyena",
+      "sharpedo"
+     ],
+     "lines": {
+      "first": "\"Hey! This is Team Aqua business. Scram!\"",
+      "beaten": "\"You again? The boss chewed me out because of you!\"",
+      "winning": "\"Back for another beating? Team Aqua never forgets a face.\"",
+      "respect": "\"...Okay, you're tough. I'm just doing my job, all right?\""
+     }
+    },
+    "specialist": {
+     "name": "Aqua Diver",
+     "sprite": "boss.npc_swimmer_m",
+     "species": [
+      "tentacool",
+      "carvanha",
+      "wailmer",
+      "tentacruel",
+      "sharpedo",
+      "wailord"
+     ],
+     "lines": {
+      "first": "\"Down here the sea decides who stays. Not you.\"",
+      "beaten": "\"The tide turned once. It turns back.\"",
+      "winning": "\"You sank last time. Want to try swimming again?\"",
+      "respect": "\"You swim against the current and win. Respect.\""
+     }
+    },
+    "executive": {
+     "name": "Admin Shelly",
+     "sprite": "boss.shelly",
+     "species": [
+      "carvanha",
+      "poochyena",
+      "sharpedo",
+      "mightyena",
+      "crawdaunt",
+      "wailord"
+     ],
+     "lines": {
+      "first": "\"Ahahaha! A little land-dweller wants to play?\"",
+      "beaten": "\"You got lucky. The sea always comes back for what it lost.\"",
+      "winning": "\"Ahaha, you again! Did you dry off from last time?\"",
+      "respect": "\"Hmph. Archie keeps asking about you. Don't let it go to your head.\""
+     }
+    },
+    "leader": {
+     "name": "Leader Archie",
+     "sprite": "boss.archie-gen6",
+     "species": [
+      "mightyena",
+      "crobat",
+      "muk",
+      "crawdaunt",
+      "wailord",
+      "sharpedo"
+     ],
+     "lines": {
+      "first": "\"Bwahaha! You're standing on my future ocean floor!\"",
+      "beaten": "\"You stopped me once. The sea is patient, and so am I.\"",
+      "winning": "\"Still on dry land? Not for long, kid.\"",
+      "respect": "\"Fine! Then let's see whose waves are stronger!\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "elite",
+    "text": "Aqua admins bring fewer Pokémon, trained harder: one less Pokémon, two levels higher."
+   },
+   "spoils": [
+    "water-stone",
+    "mystic-water",
+    "big-pearl",
+    "leftovers"
+   ],
+   "legendary": [
+    "kyogre"
+   ],
+   "ops": [
+    {
+     "id": "coastal-dig",
+     "kind": "habitat",
+     "name": "Coastal Dig",
+     "text": "Aqua grunts are digging up a nesting beach to flood it."
+    },
+    {
+     "id": "submarine-theft",
+     "kind": "steal",
+     "name": "Submarine Theft",
+     "text": "Team Aqua is stealing a research submarine from the docks."
+    },
+    {
+     "id": "deep-sea-study",
+     "kind": "legendary",
+     "name": "Deep Sea Survey",
+     "text": "Aqua divers are mapping the trench where a giant sleeps."
+    },
+    {
+     "id": "harbor-control",
+     "kind": "control",
+     "name": "Harbor Lockdown",
+     "text": "Team Aqua has closed the harbor and charges a toll to pass."
+    }
+   ]
+  },
+  {
+   "id": "magma",
+   "name": "Team Magma",
+   "color": "#c03018",
+   "style": "open",
+   "front": "Volcanic Land Trust",
+   "philosophy": "Land is where life thrives; the seas must shrink to make room.",
+   "motivation": "Maxie wants more land for people and Pokémon alike, whatever it costs.",
+   "goal": "wake Groudon and boil the seas away",
+   "ranks": {
+    "grunt": {
+     "name": "Magma Grunt",
+     "sprite": "boss.npc_hiker",
+     "species": [
+      "poochyena",
+      "numel",
+      "zubat",
+      "slugma",
+      "mightyena",
+      "camerupt"
+     ],
+     "lines": {
+      "first": "\"Hey! This is Team Magma business. Scram!\"",
+      "beaten": "\"You again? The boss chewed me out because of you!\"",
+      "winning": "\"Back for another beating? Team Magma never forgets a face.\"",
+      "respect": "\"...Okay, you're tough. I'm just doing my job, all right?\""
+     }
+    },
+    "specialist": {
+     "name": "Magma Geologist",
+     "sprite": "boss.npc_ruinmaniac",
+     "species": [
+      "numel",
+      "baltoy",
+      "slugma",
+      "torkoal",
+      "claydol",
+      "magcargo"
+     ],
+     "lines": {
+      "first": "\"The ground here is warm. Very warm. Leave.\"",
+      "beaten": "\"My readings never lie. My battles, apparently, do.\"",
+      "winning": "\"The magma doesn't care about you, and neither do I.\"",
+      "respect": "\"Your team is as stubborn as bedrock.\""
+     }
+    },
+    "executive": {
+     "name": "Admin Tabitha",
+     "sprite": "boss.tabitha",
+     "species": [
+      "numel",
+      "poochyena",
+      "camerupt",
+      "mightyena",
+      "golbat",
+      "torkoal"
+     ],
+     "lines": {
+      "first": "\"Hehehe! The leader told me to deal with pests like you.\"",
+      "beaten": "\"You again! The leader won't forgive me twice!\"",
+      "winning": "\"Hehehe, back for more lava?\"",
+      "respect": "\"Hehe... you're not a pest anymore. You're a problem.\""
+     }
+    },
+    "leader": {
+     "name": "Leader Maxie",
+     "sprite": "boss.maxie-gen6",
+     "species": [
+      "mightyena",
+      "crobat",
+      "weezing",
+      "camerupt",
+      "claydol",
+      "torkoal"
+     ],
+     "lines": {
+      "first": "\"Fufufu... a child, here? You do not understand what is at stake.\"",
+      "beaten": "\"You defeated me once. A miscalculation I have since corrected.\"",
+      "winning": "\"You remember the heat of our last battle. Turn back.\"",
+      "respect": "\"Logic says you should not keep winning. Show me how.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "elite",
+    "text": "Magma admins bring fewer Pokémon, trained harder: one less Pokémon, two levels higher."
+   },
+   "spoils": [
+    "fire-stone",
+    "charcoal",
+    "flame-orb",
+    "big-nugget"
+   ],
+   "legendary": [
+    "groudon"
+   ],
+   "ops": [
+    {
+     "id": "volcano-drill",
+     "kind": "facility",
+     "name": "Volcano Drill",
+     "text": "Team Magma has taken over a geothermal plant to drill into the volcano."
+    },
+    {
+     "id": "meteorite-heist",
+     "kind": "steal",
+     "name": "Meteorite Heist",
+     "text": "Magma grunts are stealing a meteorite from the observatory."
+    },
+    {
+     "id": "magma-survey",
+     "kind": "legendary",
+     "name": "Magma Survey",
+     "text": "Magma geologists are listening for a heartbeat deep under the mountain."
+    },
+    {
+     "id": "hot-spring-closure",
+     "kind": "control",
+     "name": "Hot Spring Closure",
+     "text": "Team Magma has fenced off the town's hot springs as \"private land\"."
+    }
+   ]
+  },
+  {
+   "id": "galactic",
+   "name": "Team Galactic",
+   "color": "#4878a8",
+   "style": "secret",
+   "front": "Galactic Energy Corp.",
+   "philosophy": "Spirit is a flaw; a new world without it would be perfect.",
+   "motivation": "Cyrus wants to unmake this world and build one without feelings.",
+   "goal": "chain the lords of time and space with the Red Chain",
+   "ranks": {
+    "grunt": {
+     "name": "Galactic Grunt",
+     "sprite": "boss.npc_supernerd",
+     "species": [
+      "glameow",
+      "stunky",
+      "zubat",
+      "bronzor",
+      "purugly",
+      "skuntank"
+     ],
+     "lines": {
+      "first": "\"Hey! This is Team Galactic business. Scram!\"",
+      "beaten": "\"You again? The boss chewed me out because of you!\"",
+      "winning": "\"Back for another beating? Team Galactic never forgets a face.\"",
+      "respect": "\"...Okay, you're tough. I'm just doing my job, all right?\""
+     }
+    },
+    "specialist": {
+     "name": "Galactic Scientist",
+     "sprite": "boss.npc_scientist",
+     "species": [
+      "bronzor",
+      "magnemite",
+      "porygon",
+      "bronzong",
+      "magneton",
+      "porygon2"
+     ],
+     "lines": {
+      "first": "\"Energy readings spike when you are near. Curious.\"",
+      "beaten": "\"An error. Errors are corrected.\"",
+      "winning": "\"The experiment worked. On you.\"",
+      "respect": "\"I am starting to doubt the model. Do not tell Cyrus.\""
+     }
+    },
+    "executive": {
+     "name": "Commander Mars",
+     "sprite": "boss.npc_psychic_f",
+     "species": [
+      "zubat",
+      "bronzor",
+      "purugly",
+      "golbat",
+      "bronzong",
+      "crobat"
+     ],
+     "lines": {
+      "first": "\"You're the kid poking around our lakes? Cute.\"",
+      "beaten": "\"You beat me, and I hate that! This time I'm serious!\"",
+      "winning": "\"Last time went my way. I bet it will again.\"",
+      "respect": "\"Ugh. Fine. You're actually good. Happy?\""
+     }
+    },
+    "leader": {
+     "name": "Boss Cyrus",
+     "sprite": "boss.cyrus",
+     "species": [
+      "sneasel",
+      "honchkrow",
+      "crobat",
+      "gyarados",
+      "weavile",
+      "houndoom"
+     ],
+     "lines": {
+      "first": "\"You are an obstacle. Obstacles are removed.\"",
+      "beaten": "\"You stopped me once. Feelings again. How tiresome.\"",
+      "winning": "\"You lost before. Spirit did not save you.\"",
+      "respect": "\"Perhaps... a world needs one like you. No. Battle me.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "shadow",
+    "text": "Galactic machines seal hearts: their first Pokémon is a Shadow Pokémon you can snag and save."
+   },
+   "spoils": [
+    "dusk-stone",
+    "shiny-stone",
+    "dawn-stone",
+    "comet-shard"
+   ],
+   "legendary": [
+    "dialga",
+    "palkia"
+   ],
+   "ops": [
+    {
+     "id": "lake-raid",
+     "kind": "legendary",
+     "name": "Lake Raid",
+     "text": "Galactic grunts are setting bombs at a lake where a guardian sleeps."
+    },
+    {
+     "id": "energy-plant",
+     "kind": "facility",
+     "name": "Power Plant Takeover",
+     "text": "Galactic Energy has bought the local power plant and turned the lights off."
+    },
+    {
+     "id": "spirit-lab",
+     "kind": "experiment",
+     "name": "Spirit Extraction Lab",
+     "text": "Scientists are draining the \"spirit\" from captured Pokémon."
+    },
+    {
+     "id": "veilstone-warehouse",
+     "kind": "steal",
+     "name": "Warehouse Raid",
+     "text": "Galactic is emptying a warehouse of Poké Balls and fossils."
+    }
+   ]
+  },
+  {
+   "id": "plasma",
+   "name": "Team Plasma",
+   "color": "#3050a0",
+   "style": "front",
+   "front": "Plasma Liberation League",
+   "philosophy": "Pokémon should be freed from trainers... so that only Plasma keeps them.",
+   "motivation": "Ghetsis uses a speech about freedom to take the world's Pokémon.",
+   "goal": "make every trainer release their Pokémon so only Plasma commands any",
+   "ranks": {
+    "grunt": {
+     "name": "Plasma Grunt",
+     "sprite": "boss.npc_engineer",
+     "species": [
+      "purrloin",
+      "trubbish",
+      "watchog",
+      "liepard",
+      "garbodor",
+      "seviper"
+     ],
+     "lines": {
+      "first": "\"Hey! This is Team Plasma business. Scram!\"",
+      "beaten": "\"You again? The boss chewed me out because of you!\"",
+      "winning": "\"Back for another beating? Team Plasma never forgets a face.\"",
+      "respect": "\"...Okay, you're tough. I'm just doing my job, all right?\""
+     }
+    },
+    "specialist": {
+     "name": "Researcher Colress",
+     "sprite": "boss.colress",
+     "species": [
+      "klink",
+      "magnemite",
+      "porygon",
+      "klinklang",
+      "magnezone",
+      "porygon2"
+     ],
+     "lines": {
+      "first": "\"I want to see what brings out a Pokémon's full power. You will help.\"",
+      "beaten": "\"Marvelous! Losing teaches me more than winning.\"",
+      "winning": "\"Ah, you again. My data says you will lose.\"",
+      "respect": "\"You are the most interesting variable I have found.\""
+     }
+    },
+    "executive": {
+     "name": "Sage Zinzolin",
+     "sprite": "boss.npc_psychic_m",
+     "species": [
+      "sneasel",
+      "cryogonal",
+      "seviper",
+      "weavile",
+      "cofagrigus",
+      "drapion"
+     ],
+     "lines": {
+      "first": "\"Release your Pokémon, child. It is for their own good.\"",
+      "beaten": "\"You humiliated a Sage! Plasma does not forgive.\"",
+      "winning": "\"Did you reflect on your sins since our last meeting?\"",
+      "respect": "\"You love those Pokémon. That is... inconvenient for us.\""
+     }
+    },
+    "leader": {
+     "name": "Ghetsis",
+     "sprite": "boss.ghetsis",
+     "species": [
+      "cofagrigus",
+      "seismitoad",
+      "eelektross",
+      "drapion",
+      "bisharp",
+      "hydreigon"
+     ],
+     "lines": {
+      "first": "\"Liberation! Such a lovely word. I made it mine.\"",
+      "beaten": "\"You ruined my plan once. Do not mistake that for victory.\"",
+      "winning": "\"Did you enjoy losing? I enjoyed watching.\"",
+      "respect": "\"Then I will crush you with my own hands!\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "swarm",
+    "text": "Plasma crowds you with followers: one more Pokémon in every battle."
+   },
+   "spoils": [
+    "dusk-ball",
+    "smoke-ball",
+    "rocky-helmet",
+    "expert-belt"
+   ],
+   "legendary": [
+    "kyurem"
+   ],
+   "ops": [
+    {
+     "id": "liberation-rally",
+     "kind": "recruit",
+     "name": "Liberation Rally",
+     "text": "Plasma speakers are convincing trainers to give up their Pokémon."
+    },
+    {
+     "id": "pokemon-confiscation",
+     "kind": "steal",
+     "name": "\"Rescue\" Drive",
+     "text": "Plasma grunts in fake ranger coats are taking Pokémon \"for their safety\"."
+    },
+    {
+     "id": "frigate-build",
+     "kind": "facility",
+     "name": "Frigate Dock",
+     "text": "Plasma is fitting an ice cannon to a flying frigate in the harbor."
+    },
+    {
+     "id": "genesect-project",
+     "kind": "artificial",
+     "name": "Ancient Revival Project",
+     "text": "Plasma scientists are rebuilding an ancient Pokémon as a weapon."
+    }
+   ]
+  },
+  {
+   "id": "flare",
+   "name": "Team Flare",
+   "color": "#d03028",
+   "style": "front",
+   "front": "Lysandre Labs",
+   "philosophy": "The world is ugly; only a chosen few deserve a beautiful future.",
+   "motivation": "Lysandre wants to save the world by wiping out almost everyone in it.",
+   "goal": "fire the ultimate weapon and keep the future for Flare alone",
+   "ranks": {
+    "grunt": {
+     "name": "Flare Grunt",
+     "sprite": "boss.npc_beauty",
+     "species": [
+      "houndour",
+      "croagunk",
+      "scraggy",
+      "litleo",
+      "mightyena",
+      "scrafty"
+     ],
+     "lines": {
+      "first": "\"Hey! This is Team Flare business. Scram!\"",
+      "beaten": "\"You again? The boss chewed me out because of you!\"",
+      "winning": "\"Back for another beating? Team Flare never forgets a face.\"",
+      "respect": "\"...Okay, you're tough. I'm just doing my job, all right?\""
+     }
+    },
+    "specialist": {
+     "name": "Flare Scientist",
+     "sprite": "boss.npc_scientist",
+     "species": [
+      "magnemite",
+      "klefki",
+      "porygon",
+      "magneton",
+      "toxicroak",
+      "porygon2"
+     ],
+     "lines": {
+      "first": "\"Team Flare pays very well. Your Pokémon could make me rich.\"",
+      "beaten": "\"My stylish plans! Ruined by an unstylish child!\"",
+      "winning": "\"How unfashionable of you to come back.\"",
+      "respect": "\"Even I must admit: that was elegant.\""
+     }
+    },
+    "executive": {
+     "name": "Admin Celosia",
+     "sprite": "boss.npc_lady",
+     "species": [
+      "houndour",
+      "litleo",
+      "croagunk",
+      "houndoom",
+      "pyroar",
+      "toxicroak"
+     ],
+     "lines": {
+      "first": "\"Only the beautiful get a ticket to the future. You don't have one.\"",
+      "beaten": "\"You ruined my outfit and my plan. Unforgivable.\"",
+      "winning": "\"Ah, the loser from before. Still no ticket?\"",
+      "respect": "\"Perhaps... you could have had a ticket after all.\""
+     }
+    },
+    "leader": {
+     "name": "Lysandre",
+     "sprite": "boss.lysandre",
+     "species": [
+      "mienshao",
+      "honchkrow",
+      "pyroar",
+      "gyarados",
+      "scizor",
+      "drapion"
+     ],
+     "lines": {
+      "first": "\"The world is too crowded. I will make it beautiful.\"",
+      "beaten": "\"You stopped me before. The world will still end, only later.\"",
+      "winning": "\"You failed last time. Give up your future.\"",
+      "respect": "\"You would protect this ugly world with everything you have? Then show me.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "elite",
+    "text": "Flare sends only its stylish best: one less Pokémon, two levels higher."
+   },
+   "spoils": [
+    "fire-stone",
+    "life-orb",
+    "scope-lens",
+    "comet-shard"
+   ],
+   "legendary": [
+    "yveltal",
+    "xerneas"
+   ],
+   "ops": [
+    {
+     "id": "power-plant",
+     "kind": "facility",
+     "name": "Power Plant Seizure",
+     "text": "Flare grunts in red suits are running the local power plant."
+    },
+    {
+     "id": "stone-mining",
+     "kind": "habitat",
+     "name": "Mega Stone Mining",
+     "text": "Flare is strip-mining a cave full of Mega Stones and sleeping Pokémon."
+    },
+    {
+     "id": "ultimate-weapon",
+     "kind": "research",
+     "name": "Weapon Research",
+     "text": "A Flare lab is studying an ancient weapon that drains life."
+    },
+    {
+     "id": "flare-tickets",
+     "kind": "trade",
+     "name": "Future Tickets",
+     "text": "Flare is selling \"tickets to the future\" for five million each."
+    }
+   ]
+  },
+  {
+   "id": "skull",
+   "name": "Team Skull",
+   "color": "#505058",
+   "style": "open",
+   "front": "Team Skull Crew",
+   "philosophy": "Nobody gave us a chance, so we take what we want.",
+   "motivation": "Guzma's misfits want respect, and money from whoever pays.",
+   "goal": "do the dirty work for a rich patron and take every island trial by force",
+   "ranks": {
+    "grunt": {
+     "name": "Skull Grunt",
+     "sprite": "boss.npc_rocker",
+     "species": [
+      "zubat",
+      "drowzee",
+      "yungoos",
+      "salandit",
+      "mareanie",
+      "golbat"
+     ],
+     "lines": {
+      "first": "\"Yo yo yo! What you lookin' at?\"",
+      "beaten": "\"Yo, not you again! My bad, my bad!\"",
+      "winning": "\"Ha! Remember last time? We got you, yo!\"",
+      "respect": "\"Aight, you're legit. Don't tell Guzma I said that.\""
+     }
+    },
+    "specialist": {
+     "name": "Skull Tagger",
+     "sprite": "boss.npc_biker",
+     "species": [
+      "ariados",
+      "masquerain",
+      "mareanie",
+      "salazzle",
+      "toxapex",
+      "golbat"
+     ],
+     "lines": {
+      "first": "\"This wall's ours now, and so is this road.\"",
+      "beaten": "\"You messed up my art, yo!\"",
+      "winning": "\"Back for another tag? You're it!\"",
+      "respect": "\"Aight. You can pass. This one time.\""
+     }
+    },
+    "executive": {
+     "name": "Admin Plumeria",
+     "sprite": "boss.plumeria",
+     "species": [
+      "salandit",
+      "golbat",
+      "mareanie",
+      "salazzle",
+      "toxapex",
+      "crobat"
+     ],
+     "lines": {
+      "first": "\"So you're the one picking on my grunts.\"",
+      "beaten": "\"You made my kids cry. Now I'm mad.\"",
+      "winning": "\"Remember how that went? Go home.\"",
+      "respect": "\"Huh. You're all right. Those idiots could learn from you.\""
+     }
+    },
+    "leader": {
+     "name": "Big Bad Guzma",
+     "sprite": "boss.guzma",
+     "species": [
+      "ariados",
+      "masquerain",
+      "pinsir",
+      "scizor",
+      "golisopod",
+      "crobat"
+     ],
+     "lines": {
+      "first": "\"Guzma! Destruction in human form! Who're you?\"",
+      "beaten": "\"You beat Guzma once. Guzma doesn't lose twice!\"",
+      "winning": "\"Heh. You're still standing? Not for long.\"",
+      "respect": "\"...Fine. You're the real deal. Let's go all out!\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "swarm",
+    "text": "Skull runs in packs: one more Pokémon in every battle."
+   },
+   "spoils": [
+    "poison-barb",
+    "toxic-orb",
+    "sharp-beak",
+    "rocky-helmet"
+   ],
+   "legendary": [
+    "nihilego"
+   ],
+   "ops": [
+    {
+     "id": "pokemon-snatch",
+     "kind": "steal",
+     "name": "Pokémon Snatching",
+     "text": "Skull grunts are grabbing Pokémon from a daycare."
+    },
+    {
+     "id": "trial-crash",
+     "kind": "interfere",
+     "name": "Trial Crashing",
+     "text": "Team Skull has crashed a local trial and is blocking every challenger."
+    },
+    {
+     "id": "town-takeover",
+     "kind": "control",
+     "name": "Town Takeover",
+     "text": "Team Skull has taken over an abandoned town and charges a \"fee\" to pass."
+    },
+    {
+     "id": "skull-recruit",
+     "kind": "recruit",
+     "name": "Recruitment Drive",
+     "text": "Skull is recruiting kids who failed their trials."
+    }
+   ]
+  },
+  {
+   "id": "aether",
+   "name": "Aether Foundation",
+   "color": "#c8c0a0",
+   "style": "front",
+   "front": "Aether Paradise Conservation",
+   "philosophy": "Beautiful Pokémon must be protected... by being kept in glass forever.",
+   "motivation": "Lusamine wants to own what she loves, including creatures from another world.",
+   "goal": "open an Ultra Wormhole and claim the beasts beyond it",
+   "ranks": {
+    "grunt": {
+     "name": "Aether Employee",
+     "sprite": "boss.npc_cooltrainer_m",
+     "species": [
+      "magnemite",
+      "porygon",
+      "voltorb",
+      "clefairy",
+      "magneton",
+      "porygon2"
+     ],
+     "lines": {
+      "first": "\"Welcome to Aether! This area is restricted, thank you.\"",
+      "beaten": "\"Please, no more trouble! My review is next week!\"",
+      "winning": "\"Security has been informed about you. Again.\"",
+      "respect": "\"Between us... I don't like what happens downstairs either.\""
+     }
+    },
+    "specialist": {
+     "name": "Aether Researcher",
+     "sprite": "boss.npc_scientist",
+     "species": [
+      "hypno",
+      "porygon",
+      "claydol",
+      "porygon2",
+      "type-null",
+      "bronzong"
+     ],
+     "lines": {
+      "first": "\"Our research is for the good of all Pokémon. Mostly.\"",
+      "beaten": "\"You damaged a prototype! Do you know what those cost?\"",
+      "winning": "\"Results are results. Thank you for the data.\"",
+      "respect": "\"You... could have been a great researcher.\""
+     }
+    },
+    "executive": {
+     "name": "Branch Chief Faba",
+     "sprite": "boss.npc_gentleman",
+     "species": [
+      "hypno",
+      "claydol",
+      "bruxish",
+      "alakazam",
+      "slowbro",
+      "type-null"
+     ],
+     "lines": {
+      "first": "\"I am the Branch Chief. You will address me properly.\"",
+      "beaten": "\"You dare humiliate the Branch Chief twice?!\"",
+      "winning": "\"Ah, the child I defeated. How did that feel?\"",
+      "respect": "\"Hmph. Perhaps I underestimated you. Slightly.\""
+     }
+    },
+    "leader": {
+     "name": "President Lusamine",
+     "sprite": "boss.lusamine-masters",
+     "species": [
+      "clefable",
+      "lilligant",
+      "mismagius",
+      "milotic",
+      "bewear",
+      "silvally"
+     ],
+     "lines": {
+      "first": "\"Such a lovely child. I could keep you in a case too.\"",
+      "beaten": "\"You broke my collection once. I will not let you touch it again.\"",
+      "winning": "\"You lost to me before. Stay still, darling.\"",
+      "respect": "\"Why will you not simply be beautiful and still?\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "elite",
+    "text": "Aether fields its finest specimens: one less Pokémon, two levels higher."
+   },
+   "spoils": [
+    "eviolite",
+    "wide-lens",
+    "quick-claw",
+    "star-piece"
+   ],
+   "legendary": [
+    "silvally",
+    "nihilego"
+   ],
+   "ops": [
+    {
+     "id": "preservation-lab",
+     "kind": "facility",
+     "name": "Preservation Wing",
+     "text": "Aether has opened a \"preservation\" lab that freezes rescued Pokémon."
+    },
+    {
+     "id": "beast-research",
+     "kind": "research",
+     "name": "Wormhole Research",
+     "text": "Aether is measuring energy from a crack in the sky."
+    },
+    {
+     "id": "type-null-project",
+     "kind": "artificial",
+     "name": "Project Type: Null",
+     "text": "Aether is building an artificial Pokémon to fight the beasts."
+    },
+    {
+     "id": "sanctuary-closure",
+     "kind": "habitat",
+     "name": "Sanctuary Closure",
+     "text": "Aether has fenced off a wild sanctuary as \"protected property\"."
+    }
+   ]
+  },
+  {
+   "id": "yell",
+   "name": "Team Yell",
+   "color": "#f0d020",
+   "style": "open",
+   "front": "Marnie's Fan Club",
+   "philosophy": "Marnie must win, and nobody else gets a fair chance.",
+   "motivation": "Loud, loyal fans who block every rival out of love for one trainer.",
+   "goal": "stop every challenger before they can reach the championship",
+   "ranks": {
+    "grunt": {
+     "name": "Team Yell Grunt",
+     "sprite": "boss.npc_crushkin",
+     "species": [
+      "zigzagoon-galar",
+      "scraggy",
+      "purrloin",
+      "impidimp",
+      "linoone-galar",
+      "liepard"
+     ],
+     "lines": {
+      "first": "\"Oi! No challengers past here! Marnie's orders! (Not really.)\"",
+      "beaten": "\"You again?! We'll yell louder this time!\"",
+      "winning": "\"Ha! Remember when we beat ya? Go Marnie!\"",
+      "respect": "\"Okay, you're alright. Just... don't tell Marnie we lost.\""
+     }
+    },
+    "specialist": {
+     "name": "Cheer Captain",
+     "sprite": "boss.npc_crushgirl",
+     "species": [
+      "impidimp",
+      "morgrem",
+      "scraggy",
+      "scrafty",
+      "obstagoon",
+      "grimmsnarl"
+     ],
+     "lines": {
+      "first": "\"Our chants are louder than your Pokémon!\"",
+      "beaten": "\"You out-shouted us? Impossible!\"",
+      "winning": "\"Lost your voice? Yell with us next time.\"",
+      "respect": "\"Fine, you get one cheer. Just one.\""
+     }
+    },
+    "executive": {
+     "name": "Piers",
+     "sprite": "boss.piers",
+     "species": [
+      "scraggy",
+      "skuntank",
+      "malamar",
+      "scrafty",
+      "obstagoon",
+      "toxtricity"
+     ],
+     "lines": {
+      "first": "\"Team Yell's my sister's mess. Guess that makes it my mess.\"",
+      "beaten": "\"You beat me once. Let's make this one a proper encore.\"",
+      "winning": "\"Back for an encore, huh? Didn't learn the lyrics?\"",
+      "respect": "\"Right. You're the real thing. I'll stop holding back.\""
+     }
+    },
+    "leader": {
+     "name": "Piers (All Out)",
+     "sprite": "boss.piers",
+     "species": [
+      "scrafty",
+      "skuntank",
+      "malamar",
+      "obstagoon",
+      "toxtricity",
+      "grimmsnarl"
+     ],
+     "lines": {
+      "first": "\"No crowd tonight. Just you, me, and the noise.\"",
+      "beaten": "\"Last time you stole the show. Not again.\"",
+      "winning": "\"You can't out-sing the encore, kid.\"",
+      "respect": "\"This is the best show I've played in years.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "swarm",
+    "text": "Team Yell never shuts up: one more Pokémon in every battle."
+   },
+   "spoils": [
+    "quick-claw",
+    "muscle-band",
+    "nugget",
+    "pp-up"
+   ],
+   "legendary": [
+    "zacian",
+    "zamazenta"
+   ],
+   "ops": [
+    {
+     "id": "stadium-block",
+     "kind": "interfere",
+     "name": "Stadium Blockade",
+     "text": "Team Yell is blocking the stadium so nobody but Marnie can enter."
+    },
+    {
+     "id": "route-chant",
+     "kind": "control",
+     "name": "Route Chant-Off",
+     "text": "Team Yell has taken over a route and won't let anyone through."
+    },
+    {
+     "id": "ticket-scalp",
+     "kind": "trade",
+     "name": "Ticket Scalping",
+     "text": "Team Yell is buying up every match ticket and reselling them."
+    },
+    {
+     "id": "fan-recruit",
+     "kind": "recruit",
+     "name": "Fan Drive",
+     "text": "Team Yell is recruiting new grunts with free scarves."
+    }
+   ]
+  },
+  {
+   "id": "star",
+   "name": "Team Star",
+   "color": "#9030c0",
+   "style": "secret",
+   "front": "School Outdoor Club",
+   "philosophy": "We stood up to bullies once. Now nobody tells us what to do.",
+   "motivation": "Students who banded together after being bullied, now bullying back.",
+   "goal": "drive every other trainer off the academy grounds",
+   "ranks": {
+    "grunt": {
+     "name": "Star Grunt",
+     "sprite": "boss.npc_lass",
+     "species": [
+      "murkrow",
+      "pawniard",
+      "varoom",
+      "azurill",
+      "nickit",
+      "bisharp"
+     ],
+     "lines": {
+      "first": "\"Star Barrage! You don't belong here!\"",
+      "beaten": "\"Not you again! You're messing with our vibe!\"",
+      "winning": "\"Ha! Remember how we beat you? Starfall!\"",
+      "respect": "\"Okay... you're not a bully. Maybe you can stay.\""
+     }
+    },
+    "specialist": {
+     "name": "Star Mechanic",
+     "sprite": "boss.npc_engineer",
+     "species": [
+      "varoom",
+      "magnemite",
+      "klink",
+      "revavroom",
+      "magneton",
+      "klinklang"
+     ],
+     "lines": {
+      "first": "\"Starmobile's tuned and ready. Want a ride? No? Then battle!\"",
+      "beaten": "\"You scratched the Starmobile! Rematch!\"",
+      "winning": "\"Engine's still warm from last time, slowpoke.\"",
+      "respect": "\"Okay, your team runs smoother than our cars.\""
+     }
+    },
+    "executive": {
+     "name": "Boss Giacomo",
+     "sprite": "boss.giacomo",
+     "species": [
+      "murkrow",
+      "pawniard",
+      "varoom",
+      "bisharp",
+      "revavroom",
+      "kingambit"
+     ],
+     "lines": {
+      "first": "\"Dark crew boss here. Drop the beat, then drop out.\"",
+      "beaten": "\"You broke my rhythm last time. Not again.\"",
+      "winning": "\"Same song as before? It ends the same way.\"",
+      "respect": "\"You've got rhythm. Respect, for real.\""
+     }
+    },
+    "leader": {
+     "name": "Boss Ortega",
+     "sprite": "boss.ortega",
+     "species": [
+      "azurill",
+      "dachsbun",
+      "wigglytuff",
+      "azumarill",
+      "tinkaton",
+      "revavroom"
+     ],
+     "lines": {
+      "first": "\"You think you can just walk into our base? Ugh!\"",
+      "beaten": "\"You embarrassed me! In front of my crew!\"",
+      "winning": "\"You lost to me! So go home already!\"",
+      "respect": "\"Fine! You're not a bully. You're just... really good.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "elite",
+    "text": "Team Star bosses rely on one Starmobile ace: one less Pokémon, two levels higher."
+   },
+   "spoils": [
+    "rare-candy",
+    "big-nugget",
+    "expert-belt",
+    "star-piece"
+   ],
+   "legendary": [
+    "koraidon",
+    "miraidon"
+   ],
+   "ops": [
+    {
+     "id": "base-blockade",
+     "kind": "control",
+     "name": "Base Blockade",
+     "text": "Team Star has set up a base camp and closed the road behind it."
+    },
+    {
+     "id": "class-crash",
+     "kind": "interfere",
+     "name": "Class Crashing",
+     "text": "Team Star is crashing the local trainer school and scaring off students."
+    },
+    {
+     "id": "star-recruit",
+     "kind": "recruit",
+     "name": "Star Recruitment",
+     "text": "Team Star is recruiting new grunts with shiny jackets."
+    },
+    {
+     "id": "ruins-claim",
+     "kind": "legendary",
+     "name": "Ruins Claim",
+     "text": "Team Star has camped out in ruins where something ancient roars."
+    }
+   ]
+  }
+ ],
+ "templates": [
+  {
+   "id": "suspicious",
+   "beat": 1,
+   "event": {
+    "name": "Suspicious Trainers",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{gruntSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "Two {grunt}s whisper about a \"{front}\" shipment and go quiet when they see you.",
+    "choices": [
+     {
+      "label": "Confront them",
+      "success": {
+       "text": "\"Mind your own business!\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        },
+        {
+         "kind": "evil",
+         "talk": "grunt"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "grunt",
+        "name": "{grunt}",
+        "size": 2,
+        "levelBonus": 0,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "money",
+          "amount": 600
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Eavesdrop",
+      "check": "intelligence",
+      "success": {
+       "text": "You hear the name {team}, and the word \"{goal}\".",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      },
+      "failure": {
+       "text": "A twig snaps. \"Who's there?!\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "grunt",
+        "name": "{grunt}",
+        "size": 2,
+        "levelBonus": 0,
+        "chain": 1,
+        "win": []
+       }
+      }
+     },
+     {
+      "label": "Walk on",
+      "success": {
+       "text": "You walk on. Later you spot the {front} logo on a crate by the road.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "evidence",
+   "beat": 2,
+   "event": {
+    "name": "{front} Files",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{gruntSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "A dropped folder lies by the path: shipping lists, Pokémon names, and a red {team} stamp.",
+    "choices": [
+     {
+      "label": "Keep the evidence",
+      "success": {
+       "text": "You tuck the folder away. Someone will want this later.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-evidence",
+         "pick": "kept",
+         "text": "Kept the {team} files as evidence",
+         "weight": 2
+        }
+       ]
+      }
+     },
+     {
+      "label": "Hand it to the police",
+      "success": {
+       "text": "Officer Jenny thanks you and opens a case on {front}.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        },
+        {
+         "kind": "money",
+         "amount": 800
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 5
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-evidence",
+         "pick": "police",
+         "text": "Handed the {team} files to the police",
+         "weight": 1
+        }
+       ]
+      }
+     },
+     {
+      "label": "Sell it back to them",
+      "success": {
+       "text": "A {grunt} pays you to forget what you saw.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": -1
+        },
+        {
+         "kind": "money",
+         "amount": 1500
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -8
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-evidence",
+         "pick": "sold",
+         "text": "Sold the {team} files back to them",
+         "weight": 2
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "recognized",
+   "beat": 3,
+   "event": {
+    "name": "{team} Knows Your Face",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{specialistSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "A {specialist} blocks the road. \"You're the one who keeps showing up. {team} has a file on you now.\"",
+    "choices": [
+     {
+      "label": "Stand your ground",
+      "success": {
+       "text": "\"Then let's see what the file is worth.\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        },
+        {
+         "kind": "evil",
+         "talk": "specialist"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "specialist",
+        "name": "{specialist}",
+        "size": 3,
+        "levelBonus": 1,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "itemFrom",
+          "ids": "{spoils}"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Play dumb",
+      "check": "charisma",
+      "success": {
+       "text": "\"Wrong kid, I guess.\" They walk off, confused.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": -1
+        }
+       ]
+      },
+      "failure": {
+       "text": "\"Nice try.\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        },
+        {
+         "kind": "evil",
+         "talk": "specialist"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "specialist",
+        "name": "{specialist}",
+        "size": 3,
+        "levelBonus": 1,
+        "chain": 1,
+        "win": []
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "rising-star",
+   "beat": 4,
+   "event": {
+    "name": "{exec}",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{execSprite}",
+      "{gruntSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "shake"
+    },
+    "intro": "{exec} steps out of a black car, flanked by grunts. {team}'s rising star wants to meet the trainer who keeps getting in the way.",
+    "choices": [
+     {
+      "label": "Battle {exec}",
+      "success": {
+       "text": "\"Let me show you why I outrank them.\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        },
+        {
+         "kind": "evil",
+         "talk": "executive"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "executive",
+        "name": "{executive}",
+        "size": 3,
+        "levelBonus": 2,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "itemFrom",
+          "ids": "{spoils}"
+         },
+         {
+          "kind": "money",
+          "amount": 1500
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Back down",
+      "success": {
+       "text": "{exec} laughs. \"Smart. Stay smart.\" {team} grows bolder.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-backed-down",
+         "pick": "yes",
+         "text": "Backed down from {exec}",
+         "weight": 1
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "nemesis",
+   "beat": 5,
+   "event": {
+    "name": "{exec} Returns",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{execSprite}",
+      "{gruntSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "{exec} is back, with a stronger team, and a {grunt} in the back is looking at you like they want out.",
+    "choices": [
+     {
+      "label": "Battle {exec} again",
+      "success": {
+       "text": "\"This time it ends differently.\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        },
+        {
+         "kind": "evil",
+         "talk": "executive"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "executive",
+        "name": "{executive}",
+        "size": 4,
+        "levelBonus": 3,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "itemFrom",
+          "ids": "{spoils}"
+         },
+         {
+          "kind": "money",
+          "amount": 2000
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Help the grunt defect",
+      "requires": [
+       {
+        "kind": "evil",
+        "stopped": 1
+       }
+      ],
+      "success": {
+       "text": "While {exec} rants, the grunt slips away with you. \"I know how their base works. I'll help.\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "defect": true
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-defector",
+         "pick": "trusted",
+         "text": "Helped a {team} grunt defect",
+         "weight": 2
+        }
+       ]
+      }
+     },
+     {
+      "label": "Turn the grunt in",
+      "requires": [
+       {
+        "kind": "evil",
+        "stopped": 1
+       }
+      ],
+      "success": {
+       "text": "You point out the deserter. {exec} smiles and pays you. The grunt is dragged away.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": -2
+        },
+        {
+         "kind": "money",
+         "amount": 2500
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -10
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-defector",
+         "pick": "betrayed",
+         "text": "Betrayed a {team} deserter to {exec}",
+         "weight": 2
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "the-plan",
+   "beat": 6,
+   "event": {
+    "name": "{team}'s Real Plan",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{specialistSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "Behind a door marked \"{front}: staff only\", a whiteboard spells it out: {team} means to {goal}. {motive}",
+    "choices": [
+     {
+      "label": "Copy their research",
+      "check": "intelligence",
+      "success": {
+       "text": "You copy everything, and slip out with a prototype.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "itemFrom",
+         "ids": "{spoils}"
+        }
+       ]
+      },
+      "failure": {
+       "text": "An alarm blares!",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 2
+        },
+        {
+         "kind": "evil",
+         "talk": "specialist"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "specialist",
+        "name": "{specialist}",
+        "size": 3,
+        "levelBonus": 2,
+        "chain": 1,
+        "win": []
+       }
+      }
+     },
+     {
+      "label": "Warn the League",
+      "success": {
+       "text": "The League promises help when you storm the base. Allies gather.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 1
+        },
+        {
+         "kind": "aid",
+         "amount": 1
+        },
+        {
+         "kind": "money",
+         "amount": 1000
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-warned",
+         "pick": "league",
+         "text": "Warned the League about {team}",
+         "weight": 1
+        }
+       ]
+      }
+     },
+     {
+      "label": "Keep it to yourself",
+      "success": {
+       "text": "You tell no one. When the time comes, this is your fight.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true
+        },
+        {
+         "kind": "attribute",
+         "key": "strength",
+         "amount": 5
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-warned",
+         "pick": "alone",
+         "text": "Kept {team}'s plan to yourself",
+         "weight": 1
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "hideout",
+   "beat": 7,
+   "event": {
+    "name": "{team} Hideout",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "rare",
+    "scene": {
+     "cast": [
+      "{leaderSprite}",
+      "{execSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "shake"
+    },
+    "intro": "You found it: {team}'s secret base. {leader} is inside. This is where it ends, one way or another.",
+    "choices": [
+     {
+      "label": "Storm the hideout",
+      "success": {
+       "text": "Grunts scatter. {leader} waits at the top.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "heat": 2
+        },
+        {
+         "kind": "evil",
+         "talk": "leader"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "leader",
+        "name": "{leader}",
+        "size": 5,
+        "levelBonus": 3,
+        "chain": 2,
+        "win": [
+         {
+          "kind": "evil",
+          "end": "defeated"
+         },
+         {
+          "kind": "itemFrom",
+          "ids": "{spoils}"
+         },
+         {
+          "kind": "money",
+          "amount": 4000
+         },
+         {
+          "kind": "choice",
+          "id": "{teamId}-ending",
+          "pick": "defeated",
+          "text": "Brought down {leader} and {team}",
+          "weight": 3
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Let the defector open a back door",
+      "requires": [
+       {
+        "kind": "evil",
+        "defector": true
+       }
+      ],
+      "success": {
+       "text": "The defector leads you past every guard, straight to {leader}.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true
+        },
+        {
+         "kind": "evil",
+         "talk": "leader"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "leader",
+        "name": "{leader}",
+        "size": 4,
+        "levelBonus": 1,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "evil",
+          "end": "defeated"
+         },
+         {
+          "kind": "itemFrom",
+          "ids": "{spoils}"
+         },
+         {
+          "kind": "money",
+          "amount": 4000
+         },
+         {
+          "kind": "choice",
+          "id": "{teamId}-ending",
+          "pick": "defeated",
+          "text": "Brought down {leader} with a defector's help",
+          "weight": 3
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Expose them with your evidence",
+      "requires": [
+       {
+        "kind": "choice",
+        "id": "{teamId}-evidence",
+        "pick": "kept"
+       },
+       {
+        "kind": "evil",
+        "stopped": 1
+       }
+      ],
+      "success": {
+       "text": "Your files hit every newspaper. {front} is raided by morning, and {leader} flees the region without a fight.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "end": "exposed"
+        },
+        {
+         "kind": "money",
+         "amount": 3000
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 10
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-ending",
+         "pick": "exposed",
+         "text": "Exposed {team} to the world without a fight",
+         "weight": 3
+        }
+       ]
+      }
+     },
+     {
+      "label": "Strike a deal with {leader}",
+      "success": {
+       "text": "{leader} smiles. \"Finally, someone sensible.\" You walk out richer, and {team} walks out stronger.",
+       "effects": [
+        {
+         "kind": "evil",
+         "beat": true,
+         "end": "allied"
+        },
+        {
+         "kind": "money",
+         "amount": 5000
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -25
+        },
+        {
+         "kind": "relic",
+         "id": "{teamId}-pact",
+         "name": "{team} Pact",
+         "effects": [
+          {
+           "kind": "moneyMultiplier",
+           "value": 1.2
+          },
+          {
+           "kind": "enemyLevelOffset",
+           "value": 1
+          }
+         ]
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-ending",
+         "pick": "allied",
+         "text": "Struck a deal with {leader}",
+         "weight": 3
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "op",
+   "slot": "op",
+   "event": {
+    "name": "{opName}",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{gruntSprite}",
+      "{specialistSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "{opText} ({team})",
+    "choices": [
+     {
+      "label": "Shut it down",
+      "success": {
+       "text": "\"Intruder!\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "talk": "grunt"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "grunt",
+        "name": "{grunt}",
+        "size": 2,
+        "levelBonus": 1,
+        "chain": 2,
+        "win": [
+         {
+          "kind": "evil",
+          "op": "foiled",
+          "heat": 2
+         },
+         {
+          "kind": "itemFrom",
+          "ids": "{spoils}"
+         },
+         {
+          "kind": "money",
+          "amount": 1000
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Sneak in disguised",
+      "check": "charisma",
+      "success": {
+       "text": "In a borrowed uniform you walk right in, swap a few wires, and walk out with their supplies.",
+       "effects": [
+        {
+         "kind": "evil",
+         "op": "infiltrated",
+         "heat": 1
+        },
+        {
+         "kind": "itemFrom",
+         "ids": "{spoils}"
+        }
+       ]
+      },
+      "failure": {
+       "text": "\"Your badge is upside down.\" Busted!",
+       "effects": [
+        {
+         "kind": "evil",
+         "talk": "specialist"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "specialist",
+        "name": "{specialist}",
+        "size": 3,
+        "levelBonus": 1,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "evil",
+          "op": "foiled",
+          "heat": 2
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Leave it alone",
+      "success": {
+       "text": "You leave them to it. {team} pulls it off.",
+       "effects": [
+        {
+         "kind": "evil",
+         "op": "succeeded"
+        }
+       ]
+      }
+     },
+     {
+      "label": "Lend them a hand",
+      "success": {
+       "text": "They pay well, and they remember who helped.",
+       "effects": [
+        {
+         "kind": "evil",
+         "op": "joined",
+         "heat": -2
+        },
+        {
+         "kind": "money",
+         "amount": 1500
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -10
+        }
+       ]
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "ambush",
+   "slot": "ambush",
+   "event": {
+    "name": "{team} Ambush",
+    "group": "Evil Teams",
+    "stop": "ambush",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{gruntSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "net"
+    },
+    "intro": "{team} grunts drop out of the trees! \"That's the one the boss told us about!\"",
+    "choices": [
+     {
+      "label": "Fight",
+      "success": {
+       "text": "\"Get them!\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "talk": "grunt"
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "grunt",
+        "name": "{grunt}",
+        "size": 3,
+        "levelBonus": 1,
+        "chain": 1,
+        "win": [
+         {
+          "kind": "money",
+          "amount": 900
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Run for it",
+      "chance": 0.5,
+      "success": {
+       "text": "You lose them in the tall grass.",
+       "effects": []
+      },
+      "failure": {
+       "text": "Cornered!",
+       "effects": [],
+       "battle": {
+        "kind": "trainer",
+        "evil": "grunt",
+        "name": "{grunt}",
+        "size": 3,
+        "levelBonus": 2,
+        "chain": 1,
+        "win": []
+       }
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "disguise",
+   "slot": "disguise",
+   "styles": [
+    "secret",
+    "front"
+   ],
+   "event": {
+    "name": "{front} Booth",
+    "group": "Evil Teams",
+    "stop": "merchant",
+    "rarity": "common",
+    "scene": {
+     "cast": [
+      "{gruntSprite}"
+     ],
+     "tint": "{color}",
+     "effect": "none"
+    },
+    "intro": "A friendly booth hands out flyers for \"{front}\". The smiling clerk wears a familiar pin under the scarf.",
+    "choices": [
+     {
+      "label": "Buy their bargain goods",
+      "success": {
+       "text": "Cheap, and they wave you off warmly. Your money funds {team}.",
+       "effects": [
+        {
+         "kind": "money",
+         "amount": -400
+        },
+        {
+         "kind": "itemFrom",
+         "ids": "{spoils}"
+        },
+        {
+         "kind": "evil",
+         "heat": -1
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": -3
+        }
+       ]
+      }
+     },
+     {
+      "label": "Expose the disguise",
+      "check": "intelligence",
+      "success": {
+       "text": "\"That pin is {team}'s!\" The crowd turns on the booth and the shop owner rewards you.",
+       "effects": [
+        {
+         "kind": "evil",
+         "heat": 1
+        },
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-booth",
+         "pick": "exposed",
+         "text": "Unmasked a disguised {team} booth",
+         "weight": 1
+        }
+       ]
+      },
+      "failure": {
+       "text": "The clerk drops the smile. \"You shouldn't have said that.\"",
+       "effects": [
+        {
+         "kind": "evil",
+         "heat": 1
+        }
+       ],
+       "battle": {
+        "kind": "trainer",
+        "evil": "grunt",
+        "name": "{grunt}",
+        "size": 2,
+        "levelBonus": 1,
+        "chain": 1,
+        "win": []
+       }
+      }
+     },
+     {
+      "label": "Walk away",
+      "success": {
+       "text": "You keep your money and your suspicions.",
+       "effects": []
+      }
+     }
+    ]
+   }
+  },
+  {
+   "id": "legend",
+   "slot": "legend",
+   "event": {
+    "name": "A Legend Stirs",
+    "group": "Evil Teams",
+    "stop": "event",
+    "rarity": "rare",
+    "scene": {
+     "cast": [],
+     "tint": "{color}",
+     "effect": "sparkle"
+    },
+    "intro": "With {team} gone, the Pokémon they hunted no longer needs to hide. Something huge moves ahead.",
+    "choices": [
+     {
+      "label": "Approach it",
+      "success": {
+       "text": "It rises to test the one who saved it.",
+       "effects": [],
+       "battle": {
+        "kind": "wild",
+        "species": "{legendary}",
+        "levelBonus": 5,
+        "win": [
+         {
+          "kind": "research",
+          "amount": 40
+         }
+        ]
+       }
+      }
+     },
+     {
+      "label": "Let it rest",
+      "success": {
+       "text": "You bow and walk on. It watches you go.",
+       "effects": [
+        {
+         "kind": "friendship",
+         "amount": 10
+        },
+        {
+         "kind": "choice",
+         "id": "{teamId}-legend",
+         "pick": "rest",
+         "text": "Let the Legendary {team} hunted rest in peace",
+         "weight": 2
+        }
+       ]
+      }
+     }
+    ]
+   }
+  }
+ ]
+}

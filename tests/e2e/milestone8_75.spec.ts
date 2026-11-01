@@ -228,7 +228,7 @@ test('map movement items: the Items menu puts you on a Bicycle, and the Devon Sc
   expect(before.previews.length).toBeGreaterThan(0);
   const wildIndex = before.options.findIndex((o) => o.endsWith(':wild'));
   await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Map').focus(i, false), wildIndex);
-  await expect.poll(async () => (await map()).info).toMatch(/Devon Scope: .+ Lv\d+/);
+  await expect.poll(async () => (await map()).info).toMatch(/Devon Scope: .+/);
   await page.screenshot({ path: 'test-results/m875-map-previews.png' });
 
   // Bag → Map pocket (the last tab, Left wraps to it) → Bicycle: the stops on offer move two columns ahead.

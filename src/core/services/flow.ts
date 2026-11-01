@@ -550,7 +550,7 @@ export function useService(content: Content, current: RunState, sideId: string, 
       break;
     }
     case 'read':
-      message = run.gameEvents.length > 0 ? `Event editions counting for this run: ${run.gameEvents.join(', ')}.` : 'No event edition is running for this run.';
+      message = run.gameEvents.length > 0 ? `Event editions counting for this run: ${run.gameEvents.join(', ')}.` : run.rules.weeks === false ? 'Weeks are off for this run: no weekly or holiday event applies.' : 'No event edition is running for this run.';
       break;
     case 'survey': {
       const dens = requireStage(run).map.nodes.flatMap((n) => n.sides).filter((s) => s.kind === 'raid');

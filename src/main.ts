@@ -4,7 +4,7 @@ import { ruleWipe, wipeAssetId, type WipeMask } from './ui/battleFx/ruleWipe';
 import { loadAssets } from './ui/lazyAssets';
 import { installTouchControls } from './ui/touchControls';
 import { sheenSweep } from './ui/battleFx/transitions';
-import { installUiJuice, pageEnter, setUiMotion } from './ui/wiiMotion';
+import { installUiJuice, noteSceneEnter, pageEnter, setUiMotion } from './ui/wiiMotion';
 import { uiMotionFrom } from './core/presentation/uiMotion';
 import Phaser from 'phaser';
 import { regionIdentity } from './core/presentation/regionIdentity';
@@ -25,6 +25,7 @@ import { LegacyGalleryScene } from './scenes/LegacyGalleryScene';
 import { MemoriesScene } from './scenes/MemoriesScene';
 import { HubScene } from './scenes/HubScene';
 import { MainMenuScene } from './scenes/MainMenuScene';
+import { SaveSlotsScene } from './scenes/SaveSlotsScene';
 import { SettingsScene } from './scenes/SettingsScene';
 import { MapScene } from './scenes/MapScene';
 import { PlazaScene } from './scenes/PlazaScene';
@@ -85,7 +86,7 @@ function start(): void {
     backgroundColor: '#1d1a24',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MainMenuScene, SettingsScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, PlazaScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, CreditsScene, HallOfFameScene, LegacyGalleryScene, MemoriesScene],
+    scene: [BootScene, MainMenuScene, SaveSlotsScene, SettingsScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, PlazaScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, CreditsScene, HallOfFameScene, LegacyGalleryScene, MemoriesScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {
@@ -102,14 +103,14 @@ function start(): void {
         // slowly changing battlefield behind them (the battle and map draw their own).
         const ownScenery = new Set(['Boot', 'Battle', 'Map', 'Hub', 'MainMenu', 'TrainerSelect']);
         // Gameplay screens in the Aero look (M10) get the glossy sky-and-bubbles backdrop instead.
-        const aeroScenery = new Set(['Reward', 'Shop', 'Event', 'Decision', 'Briefing', 'Expedition', 'Minigame', 'StarterSelect', 'RunPrep', 'GameOver', 'HallOfFame', 'LegacyGallery', 'Memories', 'Credits']);
+        const aeroScenery = new Set(['SaveSlots', 'Reward', 'Shop', 'Event', 'Decision', 'Briefing', 'Expedition', 'Minigame', 'StarterSelect', 'RunPrep', 'GameOver', 'HallOfFame', 'LegacyGallery', 'Memories', 'Credits']);
         for (const scene of g.scene.getScenes(false)) {
           scene.events.on(Phaser.Scenes.Events.CREATE, () => {
             if (scene.scene.key !== 'Boot') {
               scene.cameras.main.fadeIn(220, 14, 11, 18);
               sheenSweep(scene, session.settings.battleAnimations);
               // Wii-style menu motion (spec §24): a soft zoom settle and hover/press bounces on everything clickable.
-              if (scene.scene.key !== 'Battle') pageEnter(scene);
+              if (noteSceneEnter(scene.scene.key) && scene.scene.key !== 'Battle') pageEnter(scene);
               installUiJuice(scene);
             }
             if (aeroScenery.has(scene.scene.key)) {

@@ -20,6 +20,7 @@ const RulesChoiceSchema = z.object({
   modifierIds: z.array(z.string()),
   deathBlock: z.boolean(),
   noRewards: z.boolean().optional(),
+  weeks: z.boolean().optional(),
 });
 
 /**

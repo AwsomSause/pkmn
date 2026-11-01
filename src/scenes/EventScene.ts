@@ -14,7 +14,7 @@
 import Phaser from 'phaser';
 import { ATTRIBUTE_LABELS } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
-import { clockLabel, periodOf, PERIOD_LOOK, seasonOf } from '../core/clock';
+import { clockLabel, periodOf, PERIOD_LOOK, seasonOf, specialDateToday } from '../core/clock';
 import { eventView, type ChoiceView, type EventResult } from '../core/events';
 import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
@@ -91,7 +91,7 @@ export class EventScene extends Phaser.Scene {
       const look = PERIOD_LOOK[periodOf(run)];
       if (look.alpha > 0) this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, look.tint, look.alpha).setOrigin(0).setName('time-wash');
       startAmbient(this, periodOf(run));
-      this.add.text(GAME_WIDTH - 24, 14, `${clockLabel(run)}  ·  ${seasonOf(content, run)}  ·  ${look.ambient}`, textStyle(16, '#f4ecd0', { stroke: '#101010', strokeThickness: 3 })).setOrigin(1, 0).setName('camp-clock');
+      this.add.text(GAME_WIDTH - 24, 14, `${clockLabel(run)}  ·  ${seasonOf(content, run)}${specialDateToday(content, run) ? `  ·  ${specialDateToday(content, run)!.label}` : ''}  ·  ${look.ambient}`, textStyle(16, '#f4ecd0', { stroke: '#101010', strokeThickness: 3 })).setOrigin(1, 0).setName('camp-clock');
     }
     const rim = COLORS.rarity[view.event.rarity] ?? AERO.rim;
     this.illustrationFrame(view.event.group, view.event.rarity, rim, scene.cast.length === 0 && !scene.pokemon);

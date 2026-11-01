@@ -717,6 +717,13 @@
  "clock": {
   "ticksPerStep": 1,
   "seasonLength": 28,
+  "specialDates": [
+   { "id": "new-year", "label": "New Year", "on": "01-01" },
+   { "id": "valentine", "label": "Valentine's Day", "on": "02-14" },
+   { "id": "pokemon-day", "label": "Pokémon Day", "on": "02-27" },
+   { "id": "halloween", "label": "Halloween", "on": "10-31" },
+   { "id": "winter-gift", "label": "the Winter Gift Day", "on": "12-25" }
+  ],
   "periodWildFactor": 2,
   "shopHours": { "morning": 1, "afternoon": 0.9, "evening": 1, "night": 1.2 },
   "periodTypes": {

@@ -4,10 +4,11 @@ import Phaser from 'phaser';
 import { BAR_SHADES, COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, mixColor, textStyle } from './theme';
 import { playSfx } from './audio';
 import type { InputAction } from './input';
+import { fitLine } from './fitText';
 import { AERO, paintGlass, type MotionLevel } from './aero';
 import { glideIn, nudge, popIn, uiTiming, WiiCursor } from './wiiMotion';
 import { staggerDelay } from '../core/presentation/uiMotion';
-import { uiMotion } from './wiiMotion';
+import { justRedrawn, uiMotion } from './wiiMotion';
 
 const U = PIXEL_SCALE;
 
@@ -215,6 +216,8 @@ export class Menu {
         .setAlpha(opt.disabled ? 0.4 : 1)
         .setInteractive({ useHandCursor: !opt.disabled })
         .setData('noJuice', true);
+      // A long label stops at the item's edge (and at the next column) instead of running over its neighbour.
+      fitLine(text, this.itemWidth - 40);
       text.on('pointerover', () => {
         if (!opt.disabled && this.enabled) this.focus(i, false);
       });
@@ -226,7 +229,7 @@ export class Menu {
       this.labels.push(text);
       this.container.add(text);
       // Menu opening: options slide in one after another.
-      if (config.animateIn !== false) glideIn(scene, text, -18, 0, staggerDelay(i, uiMotion().level, uiMotion().timeScale), 'popupOpen');
+      if (config.animateIn !== false && !justRedrawn()) glideIn(scene, text, -18, 0, staggerDelay(i, uiMotion().level, uiMotion().timeScale), 'popupOpen');
     });
     // PokeRogue's white pointer, sized to the text; a ▶ if the picture is missing.
     if (scene.textures.exists('ui.cursor')) {
@@ -242,7 +245,7 @@ export class Menu {
     const first = config.options.findIndex((o) => !o.disabled);
     this.focus(first >= 0 ? first : 0, false);
     this.wii.moveTo(...this.frameBox(this.index), true);
-    if (config.animateIn !== false) this.wii.show();
+    if (config.animateIn !== false && !justRedrawn()) this.wii.show();
     // Focus changes in the same frame the menu is built (a screen restoring its place) jump, not glide.
     scene.time.delayedCall(0, () => (this.fresh = false));
   }

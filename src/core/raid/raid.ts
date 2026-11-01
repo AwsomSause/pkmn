@@ -47,16 +47,16 @@ export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regi
   const regionOpen = tiersForRegion(content, run.regionIndex).filter((t) => t <= open);
   const region = regionOpen.filter((t) => tierOpenAtBadges(content.raids.badgeScaling, t, badges));
   // A region whose tiers are all still closed gets the highest open tier instead (the badge gate still applies when the region has open tiers).
-  const usable = content.raids.raids.filter((r) => !r.grand && !r.gang && r.tier <= open && (regionOpen.length === 0 || tierOpenAtBadges(content.raids.badgeScaling, r.tier, badges)));
+  const usable = content.raids.raids.filter((r) => !r.grand && !r.gang && !r.legendary && r.tier <= open && (regionOpen.length === 0 || tierOpenAtBadges(content.raids.badgeScaling, r.tier, badges)));
   const tiers = region.length > 0 ? region : [Math.max(1, ...usable.map((r) => r.tier))];
-  const tiered = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand && !r.gang);
+  const tiered = content.raids.raids.filter((r) => tiers.includes(r.tier) && !r.grand && !r.gang && !r.legendary);
   // Spreadsheet availability: a den's boss must be unlocked at the level it would fight at (else the tier's dens stay as they were).
   const cap = levelCap(content, run.regionIndex);
   const end = Math.max(1, cap - content.balance.difficulty.capMargin);
   const unlocked = tiered.filter((r) => r.species.every((id) => isUnlockedAt(content, id, raidLevel(r, end, cap) + (Number.isFinite(badges) ? Math.min(cap - raidLevel(r, end, cap), badgeLevelBonus(content.raids.badgeScaling, r, badges)) : 0))));
   const pool = unlocked.length > 0 ? unlocked : tiered;
   const rng = new Rng(hashSeed(`${run.seed}::raid-pick::${key}`));
-  return rng.pick(pool.length > 0 ? pool : content.raids.raids.filter((r) => !r.gang));
+  return rng.pick(pool.length > 0 ? pool : content.raids.raids.filter((r) => !r.gang && !r.legendary));
 }
 
 /** Which species the boss is, from a seeded generator (so reloading never changes it). */

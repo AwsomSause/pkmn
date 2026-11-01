@@ -31,6 +31,8 @@ import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { pastGauntletLeft, startPastGauntlet } from './memories/encounters';
 import { nextKeepsake, recoverKeepsake } from './memories/keepsakes';
 import { noteChoice } from './memories/world';
+import { applyEvilEffect, evilBattle, evilBattleWon, evilConditionMet, evilConditionText } from './evil/teams';
+import { choiceMade, recordChoice } from './evil/choices';
 import { changeAid, changeCrisis, crisisAid, crisisEventIds, crisisLevel, setTournament, tournamentEventId, tournamentRound } from './story/crisis';
 import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './mapItems';
 import { scavengerBonus } from './bank';
@@ -101,6 +103,10 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return anyRoaming(run);
     case 'convoy':
       return !!run.stage?.convoy === c.active;
+    case 'evil':
+      return evilConditionMet(content, run, c);
+    case 'choice':
+      return choiceMade(run, c.id, c.pick) === c.made;
     case 'friendship':
       return run.party.some((m) => m.friendship >= c.atLeast);
     case 'rivalMet':
@@ -263,6 +269,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs a Legendary roaming this map';
     case 'convoy':
       return c.active ? 'Needs an escort under your care' : 'Needs no escort under your care';
+    case 'evil':
+      return evilConditionText(c);
+    case 'choice':
+      return c.made ? 'Needs a choice you made earlier' : 'Closed by a choice you made earlier';
     case 'pastTeams':
       return `Needs ${c.atLeast} teams from past runs`;
     case 'keepsake':
@@ -644,6 +654,10 @@ export function effectWords(content: Content, e: EventEffect): string {
       return `you escort ${e.name} to the gym`;
     case 'convoyHeal':
       return 'the escort recovers';
+    case 'evil':
+      return e.end ? `the Evil Team story ends (${e.end})` : e.op ? `the operation ends (${e.op})` : e.defect ? 'someone defects' : e.heat > 0 ? 'the Evil Team grows angrier' : e.heat < 0 ? 'the Evil Team eases off' : '';
+    case 'choice':
+      return e.weight >= 3 ? 'a run-defining choice' : e.weight === 2 ? 'a lasting choice' : '';
     case 'formChange':
       return 'a Pokémon changes form';
     case 'crisis':
@@ -888,6 +902,7 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       return effectWords(content, e);
     }
     case 'feud':
+      recordChoice(content, run, { id: 'feud', pick: e.choice, text: `Settled a rival feud (${e.choice === 'stay-out' ? 'stayed out of it' : e.choice === 'exploit' ? 'played both sides' : `backed the ${e.choice} rival`})`, weight: 2 });
       return settleFeud(content, run, e.choice);
     case 'hunt':
       return e.finish ? finishHunt(content, run) : addHuntClue(content, run);
@@ -899,6 +914,7 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       return recoverKeepsake(content, run) ?? 'nothing was left to recover';
     case 'recruit':
       run.itemCounters = { ...run.itemCounters, [`recruit:${e.trainer}`]: 1 };
+      recordChoice(content, run, { id: `recruit-${e.trainer}`, pick: 'yes', text: `Recruited ${content.archetypes.get(e.trainer)?.name ?? e.trainer} to your roster`, weight: 2 });
       return effectWords(content, e);
     case 'count':
       count(run, e.counter, e.amount);
@@ -926,7 +942,7 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       return warmed > 0 ? `${effectWords(content, e)}; your Egg${warmed === 1 ? ' is' : 's are'} snug by the fire` : effectWords(content, e);
     }
     case 'celebrate':
-      celebrateToday(run);
+      celebrateToday(content, run);
       return effectWords(content, e);
     case 'addEvent': {
       const here = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;
@@ -954,6 +970,10 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
     case 'convoyHeal':
       healConvoy(run, e.amount);
       return effectWords(content, e);
+    case 'evil':
+      return applyEvilEffect(content, run, e);
+    case 'choice':
+      return recordChoice(content, run, e);
     case 'skipAhead': {
       // The ferry lands beside the gym: one of the nodes leading into it counts as reached.
       const stage = run.stage!;
@@ -1030,7 +1050,11 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     const authored = ghost.length > 0 || (b.rival && featuredRival(run)) ? 'rival-ghost-team' : boss ? 'event-boss-signature' : null;
     const rival = b.rival ? featuredRival(run) : null;
     const rivalTeam = rival && ghost.length === 0 ? rivalFightTeam(content, rival) : [];
-    const team = rivalTeam.length > 0 ? rivalTeam.slice(0, b.size).map((id, i) => {
+    const evil = evilBattle(content, run, b);
+    const team = evil ? evil.species.map((speciesId, i) => {
+      const level = Math.min(cap, Math.max(1, base + evil.levelBonus + (i === evil.size - 1 ? 1 : 0)));
+      return newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
+    }) : rivalTeam.length > 0 ? rivalTeam.slice(0, b.size).map((id, i) => {
       const level = Math.min(cap, Math.max(1, base + (i === Math.min(b.size, rivalTeam.length) - 1 ? 1 : 0)));
       return newMon(content, run, id, level, 'e');
     }) : ghost.length > 0 ? ghost.map((m) => newMon(content, run, m.speciesId, Math.min(cap, Math.max(1, Math.min(m.level, base + 6))), 'e')) : Array.from({ length: b.size }, (_, i) => {
@@ -1039,8 +1063,8 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
       return newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
     });
     if (authored) for (const mon of team) auditEncounter(content, 'event', mon, authored);
-    team.slice(0, b.shadow).forEach((mon) => makeShadow(mon, rollShadowHeart(content, new Rng(hashSeed(`${run.seed}::shadow-foe::${mon.uid}`)))));
-    run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: rival ? rival.name : b.name, leaderId: null });
+    team.slice(0, evil ? evil.shadow : b.shadow).forEach((mon) => makeShadow(mon, rollShadowHeart(content, new Rng(hashSeed(`${run.seed}::shadow-foe::${mon.uid}`)))));
+    run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: evil ? evil.name : rival ? rival.name : b.name, leaderId: null });
     if (b.ally && content.species.has(b.ally) && team.length >= 2) {
       // A temporary ally joins the party for this fight only (finishBattle sends it home).
       const ally = newMon(content, run, b.ally, Math.max(1, base), 'p');
@@ -1093,5 +1117,6 @@ export function eventBattleWon(content: Content, run: RunState, event: EventBatt
   const battle = (event.success ? choice?.success : choice?.failure)?.battle;
   if (!battle) return [];
   const rng = new Rng(hashSeed(`${run.seed}::event-win::${stageKey(run)}::${event.sideId}`));
+  if (battle.kind === 'trainer') evilBattleWon(run, battle);
   return battle.win.map((e) => applyEffect(content, run, e, rng)).filter(Boolean);
 }

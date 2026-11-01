@@ -9,6 +9,7 @@
 import { z } from 'zod';
 import { AttributeKeySchema, BoostStatSchema } from '../contentSchema';
 import { BattleReplaySchema, WorldMemorySchema } from '../memories/schema';
+import { ChoiceRecordSchema, EvilStateSchema, freshEvil } from '../evil/schema';
 
 // ---------- domain events ----------
 
@@ -423,6 +424,10 @@ export const StoryStateSchema = z.object({
   replays: z.array(BattleReplaySchema).default([]),
   /** The world's memory: skipped branches, delayed consequences, villain operations (core/memories/world.ts). */
   world: WorldMemorySchema.default({ skipped: [], consequences: [], ops: {}, helped: 0, declined: 0, npcs: {} }),
+  /** Evil Teams (core/evil, run v32): the team in this run's world and how its story is going. */
+  evil: EvilStateSchema.default(freshEvil()),
+  /** Permanent choices (core/evil/choices.ts, run v32): the run's significant decisions, oldest first. */
+  choices: z.array(ChoiceRecordSchema).default([]),
 });
 export type StoryState = z.infer<typeof StoryStateSchema>;
 
@@ -505,6 +510,9 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('intercept'),
     takeShare: z.number().gt(0).max(1),
+    /** The Guard Formation battle condition: the protected Pokémon takes `guardReduction` less damage for the rest of this turn and the turns after (`guardTurns` in all). */
+    guardTurns: z.number().int().min(0).max(6).default(0),
+    guardReduction: z.number().min(0).max(0.9).default(0),
   }),
   /**
    * Battle scope, your side (Emotional Awakening): a badly hurt Pokémon takes on a temporary

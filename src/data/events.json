@@ -35373,6 +35373,679 @@
    ]
   },
   {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-gates",
+   "name": "Berry Festival Gates",
+   "scene": {
+    "cast": [],
+    "tint": "#3a1030",
+    "effect": "sparkle"
+   },
+   "intro": "Bunting, music and the sweet smell of a thousand berries. A banner reads: THE GREAT BERRY FESTIVAL.",
+   "choices": [
+    {
+     "label": "Browse the stalls (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "Fresh berries for everyone, and a free sample for your team.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Watch the parade",
+     "success": {
+      "text": "Berry-shaped floats drift by. Your team is delighted.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-contest",
+   "name": "Berry Contest",
+   "stop": "event",
+   "scene": {
+    "cast": [],
+    "tint": "#4a2a08",
+    "effect": "sparkle"
+   },
+   "intro": "Judges grade berries on size, flavour and shine. The prize table gleams with rare berries.",
+   "choices": [
+    {
+     "label": "Enter your best berry",
+     "check": "charisma",
+     "success": {
+      "text": "Grand champion! The judges hand over two rare berries.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Not this year, but a runner-up berry is yours.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Judge the contest",
+     "success": {
+      "text": "You taste test your way through. Delicious work.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "money",
+        "amount": 400
+       },
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-thief",
+   "name": "Berry Thief",
+   "scene": {
+    "cast": [],
+    "tint": "#101828",
+    "effect": "none"
+   },
+   "intro": "A Pokémon bolts from a stall with its cheeks stuffed with berries. The vendor wails.",
+   "choices": [
+    {
+     "label": "Chase it down",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It turns on you!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "greedent",
+        "skwovet",
+        "munchlax",
+        "zigzagoon"
+       ],
+       "types": [],
+       "levelBonus": 0,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventClues",
+         "amount": 1
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "lansat-berry",
+          "starf-berry",
+          "custap-berry",
+          "enigma-berry",
+          "lum-berry"
+         ]
+        },
+        {
+         "kind": "attribute",
+         "key": "goodEvil",
+         "amount": 5
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Pay the vendor back (₽400)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 400
+      }
+     ],
+     "success": {
+      "text": "The vendor is grateful. The thief grins, and drops one berry for you.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -400
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look away",
+     "success": {
+      "text": "Not your problem.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-guardian",
+   "name": "The Guardian Tree",
+   "rarity": "rare",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#103018",
+    "effect": "sparkle"
+   },
+   "intro": "A great old berry tree. A Pokémon sits among its branches and watches you with calm eyes.",
+   "choices": [
+    {
+     "label": "Challenge the guardian",
+     "requires": [
+      {
+       "kind": "noTrainerTag",
+       "tag": "pacifist"
+      }
+     ],
+     "success": {
+      "text": "It stands to defend its tree.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "tropius",
+        "cherrim",
+        "shuckle",
+        "applin"
+       ],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "count",
+         "counter": "eventClues",
+         "amount": 1
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "lansat-berry",
+          "starf-berry",
+          "custap-berry",
+          "enigma-berry",
+          "lum-berry"
+         ]
+        },
+        {
+         "kind": "join",
+         "species": [
+          "tropius",
+          "shuckle",
+          "applin",
+          "greedent"
+         ],
+         "types": [],
+         "levelBonus": 0,
+         "shinyMultiplier": 2,
+         "shadow": false,
+         "blissful": false,
+         "hiddenAbility": true
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Offer it a berry",
+     "success": {
+      "text": "The guardian accepts, and lets a Pokémon of the grove follow you.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "join",
+        "species": [
+         "tropius",
+         "shuckle",
+         "applin",
+         "greedent"
+        ],
+        "types": [],
+        "levelBonus": -3,
+        "shinyMultiplier": 1,
+        "shadow": false,
+        "blissful": true,
+        "hiddenAbility": true
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-research",
+   "name": "Berry Research Tent",
+   "scene": {
+    "cast": [],
+    "tint": "#102a30",
+    "effect": "sparkle"
+   },
+   "intro": "Botanists compare mutations under glass. One offers you a seedling and asks for your help.",
+   "choices": [
+    {
+     "label": "Plant the glowing seedling",
+     "success": {
+      "text": "You plant it in your Berry Garden. It will ripen in a stage.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       },
+       {
+        "kind": "seedling",
+        "berry": "lansat-berry",
+        "mutated": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade notes",
+     "success": {
+      "text": "Hours of notes later, you know a little more.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-merchant",
+   "name": "Traveling Berry Merchant",
+   "stop": "merchant",
+   "scene": {
+    "cast": [],
+    "tint": "#40280c",
+    "effect": "sparkle"
+   },
+   "intro": "A wagon of rare berries from far regions. \"Never tasted anything like them, friend.\"",
+   "choices": [
+    {
+     "label": "Buy a rare bundle (₽600)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 600
+      }
+     ],
+     "success": {
+      "text": "Three rare berries, wrapped in leaves.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -600
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Haggle",
+     "check": "charisma",
+     "success": {
+      "text": "A fair price, and a bonus berry.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "The merchant waves you off.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-shortage",
+   "name": "Berry Shortage",
+   "scene": {
+    "cast": [],
+    "tint": "#2a1018",
+    "effect": "none"
+   },
+   "intro": "The stalls are nearly empty. A drought hit the orchards, and everyone is asking for berries.",
+   "choices": [
+    {
+     "label": "Share your berries",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "Word spreads. The festival thanks you with a prized seedling.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -200
+       },
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 8
+       },
+       {
+        "kind": "seedling",
+        "berry": "sitrus-berry",
+        "mutated": false
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sell berries at the premium",
+     "success": {
+      "text": "Prices are high. Your wallet is not.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 700
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -8
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "group": "Berry Festival",
+   "gameEvent": "berry-festival",
+   "id": "berry-fest-grove",
+   "name": "The Hidden Berry Grove",
+   "rarity": "rare",
+   "minStage": 2,
+   "secret": [
+    {
+     "kind": "partyType",
+     "type": "grass"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#143a1e",
+    "effect": "sparkle"
+   },
+   "intro": "Behind the festival grounds, the berry trees grow wild and heavy. Something is nesting in the roots.",
+   "choices": [
+    {
+     "label": "Pick the grove",
+     "success": {
+      "text": "Heavy branches, rare fruit.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "lansat-berry",
+         "starf-berry",
+         "custap-berry",
+         "enigma-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the nesting egg",
+     "success": {
+      "text": "A warm egg, wrapped in berry leaves.",
+      "effects": [
+       {
+        "kind": "count",
+        "counter": "eventClues",
+        "amount": 1
+       },
+       {
+        "kind": "egg",
+        "species": [],
+        "types": [
+         "grass",
+         "bug"
+        ],
+        "levelBonus": 0,
+        "shinyMultiplier": 1,
+        "left": 3,
+        "unit": "stage",
+        "origin": "Rare Nest"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
    "id": "starving-wild",
    "name": "A Starving Poochyena",
    "group": "Emergent Stories",
@@ -35627,7 +36300,6 @@
       "effects": [
        {
         "kind": "egg",
-        "origin": "Hidden Nest",
         "species": [
          "togepi",
          "pichu",
@@ -39433,6 +40105,34 @@
      }
     },
     {
+     "label": "Sit and talk with someone",
+     "success": {
+      "text": "The fire burns low. Who do you want to talk to?",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "camp-talk"
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "camp-talk",
+   "name": "Quiet Talk",
+   "group": "Camp",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#241c2a",
+    "effect": "hearts"
+   },
+   "intro": "Away from the others, the night is long enough for a real conversation.",
+   "choices": [
+    {
      "label": "Talk with your partner",
      "success": {
       "text": "You sit with your lead for a while. Not much is said. It is enough.",
@@ -39445,6 +40145,107 @@
        {
         "kind": "research",
         "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about your rival (a friend)",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "friend"
+      }
+     ],
+     "success": {
+      "text": "You wonder aloud where they are camped tonight. Your party agrees: they would probably share the fire. You feel less alone on the road.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about your rival (a rival)",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "rival"
+      }
+     ],
+     "success": {
+      "text": "You go over every move they made against you. Your party listens, and by the end you all know what to do next time. Tension and focus.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "research",
+        "amount": 25
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about the rival who is unsure",
+     "requires": [
+      {
+       "kind": "rivalMet",
+       "atLeast": 1
+      },
+      {
+       "kind": "rivalPath",
+       "path": "between"
+      }
+     ],
+     "success": {
+      "text": "You do not know what they want yet. Neither do they. You decide to leave the door open.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 15
        }
       ]
      }
@@ -39545,7 +40346,7 @@
      }
     },
     {
-     "label": "Celebrate the milestone",
+     "label": "Celebrate the occasion",
      "requires": [
       {
        "kind": "milestone"
@@ -40313,7 +41114,6 @@
         },
         {
          "kind": "egg",
-         "origin": "Hidden Nest",
          "species": [],
          "types": [
           "water"
@@ -42501,7 +43301,6 @@
       "effects": [
        {
         "kind": "egg",
-        "origin": "Rare Nest",
         "species": [],
         "types": [
          "fire",
@@ -45616,19 +46415,23 @@
    ]
   },
   {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-gates",
-   "name": "Berry Festival Gates",
+   "id": "stranded-trainer",
+   "name": "A Trainer in Trouble",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 2,
    "scene": {
-    "cast": [],
-    "tint": "#3a1030",
-    "effect": "sparkle"
+    "cast": [
+     "boss.npc_youngster"
+    ],
+    "tint": "#2a3a20",
+    "effect": "none"
    },
-   "intro": "Bunting, music and the sweet smell of a thousand berries. A banner reads: THE GREAT BERRY FESTIVAL.",
+   "intro": "A young trainer kneels on the road beside three fainted Pokémon. \"I pushed them too hard... I don't have any potions left.\"",
    "choices": [
     {
-     "label": "Browse the stalls (₽300)",
+     "label": "Share your supplies (₽300)",
      "requires": [
       {
        "kind": "money",
@@ -45636,249 +46439,66 @@
       }
      ],
      "success": {
-      "text": "Fresh berries for everyone, and a free sample for your team.",
+      "text": "You patch up their team. \"I won't forget this!\"",
       "effects": [
        {
         "kind": "money",
         "amount": -300
        },
        {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "oran-berry",
-         "sitrus-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "heal",
-        "share": 0.3
-       },
-       {
-        "kind": "friendship",
-        "amount": 3,
-        "who": "party"
-       }
-      ]
-     }
-    },
-    {
-     "label": "Watch the parade",
-     "success": {
-      "text": "Berry-shaped floats drift by. Your team is delighted.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "friendship",
-        "amount": 5,
-        "who": "party"
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-contest",
-   "name": "Berry Contest",
-   "stop": "event",
-   "scene": {
-    "cast": [],
-    "tint": "#4a2a08",
-    "effect": "sparkle"
-   },
-   "intro": "Judges grade berries on size, flavour and shine. The prize table gleams with rare berries.",
-   "choices": [
-    {
-     "label": "Enter your best berry",
-     "check": "charisma",
-     "success": {
-      "text": "Grand champion! The judges hand over two rare berries.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       }
-      ]
-     },
-     "failure": {
-      "text": "Not this year, but a runner-up berry is yours.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "oran-berry",
-         "sitrus-berry",
-         "lum-berry"
-        ]
-       }
-      ]
-     }
-    },
-    {
-     "label": "Judge the contest",
-     "success": {
-      "text": "You taste test your way through. Delicious work.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "money",
-        "amount": 400
-       },
-       {
-        "kind": "heal",
-        "share": 0.2
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-thief",
-   "name": "Berry Thief",
-   "scene": {
-    "cast": [],
-    "tint": "#101828",
-    "effect": "none"
-   },
-   "intro": "A Pokémon bolts from a stall with its cheeks stuffed with berries. The vendor wails.",
-   "choices": [
-    {
-     "label": "Chase it down",
-     "requires": [
-      {
-       "kind": "noTrainerTag",
-       "tag": "pacifist"
-      }
-     ],
-     "success": {
-      "text": "It turns on you!",
-      "effects": [],
-      "battle": {
-       "kind": "wild",
-       "species": [
-        "greedent",
-        "skwovet",
-        "munchlax",
-        "zigzagoon"
-       ],
-       "types": [],
-       "levelBonus": 0,
-       "shinyMultiplier": 1,
-       "win": [
-        {
-         "kind": "count",
-         "counter": "eventClues",
-         "amount": 1
-        },
-        {
-         "kind": "itemFrom",
-         "ids": [
-          "lansat-berry",
-          "starf-berry",
-          "custap-berry",
-          "enigma-berry",
-          "lum-berry"
-         ]
-        },
-        {
-         "kind": "attribute",
-         "key": "goodEvil",
-         "amount": 5
-        }
-       ]
-      }
-     }
-    },
-    {
-     "label": "Pay the vendor back (₽400)",
-     "requires": [
-      {
-       "kind": "money",
-       "atLeast": 400
-      }
-     ],
-     "success": {
-      "text": "The vendor is grateful. The thief grins, and drops one berry for you.",
-      "effects": [
-       {
-        "kind": "money",
-        "amount": -400
-       },
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "oran-berry",
-         "sitrus-berry",
-         "lum-berry"
-        ]
-       },
-       {
         "kind": "attribute",
         "key": "goodEvil",
         "amount": 5
+       },
+       {
+        "kind": "choice",
+        "id": "stranded-trainer",
+        "pick": "helped",
+        "text": "Helped a stranded young trainer",
+        "weight": 1
        }
       ]
      }
     },
     {
-     "label": "Look away",
+     "label": "Point them to the Pokémon Center",
      "success": {
-      "text": "Not your problem.",
+      "text": "\"Right... thanks, I guess.\" They limp away.",
       "effects": [
+       {
+        "kind": "choice",
+        "id": "stranded-trainer",
+        "pick": "directed",
+        "text": "Sent a stranded trainer on their way",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take their Poké Balls",
+     "success": {
+      "text": "They are too tired to stop you. You will remember the look on their face.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "great-ball",
+         "ultra-ball",
+         "dusk-ball"
+        ]
+       },
        {
         "kind": "attribute",
         "key": "goodEvil",
-        "amount": -5
+        "amount": -10
+       },
+       {
+        "kind": "choice",
+        "id": "stranded-trainer",
+        "pick": "robbed",
+        "text": "Robbed a stranded young trainer",
+        "weight": 2
        }
       ]
      }
@@ -45886,100 +46506,62 @@
    ]
   },
   {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-guardian",
-   "name": "The Guardian Tree",
+   "id": "stranded-trainer-friend",
+   "name": "The Trainer You Helped",
+   "group": "Lasting Choices",
+   "stop": "event",
    "rarity": "rare",
-   "minStage": 2,
+   "minStage": 3,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "stranded-trainer",
+     "pick": "helped"
+    }
+   ],
    "scene": {
-    "cast": [],
-    "tint": "#103018",
-    "effect": "sparkle"
+    "cast": [
+     "boss.npc_youngster"
+    ],
+    "tint": "#2a4a30",
+    "effect": "glint"
    },
-   "intro": "A great old berry tree. A Pokémon sits among its branches and watches you with calm eyes.",
+   "intro": "A raider blocks the road, and then a familiar voice shouts: \"Hey! That's the one who saved my team!\" The young trainer you helped is back, their Lucario at full strength.",
    "choices": [
     {
-     "label": "Challenge the guardian",
-     "requires": [
-      {
-       "kind": "noTrainerTag",
-       "tag": "pacifist"
-      }
-     ],
+     "label": "Fight side by side",
      "success": {
-      "text": "It stands to defend its tree.",
+      "text": "\"My turn to help you!\"",
       "effects": [],
       "battle": {
-       "kind": "wild",
-       "species": [
-        "tropius",
-        "cherrim",
-        "shuckle",
-        "applin"
-       ],
-       "types": [],
+       "kind": "trainer",
+       "name": "Road Raider",
+       "ally": "lucario",
+       "size": 2,
        "levelBonus": 2,
-       "shinyMultiplier": 2,
        "win": [
         {
-         "kind": "count",
-         "counter": "eventClues",
-         "amount": 1
+         "kind": "money",
+         "amount": 1200
         },
         {
-         "kind": "itemFrom",
-         "ids": [
-          "lansat-berry",
-          "starf-berry",
-          "custap-berry",
-          "enigma-berry",
-          "lum-berry"
-         ]
-        },
-        {
-         "kind": "join",
-         "species": [
-          "tropius",
-          "shuckle",
-          "applin",
-          "greedent"
-         ],
-         "types": [],
-         "levelBonus": 0,
-         "shinyMultiplier": 2,
-         "shadow": false,
-         "blissful": false,
-         "hiddenAbility": true
+         "kind": "friendship",
+         "amount": 10
         }
        ]
       }
      }
     },
     {
-     "label": "Offer it a berry",
+     "label": "Ask for advice instead",
      "success": {
-      "text": "The guardian accepts, and lets a Pokémon of the grove follow you.",
+      "text": "They share a training trick they learned since.",
       "effects": [
        {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "join",
-        "species": [
-         "tropius",
-         "shuckle",
-         "applin",
-         "greedent"
-        ],
-        "types": [],
-        "levelBonus": -3,
-        "shinyMultiplier": 1,
-        "shadow": false,
-        "blissful": true,
-        "hiddenAbility": true
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
        }
       ]
      }
@@ -45987,73 +46569,50 @@
    ]
   },
   {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-research",
-   "name": "Berry Research Tent",
+   "id": "stranded-trainer-revenge",
+   "name": "The Trainer You Robbed",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 3,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "stranded-trainer",
+     "pick": "robbed"
+    }
+   ],
    "scene": {
-    "cast": [],
-    "tint": "#102a30",
-    "effect": "sparkle"
+    "cast": [
+     "boss.npc_youngster"
+    ],
+    "tint": "#3a2020",
+    "effect": "shake"
    },
-   "intro": "Botanists compare mutations under glass. One offers you a seedling and asks for your help.",
+   "intro": "The young trainer you robbed is waiting at the bridge, their team trained hard since. \"Remember me? I do.\"",
    "choices": [
     {
-     "label": "Plant the glowing seedling",
+     "label": "Battle them",
      "success": {
-      "text": "You plant it in your Berry Garden. It will ripen in a stage.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "research",
-        "amount": 20
-       },
-       {
-        "kind": "seedling",
-        "berry": "lansat-berry",
-        "mutated": true
-       }
-      ]
+      "text": "\"I trained every day for this.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Vengeful Trainer",
+       "size": 3,
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 800
+        }
+       ]
+      }
      }
     },
     {
-     "label": "Trade notes",
-     "success": {
-      "text": "Hours of notes later, you know a little more.",
-      "effects": [
-       {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "research",
-        "amount": 40
-       }
-      ]
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-merchant",
-   "name": "Traveling Berry Merchant",
-   "stop": "merchant",
-   "scene": {
-    "cast": [],
-    "tint": "#40280c",
-    "effect": "sparkle"
-   },
-   "intro": "A wagon of rare berries from far regions. \"Never tasted anything like them, friend.\"",
-   "choices": [
-    {
-     "label": "Buy a rare bundle (₽600)",
+     "label": "Apologize and pay them back (₽600)",
      "requires": [
       {
        "kind": "money",
@@ -46061,146 +46620,412 @@
       }
      ],
      "success": {
-      "text": "Three rare berries, wrapped in leaves.",
+      "text": "They take the money and walk off without a word.",
       "effects": [
        {
         "kind": "money",
         "amount": -600
        },
        {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 6
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-dispute",
+   "name": "Rangers and Prospectors",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonranger_m",
+     "boss.npc_engineer"
+    ],
+    "tint": "#304020",
+    "effect": "none"
+   },
+   "intro": "Pokémon Rangers and a mining company argue over the same valley. Both want your support, and both will remember your answer.",
+   "choices": [
+    {
+     "label": "Back the Rangers",
+     "success": {
+      "text": "The Rangers pin a badge on your jacket. The miners spit on the ground.",
+      "effects": [
        {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
+        "kind": "relic",
+        "id": "ranger-favor",
+        "name": "Ranger Badge",
+        "effects": [
+         {
+          "kind": "captureMultiplier",
+          "value": 1.1
+         }
         ]
        },
        {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
+        "kind": "choice",
+        "id": "valley-dispute",
+        "pick": "rangers",
+        "text": "Sided with the Rangers over the miners",
+        "weight": 2
        }
       ]
      }
     },
     {
-     "label": "Haggle",
-     "check": "charisma",
+     "label": "Back the Prospectors",
      "success": {
-      "text": "A fair price, and a bonus berry.",
+      "text": "The company gives you a share of the dig. The Rangers turn their backs.",
       "effects": [
        {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
+        "kind": "relic",
+        "id": "prospector-share",
+        "name": "Prospector Share",
+        "effects": [
+         {
+          "kind": "moneyMultiplier",
+          "value": 1.15
+         }
         ]
        },
        {
-        "kind": "itemFrom",
-        "ids": [
-         "oran-berry",
-         "sitrus-berry",
-         "lum-berry"
-        ]
+        "kind": "choice",
+        "id": "valley-dispute",
+        "pick": "prospectors",
+        "text": "Sided with the miners over the Rangers",
+        "weight": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay out of it",
+     "success": {
+      "text": "Both sides call you a coward. At least nobody is angry.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "valley-dispute",
+        "pick": "neutral",
+        "text": "Stayed out of the valley dispute",
+        "weight": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-rangers-rescue",
+   "name": "The Rangers Call for Help",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "valley-dispute",
+     "pick": "rangers"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonranger_f"
+    ],
+    "tint": "#305020",
+    "effect": "sparkle"
+   },
+   "intro": "A Ranger waves you down. \"A landslide trapped wild Pokémon. You stood with us, so we trust you.\"",
+   "choices": [
+    {
+     "label": "Dig them out",
+     "success": {
+      "text": "One of them refuses to leave your side.",
+      "effects": [
+       {
+        "kind": "join",
+        "levelBonus": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Guard the dig site",
+     "success": {
+      "text": "Wild Pokémon, scared and angry, burst out of the rubble!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "levelBonus": 1,
+       "chain": 2,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 40
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-miners-grudge",
+   "name": "The Foreman's Grudge",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "valley-dispute",
+     "pick": "rangers"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_engineer",
+     "boss.npc_hiker"
+    ],
+    "tint": "#40301a",
+    "effect": "none"
+   },
+   "intro": "The mining foreman blocks the road with his crew. \"You cost us the valley. Now you pay.\"",
+   "choices": [
+    {
+     "label": "Battle the foreman",
+     "success": {
+      "text": "\"Rocks don't forgive, kid.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Mine Foreman",
+       "types": [
+        "ground",
+        "steel",
+        "rock"
+       ],
+       "size": 3,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "hard-stone",
+          "iron-ball",
+          "star-piece"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Pay their losses (₽1000)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1000
+      }
+     ],
+     "success": {
+      "text": "They pocket it and let you pass.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1000
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-miners-dividend",
+   "name": "The Prospector Dividend",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "valley-dispute",
+     "pick": "prospectors"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_engineer"
+    ],
+    "tint": "#40381a",
+    "effect": "glint"
+   },
+   "intro": "The mining company sends a cart down the road. \"Your share, partner. And our shop is open to friends.\"",
+   "choices": [
+    {
+     "label": "Take the dividend",
+     "success": {
+      "text": "A heavy bag of coins, and a stall opens up beside you.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1500
+       },
+       {
+        "kind": "addStop",
+        "stop": "shop"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-rangers-grudge",
+   "name": "Angry Rangers",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "valley-dispute",
+     "pick": "prospectors"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonranger_m"
+    ],
+    "tint": "#203a20",
+    "effect": "none"
+   },
+   "intro": "A Ranger captain stops you. \"You sold out the valley. The wild Pokémon here know your face now.\"",
+   "choices": [
+    {
+     "label": "Battle the captain",
+     "success": {
+      "text": "\"For the valley!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Ranger Captain",
+       "types": [
+        "grass",
+        "bug",
+        "flying"
+       ],
+       "size": 3,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 900
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Help replant the valley",
+     "success": {
+      "text": "It takes all day. The captain nods, a little.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ledge-riolu",
+   "name": "A Stranded Riolu",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#20304a",
+    "effect": "none",
+    "pokemon": "riolu"
+   },
+   "intro": "A small Riolu is stuck on a crumbling ledge above a river, crying for help.",
+   "choices": [
+    {
+     "label": "Climb down and rescue it",
+     "check": "strength",
+     "success": {
+      "text": "You pull it up just as the ledge gives way. It clings to you, then runs into the forest, looking back once.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5
+       },
+       {
+        "kind": "choice",
+        "id": "ledge-riolu",
+        "pick": "rescued",
+        "text": "Rescued a stranded Riolu",
+        "weight": 2
        }
       ]
      },
      "failure": {
-      "text": "The merchant waves you off.",
-      "effects": []
-     }
-    }
-   ]
-  },
-  {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-shortage",
-   "name": "Berry Shortage",
-   "scene": {
-    "cast": [],
-    "tint": "#2a1018",
-    "effect": "none"
-   },
-   "intro": "The stalls are nearly empty. A drought hit the orchards, and everyone is asking for berries.",
-   "choices": [
-    {
-     "label": "Share your berries",
-     "requires": [
-      {
-       "kind": "money",
-       "atLeast": 200
-      }
-     ],
-     "success": {
-      "text": "Word spreads. The festival thanks you with a prized seedling.",
+      "text": "You slip and scrape your team on the rocks. Riolu scrambles to safety on its own.",
       "effects": [
        {
-        "kind": "money",
-        "amount": -200
+        "kind": "damage",
+        "share": 0.15
        },
        {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "attribute",
-        "key": "goodEvil",
-        "amount": 8
-       },
-       {
-        "kind": "seedling",
-        "berry": "sitrus-berry",
-        "mutated": false
+        "kind": "choice",
+        "id": "ledge-riolu",
+        "pick": "tried",
+        "text": "Tried to rescue a stranded Riolu",
+        "weight": 1
        }
       ]
      }
     },
     {
-     "label": "Sell berries at the premium",
+     "label": "Leave it",
      "success": {
-      "text": "Prices are high. Your wallet is not.",
+      "text": "You walk on. The crying fades behind you.",
       "effects": [
        {
-        "kind": "money",
-        "amount": 700
-       },
-       {
-        "kind": "attribute",
-        "key": "goodEvil",
-        "amount": -8
+        "kind": "choice",
+        "id": "ledge-riolu",
+        "pick": "left",
+        "text": "Left a stranded Riolu behind",
+        "weight": 1
        }
       ]
      }
@@ -46208,80 +47033,772 @@
    ]
   },
   {
-   "group": "Berry Festival",
-   "gameEvent": "berry-festival",
-   "id": "berry-fest-grove",
-   "name": "The Hidden Berry Grove",
+   "id": "ledge-riolu-return",
+   "name": "Riolu Remembers",
+   "group": "Lasting Choices",
+   "stop": "event",
    "rarity": "rare",
-   "minStage": 2,
-   "secret": [
+   "minStage": 3,
+   "callback": true,
+   "requires": [
     {
-     "kind": "partyType",
-     "type": "grass"
+     "kind": "choice",
+     "id": "ledge-riolu",
+     "pick": "rescued"
     }
    ],
    "scene": {
     "cast": [],
-    "tint": "#143a1e",
-    "effect": "sparkle"
+    "tint": "#20406a",
+    "effect": "sparkle",
+    "pokemon": "riolu"
    },
-   "intro": "Behind the festival grounds, the berry trees grow wild and heavy. Something is nesting in the roots.",
+   "intro": "Something small drops from a tree and lands in front of you. It is the Riolu you saved, bigger now, and it wants to come along.",
    "choices": [
     {
-     "label": "Pick the grove",
+     "label": "Welcome it to the team",
      "success": {
-      "text": "Heavy branches, rare fruit.",
+      "text": "Riolu joins you, aura glowing.",
       "effects": [
        {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
-       },
-       {
-        "kind": "itemFrom",
-        "ids": [
-         "lansat-berry",
-         "starf-berry",
-         "custap-berry",
-         "enigma-berry",
-         "lum-berry"
-        ]
+        "kind": "join",
+        "species": [
+         "riolu"
+        ],
+        "levelBonus": 2,
+        "shinyMultiplier": 2
        }
       ]
      }
     },
     {
-     "label": "Take the nesting egg",
+     "label": "Tell it to stay free",
      "success": {
-      "text": "A warm egg, wrapped in berry leaves.",
+      "text": "It nods, and gives you a berry it was saving.",
       "effects": [
        {
-        "kind": "count",
-        "counter": "eventClues",
-        "amount": 1
+        "kind": "heal",
+        "share": 0.5
        },
        {
-        "kind": "egg",
-        "species": [],
-        "types": [
-         "grass",
-         "bug"
+        "kind": "friendship",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "old-shrine-offering",
+   "name": "The Old Shrine",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [
+     "boss.npc_channeler"
+    ],
+    "tint": "#302040",
+    "effect": "fog"
+   },
+   "intro": "An old shrine asks for an offering. Locals say what you give here changes your whole journey.",
+   "choices": [
+    {
+     "label": "Offer ₽2000",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 2000
+      }
+     ],
+     "success": {
+      "text": "The bell rings by itself. Your Pokémon feel lighter.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -2000
+       },
+       {
+        "kind": "relic",
+        "id": "shrine-blessing",
+        "name": "Shrine Blessing",
+        "effects": [
+         {
+          "kind": "healingMultiplier",
+          "value": 1.15
+         },
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "old-shrine",
+        "pick": "money",
+        "text": "Gave ₽2000 at the old shrine",
+        "weight": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Offer one of your items",
+     "success": {
+      "text": "The item vanishes. The wild seems to welcome you.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "relic",
+        "id": "shrine-luck",
+        "name": "Shrine Luck",
+        "effects": [
+         {
+          "kind": "captureMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "encounterWeightMultiplier",
+          "group": "rare",
+          "value": 1.2
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "old-shrine",
+        "pick": "item",
+        "text": "Gave up an item at the old shrine",
+        "weight": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave nothing",
+     "success": {
+      "text": "Nothing happens. The wind feels colder.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "old-shrine",
+        "pick": "none",
+        "text": "Gave nothing at the old shrine",
+        "weight": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "old-shrine-spirit",
+   "name": "The Shrine Spirit",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 5,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "old-shrine"
+    },
+    {
+     "kind": "choice",
+     "id": "old-shrine",
+     "pick": "none",
+     "made": false
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#202a50",
+    "effect": "sparkle"
+   },
+   "intro": "The shrine bell rings far behind you, and a legendary beast is waiting on the road ahead. It has come to see who gave the offering.",
+   "choices": [
+    {
+     "label": "Face it",
+     "success": {
+      "text": "It roars, then waits for you to make the first move.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "suicune",
+        "entei",
+        "raikou"
+       ],
+       "levelBonus": 5,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 60
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Bow and step aside",
+     "success": {
+      "text": "It passes by, and your team feels braver for it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "road-fork",
+   "name": "The Fork in the Road",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "tint": "#304030",
+    "effect": "none"
+   },
+   "intro": "Three roads lead on toward the next towns. A signpost warns that once you choose, there is no going back.",
+   "choices": [
+    {
+     "label": "The mountain pass",
+     "success": {
+      "text": "Thin air and tough trainers. Every battle teaches more.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "mountain-road",
+        "name": "Mountain Road",
+        "effects": [
+         {
+          "kind": "xpMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "enemyLevelOffset",
+          "value": 1
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "road-fork",
+        "pick": "mountain",
+        "text": "Took the hard mountain pass",
+        "weight": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "The coast road",
+     "success": {
+      "text": "Sea air, warm rain, and Water Pokémon everywhere.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "coast-road",
+        "name": "Coast Road",
+        "effects": [
+         {
+          "kind": "healingMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "typeEncounterWeight",
+          "type": "water",
+          "value": 1.5
+         }
+        ]
+       },
+       {
+        "kind": "front",
+        "weather": "rain",
+        "columns": 3
+       },
+       {
+        "kind": "choice",
+        "id": "road-fork",
+        "pick": "coast",
+        "text": "Took the gentle coast road",
+        "weight": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "The forest trail",
+     "success": {
+      "text": "Dense trees, and Pokémon that hide in them.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "forest-road",
+        "name": "Forest Trail",
+        "effects": [
+         {
+          "kind": "typeEncounterWeight",
+          "type": "grass",
+          "value": 1.5
+         },
+         {
+          "kind": "captureMultiplier",
+          "value": 1.05
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "road-fork",
+        "pick": "forest",
+        "text": "Took the forest trail",
+        "weight": 3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-asks-help",
+   "name": "Your Rival Needs a Hand",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#30305a",
+    "effect": "none"
+   },
+   "intro": "Your rival is surrounded by wild Pokémon and their team is worn out. \"Don't just stand there! ...Please?\"",
+   "choices": [
+    {
+     "label": "Jump in and help",
+     "success": {
+      "text": "\"Fine, I owe you one. Don't make it weird.\"",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "choice",
+         "id": "rival-help",
+         "pick": "helped",
+         "text": "Helped your rival when they were cornered",
+         "weight": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Let them handle it",
+     "success": {
+      "text": "\"Thanks for nothing!\" They fight their way out alone, furious.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "rival-help",
+        "pick": "refused",
+        "text": "Left your rival to fight alone",
+        "weight": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-asks-help-repaid",
+   "name": "Your Rival Repays You",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "rival-help",
+     "pick": "helped"
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#30406a",
+    "effect": "hearts"
+   },
+   "intro": "Your rival jogs up with a bag. \"Here. We're even now. And next time we battle, I'm not holding back, because you'd hate that.\"",
+   "choices": [
+    {
+     "label": "Accept the gift",
+     "success": {
+      "text": "Your rival grins and runs off.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "max-revive",
+         "rare-candy",
+         "full-restore"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-asks-help-grudge",
+   "name": "A Bitter Rival",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "rival-help",
+     "pick": "refused"
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#4a2030",
+    "effect": "shake"
+   },
+   "intro": "Your rival is waiting, arms crossed. \"You left me out there. I haven't forgotten.\"",
+   "choices": [
+    {
+     "label": "Battle",
+     "success": {
+      "text": "\"This is for that day.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival",
+       "rival": true,
+       "size": 3,
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1500
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "strangers-map",
+   "name": "A Stranger's Map",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "boss.npc_gambler"
+    ],
+    "tint": "#2a2030",
+    "effect": "none"
+   },
+   "intro": "A hooded stranger offers you a map. \"It leads to a Legendary's lair. Only ₽500. Trust me.\"",
+   "choices": [
+    {
+     "label": "Trust them (₽500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "chance": 0.6,
+     "success": {
+      "text": "The map looks real: old ink, true landmarks.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "choice",
+        "id": "strangers-map",
+        "pick": "trusted",
+        "text": "Trusted a stranger's treasure map",
+        "weight": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "The map is a fake. The stranger is long gone.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "choice",
+        "id": "strangers-map",
+        "pick": "scammed",
+        "text": "Was scammed by a stranger's map",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Turn them down",
+     "success": {
+      "text": "\"Your loss.\" The stranger melts into the crowd.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "strangers-map",
+        "pick": "refused",
+        "text": "Refused a stranger's map",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Report them",
+     "success": {
+      "text": "The police thank you. Turns out they sell fakes all over town.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "choice",
+        "id": "strangers-map",
+        "pick": "reported",
+        "text": "Reported a map seller to the police",
+        "weight": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "strangers-map-lair",
+   "name": "The Hidden Lair",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "strangers-map",
+     "pick": "trusted"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#203a5a",
+    "effect": "sparkle"
+   },
+   "intro": "The stranger's map was real. Behind a waterfall, something legendary is sleeping.",
+   "choices": [
+    {
+     "label": "Wake it",
+     "success": {
+      "text": "It opens its eyes.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "lugia",
+        "ho-oh",
+        "latias",
+        "latios"
+       ],
+       "levelBonus": 5,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 60
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Take the treasure and tiptoe out",
+     "success": {
+      "text": "You leave it sleeping, and leave richer.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "comet-shard",
+         "star-piece",
+         "big-nugget"
+        ]
+       },
+       {
+        "kind": "money",
+        "amount": 1000
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "research-offer",
+   "name": "A Special Opportunity",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.npc_scientist"
+    ],
+    "tint": "#203040",
+    "effect": "none"
+   },
+   "intro": "A researcher has two offers. \"Take my prototype today, or fund my work and get something much better later.\"",
+   "choices": [
+    {
+     "label": "Take the prototype now",
+     "success": {
+      "text": "Your next reward draft will have more to choose from.",
+      "effects": [
+       {
+        "kind": "betterDraft",
+        "extra": 1
+       },
+       {
+        "kind": "choice",
+        "id": "research-offer",
+        "pick": "now",
+        "text": "Took a researcher's prototype right away",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fund the research (₽1500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1500
+      }
+     ],
+     "success": {
+      "text": "\"You won't regret it. Probably.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1500
+       },
+       {
+        "kind": "choice",
+        "id": "research-offer",
+        "pick": "funded",
+        "text": "Funded a researcher's long project",
+        "weight": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "research-offer-payoff",
+   "name": "The Research Pays Off",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "research-offer",
+     "pick": "funded"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_scientist"
+    ],
+    "tint": "#204060",
+    "effect": "glint"
+   },
+   "intro": "The researcher you funded finds you, out of breath. \"It worked! And you get the first results!\"",
+   "choices": [
+    {
+     "label": "Collect your share",
+     "success": {
+      "text": "A box of prototypes and a page of notes.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "rare-candy",
+         "max-revive",
+         "life-orb",
+         "expert-belt"
         ],
-        "levelBonus": 0,
-        "shinyMultiplier": 1,
-        "left": 3,
-        "unit": "stage",
-        "origin": "Rare Nest"
+        "count": 2
+       },
+       {
+        "kind": "research",
+        "amount": 60
+       },
+       {
+        "kind": "betterDraft",
+        "extra": 2
        }
       ]
      }

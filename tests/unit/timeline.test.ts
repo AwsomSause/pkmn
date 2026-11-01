@@ -42,8 +42,9 @@ describe('timeline genesis (normal)', () => {
     const replay = reconstructRun(content, g, replayIdFor(g.runId, 1), 1);
     expect(replay.runId).toBe(`${original.runId}~tl1`);
     expect(replay.timeline).toEqual({ replayId: replay.runId, originRunId: original.runId, attempt: 1 });
-    const { runId: _a, timeline: _t, ...rest } = replay;
-    const { runId: _b, ...orig } = original;
+    // `calendar` is today's real date, given by the host, not part of what a run is built from.
+    const { runId: _a, timeline: _t, calendar: _ca, ...rest } = replay;
+    const { runId: _b, calendar: _cb, ...orig } = original;
     expect(rest).toEqual(orig);
   });
 

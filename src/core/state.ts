@@ -628,6 +628,7 @@ export const BattleStateSchema = z.object({
       rivals: z.record(z.string(), z.enum(['calm', 'reckless'])).default({}),
       outdo: z.array(z.string()).default([]),
       taken: z.record(z.string(), z.number().int().min(0)).default({}),
+      guard: z.record(z.string(), z.number().int().min(0)).default({}),
     })
     .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),
@@ -872,6 +873,8 @@ export const RunRulesSchema = z.object({
   deathBlock: z.boolean(),
   /** True once Death-Block has saved the run (it works once). */
   deathBlockUsed: z.boolean(),
+  /** Weeks: whether weekly and holiday event editions were allowed to apply when the run started. Fixed for the run. */
+  weeks: z.boolean().default(true),
   /** False means no account-level rewards of any kind (Adventure). */
   progressionEligible: z.boolean(),
   /** The published reward multiplier, fixed at the start. */
@@ -1095,6 +1098,8 @@ export const RunStateSchema = z.object({
   partyLife: PartyLifeStateSchema.default(() => createPartyLife()),
   /** The day counter and time of day (core/clock.ts); time passes only with the player's actions. */
   clock: z.object({ day: z.number().int().min(1), tick: z.number().int().min(0).max(3), celebrated: z.array(z.number().int()) }).default(() => ({ day: 1, tick: 0, celebrated: [] })),
+  /** The real-world date as the host last gave it ("MM-DD"), and the date the run began. The core never reads a clock: the host passes the date in (core/clock.ts setCalendar). */
+  calendar: z.object({ today: z.string().nullable(), startedOn: z.string().nullable() }).default(() => ({ today: null, startedOn: null })),
   /** An earlier run's rival whose character may shape one of this run's rivals (picked at the start from the account archive; null: none). */
   legacyRival: ArchivedRivalSchema.nullable().default(null),
   /** Raid record this run (dens entered, won, lost) and the dens already finished. */

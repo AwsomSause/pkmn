@@ -16910,6 +16910,2401 @@
      "lose": "Pecharunt lets the land push you back. It is not done with you."
     }
    }
+  },
+  {
+   "id": "legend-raid-kyogre-event",
+   "name": "Kyogre: Primordial Flood (Raid)",
+   "tier": 4,
+   "blurb": "Kyogre stirs, and its stage is open for a short time. The sea has climbed the cliffs overnight, and the sky will not stop raining.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-kyogre"
+   },
+   "rentals": [
+    "wailord",
+    "gyarados",
+    "lanturn"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "water-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "kyogre",
+    "epithet": "Primordial Flood (Raid)",
+    "rarity": "veryRare",
+    "omen": "The sea has climbed the cliffs overnight, and the sky will not stop raining.",
+    "lore": [
+     "Fishermen say the tide went out of the world and came back wearing a name.",
+     "Something vast breathes under the water, and the flood follows its breath."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#1d4f9c",
+     "accent": "#6fd0ff",
+     "motif": "flooded ruins, drifting currents"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 2,
+     "maxRegion": null,
+     "time": [],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "water"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "The stage is half under water. Rain falls on every fight.",
+      "weather": "rain"
+     },
+     {
+      "fromLayer": 3,
+      "text": "The flood deepens: the rain turns to a deluge and the footing is gone.",
+      "weather": "rain",
+      "terrain": "misty"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 1,
+      "text": "A current tears a bridge away. One way forward is under water."
+     },
+     {
+      "afterLayer": 3,
+      "text": "The rising flood swallows another path."
+     }
+    ],
+    "distort": [],
+    "affinity": {
+     "types": [
+      "water"
+     ],
+     "heal": 0.1,
+     "text": "Water Pokémon ride the currents and recover a little HP."
+    },
+    "peril": {
+     "types": [
+      "fire",
+      "rock"
+     ],
+     "chip": 0.06,
+     "text": "Fire and Rock Pokémon struggle in the cold flood and lose some HP."
+    },
+    "wild": [
+     "wailord",
+     "gyarados",
+     "lanturn",
+     "octillery",
+     "huntail",
+     "gorebyss",
+     "milotic"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "drowned-fisher",
+      "name": "The Drowned Fisher",
+      "text": "\"It rises when it is lonely. Give it something, or take something from it.\"",
+      "options": [
+       {
+        "label": "Leave a bait offering",
+        "result": "The water goes still for a moment, and a cache washes up.",
+        "effect": {
+         "item": "hyper-potion"
+        }
+       },
+       {
+        "label": "Take from the wreck",
+        "result": "You find supplies, but the water bites back.",
+        "effect": {
+         "money": 300,
+         "hurt": 0.1
+        }
+       }
+      ]
+     },
+     {
+      "id": "tide-keeper",
+      "name": "The Tide Keeper",
+      "text": "\"Follow the current and you will see its eye.\"",
+      "options": [
+       {
+        "label": "Follow the current",
+        "result": "Your team is carried onward and feels stronger.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Stay on the rocks",
+        "result": "You gather research notes on the flood.",
+        "effect": {
+         "research": 1
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Rain on every fight",
+     "Water Pokémon recover HP between stops",
+     "Paths are lost as the flood rises",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The sea opens. Kyogre rises out of an enormous flooded basin and the rain turns to a wall. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The flood eases. Kyogre sinks back into the deep, and the sea remembers your name.",
+     "lose": "The flood carries your team to the shallows. Kyogre watches, and lets you go."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-groudon-event",
+   "name": "Groudon: Scorched Earth (Raid)",
+   "tier": 4,
+   "blurb": "Groudon stirs, and its stage is open for a short time. The ground is hot underfoot, and a column of ash stands over the next ridge.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-groudon"
+   },
+   "rentals": [
+    "camerupt",
+    "torkoal",
+    "magcargo"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "ground-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "groudon",
+    "epithet": "Scorched Earth (Raid)",
+    "rarity": "veryRare",
+    "omen": "The ground is hot underfoot, and a column of ash stands over the next ridge.",
+    "lore": [
+     "Rivers have run dry. The earth cracked in the night and glowed.",
+     "Something under the crust is waking, and the land is bending to its heat."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#9c2f1d",
+     "accent": "#ffb347",
+     "motif": "lava fields, cracked basalt"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 2,
+     "maxRegion": null,
+     "time": [
+      "day",
+      "eve"
+     ],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "ground"
+      },
+      {
+       "kind": "partyType",
+       "type": "fire"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "fire",
+      "ground"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "Harsh sunlight beats down on every fight.",
+      "weather": "sun"
+     },
+     {
+      "fromLayer": 2,
+      "text": "The ground splits: sandstorms of ash roll in.",
+      "weather": "sand"
+     },
+     {
+      "fromLayer": 4,
+      "text": "The sun returns, brighter than before.",
+      "weather": "sun"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 1,
+      "text": "A lava flow cuts one route."
+     },
+     {
+      "afterLayer": 3,
+      "text": "The ground collapses behind you. Another path is gone."
+     }
+    ],
+    "distort": [],
+    "affinity": {
+     "types": [
+      "fire",
+      "ground"
+     ],
+     "heal": 0.1,
+     "text": "Fire and Ground Pokémon draw strength from the hot earth."
+    },
+    "peril": {
+     "types": [
+      "grass",
+      "ice",
+      "bug"
+     ],
+     "chip": 0.06,
+     "text": "Grass, Ice and Bug Pokémon are scorched by the heat."
+    },
+    "wild": [
+     "camerupt",
+     "torkoal",
+     "magcargo",
+     "rhyperior",
+     "flareon",
+     "arcanine",
+     "golem"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "ash-prospector",
+      "name": "The Ash Prospector",
+      "text": "\"The stones are warm. Warm stones mean a bright one under them.\"",
+      "options": [
+       {
+        "label": "Dig at the ridge",
+        "result": "You pull out a bright stone, and burn your hands.",
+        "effect": {
+         "item": "hyper-potion",
+         "hurt": 0.08
+        }
+       },
+       {
+        "label": "Pay for the map",
+        "result": "The prospector marks a safe line through the ash.",
+        "effect": {
+         "money": -200,
+         "research": 1
+        }
+       }
+      ]
+     },
+     {
+      "id": "caldera-hermit",
+      "name": "The Caldera Hermit",
+      "text": "\"It is not angry. It is only awake.\"",
+      "options": [
+       {
+        "label": "Rest in the shade",
+        "result": "Your team cools down and recovers.",
+        "effect": {
+         "heal": 0.25
+        }
+       },
+       {
+        "label": "Take a coal for luck",
+        "result": "The coal glows in your bag.",
+        "effect": {
+         "money": 400
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Harsh sunlight, then ash storms, then sun again",
+     "Fire and Ground Pokémon recover HP",
+     "Lava closes paths",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The crater breathes. Groudon climbs out of an active volcano and the sky turns red. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The ground cools. Groudon sleeps again, and the ash begins to settle.",
+     "lose": "The heat drives you back across the ash. Groudon does not follow."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-rayquaza-event",
+   "name": "Rayquaza: Skybound Tempest (Raid)",
+   "tier": 4,
+   "blurb": "Rayquaza stirs, and its stage is open for a short time. A green shadow crosses the clouds, and the winds have started to climb.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-rayquaza"
+   },
+   "rentals": [
+    "altaria",
+    "salamence",
+    "dragonite"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "dragon-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "rayquaza",
+    "epithet": "Skybound Tempest (Raid)",
+    "rarity": "veryRare",
+    "omen": "A green shadow crosses the clouds, and the winds have started to climb.",
+    "lore": [
+     "The air thins. Stone platforms hang where there was only sky yesterday.",
+     "Something older than both sea and land circles above the weather."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#1f7a4d",
+     "accent": "#c6ff6f",
+     "motif": "floating platforms, tempest above the clouds"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 3,
+     "maxRegion": null,
+     "time": [],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "flying"
+      },
+      {
+       "kind": "partyType",
+       "type": "dragon"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "flying",
+      "dragon"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "Floating platforms under a rushing wind. Fights are fought in thin air.",
+      "terrain": "electric"
+     },
+     {
+      "fromLayer": 3,
+      "text": "The storm builds. Rain lashes the platforms.",
+      "weather": "rain",
+      "terrain": "electric"
+     },
+     {
+      "fromLayer": 5,
+      "text": "The platforms start to break apart.",
+      "weather": "rain"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 1,
+      "text": "A platform crumbles away. One way forward is gone."
+     },
+     {
+      "afterLayer": 3,
+      "text": "The wind tears another platform loose."
+     },
+     {
+      "afterLayer": 4,
+      "text": "The structure is falling apart behind you."
+     }
+    ],
+    "distort": [],
+    "affinity": {
+     "types": [
+      "flying",
+      "dragon"
+     ],
+     "heal": 0.1,
+     "text": "Flying and Dragon Pokémon ride the updrafts and recover."
+    },
+    "peril": {
+     "types": [
+      "rock",
+      "ice"
+     ],
+     "chip": 0.06,
+     "text": "Rock and Ice Pokémon are battered by the wind."
+    },
+    "wild": [
+     "altaria",
+     "salamence",
+     "dragonite",
+     "flygon",
+     "noivern",
+     "swellow",
+     "tropius"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "wind-reader",
+      "name": "The Wind Reader",
+      "text": "\"Lean into the gust. The platform will hold if you do.\"",
+      "options": [
+       {
+        "label": "Lean into the gust",
+        "result": "The wind carries your team forward.",
+        "effect": {
+         "heal": 0.25
+        }
+       },
+       {
+        "label": "Study the currents",
+        "result": "You chart the winds.",
+        "effect": {
+         "research": 1
+        }
+       }
+      ]
+     },
+     {
+      "id": "sky-tender",
+      "name": "The Sky Tender",
+      "text": "\"Everything that falls from here is lost. Everything you carry is enough.\"",
+      "options": [
+       {
+        "label": "Accept a charm",
+        "result": "A charm of feathers lifts your spirits.",
+        "effect": {
+         "item": "hyper-potion"
+        }
+       },
+       {
+        "label": "Trade a coin for a rope",
+        "result": "The rope keeps the team safe from a fall.",
+        "effect": {
+         "money": -100,
+         "heal": 0.15
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Electric surge aloft, then rain",
+     "Flying and Dragon Pokémon recover HP",
+     "The platforms break apart",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The clouds part. Rayquaza coils above the highest platform and the sky itself turns on you. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The tempest falls quiet. Rayquaza circles once and climbs out of sight.",
+     "lose": "The platform falls and the wind catches you. Rayquaza lets the clouds close."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-giratina-event",
+   "name": "Giratina: Distortion World (Raid)",
+   "tier": 4,
+   "blurb": "Giratina stirs, and its stage is open for a short time. Your shadow has stopped matching you, and the path ahead is hanging at an angle.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-giratina"
+   },
+   "rentals": [
+    "drifblim",
+    "mismagius",
+    "dusknoir"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "ghost-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "giratina",
+    "epithet": "Distortion World (Raid)",
+    "rarity": "veryRare",
+    "omen": "Your shadow has stopped matching you, and the path ahead is hanging at an angle.",
+    "lore": [
+     "Up is somewhere else. A staircase leads down to the ceiling.",
+     "Banished from the world, it is building one of its own."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#2a1a40",
+     "accent": "#c78aff",
+     "motif": "inverted rooms, twisted stairs"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 3,
+     "maxRegion": null,
+     "time": [
+      "night"
+     ],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "ghost"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      },
+      {
+       "kind": "friendship",
+       "atLeast": 150
+      }
+     ],
+     "favoured": [
+      "ghost",
+      "dragon"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "The rooms are the wrong way round. Battle conditions shift without warning.",
+      "pool": [
+       {
+        "terrain": "psychic",
+        "text": "The floor hums with a strange pressure."
+       },
+       {
+        "terrain": "misty",
+        "text": "A cold mist pours up from the floor."
+       },
+       {
+        "weather": "hail",
+        "text": "Snow falls upward."
+       },
+       {
+        "text": "For a moment, everything is calm."
+       }
+      ]
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 2,
+      "text": "A door that was there is gone."
+     }
+    ],
+    "distort": [
+     {
+      "afterLayer": 0,
+      "text": "The room turns. The way on is somewhere else."
+     },
+     {
+      "afterLayer": 2,
+      "text": "The stairs loop. Where they lead has changed."
+     },
+     {
+      "afterLayer": 4,
+      "text": "The walls rearrange themselves behind you."
+     }
+    ],
+    "affinity": {
+     "types": [
+      "ghost",
+      "dragon"
+     ],
+     "heal": 0.08,
+     "text": "Ghost and Dragon Pokémon feel at home here and recover."
+    },
+    "peril": {
+     "types": [
+      "normal",
+      "fighting"
+     ],
+     "chip": 0.06,
+     "text": "Normal and Fighting Pokémon feel the world slip and lose HP."
+    },
+    "wild": [
+     "drifblim",
+     "mismagius",
+     "dusknoir",
+     "chandelure",
+     "gengar",
+     "froslass",
+     "spiritomb"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "inverted-clerk",
+      "name": "The Inverted Clerk",
+      "text": "\"Everything is for sale. The price is whatever you have left.\"",
+      "options": [
+       {
+        "label": "Buy a strange tonic",
+        "result": "It tastes of nothing and your team feels better.",
+        "effect": {
+         "money": -200,
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Ask for directions",
+        "result": "Directions arrive in a language you almost understand.",
+        "effect": {
+         "research": 1
+        }
+       }
+      ]
+     },
+     {
+      "id": "mirror-self",
+      "name": "Your Reflection",
+      "text": "\"I know where you are going. I got there first.\"",
+      "options": [
+       {
+        "label": "Follow your reflection",
+        "result": "It leads you to a cache.",
+        "effect": {
+         "item": "hyper-potion"
+        }
+       },
+       {
+        "label": "Break the glass",
+        "result": "Money falls out. The glass cuts your team.",
+        "effect": {
+         "money": 500,
+         "hurt": 0.12
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Weather and terrain change from fight to fight",
+     "Rooms rearrange themselves",
+     "Strange Ghost-type Pokémon roam",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The distortion folds in on itself. Giratina waits in an arena that has no floor. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The distortion unwinds. Giratina fades into the shadow between worlds.",
+     "lose": "The room turns once more and spits you out where you began."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-dialga-event",
+   "name": "Dialga: Frozen Hour (Raid)",
+   "tier": 4,
+   "blurb": "Dialga stirs, and its stage is open for a short time. Every clock in the region has stopped at the same second.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-dialga"
+   },
+   "rentals": [
+    "bronzong",
+    "metagross",
+    "aggron"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "steel-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "dialga",
+    "epithet": "Frozen Hour (Raid)",
+    "rarity": "veryRare",
+    "omen": "Every clock in the region has stopped at the same second.",
+    "lore": [
+     "A bird hangs motionless in the air. A drip of water is shaped like a bell.",
+     "The one who holds time is deciding what to do with it."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#3b4f7a",
+     "accent": "#ffe08a",
+     "motif": "frozen clockwork, stopped time"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 3,
+     "maxRegion": null,
+     "time": [],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "steel"
+      },
+      {
+       "kind": "partyType",
+       "type": "dragon"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "steel",
+      "dragon"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "Time is stuck. The air is still and heavy.",
+      "terrain": "psychic"
+     },
+     {
+      "fromLayer": 4,
+      "text": "Time starts to run backwards.",
+      "terrain": "psychic",
+      "weather": "sand"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 2,
+      "text": "A gear locks. One route is frozen shut."
+     }
+    ],
+    "distort": [
+     {
+      "afterLayer": 1,
+      "text": "The hour rewinds. The way on changes."
+     }
+    ],
+    "affinity": {
+     "types": [
+      "steel",
+      "dragon"
+     ],
+     "heal": 0.08,
+     "text": "Steel and Dragon Pokémon keep their rhythm and recover."
+    },
+    "peril": {
+     "types": [
+      "fairy",
+      "normal"
+     ],
+     "chip": 0.05,
+     "text": "Fairy and Normal Pokémon lose their footing in the stopped hour."
+    },
+    "wild": [
+     "bronzong",
+     "metagross",
+     "aggron",
+     "magnezone",
+     "scizor",
+     "skarmory",
+     "dragonair"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "clock-mender",
+      "name": "The Clock Mender",
+      "text": "\"Time owes everyone a little. Collect yours.\"",
+      "options": [
+       {
+        "label": "Take a minute back",
+        "result": "Your team recovers as if it had rested.",
+        "effect": {
+         "heal": 0.4
+        }
+       },
+       {
+        "label": "Wind the clock",
+        "result": "You gain research on the stopped hour.",
+        "effect": {
+         "research": 1,
+         "money": 200
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Psychic terrain over the stage",
+     "Steel and Dragon Pokémon recover HP",
+     "Routes freeze and rewind",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The last gear turns. Dialga stands in an hour that never ends. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The clocks start again. Dialga lets time move on.",
+     "lose": "The hour rewinds and you find yourselves at the gate once more."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-palkia-event",
+   "name": "Palkia: Folded Space (Raid)",
+   "tier": 4,
+   "blurb": "Palkia stirs, and its stage is open for a short time. The horizon has moved closer. The sky shows a seam.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-palkia"
+   },
+   "rentals": [
+    "gyarados",
+    "kingdra",
+    "starmie"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "water-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "palkia",
+    "epithet": "Folded Space (Raid)",
+    "rarity": "veryRare",
+    "omen": "The horizon has moved closer. The sky shows a seam.",
+    "lore": [
+     "Distances no longer add up. A mountain sits on top of the sea.",
+     "The one who shapes space is stretching the road."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#6a2f8a",
+     "accent": "#ffb0ff",
+     "motif": "folded horizons, bending space"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 3,
+     "maxRegion": null,
+     "time": [],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      },
+      {
+       "kind": "partyType",
+       "type": "dragon"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "water",
+      "dragon"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "The space folds. A strange mist hangs over every fight.",
+      "terrain": "misty"
+     },
+     {
+      "fromLayer": 4,
+      "text": "Space tears open and rain pours through the seam.",
+      "terrain": "misty",
+      "weather": "rain"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 2,
+      "text": "Space folds over one of the routes."
+     }
+    ],
+    "distort": [
+     {
+      "afterLayer": 1,
+      "text": "The road stretches. The way on has moved."
+     }
+    ],
+    "affinity": {
+     "types": [
+      "water",
+      "dragon"
+     ],
+     "heal": 0.08,
+     "text": "Water and Dragon Pokémon follow the folds and recover."
+    },
+    "peril": {
+     "types": [
+      "fire",
+      "ground"
+     ],
+     "chip": 0.05,
+     "text": "Fire and Ground Pokémon lose their bearings."
+    },
+    "wild": [
+     "gyarados",
+     "kingdra",
+     "starmie",
+     "lapras",
+     "slowbro",
+     "milotic",
+     "dragalge"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "cartographer",
+      "name": "The Cartographer",
+      "text": "\"The map and the land disagree. I trust the map.\"",
+      "options": [
+       {
+        "label": "Buy the map",
+        "result": "The map shows a safe stretch.",
+        "effect": {
+         "money": -200,
+         "heal": 0.25
+        }
+       },
+       {
+        "label": "Trace the seam",
+        "result": "You learn how space bends here.",
+        "effect": {
+         "research": 1
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Misty terrain, then rain through the seam",
+     "Water and Dragon Pokémon recover HP",
+     "The road stretches and folds",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "Space opens like a page. Palkia waits in the fold. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The seam closes. Palkia lets space settle.",
+     "lose": "Space snaps shut and throws you back to the gate."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-mewtwo-event",
+   "name": "Mewtwo: The Cerulean Cave (Raid)",
+   "tier": 4,
+   "blurb": "Mewtwo stirs, and its stage is open for a short time. A message appeared in everyone’s dreams: the same cave, the same voice.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-mewtwo"
+   },
+   "rentals": [
+    "alakazam",
+    "gardevoir",
+    "metagross"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "psychic-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "mewtwo",
+    "epithet": "The Cerulean Cave (Raid)",
+    "rarity": "veryRare",
+    "omen": "A message appeared in everyone’s dreams: the same cave, the same voice.",
+    "lore": [
+     "The cave has been sealed for a long time. Tonight it is open.",
+     "Something made, not born, is waiting for a challenger worth its time."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#4a2c6a",
+     "accent": "#d9b8ff",
+     "motif": "crystal caves, psychic static"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 3,
+     "maxRegion": null,
+     "time": [
+      "night"
+     ],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "psychic"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "mythical"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "psychic"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "The cave hums with psychic energy.",
+      "terrain": "psychic"
+     },
+     {
+      "fromLayer": 4,
+      "text": "The walls are shaking with its anger.",
+      "terrain": "psychic",
+      "weather": "hail"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 1,
+      "text": "A crystal wall closes off one route."
+     }
+    ],
+    "distort": [
+     {
+      "afterLayer": 3,
+      "text": "The cave reshapes itself around you."
+     }
+    ],
+    "affinity": {
+     "types": [
+      "psychic"
+     ],
+     "heal": 0.1,
+     "text": "Psychic Pokémon feel the hum and recover."
+    },
+    "peril": {
+     "types": [
+      "bug",
+      "ghost",
+      "dark"
+     ],
+     "chip": 0.06,
+     "text": "Bug, Ghost and Dark Pokémon are unnerved by the pressure."
+    },
+    "wild": [
+     "alakazam",
+     "gardevoir",
+     "metagross",
+     "espeon",
+     "slowking",
+     "reuniclus",
+     "hypno"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "cave-scientist",
+      "name": "The Last Scientist",
+      "text": "\"I made it. I would like to know it forgave me.\"",
+      "options": [
+       {
+        "label": "Take his notes",
+        "result": "The notes are full of unsettling results.",
+        "effect": {
+         "research": 2
+        }
+       },
+       {
+        "label": "Take his tonic",
+        "result": "It steadies your team.",
+        "effect": {
+         "heal": 0.25
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Psychic terrain through the cave",
+     "Psychic Pokémon recover HP",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The last crystal wall falls. Mewtwo turns, calm and certain. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The hum fades. Mewtwo regards you once, then leaves the cave to you.",
+     "lose": "The cave pushes you out. Mewtwo does not look back."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-arceus-event",
+   "name": "Arceus: Hall of Origin (Raid)",
+   "tier": 4,
+   "blurb": "Arceus stirs, and its stage is open for a short time. A stair of light has opened in the sky above the oldest ruin.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-arceus"
+   },
+   "rentals": [
+    "blissey",
+    "snorlax",
+    "porygon-z"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "normal-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "arceus",
+    "epithet": "Hall of Origin (Raid)",
+    "rarity": "veryRare",
+    "omen": "A stair of light has opened in the sky above the oldest ruin.",
+    "lore": [
+     "All the colours of the world line the stair.",
+     "It is said everything began here."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#b8a850",
+     "accent": "#fff8d0",
+     "motif": "celestial hall, plates"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 4,
+     "maxRegion": null,
+     "time": [],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "mythical"
+      },
+      {
+       "kind": "friendship",
+       "atLeast": 200
+      }
+     ],
+     "favoured": [
+      "normal"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "A calm hall under starlight."
+     },
+     {
+      "fromLayer": 2,
+      "text": "The hall shows the sun.",
+      "weather": "sun"
+     },
+     {
+      "fromLayer": 4,
+      "text": "The hall turns to rain.",
+      "weather": "rain"
+     },
+     {
+      "fromLayer": 6,
+      "text": "The hall turns to snow.",
+      "weather": "snow"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 2,
+      "text": "A plate of light falls away."
+     },
+     {
+      "afterLayer": 4,
+      "text": "The stair loses a step."
+     }
+    ],
+    "distort": [],
+    "affinity": {
+     "types": [
+      "normal"
+     ],
+     "heal": 0.1,
+     "text": "Normal Pokémon are at peace in the hall."
+    },
+    "peril": null,
+    "wild": [
+     "blissey",
+     "snorlax",
+     "porygon-z",
+     "togekiss",
+     "staraptor",
+     "ursaring"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "plate-bearer",
+      "name": "The Plate Bearer",
+      "text": "\"Every plate is a promise. Choose which one you keep.\"",
+      "options": [
+       {
+        "label": "Accept a blessing",
+        "result": "A light heals your team.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Take a plate shard",
+        "result": "The shard is yours.",
+        "effect": {
+         "item": "hyper-potion"
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "The weather turns through the seasons",
+     "Normal Pokémon recover HP",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The stair ends. Arceus waits in the Hall of Origin. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "Arceus is satisfied. The stair fades like a breath.",
+     "lose": "The hall lets you go, unharmed."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-reshiram-event",
+   "name": "Reshiram: Vast White (Raid)",
+   "tier": 4,
+   "blurb": "Reshiram stirs, and its stage is open for a short time. The old castle has lit up from the inside, with a white flame that gives no smoke.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-reshiram"
+   },
+   "rentals": [
+    "chandelure",
+    "arcanine",
+    "salamence"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "dragon-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "reshiram",
+    "epithet": "Vast White (Raid)",
+    "rarity": "veryRare",
+    "omen": "The old castle has lit up from the inside, with a white flame that gives no smoke.",
+    "lore": [
+     "Truth, it says, burns clean.",
+     "A white dragon sleeps in the throne room."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#b05a30",
+     "accent": "#fff0d0",
+     "motif": "white flame, castle halls"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 3,
+     "maxRegion": null,
+     "time": [
+      "day",
+      "eve"
+     ],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      },
+      {
+       "kind": "partyType",
+       "type": "dragon"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "fire",
+      "dragon"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "White light and harsh sun in the halls.",
+      "weather": "sun"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 2,
+      "text": "A burning doorway collapses."
+     }
+    ],
+    "distort": [],
+    "affinity": {
+     "types": [
+      "fire",
+      "dragon"
+     ],
+     "heal": 0.08,
+     "text": "Fire and Dragon Pokémon bask in the white flame."
+    },
+    "peril": {
+     "types": [
+      "water",
+      "ice"
+     ],
+     "chip": 0.05,
+     "text": "Water and Ice Pokémon are scorched."
+    },
+    "wild": [
+     "chandelure",
+     "arcanine",
+     "salamence",
+     "haxorus",
+     "hydreigon",
+     "flygon"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "truth-seeker",
+      "name": "The Truth Seeker",
+      "text": "\"Ideals are fire. Handle with care.\"",
+      "options": [
+       {
+        "label": "Share the flame",
+        "result": "The white flame steadies your team.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Study the flame",
+        "result": "You learn how it burns.",
+        "effect": {
+         "research": 1
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Harsh sun in the castle",
+     "Fire and Dragon Pokémon recover HP",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The throne room blazes white. Reshiram unfolds its wings. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The white flame gutters. Reshiram nods and departs.",
+     "lose": "The flame forces you out of the castle."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-zekrom-event",
+   "name": "Zekrom: Deep Black (Raid)",
+   "tier": 4,
+   "blurb": "Zekrom stirs, and its stage is open for a short time. The old castle went dark last night, and every lamp in the town flickered in time with it.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-zekrom"
+   },
+   "rentals": [
+    "galvantula",
+    "magnezone",
+    "luxray"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "dragon-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "zekrom",
+    "epithet": "Deep Black (Raid)",
+    "rarity": "veryRare",
+    "omen": "The old castle went dark last night, and every lamp in the town flickered in time with it.",
+    "lore": [
+     "Ideals, it says, strike like lightning.",
+     "A black dragon sleeps in the throne room, crackling."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#1a1a3a",
+     "accent": "#6fa8ff",
+     "motif": "black thunder, castle halls"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 3,
+     "maxRegion": null,
+     "time": [
+      "night"
+     ],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "electric"
+      },
+      {
+       "kind": "partyType",
+       "type": "dragon"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "electric",
+      "dragon"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "A black storm of static in the halls.",
+      "terrain": "electric"
+     },
+     {
+      "fromLayer": 4,
+      "text": "Rain and lightning pour through the roof.",
+      "terrain": "electric",
+      "weather": "rain"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 2,
+      "text": "A lightning strike brings a ceiling down."
+     }
+    ],
+    "distort": [],
+    "affinity": {
+     "types": [
+      "electric",
+      "dragon"
+     ],
+     "heal": 0.08,
+     "text": "Electric and Dragon Pokémon drink the static."
+    },
+    "peril": {
+     "types": [
+      "water",
+      "flying"
+     ],
+     "chip": 0.05,
+     "text": "Water and Flying Pokémon are shocked."
+    },
+    "wild": [
+     "galvantula",
+     "magnezone",
+     "luxray",
+     "hydreigon",
+     "haxorus",
+     "flygon"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "ideal-seeker",
+      "name": "The Ideal Seeker",
+      "text": "\"A thunderbolt asks no permission.\"",
+      "options": [
+       {
+        "label": "Stand beside a rod",
+        "result": "The charge restores your team.",
+        "effect": {
+         "heal": 0.3
+        }
+       },
+       {
+        "label": "Take a coil",
+        "result": "The coil is valuable and bites.",
+        "effect": {
+         "money": 400,
+         "hurt": 0.08
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Static and storm in the halls",
+     "Electric and Dragon Pokémon recover HP",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The throne room goes black, then crackles. Zekrom rises. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The static eases. Zekrom bows and departs into the night.",
+     "lose": "A bolt throws you out of the castle."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-lugia-event",
+   "name": "Lugia: Guardian of the Whirl (Raid)",
+   "tier": 4,
+   "blurb": "Lugia stirs, and its stage is open for a short time. A whirlpool has opened where the ferry used to cross, and the sea is singing.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-lugia"
+   },
+   "rentals": [
+    "pelipper",
+    "wailmer",
+    "sharpedo"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "psychic-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "lugia",
+    "epithet": "Guardian of the Whirl (Raid)",
+    "rarity": "veryRare",
+    "omen": "A whirlpool has opened where the ferry used to cross, and the sea is singing.",
+    "lore": [
+     "A low song rolls over the water at night.",
+     "Something enormous sleeps in the deepest part of the whirl."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#2a5a8a",
+     "accent": "#e0f0ff",
+     "motif": "whirlpools, sea caves"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 2,
+     "maxRegion": null,
+     "time": [],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      },
+      {
+       "kind": "partyType",
+       "type": "flying"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      }
+     ],
+     "favoured": [
+      "water",
+      "psychic",
+      "flying"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "Whirlpools and sea spray: rain on every fight.",
+      "weather": "rain"
+     },
+     {
+      "fromLayer": 4,
+      "text": "A calm falls over the water — the eye of the storm.",
+      "terrain": "psychic"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 1,
+      "text": "A whirlpool swallows one route."
+     }
+    ],
+    "distort": [
+     {
+      "afterLayer": 1,
+      "text": "The way on shifts and rearranges itself."
+     }
+    ],
+    "affinity": {
+     "types": [
+      "water",
+      "flying",
+      "psychic"
+     ],
+     "heal": 0.08,
+     "text": "Water, Flying and Psychic Pokémon feel the calm of the whirl."
+    },
+    "peril": {
+     "types": [
+      "fire",
+      "ground"
+     ],
+     "chip": 0.05,
+     "text": "Fire and Ground Pokémon are soaked and slowed."
+    },
+    "wild": [
+     "pelipper",
+     "wailmer",
+     "sharpedo",
+     "lapras",
+     "dewgong",
+     "tentacruel",
+     "swanna"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "sea-singer",
+      "name": "The Sea Singer",
+      "text": "\"If you hum back, it will answer.\"",
+      "options": [
+       {
+        "label": "Hum back",
+        "result": "The sea answers with a calm that heals.",
+        "effect": {
+         "heal": 0.25
+        }
+       },
+       {
+        "label": "Listen closely",
+        "result": "You gain research on the song.",
+        "effect": {
+         "research": 1
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Rain, then a calm eye",
+     "Water, Flying and Psychic Pokémon recover HP",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The whirl parts. Lugia rises with the sea itself on its wings. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The sea goes quiet. Lugia dives back into the deep.",
+     "lose": "The whirl carries you to shore. The song fades."
+    }
+   }
+  },
+  {
+   "id": "legend-raid-ho-oh-event",
+   "name": "Ho-Oh: Rainbow Ascent (Raid)",
+   "tier": 4,
+   "blurb": "Ho-Oh stirs, and its stage is open for a short time. A rainbow has stood over the ridge for three days and no rain has fallen.",
+   "nodes": {
+    "min": 6,
+    "max": 8
+   },
+   "partyMode": "own",
+   "nodeWeights": {
+    "wild": 5,
+    "trainer": 2,
+    "elite": 1,
+    "rest": 1,
+    "cache": 1,
+    "research": 1,
+    "mystery": 2
+   },
+   "finale": {
+    "kind": "raid",
+    "raidId": "legend-raid-ho-oh"
+   },
+   "rentals": [
+    "rapidash",
+    "ninetales",
+    "staraptor"
+   ],
+   "restHeal": 0.4,
+   "cache": [
+    {
+     "item": "hyper-potion",
+     "chance": 1
+    },
+    {
+     "item": "full-heal",
+     "chance": 0.5
+    }
+   ],
+   "megaCost": 3,
+   "researchGoal": 2,
+   "rewards": {
+    "moneyPerLevel": 240,
+    "items": [
+     {
+      "item": "fire-tera-shard",
+      "chance": 1
+     },
+     {
+      "item": "full-restore",
+      "chance": 0.6
+     },
+     {
+      "item": "master-ball",
+      "chance": 0.15
+     }
+    ],
+    "megaStones": 1,
+    "researchBonusItem": null
+   },
+   "unlocks": null,
+   "failureKeep": 0.3,
+   "legendary": {
+    "species": "ho-oh",
+    "epithet": "Rainbow Ascent (Raid)",
+    "rarity": "veryRare",
+    "omen": "A rainbow has stood over the ridge for three days and no rain has fallen.",
+    "lore": [
+     "A single feather lies on the path, still warm.",
+     "The tower has been rebuilt in light."
+    ],
+    "temporaryNote": "This chance is temporary: if you move on without entering, the way is gone when this stage ends.",
+    "visual": {
+     "tint": "#b3541f",
+     "accent": "#ffe27a",
+     "motif": "burning tower, rainbow stairs"
+    },
+    "music": null,
+    "trigger": {
+     "minRegion": 2,
+     "maxRegion": null,
+     "time": [
+      "day",
+      "eve"
+     ],
+     "themeTypes": [],
+     "requires": [],
+     "any": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      },
+      {
+       "kind": "partyType",
+       "type": "flying"
+      },
+      {
+       "kind": "partyTag",
+       "tag": "legendary"
+      },
+      {
+       "kind": "friendship",
+       "atLeast": 150
+      }
+     ],
+     "favoured": [
+      "fire",
+      "flying"
+     ],
+     "weight": 0.5
+    },
+    "env": [
+     {
+      "fromLayer": 0,
+      "text": "Rainbow light over a warm tower: harsh sun.",
+      "weather": "sun"
+     },
+     {
+      "fromLayer": 4,
+      "text": "The flames climb with you.",
+      "weather": "sun",
+      "terrain": "grassy"
+     }
+    ],
+    "closes": [
+     {
+      "afterLayer": 2,
+      "text": "A floor of the tower burns away."
+     }
+    ],
+    "distort": [],
+    "affinity": {
+     "types": [
+      "fire",
+      "flying"
+     ],
+     "heal": 0.1,
+     "text": "Fire and Flying Pokémon bask in sacred flame and recover."
+    },
+    "peril": {
+     "types": [
+      "ice",
+      "rock"
+     ],
+     "chip": 0.05,
+     "text": "Ice and Rock Pokémon wilt in the heat."
+    },
+    "wild": [
+     "rapidash",
+     "ninetales",
+     "staraptor",
+     "talonflame",
+     "magmortar",
+     "houndoom",
+     "pidgeot"
+    ],
+    "wildLevelBonus": 2,
+    "npcs": [
+     {
+      "id": "tower-monk",
+      "name": "The Tower Monk",
+      "text": "\"The flame does not forgive. It does not need to.\"",
+      "options": [
+       {
+        "label": "Light a candle",
+        "result": "The flame blesses your team.",
+        "effect": {
+         "heal": 0.25
+        }
+       },
+       {
+        "label": "Take a feather",
+        "result": "The feather is warm and worth a fortune.",
+        "effect": {
+         "money": 400
+        }
+       }
+      ]
+     }
+    ],
+    "modifiers": [
+     "Harsh sun over the tower",
+     "Fire and Flying Pokémon recover HP",
+     "The finale is a Raid battle: shields, a charged attack and a timer"
+    ],
+    "finale": {
+     "intro": "The rainbow bends. Ho-Oh descends in a spiral of fire and light. This time it will not be held to a duel: the whole stage joins the fight.",
+     "win": "The flame softens. Ho-Oh leaves a feather and a rainbow behind.",
+     "lose": "The flame fades and you find yourselves at the foot of the tower."
+    }
+   }
   }
  ],
  "totems": [
@@ -22575,6 +24970,952 @@
     "unlock": null,
     "research": 3,
     "megaStones": 0
+   }
+  }
+ ],
+ "raids": [
+  {
+   "id": "legend-raid-kyogre",
+   "name": "Kyogre Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Kyogre makes a stand with shields and a charged attack.",
+   "species": [
+    "kyogre"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.7,
+     "text": "The water rises! Kyogre sets the current against you.",
+     "boost": {
+      "spd": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.4,
+     "text": "A tidal surge! The flood takes the whole arena.",
+     "boost": {
+      "spa": 1
+     },
+     "weather": "rain"
+    },
+    {
+     "atHp": 0.2,
+     "text": "Primal Reversion — the sea itself answers!",
+     "boost": {
+      "spa": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Kyogre is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": "rain",
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "water-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-groudon",
+   "name": "Groudon Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Groudon makes a stand with shields and a charged attack.",
+   "species": [
+    "groudon"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.7,
+     "text": "The crater splits open! Lava floods the arena.",
+     "boost": {
+      "def": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.4,
+     "text": "Groudon stamps. The volcano erupts.",
+     "boost": {
+      "atk": 1
+     },
+     "weather": "sun"
+    },
+    {
+     "atHp": 0.2,
+     "text": "Primal Reversion — the land itself burns!",
+     "boost": {
+      "atk": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Groudon is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": "sun",
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "ground-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-rayquaza",
+   "name": "Rayquaza Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Rayquaza makes a stand with shields and a charged attack.",
+   "species": [
+    "rayquaza"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.7,
+     "text": "Rayquaza dives! The wind turns against you.",
+     "boost": {
+      "atk": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.4,
+     "text": "The sky roars. The platform starts to fall.",
+     "boost": {
+      "spa": 1
+     },
+     "weather": "rain"
+    },
+    {
+     "atHp": 0.2,
+     "text": "Rayquaza ascends beyond the clouds and returns stronger!",
+     "boost": {
+      "atk": 1,
+      "spa": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Rayquaza is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": "rain",
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "dragon-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-giratina",
+   "name": "Giratina Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Giratina makes a stand with shields and a charged attack.",
+   "species": [
+    "giratina"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.7,
+     "text": "The arena flips! Giratina vanishes and comes back from below.",
+     "boost": {
+      "spd": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.4,
+     "text": "Giratina tears the room apart.",
+     "boost": {
+      "atk": 1
+     }
+    },
+    {
+     "atHp": 0.2,
+     "text": "Origin Forme — the world splits open!",
+     "boost": {
+      "atk": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Giratina is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": null,
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "terrain": "psychic",
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "ghost-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-dialga",
+   "name": "Dialga Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Dialga makes a stand with shields and a charged attack.",
+   "species": [
+    "dialga"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.7,
+     "text": "Dialga stops the clock. Your boosts are undone.",
+     "boost": {
+      "spd": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.4,
+     "text": "Time speeds up around Dialga.",
+     "boost": {
+      "spe": 1
+     }
+    },
+    {
+     "atHp": 0.2,
+     "text": "Roar of Time — the hour breaks!",
+     "boost": {
+      "spa": 1,
+      "atk": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Dialga is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": null,
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "terrain": "psychic",
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "steel-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-palkia",
+   "name": "Palkia Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Palkia makes a stand with shields and a charged attack.",
+   "species": [
+    "palkia"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.7,
+     "text": "Palkia folds the arena. Your boosts are gone.",
+     "boost": {
+      "spd": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.4,
+     "text": "Space tears apart around you.",
+     "boost": {
+      "spa": 1
+     },
+     "weather": "rain"
+    },
+    {
+     "atHp": 0.2,
+     "text": "Spacial Rend — the world splits!",
+     "boost": {
+      "spa": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Palkia is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": null,
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "terrain": "misty",
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "water-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-mewtwo",
+   "name": "Mewtwo Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Mewtwo makes a stand with shields and a charged attack.",
+   "species": [
+    "mewtwo"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.7,
+     "text": "Mewtwo reads your plan and wipes it away.",
+     "boost": {
+      "spd": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.4,
+     "text": "Mewtwo’s power surges. The cave cracks.",
+     "boost": {
+      "spa": 1,
+      "spe": 1
+     }
+    },
+    {
+     "atHp": 0.2,
+     "text": "Psystrike — it stops holding back!",
+     "boost": {
+      "spa": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Mewtwo is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": null,
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "terrain": "psychic",
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "psychic-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-arceus",
+   "name": "Arceus Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Arceus makes a stand with shields and a charged attack.",
+   "species": [
+    "arceus"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.7,
+     "text": "Arceus shifts its plate: sun floods the hall.",
+     "boost": {
+      "spa": 1
+     },
+     "weather": "sun",
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.45,
+     "text": "A new plate — rain pours through the hall.",
+     "boost": {
+      "spd": 1
+     },
+     "weather": "rain"
+    },
+    {
+     "atHp": 0.2,
+     "text": "Judgment — the plates align!",
+     "boost": {
+      "atk": 1,
+      "spa": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Arceus is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": null,
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "normal-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-reshiram",
+   "name": "Reshiram Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Reshiram makes a stand with shields and a charged attack.",
+   "species": [
+    "reshiram"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.65,
+     "text": "Reshiram flares; the hall turns white.",
+     "boost": {
+      "spd": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.3,
+     "text": "Blue Flare — a pillar of fire!",
+     "boost": {
+      "spa": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Reshiram is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": "sun",
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "dragon-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-zekrom",
+   "name": "Zekrom Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Zekrom makes a stand with shields and a charged attack.",
+   "species": [
+    "zekrom"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.65,
+     "text": "Zekrom crackles; the room goes dark.",
+     "boost": {
+      "def": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.3,
+     "text": "Bolt Strike — lightning everywhere!",
+     "boost": {
+      "atk": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Zekrom is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": null,
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "terrain": "electric",
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "dragon-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-lugia",
+   "name": "Lugia Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Lugia makes a stand with shields and a charged attack.",
+   "species": [
+    "lugia"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.65,
+     "text": "Lugia beats its wings and the whirl tightens.",
+     "boost": {
+      "spa": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.3,
+     "text": "Aeroblast — the sea is flung into the sky!",
+     "boost": {
+      "spa": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Lugia is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": "rain",
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "psychic-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
+   }
+  },
+  {
+   "id": "legend-raid-ho-oh",
+   "name": "Ho-Oh Raid",
+   "tier": 6,
+   "legendary": true,
+   "blurb": "Ho-Oh makes a stand with shields and a charged attack.",
+   "species": [
+    "ho-oh"
+   ],
+   "levelBonus": 6,
+   "hpBoostPercent": 520,
+   "entryCost": 0,
+   "shield": {
+    "at": [
+     0.75,
+     0.4
+    ],
+    "points": 0.15
+   },
+   "phases": [
+    {
+     "atHp": 0.65,
+     "text": "Ho-Oh blazes. The sacred fire spreads.",
+     "boost": {
+      "atk": 1
+     },
+     "clearPlayerStages": true
+    },
+    {
+     "atHp": 0.3,
+     "text": "Sacred Fire — the whole tower burns bright!",
+     "boost": {
+      "atk": 1,
+      "spe": 1
+     },
+     "cleanse": true
+    }
+   ],
+   "telegraph": {
+    "everyTurns": 3,
+    "boost": 1.6,
+    "text": "Ho-Oh is gathering its power for a crushing blow!"
+   },
+   "extraActions": {
+    "belowHp": 0.35,
+    "max": 2
+   },
+   "timerTurns": 30,
+   "weather": "sun",
+   "kind": "wild",
+   "approaches": [],
+   "modifiers": {
+    "noHealing": true
+   },
+   "extraMoves": [],
+   "rewards": {
+    "moneyPerLevel": 200,
+    "items": [
+     {
+      "item": "full-restore",
+      "chance": 1
+     },
+     {
+      "item": "fire-tera-shard",
+      "chance": 1
+     }
+    ],
+    "draftExtra": 2,
+    "joinChance": 0.25,
+    "megaStones": 1,
+    "rareEncounters": 1
    }
   }
  ]

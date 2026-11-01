@@ -47,7 +47,7 @@ describe('boss and expedition prize money', () => {
       expect(r.ratio, r.name).toBeGreaterThanOrEqual(0.5);
       expect(r.ratio, r.name).toBeLessThanOrEqual(3.5);
     }
-    const raids = [...content.raids.raids].sort((a, b) => a.tier - b.tier);
+    const raids = content.raids.raids.filter((r) => !r.legendary).sort((a, b) => a.tier - b.tier);
     for (let i = 1; i < raids.length; i++) expect(raids[i]!.rewards.moneyPerLevel).toBeGreaterThanOrEqual(raids[i - 1]!.rewards.moneyPerLevel);
   });
 });

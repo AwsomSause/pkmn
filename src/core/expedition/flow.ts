@@ -234,8 +234,8 @@ export function chooseExpeditionNode(content: Content, current: RunState, nodeId
       break;
     }
     case 'raid': {
-      const pool = content.raids.raids.filter((r) => !r.gang && r.tier === Math.min(6, def.tier + 1));
-      const raid = rng.pick(pool.length > 0 ? pool : content.raids.raids.filter((r) => !r.gang));
+      const pool = content.raids.raids.filter((r) => !r.gang && r.tier === Math.min(6, def.tier + 1) && !r.legendary);
+      const raid = rng.pick(pool.length > 0 ? pool : content.raids.raids.filter((r) => !r.gang && !r.legendary));
       fight(() => startRaidBattle(content, run, raid, rng.pick(raid.species), Math.min(exp.level + raid.levelBonus, exp.level + 5)));
       break;
     }

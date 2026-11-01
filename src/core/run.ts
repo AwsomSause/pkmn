@@ -181,6 +181,7 @@ import { freshSpectacle } from './battle/spectacle';
 import { memoryPick } from './memories/encounters';
 import { noteReplayTurn, sealReplay } from './memories/replay';
 import { noteSkips, worldStageStart } from './memories/world';
+import { evilStageStart } from './evil/teams';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
 import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
@@ -291,6 +292,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
     partyLife: createPartyLife(),
     clock: freshClock(),
+    calendar: { today: null, startedOn: null },
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     rentalsUsed: [],
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
@@ -511,6 +513,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   tellCampfire(content, run);
   tellAct(content, run);
   worldStageStart(content, run);
+  evilStageStart(content, run);
   applyGrandInfluence(content, run);
   growCrisis(content, run);
   grandGauntlet(content, run);

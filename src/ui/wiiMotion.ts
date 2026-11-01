@@ -186,6 +186,24 @@ export function iconHop(scene: Phaser.Scene, target: Phaser.GameObjects.GameObje
   scene.tweens.add({ targets: icon, y: y - 6, angle: angle - 6, duration: t.ms / 2, yoyo: true, ease: 'Quad.easeOut', onComplete: () => icon.setY(y).setAngle(angle) });
 }
 
+let lastScene = '';
+let restartAt = -1e9;
+
+/**
+ * Notes a screen being shown. A screen that restarts itself to redraw (the shop after a purchase,
+ * a list after a change) is not a new page: it skips the entrance motion, so repeated actions stay snappy.
+ * Returns true for a real page change.
+ */
+export function noteSceneEnter(key: string): boolean {
+  const fresh = key !== lastScene;
+  lastScene = key;
+  if (!fresh) restartAt = performance.now();
+  return fresh;
+}
+
+/** True just after a screen redrew itself (popups built during that redraw don't animate in). */
+export const justRedrawn = (): boolean => performance.now() - restartAt < 150;
+
 /** Screen entrance: the camera settles in from a tiny zoom (full motion only; the fade-in plays for every level). */
 export function pageEnter(scene: Phaser.Scene): void {
   const t = uiTiming('page');

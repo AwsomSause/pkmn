@@ -6,6 +6,7 @@ import { availableNodes, beginExpedition, chooseExpeditionNode, expeditionPrevie
 import { LegendaryFileSchema } from '../../src/core/expedition/schema';
 import { eligibleLegendary, envAt, legendaryEvents, legendaryProblem, placeLegendaryGate } from '../../src/core/legendary/legendary';
 import { placeExpeditionGate } from '../../src/core/expedition/gate';
+import { pickRaidFor } from '../../src/core/raid/raid';
 import { pickTotemFor } from '../../src/core/totem/totem';
 import { maxHp } from '../../src/core/pokemon';
 import { hashSeed, Rng } from '../../src/core/rng';
@@ -58,7 +59,7 @@ describe('legendary event data', () => {
     expect(events.filter((e) => e.legendary!.npcs.some((n) => !n.id.endsWith('-witness') && !n.id.endsWith('-pilgrim'))).length).toBeGreaterThanOrEqual(27);
     const missing = [...content.species.values()].filter((s) => !s.form && (s.tags.includes('legendary') || s.tags.includes('mythical')) && !covered.has(s.id) && !['cosmog', 'cosmoem', 'kubfu', 'phione', 'meltan'].includes(s.id));
     expect(missing.map((s) => s.id)).toEqual([]);
-    for (const e of events) {
+    for (const e of events.filter((x) => x.finale.kind === 'totem')) {
       const totem = content.totems.totems.find((t) => t.id === (e.finale.kind === 'totem' ? e.finale.totemId : ''))!;
       expect(totem.legendary, e.id).toBe(true);
       expect(totem.species).toEqual([e.legendary!.species]);
@@ -90,6 +91,50 @@ describe('legendary event data', () => {
       for (const n of r.stage!.map.nodes) for (const s of n.sides) if (s.kind === 'expedition') expect(content.expeditions.expeditions.find((e) => e.id === s.expeditionId)!.legendary).toBeUndefined();
     }
     expect(run.legendary).toBeUndefined();
+  });
+});
+
+describe('Raid-based legendary events', () => {
+  const raidEvents = () => legendaryEvents(content).filter((e) => e.finale.kind === 'raid');
+
+  it('12 Legendaries also have a Raid version; their raids never fill dens or ordinary expeditions', () => {
+    expect(raidEvents().length).toBe(12);
+    for (const e of raidEvents()) {
+      const raid = content.raids.raids.find((r) => r.id === (e.finale.kind === 'raid' ? e.finale.raidId : ''))!;
+      expect(raid.legendary).toBe(true);
+      expect(raid.species).toEqual([e.legendary!.species]);
+      expect(raid.shield).not.toBeNull();
+      expect(raid.telegraph).not.toBeNull();
+    }
+    for (let i = 0; i < 40; i++) expect(pickRaidFor(content, { seed: `r${i}`, regionIndex: i % 5 }, `${i}`).legendary).toBe(false);
+  });
+
+  it('the finale is a Raid battle with shields, and either version counts as facing that Legendary', () => {
+    const e = raidEvents().find((x) => x.legendary!.species === 'kyogre')!;
+    let run = beginExpedition(content, gateRun('rk', e.id), 'gate-test');
+    let sawRaid = false;
+    for (let guard = 0; guard < 80 && run.phase === 'expedition'; guard++) {
+      const exp = run.expedition!;
+      if (exp.battleResult) { run = settleExpedition(content, run); continue; }
+      if (exp.choice) { run = resolveExpeditionChoice(content, run, 0); continue; }
+      run = chooseExpeditionNode(content, run, availableNodes(exp)[0]!.id);
+      if (run.phase === 'battle') {
+        if (run.battle!.raid) {
+          sawRaid = true;
+          expect(run.battle!.raid.id).toBe(e.finale.kind === 'raid' ? e.finale.raidId : '');
+          expect(run.battle!.enemyTeam[0]!.speciesId).toBe('kyogre');
+        }
+        run.battle = null;
+        run.phase = 'expedition';
+        run.expedition!.battleResult = 'win';
+      }
+    }
+    expect(sawRaid).toBe(true);
+    expect(run.legendary!.completed).toEqual([e.id]);
+    const duel = legendaryEvents(content).find((x) => x.id === 'legend-kyogre')!;
+    run.regionIndex = 3;
+    run.party = run.party.map((m) => ({ ...m, speciesId: 'squirtle' }));
+    expect(legendaryProblem(content, run, duel)).toBe('already completed this run');
   });
 });
 

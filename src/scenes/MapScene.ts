@@ -46,7 +46,9 @@ import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { showAchievementToasts } from '../ui/achievementToast';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
 import { badge, focusFrame } from '../ui/widgets';
+import { fitBlock, fitLine } from '../ui/fitText';
 import { AERO, drawGlass, floatIdle, glassPanel as drawPanel, typeLabel, type MotionLevel } from '../ui/aero';
+import { uiTiming } from '../ui/wiiMotion';
 import { addAmbience } from '../ui/battleFx/ambience';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
@@ -435,24 +437,28 @@ export class MapScene extends Phaser.Scene {
     }
 
     // ---------- bottom panel: info, side stops, party, bag ----------
-    drawPanel(this, 8, 424, GAME_WIDTH - 16, 110, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true, alpha: 0.94 });
+    drawPanel(this, 8, 420, GAME_WIDTH - 16, 116, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true, alpha: 0.94 });
+    // Layout (spec 3): row one holds the party and eggs on the left and the buttons in whatever width is left;
+    // row two is the info line and the notice. Nothing is placed over anything else.
+    const slots = run.party.length + run.eggs.length;
+    const step = Math.min(46, Math.floor(420 / Math.max(1, slots)));
     run.party.forEach((mon, i) => {
       const species = content.species.get(mon.speciesId)!;
-      const x = 40 + i * 52;
-      pokemonIcon(this, species, x, 450, 1);
-      this.add.text(x, 470, mon.hp <= 0 ? 'FNT' : `Lv${mon.level}`, textStyle(13, mon.hp <= 0 ? '#f08080' : COLORS.textLight)).setOrigin(0.5, 0);
+      const x = 40 + i * step;
+      pokemonIcon(this, species, x, 444, 1);
+      this.add.text(x, 458, mon.hp <= 0 ? 'FNT' : `Lv${mon.level}`, textStyle(13, mon.hp <= 0 ? '#f08080' : COLORS.textLight)).setOrigin(0.5, 0);
     });
     // Eggs ride along after the party, rocking gently; the soonest-to-hatch one wobbles hardest.
     run.eggs.forEach((egg, i) => {
-      const x = 40 + (run.party.length + i) * 52;
+      const x = 40 + (run.party.length + i) * step;
       if (this.textures.exists('pack.ebdx.egg')) {
-        const icon = this.add.image(x, 452, 'pack.ebdx.egg').setScale(1.2).setOrigin(0.5, 0.8);
+        const icon = this.add.image(x, 446, 'pack.ebdx.egg').setScale(1.2).setOrigin(0.5, 0.8);
         if (eggRevealed(egg) && egg.tier !== 'ordinary') icon.setTint(Phaser.Display.Color.HexStringToColor(eggTier(egg.tier).color).color);
         this.tweens.add({ targets: icon, angle: { from: -4 - (egg.left <= 1 ? 8 : 0), to: 4 + (egg.left <= 1 ? 8 : 0) }, duration: egg.left <= 1 ? 260 : 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: i * 120 });
       }
-      this.add.text(x, 470, `${egg.left}${egg.unit === 'battle' ? 'B' : 'S'}`, textStyle(13, '#fff2b0')).setOrigin(0.5, 0);
+      this.add.text(x, 458, `${egg.left}${egg.unit === 'battle' ? 'B' : 'S'}`, textStyle(13, '#fff2b0')).setOrigin(0.5, 0);
     });
-    this.info = this.add.text(24, 492, '', textStyle(17, COLORS.textLight, { wordWrap: { width: 560 } }));
+    this.info = this.add.text(24, 480, '', textStyle(17, COLORS.textLight, { wordWrap: { width: 580 } }));
 
     const buttons: { option: Option; label: string; color: number }[] = [];
     const currentNode = stage.current ? findNode(stage.map, stage.current) : null;
@@ -463,23 +469,30 @@ export class MapScene extends Phaser.Scene {
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
     buttons.push({ option: { kind: 'party' }, label: 'Party', color: COLORS.panel }, { option: { kind: 'bag' }, label: 'Bag', color: COLORS.panel }, { option: { kind: 'bond' }, label: 'Bonds', color: COLORS.panel }, { option: { kind: 'scrapbook' }, label: 'Album', color: COLORS.panel }, { option: { kind: 'story' }, label: 'Story', color: COLORS.panel });
     if (wipeStatus(services().session.run!)) buttons.push({ option: { kind: 'endRun' }, label: 'End run', color: 0x6a2a38 });
-    // Narrower buttons when there are many, so they never run into the info line.
-    const bw = buttons.length > 7 ? Math.max(76, Math.floor((GAME_WIDTH - 48) / buttons.length) - 8) : 92;
-    let x = GAME_WIDTH - 24 - buttons.length * (bw + 8) + 4;
-    for (const b of buttons) {
-      const bxPos = x;
-      drawGlass(this, bxPos, 444, bw, 52, { tint: b.color === COLORS.panel ? AERO.glass : mixColor(b.color, 0x000000, 0.25), rim: b.color === COLORS.panel ? AERO.rim : mixColor(b.color, 0xffffff, 0.45), radius: 16, alpha: 0.95 });
-      this.add.text(bxPos + bw / 2, 470, b.label, textStyle(b.label.length > 6 || bw < 92 ? 16 : 22, '#ffffff')).setOrigin(0.5);
-      this.addOption(b.option, () => this.boxCursor(bxPos, 444, bw, 52), { x: bxPos, y: 444, w: bw, h: 52 });
-      x += bw + 8;
-    }
+    // Buttons share the width right of the party: one tall row when they fit, else two short rows.
+    const areaX = 40 + slots * step + 4;
+    const areaW = GAME_WIDTH - 24 - areaX;
+    const n = buttons.length;
+    const oneRow = areaW / n - 8 >= 84;
+    const cols = oneRow ? n : Math.ceil(n / 2);
+    const bw = Math.min(100, Math.floor(areaW / cols) - 8);
+    const bh = oneRow ? 44 : 22;
+    buttons.forEach((b, i) => {
+      const bxPos = GAME_WIDTH - 24 - (cols - (i % cols)) * (bw + 8) + 8;
+      const byPos = 428 + (oneRow ? 0 : Math.floor(i / cols) * (bh + 4));
+      drawGlass(this, bxPos, byPos, bw, bh, { tint: b.color === COLORS.panel ? AERO.glass : mixColor(b.color, 0x000000, 0.25), rim: b.color === COLORS.panel ? AERO.rim : mixColor(b.color, 0xffffff, 0.45), radius: oneRow ? 16 : 9, alpha: 0.95 });
+      const label = this.add.text(bxPos + bw / 2, byPos + bh / 2, b.label, textStyle(oneRow && b.label.length <= 6 && bw >= 92 ? 22 : 16, '#ffffff')).setOrigin(0.5);
+      fitLine(label, bw - 12);
+      this.addOption(b.option, () => this.boxCursor(bxPos, byPos, bw, bh), { x: bxPos, y: byPos, w: bw, h: bh });
+    });
 
     // Without a notice, the corner shows the map items that are working (Repel ×2 · Black Flute...).
     const riding = run.moveMode ? mapActions(content, run).find((a) => a.on) : undefined;
     const working = [riding ? `Riding the ${content.catalog.get(riding.itemId)!.name}` : '', mapItemSummary(content, run)].filter(Boolean).join(' · ');
     this.notice = this.add
-      .text(GAME_WIDTH - 24, 506, data.notice ?? (working ? `Working: ${working}` : newsLine(content, run)), textStyle(15, '#f0e0a0', { align: 'right', wordWrap: { width: 340 } }))
+      .text(GAME_WIDTH - 24, 482, data.notice ?? (working ? `Working: ${working}` : newsLine(content, run)), textStyle(15, '#f0e0a0', { align: 'right', wordWrap: { width: 300 } }))
       .setOrigin(1, 0);
+    fitBlock(this.notice, 300, 48);
     this.focus(Math.min(data.focus ?? 0, this.options.length - 1), false);
     showAchievementToasts(this, session.takeAchievementToasts(), this.motion);
 
@@ -575,7 +588,7 @@ export class MapScene extends Phaser.Scene {
   }
 
   private ringCursor(layer: Phaser.GameObjects.Container, x: number, y: number, r: number): Phaser.GameObjects.Graphics {
-    const g = this.add.graphics({ x, y });
+    const g = this.add.graphics({ x, y }).setData('home', { x, y });
     g.lineStyle(10, AERO.rim, 0.3);
     g.strokeCircle(0, 0, r + 2);
     g.lineStyle(4, AERO.white, 1);
@@ -598,11 +611,10 @@ export class MapScene extends Phaser.Scene {
         if (isFogged(content, runNow, n)) return `Level ${n.column}: lost in fog. You see ${sightRange(content, runNow)} columns ahead; Intelligence, a keen-eyed or Flying Pokémon and scouting see further.`;
         const frontHere = frontAt(content, runNow, n);
         const frontNote = frontHere ? `${FRONT_LABEL[frontHere.weather] ?? frontHere.weather} front: battles here start in ${frontHere.weather}.\n` : '';
-        const [lo, hi] = content.balance.difficulty.harderBonus;
         const boss = this.bossFor(n);
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
-        const risk = n.harder ? `  ·  Risk: high (+${lo}–${hi} enemy levels, better rewards)` : boss ? '  ·  Risk: boss' : '';
+        const risk = n.harder ? '  ·  Risk: high (better rewards)' : boss ? '  ·  Risk: boss' : '';
         const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'service' ? (SERVICES.services.find((x) => x.id === s.serviceId)?.name ?? 'service') : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : s.kind === 'plaza' ? 'Trainer Plaza' : 'shop'));
         const seen = this.previewText(n);
         const route = routeKind(services().session.run!, n);
@@ -645,10 +657,20 @@ export class MapScene extends Phaser.Scene {
   private focus(i: number, sound = true): void {
     if (i < 0) return;
     if (sound && i !== this.index) playSfx(this, 'ui.cursor', 0.5);
+    const from = this.cursors[this.index];
     this.index = i;
     this.cursors.forEach((c, n) => c.setVisible(n === i));
+    // Wii-style (spec §24): the node ring glides over from the node it left instead of jumping.
+    const to = this.cursors[i];
+    const home = to?.getData('home') as { x: number; y: number } | undefined;
+    const tm = uiTiming('cursor');
+    if (to && home && from && from !== to && from.getData('home') && sound && tm.ms) {
+      (to.getData('glide') as Phaser.Tweens.Tween | undefined)?.stop();
+      to.setPosition(from.x, from.y);
+      to.setData('glide', this.tweens.add({ targets: to, x: home.x, y: home.y, duration: tm.ms * 1.3, ease: tm.bounce ? 'Back.easeOut' : tm.ease }));
+    } else if (to && home) to.setPosition(home.x, home.y);
     const option = this.options[i];
-    if (option) this.info?.setText(this.describe(option));
+    if (option && this.info) fitBlock(this.info, 580, 52, this.describe(option).replace(/\n/g, '  ·  '));
   }
 
   private fieldHost(): FieldMenuHost {
@@ -755,7 +777,7 @@ export class MapScene extends Phaser.Scene {
       case 'endRun':
         if (!this.endArmed) {
           this.endArmed = true;
-          this.notice?.setText('Press End run again to end this Adventure run.');
+          if (this.notice) fitBlock(this.notice, 300, 48, 'Press End run again to end this Adventure run.');
           break;
         }
         services().session.endRunEarly();
@@ -790,16 +812,16 @@ export class MapScene extends Phaser.Scene {
     if (!first || !species) return;
     const px = x + r + 18;
     layer.add(pokemonIcon(this, species, px, y + 4, 1.2));
-    label(px, y + 24, n.kind === 'wild' ? `Lv${first.level}` : `×${preview.team.length}`);
+    if (n.kind !== 'wild') label(px, y + 24, `×${preview.team.length}`);
   }
 
   /** The preview of a node in words, for the info line. */
-  private previewText(n: MapNode): string {
+  private previewText(n: MapNode, withLevels = false): string {
     const preview = this.previews[n.id];
     if (!preview) return '';
     const content = services().session.content;
     const item = preview.source;
-    const names = preview.team.map((m) => `${content.species.get(m.speciesId)?.name ?? m.speciesId}${m.level ? ` Lv${m.level}` : ''}`).join(', ');
+    const names = preview.team.map((m) => `${content.species.get(m.speciesId)?.name ?? m.speciesId}${withLevels && m.level ? ` Lv${m.level}` : ''}`).join(', ');
     if (n.kind === 'gym') return `${item}: ${preview.team.length === 1 ? 'the ace is' : 'the team is'} ${names}`;
     return `${item}: ${preview.trainerName ? `${preview.trainerName} with ` : ''}${names}`;
   }
@@ -824,7 +846,7 @@ export class MapScene extends Phaser.Scene {
     const licenseText = licenseNote(content, run);
     if (licenseText) rows.push({ action: null, itemId: '', title: `${run.prep.license ? 'Field License' : 'Intel'}: ${licenseName(fieldHintId(content, run)!)}`, text: licenseText, problem: licenseText });
     const gym = run.stage!.map.nodes.find((n) => n.kind === 'gym');
-    const gymText = gym ? this.previewText(gym) : '';
+    const gymText = gym ? this.previewText(gym, true) : '';
     if (gym && gymText) {
       const { itemId, source } = this.previews[gym.id]!;
       const text = `Gym leader ${bossInfo(content, 'gym', run.stage!.leaderId).name}: ${gymText.slice(gymText.indexOf(':') + 2)}`;
