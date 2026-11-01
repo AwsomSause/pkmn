@@ -358,6 +358,9 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
   rest(ctx, events);
   events.length = 0;
 
+  // Ideas W1: mind-read, grudges and a spectator's buff, once each.
+  S.w1DoublesStart(ctx, field.alive('player'), field.alive('enemy'), events, (c) => field.on(c, events));
+
   // 1. Switches and items go before any move.
   for (const spot of SPOTS) {
     const cmd = commands[spot];

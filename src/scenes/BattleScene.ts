@@ -1190,7 +1190,7 @@ export class BattleScene extends Phaser.Scene {
   private async scanFoe(): Promise<void> {
     const content = services().session.content;
     const battle = this.run.battle!;
-    const foe = currentEnemy(battle);
+    const foe = this.duo ? (this.shown.enemy ?? currentEnemy(battle)) : currentEnemy(battle);
     const species = getSpecies(content, foe.speciesId);
     this.clearMenus();
     const ok = await runScan(this, content, species.name, species.types, `${foe.uid}:${battle.turn}`);
@@ -1850,9 +1850,9 @@ export class BattleScene extends Phaser.Scene {
     if (dealAt >= 0) options.push({ label: 'Deal?' });
     const smashAt = battleNow.arena && !battleNow.arena.spent && !this.commands.some((c) => c?.action.kind === 'arena') ? options.length : -1;
     if (smashAt >= 0) options.push({ label: `Smash ${battleNow.arena!.kind}` });
-    const scanAt = !this.duo && services().session.settings.skillPrompts && !battleNow.scanned && !battleNow.raid ? options.length : -1;
+    const scanAt = services().session.settings.skillPrompts && !battleNow.scanned && !battleNow.raid ? options.length : -1;
     if (scanAt >= 0) options.push({ label: 'Scan' });
-    const hotbar = this.duo ? [] : services().session.settings.hotbar.filter((id) => (this.run.inventory[id] ?? 0) > 0 && content.items.get(id) && content.items.get(id)!.target !== 'party' && content.items.get(id)!.target !== 'fainted' && itemProblem(this.battleCtx(), id) === null).slice(0, 4);
+    const hotbar = services().session.settings.hotbar.filter((id) => (this.run.inventory[id] ?? 0) > 0 && content.items.get(id) && content.items.get(id)!.target !== 'party' && content.items.get(id)!.target !== 'fainted' && itemProblem(this.battleCtx(), id) === null).slice(0, 4);
     const hotbarAt = options.length;
     for (const id of hotbar) options.push({ label: `Quick: ${content.items.get(id)!.name}` });
     this.commandWindow.setVisible(true);

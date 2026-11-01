@@ -1379,7 +1379,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
 /** Ideas W1: the arena hazard of this stage, grudges against the foe's species and a spectator, rolled from streams of their own. */
 function addPlayFeatures(content: Content, run: RunState, node: MapNode): void {
   const battle = run.battle;
-  if (!battle || battle.doubles) return;
+  if (!battle) return;
   const play = content.balance.w1.play;
   const arena = battle.raid || battle.totem ? null : arenaFor(content, run.stage?.themeId);
   if (arena && new Rng(hashSeed(`${run.seed}:arena:${run.encountersCompleted}:${node.id}`)).chance(0.5)) battle.arena = { kind: arena, spent: false };

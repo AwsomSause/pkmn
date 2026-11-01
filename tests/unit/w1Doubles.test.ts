@@ -82,3 +82,29 @@ describe('doubles skill prompts', () => {
     expect(dmg('perfect')).toBeGreaterThan(dmg('miss'));
   });
 });
+
+describe('doubles mind-read, grudge and spectator', () => {
+  const idle = (): Parameters<ReturnType<typeof setup>['run']>[0] => ({ kind: 'double', commands: [{ action: { kind: 'idle' } }, { action: { kind: 'idle' } }] });
+  const kinds = (ev: ReturnType<ReturnType<typeof setup>['run']>) => ev.filter((e) => e.type === 'spectacle').map((e) => (e as { kind: string }).kind);
+  it('a Psychic ally reads one foe move, once', () => {
+    const f = setup('tackle');
+    f.party[1] = mk('alakazam', 'p1', 60, 'splash');
+    f.ctx.party[1] = f.party[1];
+    const first = kinds(f.run(idle()));
+    expect(first).toContain('mindRead');
+    expect(f.battle.mindRead).toBeTruthy();
+    expect(kinds(f.run(idle()))).not.toContain('mindRead');
+  });
+  it('a grudge and a spectator each boost both allies once', () => {
+    const f = setup();
+    f.battle.grudgeMons = ['p1'];
+    f.battle.spectator = { name: 'Fan', used: false };
+    const ev = kinds(f.run(idle()));
+    expect(ev).toContain('grudge');
+    expect(ev).toContain('spectator');
+    expect(f.battle.spectator.used).toBe(true);
+    const again = kinds(f.run(idle()));
+    expect(again).not.toContain('grudge');
+    expect(again).not.toContain('spectator');
+  });
+});
