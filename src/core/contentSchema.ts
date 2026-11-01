@@ -2368,6 +2368,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('rivalPath'), path: z.enum(['friend', 'rival', 'between']) }),
   /** Living Rival: a rival you beat in your last meeting (it has something to prove). */
   z.object({ kind: z.literal('rivalBeaten') }),
+  /** §11/§29: a Pokémon rival is still out there (`open`), rides with a trainer rival (`carried`), or gave itself up (`sacrificed`), or any of these (`any`). */
+  z.object({ kind: z.literal('monRival'), state: z.enum(['open', 'carried', 'sacrificed', 'any']) }),
   /** Event Director: a party member with a species tag (legendary, mythical, delta, zform...). */
   z.object({ kind: z.literal('partyTag'), tag: z.enum(SPECIES_TAGS) }),
   /** The Pokémon you started with (still in the party) has this type, species or species tag: starter-tagged events. */

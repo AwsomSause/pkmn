@@ -12,6 +12,8 @@ import { getSpecies, maxHp, movesAtLevel } from '../pokemon';
 import { hashSeed, Rng } from '../rng';
 import type { PokemonInstance, RunState } from '../state';
 import { emit } from '../story/record';
+import type { Candidate, PlanCtx } from '../drama/events';
+import { pickIndex } from '../drama/schema';
 import type { MonRival, Rival, Where } from '../story/schema';
 import { scheduleKey } from './adapt';
 import { MAJOR } from './major';
@@ -131,6 +133,7 @@ export function monRivalAfterBattle(content: Content, run: RunState, kos: { fain
   const beatRival = kos.some((k) => k.by === b.monRival!.uid && k.fainted === m.rivalOf);
   const fell = b.enemyTeam.find((e) => e.uid === b.monRival!.uid)?.hp === 0;
   if (beatRival) { m.wins += 1; note(m, `Beat ${m.rivalName} again`); }
+  if (fell && !m.owner) emit(content, run, 'rivalryFormed', { actors: [m.rivalOf], data: { kind: 'monRivalFled', monRival: m.id }, text: `The ${name(content, b.enemyTeam.find((e) => e.uid === b.monRival!.uid)?.speciesId ?? m.speciesId)} with ${m.mark} got back up and limped off. It will be back` });
   if (fell) { m.losses += 1; note(m, m.owner ? `Fell to ${m.rivalName}'s team in ${run.story.rivals.find((r) => r.id === m.owner)?.name ?? 'its trainer'}'s team` : `Lost to your team and slipped away`); }
   if (m.owner) m.bond = Math.min(100, m.bond + (fell ? 4 : 8));
 }
@@ -166,6 +169,11 @@ export function carriedMonRival(run: RunState, rival: Rival): MonRival | null {
   return m && !m.sacrificed && m.owner === rival.id ? m : null;
 }
 
+/** Event condition (§11/§29 camp scenes): any Pokémon rival in this state whose rival is still on your team. */
+export function monRivalState(run: RunState, state: 'open' | 'carried' | 'sacrificed' | 'any'): boolean {
+  return monRivals(run).some((m) => run.party.some((p) => p.uid === m.rivalOf) && (state === 'any' || (state === 'sacrificed' ? m.sacrificed : !m.sacrificed && (state === 'carried' ? m.owner !== null : m.owner === null))));
+}
+
 /** Readable lines for the Story screen. */
 export function monRivalLines(content: Content, run: RunState): { title: string; hint: string }[] {
   return monRivals(run).map((m) => {
@@ -176,4 +184,30 @@ export function monRivalLines(content: Content, run: RunState): { title: string;
       hint: `${status}. Met ${m.meetings} times: it won ${m.wins}, lost ${m.losses}. ${m.history.join('. ')}.`,
     };
   });
+}
+
+/**
+ * §11 battle lines for a trainer's Pokémon rival: when it comes out facing its rival, and how its trainer reacts at the end.
+ * Wild meetings tell theirs in the intro and the Chronicle.
+ */
+export function monRivalCandidates(c: PlanCtx): Candidate[] {
+  const mr = c.battle.monRival;
+  const m = monRivalById(c.run, mr?.id);
+  if (!mr || !m) return [];
+  const mine = c.run.party.find((p) => p.uid === m.rivalOf);
+  const out: Candidate[] = [];
+  const who = name(c.content, c.battle.enemyTeam.find((e) => e.uid === mr.uid)?.speciesId ?? m.speciesId);
+  for (const ev of c.drama) {
+    if (ev.kind === 'enemySwitch' && ev.data.uid === mr.uid) {
+      const pool = mine && c.run.party[c.battle.activeIndex]?.uid === mine.uid
+        ? [`${who} with ${m.mark} locks eyes with your ${m.rivalName}. Nothing else on the field matters to it now!`, `${who} ignores its trainer's call and stares straight at your ${m.rivalName}!`]
+        : [`${who} with ${m.mark} looks past your Pokémon, searching for your ${m.rivalName}.`];
+      out.push({ ev: { ...ev, id: `${ev.id}:monRival` }, category: 'event', tier: 'major', pool: [pool[pickIndex(ev.id, pool.length)]!], cue: { event: 'monRival' } });
+    } else if (ev.kind === 'battleEnd' && !m.sacrificed) {
+      const won = ev.data.outcome === 'win';
+      const pool = won ? [`${who} won't look at you. It is already thinking about the next time it meets your ${m.rivalName}.`] : [`${who} stands over your ${m.rivalName} for a moment, then turns away. Rivals.`];
+      out.push({ ev: { ...ev, id: `${ev.id}:monRivalEnd` }, category: 'aftermath', tier: 'tactical', pool, cue: { event: 'monRivalEnd' } });
+    }
+  }
+  return out;
 }
