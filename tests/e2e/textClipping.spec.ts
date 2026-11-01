@@ -14,8 +14,11 @@ async function startRun(page: Page, long: boolean) {
     session.chooseStarter(0);
     const run = session.run;
     if (longNames) {
-      for (const key of ['species', 'items', 'catalog', 'moves', 'abilities']) {
-        for (const v of session.content[key].values()) if (v && typeof v.name === 'string') v.name = `${v.name} of Unending Splendour Deluxe`;
+      for (const key of ['species', 'items', 'catalog', 'moves', 'abilities', 'rewards', 'events']) {
+        const map = session.content[key];
+        for (const [id, v] of [...map.entries()]) {
+          if (v && typeof v.name === 'string') map.set(id, { ...v, name: `${v.name} of Unending Splendour Deluxe`, ...(typeof v.description === 'string' ? { description: `${v.description} And a very long extra sentence that goes on and on.` } : {}) });
+        }
       }
     }
     for (let i = 0; i < 5; i++) run.party.push({ ...structuredClone(run.party[0]), uid: `clip-${i}` });
@@ -108,5 +111,22 @@ test('long names are cut inside their boxes on Shop, Hub pages and field menus',
     await page.keyboard.press('Escape');
     await page.waitForTimeout(500);
   }
+  expect(errors).toEqual([]);
+
+  // Reward cards and an event screen with long names and descriptions.
+  await page.evaluate(() => { const { session } = (window as any).__pkr; session.run.phase = 'reward'; session.run.draft = ['item:amulet-coin', 'item:pp-up', 'item:big-pearl', 'item:leftovers', 'item:charcoal']; });
+  await start(page, 'Reward');
+  expect(await overlaps(page), 'reward').toEqual([]);
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    const run = session.run;
+    run.phase = 'map';
+    const node = run.stage.map.nodes.find((n: any) => n.column === 1);
+    node.sides.push({ id: 'clip-event', kind: 'event', used: false, eventId: 'department-store-sale' });
+    run.stage.current = node.id;
+    run.stage.visited = [node.id];
+  });
+  await start(page, 'Event', { sideId: 'clip-event' });
+  expect(await overlaps(page), 'event').toEqual([]);
   expect(errors).toEqual([]);
 });

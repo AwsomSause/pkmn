@@ -228,7 +228,7 @@ export class RunPrepScene extends Phaser.Scene {
       }
       if (locked.length > 0) {
         y += 4;
-        line(`Not yet available: ${locked.join(', ')}.`, 13, '#a69cb4');
+        line(`Not yet available: ${locked.slice(0, 3).join(', ')}${locked.length > 3 ? `, and ${locked.length - 3} more (see Unlocks)` : ''}.`, 13, '#a69cb4');
       }
     } else {
       // Other pages: a short, readable recap of the choices so far (the Overview has the full build).
