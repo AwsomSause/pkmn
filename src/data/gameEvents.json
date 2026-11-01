@@ -2476,7 +2476,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Water-types appear twice as often and their moves deal 10% more damage. Your Water moves hit 15% harder in rain.",
+   "ruleText": "Water-types appear twice as often and their moves deal 10% more damage. Your Water moves hit 15% harder in rain. A tide meter rises by 1 at every map stop (0 to 4, then it falls back to low); at high tide (3 or 4) your Water moves deal 25% more damage.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
@@ -2494,6 +2494,22 @@
      "side": "player",
      "moveType": "water",
      "value": 1.15
+    },
+    {
+     "kind": "eventCounter",
+     "id": "tide",
+     "on": "nodeEnter",
+     "amount": 1,
+     "max": 4,
+     "cycle": true
+    },
+    {
+     "kind": "counterDamage",
+     "counter": "tide",
+     "atLeast": 3,
+     "type": "water",
+     "base": 1.25,
+     "perPoint": 0
     }
    ],
    "mapEvents": [],
@@ -2647,7 +2663,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Electric-types appear twice as often and their moves deal 10% more damage. Paralysis from your Electric moves lands 50% more often.",
+   "ruleText": "Electric-types appear twice as often and their moves deal 10% more damage. Paralysis from your Electric moves lands 50% more often. Charge builds by 1 after every won battle (up to 5), carries between battles, and adds 4% Electric damage per point.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
@@ -2664,6 +2680,21 @@
      "type": "electric",
      "status": "par",
      "value": 1.5
+    },
+    {
+     "kind": "eventCounter",
+     "id": "charge",
+     "on": "battleWin",
+     "amount": 1,
+     "max": 5
+    },
+    {
+     "kind": "counterDamage",
+     "counter": "charge",
+     "atLeast": 1,
+     "type": "electric",
+     "base": 1,
+     "perPoint": 0.04
     }
    ],
    "mapEvents": [],
@@ -2733,7 +2764,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Ice-types appear twice as often and their moves deal 10% more damage. Weather your side sets up lasts 2 turns longer.",
+   "ruleText": "Ice-types appear twice as often and their moves deal 10% more damage. Hail starts every fight (5 turns) and weather your side sets up lasts 2 turns longer.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
@@ -2748,6 +2779,11 @@
     {
      "kind": "weatherTurnsBonus",
      "turns": 2
+    },
+    {
+     "kind": "battleStart",
+     "weather": "hail",
+     "turns": 5
     }
    ],
    "mapEvents": [],
@@ -9448,6 +9484,228 @@
    "contentTags": [
     "w9",
     "challenge"
+   ]
+  },
+  {
+   "id": "gravity-week",
+   "version": 1,
+   "name": "Gravity Week",
+   "kind": "holiday",
+   "description": "The ground pulls hard: nothing floats today.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "02-15",
+    "end": "02-21"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Gravity is on at the start of every fight (5 turns): Flying-types and levitating Pokémon lose their ground immunity.",
+   "modifiers": [
+    {
+     "kind": "battleStart",
+     "field": "gravity",
+     "turns": 5
+    }
+   ],
+   "mapEvents": [],
+   "objectives": [
+    {
+     "id": "wins",
+     "text": "Win 25 battles",
+     "counter": "battlesWon",
+     "atLeast": 25,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "gyms",
+     "text": "Beat 2 gym leaders",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 2,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "trainers",
+     "text": "Beat 15 trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 15,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 350,
+    "title": "Heavy Footed"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#605070",
+    "icon": "item.metal_coat"
+   },
+   "contentTags": [
+    "w9",
+    "challenge",
+    "field"
+   ]
+  },
+  {
+   "id": "trick-room-week",
+   "version": 1,
+   "name": "Trick Room Week",
+   "kind": "holiday",
+   "description": "The slow go first, everywhere.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "04-06",
+    "end": "04-12"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Trick Room is on at the start of every fight (5 turns): slower Pokémon move first.",
+   "modifiers": [
+    {
+     "kind": "battleStart",
+     "field": "trickRoom",
+     "turns": 5
+    }
+   ],
+   "mapEvents": [],
+   "objectives": [
+    {
+     "id": "wins",
+     "text": "Win 25 battles",
+     "counter": "battlesWon",
+     "atLeast": 25,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "gyms",
+     "text": "Beat 2 gym leaders",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 2,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "trainers",
+     "text": "Beat 15 trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 15,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 350,
+    "title": "Slow Mover"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#b050b0",
+    "icon": "item.wise_glasses"
+   },
+   "contentTags": [
+    "w9",
+    "challenge",
+    "field"
+   ]
+  },
+  {
+   "id": "tailwind-week",
+   "version": 1,
+   "name": "Tailwind Week",
+   "kind": "holiday",
+   "description": "A steady wind at your back.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "05-26",
+    "end": "06-01"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Your side starts every fight with Tailwind (5 turns): double Speed.",
+   "modifiers": [
+    {
+     "kind": "battleStart",
+     "tailwind": true,
+     "turns": 5
+    }
+   ],
+   "mapEvents": [],
+   "objectives": [
+    {
+     "id": "wins",
+     "text": "Win 25 battles",
+     "counter": "battlesWon",
+     "atLeast": 25,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "gyms",
+     "text": "Beat 2 gym leaders",
+     "counter": "gymLeadersDefeated",
+     "atLeast": 2,
+     "reward": {
+      "researchPoints": 80
+     }
+    },
+    {
+     "id": "trainers",
+     "text": "Beat 15 trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 15,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 350,
+    "title": "Wind Rider"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#80d0f0",
+    "icon": "item.prism_scale"
+   },
+   "contentTags": [
+    "w9",
+    "challenge",
+    "field"
    ]
   },
   {

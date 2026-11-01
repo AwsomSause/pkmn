@@ -129,3 +129,16 @@ describe('W9 live events: modifiers', () => {
     for (const e of w9) for (const m of e.modifiers) if (m.kind === 'evilTeamFocus') for (const t of m.teams) expect(content.evilTeams.teams.some((x) => x.id === t), `${e.id} ${t}`).toBe(true);
   });
 });
+
+describe('W9 live events: W0 toolkit events', () => {
+  it('Electric Week charges up between battles, Water Week has a tide, Ice Week starts in hail, field weeks set the field', () => {
+    const mods = (id: string) => content.gameEvents.get(id)!.modifiers;
+    expect(mods('electric-week').some((m) => m.kind === 'eventCounter' && m.id === 'charge' && m.on === 'battleWin')).toBe(true);
+    expect(mods('electric-week').some((m) => m.kind === 'counterDamage' && m.counter === 'charge' && m.type === 'electric')).toBe(true);
+    expect(mods('water-week').some((m) => m.kind === 'eventCounter' && m.id === 'tide' && m.cycle)).toBe(true);
+    expect(mods('ice-week').some((m) => m.kind === 'battleStart' && m.weather === 'hail')).toBe(true);
+    expect(mods('gravity-week').some((m) => m.kind === 'battleStart' && m.field === 'gravity')).toBe(true);
+    expect(mods('trick-room-week').some((m) => m.kind === 'battleStart' && m.field === 'trickRoom')).toBe(true);
+    expect(mods('tailwind-week').some((m) => m.kind === 'battleStart' && m.tailwind)).toBe(true);
+  });
+});
