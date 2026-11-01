@@ -49,12 +49,16 @@ test('the Wardrobe, the Research Directive and a Challenge Contract', async ({ p
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');
   await waitForScene(page, 'RunPrep');
-  // Research Directive is six rows down (the Focus type row is skipped while it's off): pick the first type with →.
-  for (let i = 0; i < 6; i++) await page.keyboard.press('ArrowDown');
+  // Research Directive is on the Trainer page (trainer, Preparation, then Research Directive): pick the first type with →.
+  await page.evaluate(() => (window as any).__pkr.game.scene.getScene('RunPrep').goPage(1));
+  await page.waitForTimeout(500);
+  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowDown');
   await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(400);
+  expect(await texts(page, 'RunPrep')).toContain('Research Directive: Normal');
+  await page.evaluate(() => (window as any).__pkr.game.scene.getScene('RunPrep').goPage(4)); // the full summary is on the Overview
+  await page.waitForTimeout(500);
   const prep = await texts(page, 'RunPrep');
-  expect(prep).toContain('Research Directive: Normal');
   expect(prep).toContain('defeat or catch 12 Normal-types');
   await page.screenshot({ path: 'test-results/run-prep-directive.png' });
   await page.evaluate(() => {

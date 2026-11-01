@@ -55,9 +55,20 @@ export function restUntilMorning(run: RunState): void {
   run.clock.tick = 0;
 }
 
-/** Today is a milestone day that has not been celebrated yet (7th day, 14th, 30th...). */
+export const SEASONS = ['Spring', 'Summer', 'Autumn', 'Winter'] as const;
+
+/** The run's calendar: a season is `seasonLength` days. */
+export const seasonOf = (content: Content, run: Pick<RunState, 'clock'>): (typeof SEASONS)[number] =>
+  SEASONS[Math.floor((run.clock.day - 1) / content.balance.clock.seasonLength) % SEASONS.length]!;
+
+/** The first day of a new season (a recurring seasonal festival; never day 1). */
+export const seasonStartToday = (content: Content, run: Pick<RunState, 'clock'>): boolean =>
+  run.clock.day > 1 && (run.clock.day - 1) % content.balance.clock.seasonLength === 0;
+
+/** Today is a milestone day (7th day, 14th, 30th... or a new season) that has not been celebrated yet. */
 export function milestoneToday(content: Content, run: RunState): boolean {
-  return content.balance.clock.milestoneDays.includes(run.clock.day) && !run.clock.celebrated.includes(run.clock.day);
+  const special = content.balance.clock.milestoneDays.includes(run.clock.day) || seasonStartToday(content, run);
+  return special && !run.clock.celebrated.includes(run.clock.day);
 }
 
 export function celebrateToday(run: RunState): void {

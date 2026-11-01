@@ -58,8 +58,16 @@ interface MenuOption {
 }
 
 /** Opens the Pokémon screen on party index `start`. */
-export function openPokemonMenu(host: FieldMenuHost, start = 0): void {
-  host.setPicker(new PokemonScreen(host, start));
+export function openPokemonMenu(host: FieldMenuHost, start = 0, pick?: PokemonPick): void {
+  host.setPicker(new PokemonScreen(host, start, pick));
+}
+
+/** Choose-a-Pokémon mode (e.g. who gets a reward): Enter picks instead of opening the action menu. */
+export interface PokemonPick {
+  title: string;
+  /** Why this party member can't be chosen, or null. */
+  problemFor: (index: number) => string | null;
+  onPick: (index: number) => void;
 }
 
 class PokemonScreen implements PickerLike {
@@ -77,7 +85,7 @@ class PokemonScreen implements PickerLike {
   private flash = '';
   private loadingKey = '';
 
-  constructor(private readonly host: FieldMenuHost, start: number) {
+  constructor(private readonly host: FieldMenuHost, start: number, private readonly pick?: PokemonPick) {
     const { scene } = host;
     const { session } = services();
     this.motion = session.settings.battleAnimations;
@@ -88,13 +96,13 @@ class PokemonScreen implements PickerLike {
     this.root.add(drawGlass(scene, 24, 16, GAME_WIDTH - 48, GAME_HEIGHT - 32, { radius: 26 }));
     this.root.add(drawGlass(scene, 36, 24, GAME_WIDTH - 72, 46, { tint: AERO.sky, rim: AERO.rim, glow: false, radius: 20 }));
     const cap = runLevelCap(session.content, session.run!);
-    this.root.add(scene.add.text(48, 47, `Pokémon  ·  Level cap ${cap}`, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5).setName('pokemon-title'));
+    this.root.add(scene.add.text(48, 47, pick ? `${pick.title}  ·  cap ${cap}` : `Pokémon  ·  Level cap ${cap}`, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5).setName('pokemon-title'));
     const back = scene.add.text(GAME_WIDTH - 48, 47, '◀ Back', textStyle(22, COLORS.gold)).setOrigin(1, 0.5).setName('picker-back').setInteractive({ useHandCursor: true });
     back.on('pointerover', () => back.setColor(COLORS.textLight));
     back.on('pointerout', () => back.setColor(COLORS.gold));
     back.on('pointerdown', () => this.handle('back'));
     this.root.add(back);
-    this.root.add(scene.add.text(GAME_WIDTH - 150, 47, 'Enter actions  ·  Esc back', textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
+    this.root.add(scene.add.text(GAME_WIDTH - 150, 47, this.pick ? 'Enter choose  ·  Esc back' : 'Enter actions  ·  Esc back', textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
     this.root.add(drawGlass(scene, 36, GAME_HEIGHT - 74, GAME_WIDTH - 72, 52, { tint: AERO.glassLow, rim: AERO.sky, glow: false, radius: 16 }));
     this.footer = scene.add.text(52, GAME_HEIGHT - 48, '', textStyle(16, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 104 }, maxLines: 2 })).setOrigin(0, 0.5);
     this.root.add(this.footer);
@@ -154,6 +162,18 @@ class PokemonScreen implements PickerLike {
         this.cursor = 0;
       }
       playSfx(this.host.scene, 'ui.cursor', 0.5);
+    } else if (action === 'confirm' && this.pick) {
+      const problem = this.pick.problemFor(this.sel);
+      if (problem) {
+        playSfx(this.host.scene, 'ui.error');
+        this.flash = problem;
+      } else {
+        playSfx(this.host.scene, 'ui.select');
+        const choice = this.sel;
+        this.close();
+        this.pick.onPick(choice);
+        return;
+      }
     } else if (action === 'confirm') {
       if (this.mode === 'detail') this.mode = 'list';
       else {
@@ -267,6 +287,7 @@ class PokemonScreen implements PickerLike {
 
   private footerText(): string {
     if (this.flash) return this.flash;
+    if (this.pick && this.mode === 'list') return this.pick.problemFor(this.sel) ?? `Enter: choose ${this.nameOf(this.mon)}.  Up/down Pokémon · left/right tab.`;
     const r = readiness(this.content, this.mon);
     if (this.mode === 'menu') {
       const o = this.menuOptions()[this.menuIdx]!;
@@ -325,7 +346,8 @@ class PokemonScreen implements PickerLike {
       zone.on('pointerdown', () => {
         if (this.closed) return;
         if (this.mode === 'menu') this.mode = 'list';
-        if (this.sel === i && this.mode === 'list') this.mode = 'menu';
+        if (this.sel === i && this.mode === 'list' && !this.pick) this.mode = 'menu';
+        else if (this.sel === i && this.pick) return this.handle('confirm');
         this.sel = i;
         this.cursor = 0;
         this.menuIdx = 0;

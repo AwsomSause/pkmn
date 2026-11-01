@@ -941,7 +941,7 @@
   },
   "rival-to-rival-pok-mon-influence": {
    "status": "limited",
-   "note": "Enemy rivals' Pok\u00e9mon spar off-screen: the winner gains confidence, the loser loses it (bonds). No battle preferences yet."
+   "note": "Enemy rivals' Pokémon spar off-screen: the winner gains confidence, the loser loses it (bonds). No battle preferences yet."
   },
   "training-exchange": {
    "status": "limited",
@@ -953,7 +953,7 @@
   },
   "rival-s-substitute": {
    "status": "limited",
-   "note": "A worn-out ace sits out its return; the next Pok\u00e9mon leads and the player is told."
+   "note": "A worn-out ace sits out its return; the next Pokémon leads and the player is told."
   },
   "legacy-encounter": {
    "status": "limited",
@@ -970,6 +970,30 @@
   "conflicting-account": {
    "status": "limited",
    "note": "Distorted rumours say a second account differs; the player is not told which is right. No investigation yet."
+  },
+  "major-rival": {
+   "status": "supported",
+   "note": "§21: the first rival (stage 2) always becomes a recurring major rival with a semi-canon team (majorRivals.json, rivals/major.ts); it returns every 2 stages."
+  },
+  "ace-progression": {
+   "status": "supported",
+   "note": "§9: the rival's ace (its starter) is tracked: form, level, moves, held item (type booster after 2 meetings), wins/losses and changes (rival.aceLog; Story screen)."
+  },
+  "studied-move": {
+   "status": "limited",
+   "note": "§10: the move that knocked out the most of its team is studied and taught to the ace as a signature move (+awakening boost). A move the ace can't learn becomes its closest same-type move. No new custom moves or unique animations."
+  },
+  "counter-move": {
+   "status": "supported",
+   "note": "§10: the Pokémon that beat its ace gets a trained counter (a learnable super-effective move); the ace uses it on sight of that Pokémon."
+  },
+  "pokemon-rival": {
+   "status": "limited",
+   "note": "§11: one wild individual (with a mark) per run becomes a Pokémon's rival; it takes the first wild battle of every later stage, can't be caught, and a trainer rival may catch it and always carry it. Not in doubles; a stage with no wild battle skips it."
+  },
+  "rivalry-sacrifice": {
+   "status": "limited",
+   "note": "§29: the caught rival Pokémon jumps in front of a knockout hit on its rival (last in reserve, armed by a seeded 50% roll per battle); singles only; no camp scene."
   }
  }
 }

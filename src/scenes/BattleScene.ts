@@ -1088,7 +1088,7 @@ export class BattleScene extends Phaser.Scene {
       } else {
         this.showSprite('enemy', this.shown.enemy);
         await this.refreshInfoBox(this.enemyBox, this.shown.enemy, false);
-        await this.say(battle.nemesis ? `Your nemesis, ${this.speciesName(this.shown.enemy)}, appeared!` : `A wild ${this.speciesName(this.shown.enemy)} appeared!`);
+        await this.say(battle.nemesis ? `Your nemesis, ${this.speciesName(this.shown.enemy)}, appeared!` : battle.monRival ? `Your ${this.speciesName(this.shown.enemy)} rival appeared!` : `A wild ${this.speciesName(this.shown.enemy)} appeared!`);
         // Shadow and Blissful foes announce themselves (a dark haze / soft motes) before the fight.
         if (this.shown.enemy.blissful) {
           const aura = services().session.content.shadowWorld.auras.find((x) => x.id === this.shown.enemy!.blissful!.aura);
@@ -1096,6 +1096,9 @@ export class BattleScene extends Phaser.Scene {
           await this.say('It glows with a soft, serene light. It does not seem to want a fight.');
         } else if (this.shown.enemy.shadow) await this.say('A dark aura clings to it, and its eyes are empty.');
         if (battle.nemesisNote) await this.say(battle.nemesisNote);
+        // §11 a Pokémon rival (or the memory of one that is gone).
+        if (battle.monRival) await this.playBeat(stamp(this, 'RIVAL!', 'It remembers', this.foeRim(), this.motion));
+        if (battle.rivalNote) await this.say(battle.rivalNote);
       }
       if (this.shown.enemy.shiny) await this.shinySparkle();
       await this.formIntroBeat(this.shown.enemy);
@@ -1229,7 +1232,8 @@ export class BattleScene extends Phaser.Scene {
   private nextPrompt(): void {
     this.refreshMusicState();
     if (this.duo) {
-      if (this.run.battle?.needsSwitch) this.openPartyPicker(true);
+      if (this.autoOn && !autoBattleProblem(this.run)) void this.runAuto();
+      else if (this.run.battle?.needsSwitch) this.openPartyPicker(true);
       else {
         this.commands = [];
         this.promptSpot(0);
@@ -1447,7 +1451,10 @@ export class BattleScene extends Phaser.Scene {
       this.autoCancel = false;
       this.setAuto(false);
       this.flash('Manual control: you choose every action again.');
-      this.showRootMenu();
+      if (this.duo) {
+        this.commands = [];
+        this.promptSpot(0);
+      } else this.showRootMenu();
       return;
     }
     await this.act(pick.action, true);
@@ -2147,6 +2154,14 @@ export class BattleScene extends Phaser.Scene {
         case 'cured':
           mon!.status = null;
           void this.refreshInfoBox(box, mon!, false);
+          break;
+        case 'sacrifice':
+          // §29: its rival took the blow; yours is restored, cured and enraged (a red burst, a pause, then the line).
+          mon!.hp = e.hpAfter;
+          mon!.status = null;
+          playSfx(this, 'se.faint');
+          if (sprite) await burstReveal(this, sprite.x, sprite.y - 40, 0xff3030, this.motion).done;
+          await this.refreshInfoBox(box, mon!, true);
           break;
         case 'lastStand':
           mon!.hp = 1;

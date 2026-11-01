@@ -106,6 +106,10 @@ export function eventText(content: Content, names: Names, e: RunEvent, details =
       return `${who(e.side)} is damaged by recoil!`;
     case 'faint':
       return `${who(e.side)} fainted!`;
+    case 'sacrifice': {
+      const guard = content.species.get(e.guardSpecies)?.name ?? 'Its rival';
+      return `${guard} leapt in front of the attack meant for ${names.player}! ${guard} took the blow for its rival and was gone... ${names.player} is enraged! Fully restored, its next ${e.moves} moves strike first!`;
+    }
     case 'lastStand':
       return `${who(e.side)} hung on using its ${content.items.get(e.itemId)?.name ?? 'charm'}!`;
     case 'hyper':

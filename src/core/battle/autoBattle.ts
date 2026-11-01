@@ -9,12 +9,13 @@ import type { Content, Move } from '../contentSchema';
 import { NATURES } from '../natures';
 import { calcStats, getSpecies } from '../pokemon';
 import { cheerProblem } from '../raid/raid';
+import { doublesSwitchProblem, indexAt, monAt, stagesAt, volAt, type Spot } from './doubles';
 import { noBattleItems } from '../rules';
 import { currentEnemy, freshStages, type PokemonInstance, type RunState } from '../state';
 import { emotionOf } from '../story/emotions';
 import { mentorPathOf, mentorshipOf } from '../story/mentorship';
 import { typeEffectiveness } from './damage';
-import { estimateDamage, itemProblem, moveValue, switchProblem, telegraphedAttack, type EnemyBrain, type PlayerAction } from './engine';
+import { estimateDamage, itemProblem, moveValue, switchProblem, telegraphedAttack, forcedMoveId, type EnemyBrain, type PlayerAction, type SlotAction, type SlotCommand } from './engine';
 import { moveBlockReason } from './moveBlock';
 import { counterProblem, rallyProblem } from './spectacle';
 import { canDynamax, teraOption, zMoveOptions, type TransformRequest } from './transform';
@@ -195,6 +196,8 @@ export interface AutoPick {
   reason: string;
   /** Short markers for the interesting parts of the decision (ko, defensive, switch, transform, ...). */
   tags: string[];
+  /** How much it liked this pick (for choosing between targets in double battles). */
+  score?: number;
 }
 
 function context(run: RunState, content: Content) {
@@ -254,19 +257,18 @@ function chooseAutoItem(content: Content, run: RunState, ctx: ReturnType<typeof 
 export function autoBattleProblem(run: RunState): string | null {
   const b = run.battle;
   if (!b) return 'Not in a battle.';
-  if (b.doubles) return 'Auto-Battle only plays single battles; double battles stay in manual control.';
   if (b.outcome) return 'The battle is over.';
   return null;
 }
 
 /** The best Pokémon to send out (after a faint, or as a switch): scored by its own offence and bulk against this foe. */
-function bestSwitchIn(content: Content, run: RunState, profile: AutoProfile, exclude: number): { index: number; score: number; offense: number } | null {
+function bestSwitchIn(content: Content, run: RunState, profile: AutoProfile, exclude: number, problem?: (index: number) => string | null, against?: PokemonInstance): { index: number; score: number; offense: number } | null {
   const battle = run.battle!;
-  const foe = currentEnemy(battle);
+  const foe = against ?? currentEnemy(battle);
   const foeTypes = getSpecies(content, foe.speciesId).types;
   let best: { index: number; score: number; offense: number } | null = null;
   run.party.forEach((cand, i) => {
-    if (i === exclude || switchProblem({ content, battle, party: run.party }, i) !== null) return;
+    if (i === exclude || (problem ? problem(i) : switchProblem({ content, battle, party: run.party }, i)) !== null) return;
     const brain: EnemyBrain = { content, ai: 1, target: foe, stages: freshStages(), battle, party: run.party, side: 'player', raw: true };
     const offense = Math.max(0, ...cand.moves.filter((m) => m.pp > 0).map((m) => estimateDamage(brain, cand, m.id))) / Math.max(1, foe.hp);
     const types = getSpecies(content, cand.speciesId).types;
@@ -297,7 +299,16 @@ export function chooseAutoSwitchIn(content: Content, run: RunState): AutoPick | 
  * The action the active Pokémon would take now (null when Auto-Battle can't play this turn). It weighs damage, accuracy, type
  * matchup, knock-outs, status, set-up, healing, switching and the special actions, then bends each by its character.
  */
-export function chooseAutoAction(content: Content, run: RunState): AutoPick | null {
+interface DecideOpts {
+  /** One Pokémon of a double battle: no switching, cheers, Brace or Rally (the scene keeps those to single battles). */
+  slot?: boolean;
+  /** Transformations a partner already chose this turn (once per battle). */
+  taken?: string[];
+  /** A partner already used an item this turn. */
+  noItems?: boolean;
+}
+
+function decide(content: Content, run: RunState, opts: DecideOpts = {}): AutoPick | null {
   if (autoBattleProblem(run)) return null;
   const battle = run.battle!;
   if (battle.needsSwitch) return chooseAutoSwitchIn(content, run);
@@ -391,11 +402,11 @@ export function chooseAutoAction(content: Content, run: RunState): AutoPick | nu
   const best = scored.reduce((a, b) => (b.score > a.score ? b : a));
 
   // Bag items: a hurt or afflicted Pokémon may use a potion or a cure (it costs the turn), unless it can finish the foe.
-  const itemPick = chooseAutoItem(content, run, ctx, mon, profile, hp, best.tags.includes('ko') || (best.tags.includes('defensive') && best.score > 0.5));
+  const itemPick = opts.noItems ? null : chooseAutoItem(content, run, ctx, mon, profile, hp, best.tags.includes('ko') || (best.tags.includes('defensive') && best.score > 0.5));
   if (itemPick) return itemPick;
 
   // Switching: a Pokémon that can't hurt the foe, or is about to be knocked out by a better matchup, may step back.
-  if (!battle.doubles) {
+  if (!opts.slot) {
     const hopeless = best.damage <= 0 || (best.damage / Math.max(1, foe.hp) < 0.08 && best.score < 0.9);
     const exposed = danger && foeFirst;
     if (hopeless || exposed) {
@@ -414,7 +425,7 @@ export function chooseAutoAction(content: Content, run: RunState): AutoPick | nu
   // Raid cheers and the Perfect Counter use the turn, so they only win when they clearly matter.
   // (Some of these helpers create lazy battle state, so they read a copy: choosing must not change the run.)
   const probe = structuredClone(battle);
-  const raid = battle.raid;
+  const raid = opts.slot ? undefined : battle.raid;
   if (raid && raid.cheersLeft > 0) {
     const heal = cheerProblem(content, probe, 'healing') === null && hp < 0.4;
     const guard = cheerProblem(content, probe, 'defense') === null && danger && profile.caution + profile.fear > 0.3;
@@ -423,7 +434,7 @@ export function chooseAutoAction(content: Content, run: RunState): AutoPick | nu
     if (cheer) return { action: { kind: 'cheer', cheer }, intent: `${name} calls for a cheer!`, reason: `${name} wants backup: ${cheer}.`, tags: ['cheer'] };
   }
   const telegraphed = telegraphedAttack({ content, battle: probe, party: run.party }) !== null;
-  if (counterProblem(content, probe, telegraphed) === null && telegraphed) {
+  if (!opts.slot && counterProblem(content, probe, telegraphed) === null && telegraphed) {
     const brace = 0.35 + 0.5 * profile.caution + 0.5 * profile.fear - 0.4 * profile.aggr + (hp < 0.4 ? 0.2 : 0);
     if (brace > Math.max(0.55, best.score)) return { action: { kind: 'counter' }, intent: `${name} braces for the telegraphed attack!`, reason: `${name} reads the attack coming and braces to counter it.`, tags: ['brace', 'defensive'] };
   }
@@ -434,8 +445,9 @@ export function chooseAutoAction(content: Content, run: RunState): AutoPick | nu
   let why = best.why;
   const boss = Boolean(battle.raid || battle.totem || (battle.trainer && (battle.rivalId || battle.trainer.classId !== 'trainer')));
   const attacking = best.move.category !== 'status';
-  const tera = teraOption(ctx);
-  const z = zMoveOptions(ctx);
+  const used = opts.taken ?? [];
+  const tera = used.includes('tera') ? null : teraOption(ctx);
+  const z = used.includes('zmove') ? [] : zMoveOptions(ctx);
   const zAt = z.reduce<number>((pick, option, i) => (option && option.category !== 'status' && (pick < 0 || (option.power ?? 0) > (z[pick]?.power ?? 0)) ? i : pick), -1);
   const zIndex = zAt >= 0 && scored.some((s) => s.i === zAt) ? zAt : -1;
   let index = best.i;
@@ -444,7 +456,7 @@ export function chooseAutoAction(content: Content, run: RunState): AutoPick | nu
     index = zIndex;
     why = `${name} unleashes the power it has been saving.`;
     tags.push('zmove');
-  } else if (canDynamax(ctx) && (boss || hp < 0.6 || profile.aggr + profile.risk > 0.3)) {
+  } else if (!used.includes('dynamax') && canDynamax(ctx) && (boss || hp < 0.6 || profile.aggr + profile.risk > 0.3)) {
     transform = { kind: 'dynamax' };
     why = `${name} feels the surge and goes Max!`;
     tags.push('dynamax');
@@ -454,9 +466,66 @@ export function chooseAutoAction(content: Content, run: RunState): AutoPick | nu
     tags.push('tera');
   }
   const chosen = scored.find((s) => s.i === index) ?? best;
-  const rally = !transform && attacking && rallyProblem(content, probe) === null && profile.aggr + profile.risk + 0.2 > 0.2;
+  const rally = !opts.slot && !transform && attacking && rallyProblem(content, probe) === null && profile.aggr + profile.risk + 0.2 > 0.2;
   if (rally) tags.push('rally');
   const action: PlayerAction = { kind: 'move', index, ...(transform ? { transform } : {}), ...(rally ? { rally: true } : {}) };
   const verb = transform?.kind === 'zmove' ? `${name} will unleash a Z-Move!` : transform?.kind === 'dynamax' ? `${name} will Dynamax and use ${chosen.move.name}!` : transform?.kind === 'tera' ? `${name} will Terastallize and use ${chosen.move.name}!` : `${name} will use ${chosen.move.name}!`;
-  return { action, intent: rally ? `${verb} (Rally!)` : verb, reason: why, tags };
+  return { action, intent: rally ? `${verb} (Rally!)` : verb, reason: why, tags, score: chosen.score };
 }
+
+/** Double battles: each Pokémon picks its best move against the foe it likes best, one transformation per kind, one item at a time. */
+function decideDoubles(content: Content, run: RunState): AutoPick | null {
+  const battle = run.battle!;
+  const d = battle.doubles!;
+  const view = { battle, party: run.party };
+  if (battle.needsSwitch) {
+    const taken: number[] = [];
+    const lead = monAt(view, 'player', 0) ?? monAt(view, 'player', 1) ?? run.party[0]!;
+    const foe = [0, 1].map((s) => monAt(view, 'enemy', s as Spot)).find((m): m is PokemonInstance => Boolean(m) && m!.hp > 0);
+    const cand = bestSwitchIn(content, run, autoProfile(content, run, lead), -1, (i) => doublesSwitchProblem(view, i, taken), foe);
+    if (!cand) return null;
+    const mon = run.party[cand.index]!;
+    return { action: { kind: 'switch', partyIndex: cand.index }, intent: `${nameOf(content, mon)} is sent out!`, reason: `${nameOf(content, mon)} matches up best against the foes.`, tags: ['switch-in'] };
+  }
+  const commands: (SlotCommand | null)[] = [null, null];
+  const intents: string[] = [];
+  const reasons: string[] = [];
+  const tags: string[] = [];
+  const taken: string[] = [];
+  let itemUsed = false;
+  for (const spot of [0, 1] as const) {
+    const mon = monAt(view, 'player', spot);
+    if (!mon || mon.hp <= 0 || d.commanding.includes(mon.uid)) continue;
+    const forced = forcedMoveId(volAt(view, 'player', spot) ?? undefined);
+    const forcedIndex = forced ? mon.moves.findIndex((m) => m.id === forced) : -1;
+    if (forcedIndex >= 0) {
+      commands[spot] = { action: { kind: 'move', index: forcedIndex } };
+      continue;
+    }
+    let best: { pick: AutoPick; foeSpot: Spot } | null = null;
+    for (const foeSpot of [0, 1] as const) {
+      const foe = monAt(view, 'enemy', foeSpot);
+      if (!foe || foe.hp <= 0 || d.commanding.includes(foe.uid)) continue;
+      const seen: RunState = { ...run, battle: { ...battle, doubles: undefined, activeIndex: indexAt(view, 'player', spot), enemyIndex: indexAt(view, 'enemy', foeSpot), playerStages: stagesAt(view, 'player', spot)!, enemyStages: stagesAt(view, 'enemy', foeSpot)!, playerVolatile: volAt(view, 'player', spot)!, enemyVolatile: volAt(view, 'enemy', foeSpot)!, needsSwitch: false } };
+      const pick = decide(content, seen, { slot: true, taken, noItems: itemUsed });
+      if (pick && (!best || (pick.score ?? 0) > (best.pick.score ?? 0))) best = { pick, foeSpot };
+    }
+    if (!best) continue;
+    const action = best.pick.action as SlotAction;
+    commands[spot] = { action, target: { side: 'enemy', spot: best.foeSpot } };
+    if (action.kind === 'move' && action.transform) taken.push(action.transform.kind);
+    if (action.kind === 'item') itemUsed = true;
+    intents.push(best.pick.intent);
+    reasons.push(best.pick.reason);
+    tags.push(...best.pick.tags);
+  }
+  if (intents.length === 0) return null;
+  return { action: { kind: 'double', commands }, intent: intents.join(' '), reason: reasons.join(' '), tags: [...new Set(tags)] };
+}
+
+/** The action (or, in a double battle, the pair of commands) Auto-Battle would play now; null when it can't play this turn. */
+export function chooseAutoAction(content: Content, run: RunState): AutoPick | null {
+  if (autoBattleProblem(run)) return null;
+  return run.battle!.doubles ? decideDoubles(content, run) : decide(content, run);
+}
+

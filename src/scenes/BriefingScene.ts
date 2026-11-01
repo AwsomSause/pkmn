@@ -58,6 +58,7 @@ export class BriefingScene extends Phaser.Scene {
     line('Attributes', attributesLine(effectiveAttributes(content, run)));
     if (run.prep.directive) line('Directive', directiveText(content, run.prep.directive));
     if (run.prep.license) line('Field License', licenseName(run.prep.license));
+    if (run.rules.weeks === false) line('Weeks', 'Off: no weekly or holiday event applies to this run.');
     for (const edition of run.gameEvents) {
       const ge = content.gameEvents.get(eventIdOf(edition));
       if (ge) line(ge.name, ge.ruleText);

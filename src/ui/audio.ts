@@ -79,3 +79,54 @@ export function refreshMusicVolume(): void {
   const sound = currentMusic?.sound as (Phaser.Sound.BaseSound & { setVolume?: (v: number) => void }) | undefined;
   sound?.setVolume?.(services().session.settings.musicVolume);
 }
+
+/** Camp ambience by the hour (synthesised, so no audio files are needed): a soft wind bed, plus crickets in the evening, owl-like hoots at night, birdsong in the morning. Stops with the scene; respects mute and the sound-effects volume. */
+export function startAmbient(scene: Phaser.Scene, period: 'morning' | 'afternoon' | 'evening' | 'night'): void {
+  const { session } = services();
+  const sm = scene.sound as unknown as { context?: AudioContext };
+  const ctx = sm.context;
+  if (!ctx || session.settings.muted || session.settings.sfxVolume <= 0) return;
+  try {
+    const gain = ctx.createGain();
+    gain.gain.value = 0.05 * session.settings.sfxVolume;
+    gain.connect(ctx.destination);
+    // Wind: low-passed noise.
+    const buffer = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+    noise.loop = true;
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.value = period === 'night' ? 300 : 600;
+    noise.connect(lp).connect(gain);
+    noise.start();
+    // Little calls on a timer: [pitch Hz, wave, every ms].
+    const call = { morning: [1800, 'sine', 1400], afternoon: [0, 'sine', 0], evening: [4200, 'square', 700], night: [420, 'sine', 3200] }[period] as [number, OscillatorType, number];
+    const beep = (): void => {
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = call[1];
+      osc.frequency.value = call[0] * (0.9 + Math.random() * 0.2);
+      g.gain.setValueAtTime(0.0001, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.02 * session.settings.sfxVolume, ctx.currentTime + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.25);
+      osc.connect(g).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.3);
+    };
+    const timer = call[2] > 0 ? window.setInterval(beep, call[2]) : 0;
+    scene.events.once('shutdown', () => {
+      window.clearInterval(timer);
+      try {
+        noise.stop();
+        gain.disconnect();
+      } catch {
+        // already stopped
+      }
+    });
+  } catch {
+    // Audio is never critical.
+  }
+}

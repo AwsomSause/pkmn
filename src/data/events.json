@@ -27704,6 +27704,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_youngster"
@@ -27711,7 +27720,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Youngster Joey spots you on the road. My Rattata is in the top percentage of Rattata!",
+   "intro": "Youngster Joey is out morning and afternoon hours, and spots you on the road. My Rattata is in the top percentage of Rattata!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -27772,6 +27781,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_lass"
@@ -27779,7 +27797,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Lass Janice spots you on the road. Be gentle, okay? They are my friends.",
+   "intro": "Lass Janice is out morning and afternoon hours, and spots you on the road. Be gentle, okay? They are my friends.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -27840,6 +27858,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_bugcatcher"
@@ -27847,7 +27874,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Bug Catcher Wade spots you on the road. Bugs are way tougher than they look!",
+   "intro": "Bug Catcher Wade is out morning and afternoon hours, and spots you on the road. Bugs are way tougher than they look!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -27908,6 +27935,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_camper"
@@ -27915,7 +27951,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Camper Liam spots you on the road. Nothing beats a night under the stars.",
+   "intro": "Camper Liam is out morning and afternoon hours, and spots you on the road. Nothing beats a night under the stars.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -27976,6 +28012,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_picnicker"
@@ -27983,7 +28028,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Picnicker Gina spots you on the road. We packed sandwiches for the whole team!",
+   "intro": "Picnicker Gina is out morning and afternoon hours, and spots you on the road. We packed sandwiches for the whole team!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28044,6 +28089,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_hiker"
@@ -28051,7 +28105,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Hiker Anthony spots you on the road. Mountains make for stubborn Pokémon.",
+   "intro": "Hiker Anthony is out morning and afternoon hours, and spots you on the road. Mountains make for stubborn Pokémon.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28112,6 +28166,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_fisherman"
@@ -28119,7 +28182,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Fisherman Elliot spots you on the road. Patience is the whole trick.",
+   "intro": "Fisherman Elliot is out morning and evening hours, and spots you on the road. Patience is the whole trick.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28180,6 +28243,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_birdkeeper"
@@ -28187,7 +28259,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Bird Keeper Perry spots you on the road. Watch them ride the wind!",
+   "intro": "Bird Keeper Perry is out morning and afternoon hours, and spots you on the road. Watch them ride the wind!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28248,6 +28320,14 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_blackbelt"
@@ -28255,7 +28335,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Black Belt Kenji spots you on the road. Hup! Train the body, train the Pokémon.",
+   "intro": "Black Belt Kenji is out morning hours, and spots you on the road. Hup! Train the body, train the Pokémon.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28316,6 +28396,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_biker"
@@ -28323,7 +28412,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Biker Ryder spots you on the road. Out of my way, rookie!",
+   "intro": "Biker Ryder is out evening and night hours, and spots you on the road. Out of my way, rookie!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28384,6 +28473,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "afternoon",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_burglar"
@@ -28391,7 +28489,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Burglar Quinn spots you on the road. Finders keepers, right?",
+   "intro": "Burglar Quinn is out afternoon and evening hours, and spots you on the road. Finders keepers, right?",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28452,6 +28550,14 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_channeler"
@@ -28459,7 +28565,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Channeler Hester spots you on the road. I feel something behind you...",
+   "intro": "Channeler Hester is out night hours, and spots you on the road. I feel something behind you...",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28520,6 +28626,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_cooltrainer_m"
@@ -28527,7 +28642,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Cooltrainer Marcus spots you on the road. Only the best trainers get my respect.",
+   "intro": "Cooltrainer Marcus is out morning and afternoon hours, and spots you on the road. Only the best trainers get my respect.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28588,6 +28703,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_cooltrainer_f"
@@ -28595,7 +28719,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Cooltrainer Selene spots you on the road. My strategy is flawless.",
+   "intro": "Cooltrainer Selene is out morning and night hours, and spots you on the road. My strategy is flawless.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28656,6 +28780,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_crushgirl"
@@ -28663,7 +28796,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Crush Girl Tamsin spots you on the road. Throw a punch, then another!",
+   "intro": "Crush Girl Tamsin is out morning and night hours, and spots you on the road. Throw a punch, then another!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28724,6 +28857,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "afternoon",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_crushkin"
@@ -28731,7 +28873,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Crush Kin Ivan and Mira spots you on the road. Two trainers, double the pressure!",
+   "intro": "Crush Kin Ivan and Mira is out afternoon and evening hours, and spots you on the road. Two trainers, double the pressure!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28792,6 +28934,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_cueball"
@@ -28799,7 +28950,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Cue Ball Dutch spots you on the road. Show me what you have got!",
+   "intro": "Cue Ball Dutch is out morning and afternoon hours, and spots you on the road. Show me what you have got!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28860,6 +29011,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_engineer"
@@ -28867,7 +29027,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Engineer Baxter spots you on the road. Everything runs on current, even teams.",
+   "intro": "Engineer Baxter is out evening and night hours, and spots you on the road. Everything runs on current, even teams.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28928,6 +29088,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_gambler"
@@ -28935,7 +29104,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Gambler Lucky spots you on the road. Double or nothing on this battle!",
+   "intro": "Gambler Lucky is out evening and night hours, and spots you on the road. Double or nothing on this battle!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -28996,6 +29165,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_gentleman"
@@ -29003,7 +29181,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Gentleman Alfred spots you on the road. Proper form, proper manners.",
+   "intro": "Gentleman Alfred is out evening and night hours, and spots you on the road. Proper form, proper manners.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29064,6 +29242,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_juggler"
@@ -29071,7 +29258,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Juggler Pierre spots you on the road. Keep your eyes on the ball. And the Pokémon.",
+   "intro": "Juggler Pierre is out morning and afternoon hours, and spots you on the road. Keep your eyes on the ball. And the Pokémon.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29132,6 +29319,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_lady"
@@ -29139,7 +29335,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Lady Cordelia spots you on the road. My Pokémon are only the finest.",
+   "intro": "Lady Cordelia is out morning and afternoon hours, and spots you on the road. My Pokémon are only the finest.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29200,6 +29396,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_painter"
@@ -29207,7 +29412,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Painter Vera spots you on the road. Every battle is a canvas.",
+   "intro": "Painter Vera is out morning and afternoon hours, and spots you on the road. Every battle is a canvas.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29268,6 +29473,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "afternoon",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_pokemaniac"
@@ -29275,7 +29489,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Poké Maniac Rex spots you on the road. I collect them all, and I mean all!",
+   "intro": "Poké Maniac Rex is out afternoon and evening hours, and spots you on the road. I collect them all, and I mean all!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29336,6 +29550,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "afternoon",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_pokemonbreeder"
@@ -29343,7 +29566,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Pokémon Breeder Delia spots you on the road. Raised with love since the egg.",
+   "intro": "Pokémon Breeder Delia is out afternoon and evening hours, and spots you on the road. Raised with love since the egg.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29404,6 +29627,15 @@
    "group": "Trainers and challenges",
    "rarity": "common",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "afternoon",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_pokemonranger_m"
@@ -29411,7 +29643,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Pokémon Ranger Hal spots you on the road. Keep the wild safe, and the wild keeps us safe.",
+   "intro": "Pokémon Ranger Hal is out afternoon and evening hours, and spots you on the road. Keep the wild safe, and the wild keeps us safe.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29472,6 +29704,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "afternoon",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_pokemonranger_f"
@@ -29479,7 +29720,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Pokémon Ranger Willa spots you on the road. Capture on, ranger style!",
+   "intro": "Pokémon Ranger Willa is out afternoon and evening hours, and spots you on the road. Capture on, ranger style!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29540,6 +29781,14 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_psychic_m"
@@ -29547,7 +29796,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Psychic Edmund spots you on the road. I knew you were coming.",
+   "intro": "Psychic Edmund is out night hours, and spots you on the road. I knew you were coming.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29608,6 +29857,14 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_psychic_f"
@@ -29615,7 +29872,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Psychic Lorna spots you on the road. Your next move is already in my head.",
+   "intro": "Psychic Lorna is out night hours, and spots you on the road. Your next move is already in my head.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29676,6 +29933,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_rocker"
@@ -29683,7 +29949,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Rocker Axel spots you on the road. Turn it up to eleven!",
+   "intro": "Rocker Axel is out evening and night hours, and spots you on the road. Turn it up to eleven!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29744,6 +30010,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_ruinmaniac"
@@ -29751,7 +30026,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Ruin Maniac Hadrian spots you on the road. These ruins hold such secrets.",
+   "intro": "Ruin Maniac Hadrian is out morning and afternoon hours, and spots you on the road. These ruins hold such secrets.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29812,6 +30087,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_sailor"
@@ -29819,7 +30103,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Sailor Murphy spots you on the road. Hoist the sails, matey!",
+   "intro": "Sailor Murphy is out morning and evening hours, and spots you on the road. Hoist the sails, matey!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29880,6 +30164,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "afternoon",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_scientist"
@@ -29887,7 +30180,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Scientist Dr. Orson spots you on the road. A fascinating battle sample.",
+   "intro": "Scientist Dr. Orson is out afternoon and evening hours, and spots you on the road. A fascinating battle sample.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -29948,6 +30241,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_sisandbro"
@@ -29955,7 +30257,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Sis and Bro Amy and Tim spots you on the road. We always fight together!",
+   "intro": "Sis and Bro Amy and Tim is out evening and night hours, and spots you on the road. We always fight together!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30016,6 +30318,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_supernerd"
@@ -30023,7 +30334,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Super Nerd Miles spots you on the road. I did the math on your odds.",
+   "intro": "Super Nerd Miles is out morning and afternoon hours, and spots you on the road. I did the math on your odds.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30084,6 +30395,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_swimmer_m"
@@ -30091,7 +30411,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Swimmer Kai spots you on the road. The water is perfect today!",
+   "intro": "Swimmer Kai is out morning and evening hours, and spots you on the road. The water is perfect today!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30152,6 +30472,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_swimmer_f"
@@ -30159,7 +30488,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Swimmer Marina spots you on the road. Dive in with me!",
+   "intro": "Swimmer Marina is out morning and evening hours, and spots you on the road. Dive in with me!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30220,6 +30549,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_swimmer2_m"
@@ -30227,7 +30565,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Swimmer Finn spots you on the road. Cannonball into battle!",
+   "intro": "Swimmer Finn is out morning and evening hours, and spots you on the road. Cannonball into battle!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30288,6 +30626,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_swimmer2_f"
@@ -30295,7 +30642,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Swimmer Coral spots you on the road. Swim and splash!",
+   "intro": "Swimmer Coral is out morning and evening hours, and spots you on the road. Swim and splash!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30356,6 +30703,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_tamer"
@@ -30363,7 +30719,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Tamer Garrett spots you on the road. Wild or not, they listen to me.",
+   "intro": "Tamer Garrett is out morning and night hours, and spots you on the road. Wild or not, they listen to me.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30424,6 +30780,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "afternoon",
+      "evening"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_teamrocket_m"
@@ -30431,7 +30796,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Team Rocket Grunt Boris spots you on the road. Hand over your Pokémon!",
+   "intro": "Team Rocket Grunt Boris is out afternoon and evening hours, and spots you on the road. Hand over your Pokémon!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30492,6 +30857,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_teamrocket_f"
@@ -30499,7 +30873,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Team Rocket Grunt Jessa spots you on the road. Prepare for trouble, rookie!",
+   "intro": "Team Rocket Grunt Jessa is out morning and afternoon hours, and spots you on the road. Prepare for trouble, rookie!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30560,6 +30934,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_tuber_m"
@@ -30567,7 +30950,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Tuber Pip spots you on the road. Float on, battle later.",
+   "intro": "Tuber Pip is out morning and afternoon hours, and spots you on the road. Float on, battle later.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30628,6 +31011,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_tuber_f"
@@ -30635,7 +31027,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Tuber Dot spots you on the road. Splash fight!",
+   "intro": "Tuber Dot is out evening and night hours, and spots you on the road. Splash fight!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30696,6 +31088,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_tuber2_m"
@@ -30703,7 +31104,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Tuber Rudy spots you on the road. Tube life is the best life.",
+   "intro": "Tuber Rudy is out morning and night hours, and spots you on the road. Tube life is the best life.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30764,6 +31165,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "afternoon"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_tuber2_f"
@@ -30771,7 +31181,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Tuber Sunny spots you on the road. Come join the waves!",
+   "intro": "Tuber Sunny is out morning and afternoon hours, and spots you on the road. Come join the waves!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30832,6 +31242,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_twins"
@@ -30839,7 +31258,7 @@
     "tint": "#1c3040",
     "effect": "none"
    },
-   "intro": "Twins Nia and Mia spots you on the road. Two for the price of one!",
+   "intro": "Twins Nia and Mia is out evening and night hours, and spots you on the road. Two for the price of one!",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30900,6 +31319,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_youngcouple"
@@ -30907,7 +31335,7 @@
     "tint": "#40301c",
     "effect": "none"
    },
-   "intro": "Young Couple Dan and Eri spots you on the road. Together we cannot lose.",
+   "intro": "Young Couple Dan and Eri is out evening and night hours, and spots you on the road. Together we cannot lose.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -30968,6 +31396,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_beauty"
@@ -30975,7 +31412,7 @@
     "tint": "#301c40",
     "effect": "none"
    },
-   "intro": "Beauty Bianca spots you on the road. My Pokémon sparkle, and so do I.",
+   "intro": "Beauty Bianca is out morning and night hours, and spots you on the road. My Pokémon sparkle, and so do I.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -31036,6 +31473,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "evening",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_aromalady"
@@ -31043,7 +31489,7 @@
     "tint": "#40281c",
     "effect": "none"
    },
-   "intro": "Aroma Lady Rosalind spots you on the road. Smell the flowers, then fall to them.",
+   "intro": "Aroma Lady Rosalind is out evening and night hours, and spots you on the road. Smell the flowers, then fall to them.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",
@@ -31104,6 +31550,15 @@
    "group": "Trainers and challenges",
    "rarity": "uncommon",
    "minStage": 1,
+   "requires": [
+    {
+     "kind": "period",
+     "in": [
+      "morning",
+      "night"
+     ]
+    }
+   ],
    "scene": {
     "cast": [
      "boss.npc_coolcouple"
@@ -31111,7 +31566,7 @@
     "tint": "#28401c",
     "effect": "none"
    },
-   "intro": "Cool Couple Leon and Sky spots you on the road. Stylish and strong, that is us.",
+   "intro": "Cool Couple Leon and Sky is out morning and night hours, and spots you on the road. Stylish and strong, that is us.",
    "choices": [
     {
      "label": "Battle for a spot on your roster",

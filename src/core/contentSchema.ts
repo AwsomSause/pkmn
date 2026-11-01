@@ -2110,7 +2110,7 @@ export const BalanceSchema = z.object({
   /** Exploration (core/world.ts): fog of war, weather fronts, roaming Legendaries and checkpoint camps. */
   world: WorldBalanceSchema,
   /** The day counter and day/night cycle (core/clock.ts): four times of day, a step of the map takes `ticksPerStep` of them. */
-  clock: z.object({ ticksPerStep: z.number().int().min(0).max(4), milestoneDays: z.array(z.number().int().min(2)).min(1), /** Types that turn up more in the wild at each time of day. */ periodTypes: z.object({ morning: z.array(TypeNameSchema), afternoon: z.array(TypeNameSchema), evening: z.array(TypeNameSchema), night: z.array(TypeNameSchema) }), periodWildFactor: z.number().min(1), /** Merchants' prices by the hour (1 = normal). */ shopHours: z.object({ morning: z.number().positive(), afternoon: z.number().positive(), evening: z.number().positive(), night: z.number().positive() }) }),
+  clock: z.object({ ticksPerStep: z.number().int().min(0).max(4), milestoneDays: z.array(z.number().int().min(2)).min(1), /** Days in a season of the run's calendar; each new season is a festival day. */ seasonLength: z.number().int().min(2), /** Types that turn up more in the wild at each time of day. */ periodTypes: z.object({ morning: z.array(TypeNameSchema), afternoon: z.array(TypeNameSchema), evening: z.array(TypeNameSchema), night: z.array(TypeNameSchema) }), periodWildFactor: z.number().min(1), /** Merchants' prices by the hour (1 = normal). */ shopHours: z.object({ morning: z.number().positive(), afternoon: z.number().positive(), evening: z.number().positive(), night: z.number().positive() }) }),
   attributeGrowth: z.array(
     z.object({
       attribute: AttributeKeySchema,
@@ -2200,7 +2200,8 @@ export const BalanceSchema = z.object({
   /** Wild species with at least this base stat total count as rare (trainer perks make them turn up more or less). */
   rareEncounterBst: z.number().int().positive(),
   /** The first rival: met on the first ordinary trainer of `stage` (0-based, counted from the run start) with one Pokémon of `level`. The Exp. Share (and bench EXP) switch on after that fight. */
-  rival: z.object({ stage: z.number().int().min(0), level: z.number().int().min(1), starters: z.array(z.string()).min(1) }),
+  /** `depth` (Kice spec §11/§21): the first rival becomes the major rival and wild Pokémon rivals can form (off only in old-seed fingerprints). */
+  rival: z.object({ stage: z.number().int().min(0), level: z.number().int().min(1), starters: z.array(z.string()).min(1), depth: z.boolean().default(true) }),
   /** Candies for releasing a caught Pokémon: perRelease + floor(level / perLevels). */
   candies: z.object({ perRelease: z.number().int().min(0), perLevels: z.number().int().min(1) }),
   /** Run-end payout into the Bank (GAME_DESIGN.md §14.2). */
