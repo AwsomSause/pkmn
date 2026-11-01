@@ -49,11 +49,13 @@ function walk(run: RunState, loseAt?: number): RunState {
 }
 
 describe('legendary event data', () => {
-  it('validates and covers every Legendary and Mythical (base forms), with 12 hand-designed ones', () => {
+  it('validates and covers every Legendary and Mythical (base forms), with at least 27 hand-designed ones', () => {
     expect(LegendaryFileSchema.safeParse(legendaryJson).success).toBe(true);
     const events = legendaryEvents(content);
     const covered = new Set(events.map((e) => e.legendary!.species));
-    for (const id of ['kyogre', 'groudon', 'rayquaza', 'giratina', 'dialga', 'palkia', 'lugia', 'ho-oh', 'mewtwo', 'articuno', 'zapdos', 'moltres']) expect(covered.has(id), id).toBe(true);
+    for (const id of ['kyogre', 'groudon', 'rayquaza', 'giratina', 'dialga', 'palkia', 'lugia', 'ho-oh', 'mewtwo', 'articuno', 'zapdos', 'moltres', 'raikou', 'entei', 'suicune', 'latias', 'latios', 'regirock', 'regice', 'registeel', 'heatran', 'cresselia', 'darkrai', 'arceus', 'reshiram', 'zekrom', 'celebi']) expect(covered.has(id), id).toBe(true);
+    // Hand-designed events have their own epithet, not a type template word.
+    expect(events.filter((e) => e.legendary!.npcs.some((n) => !n.id.endsWith('-witness') && !n.id.endsWith('-pilgrim'))).length).toBeGreaterThanOrEqual(27);
     const missing = [...content.species.values()].filter((s) => !s.form && (s.tags.includes('legendary') || s.tags.includes('mythical')) && !covered.has(s.id) && !['cosmog', 'cosmoem', 'kubfu', 'phione', 'meltan'].includes(s.id));
     expect(missing.map((s) => s.id)).toEqual([]);
     for (const e of events) {
