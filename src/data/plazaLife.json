@@ -1,0 +1,47 @@
+{
+  "districts": [
+    { "id": "market", "name": "Marketplace", "blurb": "Stalls, rare vendors, oddities and the odd caravan. Stock changes every stage.", "sections": ["stalls", "oddities", "caravan"], "x": 0.12, "y": 0.5, "color": "0xf0a040" },
+    { "id": "trading", "name": "Trading Post", "blurb": "Pokémon swaps, held-item exchanges and the notice board.", "sections": ["traders", "board"], "x": 0.31, "y": 0.58, "color": "0x58c0e8" },
+    { "id": "gathering", "name": "Gathering Square", "blurb": "Regulars, returning rivals, old foes and travellers. Rumours change hands here.", "sections": ["people", "rumors"], "x": 0.5, "y": 0.64, "color": "0xe86890" },
+    { "id": "social", "name": "Social Terrace", "blurb": "The Battle Club, errands and friendly company.", "sections": ["club", "errands"], "x": 0.69, "y": 0.58, "color": "0x80d868" },
+    { "id": "services", "name": "Services Hall", "blurb": "Nurse, groomer, appraiser and coach.", "sections": ["services"], "x": 0.88, "y": 0.5, "color": "0xb090f0" },
+    { "id": "secret", "name": "Back Alley", "blurb": "A narrow passage behind the bins.", "sections": ["alley"], "x": 0.5, "y": 0.33, "color": "0x6a5a8a" }
+  ],
+  "looks": [
+    { "id": "lantern", "name": "Lantern Festival Look", "decor": ["lanterns", "banners"], "tint": 16763008 },
+    { "id": "garden", "name": "Garden Terrace Look", "decor": ["flowers", "trees"], "tint": 10545312 },
+    { "id": "stone", "name": "Old Stone Look", "decor": ["statue", "banners"], "tint": 12634336 },
+    { "id": "bazaar", "name": "Bazaar Look", "decor": ["awnings", "lanterns"], "tint": 15769792 },
+    { "id": "harbor", "name": "Harbour Look", "decor": ["flags", "crates"], "tint": 9490672 }
+  ],
+  "travelers": [
+    { "name": "Wandering Birder", "line": "I come for the feathers. This plaza trades in everything." },
+    { "name": "Retired Gym Trainer", "line": "I led a gym once. Now I just watch the kids argue about types." },
+    { "name": "Ribbon Collector", "line": "Show me a Pokémon who loves you and I'll show you a ribbon." },
+    { "name": "Map Seller", "line": "Every route has a secret, friend. Some of them are even true." },
+    { "name": "Berry Farmer", "line": "Mulch makes the difference. Ask anybody." },
+    { "name": "Street Performer", "line": "Tip the Pokémon, not the trainer. The Pokémon work harder." },
+    { "name": "Ferry Pilot", "line": "I take the long way. Fewer trainers on the long way." },
+    { "name": "Old Fisher", "line": "Fish bite hardest the night before a big battle. Don't ask why." },
+    { "name": "Backpacker", "line": "Three regions in one bag. Mind the Pokéball in the pocket." },
+    { "name": "Tournament Scout", "line": "I'm watching for talent. Try not to trip." }
+  ],
+  "chatter": [
+    ["Did you see that Pokémon's Speed?", "Everyone saw. The whole square saw."],
+    ["Prices are up again today.", "Prices are always up. Buy first, grumble later."],
+    ["Heard a rumour about the next gym.", "Heard it was exactly the opposite."],
+    ["That stall's berries are the best.", "Only because you haven't tried the other one."],
+    ["My Pokémon refuses to leave the fountain.", "Yours or the fountain's?"],
+    ["The Battle Club was packed last night.", "It's always packed. That's why I come early."]
+  ],
+  "rare": [
+    { "id": "gilded-merchant", "name": "Gilded Merchant", "line": "Gold is just a colour I wear. The stock is what shines.", "minBadges": 2 },
+    { "id": "lost-champion", "name": "Retired Champion", "line": "I lost, once. It was the best thing that ever happened to me.", "minBadges": 4 },
+    { "id": "moon-pilgrim", "name": "Moon Pilgrim", "line": "Come back at night. The plaza is a different place.", "minBadges": 0 },
+    { "id": "ghost-gardener", "name": "The Gardener in Grey", "line": "Some visitors never leave. Don't worry. They're polite.", "minBadges": 6 }
+  ],
+  "bubbles": {
+    "player": ["Nice square.", "Where to first?", "Let's look around."],
+    "secretClosed": "A narrow passage behind the bins. Nobody will let you in yet."
+  }
+}

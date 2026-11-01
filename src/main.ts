@@ -25,6 +25,7 @@ import { HubScene } from './scenes/HubScene';
 import { MainMenuScene } from './scenes/MainMenuScene';
 import { SettingsScene } from './scenes/SettingsScene';
 import { MapScene } from './scenes/MapScene';
+import { PlazaScene } from './scenes/PlazaScene';
 import { RewardScene } from './scenes/RewardScene';
 import { RunPrepScene } from './scenes/RunPrepScene';
 import { ShopScene } from './scenes/ShopScene';
@@ -82,7 +83,7 @@ function start(): void {
     backgroundColor: '#1d1a24',
     pixelArt: true,
     scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
-    scene: [BootScene, MainMenuScene, SettingsScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, CreditsScene, HallOfFameScene, LegacyGalleryScene, MemoriesScene],
+    scene: [BootScene, MainMenuScene, SettingsScene, HubScene, TrainerSelectScene, RunPrepScene, StarterSelectScene, BriefingScene, MapScene, PlazaScene, ShopScene, EventScene, BattleScene, DecisionScene, RewardScene, ExpeditionScene, MinigameScene, GameOverScene, CreditsScene, HallOfFameScene, LegacyGalleryScene, MemoriesScene],
     callbacks: {
       preBoot: (g) => g.registry.set('session', session),
       postBoot: (g) => {

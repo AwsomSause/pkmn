@@ -43,11 +43,16 @@ test('the plaza opens from its map stop, lists its areas, and sells an item', as
   await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
 
   await page.evaluate((id) => (window as any).__pkr.game.scene.getScene('Map').openPlaza(id), sideId);
-  await page.waitForTimeout(300);
-  expect(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Map').picker))).toBe(true);
-  await page.screenshot({ path: 'test-results/plaza-menu.png' });
+  await waitForScene(page, 'Plaza');
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Plaza').layout.districts.length)).toBe(6);
+  await page.screenshot({ path: 'test-results/plaza-square.png' });
 
-  // Open "Merchant stalls" (the first area), then buy the first thing on offer.
+  // Open the Marketplace (focused first), then "Merchant stalls", then buy the first thing on offer.
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(300);
+  expect(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Plaza').picker))).toBe(true);
+  await page.screenshot({ path: 'test-results/plaza-menu.png' });
   await page.keyboard.press('Enter');
   await page.waitForTimeout(300);
   const before = await page.evaluate(() => (window as any).__pkr.session.run.money);
