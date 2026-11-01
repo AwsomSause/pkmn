@@ -1994,6 +1994,8 @@ export const BalanceSchema = z.object({
     levelCapStep: z.number().int().positive(),
     /** Multiplies all experience gained (the single knob for how fast the party levels). */
     xpScale: z.number().positive(),
+    /** Auto-Battle (spec §32): a battle where the Pokémon chose their own actions gives this share of the EXP. */
+    autoBattleXp: z.number().min(0).max(1).default(0.5),
     /** Party levels stop at the stage's last enemy level plus this many (the region cap still applies). */
     stageCapMargin: z.number().int().min(0),
     /** Party members that did not battle always get this percent of the EXP (the Exp. Share item can raise it). */

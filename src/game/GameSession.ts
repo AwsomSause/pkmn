@@ -24,6 +24,7 @@ import { buyCandyPerk } from '../core/candyShop';
 import { loanProblem, runBankFlags, vaultTake, buyTier, exchange, type ExchangeDirection } from '../core/bank';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
+import { chooseAutoAction, setStance, type AutoPick, type Stance } from '../core/battle/autoBattle';
 import type { DramaLine } from '../core/drama';
 import * as Exp from '../core/expedition/flow';
 import * as Mini from '../core/minigame/flow';
@@ -373,6 +374,41 @@ export class GameSession {
     this.persistRun();
     if (result.run.phase === 'over') this.finishRun();
     return result;
+  }
+
+  /**
+   * Auto-Battle (spec §32): plays the action the active Pokémon picks by itself. The battle is marked first, so its EXP is
+   * reduced for the whole fight (switching back to manual later does not undo it). A pick the engine refuses falls back to a
+   * plain move, so a mistake never freezes the battle. Returns null when Auto-Battle can't play this turn.
+   */
+  takeAutoTurn(): { result: Run.TurnResult; pick: AutoPick } | null {
+    const run = this.requireRun();
+    const pick = chooseAutoAction(this.content, run);
+    if (!pick) return null;
+    const marked = structuredClone(run);
+    marked.battle!.autoUsed = true;
+    const tries: PlayerAction[] = [pick.action];
+    if (pick.action.kind === 'move' && (pick.action.transform || pick.action.rally)) tries.push({ kind: 'move', index: pick.action.index });
+    const plain = marked.party[marked.battle!.activeIndex]?.moves.findIndex((m) => m.pp > 0) ?? -1;
+    tries.push({ kind: 'move', index: plain });
+    for (const [n, action] of tries.entries()) {
+      try {
+        const result = Run.takeTurn(this.content, marked, action, this.settings.dialogueFrequency);
+        this.run = result.run;
+        this.persistRun();
+        if (result.run.phase === 'over') this.finishRun();
+        return { result, pick: n === 0 ? pick : { ...pick, action, tags: [...pick.tags, 'fallback'] } };
+      } catch (err) {
+        if (n === tries.length - 1) throw err;
+      }
+    }
+    return null;
+  }
+
+  /** Teaches a Pokémon how to fight in Auto-Battle (core/battle/autoBattle.ts). */
+  teachStance(uid: string, stance: Stance): void {
+    this.run = setStance(this.requireRun(), uid, stance);
+    this.persistRun();
   }
 
   chooseReward(index: number, targetIndex = 0): Run.RewardChoiceResult {
