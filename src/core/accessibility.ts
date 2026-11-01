@@ -32,7 +32,7 @@ export function nextProfile(current: AccessibilityProfile): AccessibilityProfile
   return PROFILE_ORDER[(PROFILE_ORDER.indexOf(current) + 1) % PROFILE_ORDER.length]!;
 }
 
-export const ANIMATION_KEYS = ['abilityAnimations', 'battleTextAnimations', 'interactionAnimations', 'hyperAnimations', 'rivalAnimations', 'evolutionAnimations', 'battleScreenEffects'] as const;
+export const ANIMATION_KEYS = ['abilityAnimations', 'battleTextAnimations', 'interactionAnimations', 'hyperAnimations', 'rivalAnimations', 'evolutionAnimations', 'battleScreenEffects', 'menuAnimations'] as const;
 export type AnimationKey = (typeof ANIMATION_KEYS)[number];
 
 /** Which animation groups play: `disableAllAnimations` turns every one off but never changes the saved individual switches. */
@@ -60,7 +60,7 @@ export function animSettingsFrom(s: Settings): AnimSettings {
     intensity: s.effectIntensity,
     shake: s.shakeIntensity,
     reduceParticles: s.reduceParticles,
-    enabled: { ability: flags.abilityAnimations, text: flags.battleTextAnimations, interaction: flags.interactionAnimations, overdrive: flags.hyperAnimations, rival: flags.rivalAnimations },
+    enabled: { ability: flags.abilityAnimations, text: flags.battleTextAnimations, interaction: flags.interactionAnimations, overdrive: flags.hyperAnimations, rival: flags.rivalAnimations, ui: flags.menuAnimations },
     timeScale: animationTimeScale(s),
     strength: animationStrength(s),
   };

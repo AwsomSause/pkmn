@@ -1428,6 +1428,8 @@ export const SettingsSchema = z.object({
   rivalAnimations: z.boolean().default(true),
   evolutionAnimations: z.boolean().default(true),
   battleScreenEffects: z.boolean().default(true),
+  /** Menu motion (spec §24): the gliding cursor, button bounces and screen/popup transitions. */
+  menuAnimations: z.boolean().default(true),
   /** How fast animations play and how strong they look. */
   animationSpeed: z.enum(['slow', 'normal', 'fast']).default('normal'),
   animationIntensity: z.enum(['reduced', 'normal', 'enhanced']).default('normal'),
