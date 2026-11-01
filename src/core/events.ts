@@ -26,7 +26,7 @@ import { oldFoe } from './story/promises';
 import { featuredRival, rivalBeaten, rivalFightTeam, rivalPath } from './rivals/living';
 import { monRivalState } from './rivals/monRivals';
 import { openFeud, settleFeud } from './story/feud';
-import { applyMentorEffect, mentorConditionMet, mentorConditionText, mentorStopEvent } from './mentors';
+import { apprenticeLevelBonus, applyMentorEffect, mentorConditionMet, mentorConditionText, mentorStopEvent } from './mentors';
 import { noteEventMorality } from './story/nemesis';
 import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy';
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
@@ -1071,7 +1071,12 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     const rival = b.rival ? featuredRival(run) : null;
     const rivalTeam = rival && ghost.length === 0 ? rivalFightTeam(content, rival) : [];
     const evil = evilBattle(content, run, b);
-    const team = evil ? evil.species.map((speciesId, i) => {
+    const fellow = b.apprentice ? run.mentor?.fellow ?? null : null;
+    const team = fellow ? Array.from({ length: b.size }, (_, i) => {
+      const level = Math.min(cap, Math.max(1, base + apprenticeLevelBonus(fellow) + (i === b.size - 1 ? 1 : 0)));
+      const type = fellow.types[i % Math.max(1, fellow.types.length)];
+      return newMon(content, run, evolvedFormAt(content, pickSpecies(content, run, [], type ? [type] : [], rng), level, rng), level, 'e');
+    }) : evil ? evil.species.map((speciesId, i) => {
       const level = Math.min(cap, Math.max(1, base + evil.levelBonus + (i === evil.size - 1 ? 1 : 0)));
       return newMon(content, run, evolvedFormAt(content, speciesId, level, rng), level, 'e');
     }) : rivalTeam.length > 0 ? rivalTeam.slice(0, b.size).map((id, i) => {
@@ -1084,7 +1089,7 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
     });
     if (authored) for (const mon of team) auditEncounter(content, 'event', mon, authored);
     team.slice(0, evil ? evil.shadow : b.shadow).forEach((mon) => makeShadow(mon, rollShadowHeart(content, new Rng(hashSeed(`${run.seed}::shadow-foe::${mon.uid}`)))));
-    run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: evil ? evil.name : rival ? rival.name : b.name, leaderId: null });
+    run.battle = createBattle('trainer', team, activeIndex, run.party[activeIndex]!.uid, { classId: b.classId ?? 'event', name: evil ? evil.name : rival ? rival.name : fellow ? fellow.name : b.name, leaderId: null });
     if (b.ally && content.species.has(b.ally) && team.length >= 2) {
       // A temporary ally joins the party for this fight only (finishBattle sends it home).
       const ally = newMon(content, run, b.ally, Math.max(1, base), 'p');
@@ -1099,6 +1104,13 @@ function startEventBattle(content: Content, run: RunState, node: MapNode, b: Eve
   for (const mon of run.battle.enemyTeam) discover(run, mon.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
+}
+
+/** Whether this event battle is a sparring match with the fellow apprentice: losing it is friendly (nobody is out). */
+export function isApprenticeBattle(content: Content, event: EventBattleRef): boolean {
+  const choice = content.events.get(event.eventId)?.choices[event.choiceIndex];
+  const battle = (event.success ? choice?.success : choice?.failure)?.battle;
+  return battle?.kind === "trainer" && battle.apprentice === true;
 }
 
 /** A detour's next battle (`chain`): same stop, no healing in between. Called once decisions from the last fight are done. */

@@ -2383,6 +2383,8 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
     loyaltyAtLeast: z.number().int().min(0).max(100).optional(),
     lesson: z.string().optional(),
     mission: z.enum(['none', 'active', 'done']).optional(),
+    /** The fellow apprentice: a veteran who graduated before, or a prodigy (potential 5). */
+    fellow: z.enum(['veteran', 'prodigy']).optional(),
   }),
   /** A Blissful Pokémon is in the party / a Shadow Pokémon is in the party (APPROVED.md §12-14). */
   z.object({ kind: z.literal('partyBlissful') }),
@@ -2622,6 +2624,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     ally: z.string().optional(),
     /** Evil Teams: a member of the run's team at this rank (their Pokémon, name and battle rule; core/evil). */
     evil: z.enum(['grunt', 'specialist', 'executive', 'leader']).optional(),
+    /** Mentors: the team is your fellow apprentice's (their preferred types; they take the name). A loss is friendly: nobody is out and the run goes on. */
+    apprentice: z.boolean().optional(),
     name: z.string(),
     size: z.number().int().min(1).max(6).default(2),
     /** How many of the trainer's Pokémon (the first ones) are Shadow Pokémon a Snag Ball can take. */

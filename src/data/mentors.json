@@ -190,14 +190,15 @@
     {
      "id": "ravi-captain",
      "name": "Captain's Order",
-     "text": "Gym leaders fall to a plan, not luck.",
+     "text": "Gym leaders fall to a plan, not luck. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
        "kind": "bossDamageMultiplier",
        "value": 1.1
       }
-     ]
+     ],
+     "teachMove": "close-combat"
     },
     {
      "id": "ravi-veteran",
@@ -234,6 +235,11 @@
    "graduation": {
     "title": "Ironhand's Pupil",
     "text": "Ravi salutes you. It is the only salute he gives."
+   },
+   "story": {
+    "intro": "Ravi stares at the horizon. \"Twenty years on the coast, and I lost one recruit to a storm I should have seen. I teach so no one else is unprepared.\"",
+    "listen": "You stay quiet and let him finish. He nods once.",
+    "share": "You tell him about your own near miss. \"Then we both learned it,\" he says."
    }
   },
   {
@@ -290,7 +296,7 @@
     {
      "id": "marigold-rest",
      "name": "Rest Is a Move",
-     "text": "Rest after a battle is part of the battle.",
+     "text": "Rest after a battle is part of the battle. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -301,7 +307,8 @@
        "kind": "healingMoveMultiplier",
        "value": 1.15
       }
-     ]
+     ],
+     "teachMove": "wish"
     },
     {
      "id": "marigold-heirloom",
@@ -337,6 +344,11 @@
    "graduation": {
     "title": "Hatch's Fledgling",
     "text": "Marigold presses a spare Egg basket into your hands."
+   },
+   "story": {
+    "intro": "Marigold turns an Egg in her hands. \"My first hatchling never came out. I kept the shell. I have raised every one since like it was that one.\"",
+    "listen": "You hold the Egg for a moment so she can breathe.",
+    "share": "You tell her about your first Pokémon. She laughs, and wipes her eye."
    }
   },
   {
@@ -386,7 +398,7 @@
     {
      "id": "linden-wild",
      "name": "The Wild Index",
-     "text": "Know what waits on the road before you walk it.",
+     "text": "Know what waits on the road before you walk it. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -397,7 +409,8 @@
        "kind": "researchMultiplier",
        "value": 1.1
       }
-     ]
+     ],
+     "teachMove": "calm-mind"
     },
     {
      "id": "linden-cited",
@@ -433,6 +446,11 @@
    "graduation": {
     "title": "Vale's Co-Author",
     "text": "Linden adds your name to the cover of the field guide."
+   },
+   "story": {
+    "intro": "Linden closes the notebook. \"The lab wanted results. I wanted answers. They were not the same thing, so I left.\"",
+    "listen": "You ask what answer they found. \"That the question was better,\" they say.",
+    "share": "You share your own odd observation. Linden writes it down, and credits you."
    }
   },
   {
@@ -484,7 +502,7 @@
     {
      "id": "juno-summit",
      "name": "The Long View",
-     "text": "From the top you see every road at once.",
+     "text": "From the top you see every road at once. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -495,7 +513,8 @@
        "kind": "captureMultiplier",
        "value": 1.1
       }
-     ]
+     ],
+     "teachMove": "u-turn"
     },
     {
      "id": "juno-legend",
@@ -532,6 +551,11 @@
    "graduation": {
     "title": "Trailwind's Heir",
     "text": "Juno hands you her oldest compass."
+   },
+   "story": {
+    "intro": "Juno traces a route in the dirt. \"I was lost for nine days once. A wild Pokémon walked me out. I have been paying it back ever since.\"",
+    "listen": "You let the silence sit. Juno hums an old trail song.",
+    "share": "You tell her about your wrong turn. \"Best way to learn a road,\" she says."
    }
   },
   {
@@ -583,7 +607,7 @@
     {
      "id": "celeste-finale",
      "name": "The Grand Finale",
-     "text": "Always finish with something unforgettable.",
+     "text": "Always finish with something unforgettable. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -596,7 +620,8 @@
        "type": "water",
        "value": 1.1
       }
-     ]
+     ],
+     "teachMove": "dazzling-gleam"
     },
     {
      "id": "celeste-encore",
@@ -632,6 +657,11 @@
    "graduation": {
     "title": "Ribbon's Star",
     "text": "Celeste pins her ribbon to your sleeve."
+   },
+   "story": {
+    "intro": "Celeste lowers her voice. \"I won my third Festival with a shaking hand. Nobody saw. I teach so others know that shaking is allowed.\"",
+    "listen": "You say nothing and hand her a glass of water.",
+    "share": "You admit you are nervous too. She squeezes your shoulder."
    }
   },
   {
@@ -682,7 +712,7 @@
     {
      "id": "sable-throne",
      "name": "The Empty Throne",
-     "text": "A title is a weight, not a prize.",
+     "text": "A title is a weight, not a prize. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -693,7 +723,8 @@
        "kind": "bossDamageMultiplier",
        "value": 1.05
       }
-     ]
+     ],
+     "teachMove": "dragon-dance"
     },
     {
      "id": "sable-legacy",
@@ -729,6 +760,11 @@
    "graduation": {
     "title": "Sable's Successor",
     "text": "Sable finally tells you why they left."
+   },
+   "story": {
+    "intro": "Sable looks at their hands. \"I left the title because I stopped enjoying it. I was afraid that meant I had stopped being good.\"",
+    "listen": "You wait. Sable almost smiles.",
+    "share": "You say you are afraid of the same thing. \"Good. Remember that,\" Sable says."
    }
   },
   {
@@ -784,7 +820,7 @@
     {
      "id": "dax-respect",
      "name": "Earned Respect",
-     "text": "The best compliment is a rematch.",
+     "text": "The best compliment is a rematch. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -795,7 +831,8 @@
        "kind": "xpMultiplier",
        "value": 1.05
       }
-     ]
+     ],
+     "teachMove": "flare-blitz"
     },
     {
      "id": "dax-rematch",
@@ -832,6 +869,11 @@
    "graduation": {
     "title": "Corvane's Equal",
     "text": "Dax finally calls you by name instead of \"rival\"."
+   },
+   "story": {
+    "intro": "Dax scuffs his boot. \"I lost to you and I was furious for a week. Then I realised I had never been that interested in anything before.\"",
+    "listen": "You do not mention the loss. He looks grateful.",
+    "share": "You admit the win was luck. \"Liar,\" he says, grinning."
    }
   },
   {
@@ -889,7 +931,7 @@
     {
      "id": "brook-harbour",
      "name": "The Safe Harbour",
-     "text": "A good gym leader also knows when to stop.",
+     "text": "A good gym leader also knows when to stop. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -901,7 +943,8 @@
        "kind": "postBattleHeal",
        "percent": 4
       }
-     ]
+     ],
+     "teachMove": "aqua-jet"
     },
     {
      "id": "brook-lighthouse",
@@ -937,6 +980,11 @@
    "graduation": {
     "title": "Brook's Understudy",
     "text": "Brook hands you a spare gym key, just in case."
+   },
+   "story": {
+    "intro": "Brook watches the tide. \"My mother kept this gym. When the harbour flooded, we saved the Pokémon first. I took her badge, not her name.\"",
+    "listen": "You listen to the water with her.",
+    "share": "You tell her about your home. \"Then you know what a harbour is,\" she says."
    }
   },
   {
@@ -993,7 +1041,7 @@
     {
      "id": "vesper-last",
      "name": "The Last Door",
-     "text": "The final door is only locked from the inside.",
+     "text": "The final door is only locked from the inside. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -1004,7 +1052,8 @@
        "kind": "switchGuard",
        "value": 0.92
       }
-     ]
+     ],
+     "teachMove": "shadow-ball"
     },
     {
      "id": "vesper-curtain",
@@ -1041,6 +1090,11 @@
    "graduation": {
     "title": "Nox's Successor",
     "text": "Vesper bows. The theatre goes quiet."
+   },
+   "story": {
+    "intro": "Vesper adjusts their cloak. \"Every challenger who reaches me is better than I was. I teach because I would like, once, to lose well.\"",
+    "listen": "You nod. Vesper turns away, but not before you see the smile.",
+    "share": "You say you would like to be the one. \"Then do not telegraph it,\" Vesper says."
    }
   },
   {
@@ -1099,7 +1153,7 @@
     {
      "id": "ysolde-covenant",
      "name": "The Covenant",
-     "text": "To meet a legend you must be worth meeting.",
+     "text": "To meet a legend you must be worth meeting. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -1110,7 +1164,8 @@
        "kind": "researchMultiplier",
        "value": 1.1
       }
-     ]
+     ],
+     "teachMove": "future-sight"
     },
     {
      "id": "ysolde-archive",
@@ -1147,6 +1202,11 @@
    "graduation": {
     "title": "Marrow's Keeper",
     "text": "Ysolde gives you the archive's key, still warm."
+   },
+   "story": {
+    "intro": "Ysolde unrolls a map. \"I saw one once, for three seconds, in a storm. I have written four hundred pages since to be sure I did not dream it.\"",
+    "listen": "You look at the map without a word.",
+    "share": "You tell her about a strange dream. She reaches for her pen."
    }
   },
   {
@@ -1205,7 +1265,7 @@
     {
      "id": "tobias-held",
      "name": "Hold It Right",
-     "text": "The right item in the right paw.",
+     "text": "The right item in the right paw. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -1218,7 +1278,8 @@
        "id": "leftovers",
        "count": 1
       }
-     ]
+     ],
+     "teachMove": "trick"
     },
     {
      "id": "tobias-stash",
@@ -1254,6 +1315,11 @@
    "graduation": {
     "title": "Satchel's Partner",
     "text": "Tobias slides his battered satchel across the counter."
+   },
+   "story": {
+    "intro": "Tobias pats the satchel. \"My first customer was a girl with no money and a Pokémon with no berries. I gave her both. Worst deal I ever made.\"",
+    "listen": "You smile and let him ramble.",
+    "share": "You offer to pay for something small. He refuses, and then accepts."
    }
   },
   {
@@ -1310,7 +1376,7 @@
     {
      "id": "fenwick-form",
      "name": "The Final Form",
-     "text": "The last stage is the first stage, understood.",
+     "text": "The last stage is the first stage, understood. (and a move to remember it by)",
      "trust": 55,
      "effects": [
       {
@@ -1322,7 +1388,8 @@
        "stat": "spe",
        "value": 1.03
       }
-     ]
+     ],
+     "teachMove": "synthesis"
     },
     {
      "id": "fenwick-wall",
@@ -1358,6 +1425,11 @@
    "graduation": {
     "title": "Eon's Heir",
     "text": "Fenwick ties a piece of string to your wrist."
+   },
+   "story": {
+    "intro": "Fenwick touches the string on the wall. \"My Eevee never evolved. I used to think I failed it. Now I think it just did not need to.\"",
+    "listen": "You sit beside him in silence.",
+    "share": "You say your own team is still changing. \"Good. Stay curious,\" he says."
    }
   }
  ]

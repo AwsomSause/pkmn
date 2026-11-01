@@ -54,6 +54,7 @@ import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { eggLabel, eggRevealed, eggTier } from '../core/eggs';
 import { protagonistTitle, topHeadline } from '../core/rivals/recognition';
+import { mentorHudLine } from '../core/mentors';
 
 const COL_SPACING = 104;
 const ROW_SPACING = 92;
@@ -241,6 +242,9 @@ export class MapScene extends Phaser.Scene {
     this.add
       .text(GAME_WIDTH - 24, 44, `${clockLabel(run)}  ·  ₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}${wipeStatus(run) ? `  ·  Wipes ${wipeStatus(run)!.wipes}${wipeStatus(run)!.max ? `/${wipeStatus(run)!.max}` : ''}` : ''}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
+    // Mentors: who trains you, how far the bond has come and where you stand against the fellow apprentice.
+    const mentorLine = league ? null : mentorHudLine(run);
+    if (mentorLine) this.add.text(24, 68, mentorLine, textStyle(13, '#d8c8f0', { stroke: '#2a1a4a', strokeThickness: 3 })).setName('mentor-hud');
     // Time of day: a light wash over the map (presentation only).
     const look = PERIOD_LOOK[periodOf(run)];
     if (look.alpha > 0) this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, look.tint, look.alpha * 0.5).setOrigin(0).setDepth(900).setName('time-wash');
