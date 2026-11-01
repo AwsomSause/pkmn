@@ -609,6 +609,7 @@ export const BattleStateSchema = z.object({
       met: z.record(z.string(), z.array(z.string())).default({}),
       rivals: z.record(z.string(), z.enum(['calm', 'reckless'])).default({}),
       outdo: z.array(z.string()).default([]),
+      taken: z.record(z.string(), z.number().int().min(0)).default({}),
     })
     .default(freshHyperBattle),
   outcome: z.enum(['win', 'lose', 'caught']).nullable(),

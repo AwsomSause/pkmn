@@ -165,7 +165,23 @@ export type BattleEvent =
    * A Hyper moment (story.json definition `defId`): the Pokémon hung on at 1 HP, got back up,
    * shook off its status (`cured`) or dug in. `hpAfter` is its HP after the moment.
    */
-  | { type: 'hyper'; side: Side; uid: string; defId: string; variant: string | null; hpAfter: number; cured: boolean }
+  | {
+      type: 'hyper';
+      side: Side;
+      uid: string;
+      defId: string;
+      variant: string | null;
+      hpAfter: number;
+      cured: boolean;
+      /** Defiance: the foe's HP after the Pokémon struck back. */
+      foeHpAfter?: number;
+      /** Protective Instinct: the teammate that took the hit, and its HP afterwards. */
+      proxy?: { uid: string; hpAfter: number };
+      /** Stages the moment gave or cost (already applied). */
+      stageChanges?: [string, number][];
+      /** Emotional Awakening: the temporary ability. */
+      ability?: string;
+    }
   /** `uid` and `participants` let the run award experience for this faint. */
   | { type: 'faint'; side: Side; uid: string; participants: string[] }
   | { type: 'switchOut'; side: Side; uid: string }
@@ -1997,7 +2013,7 @@ function takeHp(
   if (c.vol.bide && lost > 0) c.vol.bide.damage += lost;
   // A fatal hit from a move may be survived by a Hyper moment (decided before the charm).
   if (hit !== null && c.side === 'player' && lost > 0 && lost >= c.mon.hp) {
-    const hyper = hyperKnockout(ctx, c, hit);
+    const hyper = hyperKnockout(ctx, c, hit, amount);
     if (hyper) {
       lost = c.mon.hp - (hyper.hpAfter > 0 && !hyper.revived ? hyper.hpAfter : 0);
       c.mon.hp = hyper.hpAfter;
@@ -2054,7 +2070,7 @@ function tryHyper(ctx: BattleContext, trigger: StoryTriggerKind, mon: PokemonIns
  * A fatal hit on your Pokémon: Toughened It Out (it had enough HP before the hit, first hit only),
  * then Felt a Bond, then Pushed Itself Back Up (it goes down, then gets back up).
  */
-function hyperKnockout(ctx: BattleContext, c: Combatant, hit: number): { hpAfter: number; revived: boolean; event: HyperEvent } | null {
+function hyperKnockout(ctx: BattleContext, c: Combatant, hit: number, amount: number): { hpAfter: number; revived: boolean; event: HyperEvent } | null {
   const max = calcStats(ctx.content, c.mon).hp;
   const make = (e: HyperEligibility, hpAfter: number, revived: boolean) => ({
     hpAfter,
@@ -2074,9 +2090,93 @@ function hyperKnockout(ctx: BattleContext, c: Combatant, hit: number): { hpAfter
       if (e) return make(e, 1, false);
     }
   }
+  const defiant = hyperDefiance(ctx, c);
+  if (defiant) return defiant;
+  const guarded = hyperIntercept(ctx, c, amount);
+  if (guarded) return guarded;
   const back = tryHyper(ctx, 'pushedBackUp', c.mon);
   if (back && back.def.effect?.kind === 'revive') return make(back, Math.max(1, Math.floor(max * back.def.effect.hpShare)), true);
   return null;
+}
+
+/** Applies stage costs straight to a combatant (the moment's event reports them). */
+function payStageCosts(c: Combatant, cost: Partial<Record<BoostStat, number>>): [string, number][] {
+  const paid: [string, number][] = [];
+  for (const [stat, delta] of Object.entries(cost) as [BoostStat, number][]) {
+    c.stages[stat] = clampStage((c.stages[stat] ?? 0) + delta);
+    paid.push([stat, delta]);
+  }
+  return paid;
+}
+
+/**
+ * Defiance (Overdrive, spec 8): a Pokémon that has been hit enough times to count as overwhelmed
+ * refuses to fall. It holds on at 1 HP, strikes the attacker (never to a knockout) and pays for
+ * the stand in lowered stats.
+ */
+function hyperDefiance(ctx: BattleContext, c: Combatant): { hpAfter: number; revived: boolean; event: HyperEvent } | null {
+  const peek = ctx.hyper?.eligibility('defiance', c.mon);
+  const spec = peek?.def.effect;
+  if (!peek || spec?.kind !== 'defy' || c.mon.hp <= 1) return null;
+  if ((ctx.battle.hyper.taken?.[c.mon.uid] ?? 0) < spec.minHits) return null;
+  const e = tryHyper(ctx, 'defiance', c.mon);
+  if (!e || e.def.effect?.kind !== 'defy') return null;
+  const foe = currentEnemy(ctx.battle);
+  const foeMax = calcStats(ctx.content, foe).hp;
+  if (foe.hp > 1) foe.hp = Math.max(1, foe.hp - Math.max(1, Math.floor(foeMax * e.def.effect.retaliateShare)));
+  const stageChanges = payStageCosts(c, e.def.effect.cost);
+  return {
+    hpAfter: 1,
+    revived: false,
+    event: { type: 'hyper', side: c.side, uid: c.mon.uid, defId: e.def.id, variant: e.variant, hpAfter: 1, cured: false, foeHpAfter: foe.hp, stageChanges },
+  };
+}
+
+/**
+ * Protective Instinct (Overdrive, spec 8): when the front Pokémon would fall, the most bonded
+ * teammate that can bear it steps in and takes a share of the hit (at least what keeps the front
+ * Pokémon on its feet). The teammate pays in HP but is never knocked out by it.
+ */
+function hyperIntercept(ctx: BattleContext, c: Combatant, amount: number): { hpAfter: number; revived: boolean; event: HyperEvent } | null {
+  if (!ctx.hyper || ctx.hyperUsed || c.mon.hp <= 1) return null;
+  const mates = ctx.party.filter((p) => p.uid !== c.mon.uid && p.hp > 1).sort((a, b) => b.friendship - a.friendship);
+  for (const mate of mates) {
+    const peek = ctx.hyper.eligibility('protectiveInstinct', mate);
+    const spec = peek?.def.effect;
+    if (!peek || spec?.kind !== 'intercept') continue;
+    const absorbed = Math.min(amount, Math.max(amount - (c.mon.hp - 1), Math.ceil(amount * spec.takeShare)));
+    if (mate.hp - absorbed < 1) continue;
+    const e = tryHyper(ctx, 'protectiveInstinct', mate);
+    if (!e) return null;
+    mate.hp -= absorbed;
+    const hpAfter = c.mon.hp - (amount - absorbed);
+    return {
+      hpAfter,
+      revived: false,
+      event: { type: 'hyper', side: c.side, uid: c.mon.uid, defId: e.def.id, variant: e.variant, hpAfter, cured: false, proxy: { uid: mate.uid, hpAfter: mate.hp } },
+    };
+  }
+  return null;
+}
+
+/**
+ * Emotional Awakening (Overdrive, spec 8): a badly hurt Pokémon's emotion changes how it fights.
+ * It takes a temporary ability for as long as it stays in front and pays for it in one stat.
+ */
+function hyperAwaken(ctx: BattleContext, c: Combatant, events: BattleEvent[]): boolean {
+  if (c.side !== 'player' || c.vol.abilityOverride || !ctx.hyper) return false;
+  const peek = ctx.hyper.eligibility('emotionalAwakening', c.mon);
+  if (!peek || peek.def.effect?.kind !== 'awaken') return false;
+  const max = calcStats(ctx.content, c.mon).hp;
+  if (c.mon.hp > max * (peek.def.triggerConditions.lowHpShare ?? 0.35)) return false;
+  const e = tryHyper(ctx, 'emotionalAwakening', c.mon);
+  if (!e || e.def.effect?.kind !== 'awaken') return false;
+  const emotion = ctx.hyper.emotion?.(c.mon.uid) ?? null;
+  const line = (emotion ? e.def.effect.lines[emotion] : undefined) ?? e.def.effect.fallback;
+  c.vol.abilityOverride = line.ability;
+  const stageChanges = payStageCosts(c, line.cost);
+  events.push({ type: 'hyper', side: c.side, uid: c.mon.uid, defId: e.def.id, variant: e.variant, hpAfter: c.mon.hp, cured: false, stageChanges, ability: line.ability });
+  return true;
 }
 
 // ---------- The Enemy Is Getting Riled Up ----------
@@ -2253,6 +2353,8 @@ function hyperEndOfTurn(ctx: BattleContext, c: Combatant, events: BattleEvent[])
       return;
     }
   }
+
+  if (hyperAwaken(ctx, c, events)) return;
 
   if (!hung || !cond) return;
   const stood = (state.lowHp?.turns ?? 0) >= (cond.turns ?? Infinity);
@@ -3058,6 +3160,10 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     spectacleAfterHit(ctx, user, target, lost, effectiveness, events);
     if (target.side === 'player' && effectiveness > 1 && target.mon.hp > 0) {
       ctx.battle.hyper.superEffective[target.mon.uid] = (ctx.battle.hyper.superEffective[target.mon.uid] ?? 0) + 1;
+    }
+    if (target.side === 'player' && lost > 0) {
+      const taken = (ctx.battle.hyper.taken ??= {});
+      taken[target.mon.uid] = (taken[target.mon.uid] ?? 0) + 1;
     }
   }
   if (fx.hits || fx.beatUp) events.push({ type: 'hits', side: target.side, count: landed });

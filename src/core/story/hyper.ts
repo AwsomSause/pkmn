@@ -7,6 +7,7 @@ import { runPerks } from '../archetypes';
 import { effectiveAttributes, type Attributes } from '../attributes';
 import type { HyperAttribute, HyperContext } from '../battle/hyper';
 import type { Content } from '../contentSchema';
+import { currentEmotion } from './emotions';
 import { Rng } from '../rng';
 import { bonusFriendship, hyperChancePerk } from '../trainerPerks';
 import type { RunState } from '../state';
@@ -22,6 +23,9 @@ export const HYPER_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['ki
   heatedRivalry: 'rivalry',
   friendlyCompetition: 'rivalry',
   trainerReturns: 'rematch',
+  defiance: 'defy',
+  protectiveInstinct: 'intercept',
+  emotionalAwakening: 'awaken',
   megaOverdrive: 'flair',
   zHeart: 'flair',
   dynamaxResolve: 'flair',
@@ -92,6 +96,9 @@ export function buildHyperContext(content: Content, run: RunState, rng: Rng): Hy
     },
     rivalBattles(uid, speciesId) {
       return run.story.histories[uid]?.foes[speciesId] ?? 0;
+    },
+    emotion(uid) {
+      return currentEmotion(run.story.histories[uid], content.story.emotions.window);
     },
     friendlyRivals(uid) {
       return friendlyRivalsOf(run, uid);

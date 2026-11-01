@@ -11,7 +11,7 @@
 
 import type { PokemonInstance } from '../state';
 import type { Rng } from '../rng';
-import type { HYPER_ATTRIBUTES, StoryEventDefinition, StoryTriggerKind } from '../story/schema';
+import type { Emotion, HYPER_ATTRIBUTES, StoryEventDefinition, StoryTriggerKind } from '../story/schema';
 
 export type HyperAttribute = (typeof HYPER_ATTRIBUTES)[number];
 
@@ -35,6 +35,8 @@ export interface HyperContext {
   rivalBattles(uid: string, speciesId: string): number;
   /** Teammates (uids) your Pokémon has a Friendly Competition with. */
   friendlyRivals(uid: string): string[];
+  /** A Pokémon's current emotion (Emotional Awakening), when it has one. */
+  emotion?(uid: string): Emotion | null;
 }
 
 /** Hyper counters for the battle (saved with it). */
@@ -51,6 +53,8 @@ export interface HyperBattleState {
   rivals: Record<string, 'calm' | 'reckless'>;
   /** Friendly Competition: your Pokémon that saw a teammate rival land a finishing blow (they hit harder). */
   outdo: string[];
+  /** Hits each of your Pokémon has taken this battle (Defiance counts the overwhelmed). */
+  taken: Record<string, number>;
 }
 
 /**
@@ -67,7 +71,7 @@ export interface EnemyRage {
 }
 
 export function freshHyperBattle(): HyperBattleState {
-  return { lowHp: null, superEffective: {}, rage: {}, met: {}, rivals: {}, outdo: [] };
+  return { lowHp: null, superEffective: {}, rage: {}, met: {}, rivals: {}, outdo: [], taken: {} };
 }
 
 /** Rolls an eligible moment (no roll when it is certain). */
