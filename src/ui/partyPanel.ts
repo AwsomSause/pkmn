@@ -33,6 +33,8 @@ export interface PickerRow {
 }
 
 export interface PickerConfig {
+  /** Draw depth; scenes with lively layers (the Plaza crowd) put the menu above them. */
+  depth?: number;
   title: string;
   rows: PickerRow[];
   /** Two columns of rows (party) or one (Bag). */
@@ -85,7 +87,7 @@ export class Picker implements PickerLike {
   private readonly bottom: number;
 
   constructor(private readonly scene: Phaser.Scene, private readonly config: PickerConfig) {
-    this.root = scene.add.container(0, 0).setDepth(DEPTH);
+    this.root = scene.add.container(0, 0).setDepth(config.depth ?? DEPTH);
     // Popup opening (spec §24): the window rises into place and fades in; input works straight away.
     if (!justRedrawn()) glideIn(scene, this.root, 0, config.dock ? 8 : 14, 0, 'popupOpen');
     const dock = config.dock === true;

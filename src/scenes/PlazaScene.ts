@@ -442,6 +442,7 @@ export class PlazaScene extends Phaser.Scene {
     playSfx(this, 'ui.select');
     if (d.sections.length === 1) return this.openSection(d, d.sections[0]!.id, notice);
     const picker: Picker = new Picker(this, {
+      depth: 2000,
       glass: true,
       title: `${d.name}  ·  ₽${services().session.run!.money}`,
       columns: 1,
@@ -480,6 +481,7 @@ export class PlazaScene extends Phaser.Scene {
     const notes = [...(notice ? [`» ${notice}`] : []), ...view.notes];
     const rows = view.options;
     const picker: Picker = new Picker(this, {
+      depth: 2000,
       glass: true,
       title: `${d.name}  ·  ₽${session.run!.money}`,
       columns: 1,
