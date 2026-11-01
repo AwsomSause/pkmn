@@ -4,6 +4,7 @@ import type Phaser from 'phaser';
 import { continueLines } from '../core/presentation/continueLines';
 import { shareCardRows, shotFileName } from '../core/presentation/uiPrefs';
 import { lookSpecies } from '../core/pokemon';
+import { notify } from './overlays';
 import type { GameSession } from '../game/GameSession';
 
 function save(canvas: HTMLCanvasElement, name: string): void {
@@ -14,6 +15,7 @@ function save(canvas: HTMLCanvasElement, name: string): void {
     a.href = url;
     a.download = name;
     a.click();
+    notify(`Saved ${name}`);
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }, 'image/png');
 }

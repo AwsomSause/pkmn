@@ -3,6 +3,7 @@ import { animSettingsFrom } from '../../src/core/accessibility';
 import { getContent } from '../../src/data';
 import {
   aeroMood, buttonGlyph, cameraFocus, capFlash, glyphFamily, hapticPattern, holdProgress, InteractionLog, loadingTip, LOADING_TIPS,
+  autoInterruption, chestReady, GLOSSARY, glossaryLinks, hotkeyIndex, idleHintDue, isShake, lyricAt, MoveUndo, NoticeStack, rowAt, swipeDir,
   padActions, padJustify, shareCardRows, TOOLTIP_DELAY_MS, tiltFor, UI_THEMES, UI_THEME_ORDER,
 } from '../../src/core/presentation/uiPrefs';
 import { changeSetting, settingsIn } from '../../src/core/settingsRegistry';
@@ -16,11 +17,11 @@ describe('W11 settings (v12)', () => {
   it('migrates settings v11 to v12 with every new key at the old behaviour', () => {
     expect(CURRENT_VERSIONS.settings).toBeGreaterThanOrEqual(12);
     const storage = new MemoryStorageProvider();
-    const { uiTheme: _a, fontSize: _b, dyslexiaFont: _c, reducedFlash: _d, tooltipDelay: _e, popupScale: _f, transitionStyle: _g, cursorTrail: _h, holdToConfirm: _i, haptics: _j, oneHanded: _k, gamepadConfirm: _l, gamepadBack: _m, ...old } = DEFAULT_SETTINGS;
+    const { uiTheme: _a, fontSize: _b, dyslexiaFont: _c, reducedFlash: _d, tooltipDelay: _e, popupScale: _f, transitionStyle: _g, cursorTrail: _h, holdToConfirm: _i, haptics: _j, oneHanded: _k, gamepadConfirm: _l, gamepadBack: _m, victoryJingle: _n, ...old } = DEFAULT_SETTINGS;
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 11, savedAt: '', data: { ...old, sfxVolume: 0.21 } }));
     const loaded = new SaveManager(storage, content).loadSettings();
     expect(loaded.sfxVolume).toBe(0.21);
-    expect(loaded).toMatchObject({ uiTheme: 'classic', fontSize: 'normal', dyslexiaFont: false, reducedFlash: false, tooltipDelay: 'normal', popupScale: 1, transitionStyle: 'fade', cursorTrail: false, holdToConfirm: false, haptics: false, oneHanded: 'off', gamepadConfirm: 0, gamepadBack: 1 });
+    expect(loaded).toMatchObject({ uiTheme: 'classic', fontSize: 'normal', dyslexiaFont: false, reducedFlash: false, tooltipDelay: 'normal', popupScale: 1, transitionStyle: 'fade', cursorTrail: false, holdToConfirm: false, haptics: false, oneHanded: 'off', gamepadConfirm: 0, gamepadBack: 1, victoryJingle: 'badge' });
   });
   it('defaults satisfy the schema and bad values are rejected', () => {
     expect(SettingsSchema.safeParse(DEFAULT_SETTINGS).success).toBe(true);
@@ -28,7 +29,7 @@ describe('W11 settings (v12)', () => {
     expect(SettingsSchema.safeParse({ ...DEFAULT_SETTINGS, popupScale: 9 }).success).toBe(false);
   });
   it('every new setting cycles back to where it started', () => {
-    for (const id of ['uiTheme', 'fontSize', 'dyslexiaFont', 'reducedFlash', 'tooltipDelay', 'popupScale', 'transitionStyle', 'cursorTrail', 'holdToConfirm', 'haptics', 'oneHanded', 'gamepadConfirm']) {
+    for (const id of ['uiTheme', 'fontSize', 'dyslexiaFont', 'reducedFlash', 'tooltipDelay', 'popupScale', 'transitionStyle', 'cursorTrail', 'holdToConfirm', 'haptics', 'oneHanded', 'gamepadConfirm', 'victoryJingle']) {
       let s = DEFAULT_SETTINGS;
       const seen = new Set<string>();
       for (let i = 0; i < 12; i++) {
@@ -133,5 +134,66 @@ describe('gamepad, haptics, hold, tilt, tips, log, share', () => {
     expect(cameraFocus('ko', 0).zoom).toBe(0);
     expect(aeroMood('rain', 0).strength).toBeGreaterThan(0);
     expect(aeroMood(null, 0).strength).toBe(0);
+  });
+});
+
+describe('W11 batch 2 rules', () => {
+  it('maps pointer y to party rows and hotkeys to party slots', () => {
+    expect(rowAt(100, 90, 50, 6, 6)).toBe(0);
+    expect(rowAt(150, 90, 50, 6, 6)).toBe(1);
+    expect(rowAt(9999, 90, 50, 6, 6)).toBe(5);
+    expect(rowAt(-5, 90, 50, 6, 6)).toBe(0);
+    expect(hotkeyIndex('Digit3', 6)).toBe(2);
+    expect(hotkeyIndex('Digit6', 4)).toBeNull();
+    expect(hotkeyIndex('KeyA', 6)).toBeNull();
+  });
+  it('undo reverses reorders newest first', () => {
+    const u = new MoveUndo();
+    u.push(0, 2);
+    u.push(2, 1);
+    expect(u.pop()).toEqual({ from: 1, to: 2 });
+    expect(u.pop()).toEqual({ from: 2, to: 0 });
+    expect(u.pop()).toBeNull();
+  });
+  it('the notice stack keeps the newest, drops dismissed and expired bubbles', () => {
+    const s = new NoticeStack(2, 1000);
+    const a = s.push('a', 0);
+    s.push('b', 10);
+    s.push('c', 20);
+    expect(s.visible(30).map((n) => n.text)).toEqual(['c', 'b']);
+    s.dismiss(a.id);
+    s.dismiss(s.visible(30)[0]!.id);
+    expect(s.visible(30).map((n) => n.text)).toEqual(['b']);
+    expect(s.visible(5000)).toEqual([]);
+  });
+  it('idle hints wait for quiet and never repeat inside a minute', () => {
+    expect(idleHintDue(10_000, 0, -100_000)).toBe(false);
+    expect(idleHintDue(30_000, 0, -100_000)).toBe(true);
+    expect(idleHintDue(30_000, 0, 20_000)).toBe(false);
+  });
+  it('glossary links are stripped from text and only known ones kept', () => {
+    expect(glossaryLinks('A [[STAB]] hit and [[nope]].')).toEqual({ clean: 'A STAB hit and nope.', keys: ['stab'] });
+    expect(GLOSSARY.crit).toBeTruthy();
+  });
+  it('lyric cues, swipes, shakes and the daily chest', () => {
+    const cues: [number, string][] = [[0, 'one'], [1000, 'two']];
+    expect(lyricAt(cues, 500)).toBe('one');
+    expect(lyricAt(cues, 1500)).toBe('two');
+    expect(lyricAt(cues, -1)).toBe('');
+    expect(swipeDir(80, 10)).toBe('right');
+    expect(swipeDir(-80, 10)).toBe('left');
+    expect(swipeDir(5, 90)).toBe('down');
+    expect(swipeDir(5, -90)).toBe('up');
+    expect(swipeDir(20, 20)).toBeNull();
+    expect(isShake([10, 40, 5, 45, 2])).toBe(true);
+    expect(isShake([10, 11, 10, 11])).toBe(false);
+    expect(chestReady(null, '2026-11-01')).toBe(true);
+    expect(chestReady('2026-11-01', '2026-11-01')).toBe(false);
+  });
+  it('auto-battle pauses on low HP, raids and bosses', () => {
+    expect(autoInterruption(10, 100, false, false)).toMatch(/danger/);
+    expect(autoInterruption(80, 100, false, true)).toMatch(/raid/);
+    expect(autoInterruption(80, 100, true, false)).toMatch(/boss/);
+    expect(autoInterruption(80, 100, false, false)).toBeNull();
   });
 });

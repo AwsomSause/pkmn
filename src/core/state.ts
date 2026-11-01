@@ -1557,6 +1557,8 @@ export const SettingsSchema = z.object({
   oneHanded: z.enum(['off', 'left', 'right']).default('off'),
   gamepadConfirm: z.number().int().min(0).max(3).default(0),
   gamepadBack: z.number().int().min(0).max(3).default(1),
+  /** Custom sound bank (I475): which jingle plays when a badge is won. */
+  victoryJingle: z.enum(['badge', 'item_get', 'pkmn_get', 'evo_success', 'tm_get']).default('badge'),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 

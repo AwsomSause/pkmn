@@ -46,6 +46,8 @@ import { applyUiSkin } from './ui/uiSkin';
 import { installPointerFx } from './ui/pointerFx';
 import { installGamepad } from './ui/gamepad';
 import { installShareTools } from './ui/shareCard';
+import { interactionLog } from './core/presentation/uiPrefs';
+import { installOverlays } from './ui/overlays';
 import { enterTransition } from './ui/transitions';
 import './style.css';
 
@@ -103,6 +105,7 @@ function start(): void {
         setUiMotion(uiMotionFrom(session.settings));
         installPointerFx(g, () => session.settings, () => regionIdentity(session.run ? session.run.regionOrder[session.run.regionIndex] : undefined).sky);
         installGamepad(() => session.settings);
+        installOverlays(g, () => session.settings);
         setTouchLayout(session.settings.oneHanded);
         installShareTools(g, session);
         session.onChange(() => {
@@ -122,6 +125,7 @@ function start(): void {
           scene.events.on(Phaser.Scenes.Events.CREATE, () => {
             if (scene.scene.key !== 'Boot') {
               enterTransition(scene, session.settings);
+              interactionLog.add(`Opened ${scene.scene.key}`);
               sheenSweep(scene, session.settings.battleAnimations);
               // Wii-style menu motion (spec §24): a soft zoom settle and hover/press bounces on everything clickable.
               if (noteSceneEnter(scene.scene.key) && scene.scene.key !== 'Battle') pageEnter(scene);

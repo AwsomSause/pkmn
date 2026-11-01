@@ -28,6 +28,7 @@ import { Menu } from '../ui/widgets';
 import { glassPanel as drawPanel, slideIn } from '../ui/aero';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 import { pokemonIcon } from '../ui/sprites';
+import { whatIf } from '../core/presentation/whatIf';
 
 export class GameOverScene extends Phaser.Scene {
   constructor() {
@@ -65,7 +66,7 @@ export class GameOverScene extends Phaser.Scene {
           void navigator.clipboard?.writeText(code).catch(() => undefined);
         });
       }
-      this.add.text(
+      const runText = this.add.text(
         44,
         84,
         [
@@ -86,6 +87,18 @@ export class GameOverScene extends Phaser.Scene {
         ].join('\n'),
         textStyle(15, COLORS.text, { lineSpacing: 2, wordWrap: { width: 410 } }),
       );
+      // Run summary card (I485): tap it to flip to the team card and back.
+      const front = runText.text;
+      const back = ['Your team', '', ...run.party.map((m) => `${session.content.species.get(m.speciesId)?.name ?? m.speciesId}  Lv${m.level}${m.shiny ? ' ★' : ''}`)].join('\n');
+      let showingBack = false;
+      runText.setInteractive({ useHandCursor: true }).on('pointerdown', () => {
+        runText.disableInteractive();
+        this.tweens.add({ targets: runText, scaleX: 0, duration: 140, ease: 'Sine.easeIn', onComplete: () => {
+          showingBack = !showingBack;
+          runText.setText(showingBack ? back : front);
+          this.tweens.add({ targets: runText, scaleX: 1, duration: 140, ease: 'Sine.easeOut', onComplete: () => runText.setInteractive({ useHandCursor: true }) });
+        } });
+      });
       // The run's story: the chronicle's five most memorable moments.
       const moments = topMoments(run.story);
       if (moments.length > 0) {
@@ -133,6 +146,8 @@ export class GameOverScene extends Phaser.Scene {
     } else {
       lines.push('This run was already added to your profile.');
     }
+    const reflection = run && !won ? whatIf(session.content, run) : null;
+    if (reflection) lines.unshift(reflection, '');
     this.add.text(500, 84, lines.join('\n'), textStyle(18, COLORS.textLight, { lineSpacing: 3, wordWrap: { width: GAME_WIDTH - 540 } }));
     const menu = new Menu(this, {
       x: GAME_WIDTH / 2 - 120,
@@ -175,8 +190,14 @@ export class GameOverScene extends Phaser.Scene {
       const k = left ? half - 1 - i : i - half;
       const x = GAME_WIDTH / 2 + (left ? -1 : 1) * (titleWidth / 2 + 34 + k * 50);
       const icon = pokemonIcon(this, sp, x, 36, 1.4) as Phaser.GameObjects.Image;
-      icon.setName('runend-party');
+      icon.setName('runend-party').setData('tilt', true);
       if (!won) icon.setTint(0xa8b4c8);
+      // Victory poke (I484): tap a Pokémon for a little reaction.
+      icon.setInteractive({ useHandCursor: true }).on('pointerdown', () => {
+        const face = this.add.text(icon.x, icon.y - 26, won ? '♥' : '…', textStyle(22, won ? '#ff7a9a' : COLORS.textMuted)).setOrigin(0.5);
+        this.tweens.add({ targets: face, y: face.y - 30, alpha: 0, duration: 800, onComplete: () => face.destroy() });
+        this.tweens.add({ targets: icon, angle: { from: -14, to: 0 }, scaleY: { from: 1.3, to: 1.4 }, duration: 320, ease: 'Back.easeOut' });
+      });
       if (motion === 'off') return;
       icon.setY(won ? -30 : 52).setAlpha(0);
       this.tweens.add({ targets: icon, y: 36, alpha: 1, duration: motion === 'full' ? 600 : 200, delay: motion === 'full' ? 200 + i * 120 : 0, ease: won ? 'Bounce.easeOut' : 'Sine.easeOut' });

@@ -1,7 +1,8 @@
 // Gamepad support (F187): the d-pad / left stick and two face buttons send the same key events as the keyboard and the
 // on-screen pad, so every screen works with a controller. Which buttons confirm and go back is set in Settings > Controls.
 
-import { PAD_KEY, padActions, type PadAction } from '../core/presentation/uiPrefs';
+import { buttonGlyph, glyphFamily, PAD_KEY, padActions, type PadAction } from '../core/presentation/uiPrefs';
+import { notify } from './overlays';
 import type { Settings } from '../core/state';
 
 const REPEAT_MS = 220;
@@ -13,6 +14,12 @@ function press(action: PadAction): void {
 
 export function installGamepad(get: () => Settings): void {
   if (typeof window === 'undefined' || typeof navigator === 'undefined' || !navigator.getGamepads) return;
+  // Controller glyph hints (F186): say which buttons confirm and go back, in the controller's own symbols.
+  window.addEventListener('gamepadconnected', (e) => {
+    const family = glyphFamily(e.gamepad.id);
+    const s = get();
+    notify(`Controller connected: ${buttonGlyph(family, s.gamepadConfirm)} confirms, ${buttonGlyph(family, s.gamepadBack)} goes back.`);
+  });
   const held = new Map<PadAction, number>();
   const loop = (): void => {
     const now = performance.now();
