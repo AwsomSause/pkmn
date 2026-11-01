@@ -158,3 +158,35 @@ describe('Weeks toggle', () => {
     expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(30);
   });
 });
+
+describe('older run saves still load', () => {
+  it('v27 and v28 run saves upgrade to the current version', () => {
+    const base = new GameSession(content, new MemoryStorageProvider());
+    base.newRun('red', 'old');
+    const run = JSON.parse(JSON.stringify(base.run)) as Record<string, any>;
+    const { clock: _c, ...noClock } = run;
+    for (const [version, data] of [[27, noClock], [28, run]] as const) {
+      const storage = new MemoryStorageProvider();
+      const text = version === 27
+        ? JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 27, savedAt: '', data })
+        : JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 28, savedAt: '', data });
+      storage.set('pkr.run', text);
+      const loaded = new SaveManager(storage, content).loadRun();
+      expect(loaded.status).toBe('ok');
+      if (loaded.status === 'ok') {
+        expect(loaded.migratedFrom).toBe(version);
+        expect(loaded.data.clock.day).toBe(1);
+        expect(loaded.data.rules.weeks).toBe(true);
+      }
+    }
+  });
+
+  it('a v9 settings save upgrades (Auto-Battle off, explanations on)', () => {
+    const storage = new MemoryStorageProvider();
+    const { autoBattle: _a, autoExplain: _e, ...old } = new SaveManager(storage, content).loadSettings() as Record<string, unknown>;
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 9, savedAt: '', data: old }));
+    const loaded = new SaveManager(storage, content).loadSettings();
+    expect(loaded.autoBattle).toBe(false);
+    expect(loaded.autoExplain).toBe(true);
+  });
+});
