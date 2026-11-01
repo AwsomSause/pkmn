@@ -21,12 +21,21 @@ export function isLoaded(scene: Phaser.Scene, entry: AssetEntry): boolean {
  * Two scenes can fetch the same sprite at once (each loader only knows its own queue). Phaser would add the second copy
  * and log "Texture key already in use", so a single-file load whose key arrived meanwhile just skips its cache step.
  */
+const guarded = new WeakSet<object>();
+
 function skipIfCached(scene: Phaser.Scene, before: Set<Phaser.Loader.File>): void {
   for (const file of scene.load.list.entries) {
-    if (before.has(file) || !['image', 'spritesheet', 'audio', 'json'].includes(file.type)) continue;
-    const add = file.addToCache.bind(file);
-    const has = () => (file.type === 'audio' ? scene.cache.audio.exists(file.key) : file.type === 'json' ? scene.cache.json.exists(file.key) : scene.textures.exists(file.key));
-    file.addToCache = () => {
+    if (before.has(file)) continue;
+    // Atlas files load as a group (picture + data); the group adds the texture, so guard the group.
+    const target = (file.multiFile ?? file) as Phaser.Loader.File & { addToCache: () => void };
+    if (guarded.has(target)) continue;
+    const key = target.key;
+    const kind = target.type;
+    if (!['image', 'spritesheet', 'audio', 'json', 'atlasJSON', 'multiatlas'].includes(kind)) continue;
+    guarded.add(target);
+    const add = target.addToCache.bind(target);
+    const has = () => (kind === 'audio' ? scene.cache.audio.exists(key) : kind === 'json' ? scene.cache.json.exists(key) : scene.textures.exists(key));
+    target.addToCache = () => {
       if (!has()) add();
     };
   }
@@ -49,9 +58,12 @@ function addToLoader(scene: Phaser.Scene, entry: AssetEntry): void {
       const jsonKey = `${entry.id}#atlas-json`;
       scene.load.once(`filecomplete-json-${jsonKey}`, (_key: string, _type: string, data: unknown) => {
         scene.cache.json.remove(jsonKey);
+        if (scene.textures.exists(entry.id)) return; // another loader finished this atlas first
+        const queuedBefore = new Set(scene.load.list.entries);
         // Phaser accepts the already-read JSON in place of its URL (its types only list strings).
         if (data && typeof data === 'object' && 'textures' in data) scene.load.multiatlas(entry.id, data as unknown as string, `assets/${dir}`);
         else scene.load.atlas(entry.id, `assets/${entry.path}`, data as object);
+        skipIfCached(scene, queuedBefore);
       });
       scene.load.json(jsonKey, `assets/${entry.atlasPath}`);
       break;
