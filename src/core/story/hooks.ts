@@ -11,6 +11,7 @@ import { maxHp } from '../pokemon';
 import { withStream } from '../rng';
 import type { RunEvent } from '../run';
 import { currentEnemy, type PokemonInstance, type RunState } from '../state';
+import { changeFriendship } from '../friendship';
 import { applyStoryEffect, isBattleEffect } from './effects';
 import { friendlyRivalsOf, HYPER_EFFECTS } from './hyper';
 import { cooldownKey, hasBattleEffect } from './ledger';
@@ -181,8 +182,23 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         const history = run.story.histories[e.uid];
         if (history) history.hyper[def.id] = (history.hyper[def.id] ?? 0) + 1;
         const kind = def.effect?.kind;
-        if (!e.cured && (kind === 'endure' || kind === 'endureOrCure' || kind === 'revive')) {
+        if (!e.cured && (kind === 'endure' || kind === 'endureOrCure' || kind === 'revive' || kind === 'defy' || kind === 'intercept')) {
           emit(content, run, 'survivedFatal', { where, actors: [e.uid], data: { cause: def.id, enemy: mon(active.enemy)?.speciesId ?? null } });
+        }
+        if (e.proxy) {
+          // Protective Instinct leaves a mark: the two teammates grow closer (a bond) and trust each other more.
+          const cause = emit(content, run, 'storyMoment', {
+            where,
+            actors: [e.proxy.uid, e.uid],
+            data: { def: def.id, suppressed: false },
+            importance: 80,
+            text: `${speciesOf(e.proxy.uid)} took a hit meant for ${speciesOf(e.uid)}`,
+          });
+          openRelationship(content, run, 'bond', { kind: 'pokemon', id: e.proxy.uid }, { kind: 'pokemon', id: e.uid }, cause);
+          for (const uid of [e.uid, e.proxy.uid]) {
+            const m = run.party.find((p) => p.uid === uid);
+            if (m) changeFriendship(content, m, 5);
+          }
         }
         const move = lastMove.enemy ? content.moves.get(lastMove.enemy)?.name ?? lastMove.enemy : 'attack';
         const t = makeTrigger(run, def, i, triggers.length, { name: speciesOf(e.uid), enemy: speciesOf(active.enemy), other: speciesOf(active.player), move }, e.variant, e.uid);
