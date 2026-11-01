@@ -26,6 +26,21 @@ const setMoves = (run: RunState, ids: string[]) => {
   run.party[0]!.moves = ids.map((id) => ({ id, pp: 20 }));
 };
 
+describe('Auto-Battle and Hyper moments', () => {
+  it('a heated rivalry makes it bolder and a foe about to rage makes it warier', () => {
+    const run = fight();
+    const mon = run.party[0]!;
+    const base = autoProfile(content, run, mon);
+    run.battle!.hyper!.rivals[`${mon.uid}|rattata`] = 'reckless';
+    const reckless = autoProfile(content, run, mon);
+    expect(reckless.aggr).toBeGreaterThan(base.aggr);
+    delete run.battle!.hyper!.rivals[`${mon.uid}|rattata`];
+    run.battle!.hyper!.rage[run.battle!.enemyTeam[0]!.uid] = { hits: 3, state: 'warned', uncontrollable: false, denied: false };
+    const wary = autoProfile(content, run, mon);
+    expect(wary.caution).toBeGreaterThan(base.caution);
+  });
+});
+
 describe('Auto-Battle picks', () => {
   it('is deterministic and never touches the run or its RNG', () => {
     const run = fight();

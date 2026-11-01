@@ -93,6 +93,20 @@ export const EvilFileSchema = z.object({
   }),
   consequences: z.record(EvilOpKindSchema, OpConsequenceSchema),
   teams: z.array(EvilTeamSchema),
+  /** Plaza integration: disguised members in the crowd, a returning executive, and the price markup while they control trade. */
+  plaza: z.object({
+    agentChance: z.number().min(0).max(1),
+    villainChance: z.number().min(0).max(1),
+    markup: z.number().min(0).max(1),
+    buyCost: z.number().int().min(0),
+    unmaskMoney: z.number().int().min(0),
+    hidden: z.object({ name: z.string().min(1), line: z.string().min(1) }),
+    open: z.object({ name: z.string().min(1), line: z.string().min(1) }),
+    unmask: z.string().min(1),
+    buy: z.string().min(1),
+    allied: z.string().min(1),
+    controlled: z.string().min(1),
+  }),
   /** Storyline beats (1 to 7) and the extra stops, as event templates with {team}-style tokens (core/evil/content.ts). */
   templates: z.array(z.object({ id: z.string().regex(/^[a-z][a-z0-9-]*$/), beat: z.number().int().min(1).max(7).optional(), slot: z.enum(['op', 'ambush', 'disguise', 'legend']).optional(), styles: z.array(z.enum(EVIL_STYLES)).optional(), event: z.record(z.string(), z.unknown()) })).min(7),
 });

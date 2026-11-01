@@ -290,6 +290,19 @@
   ]
  },
  {
+  "id": "mentors-apprentices",
+  "name": "Mentors and apprentices (spec section 15)",
+  "status": "supported",
+  "code": [
+   "src/core/mentors/index.ts",
+   "src/data/mentors.json"
+  ],
+  "tests": [
+   "tests/unit/mentors.test.ts"
+  ],
+  "note": "12 mentors, trust/loyalty, lessons, mission, 18 events, fellow apprentice, lasting bond. Limited: apprentice rivalry is flavour plus a standing, not a battle; no mentor-specific battle scene."
+ },
+ {
   "id": "mentorship",
   "name": "Protégé and mentorship",
   "status": "supported",

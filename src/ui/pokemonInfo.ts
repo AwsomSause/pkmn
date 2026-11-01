@@ -154,7 +154,12 @@ export function historyView(run: RunState | null, mon: PokemonInstance): History
   if (!h) return { record: 'No battles yet this run.', titles: [], memories: [] };
   const record = [`${h.battles} battle${h.battles === 1 ? '' : 's'}`, `${h.knockoutsDealt} KO${h.knockoutsDealt === 1 ? '' : 's'}`, h.bossesBeaten ? `${h.bossesBeaten} boss${h.bossesBeaten === 1 ? '' : 'es'}` : ''].filter(Boolean).join(' · ');
   const memories = [...(h.memories ?? [])].sort((a, b) => b.importance - a.importance || b.seq - a.seq).slice(0, 6).map((m) => m.text);
-  return { record, titles: h.titles ?? [], memories };
+  // §11/§29 its Pokémon rival, first: the one with the mark that keeps coming back (or gave itself up for it).
+  const rivalLines = (run?.story.monRivals ?? []).filter((r) => r.rivalOf === mon.uid).map((r) => {
+    const owner = r.owner ? run?.story.rivals.find((x) => x.id === r.owner)?.name : undefined;
+    return r.sacrificed ? `Its rival with ${r.mark} gave itself up to save it.` : `Rival: the one with ${r.mark}${owner ? `, now on ${owner}'s team` : ''} (${r.wins}-${r.losses}).`;
+  });
+  return { record, titles: h.titles ?? [], memories: [...rivalLines, ...memories].slice(0, 6) };
 }
 
 /** Special characteristics beyond the stats: shiny, hatched, lineage, vitamins, permanent boosts. */

@@ -5,7 +5,7 @@
 // Rival events (Rival Clash, Rival Gauntlet) belong to the rival work.
 
 import { readFileSync } from 'node:fs';
-import { $, at, celebrate, lv, milestone, rest, ability, any, att, ch, convoy, convoyHeal, cure, egg, ev, ferry, fight, flag, escorting, flagIs, fr, front, good, gym, has, heal, hurt, item, join, leave, lose, out, ptype, reveal, room, roomFrom, rp, scout, trainer, wild, type Json, HELD, TREASURE, VITAMINS, BERRIES, SNACKS, HEALING } from './dsl.ts';
+import { $, at, celebrate, monRival, lv, milestone, rest, ability, any, att, ch, convoy, convoyHeal, cure, egg, ev, ferry, fight, flag, escorting, flagIs, fr, front, good, gym, has, heal, hurt, item, join, leave, lose, out, ptype, reveal, room, roomFrom, rp, scout, trainer, wild, type Json, HELD, TREASURE, VITAMINS, BERRIES, SNACKS, HEALING } from './dsl.ts';
 
 const balance = JSON.parse(readFileSync(new URL('../../src/data/balance.json', import.meta.url), 'utf8')) as { world: { roamers: { species: string; name: string; gameEvent: string | null }[] } };
 const clue = (amount = 1): Json => ({ kind: 'count', counter: 'eventClues', amount });
@@ -49,6 +49,13 @@ export const CAMP_EVENTS: Json[] = [
       ch('Talk about your rival (a friend)', out('You wonder aloud where they are camped tonight. Your party agrees: they would probably share the fire. You feel less alone on the road.', fr(4, 'party'), flag('rival-friend', 1), good(1), rp(20)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'friend' }] }),
       ch('Talk about your rival (a rival)', out('You go over every move they made against you. Your party listens, and by the end you all know what to do next time. Tension and focus.', fr(3, 'party'), flag('rival-heat', 1), lv(1, 'lead'), rp(25)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'rival' }] }),
       ch('Talk about the rival who is unsure', out('You do not know what they want yet. Neither do they. You decide to leave the door open.', fr(4, 'party'), rp(15)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'between' }] }),
+    ]),
+  ev('camp-rival-trail', "A Rival's Trail", 'Camp', { rarity: 'uncommon', minStage: 2, requires: [monRival('any')], effect: 'sparkle', tint: '#2a1c24' },
+    'A quiet clearing off the road. One of your Pokémon stops here and will not move on: something about its rival is on its mind.', [
+      ch('Remember the rival who took the blow', out('Nobody plays tonight. The Pokémon it saved sits closest to the fire and watches the dark where its rival used to be. The others lean in around it.', fr(10, 'party'), heal(0.3), good(1), rp(40)), { requires: [monRival('sacrificed')] }),
+      ch('Train for the rematch with its rival', out('One of your Pokémon will not sit still. Somewhere out there is the one with the mark, and next time it means to win.', lv(1, 'party'), fr(3, 'party'), rp(20)), { requires: [monRival('open')] }),
+      ch('Talk about the rival that joined a trainer', out('Its rival rides with another trainer now. Your Pokémon growls at the thought, then settles. It will be ready.', fr(6, 'party'), rp(20)), { requires: [monRival('carried')] }),
+      ch('Move on', leave('You coax it along. It looks back once.')),
     ]),
   ev('camp-prepare', 'Before You Go', 'Camp', { rarity: 'common', minStage: 1, effect: 'sparkle', tint: '#1c242a' },
     'The road ahead is quiet, and what you can do with it changes as the day wears on.', [

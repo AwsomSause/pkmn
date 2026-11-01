@@ -89,3 +89,34 @@ test('Auto-Battle: asks first, halves EXP for the battle, can be taken back', as
   }
   expect(errors).toEqual([]);
 });
+
+test('Party and Bag lists stay in the bar, so the arena and HP boxes remain visible', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await startBattle(page, 'e2e-dock');
+  await page.evaluate(() => {
+    const { session } = (window as any).__pkr;
+    session.debugAddToParty('pikachu', 5);
+    session.debugAddToParty('eevee', 5);
+    session.debugGiveItem('potion', 3);
+    session.debugGiveItem('full-heal', 2);
+  });
+  await page.keyboard.press('e'); // root -> Attack
+  await expect.poll(() => tabs(page)).toEqual({ visible: true, page: 'attack' });
+  await page.keyboard.press('e'); // -> Party
+  const docked = () =>
+    page.evaluate(() => {
+      const b = (window as any).__pkr.game.scene.getScene('Battle');
+      const list: any[] = b.picker?.root?.list ?? [];
+      // A full-screen shade would hide the arena: the docked list has none.
+      return { open: Boolean(b.picker), shade: list.some((o) => o.type === 'Rectangle' && o.width >= 960 && o.height >= 540) };
+    });
+  await expect.poll(async () => (await docked()).open).toBe(true);
+  expect((await docked()).shade).toBe(false);
+  await page.screenshot({ path: 'test-results/dock-party.png' });
+  await page.keyboard.press('e'); // Item
+  await expect.poll(() => tabs(page)).toEqual({ visible: true, page: 'item' });
+  expect((await docked()).shade).toBe(false);
+  await page.screenshot({ path: 'test-results/dock-bag.png' });
+  expect(errors).toEqual([]);
+});

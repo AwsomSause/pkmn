@@ -2624,5 +2624,24 @@
     ]
    }
   }
- ]
+ ],
+ "plaza": {
+  "agentChance": 0.6,
+  "villainChance": 0.4,
+  "markup": 0.15,
+  "buyCost": 400,
+  "unmaskMoney": 600,
+  "hidden": {
+   "name": "{front} Volunteer",
+   "line": "Have you heard about {front}? We only want to help. Sign here, and bring your Pokémon."
+  },
+  "open": {
+   "name": "Shifty Stranger",
+   "line": "Nice team you got there. Shame if someone... looked after it for you."
+  },
+  "unmask": "\"That pin is {team}'s!\" The crowd turns on them, and they bolt. A shopkeeper slips you a reward.",
+  "buy": "They sell you something cheap and wave you off warmly. Your money funds {team}.",
+  "allied": "{exec} sends a crate of supplies your way. \"Partners look after each other.\"",
+  "controlled": "{team} runs this region's trade: prices are up {percent}% until they are stopped."
+ }
 }

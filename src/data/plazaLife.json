@@ -16,9 +16,10 @@
     {
       "id": "trading",
       "name": "Trading Post",
-      "blurb": "Pokémon swaps, held-item exchanges and the notice board.",
+      "blurb": "Pokémon swaps, Egg traders, held-item exchanges and the notice board.",
       "sections": [
         "traders",
+        "eggs",
         "board"
       ],
       "x": 0.31,
@@ -302,5 +303,28 @@
         "who": "party"
       }
     ]
-  }
+  },
+  "eggTraders": [
+    {
+      "id": "nest-keeper",
+      "name": "Nest Keeper Orla",
+      "line": "Every egg here was warmed by hand. I cannot say what is inside, and neither will they.",
+      "price": 900,
+      "origin": "Trading Post"
+    },
+    {
+      "id": "ranger-pell",
+      "name": "Ranger Pell",
+      "line": "Found these on patrol. Take one, swap one, I do not mind.",
+      "price": 1400,
+      "origin": "Ranger Cache"
+    },
+    {
+      "id": "old-breeder",
+      "name": "Old Breeder Moss",
+      "line": "I have bred for forty years. This one is special, I can feel it.",
+      "price": 2400,
+      "origin": "Master Breeder"
+    }
+  ]
 }

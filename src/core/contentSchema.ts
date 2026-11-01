@@ -2368,10 +2368,22 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('rivalPath'), path: z.enum(['friend', 'rival', 'between']) }),
   /** Living Rival: a rival you beat in your last meeting (it has something to prove). */
   z.object({ kind: z.literal('rivalBeaten') }),
+  /** §11/§29: a Pokémon rival is still out there (`open`), rides with a trainer rival (`carried`), or gave itself up (`sacrificed`), or any of these (`any`). */
+  z.object({ kind: z.literal('monRival'), state: z.enum(['open', 'carried', 'sacrificed', 'any']) }),
   /** Event Director: a party member with a species tag (legendary, mythical, delta, zform...). */
   z.object({ kind: z.literal('partyTag'), tag: z.enum(SPECIES_TAGS) }),
   /** The Pokémon you started with (still in the party) has this type, species or species tag: starter-tagged events. */
   z.object({ kind: z.literal('starter'), type: TypeNameSchema.optional(), species: z.string().optional(), tag: z.enum(SPECIES_TAGS).optional() }).refine((c) => c.type !== undefined || c.species !== undefined || c.tag !== undefined, { message: 'a starter condition needs a type, species or tag' }),
+  /** Mentors (spec section 15): you train under a mentor, optionally this one / this category, with enough trust or loyalty, having learned a lesson, or at a mission state. */
+  z.object({
+    kind: z.literal('mentor'),
+    id: z.string().optional(),
+    category: z.string().optional(),
+    trustAtLeast: z.number().int().min(0).max(100).optional(),
+    loyaltyAtLeast: z.number().int().min(0).max(100).optional(),
+    lesson: z.string().optional(),
+    mission: z.enum(['none', 'active', 'done']).optional(),
+  }),
   /** A Blissful Pokémon is in the party / a Shadow Pokémon is in the party (APPROVED.md §12-14). */
   z.object({ kind: z.literal('partyBlissful') }),
   z.object({ kind: z.literal('partyShadow') }),
@@ -2536,6 +2548,15 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
   /** An NPC trainer joins your roster for good (unlocked when the run ends; the run records it in `itemCounters["recruit:<id>"]`). */
   z.object({ kind: z.literal('recruit'), trainer: z.string().min(1) }),
+  /** Mentors (spec section 15): moves mentor trust, loyalty or the rivalry with the fellow apprentice; `mission: start` takes the mentor's mission, `disagree` notes a disagreement. */
+  z.object({
+    kind: z.literal('mentor'),
+    trust: z.number().int().default(0),
+    loyalty: z.number().int().default(0),
+    rivalry: z.number().int().default(0),
+    mission: z.enum(['start']).optional(),
+    disagree: z.boolean().default(false),
+  }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
   /** Exploration: the map shows this many more columns ahead for the rest of the stage (fog of war). */
   z.object({ kind: z.literal('scout'), columns: z.number().int().min(1).max(20) }),

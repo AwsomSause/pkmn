@@ -857,8 +857,68 @@ export const RunPrepSchema = z.object({
   loan: z.boolean().default(false),
   /** An item taken out of the Collector's Vault to start this run with. */
   vaultItem: z.string().nullable().default(null),
+  /** The mentor who trains you this run (core/mentors, spec section 15), or none. */
+  mentorId: z.string().nullable().default(null),
 });
 export type RunPrep = z.infer<typeof RunPrepSchema>;
+
+
+// ---------- mentors and apprentices (core/mentors; spec section 15) ----------
+
+/** A fellow apprentice of your mentor: a rival and a mirror (the player is the other apprentice). */
+export const ApprenticeSchema = z.object({
+  name: z.string(),
+  potential: z.number().int().min(1).max(5),
+  personality: z.string(),
+  strength: z.string(),
+  weakness: z.string(),
+  types: z.array(TypeNameSchema).max(3),
+  learning: z.enum(['slow', 'steady', 'fast']),
+  interest: z.string(),
+  /** Grows with every badge, by learning pace. */
+  progress: z.number().int().min(0).default(0),
+  /** A graduate of an earlier run who came back (legacy apprentice). */
+  veteran: z.boolean().default(false),
+});
+export type Apprentice = z.infer<typeof ApprenticeSchema>;
+
+/** The run's mentorship: trust, loyalty, lessons learned, the mission and the fellow apprentice. */
+export const MentorRunSchema = z.object({
+  id: z.string(),
+  /** How much the mentor trusts you (0 to 100). */
+  trust: z.number().int().min(0).max(100),
+  /** How loyal you are to the mentor (0 to 100). */
+  loyalty: z.number().int().min(0).max(100),
+  /** Standing against the fellow apprentice: above 0 you are ahead (−10 to 10). */
+  rivalry: z.number().int().min(-10).max(10).default(0),
+  /** Lesson ids learned this run (each applies once). */
+  lessons: z.array(z.string()).default([]),
+  tier: z.string(),
+  mission: z.object({ state: z.enum(['none', 'active', 'done']), bossesLeft: z.number().int().min(0) }).default({ state: 'none', bossesLeft: 0 }),
+  fellow: ApprenticeSchema,
+  disagreements: z.number().int().min(0).default(0),
+  /** Times you graduated under this mentor before this run (unlocks advanced lessons). */
+  priorGraduations: z.number().int().min(0).default(0),
+  /** How the mentorship ended, once the run is over. */
+  ending: z.enum(['devoted', 'independent']).nullable().default(null),
+  /** The last few things that happened, newest last. */
+  log: z.array(z.string()).default([]),
+});
+export type MentorRun = z.infer<typeof MentorRunSchema>;
+
+/** The profile's lasting bond with one mentor, across runs. */
+export const MentorBondSchema = z.object({
+  trust: z.number().int().min(0).max(100).default(0),
+  runs: z.number().int().min(0).default(0),
+  graduated: z.number().int().min(0).default(0),
+  devoted: z.number().int().min(0).default(0),
+  bestTier: z.string().default('newcomer'),
+  /** Lessons learned in any run. */
+  lessons: z.array(z.string()).default([]),
+  /** Fellow apprentices who graduated beside you; one may return as a veteran. */
+  apprentices: z.array(ApprenticeSchema).default([]),
+});
+export type MentorBond = z.infer<typeof MentorBondSchema>;
 
 /** A saved loadout: a trainer and preparation choices (preferences only, nothing is reserved). */
 export const LoadoutPresetSchema = RunPrepSchema.extend({ name: z.string(), archetypeId: z.string() });
@@ -1065,6 +1125,8 @@ export const RunStateSchema = z.object({
   journal: z.array(z.string()).default([]),
   /** This run's Run Quest (trainerQuests.json runQuests), or null when none was offered. */
   runQuest: z.string().nullable().default(null),
+  /** This run's mentorship, or null when none was chosen on the Preparation Desk. */
+  mentor: MentorRunSchema.nullable().default(null),
   /** Species Mastery unlocks for this run, by family (first-stage id): applied to each Pokémon of it that joins. */
   mastery: z.record(z.string(), MasteryPerkSchema).default({}),
   /** Game event editions on when the run started ("rivalry-week@2026-W44"): their rules apply and the run counts for them. */
@@ -1386,6 +1448,8 @@ export const ProfileSchema = z.object({
   legacy: LegacySchema.optional(),
   /** Hyper moment codex (core/story/codex.ts): times each story moment (story.json id) was seen, over all runs. */
   momentCodex: z.record(z.string(), z.number().int().min(0)).default({}),
+  /** Lasting bonds with mentors, by mentor id (core/mentors). */
+  mentorBonds: z.record(z.string(), MentorBondSchema).default({}),
   /** Legacy runs (core/legacyRuns.ts): every finished run's immutable record, newest first (profile v14). */
   legacyRuns: z.array(LegacyRunSchema).default([]),
   /** Heirlooms, Lost-and-Found claims and cameos seen across runs (core/memories). */

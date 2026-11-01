@@ -26,6 +26,7 @@ import { recordMoveMastery } from './moveMastery';
 import { relationshipCounters } from './relationships';
 import { claimBankMilestones, claimRegionAccounts, loanDue, vaultDeposit } from './bank';
 import { runStamps } from './recap';
+import { settleMentor } from './mentors';
 import { recordMastery, type MasteryRankUp } from './mastery';
 import { addTrainerCounters, awardQuestSteps, questTrainer, runQuestOf, runQuestProgress, type QuestStepDone } from './quests';
 
@@ -261,6 +262,8 @@ export interface RunEndSummary {
   modeRewards: ModeRewardPaid[];
   /** The Research Directive and how far it got (null: none, or the run doesn't count). */
   directive: DirectiveProgress | null;
+  /** The mentorship's closing lines (core/mentors settleMentor); empty without a mentor. */
+  mentorLines?: string[];
 }
 
 /**
@@ -321,6 +324,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
     profile.attributes = permanentAttributes(content, profile);
     addTrainerCounters(profile, questTrainer(content, run.archetypeId), runCounters);
   }
+  const mentorLines = counts ? settleMentor(profile, run) : [];
   const questSteps = counts ? awardQuestSteps(content, profile, questTrainer(content, run.archetypeId), now) : [];
   const masteryUps = counts ? recordMastery(content, profile, run, now) : [];
   if (counts) {
@@ -381,7 +385,7 @@ export function applyRunToProfile(content: Content, profile: Profile, run: RunSt
 
   const trainersReady = trainersReadyToClaim(content, profile).filter((a) => !readyBefore.has(a.id));
   const attributesAfter = readAttributes(content, profile.attributes);
-  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents, contracts, modeRewards, directive };
+  return { payout, researchPoints, newSpeciesSeen, newSpeciesCaught, achievements, trainersReady, attributesBefore, attributesAfter, questSteps, runQuestDone: runQuestDone ? runQuest : null, masteryUps, gameEvents, contracts, modeRewards, directive, mentorLines };
 }
 
 export type TrainerStatus = 'unlocked' | 'claimable' | 'locked' | 'comingLater';

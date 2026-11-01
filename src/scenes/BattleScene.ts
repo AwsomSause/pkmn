@@ -78,6 +78,8 @@ import { environmentStory } from '../core/presentation/environmentStory';
 import { crisisLevel } from '../core/story/crisis';
 import { moveRank } from '../core/moveMastery';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
+import { legendKit } from '../core/legendary/visuals';
+import { addLegendLook } from '../ui/legendFx';
 import { bossVictoryCard, burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
 import { AERO, moveFlagNames, bounceIn, breathe, categoryIcon, drawGlass, effectivenessIcon, effectivenessWord, slideIn, statusIcon, typeLabel, type MotionLevel } from '../ui/aero';
 import { typeEffectiveness } from '../core/battle/damage';
@@ -307,6 +309,13 @@ export class BattleScene extends Phaser.Scene {
     const stageTypes = bossType ? [bossType] : run.stage ? getTheme(session.content, run.stage.themeId).types : [arenaType(bg)];
     this.arenaTypes = stageTypes.length > 0 ? stageTypes : [arenaType(bg)];
     addAmbience(this, this.field, this.field.length, this.arenaTypes, this.motion);
+    // A Legendary world event's own look over its fights (colour wash and drifting particles).
+    const legendDef = run.battle?.expedition && run.expedition ? session.content.expeditions.expeditions.find((e) => e.id === run.expedition!.id) : undefined;
+    if (legendDef?.legendary) {
+      const layer = run.expedition!.node ? run.expedition!.nodes.find((n) => n.id === run.expedition!.node)?.layer ?? 0 : 0;
+      const kit = legendKit(session.content, legendDef, layer);
+      if (kit) addLegendLook(this, kit, this.motion, 0, this.field);
+    }
     if (this.motion !== 'off' && !battle.doubles) {
       const edge = TYPE_COLORS[this.arenaTypes[0] ?? 'normal'] ?? 0xffffff;
       for (const at of [ENEMY_POS, PLAYER_POS]) {
@@ -1823,9 +1832,10 @@ export class BattleScene extends Phaser.Scene {
     this.clearMenus();
     this.picker = new Picker(this, {
       glass: true,
+      dock: true,
       title: 'Bag',
       columns: 2,
-      rowHeight: 48,
+      rowHeight: 34,
       rows: ids.map((id) => bagRow(content, run.inventory, id, problem(id))),
       onSelect: (i) => {
         const id = ids[i]!;
@@ -1835,7 +1845,7 @@ export class BattleScene extends Phaser.Scene {
       },
       onBack: () => this.showRootMenu(),
     });
-    this.showTabs('item', 'band');
+    this.showTabs('item');
   }
 
   private openItemTarget(itemId: string): void {
@@ -1845,9 +1855,10 @@ export class BattleScene extends Phaser.Scene {
     this.clearMenus();
     this.picker = new Picker(this, {
       glass: true,
+      dock: true,
       title: `Use ${item.name} on which Pokémon?`,
-      columns: 2,
-      rowHeight: 78,
+      columns: 3,
+      rowHeight: 70,
       rows: partyRows(content, run.party, (i) => itemProblem(this.battleCtx(), itemId, i), (i) => (i === run.battle!.activeIndex ? 'IN BATTLE' : undefined)),
       onSelect: (i) => this.submit({ kind: 'item', itemId, targetIndex: i }),
       onBack: () => this.openBag(),
@@ -1866,9 +1877,10 @@ export class BattleScene extends Phaser.Scene {
       const onField = [0, 1].map((s) => indexAt(view, 'player', s as Spot));
       const taken = this.commands.flatMap((c) => (c?.action.kind === 'switch' ? [c.action.partyIndex] : []));
       this.picker = new Picker(this, {
+        dock: true,
         title: forced ? 'Send out which Pokémon?' : `Switch ${this.speciesName(this.activeMon())} for which Pokémon?`,
-        columns: 2,
-        rowHeight: 78,
+        columns: 3,
+        rowHeight: 70,
         rows: partyRows(content, run.party, (i) => doublesSwitchProblem(view, i, taken), (i) => (onField.includes(i) ? 'IN BATTLE' : undefined)),
         onSelect: (i) => (forced ? void this.act({ kind: 'switch', partyIndex: i }) : this.submit({ kind: 'switch', partyIndex: i })),
         onBack: forced ? undefined : () => this.showRootMenu(),
@@ -1877,16 +1889,17 @@ export class BattleScene extends Phaser.Scene {
     }
     this.picker = new Picker(this, {
       glass: true,
+      dock: true,
       title: forced ? 'Send out which Pokémon?' : 'Party',
-      columns: 2,
-      rowHeight: 78,
+      columns: 3,
+      rowHeight: 70,
       rows: partyRows(content, run.party, (i) => (forced ? switchProblem(this.battleCtx(), i) : null), (i) => (i === run.battle!.activeIndex && !forced ? 'IN BATTLE' : undefined)),
       // The cursor starts on the first Pokémon that can switch in.
       start: forced ? undefined : Math.max(0, run.party.findIndex((_, i) => switchProblem(this.battleCtx(), i) === null)),
       onSelect: (i) => (forced ? void this.act({ kind: 'switch', partyIndex: i }) : this.showPartyActions(i)),
       onBack: forced ? undefined : () => this.showRootMenu(),
     });
-    if (!forced) this.showTabs('party', 'band');
+    if (!forced) this.showTabs('party');
   }
 
   // ---------- taking a turn ----------
@@ -2179,7 +2192,7 @@ export class BattleScene extends Phaser.Scene {
           if (sprite && sprite.alpha < 1) sprite.setAlpha(1);
           await this.refreshInfoBox(box, mon!, true);
           // Defiance struck the foe back; Protective Instinct hurt the teammate that stepped in.
-          if (e.foeHpAfter !== undefined && this.shown.enemy) {
+          if (e.foeHpAfter !== undefined && this.shown.enemy && (!e.foeUid || e.foeUid === this.shown.enemy.uid)) {
             this.shown.enemy.hp = e.foeHpAfter;
             await this.refreshInfoBox(this.enemyBox, this.shown.enemy, true);
           }

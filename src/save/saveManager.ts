@@ -36,7 +36,7 @@ export const ACTIVE_SLOT_KEY = `${KEY_PREFIX}.slot`;
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 32, settings: 11, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 15, run: 33, settings: 11, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -118,6 +118,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       const history = Array.isArray(profile.runHistory) ? (profile.runHistory as Json[]) : [];
       return { ...profile, legacyRuns: history.flatMap((r) => { const parsed = RunRecordSchema.safeParse(r); return parsed.success ? [legacyRunFromHistory(parsed.data)] : []; }) };
     },
+    // v15 (mentors, spec section 15): older profiles have no mentor bonds yet.
+    14: (data) => ({ ...(data as Json), mentorBonds: {} }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against
@@ -303,6 +305,12 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     31: (data) => {
       const d = data as Json & { story?: Json };
       return d.story ? { ...d, story: { evil: freshEvil(), choices: [], ...d.story } } : d;
+    },
+    // v33 (mentors, spec section 15): older runs have no mentor; the Preparation Desk gains `mentorId`.
+    32: (data) => {
+      const run = data as Json;
+      const prep = (run.prep ?? {}) as Json;
+      return { ...run, prep: { ...prep, mentorId: null }, mentor: null };
     },
   },
   settings: {
