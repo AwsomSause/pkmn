@@ -141,6 +141,8 @@ export const at = (...periods: string[]): Json => ({ kind: 'period', in: periods
 export const milestone: Json = { kind: 'milestone' };
 /** §11/§29 Pokémon rival state: open, carried (a trainer caught it), sacrificed, or any of them. */
 export const monRival = (state: 'open' | 'carried' | 'sacrificed' | 'any'): Json => ({ kind: 'monRival', state });
+/** Camp time together: pair chemistry up, tension down, optionally old grudges settled. */
+export const bond = (chemistry: number, calm = 3, settle = false): Json => ({ kind: 'campBond', chemistry, calm, settle });
 /** Sleep until the next morning (a new day begins). */
 export const rest = (): Json => ({ kind: 'rest' });
 /** Today's milestone celebration is held (pays once per milestone). */
