@@ -529,6 +529,13 @@ class PokemonScreen implements PickerLike {
     return y + 16 + t.height + 10;
   }
 
+  /** A one-line field: the label and its value share a row, so a stack of them stays short. */
+  private row(box: Phaser.GameObjects.Container, x: number, y: number, w: number, label: string, value: string, color = '#ffffff', size = 14): number {
+    this.text(box, x, y + 2, label, 13, '#bfe9ff');
+    this.text(box, x + 66, y, value, size, color, { wordWrap: { width: w - 66 }, maxLines: 1 });
+    return y + 22;
+  }
+
   private panel(box: Phaser.GameObjects.Container, x: number, y: number, w: number, h: number, alpha = 0.55): void {
     const g = this.host.scene.add.graphics();
     g.fillStyle(0x061528, alpha).fillRoundedRect(x, y, w, h, 12);
@@ -717,10 +724,10 @@ class PokemonScreen implements PickerLike {
     {
       const c = mon.care;
       const extra = [c?.talent ? `talent ${c.talent.toUpperCase()}` : '', c?.fatigue ? `tired ×${c.fatigue}` : '', c?.favourite ? '★ favourite' : '', c?.ace ? 'ace' : ''].filter(Boolean).join(' · ');
-      y = this.field(box, rx, y, rw, 'Mood', `${moodWord(c?.mood ?? 0)}${extra ? ` · ${extra}` : ''}`, (c?.mood ?? 0) < 0 ? '#ffb0a0' : '#ffffff', 14, 1);
-      y = this.field(box, rx, y, rw, 'Journal', `${c?.fights ?? 0} fights · ${c?.falls ?? 0} falls · ${mon.moves.filter((m) => m.star).length}★ moves`, '#ffffff', 14, 1);
-      y = this.field(box, rx, y, rw, 'Feeling', bv.emotion ? bv.emotion.name : 'Calm', bv.emotion?.color ?? '#ffffff', 16, 1);
-      y = this.field(box, rx, y, rw, 'Bond', `${bv.mood.text}  ${'♥'.repeat(bv.hearts)}${'♡'.repeat(5 - bv.hearts)}`, bv.hearts === 5 ? '#ff80a0' : '#ffffff', 16, 1);
+      y = this.row(box, rx, y, rw, 'Mood', `${moodWord(c?.mood ?? 0)}${extra ? ` · ${extra}` : ''}`, (c?.mood ?? 0) < 0 ? '#ffb0a0' : '#ffffff', 14);
+      y = this.row(box, rx, y, rw, 'Journal', `${c?.fights ?? 0} fights · ${c?.falls ?? 0} falls · ${mon.moves.filter((m) => m.star).length}★ moves`, '#ffffff', 14);
+      y = this.row(box, rx, y, rw, 'Feeling', bv.emotion ? bv.emotion.name : 'Calm', bv.emotion?.color ?? '#ffffff', 16);
+      y = this.row(box, rx, y, rw, 'Bond', `${bv.mood.text}  ${'♥'.repeat(bv.hearts)}${'♡'.repeat(5 - bv.hearts)}`, bv.hearts === 5 ? '#ff80a0' : '#ffffff', 16);
     }
     // Moves and items in brief (bottom left).
     this.text(box, 0, 250, 'Moves', 13, '#bfe9ff');

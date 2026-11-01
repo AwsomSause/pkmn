@@ -5,6 +5,7 @@
 
 import { z } from 'zod';
 import type { Content } from '../contentSchema';
+import { maxHp } from '../pokemon';
 import type { BattleState, PokemonInstance } from '../state';
 
 export const GradeSchema = z.enum(['miss', 'ok', 'good', 'perfect']);
@@ -64,8 +65,14 @@ export function dealOffer(content: Content, battle: BattleState, foeHp: number, 
   const c = cfg(content).deal;
   if (battle.kind !== 'trainer' || !battle.trainer || battle.deal || battle.dealRefused || battle.outcome) return null;
   if (!c.classes.includes(battle.trainer.classId)) return null;
-  if (battle.enemyIndex !== battle.enemyTeam.length - 1 || battle.doubles) return null;
+  if (!battle.doubles && battle.enemyIndex !== battle.enemyTeam.length - 1) return null;
   return foeHp > 0 && foeHp / Math.max(1, foeMax) <= c.below ? { moneyMultiplier: c.money } : null;
+}
+
+/** What the foe has left for a deal: the one on the field, or (in doubles) everything still standing on the foe's team. */
+export function foeStake(content: Content, battle: BattleState): { hp: number; max: number } {
+  const mons = battle.doubles ? battle.enemyTeam : [battle.enemyTeam[battle.enemyIndex]!];
+  return { hp: mons.reduce((n, m) => n + Math.max(0, m.hp), 0), max: mons.reduce((n, m) => n + maxHp(content, m), 0) };
 }
 
 /** A Psychic-type Pokémon of yours (anywhere in the party, still up) that can read the foe's mind. */

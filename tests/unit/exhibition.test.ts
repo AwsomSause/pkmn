@@ -15,5 +15,11 @@ describe('club exhibition (spectate and wager)', () => {
     expect([0, 1]).toContain(a.winner);
     expect(a.lines.length).toBeGreaterThan(0);
     expect(JSON.stringify(run.rng)).toBe(before);
+    // A real engine battle: the loser's whole team is knocked out, and different keys can end differently.
+    const loser = a.winner === 0 ? 1 : 0;
+    const names = a.teams[loser].fighters.length;
+    expect(a.lines.filter((l) => l.includes(`(${a.teams[loser].trainer}) is knocked out`)).length).toBe(names);
+    const winners = new Set(Array.from({ length: 12 }, (_, i) => exhibitionFor(content, run, `k${i}`).winner));
+    expect(winners.size).toBe(2);
   });
 });

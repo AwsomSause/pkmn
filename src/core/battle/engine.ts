@@ -85,7 +85,7 @@ import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
 import { addMomentum, cfgOf as spectacleCfg, duePhases, isBossFight, rallyProblem, rollLastStand, spectacleOf, spectacleRoll as spectacleRollExt, type SpectacleEvent } from './spectacle';
-import { ARENA_IMMUNE, aimAccuracy, arenaText, dealOffer, mindReader, shoutDamage, throwCatch, type SkillInput } from './w1Play';
+import { ARENA_IMMUNE, foeStake, aimAccuracy, arenaText, dealOffer, mindReader, shoutDamage, throwCatch, type SkillInput } from './w1Play';
 import { benchSupporter, addBleed, bleedDamage, causesBleed, curseMultiplier, resonanceMultiplier } from './w1Rules';
 import { sacrificeFor } from './sacrificeRule';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
@@ -5378,6 +5378,10 @@ function championsAura(ctx: BattleContext, events: BattleEvent[]): void {
 
 /** Engine steps the double-battle turn (battle/doubles.ts) drives. Not meant for other callers. */
 export const doublesSteps = {
+  dealTurn,
+  arenaProblem,
+  smashArenaOn,
+  doublesArena,
   actWithRage,
   totemAura,
   totemPhases,
@@ -5443,6 +5447,24 @@ export function foeBestMove(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
   if (foe.hp <= 0 || usable.length === 0 || !target) return null;
   const brain = { content, ai: Math.max(battle.ai, 0.7), target, stages: battle.enemyStages, battle, party: ctx.party };
   return usable.map((m) => ({ id: m.id, v: moveValue(brain, foe, m.id) })).reduce((a, b) => (b.v > a.v ? b : a)).id;
+}
+
+/** The move an AI-controlled player-side Pokémon would pick (club exhibitions run both sides on the AI). */
+export function exhibitionMove(ctx: Pick<BattleContext, 'content' | 'battle' | 'party'>): number {
+  const { battle, content } = ctx;
+  const me = ctx.party[battle.activeIndex]!;
+  const brain = { content, ai: 0.7, target: currentEnemy(battle), stages: battle.playerStages, battle, party: battle.enemyTeam };
+  let best = -1;
+  let bestValue = -Infinity;
+  me.moves.forEach((m, i) => {
+    if (m.pp <= 0) return;
+    const v = moveValue(brain, me, m.id);
+    if (v > bestValue) {
+      best = i;
+      bestValue = v;
+    }
+  });
+  return best;
 }
 
 /** Start of a turn: a Rally is set. */
@@ -5545,8 +5567,8 @@ function spectacleEndOfTurn(ctx: BattleContext, spec: NonNullable<BattleState['s
 /** A trainer's deal: refuse (no turn used) or accept (the fight ends as a win with no EXP; the prize money is bigger). */
 function dealTurn(ctx: BattleContext, accept: boolean, events: BattleEvent[]): BattleEvent[] {
   const { battle, content } = ctx;
-  const foe = currentEnemy(battle);
-  if (!dealOffer(content, battle, foe.hp, maxHp(content, foe))) throw new Error('There is no deal on the table');
+  const stake = foeStake(content, battle);
+  if (!dealOffer(content, battle, stake.hp, stake.max)) throw new Error('There is no deal on the table');
   if (!accept) {
     battle.dealRefused = true;
     events.push(say('enemy', 'deal', `${battle.trainer?.name ?? 'The trainer'}'s offer was turned down. The fight goes on!`));
@@ -5560,7 +5582,7 @@ function dealTurn(ctx: BattleContext, accept: boolean, events: BattleEvent[]): B
 
 function arenaProblem(ctx: BattleContext): string | null {
   const arena = ctx.battle.arena;
-  if (!arena || ctx.battle.doubles) return 'There is nothing to smash here';
+  if (!arena) return 'There is nothing to smash here';
   return arena.spent ? 'The arena has already been smashed' : null;
 }
 
@@ -5592,38 +5614,54 @@ function w1StartOfTurn(ctx: BattleContext, events: BattleEvent[]): void {
   if (battle.skill?.kind === 'shout' && battle.skill.grade !== 'miss') events.push(say('player', 'shout', `${nameOf(ctx, mine)} yells out! The trainer echoes it!`, mine.uid));
 }
 
-function hurtBoth(ctx: BattleContext, fraction: (side: Side) => number, immune: readonly string[], events: BattleEvent[]): void {
-  for (const side of ['player', 'enemy'] as const) {
-    const mon = side === 'player' ? ctx.party[ctx.battle.activeIndex]! : currentEnemy(ctx.battle);
+/** Hurts these Pokémon by a fraction of their max HP (arena hazards); `focus` lets doubles point the screen at each one. */
+export function arenaHurt(ctx: BattleContext, targets: Combatant[], fraction: number, immune: readonly string[], events: BattleEvent[], focus?: (c: Combatant) => void): void {
+  for (const c of targets) {
+    const mon = c.mon;
     if (mon.hp <= 0 || getSpecies(ctx.content, mon.speciesId).types.some((t) => immune.includes(t))) continue;
-    const c: Combatant = { side, mon, stages: side === 'player' ? ctx.battle.playerStages : ctx.battle.enemyStages, vol: side === 'player' ? ctx.battle.playerVolatile : ctx.battle.enemyVolatile, flinched: false, protected: false };
     if (abilityIn(ctx, c) === 'magic-guard') continue;
-    const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(maxHp(ctx.content, mon) * fraction(side))));
-    events.push({ type: 'damage', side, amount: lost, hpAfter: mon.hp, effectiveness: 1, crit: false });
-    if (lastStand) events.push({ type: 'lastStand', side, itemId: lastStand });
+    focus?.(c);
+    const { lost, lastStand } = takeHp(ctx, c, Math.max(1, Math.floor(maxHp(ctx.content, mon) * fraction)));
+    events.push({ type: 'damage', side: c.side, amount: lost, hpAfter: mon.hp, effectiveness: 1, crit: false });
+    if (lastStand) events.push({ type: 'lastStand', side: c.side, itemId: lastStand });
   }
 }
 
 /** Arena hazards (lava flow, falling rocks, flood): both sides take a hit every few turns until the arena is smashed. */
 function arenaHazard(ctx: BattleContext, events: BattleEvent[]): void {
-  const { battle, content } = ctx;
-  const arena = battle.arena;
-  if (!arena || arena.spent || battle.doubles || battle.outcome) return;
-  const cfg = content.balance.w1.play.arena;
-  if (battle.turn % cfg.every !== 0) return;
-  events.push(say('player', 'arena', arenaText(arena.kind)));
-  hurtBoth(ctx, () => cfg.fraction, ARENA_IMMUNE[arena.kind], events);
+  const { battle } = ctx;
+  if (battle.doubles || !arenaDue(ctx)) return;
+  events.push(say('player', 'arena', arenaText(battle.arena!.kind)));
+  const mine: Combatant = { side: 'player', mon: ctx.party[battle.activeIndex]!, stages: battle.playerStages, vol: battle.playerVolatile, flinched: false, protected: false };
+  const foe: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
+  arenaHurt(ctx, [mine, foe], ctx.content.balance.w1.play.arena.fraction, ARENA_IMMUNE[battle.arena!.kind], events);
 }
 
-/** Smash the cliff / dam the lava / drain the flood: the foe takes a big hit and the hazard stops for good. */
-function smashArena(ctx: BattleContext, events: BattleEvent[]): void {
+/** True on the turns the arena's hazard strikes (every few turns, until it is smashed). */
+export function arenaDue(ctx: BattleContext): boolean {
+  const { battle, content } = ctx;
+  const arena = battle.arena;
+  return !!arena && !arena.spent && !battle.outcome && battle.turn % content.balance.w1.play.arena.every === 0;
+}
+
+/** The hazard in doubles: everyone standing takes the hit. */
+export function doublesArena(ctx: BattleContext, all: Combatant[], events: BattleEvent[], focus: (c: Combatant) => void): void {
+  if (!arenaDue(ctx)) return;
+  events.push(say('player', 'arena', arenaText(ctx.battle.arena!.kind)));
+  arenaHurt(ctx, all, ctx.content.balance.w1.play.arena.fraction, ARENA_IMMUNE[ctx.battle.arena!.kind], events, focus);
+}
+
+/** Smash the cliff / dam the lava / drain the flood: every foe takes a big hit and the hazard stops for good. */
+export function smashArenaOn(ctx: BattleContext, user: PokemonInstance, foes: Combatant[], events: BattleEvent[], focus?: (c: Combatant) => void): void {
   const { battle, content } = ctx;
   const arena = battle.arena!;
   arena.spent = true;
-  const foe = currentEnemy(battle);
-  const c: Combatant = { side: 'enemy', mon: foe, stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
-  events.push(say('player', 'arena', `${nameOf(ctx, ctx.party[battle.activeIndex]!)} smashes the arena! ${arenaText(arena.kind)}`));
-  if (getSpecies(content, foe.speciesId).types.some((t) => ARENA_IMMUNE[arena.kind].includes(t))) return;
-  const { lost } = takeHp(ctx, c, Math.max(1, Math.floor(maxHp(content, foe) * content.balance.w1.play.arena.interact)));
-  events.push({ type: 'damage', side: 'enemy', amount: lost, hpAfter: foe.hp, effectiveness: 1, crit: false });
+  events.push(say('player', 'arena', `${nameOf(ctx, user)} smashes the arena! ${arenaText(arena.kind)}`));
+  arenaHurt(ctx, foes, content.balance.w1.play.arena.interact, ARENA_IMMUNE[arena.kind], events, focus);
+}
+
+function smashArena(ctx: BattleContext, events: BattleEvent[]): void {
+  const { battle } = ctx;
+  const foe: Combatant = { side: 'enemy', mon: currentEnemy(battle), stages: battle.enemyStages, vol: battle.enemyVolatile, flinched: false, protected: false };
+  smashArenaOn(ctx, ctx.party[battle.activeIndex]!, [foe], events);
 }
