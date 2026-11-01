@@ -9,6 +9,7 @@
 // Mouse: click a row, a tab, a menu entry or a move/item. The screen never changes the
 // run except for the party order (session.moveParty) and never rolls anything.
 
+import { fitLine } from './fitText';
 import type Phaser from 'phaser';
 import { genderSign } from '../core/gender';
 import { heldBuild, type HeldItemInfo } from '../core/itemEffects';
@@ -299,6 +300,12 @@ class PokemonScreen implements PickerLike {
 
   private text(box: Phaser.GameObjects.Container, x: number, y: number, s: string, size = 16, color = '#e8f6ff', extra: Phaser.Types.GameObjects.Text.TextStyle = {}): Phaser.GameObjects.Text {
     const t = this.host.scene.add.text(x, y, s, textStyle(size, color, extra));
+    // A fixed width would cut a long name hard: fit it with "..." instead.
+    const fixed = extra.fixedWidth ?? 0;
+    if (fixed > 0 && !extra.wordWrap) {
+      t.setFixedSize(0, 0);
+      fitLine(t, fixed);
+    }
     box.add(t);
     return t;
   }
@@ -333,7 +340,8 @@ class PokemonScreen implements PickerLike {
       row.add(pokemonIcon(scene, species, 26, rowH / 2, 1.1));
       const r = readiness(this.content, mon);
       row.add(scene.add.circle(LEFT_W - 14, 14, 6, STATE_COLOR[r.state]).setStrokeStyle(2, 0x061528).setName(`ready-${r.state}`));
-      row.add(scene.add.text(52, 6, `${species.name}${genderSign(this.content, mon)}${mon.shiny ? ' ★' : ''}`, textStyle(rowH >= 56 ? 20 : 17, '#ffffff', { fixedWidth: LEFT_W - 118 })));
+      row.add(scene.add.text(52, 6, `${species.name}${genderSign(this.content, mon)}${mon.shiny ? ' ★' : ''}`, textStyle(rowH >= 56 ? 20 : 17, '#ffffff')));
+      fitLine(row.list[row.list.length - 1] as Phaser.GameObjects.Text, LEFT_W - 118);
       row.add(scene.add.text(LEFT_W - 28, 8, `Lv${mon.level}`, textStyle(15, '#bfe9ff')).setOrigin(1, 0));
       const maxHp = this.maxHp(mon);
       const bar = new Bar(scene, 52, rowH - 18, LEFT_W - 124, 10, 'hp');
@@ -422,6 +430,7 @@ class PokemonScreen implements PickerLike {
     box.add(icon);
     if (this.motion === 'full') scene.tweens.add({ targets: icon, y: 46, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     const name = this.text(box, 110, 8, `${info.name}${mon.shiny ? ' ★' : ''}`, 28, '#ffffff');
+    fitLine(name, 382 - 110 - 70);
     const sign = genderSign(this.content, mon);
     const frame = sign === '♂' ? 0 : sign === '♀' ? 1 : -1;
     if (frame >= 0 && scene.textures.exists('pack.ebui.gender')) box.add(scene.add.image(110 + name.width + 14, 22, 'pack.ebui.gender', frame).setScale(1.2));

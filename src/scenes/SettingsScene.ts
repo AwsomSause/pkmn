@@ -1,6 +1,7 @@
 // The one Settings screen. The title screen and the Hub both open it, so they always show the same
 // settings from the same registry (core/settingsRegistry.ts). It is never reachable from inside a battle.
 
+import { fitLine } from '../ui/fitText';
 import Phaser from 'phaser';
 import { DEFAULT_SETTINGS } from '../save/saveManager';
 import { changeSetting, resetSettings, searchSettings, settingsIn, SETTING_CATEGORIES, type SettingCategory, type SettingDef } from '../core/settingsRegistry';
@@ -158,7 +159,11 @@ export class SettingsScene extends Phaser.Scene {
     const rows = this.rows();
     const cat = SETTING_CATEGORIES.find((c) => c.id === this.page)?.label;
     const title = this.page === 'home' ? 'Settings' : this.page === 'search' ? 'Search settings' : this.page === 'confirmReset' ? 'Reset to defaults?' : `Settings · ${cat}`;
-    ui.add(this.add.text(48, 22, title, textStyle(34)));
+    // The UIE Options backdrop already has the word "Options" in its corner: the home page leaves the title to the art,
+    // and sub-pages put theirs beside it, so the two never print over each other.
+    const art = this.textures.exists('ui.optionsbg');
+    const heading = art ? (this.page === 'home' ? '' : title.replace(/^Settings · /, '')) : title;
+    if (heading) ui.add(fitLine(this.add.text(art ? 150 : 48, 22, heading, textStyle(34)), 760 - (art ? 102 : 0)));
     if (this.page === 'search') ui.add(this.add.text(48, 70, `Find: ${this.query}▍`, textStyle(24, '#ffb745')));
     if (this.page === 'search' && this.query && rows.length === 1) ui.add(this.add.text(48, 110, 'No setting matches.', textStyle(20, COLORS.textMuted)));
     const top = this.page === 'search' ? 108 : 78;

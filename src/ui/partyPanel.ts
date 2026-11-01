@@ -19,6 +19,7 @@ import { COLORS, GAME_HEIGHT, GAME_WIDTH, STATUS_LABELS, textStyle } from './the
 import { Bar, drawPanel, focusFrame, paintWindow } from './widgets';
 import { AERO, drawGlass, ensureRowFrames, paintGlass } from './aero';
 import { glideIn, iconHop, justRedrawn, uiTiming } from './wiiMotion';
+import { clampTexts, fitBlock, fitLine } from './fitText';
 
 const DEPTH = 100;
 
@@ -55,6 +56,7 @@ export interface PickerConfig {
 
 const LIST_TOP = 82;
 const LIST_BOTTOM = GAME_HEIGHT - 84;
+const FOOTER_W = GAME_WIDTH - 144;
 
 /** What a screen needs from a modal menu: keyboard input and a way to close it (the Picker and the Pokémon screen). */
 export interface PickerLike {
@@ -71,6 +73,8 @@ export class Picker implements PickerLike {
   /** Rows sit in a scrolling list when there are more than fit on screen. */
   private readonly list: Phaser.GameObjects.Container;
   private readonly footer: Phaser.GameObjects.Text;
+  /** ▲ / ▼ in the message box corner while rows lie above or below the visible list. */
+  private readonly more: Phaser.GameObjects.Text;
   private index = 0;
   private closed = false;
 
@@ -95,18 +99,25 @@ export class Picker implements PickerLike {
       band.fillStyle(COLORS.accent, 1).fillRect(36, 68, GAME_WIDTH - 72, 2);
       this.root.add(band);
     }
-    if (!(backdrop && config.titleInArt)) this.root.add(scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5));
+    const title = !(backdrop && config.titleInArt) ? scene.add.text(48, 47, config.title, textStyle(30, COLORS.textLight)).setOrigin(0, 0.5) : null;
+    if (title) this.root.add(title);
     if (config.badge) {
       const id = config.badge;
       const put = (): void => {
-        if (!this.closed) this.root.add(scene.add.image(GAME_WIDTH - 260, 47, id).setDisplaySize(44, 44).setName('picker-badge'));
+        if (!this.closed) this.root.add(scene.add.image(hint.x - hint.width - 40, 47, id).setDisplaySize(44, 44).setName('picker-badge'));
       };
       if (scene.textures.exists(id)) put();
       else void loadAssets(scene, [id]).then(() => scene.scene.isActive() && put());
     }
     const backHint = config.onBack ? `  ·  Esc ${config.backLabel ?? 'back'}` : '';
     const hintRight = config.onBack ? GAME_WIDTH - 150 : GAME_WIDTH - 48;
-    this.root.add(scene.add.text(hintRight, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5));
+    const hint = scene.add.text(hintRight, 47, `Enter choose${backHint}`, textStyle(16, COLORS.textMuted)).setOrigin(1, 0.5);
+    this.root.add(hint);
+    // The title and the key hint share the header: a long title is shortened, never run into the hint.
+    if (title) {
+      const badgeRoom = config.badge ? 64 : 0;
+      fitLine(title, hint.x - hint.width - 16 - badgeRoom - title.x);
+    }
     if (config.onBack) {
       // A clickable Back button, so every page can be left with the mouse or touch too.
       const back = scene.add
@@ -138,6 +149,7 @@ export class Picker implements PickerLike {
           });
       box.add(bg);
       row.draw(scene, box, colW, config.rowHeight);
+      clampTexts(box, colW, config.rowHeight);
       const hl = focusFrame(scene, 0, 0, colW, config.rowHeight);
       box.add(hl);
       this.highlights.push(hl);
@@ -159,8 +171,10 @@ export class Picker implements PickerLike {
         ? drawGlass(scene, 36, GAME_HEIGHT - 74, GAME_WIDTH - 72, 52, { tint: AERO.glassLow, rim: AERO.sky, glow: false, radius: 16 })
         : paintWindow(scene.add.graphics(), 36, GAME_HEIGHT - 74, GAME_WIDTH - 72, 52, { thin: true, fill: 0x18141d, border: COLORS.borderMuted }),
     );
-    this.footer = scene.add.text(52, GAME_HEIGHT - 48, '', textStyle(16, COLORS.textLight, { wordWrap: { width: GAME_WIDTH - 104 } })).setOrigin(0, 0.5);
+    this.footer = scene.add.text(52, GAME_HEIGHT - 48, '', textStyle(16, COLORS.textLight, { wordWrap: { width: FOOTER_W } })).setOrigin(0, 0.5);
     this.root.add(this.footer);
+    this.more = scene.add.text(GAME_WIDTH - 52, GAME_HEIGHT - 48, '', textStyle(16, COLORS.gold)).setOrigin(1, 0.5);
+    this.root.add(this.more);
     if (config.rows.length === 0) {
       this.root.add(scene.add.text(GAME_WIDTH / 2, (LIST_TOP + LIST_BOTTOM) / 2, 'Nothing here yet', textStyle(32, COLORS.textMuted)).setOrigin(0.5));
       this.footer.setText(config.onBack ? 'Press Esc to go back.' : '');
@@ -178,7 +192,7 @@ export class Picker implements PickerLike {
     if (sound && this.boxes[i]) iconHop(this.scene, this.boxes[i]!);
     this.scrollTo(i);
     const row = this.config.rows[i]!;
-    this.footer.setText(row.problem ?? row.hint ?? '');
+    fitBlock(this.footer, FOOTER_W, 40, row.problem ?? row.hint ?? '');
     this.footer.setColor(row.problem ? '#f0a0a0' : COLORS.textLight);
   }
 
@@ -194,6 +208,8 @@ export class Picker implements PickerLike {
       const visible = y >= LIST_TOP - 1 && y + this.config.rowHeight <= LIST_BOTTOM + 1;
       if (zone.input) zone.input.enabled = visible;
     });
+    const lastTop = rowTop(this.config.rows.length - 1) + this.list.y;
+    this.more.setText(`${this.list.y < 0 ? '▲' : ''}${lastTop + this.config.rowHeight > LIST_BOTTOM + 1 ? '▼' : ''}`);
   }
 
   private confirm(): void {

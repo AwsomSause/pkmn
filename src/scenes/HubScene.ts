@@ -3,6 +3,7 @@
 // Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
+import { fitLine } from '../ui/fitText';
 import { candyPerkProblem } from '../core/candyShop';
 import { researchLines } from '../core/trainerResearch';
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
@@ -311,7 +312,7 @@ export class HubScene extends Phaser.Scene {
       const lit = paintWindow(this.add.graphics(), 0, 0, w, h, { fill: 0x3a3048, border: COLORS.accent }).setVisible(false);
       const icon = itemVisual(this, t.icon, w / 2, big ? 42 : 38, big ? 3 : 2) as Tile['icon'];
       const text = t.id === 'trainers' && ready > 0 ? `${t.label} (${ready}!)` : t.label;
-      const label = this.add.text(w / 2, h - 26, text, textStyle(big ? 28 : 24)).setOrigin(0.5, 0.5);
+      const label = fitLine(this.add.text(w / 2, h - (big ? 34 : 30), text, textStyle(big ? 28 : 24)).setOrigin(0.5, 0.5), w - 24);
       root.add([idle, lit, icon, label]);
       const zone = this.add.zone(0, 0, w, h).setOrigin(0).setInteractive({ useHandCursor: true });
       zone.on('pointerover', () => {
