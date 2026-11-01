@@ -135,6 +135,25 @@ describe('profile and run end', () => {
 });
 
 describe('game session save/load', () => {
+  it('Save & leave keeps the run resumable and clears the live run (Hub / title)', () => {
+    const storage = new MemoryStorageProvider();
+    const a = new GameSession(content, storage);
+    a.newRun('red', 'leave-seed');
+    a.chooseStarter(0);
+    const uid = a.run!.party[0]!.uid;
+    expect(a.saveRunNow()).toBe(true);
+    expect(a.saveAndLeaveRun()).toBe(true);
+    expect(a.run).toBeNull();
+    expect(a.canContinue).toBe(true);
+    expect(a.continueRun().party[0]!.uid).toBe(uid);
+    // A second session (reload) also finds it.
+    const b = new GameSession(content, storage);
+    expect(b.continueRun().party[0]!.uid).toBe(uid);
+    // With no run, there is nothing to save.
+    const empty = new GameSession(content, new MemoryStorageProvider());
+    expect(empty.saveAndLeaveRun()).toBe(false);
+  });
+
   it('continue resumes exactly where the player left off', () => {
     const storage = new MemoryStorageProvider();
     const a = new GameSession(content, storage);

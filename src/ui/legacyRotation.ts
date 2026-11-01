@@ -7,7 +7,8 @@ import type { Content } from '../core/contentSchema';
 import { LEGACY_RUNS, legacyInteraction, viewRandom, type RotationEntry } from '../core/legacyRuns';
 import type { LegacyRun } from '../core/state';
 import { AERO, drawGlass, type MotionLevel } from './aero';
-import { fitHeight } from './showcase';
+import { sizeToHeight } from './showcase';
+import { pokemonHeightM, sizePair, trainerHeightM } from '../core/heights';
 import { pokemonVisual, trainerVisual } from './sprites';
 import { PIXEL_SCALE, textStyle } from './theme';
 
@@ -70,12 +71,14 @@ export class LegacyRotationView {
     const trainerName = archetype?.name ?? entry.archetypeId;
     const trainer = trainerVisual(scene, archetype?.spriteAssetId ?? '', trainerName, opts.x - 96, opts.y, 2);
     if (trainer instanceof Phaser.GameObjects.Sprite) trainer.setOrigin(0.5, 1);
-    fitHeight(scene, trainer, 170);
-    root.add(trainer);
     const species = entry.ace ? content.species.get(entry.ace.speciesId) : undefined;
+    // Trainer and Ace share one pixels-per-metre scale, so heights match canon (a Wailord towers over its trainer).
+    const size = sizePair(trainerHeightM(entry.archetypeId), species ? pokemonHeightM(species) : 0);
+    sizeToHeight(scene, trainer, size.trainerPx);
+    root.add(trainer);
     if (species) {
       const mon = pokemonVisual(scene, species, 'front', opts.x + 40, opts.y, PIXEL_SCALE, entry.ace!.shiny);
-      fitHeight(scene, mon, 210);
+      sizeToHeight(scene, mon, size.monPx);
       root.add(mon);
       if (opts.motion === 'full') scene.tweens.add({ targets: mon, y: opts.y - 6, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
     }

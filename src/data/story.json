@@ -721,7 +721,7 @@
       "displayName": "It Mastered the Power Within!",
       "messagePool": [
         "{name} mastered the power within {move}!",
-        "{move} has awakened in {name}!"
+        "{move} has become {name}'s signature move!"
       ],
       "category": "evolution",
       "triggerConditions": {
@@ -735,7 +735,7 @@
       "cooldown": "none",
       "memoryRecord": {
         "importance": 80,
-        "text": "Mastered {move}: it awakened for this run"
+        "text": "Mastered {move}: it is now its signature move"
       },
       "followUpEvents": [],
       "visualCue": {

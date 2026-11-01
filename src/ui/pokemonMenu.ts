@@ -500,7 +500,7 @@ class PokemonScreen implements PickerLike {
     }
     // Moves and items in brief (bottom left).
     this.text(box, 0, 250, 'Moves', 13, '#bfe9ff');
-    this.text(box, 0, 266, info.moves.map((m) => m.name).join(' · ') || '—', 15, '#ffffff', { wordWrap: { width: 382 }, maxLines: 2 });
+    this.text(box, 0, 266, info.moves.map((m) => (mon.awakened?.includes(m.id) ? `★ ${m.name}` : m.name)).join(' · ') || '—', 15, '#ffffff', { wordWrap: { width: 382 }, maxLines: 2 });
     const build = heldBuild(this.content, mon);
     this.text(box, 0, 302, 'Holding', 13, '#bfe9ff');
     this.text(box, 0, 318, build.summary, 14, '#d0e4f4', { wordWrap: { width: 382 }, maxLines: 1 });

@@ -1,5 +1,5 @@
-// Tuning for Battle Drama spectacle (APPROVED section 7): Last Stand, Perfect Counter, Momentum,
-// Guard Break, Revenge Moment, boss phases and the Boss Revenge Rematch. Values live in balance.json
+// Tuning for Battle Drama spectacle (APPROVED section 7): Last Stand, Momentum,
+// Revenge Moment, boss phases and the Boss Revenge Rematch. Values live in balance.json
 // (`spectacle`); rules are in spectacle.ts. Off (`enabled: false`) = none of it runs (old-seed checks).
 
 import { z } from 'zod';
@@ -22,7 +22,6 @@ export const SpectacleConfigSchema = z.object({
     superEffective: z.number().int().min(0),
     streak: z.number().int().min(0),
     knockout: z.number().int().min(0),
-    counter: z.number().int().min(0),
     /** Share of the meter kept when one of your Pokémon faints. */
     faintKeeps: z.number().min(0).max(1),
     ralliesPerBattle: z.number().int().min(0),
@@ -36,26 +35,6 @@ export const SpectacleConfigSchema = z.object({
     lastMonBonus: z.number().int().min(0).max(100),
     perBattle: z.number().int().min(0),
     boost: Boost,
-  }),
-  counter: z.object({
-    perBattle: z.number().int().min(0),
-    /** Share of the hit taken when the counter lands. */
-    taken: z.number().min(0).max(1),
-    /** Share of the damage you did not take that goes back at the attacker. */
-    reflect: z.number().min(0).max(1),
-  }),
-  guard: z.object({
-    /** Guard points per boss trainer class (a final boss adds `finalBonus`). */
-    classes: z.record(z.string(), z.number().int().min(1)),
-    finalBonus: z.number().int().min(0),
-    /** Share of damage taken while the guard stands. */
-    taken: z.number().min(0).max(1),
-    superEffective: z.number().int().min(1),
-    staggerTurns: z.number().int().min(1),
-    /** Damage multiplier on the staggered boss. */
-    staggerDamage: z.number().min(1),
-    /** Times a boss Pokémon may put its guard back up after it breaks. */
-    rebuilds: z.number().int().min(0),
   }),
   revenge: z.object({
     chance: z.number().min(0).max(1),
@@ -71,7 +50,6 @@ export const SpectacleConfigSchema = z.object({
     enabled: z.boolean(),
     chance: z.number().min(0).max(1),
     levelBonus: z.number().int().min(0),
-    guardBonus: z.number().int().min(0),
     ai: z.number().min(0).max(1),
   }),
 });

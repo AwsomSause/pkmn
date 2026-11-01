@@ -13,7 +13,7 @@ import { hasPerk } from '../core/mapItems';
 import Phaser from 'phaser';
 import { wildBehavior } from '../core/wildBehavior';
 import { enemyIntent } from '../core/battle/intent';
-import { cfgOf as spectacleCfg, counterProblem, momentumMax, rallyProblem } from '../core/battle/spectacle';
+import { momentumMax, rallyProblem } from '../core/battle/spectacle';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, telegraphedAttack, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
 import { canDynamax, maxMoveOptions, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
@@ -203,7 +203,6 @@ export class BattleScene extends Phaser.Scene {
   /** The Rally toggle in the command menu (spends a full Momentum Meter on the next attack). */
   private rallyChoice = false;
   private momentumText!: Phaser.GameObjects.Text;
-  private guardText!: Phaser.GameObjects.Text;
   /** What the screen currently shows for each side (may lag the real state during playback). */
   private shown!: { player: PokemonInstance; enemy: PokemonInstance };
   /** The opposing Pokémon shown as riled up (warned, not yet unleashed or calmed). Presentation only. */
@@ -384,7 +383,6 @@ export class BattleScene extends Phaser.Scene {
     this.header = this.add.text(GAME_WIDTH - 16, 10, '', textStyle(20, COLORS.textLight, { stroke: '#181818', strokeThickness: 4 })).setOrigin(1, 0);
     // Raid and Totem status sits under the enemy's box, away from the boss sprite.
     this.momentumText = this.add.text(GAME_WIDTH - 16, MESSAGE_Y - 160, '', textStyle(18, COLORS.textLight, { stroke: '#181818', strokeThickness: 4 })).setOrigin(1, 0);
-    this.guardText = this.add.text(12, 146, '', textStyle(18, COLORS.textLight, { stroke: '#181818', strokeThickness: 4, wordWrap: { width: 470 } }));
     this.status = this.add.text(12, 186, '', textStyle(18, COLORS.textLight, { stroke: '#181818', strokeThickness: 4, wordWrap: { width: 470 } }));
     this.updateHeader();
 
@@ -932,22 +930,17 @@ export class BattleScene extends Phaser.Scene {
     this.status.setText(parts.join('  ·  '));
   }
 
-  /** Momentum Meter (yours) and the boss's Guard (battle/spectacle.ts): plain text, always readable. */
+  /** Momentum Meter (yours; battle/spectacle.ts): plain text, always readable. */
   private updateSpectacleHud(): void {
     const battle = this.run.battle;
     const spec = battle?.spectacle;
     if (!battle || !spec || battle.doubles) {
       this.momentumText.setText('');
-      this.guardText.setText('');
       return;
     }
     const max = momentumMax(services().session.content);
     const filled = Math.round((spec.momentum / max) * 10);
     this.momentumText.setText(spec.momentum >= max ? 'MOMENTUM [==========]  RALLY READY!' : `MOMENTUM [${'='.repeat(filled)}${'-'.repeat(10 - filled)}]`);
-    const g = spec.guard;
-    const foe = currentEnemy(battle);
-    if (g && g.uid === foe.uid) this.guardText.setText(g.stagger > 0 ? `GUARD BROKEN: staggered, takes more damage (${g.stagger})` : g.hp > 0 ? `GUARD ${g.hp}/${g.max}: wear it down` : '');
-    else this.guardText.setText('');
   }
 
   private updateHeaderBase(): void {
@@ -1669,11 +1662,10 @@ export class BattleScene extends Phaser.Scene {
     // Boss intent (#117): bosses, raids and totems telegraph the move they value most.
     const intent = this.run.battle && !this.run.battle.doubles ? enemyIntent(content, this.run.battle, this.activeMon(), this.run.party) : null;
     const battleNow = this.run.battle!;
-    const canBrace = !this.duo && counterProblem(content, battleNow, telegraphedAttack({ content, battle: battleNow, party: this.run.party }) !== null) === null;
     const canRally = !this.duo && rallyProblem(content, battleNow) === null;
     if (!canRally) this.rallyChoice = false;
     const shadow = this.activeMon().shadow;
-    this.message.setText(`${intent ? `${intent.text}${canBrace ? ' Brace to counter it!' : ''}\n` : ''}${this.rallyChoice ? 'Rally ON: your next attack is a Surge Strike!\n' : ''}${shadow ? `Shadow haze · ${heartStage(content, shadow.heart)} · Heart Gauge ${shadow.heart}/100 (hits harder, takes more)\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
+    this.message.setText(`${intent ? `${intent.text}\n` : ''}${this.rallyChoice ? 'Rally ON: your next attack is a Surge Strike!\n' : ''}${shadow ? `Shadow haze · ${heartStage(content, shadow.heart)} · Heart Gauge ${shadow.heart}/100 (hits harder, takes more)\n` : ''}What will ${this.speciesName(this.activeMon())} do?${ready}`);
     const options = [{ label: 'Fight' }, { label: 'Bag' }, { label: 'Pokémon' }];
     const label = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z', dynamax: 'Max' })[c.kind];
     const onLabel = (c: TransformRequest) => ({ tera: 'Tera', zmove: 'Z-Move', dynamax: 'Dynamax' })[c.kind];
@@ -1683,8 +1675,6 @@ export class BattleScene extends Phaser.Scene {
     const raid = this.run.battle?.raid;
     const cheerAt = raid && raid.cheersLeft > 0 && !this.duo ? options.length : -1;
     if (cheerAt >= 0) options.push({ label: `Cheer ×${raid!.cheersLeft}` });
-    const braceAt = canBrace ? options.length : -1;
-    if (canBrace) options.push({ label: `Brace ×${spectacleCfg(content).counter.perBattle - (battleNow.spectacle?.counters ?? 0)}` });
     const rallyAt = canRally ? options.length : -1;
     if (canRally) options.push({ label: this.rallyChoice ? 'Rally: ON' : 'Rally: OFF' });
     this.commandWindow.setVisible(true);
@@ -1700,8 +1690,7 @@ export class BattleScene extends Phaser.Scene {
       // Wii-style glossy buttons: Fight red, Bag gold, Pokémon green, transformations neon.
       glass: { tints: [0xc8303c, 0xc08a10, 0x1f9a52, 0x9a2cc8, 0x2c8ad8, 0x2cb8c8, 0xd8a020], motion: this.motion },
       onSelect: (i) => {
-        if (i === braceAt) this.submit({ kind: 'counter' });
-        else if (i === rallyAt) {
+        if (i === rallyAt) {
           this.rallyChoice = !this.rallyChoice;
           this.showRootMenu();
         } else if (i === cheerAt) this.showCheerMenu();
