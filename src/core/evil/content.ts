@@ -53,6 +53,8 @@ export function expandEvilEvents(file: EvilFile): Record<string, unknown>[] {
       else if (t.slot === 'op') for (const op of team.ops) make(evilEventId(team.id, t.id, op.id), { op: op.id }, { opName: op.name, opText: op.text }, { callback: true });
       else if (t.slot === 'ambush') make(evilEventId(team.id, t.id), { heat: file.config.ambushAt, ends: ['none'] }, {});
       else if (t.slot === 'disguise') make(evilEventId(team.id, t.id), { ends: ['none'], after: 2 }, {});
+      else if (t.slot === 'rescue') make(evilEventId(team.id, t.id), { ends: ['none'], after: 3 }, {});
+      else if (t.slot === 'infighting') make(evilEventId(team.id, t.id), { ends: ['none'], after: 4 }, {});
       else if (t.slot === 'legend') make(evilEventId(team.id, t.id), { ends: ['defeated', 'exposed'] }, {}, { callback: true });
     }
   }
