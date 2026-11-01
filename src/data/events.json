@@ -58407,6 +58407,102 @@
      }
     }
    ]
+  },
+  {
+   "id": "photo-contest",
+   "name": "The Photo Contest",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.lacey"
+    ],
+    "tint": "#2a2030",
+    "effect": "sparkle"
+   },
+   "intro": "A judge with a big camera strap runs a contest: \"Show me your best camp photo of your Pokémon!\"",
+   "choices": [
+    {
+     "label": "Enter your album (3+ camp photos)",
+     "requires": [
+      {
+       "kind": "photos",
+       "atLeast": 3
+      }
+     ],
+     "success": {
+      "text": "The judges flip through your album and gasp. First prize!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 600
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "Won the photo contest with camp photos.",
+        "importance": 55
+       }
+      ]
+     }
+    },
+    {
+     "label": "Enter your best photo (1+ camp photo)",
+     "requires": [
+      {
+       "kind": "photos",
+       "atLeast": 1
+      }
+     ],
+     "success": {
+      "text": "A lovely shot. Second place and a ribbon.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 250
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take a quick photo now (Luck)",
+     "check": "luck",
+     "success": {
+      "text": "Blink, flash. Somehow it works. Third place!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 100
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "A blurry thumb. Everyone laughs kindly.",
+      "effects": []
+     }
+    }
+   ]
   }
  ]
 }

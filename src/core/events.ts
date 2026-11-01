@@ -158,6 +158,8 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return legacyEggWaiting(run);
     case 'partyTag':
       return run.party.some((m) => content.species.get(m.speciesId)?.tags.includes(c.tag));
+    case 'photos':
+      return (run.camp?.photos.length ?? 0) >= c.atLeast;
     case 'bond':
       return run.story.relationships.some((r) => r.open && r.kind === 'bond');
     case 'focus':
@@ -250,6 +252,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs a ${c.tag} Pokémon in your party`;
     case 'starter':
       return 'Needs a particular starter';
+    case 'photos':
+      return `Needs ${c.atLeast} camp photo${c.atLeast === 1 ? '' : 's'}`;
     case 'bond':
       return 'Needs two bonded Pokémon';
     case 'focus':

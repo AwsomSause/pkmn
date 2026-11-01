@@ -7,6 +7,7 @@
 // pillar with a bigger token, and the champion stands in turning gold rays
 // (Visual Bible: "a deliberate escalation from normal stages").
 
+import { renameNode } from '../core/hubNook';
 import { habitatList } from '../core/habitat';
 import { clockLabel, periodOf, PERIOD_LOOK } from '../core/clock';
 import { modeObjectives, objectivesLine } from '../core/modeObjectives';
@@ -181,6 +182,18 @@ export class MapScene extends Phaser.Scene {
     this.endArmed = false;
     const { session } = services();
     const run = session.run!;
+    // W10 (I497): N names the node you stand on; the name shows in its description.
+    this.input.keyboard?.on('keydown-N', () => {
+      const cur = run.stage?.current;
+      const node = run.stage?.map.nodes.find((n) => n.id === cur);
+      if (!node || typeof window === 'undefined' || typeof window.prompt !== 'function') return;
+      const text = window.prompt('Name this place (up to 24 letters, empty clears):', node.name ?? '');
+      if (text === null) return;
+      const renamed = renameNode(run, node.id, text);
+      node.name = renamed.stage!.map.nodes.find((n) => n.id === node.id)!.name;
+      session.saveRunNow();
+      this.scene.restart({ notice: node.name ? `You named this place "${node.name}".` : 'The name is cleared.', focus: this.index });
+    });
     const content = session.content;
     const stage = run.stage!;
     const theme = getTheme(content, stage.themeId);
@@ -675,13 +688,14 @@ export class MapScene extends Phaser.Scene {
         const frontNote = frontHere ? `${FRONT_LABEL[frontHere.weather] ?? frontHere.weather} front: battles here start in ${frontHere.weather}.\n` : '';
         const boss = this.bossFor(n);
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
+        const named = n.name ? `"${n.name}"  ·  ` : '';
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
         const risk = n.harder ? '  ·  Risk: high (better rewards)' : boss ? '  ·  Risk: boss' : '';
         const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'service' ? (SERVICES.services.find((x) => x.id === s.serviceId)?.name ?? 'service') : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : s.kind === 'plaza' ? 'Trainer Plaza' : 'shop'));
         const seen = this.previewText(n) || (n.kind === 'wild' ? `Habitat: likely ${habitatList(services().session.content, services().session.run!).join(', ')}` : '');
         const route = routeKind(services().session.run!, n);
         const anomaly = stageAnomaly(services().session.content, services().session.run!);
-        return `${frontNote}${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
+        return `${named}${frontNote}${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
         if (option.side.kind === 'plaza') return 'Trainer Plaza: the middle of the stage. Stalls, traders, a Battle Club, errands and gossip. Rest, shop and plan before you go on.';

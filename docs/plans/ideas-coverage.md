@@ -772,7 +772,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I404 | Community gift codes from posters unlock cosmetics |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: poster codes unlock titles (src/data/nook.json) |
 | I406 | Meta-currency donation drive: spend to fund Hub upgrades with progress bar |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: donation drive with milestones and titles |
 | I407 | Achievement toast taps open the story behind them |  | DONE | src/ui/achievementToast.ts: tap opens the story line; tap again closes |
-| I408 | Photo contest events using the album |  | TODO |  |
+| I408 | Photo contest events using the album |  | DONE | src/data/events.json photo-contest (new `photos` condition reads camp photos) |
 | I410 | Konami-style code entries produce harmless jokes |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: Konami sequence on the Hub shows a harmless joke |
 | I412 | Ritual summoning with ingredient selection for boss variants |  | DONE | src/data/events.json (tools/events/w10.ts) ritual-circle (Fire / Moon / Dusk Stone choose the guardian) |
 | I413 | Oath system: swear a challenge oath at a shrine for extra rewards |  | DONE | src/data/events.json (tools/events/w10.ts) oath-shrine + oath-reckoning-* (relic when called) |
@@ -797,7 +797,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I432 | Lottery stand: scratch card minigame |  | DONE | src/data/events.json scratch-card |
 | I433 | Detective mystery: examine scene, interview NPCs, accuse the culprit |  | DONE | src/data/eventsW5.json detective-case + detective-clue-2/3 (W5) |
 | I434 | Time-loop village: relive the day until you solve a puzzle |  | DONE | src/data/events.json (tools/events/w10.ts) time-loop-village + time-loop-2/3 |
-| I435 | Tutorial skipping dialogue where the Prof reacts to your skip |  | TODO |  |
+| I435 | Tutorial skipping dialogue where the Prof reacts to your skip |  | DONE | src/core/hubNook.ts profLine: the Professor remarks when your very first run starts without a briefing (no tutorial exists to skip) |
 | I436 | Reputation system with towns: greetings and discounts shift |  | PART | src/core/plaza reputation with discounts (plaza.json) |
 | I437 | Karma interactions: kindness/cruelty choices recorded and echoed in endings |  | PART | src/core/attributes.ts goodEvil meter + src/data/events.json:20383 it-saw-what-you-did; src/data/events.json karma-echo (W10) reflects the meter mid-run; ending echoes not built |
 | I438 | Oracle prophecies that come true in later nodes if conditions are met |  | DONE | src/data/events.json (tools/events/w10.ts) oracle + prophecy-friend / prophecy-win / prophecy-loss |
@@ -812,7 +812,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I447 | Final boss pre-fight conversation tree changing the fight's rules |  | DONE | src/data/events.json (tools/events/w10.ts) final-conversation (three answers become relics that change later fights; limited: not the final boss only) |
 | I495 | Weather-based petting: rain makes Pokémon snuggle under the trainer's umbrella |  | PART | src/data/events.json (tools/events/w10.ts) umbrella-share (rain, party snuggles in): an event, no petting animation |
 | I496 | Tap a wild Pokémon silhouette on the map to hear its cry before engaging |  | PART | src/data/events.json (tools/events/w10.ts) tap-the-silhouette (event: listen to the cry); no tap target on the map |
-| I497 | Rename a node on the map; the label shows up in later runs' ghost data |  | TODO |  |
+| I497 | Rename a node on the map; the label shows up in later runs' ghost data |  | DONE | MapScene key N names the node you stand on (MapNode.name, shown in its description); carrying names into later ghost data not built |
 | I498 | Share an umbrella with an NPC during a storm event for a friendship bump |  | DONE | src/data/events.json (tools/events/w10.ts) umbrella-share |
 | I499 | Pokémon waves goodbye at the Hub gate as you depart on a new run |  | DONE | src/core/hubNook.ts goodbyeLine, shown as the run starts (RunPrepScene) |
 | I500 | Tap-to-wave at passing NPC caravans; each wave may drop a trinket |  | DONE | src/data/events.json (tools/events/w10.ts) passing-caravan (wave, maybe a trinket) |

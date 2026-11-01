@@ -809,6 +809,8 @@ export const MapNodeSchema = z.object({
   next: z.array(z.string()),
   /** Optional stops beside this node (they don't count as levels). */
   sides: z.array(SideStopSchema),
+  /** W10 (I497): a name the player gave this node. */
+  name: z.string().max(24).optional(),
   /** How the generator made this node, for debugging. */
   note: z.string(),
 });
