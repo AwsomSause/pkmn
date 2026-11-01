@@ -85,18 +85,33 @@ export interface PadSnapshot {
   buttons: boolean[];
   axes: number[];
 }
-export const PAD_BUTTON_NAMES = ['A / Cross', 'B / Circle', 'X / Square', 'Y / Triangle'] as const;
+/** The standard gamepad layout, button 0 to 16 (face buttons differ in symbol between controller families). */
+export const PAD_BUTTON_NAMES = ['A / Cross', 'B / Circle', 'X / Square', 'Y / Triangle', 'L1', 'R1', 'L2', 'R2', 'Select', 'Start', 'Left stick press', 'Right stick press', 'D-pad up', 'D-pad down', 'D-pad left', 'D-pad right', 'Home'] as const;
+export type PadMap = Record<PadAction, number>;
+export const DEFAULT_PAD_MAP: PadMap = { up: 12, down: 13, left: 14, right: 15, confirm: 0, back: 1 };
+export const PAD_ACTIONS: PadAction[] = ['up', 'down', 'left', 'right', 'confirm', 'back'];
+export const PAD_ACTION_LABEL: Record<PadAction, string> = { up: 'Up', down: 'Down', left: 'Left', right: 'Right', confirm: 'Confirm', back: 'Back' };
 
-/** Which game actions are held, from one gamepad snapshot. Standard mapping: d-pad 12 to 15, left stick axes 0 and 1. */
-export function padActions(pad: PadSnapshot, confirmButton: number, backButton: number): Set<PadAction> {
+/** Gives `action` the button; if another action already used it, that one takes the old button (a swap, so nothing is lost). */
+export function remapPad(map: PadMap, action: PadAction, button: number): PadMap {
+  const out = { ...map };
+  const old = map[action];
+  for (const a of PAD_ACTIONS) if (a !== action && out[a] === button) out[a] = old;
+  out[action] = button;
+  return out;
+}
+/** The next button number, 0 to 16, for cycling a mapping from the Settings list. */
+export const nextPadButton = (n: number): number => (n + 1) % PAD_BUTTON_NAMES.length;
+
+/** Which game actions are held, from one gamepad snapshot. The left stick (axes 0 and 1) always moves as well. */
+export function padActions(pad: PadSnapshot, map: PadMap): Set<PadAction> {
   const out = new Set<PadAction>();
   const b = (i: number) => pad.buttons[i] === true;
-  if (b(12) || (pad.axes[1] ?? 0) < -0.6) out.add('up');
-  if (b(13) || (pad.axes[1] ?? 0) > 0.6) out.add('down');
-  if (b(14) || (pad.axes[0] ?? 0) < -0.6) out.add('left');
-  if (b(15) || (pad.axes[0] ?? 0) > 0.6) out.add('right');
-  if (b(confirmButton)) out.add('confirm');
-  if (b(backButton)) out.add('back');
+  for (const a of PAD_ACTIONS) if (b(map[a])) out.add(a);
+  if ((pad.axes[1] ?? 0) < -0.6) out.add('up');
+  if ((pad.axes[1] ?? 0) > 0.6) out.add('down');
+  if ((pad.axes[0] ?? 0) < -0.6) out.add('left');
+  if ((pad.axes[0] ?? 0) > 0.6) out.add('right');
   return out;
 }
 export const PAD_KEY: Record<PadAction, { code: string; keyCode: number }> = {
@@ -340,3 +355,16 @@ export function autoInterruption(hp: number, maxHp: number, foeIsBoss: boolean, 
   if (foeIsBoss) return 'A boss trainer is in front of you.';
   return null;
 }
+
+// --- Jingle captions ----------------------------------------------------------------------------------------------
+
+const JINGLES: Record<string, string> = {
+  'me.item_get': 'Item get!', 'me.key_item': 'Key item get!', 'me.badge': 'Badge earned!', 'me.pkmn_get': 'A new Pokémon joins you!',
+  'me.evo_start': 'Something is happening…', 'me.evo_success': 'Evolution!', 'me.heal': 'Your team is healed.', 'me.save': 'Game saved.',
+  'me.tm_get': 'TM get!', 'me.berry': 'Berry get!', 'me.forget_move': 'A move is forgotten.',
+  'bgm.victory_wild': 'Victory!', 'bgm.victory_trainer': 'Trainer defeated!', 'bgm.victory_leader': 'Leader defeated!', 'bgm.victory_elite': 'Elite victory!',
+  'bgm.raid.capture.basic': 'The boss wants to join!', 'bgm.raid.capture.ultra': 'The boss wants to join!', 'bgm.raid.capture.max': 'The boss wants to join!', 'bgm.raid.capture.tera': 'The boss wants to join!',
+};
+/** The caption for a jingle or fanfare id (all `me.*` jingles, the victory fanfares and the raid capture jingles), or null. */
+export const jingleCaption = (id: string): string | null => JINGLES[id] ?? null;
+export const JINGLE_IDS = Object.keys(JINGLES);

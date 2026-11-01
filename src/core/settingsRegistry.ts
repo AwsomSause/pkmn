@@ -4,7 +4,7 @@
 
 import { applyProfile, nextProfile, PROFILE_INFO } from './accessibility';
 import type { Settings } from './state';
-import { POPUP_SCALES, PAD_BUTTON_NAMES, TOOLTIP_DELAY_MS, TRANSITION_INFO, UI_THEME_ORDER, UI_THEMES } from './presentation/uiPrefs';
+import { nextPadButton, PAD_ACTIONS, PAD_ACTION_LABEL, POPUP_SCALES, PAD_BUTTON_NAMES, remapPad, TOOLTIP_DELAY_MS, TRANSITION_INFO, UI_THEME_ORDER, UI_THEMES } from './presentation/uiPrefs';
 
 export type SettingCategory = 'display' | 'audio' | 'gameplay' | 'animations' | 'text' | 'accessibility' | 'controls' | 'data';
 
@@ -124,8 +124,7 @@ export const SETTINGS: SettingDef[] = [
   { id: 'haptics', label: 'Haptic buzz', description: 'Phones and controllers vibrate in a pattern for each move type.', category: 'controls', applies: 'now', ...toggle('haptics') },
   { id: 'oneHanded', label: 'One-handed layout', description: 'Bunches the on-screen buttons to the left or right edge.', category: 'controls', also: ['accessibility'], applies: 'now', show: (s) => ({ off: 'Off', left: 'Left hand', right: 'Right hand' })[s.oneHanded], next: (s) => ({ ...s, oneHanded: ({ off: 'left', left: 'right', right: 'off' } as const)[s.oneHanded] }) },
   { id: 'victoryJingle', label: 'Badge jingle', description: 'Which short tune plays when you win a badge.', category: 'audio', applies: 'now', show: (s) => ({ badge: 'Badge fanfare', item_get: 'Item chime', pkmn_get: 'New Pokémon', evo_success: 'Evolution', tm_get: 'TM tune' })[s.victoryJingle], next: (s) => ({ ...s, victoryJingle: ({ badge: 'item_get', item_get: 'pkmn_get', pkmn_get: 'evo_success', evo_success: 'tm_get', tm_get: 'badge' } as const)[s.victoryJingle] }) },
-  { id: 'gamepadConfirm', label: 'Gamepad: confirm button', description: 'Which face button confirms. The d-pad and left stick always move.', category: 'controls', applies: 'now', show: (s) => PAD_BUTTON_NAMES[s.gamepadConfirm]!, next: (s) => { const gamepadConfirm = (s.gamepadConfirm + 1) % 4; return { ...s, gamepadConfirm, gamepadBack: s.gamepadBack === gamepadConfirm ? (gamepadConfirm + 1) % 4 : s.gamepadBack }; } },
-  { id: 'gamepadBack', label: 'Gamepad: back button', description: 'Which face button goes back.', category: 'controls', applies: 'now', show: (s) => PAD_BUTTON_NAMES[s.gamepadBack]!, next: (s) => { const gamepadBack = (s.gamepadBack + 1) % 4; return { ...s, gamepadBack: gamepadBack === s.gamepadConfirm ? (gamepadBack + 1) % 4 : gamepadBack }; } },
+  ...PAD_ACTIONS.map((action): SettingDef => ({ id: `pad_${action}`, label: `Gamepad: ${PAD_ACTION_LABEL[action]}`, description: `Which button does ${PAD_ACTION_LABEL[action]}. A button already in use swaps with this one. The left stick always moves.`, category: 'controls', applies: 'now', show: (s) => PAD_BUTTON_NAMES[s.gamepadMap[action]]!, next: (s) => ({ ...s, gamepadMap: remapPad(s.gamepadMap, action, nextPadButton(s.gamepadMap[action])) }) })),
 ];
 
 export const settingById = (id: string): SettingDef | undefined => SETTINGS.find((d) => d.id === id);

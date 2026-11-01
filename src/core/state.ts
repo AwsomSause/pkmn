@@ -1567,8 +1567,8 @@ export const SettingsSchema = z.object({
   holdToConfirm: z.boolean().default(false),
   haptics: z.boolean().default(false),
   oneHanded: z.enum(['off', 'left', 'right']).default('off'),
-  gamepadConfirm: z.number().int().min(0).max(3).default(0),
-  gamepadBack: z.number().int().min(0).max(3).default(1),
+  /** Which gamepad button (0-16, standard mapping) does each game action. The left stick always moves too. */
+  gamepadMap: z.object({ up: z.number().int().min(0).max(16), down: z.number().int().min(0).max(16), left: z.number().int().min(0).max(16), right: z.number().int().min(0).max(16), confirm: z.number().int().min(0).max(16), back: z.number().int().min(0).max(16) }).default({ up: 12, down: 13, left: 14, right: 15, confirm: 0, back: 1 }),
   /** Custom sound bank (I475): which jingle plays when a badge is won. */
   victoryJingle: z.enum(['badge', 'item_get', 'pkmn_get', 'evo_success', 'tm_get']).default('badge'),
 });

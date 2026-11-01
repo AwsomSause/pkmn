@@ -5,6 +5,7 @@
 // Pure: no Phaser, no random numbers. Presentation only; nothing here can
 // change an outcome, and every animation can be cut short by the next input.
 
+import { feelTween, SKINS, type MotionFeel } from './skins';
 import type { Settings } from '../state';
 import { animationFlags, animationTimeScale } from '../accessibility';
 import { registerAnims } from './animRegistry';
@@ -47,17 +48,19 @@ export interface UiTween {
 }
 
 /** Timing for one kind of UI motion under a motion level and the Animation speed setting. */
-export function uiTween(key: UiTimingKey, level: UiMotionLevel, timeScale = 1): UiTween {
+export function uiTween(key: UiTimingKey, level: UiMotionLevel, timeScale = 1, feel: MotionFeel = 'default'): UiTween {
   if (level === 'off') return { ms: 0, ease: 'Linear', travel: 0, bounce: false };
   const base = UI_TIMING[key] * timeScale;
   if (level === 'reduced') return { ms: Math.round(Math.min(base, 160) * 0.75), ease: 'Sine.easeOut', travel: 0.25, bounce: false };
   const ease = key === 'press' || key === 'popupClose' ? 'Quad.easeOut' : key === 'hover' || key === 'cursor' ? 'Cubic.easeOut' : 'Back.easeOut';
-  return { ms: Math.round(base), ease, travel: 1, bounce: true };
+  const f = feelTween(feel);
+  const keepEase = key === 'press' || key === 'popupClose' || key === 'hover' || key === 'cursor';
+  return { ms: Math.round(base * f.msScale), ease: f.ease && !keepEase ? f.ease : ease, travel: 1, bounce: f.pops };
 }
 
 /** Everything the UI layer needs from the settings, read one way. */
-export function uiMotionFrom(s: Settings): { level: UiMotionLevel; timeScale: number } {
-  return { level: uiMotionLevel(s), timeScale: animationTimeScale(s) };
+export function uiMotionFrom(s: Settings): { level: UiMotionLevel; timeScale: number; feel: MotionFeel } {
+  return { level: uiMotionLevel(s), timeScale: animationTimeScale(s), feel: SKINS[s.uiTheme].feel };
 }
 
 /** Delay before item `i` of a list pops in (capped so long lists don't drag). */
@@ -80,10 +83,11 @@ export interface SpringTuning {
 }
 
 /** Full motion: a soft overshoot. Reduced: critically damped (no overshoot). */
-export function springTuning(level: UiMotionLevel, timeScale = 1): SpringTuning {
-  const k = 420 / (timeScale * timeScale);
+export function springTuning(level: UiMotionLevel, timeScale = 1, feel: MotionFeel = 'default'): SpringTuning {
+  const f = feelTween(feel);
+  const k = (420 * f.stiffness) / (timeScale * timeScale);
   const critical = 2 * Math.sqrt(k);
-  return { stiffness: k, damping: level === 'full' ? critical * 0.62 : critical };
+  return { stiffness: k, damping: level === 'full' ? critical * f.dampingScale : critical };
 }
 
 export const createSpring = (value: readonly number[]): Spring => ({ value: [...value], velocity: value.map(() => 0) });
@@ -92,7 +96,7 @@ export const createSpring = (value: readonly number[]): Spring => ({ value: [...
  * Moves a spring towards `target` by `dtMs`, in fixed 4 ms substeps so the
  * path is the same at any frame rate. `off` snaps. Returns true when it has settled.
  */
-export function stepSpring(spring: Spring, target: readonly number[], dtMs: number, level: UiMotionLevel, timeScale = 1): boolean {
+export function stepSpring(spring: Spring, target: readonly number[], dtMs: number, level: UiMotionLevel, timeScale = 1, feel: MotionFeel = 'default'): boolean {
   if (level === 'off') {
     target.forEach((t, i) => {
       spring.value[i] = t;
@@ -100,7 +104,7 @@ export function stepSpring(spring: Spring, target: readonly number[], dtMs: numb
     });
     return true;
   }
-  const { stiffness, damping } = springTuning(level, timeScale);
+  const { stiffness, damping } = springTuning(level, timeScale, feel);
   const SUB = 4;
   let left = Math.min(dtMs, 100);
   while (left > 0) {

@@ -4,16 +4,18 @@
 // draws. Presentation only: every tween can be cut short and none blocks input.
 
 import Phaser from 'phaser';
+import { paintSkinCursor } from './skinPaint';
+import type { MotionFeel } from '../core/presentation/skins';
 import { createSpring, stepSpring, uiTween, UI_SCALE, type Spring, type UiMotionLevel, type UiTimingKey } from '../core/presentation/uiMotion';
 
-let current: { level: UiMotionLevel; timeScale: number } = { level: 'full', timeScale: 1 };
+let current: { level: UiMotionLevel; timeScale: number; feel: MotionFeel } = { level: 'full', timeScale: 1, feel: 'default' };
 
 /** Called by main.ts whenever settings change. */
-export function setUiMotion(m: { level: UiMotionLevel; timeScale: number }): void {
-  current = m;
+export function setUiMotion(m: { level: UiMotionLevel; timeScale: number; feel?: MotionFeel }): void {
+  current = { feel: 'default', ...m };
 }
-export const uiMotion = (): { level: UiMotionLevel; timeScale: number } => current;
-export const uiTiming = (key: UiTimingKey) => uiTween(key, current.level, current.timeScale);
+export const uiMotion = (): { level: UiMotionLevel; timeScale: number; feel: MotionFeel } => current;
+export const uiTiming = (key: UiTimingKey) => uiTween(key, current.level, current.timeScale, current.feel);
 
 type Obj = Phaser.GameObjects.GameObject & Phaser.GameObjects.Components.Transform;
 
@@ -93,7 +95,7 @@ export class WiiCursor {
     if (!this.g.active) return;
     this.time += delta;
     if (!this.settled) {
-      this.settled = stepSpring(this.spring, this.target, delta, current.level, current.timeScale);
+      this.settled = stepSpring(this.spring, this.target, delta, current.level, current.timeScale, current.feel);
     }
     this.draw();
   }
@@ -108,6 +110,7 @@ export class WiiCursor {
     const g = this.g;
     g.setPosition(cx, cy);
     g.clear();
+    if (paintSkinCursor(g, w, h, glow)) return;
     const r = Math.min(this.radius, h / 2, w / 2);
     g.fillStyle(0xffffff, 0.1);
     g.fillRoundedRect(-w / 2, -h / 2, w, h, r);
@@ -130,7 +133,7 @@ export class WiiCursor {
 
 /** Pops an object in (scale up from a little smaller, fade in). Works on objects drawn around their own origin. */
 export function popIn(scene: Phaser.Scene, target: Obj, delay = 0, key: UiTimingKey = 'popupOpen'): void {
-  const t = uiTween(key, current.level, current.timeScale);
+  const t = uiTween(key, current.level, current.timeScale, current.feel);
   if (!t.ms) return;
   const o = target as unknown as Phaser.GameObjects.Components.Transform & Phaser.GameObjects.Components.Alpha;
   const sx = o.scaleX;
@@ -143,7 +146,7 @@ export function popIn(scene: Phaser.Scene, target: Obj, delay = 0, key: UiTiming
 
 /** Slides an object in from an offset (reduced: a quarter of the way), fading in. */
 export function glideIn(scene: Phaser.Scene, target: Obj, dx: number, dy: number, delay = 0, key: UiTimingKey = 'tab'): void {
-  const t = uiTween(key, current.level, current.timeScale);
+  const t = uiTween(key, current.level, current.timeScale, current.feel);
   if (!t.ms) return;
   const o = target as unknown as Phaser.GameObjects.Components.Transform & Phaser.GameObjects.Components.Alpha;
   const { x, y, alpha } = o;

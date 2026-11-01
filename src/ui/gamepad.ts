@@ -18,7 +18,7 @@ export function installGamepad(get: () => Settings): void {
   window.addEventListener('gamepadconnected', (e) => {
     const family = glyphFamily(e.gamepad.id);
     const s = get();
-    notify(`Controller connected: ${buttonGlyph(family, s.gamepadConfirm)} confirms, ${buttonGlyph(family, s.gamepadBack)} goes back.`);
+    notify(`Controller connected: ${buttonGlyph(family, s.gamepadMap.confirm)} confirms, ${buttonGlyph(family, s.gamepadMap.back)} goes back.`);
   });
   const held = new Map<PadAction, number>();
   const loop = (): void => {
@@ -26,7 +26,7 @@ export function installGamepad(get: () => Settings): void {
     const pad = [...(navigator.getGamepads() ?? [])].find((p) => p?.connected);
     if (pad) {
       const s = get();
-      const down = padActions({ buttons: pad.buttons.map((b) => b.pressed), axes: [...pad.axes] }, s.gamepadConfirm, s.gamepadBack);
+      const down = padActions({ buttons: pad.buttons.map((b) => b.pressed), axes: [...pad.axes] }, s.gamepadMap);
       for (const a of down) {
         const next = held.get(a);
         const moving = a !== 'confirm' && a !== 'back';
@@ -49,4 +49,33 @@ export function installGamepad(get: () => Settings): void {
 export function connectedPadId(): string | null {
   if (typeof navigator === 'undefined' || !navigator.getGamepads) return null;
   return [...(navigator.getGamepads() ?? [])].find((p) => p?.connected)?.id ?? null;
+}
+
+/**
+ * Waits for the next button press on any controller (buttons already held are ignored) and calls back with its number.
+ * Returns a cancel function. Used by Settings > Controls > "Remap by pressing buttons".
+ */
+export function listenForButton(onButton: (n: number) => void): () => void {
+  let stopped = false;
+  const held = new Set<number>();
+  const poll = (): void => {
+    if (stopped) return;
+    const pad = [...(navigator.getGamepads?.() ?? [])].find((p) => p?.connected);
+    if (pad) {
+      const now = pad.buttons.map((b, i) => (b.pressed ? i : -1)).filter((i) => i >= 0);
+      for (const i of now) {
+        if (!held.has(i)) {
+          stopped = true;
+          return onButton(i);
+        }
+      }
+      held.clear();
+      now.forEach((i) => held.add(i));
+    }
+    requestAnimationFrame(poll);
+  };
+  requestAnimationFrame(poll);
+  return () => {
+    stopped = true;
+  };
 }
