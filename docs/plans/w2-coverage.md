@@ -9,6 +9,8 @@ I1 pet (partial: no purr animation) · I2 hug (once per stop) · I3 feed berries
 ## Added in the second batch
 I19 dress-up (scarf, bow, glasses, band, anklet: +2% to one stat; worn, shown in menu) · I24/I25/I321 egg care as **Sing to Eggs** (1 step closer per stop, never hatches by it) · F41 stat radar on the Stats tab · F60 release gift (extra candies by level, switched off with `careEffects`) · F40 compare screen already existed on the Stats tab.
 
+I27 fetch (may bring back a berry) · I39 bedtime story (once per run, needs trust; friendship + mood). Care menu rows shrink when there are many.
+
 ## Earlier (see `docs/status/party-life.md`, Bond Engine)
 I4/I5 share snack and gifts · I12 Listen (initiative) · I13 disobedience (refusal) · I16 gifts · I29/I30 fear and pride (grudges, comfort) · I37 sleep-over chats · I40/I41 last words · I291 chats · I292 bickering · I294 mentor/apprentice (mentors system) · I295 pranks · I297 jealousy/newcomer · I298 sharing food · I299 group hug · I311 evolution cheers · I312 gather round fainted · I313 revenge pact · I318 formation/synergy badge · I326 practice together · I328 gossip · I345 Spirit Link · M57 quirks · F33 friendship hearts · F59 team synergy.
 

@@ -27,6 +27,8 @@ const CareDataSchema = z.object({
   benchedWinsToSulk: z.number().int().min(1),
   nicknameMax: z.number().int().min(1),
   accessories: z.record(z.string(), z.object({ stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe']), percent: z.number() })),
+  fetch: z.object({ chance: z.number().min(0).max(1), friendship: z.number().int() }),
+  story: z.object({ friendship: z.number().int(), mood: z.number().int(), minFriendship: z.number().int() }),
   sing: z.object({ eggSteps: z.number().int().min(1) }),
   releaseGift: z.object({ candiesPerLevels: z.number().int().min(1) }),
   quips: z.record(z.string(), z.array(z.string()).min(1)),
@@ -53,6 +55,8 @@ export const CareSchema = z.object({
   favourite: z.boolean().optional(),
   ace: z.boolean().optional(),
   sparkle: z.boolean().optional(),
+  /** Heard its bedtime story this run. */
+  storyHeard: z.boolean().optional(),
   /** Dress-up: a worn accessory (a key of data/care.json accessories) with a tiny stat buff. */
   accessory: z.string().optional(),
   /** Hidden talent: a stat that grew on its own after enough fights. */

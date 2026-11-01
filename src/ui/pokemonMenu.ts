@@ -159,7 +159,7 @@ class PokemonScreen implements PickerLike {
           this.menuIdx = 0;
         } else this.mode = 'list';
       } else if ((action === 'left' || action === 'right') && this.careMenu) {
-        if (this.menuIdx === 8) this.accIdx = (this.accIdx + (action === 'right' ? 1 : ACCESSORY_CHOICES.length - 1)) % ACCESSORY_CHOICES.length;
+        if (this.menuOptions()[this.menuIdx]?.id === 'dress') this.accIdx = (this.accIdx + (action === 'right' ? 1 : ACCESSORY_CHOICES.length - 1)) % ACCESSORY_CHOICES.length;
         else this.trainStat = (this.trainStat + (action === 'right' ? 1 : 4)) % 5;
       }
       this.render();
@@ -224,6 +224,8 @@ class PokemonScreen implements PickerLike {
       p('train', `Train ${stat.toUpperCase()} ‹ ›`, 'Left/right picks the stat. +8% for its next 3 fights, once per stop.', stat),
       p('sing', 'Sing to Eggs', 'Hum to the Eggs you carry: they move 1 step closer to hatching (never hatch by it). Once per stop.'),
       p('dress', `Dress: ${this.mon.care?.accessory ?? 'none'} ‹ ›`, 'Left/right picks scarf, bow, glasses, band or anklet (+2% to one stat). Enter wears it; "none" takes it off.', ACCESSORY_CHOICES[this.accIdx] || ''),
+      p('fetch', 'Play fetch', 'Throw a ball: it may bring back a berry. Once per stop.'),
+      p('story', 'Bedtime story', 'Once per run, for Pokémon that trust you: friendship and mood rise.'),
       p('nickname', 'Nickname', 'Give it a name (up to 12 letters). Leave it empty to clear.'),
       { id: 'favourite', label: care?.favourite ? 'Unfavourite' : 'Favourite', problem: null, hint: 'Favourites are never offered as swap or trade fodder.' },
       { id: 'ace', label: care?.ace ? 'Unmark ace' : 'Mark ace', problem: null, hint: 'Your ace is remembered on the Hub memorial wall if it falls.' },
@@ -481,21 +483,22 @@ class PokemonScreen implements PickerLike {
   private drawMenu(scene: Phaser.Scene): void {
     const opts = this.menuOptions();
     const w = 214;
-    const h = opts.length * 34 + 20;
+    const rh = opts.length > 8 ? 26 : 34;
+    const h = opts.length * rh + 20;
     const x = RIGHT_X + 16;
     const y = BODY_Y + 8;
     const box = scene.add.container(x, y).setName('pokemon-action-menu');
     box.add(drawGlass(scene, 0, 0, w, h, { tint: AERO.glassLow, rim: AERO.sky, glow: false, radius: 16 }));
     opts.forEach((o, i) => {
-      const oy = 10 + i * 34;
+      const oy = 10 + i * rh;
       if (i === this.menuIdx) {
         const hl = scene.add.graphics();
-        hl.fillStyle(0xfff2b0, 0.22).fillRoundedRect(8, oy, w - 16, 30, 10);
-        hl.lineStyle(2, 0xfff2b0, 0.9).strokeRoundedRect(8, oy, w - 16, 30, 10);
+        hl.fillStyle(0xfff2b0, 0.22).fillRoundedRect(8, oy, w - 16, rh - 4, 10);
+        hl.lineStyle(2, 0xfff2b0, 0.9).strokeRoundedRect(8, oy, w - 16, rh - 4, 10);
         box.add(hl);
       }
-      box.add(scene.add.text(22, oy + 15, o.label, textStyle(18, o.problem ? '#7f93a8' : '#ffffff')).setOrigin(0, 0.5));
-      const zone = scene.add.zone(8, oy, w - 16, 30).setOrigin(0).setInteractive({ useHandCursor: true });
+      box.add(scene.add.text(22, oy + (rh - 4) / 2, o.label, textStyle(rh < 30 ? 15 : 18, o.problem ? '#7f93a8' : '#ffffff')).setOrigin(0, 0.5));
+      const zone = scene.add.zone(8, oy, w - 16, rh - 4).setOrigin(0).setInteractive({ useHandCursor: true });
       zone.on('pointerover', () => {
         if (this.menuIdx === i || this.closed) return;
         this.menuIdx = i;

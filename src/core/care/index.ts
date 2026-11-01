@@ -16,7 +16,7 @@ export * from './mods';
 const PHASES: readonly RunState['phase'][] = ['reward', 'decision', 'map', 'shop'];
 const TRAIN_STATS = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 export type TrainStat = (typeof TRAIN_STATS)[number];
-export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'nickname', 'favourite', 'ace'] as const;
+export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'nickname', 'favourite', 'ace'] as const;
 export type CareAction = (typeof CARE_ACTIONS)[number];
 
 const hash = (text: string): number => {
@@ -100,6 +100,8 @@ export function careProblem(content: Content, run: RunState, partyIndex: number,
     case 'cheer': return n('cheer') >= 1 ? 'You already cheered it up at this stop.' : null;
     case 'train': return n('train') >= 1 ? 'Already training at this stop.' : !arg || !TRAIN_STATS.includes(arg as TrainStat) ? 'Pick a stat to train.' : null;
     case 'sing': return n('sing') >= 1 ? 'Already sang at this stop.' : run.eggs.length === 0 ? 'You carry no Eggs.' : null;
+    case 'fetch': return n('fetch') >= 1 ? 'Already played fetch at this stop.' : null;
+    case 'story': return care.storyHeard ? 'It has heard its bedtime story.' : mon.friendship < CARE.story.minFriendship ? 'It does not trust you enough to listen yet.' : null;
     case 'dress': return arg !== '' && arg !== undefined && !CARE.accessories[arg] ? 'Unknown accessory.' : null;
     default: return null;
   }
@@ -184,6 +186,21 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       message = `${name} sings to the Eggs. They stir a little closer to hatching.`;
       break;
     }
+    case 'fetch': {
+      tick();
+      changeFriendship(content, mon, CARE.fetch.friendship);
+      const berries = [...content.catalog.values()].filter((e) => e.family.startsWith('Berries') && e.effect?.kind === 'held').map((e) => e.id).sort();
+      const found = berries.length > 0 && (hash(`fetch:${seed}`) % 1000) / 1000 < CARE.fetch.chance ? berries[hash(`fetchitem:${seed}`) % berries.length]! : null;
+      if (found) run.looseHeld = { ...run.looseHeld, [found]: (run.looseHeld?.[found] ?? 0) + 1 };
+      message = `${name} ${pickLine('fetch', seed)}${found ? ` It brought back a ${content.catalog.get(found)!.name}!` : ' Nothing this time.'}`;
+      break;
+    }
+    case 'story':
+      care.storyHeard = true;
+      changeFriendship(content, mon, CARE.story.friendship);
+      setMood(care, CARE.story.mood);
+      message = `You tell ${name} its story. It ${pickLine('story', seed)}`;
+      break;
     case 'dress':
       if (arg) care.accessory = arg;
       else delete care.accessory;

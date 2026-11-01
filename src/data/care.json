@@ -91,6 +91,13 @@
     "cheer": [
       "giggles and perks up.",
       "bounces back a little."
+    ],
+    "fetch": [
+      "bounds back with something in its mouth!",
+      "races off and returns, tail wagging."
+    ],
+    "story": [
+      "listens with wide eyes and settles down happy."
     ]
   },
   "accessories": {
@@ -120,5 +127,14 @@
   },
   "releaseGift": {
     "candiesPerLevels": 20
+  },
+  "fetch": {
+    "chance": 0.5,
+    "friendship": 1
+  },
+  "story": {
+    "friendship": 5,
+    "mood": 2,
+    "minFriendship": 60
   }
 }

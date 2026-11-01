@@ -165,3 +165,27 @@ describe('dress-up, egg songs and release gifts', () => {
     expect(releaseGift(content, 5)).toBe(0);
   });
 });
+
+describe('fetch and bedtime story', () => {
+  it('fetch is once per stop and can bring back a loose berry', () => {
+    let run = setup();
+    let got = 0;
+    for (let i = 0; i < 12; i++) {
+      run.encountersCompleted = i;
+      run = careAction(content, run, 0, 'fetch').run;
+      got = Object.values(run.looseHeld ?? {}).reduce((a, b) => a + b, 0);
+    }
+    expect(got).toBeGreaterThan(0);
+    expect(careProblem(content, run, 0, 'fetch')).toMatch(/Already/);
+  });
+
+  it('a story needs trust and is heard once', () => {
+    let run = setup();
+    run.party[0]!.friendship = 0;
+    expect(careProblem(content, run, 0, 'story')).toMatch(/trust/);
+    run.party[0]!.friendship = 100;
+    run = careAction(content, run, 0, 'story').run;
+    expect(careProblem(content, run, 0, 'story')).toMatch(/heard/);
+    expect(run.party[0]!.care!.mood).toBe(CARE.story.mood);
+  });
+});
