@@ -505,6 +505,9 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('intercept'),
     takeShare: z.number().gt(0).max(1),
+    /** The Guard Formation battle condition: the protected Pokémon takes `guardReduction` less damage for the rest of this turn and the turns after (`guardTurns` in all). */
+    guardTurns: z.number().int().min(0).max(6).default(0),
+    guardReduction: z.number().min(0).max(0.9).default(0),
   }),
   /**
    * Battle scope, your side (Emotional Awakening): a badly hurt Pokémon takes on a temporary

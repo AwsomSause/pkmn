@@ -55,6 +55,8 @@ export interface HyperBattleState {
   outdo: string[];
   /** Hits each of your Pokémon has taken this battle (Defiance counts the overwhelmed). */
   taken: Record<string, number>;
+  /** Guard Formation (Protective Instinct): turns left for each of your Pokémon (by uid) that is guarded. */
+  guard: Record<string, number>;
 }
 
 /**
@@ -71,7 +73,7 @@ export interface EnemyRage {
 }
 
 export function freshHyperBattle(): HyperBattleState {
-  return { lowHp: null, superEffective: {}, rage: {}, met: {}, rivals: {}, outdo: [], taken: {} };
+  return { lowHp: null, superEffective: {}, rage: {}, met: {}, rivals: {}, outdo: [], taken: {}, guard: {} };
 }
 
 /** Rolls an eligible moment (no roll when it is certain). */
