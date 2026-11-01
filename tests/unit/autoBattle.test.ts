@@ -7,7 +7,8 @@ import { bondOf } from '../../src/core/bond';
 import { createBattle } from '../../src/core/battle/engine';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
-import { CURRENT_VERSIONS, MIGRATIONS } from '../../src/save/saveManager';
+import { CURRENT_VERSIONS, MIGRATIONS, SaveManager } from '../../src/save/saveManager';
+import { MemoryStorageProvider } from '../../src/save/storage';
 import type { RunState } from '../../src/core/state';
 import { openHistory } from '../../src/core/story/record';
 import { content } from './helpers';
@@ -185,5 +186,24 @@ describe('Auto-Battle and Bag items', () => {
     run.party[0]!.level = 30;
     run.battle!.enemyTeam[0]!.hp = 1;
     expect(chooseAutoAction(content, run)!.action.kind).toBe('move');
+  });
+});
+
+describe('older saves load with Auto-Battle', () => {
+  it('a version 28 run loads (its battle has no autoUsed)', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 28, savedAt: '', data: fight() }));
+    const loaded = new SaveManager(storage, content).loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status !== 'ok') return;
+    expect(loaded.migratedFrom).toBe(28);
+    expect(loaded.data.battle!.autoUsed).toBeUndefined();
+  });
+  it('version 9 settings load with Auto-Battle off and explanations on', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 9, savedAt: '', data: { musicVolume: 0.3 } }));
+    const settings = new SaveManager(storage, content).loadSettings();
+    expect(settings.autoBattle).toBe(false);
+    expect(settings.autoExplain).toBe(true);
   });
 });
