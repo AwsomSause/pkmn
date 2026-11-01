@@ -104,6 +104,8 @@ export const RaidDefSchema = z.object({
   /** Moves the boss knows beyond the usual four (up to two more). */
   extraMoves: z.array(z.string()).max(2).default([]),
   rewards: RaidRewardSchema,
+  /** Boss HP lines at which it calls a minion. Never authored: badge scaling fills it in (core/raid/scaling.ts). */
+  summons: z.array(Fraction).max(3).default([]),
   /**
    * A Gang Raid (APPROVED.md §12): an evil faction's stronghold. The boss is a Shadow Pokémon; the approaches are the
    * ways in (stealth, direct, rescue-first). Never in the random den pool: the shadow world places it (shadowWorld/world.ts).
@@ -150,6 +152,11 @@ export const BadgeScalingSchema = z.object({
   rareTokenBadges: z.number().int().min(1),
   /** The share of the badge count used by each raid kind (default 1; the Grand-Enemy and gang raids are never scaled). */
   kindShare: z.partialRecord(z.enum(['wild', 'regional', 'rival', 'anomaly']), z.number().min(0).max(1)).default({}),
+  /** Reinforcements: the boss calls a minion when its HP falls to `atHp`, once `minBadges` badges are earned on a raid of at least `minTier`. The minion fights in its place until it faints. */
+  reinforcements: z.array(z.object({ minBadges: z.number().int().min(1), minTier: z.number().int().min(1).max(6), atHp: Fraction })).max(3),
+  /** The minion's species by the boss's first type, and its level relative to the boss. */
+  minionByType: z.record(z.string(), z.string()),
+  minionLevelOffset: z.number().int().min(-15).max(0),
   /** Badges needed before a den can hold a raid of tier 1 to 6 (an open tier is not enough on its own). */
   tierBadges: z.array(z.number().int().min(0)).length(6),
   /** Names of tiers 1 to 6 (Standard, Advanced, Elite, Exceptional, Legendary), and the label of rival and anomaly raids. */
@@ -158,8 +165,35 @@ export const BadgeScalingSchema = z.object({
 });
 export type BadgeScaling = z.infer<typeof BadgeScalingSchema>;
 
+/**
+ * What the world is doing can raise the chance of a raid den and steer which kind appears (spec 31 "Integration").
+ * Every condition given must hold. The same stage and run always roll the same.
+ */
+export const DenTriggerSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  /** Shown on the den's preview. */
+  text: z.string().min(1),
+  /** A story flag (see core/shadowWorld/world.ts flagOf) at or above a value: evil team operations, kindness, choices made. */
+  flag: z.object({ key: z.string(), min: z.number().int().min(1) }).optional(),
+  /** A Legendary world event has been offered this run. */
+  legendary: z.boolean().optional(),
+  /** The run's calendar day (or the real day when it has none) is a Saturday or Sunday. */
+  weekend: z.boolean().optional(),
+  /** The calendar month (1-12) is one of these (seasonal events). */
+  months: z.array(z.number().int().min(1).max(12)).optional(),
+  /** The run has reached this region (regional progression). */
+  minRegion: z.number().int().min(0).optional(),
+  chanceBonus: z.number().min(0).max(0.5),
+  /** Steer the den to this kind of raid when one fits. */
+  prefer: z.enum(['wild', 'regional', 'rival', 'anomaly']).optional(),
+});
+export type DenTrigger = z.infer<typeof DenTriggerSchema>;
+
 export const RaidFileSchema = z.object({
   badgeScaling: BadgeScalingSchema,
+  denTriggers: z.array(DenTriggerSchema).default([]),
+  /** The most the triggers can add to a stage's den chance. */
+  maxTriggerBonus: z.number().min(0).max(0.5).default(0.3),
   /** Chance that a stage has a raid den (the Pokémon League never does). */
   denChance: z.number().min(0).max(1),
   /** Raid tiers a den can have, by region index (the last entry covers later regions). */
