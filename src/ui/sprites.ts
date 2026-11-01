@@ -75,6 +75,7 @@ export function pokemonVisual(scene: Phaser.Scene, species: Species, side: 'fron
       if (!sprite) return;
       holder.removeAll(true);
       holder.add(sprite);
+      holder.emit('art-ready');
     });
   }
   return holder;
