@@ -1,0 +1,4255 @@
+{
+ "note": "Pocket Town data (W7). Generated once from the design notes; edit this file directly from now on. Reward numbers are intentionally small: the town flavors a run, it does not decide it.",
+ "buildings": [
+  {
+   "id": "garden",
+   "name": "Garden",
+   "icon": "item.sitrus_berry",
+   "blurb": "Water and harvest berries that carry into your next run.",
+   "actions": [
+    {
+     "id": "garden-tend",
+     "name": "Tend the berry beds",
+     "desc": "Plant a seed, water it, and harvest when it is ripe. Beds grow one stage each time you start a run.",
+     "kind": "tend",
+     "rows": [
+      "I241"
+     ],
+     "field": "garden",
+     "plots": 3,
+     "crops": [
+      {
+       "id": "oran",
+       "label": "Oran Berry",
+       "grow": 2,
+       "stages": [
+        "Seed",
+        "Sprout",
+        "Ripe"
+       ],
+       "yield": {
+        "items": {
+         "oran-berry": 3
+        },
+        "say": "Three plump Oran Berries."
+       }
+      },
+      {
+       "id": "pecha",
+       "label": "Pecha Berry",
+       "grow": 2,
+       "stages": [
+        "Seed",
+        "Sprout",
+        "Ripe"
+       ],
+       "yield": {
+        "items": {
+         "pecha-berry": 3
+        },
+        "say": "Three Pecha Berries."
+       }
+      },
+      {
+       "id": "sitrus",
+       "label": "Sitrus Berry",
+       "grow": 3,
+       "stages": [
+        "Seed",
+        "Sprout",
+        "Bud",
+        "Ripe"
+       ],
+       "yield": {
+        "items": {
+         "sitrus-berry": 2
+        },
+        "say": "Two Sitrus Berries."
+       }
+      },
+      {
+       "id": "lum",
+       "label": "Lum Berry",
+       "grow": 4,
+       "stages": [
+        "Seed",
+        "Sprout",
+        "Bud",
+        "Flower",
+        "Ripe"
+       ],
+       "yield": {
+        "items": {
+         "lum-berry": 2
+        },
+        "say": "Two rare Lum Berries."
+       },
+       "cost": {
+        "credits": 20
+       }
+      }
+     ]
+    },
+    {
+     "id": "garden-lesson",
+     "name": "Tutorial garden",
+     "desc": "The Professor explains the game in a small hands-on lesson. Each lesson pays once.",
+     "kind": "pick",
+     "rows": [
+      "I285"
+     ],
+     "limit": "none",
+     "options": [
+      {
+       "id": "lesson-catch",
+       "label": "Lesson 1: Catching",
+       "desc": "Weaken, then throw.",
+       "say": "The Professor snaps a pretend ball at a scarecrow. \"Lower its health first. Status helps too. Then throw.\"",
+       "reward": {
+        "rp": 1
+       },
+       "once": true
+      },
+      {
+       "id": "lesson-types",
+       "label": "Lesson 2: Types",
+       "desc": "Water beats Fire.",
+       "say": "Pots of fire, water and grass sit in a ring. \"Each beats one and loses to one. Remember the ring.\"",
+       "reward": {
+        "rp": 1
+       },
+       "once": true
+      },
+      {
+       "id": "lesson-care",
+       "label": "Lesson 3: Care",
+       "desc": "Friends fight harder.",
+       "say": "You pat a watering can. \"Bonded Pokémon crit more and endure more. Feed, groom, talk.\"",
+       "reward": {
+        "rp": 1
+       },
+       "once": true
+      },
+      {
+       "id": "lesson-camp",
+       "label": "Lesson 4: Camp",
+       "desc": "Gadgets and cooking.",
+       "say": "A toy tent pops up. \"Camp is where you cook, craft and rest. Spend a stop wisely.\"",
+       "reward": {
+        "rp": 1
+       },
+       "once": true
+      },
+      {
+       "id": "lesson-shiny",
+       "label": "Lesson 5: Luck",
+       "desc": "Chains and meters.",
+       "say": "The Professor tips his hat. \"Keep catching the same species and the shiny meter fills.\"",
+       "reward": {
+        "rp": 2
+       },
+       "once": true,
+       "needs": {
+        "runs": 3
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dojo",
+   "name": "Training Dojo",
+   "icon": "item.scanner",
+   "blurb": "Spar with a dummy, and test movesets without risk.",
+   "actions": [
+    {
+     "id": "dojo-spar",
+     "name": "Spar with the dummy",
+     "desc": "Time your strikes. Better rounds earn more practice.",
+     "kind": "grade",
+     "rows": [
+      "I242"
+     ],
+     "limit": "run",
+     "prompt": "echo-rhythm",
+     "rewards": {
+      "miss": {
+       "say": "You flail at the dummy and hit your own toe."
+      },
+      "ok": {
+       "rp": 1,
+       "xp": 1,
+       "counts": {
+        "practice": 1
+       },
+       "say": "A tidy spar. The dummy wobbles."
+      },
+      "good": {
+       "rp": 2,
+       "xp": 2,
+       "counts": {
+        "practice": 2
+       },
+       "items": {
+        "x-attack": 1
+       },
+       "say": "Crisp hits! You pocket an X Attack."
+      },
+      "perfect": {
+       "rp": 3,
+       "xp": 3,
+       "counts": {
+        "practice": 3
+       },
+       "items": {
+        "x-attack": 1,
+        "x-speed": 1
+       },
+       "say": "Flawless! The dummy bows."
+      }
+     }
+    },
+    {
+     "id": "dojo-dummy",
+     "name": "Practice dummy (moveset lab)",
+     "desc": "Pick a Pokémon from your last team and a move to see its damage against the dummy. No risk, no cost.",
+     "kind": "view",
+     "rows": [
+      "F29"
+     ],
+     "view": "dummy"
+    }
+   ]
+  },
+  {
+   "id": "library",
+   "name": "Library",
+   "icon": "item.map",
+   "blurb": "Read lore books and take the quiz for rewards.",
+   "actions": [
+    {
+     "id": "library-read",
+     "name": "Read a book",
+     "desc": "Lore books. The first read of each pays Research Points.",
+     "kind": "pick",
+     "rows": [
+      "I243"
+     ],
+     "limit": "none",
+     "pool": "lore",
+     "options": []
+    },
+    {
+     "id": "library-quiz",
+     "name": "Take the quiz",
+     "desc": "Three questions a day. Right answers pay.",
+     "kind": "quiz",
+     "rows": [
+      "I243"
+     ],
+     "limit": "day",
+     "pool": "library",
+     "max": 3,
+     "rewards": {
+      "miss": {
+       "say": "Not this time."
+      },
+      "ok": {
+       "rp": 1,
+       "say": "Correct."
+      },
+      "good": {
+       "rp": 1,
+       "credits": 10,
+       "say": "Correct."
+      },
+      "perfect": {
+       "rp": 2,
+       "credits": 20,
+       "say": "Correct."
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "trophy",
+   "name": "Trophy Room",
+   "icon": "item.master_ribbon",
+   "blurb": "Your trophy shelf, and a rubbing minigame to polish them.",
+   "actions": [
+    {
+     "id": "trophy-shelf",
+     "name": "Trophy shelf",
+     "desc": "Boss kills, champion wins and mastery, each on its own shelf.",
+     "kind": "view",
+     "rows": [
+      "F97"
+     ],
+     "view": "shelf"
+    },
+    {
+     "id": "trophy-polish",
+     "name": "Polish a trophy",
+     "desc": "Rub in rhythm. A polished trophy shines brighter and earns a Shine point.",
+     "kind": "grade",
+     "rows": [
+      "I244"
+     ],
+     "dynamic": "trophies",
+     "limit": "day",
+     "prompt": "brace-hold",
+     "rewards": {
+      "miss": {
+       "say": "A smudge."
+      },
+      "ok": {
+       "counts": {
+        "shine": 1
+       },
+       "xp": 1,
+       "say": "A fair shine."
+      },
+      "good": {
+       "counts": {
+        "shine": 2
+       },
+       "rp": 1,
+       "xp": 2,
+       "say": "It gleams."
+      },
+      "perfect": {
+       "counts": {
+        "shine": 3
+       },
+       "rp": 2,
+       "xp": 2,
+       "say": "Mirror bright."
+      }
+     },
+     "template": {
+      "id": "polish",
+      "label": "{name}",
+      "desc": "",
+      "say": ""
+     }
+    }
+   ]
+  },
+  {
+   "id": "board",
+   "name": "Bulletin Board",
+   "icon": "item.calendar",
+   "blurb": "Pin contracts and weekly events so you see them first.",
+   "actions": [
+    {
+     "id": "board-pin",
+     "name": "Pin a contract",
+     "desc": "Pinned contracts stay on top of the board and in your Town header.",
+     "kind": "place",
+     "rows": [
+      "I245"
+     ],
+     "view": "pin",
+     "max": 3
+    }
+   ]
+  },
+  {
+   "id": "mailbox",
+   "name": "Mailbox",
+   "icon": "item.pair_of_tickets",
+   "blurb": "Letters from rivals, townsfolk and Pokémon.",
+   "actions": [
+    {
+     "id": "mail-read",
+     "name": "Open the mail",
+     "desc": "A new batch every day: rival notes, NPC letters, Pokémon scrawls. Some hold gifts.",
+     "kind": "pick",
+     "rows": [
+      "I246"
+     ],
+     "limit": "none",
+     "dynamic": "mail",
+     "options": []
+    }
+   ]
+  },
+  {
+   "id": "radio",
+   "name": "Radio Tower",
+   "icon": "item.scanner",
+   "blurb": "Tune a broadcast. Your next run starts with its gift.",
+   "actions": [
+    {
+     "id": "radio-tune",
+     "name": "Tune a broadcast",
+     "desc": "One broadcast per run.",
+     "kind": "pick",
+     "rows": [
+      "I247"
+     ],
+     "limit": "run",
+     "options": [
+      {
+       "id": "weather",
+       "label": "Weather Report",
+       "desc": "A run-ready forecast.",
+       "say": "A calm voice reads the skies. You scribble the highlights.",
+       "reward": {
+        "items": {
+         "potion": 2
+        },
+        "note": "The radio promised clear skies when you set out."
+       }
+      },
+      {
+       "id": "trainer-tips",
+       "label": "Trainer Tips",
+       "desc": "Hints for the road.",
+       "say": "\"Always check your Bag before the gym.\" Wise words.",
+       "reward": {
+        "money": 300,
+        "note": "A trainer tip crackled over the radio before you left."
+       }
+      },
+      {
+       "id": "wild-watch",
+       "label": "Wild Watch",
+       "desc": "Where the wild things are.",
+       "say": "Static, then a list of spotted species.",
+       "reward": {
+        "items": {
+         "poke-ball": 3
+        },
+        "note": "Wild Watch named a few species to look for."
+       }
+      },
+      {
+       "id": "battle-hour",
+       "label": "Battle Hour",
+       "desc": "Live commentary.",
+       "say": "Two announcers shout over a match replay.",
+       "reward": {
+        "items": {
+         "x-attack": 1,
+         "x-speed": 1
+        },
+        "note": "Battle Hour left you pumped for the first fight."
+       }
+      },
+      {
+       "id": "oldies",
+       "label": "Oldies Request",
+       "desc": "A song from home.",
+       "say": "The old tune plays. You hum along.",
+       "reward": {
+        "items": {
+         "soothe-bell": 1
+        },
+        "xp": 1,
+        "note": "You hummed an old tune on the way out."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kitchen",
+   "name": "Kitchen",
+   "icon": "item.sitrus_berry",
+   "blurb": "Prepare run snacks. Combine two ingredients and see what you get.",
+   "actions": [
+    {
+     "id": "kitchen-cook",
+     "name": "Cook a snack",
+     "desc": "Pick two ingredients. Known recipes make a proper snack; unknown mixes make mush. One snack per run.",
+     "kind": "puzzle",
+     "rows": [
+      "I248"
+     ],
+     "puzzle": "match",
+     "limit": "run",
+     "pool": "recipes"
+    }
+   ]
+  },
+  {
+   "id": "workshop",
+   "name": "Workshop",
+   "icon": "ball.pb",
+   "blurb": "Craft balls for credits. Gear tune-ups are in the in-run Camp.",
+   "actions": [
+    {
+     "id": "workshop-craft",
+     "name": "Craft balls",
+     "desc": "Turn credits into balls for the next run.",
+     "kind": "buy",
+     "rows": [
+      "I249"
+     ],
+     "set": "boxes",
+     "goods": [
+      {
+       "id": "craft-great",
+       "label": "6 Great Balls",
+       "desc": "Sturdier than plain balls.",
+       "set": "boon",
+       "cost": {
+        "credits": 30
+       },
+       "reward": {
+        "items": {
+         "great-ball": 6
+        }
+       }
+      },
+      {
+       "id": "craft-net",
+       "label": "4 Net Balls",
+       "desc": "Bug and Water catchers.",
+       "set": "boon",
+       "cost": {
+        "credits": 24
+       },
+       "reward": {
+        "items": {
+         "net-ball": 4
+        }
+       }
+      },
+      {
+       "id": "craft-quick",
+       "label": "3 Quick Balls",
+       "desc": "Best on turn one.",
+       "set": "boon",
+       "cost": {
+        "credits": 30
+       },
+       "reward": {
+        "items": {
+         "quick-ball": 3
+        }
+       }
+      },
+      {
+       "id": "craft-heal",
+       "label": "3 Heal Balls",
+       "desc": "Heal what you catch.",
+       "set": "boon",
+       "cost": {
+        "credits": 24
+       },
+       "reward": {
+        "items": {
+         "heal-ball": 3
+        }
+       }
+      },
+      {
+       "id": "craft-luxury",
+       "label": "3 Luxury Balls",
+       "desc": "Friendlier catches.",
+       "set": "boon",
+       "cost": {
+        "credits": 36
+       },
+       "reward": {
+        "items": {
+         "luxury-ball": 3
+        }
+       }
+      }
+     ]
+    },
+    {
+     "id": "workshop-repair",
+     "name": "Repair gear",
+     "desc": "Fix a keepsake so it is ready to carry. Also earns a tune-up charge that makes your first camp gadget repair free.",
+     "kind": "pick",
+     "rows": [
+      "I249"
+     ],
+     "limit": "run",
+     "options": [
+      {
+       "id": "repair-gear",
+       "label": "Tune up the toolkit",
+       "desc": "The forge hums.",
+       "say": "You oil every hinge and sharpen every blade.",
+       "reward": {
+        "stuff": {
+         "oil": 2
+        },
+        "say": "You pack two flasks of oil for the road."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "greenhouse",
+   "name": "Greenhouse",
+   "icon": "item.leaf_stone",
+   "blurb": "Raise plants that change as they grow, like Oddish bulbs.",
+   "actions": [
+    {
+     "id": "greenhouse-tend",
+     "name": "Tend the plants",
+     "desc": "Each run you start grows them one stage. Fully grown plants give stones and items.",
+     "kind": "tend",
+     "rows": [
+      "I250"
+     ],
+     "field": "greenhouse",
+     "plots": 2,
+     "crops": [
+      {
+       "id": "oddish",
+       "label": "Oddish bulb",
+       "grow": 4,
+       "stages": [
+        "Bulb",
+        "Oddish",
+        "Gloom",
+        "Vileplume"
+       ],
+       "yield": {
+        "items": {
+         "leaf-stone": 1,
+         "oran-berry": 2
+        },
+        "say": "The Vileplume bloom gives up a Leaf Stone."
+       }
+      },
+      {
+       "id": "bellsprout",
+       "label": "Bellsprout bud",
+       "grow": 3,
+       "stages": [
+        "Bud",
+        "Bellsprout",
+        "Weepinbell"
+       ],
+       "yield": {
+        "items": {
+         "pecha-berry": 2,
+         "potion": 1
+        },
+        "say": "A Weepinbell hands over berries."
+       }
+      },
+      {
+       "id": "sunflora",
+       "label": "Sunkern seed",
+       "grow": 3,
+       "stages": [
+        "Seed",
+        "Sunkern",
+        "Sunflora"
+       ],
+       "yield": {
+        "items": {
+         "sun-stone": 1
+        },
+        "say": "Sunflora leaves a Sun Stone in its petals."
+       },
+       "cost": {
+        "credits": 40
+       }
+      },
+      {
+       "id": "bonsly",
+       "label": "Mossy bonsai",
+       "grow": 2,
+       "stages": [
+        "Pot",
+        "Bonsai"
+       ],
+       "yield": {
+        "money": 200,
+        "say": "A tidy bonsai sells for ₽200."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "aquarium",
+   "name": "Aquarium",
+   "icon": "item.water_stone",
+   "blurb": "Feed and decorate for Water-type bonds.",
+   "actions": [
+    {
+     "id": "aquarium-tend",
+     "name": "Feed the tank",
+     "desc": "Fish grow a stage per run started. A well-fed tank adds Water-type bond gifts.",
+     "kind": "tend",
+     "rows": [
+      "I251"
+     ],
+     "field": "aquarium",
+     "plots": 2,
+     "crops": [
+      {
+       "id": "magikarp",
+       "label": "Magikarp fry",
+       "grow": 3,
+       "stages": [
+        "Fry",
+        "Magikarp",
+        "Gyarados"
+       ],
+       "yield": {
+        "items": {
+         "net-ball": 2,
+         "dive-ball": 1
+        },
+        "say": "Gyarados splashes you with a happy roar."
+       }
+      },
+      {
+       "id": "goldeen",
+       "label": "Goldeen",
+       "grow": 2,
+       "stages": [
+        "Egg",
+        "Goldeen"
+       ],
+       "yield": {
+        "items": {
+         "water-stone": 1
+        },
+        "say": "Goldeen spits a Water Stone out of the sand."
+       },
+       "cost": {
+        "credits": 30
+       }
+      },
+      {
+       "id": "corsola",
+       "label": "Corsola",
+       "grow": 3,
+       "stages": [
+        "Coral",
+        "Branch",
+        "Corsola"
+       ],
+       "yield": {
+        "items": {
+         "soothe-bell": 1,
+         "sea-incense": 1
+        },
+        "say": "Corsola gifts you a charm."
+       }
+      }
+     ]
+    },
+    {
+     "id": "aquarium-decor",
+     "name": "Decorate the tank",
+     "desc": "Buy tank decor. More decor makes feeding a little more rewarding.",
+     "kind": "buy",
+     "rows": [
+      "I251"
+     ],
+     "set": "tank",
+     "goods": [
+      {
+       "id": "tank-castle",
+       "label": "Sand castle",
+       "desc": "",
+       "set": "tank",
+       "cost": {
+        "credits": 20
+       }
+      },
+      {
+       "id": "tank-kelp",
+       "label": "Kelp forest",
+       "desc": "",
+       "set": "tank",
+       "cost": {
+        "credits": 25
+       }
+      },
+      {
+       "id": "tank-chest",
+       "label": "Treasure chest",
+       "desc": "",
+       "set": "tank",
+       "cost": {
+        "credits": 40
+       },
+       "rarity": "rare"
+      },
+      {
+       "id": "tank-bubbles",
+       "label": "Bubble stream",
+       "desc": "",
+       "set": "tank",
+       "cost": {
+        "credits": 30
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "observatory",
+   "name": "Observatory",
+   "icon": "item.scanner",
+   "blurb": "Stargaze and choose an omen for your next run.",
+   "actions": [
+    {
+     "id": "observatory-omen",
+     "name": "Read the stars",
+     "desc": "One omen per run.",
+     "kind": "pick",
+     "rows": [
+      "I252"
+     ],
+     "limit": "run",
+     "options": [
+      {
+       "id": "omen-comet",
+       "label": "The Comet",
+       "desc": "Bold beginnings.",
+       "say": "A streak of white crosses the sky.",
+       "reward": {
+        "money": 400,
+        "note": "A comet crossed the sky the night before you left."
+       }
+      },
+      {
+       "id": "omen-moon",
+       "label": "The Full Moon",
+       "desc": "Calm nights.",
+       "say": "The moon sits fat and bright.",
+       "reward": {
+        "items": {
+         "moon-stone": 1
+        },
+        "note": "The full moon watched you pack."
+       }
+      },
+      {
+       "id": "omen-twins",
+       "label": "The Twins",
+       "desc": "Pairs and partners.",
+       "say": "Two stars burn side by side.",
+       "reward": {
+        "items": {
+         "poke-ball": 2,
+         "potion": 1
+        },
+        "note": "The Twins hung low over the town."
+       }
+      },
+      {
+       "id": "omen-hunter",
+       "label": "The Hunter",
+       "desc": "Big prey.",
+       "say": "Three stars line up like a belt.",
+       "reward": {
+        "items": {
+         "x-attack": 1,
+         "great-ball": 2
+        },
+        "note": "The Hunter rose red at your back."
+       }
+      },
+      {
+       "id": "omen-lamp",
+       "label": "The Lamp",
+       "desc": "Safe travels.",
+       "say": "A single steady star.",
+       "reward": {
+        "items": {
+         "revive": 1
+        },
+        "note": "The Lamp star burned steady."
+       },
+       "needs": {
+        "runs": 5
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "hotspring",
+   "name": "Hot Spring",
+   "icon": "item.soothe_bell",
+   "blurb": "A bond-and-heal session between runs.",
+   "actions": [
+    {
+     "id": "hotspring-soak",
+     "name": "Soak with your team",
+     "desc": "Hold steady until the steam is just right.",
+     "kind": "grade",
+     "rows": [
+      "I253"
+     ],
+     "limit": "run",
+     "prompt": "brace-hold",
+     "rewards": {
+      "miss": {
+       "say": "Too hot! You hop out."
+      },
+      "ok": {
+       "items": {
+        "potion": 1
+       },
+       "say": "A pleasant soak."
+      },
+      "good": {
+       "items": {
+        "super-potion": 1,
+        "soothe-bell": 1
+       },
+       "xp": 1,
+       "say": "Your team is glowing."
+      },
+      "perfect": {
+       "items": {
+        "super-potion": 2,
+        "soothe-bell": 1,
+        "revive": 1
+       },
+       "xp": 2,
+       "rp": 1,
+       "say": "Perfect temperature. Everyone is happy."
+      }
+     },
+     "dynamic": "lastTeam"
+    }
+   ]
+  },
+  {
+   "id": "fireplace",
+   "name": "Fireplace",
+   "icon": "item.sachet",
+   "blurb": "Sit with your last team. Each chat is a short vignette.",
+   "actions": [
+    {
+     "id": "fireplace-chat",
+     "name": "Sit by the fire",
+     "desc": "Pick a Pokémon from your last team. Their chat depends on their type. The first chat with each species pays a little.",
+     "kind": "pick",
+     "rows": [
+      "I254"
+     ],
+     "limit": "none",
+     "dynamic": "lastTeam",
+     "options": [],
+     "template": {
+      "id": "chat",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
+       "rp": 1,
+       "xp": 1
+      },
+      "once": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "arcade",
+   "name": "Arcade Corner",
+   "icon": "item.coin_case",
+   "blurb": "Mini versions of battle and rhythm modes, plus darts and Memory Match.",
+   "actions": [
+    {
+     "id": "arcade-rhythm",
+     "name": "Rhythm cabinet",
+     "desc": "Press on the beat.",
+     "kind": "grade",
+     "rows": [
+      "I255"
+     ],
+     "limit": "day",
+     "prompt": "echo-rhythm",
+     "rewards": {
+      "miss": {
+       "coins": 1,
+       "say": "You stumble through it."
+      },
+      "ok": {
+       "credits": 5,
+       "coins": 2,
+       "say": "Nice groove."
+      },
+      "good": {
+       "credits": 10,
+       "coins": 3,
+       "xp": 1,
+       "say": "Smooth!"
+      },
+      "perfect": {
+       "credits": 20,
+       "coins": 5,
+       "xp": 2,
+       "say": "All perfect! The cabinet lights up."
+      }
+     }
+    },
+    {
+     "id": "arcade-battle",
+     "name": "Mini battle cabinet",
+     "desc": "Pick the best type against a foe. Three rounds a day.",
+     "kind": "quiz",
+     "rows": [
+      "I255"
+     ],
+     "limit": "day",
+     "pool": "matchup",
+     "max": 3,
+     "rewards": {
+      "miss": {
+       "say": "Not super effective…"
+      },
+      "ok": {
+       "credits": 5,
+       "coins": 1,
+       "say": "Super effective!"
+      },
+      "good": {
+       "credits": 8,
+       "coins": 1,
+       "say": "Super effective!"
+      },
+      "perfect": {
+       "credits": 10,
+       "coins": 2,
+       "say": "Super effective!"
+      }
+     }
+    },
+    {
+     "id": "arcade-darts",
+     "name": "Darts",
+     "desc": "Hit the bullseye as the ring closes.",
+     "kind": "grade",
+     "rows": [
+      "F114"
+     ],
+     "limit": "day",
+     "prompt": "throw-ring",
+     "rewards": {
+      "miss": {
+       "coins": 1,
+       "say": "Wall hit."
+      },
+      "ok": {
+       "credits": 5,
+       "coins": 1,
+       "say": "Outer ring."
+      },
+      "good": {
+       "credits": 10,
+       "coins": 2,
+       "say": "Inner ring."
+      },
+      "perfect": {
+       "credits": 20,
+       "coins": 4,
+       "xp": 1,
+       "say": "Bullseye!"
+      }
+     }
+    },
+    {
+     "id": "arcade-memory",
+     "name": "Memory Match",
+     "desc": "Flip cards to find pairs of Pokémon. Fewer misses pay more.",
+     "kind": "puzzle",
+     "rows": [
+      "F114"
+     ],
+     "puzzle": "match",
+     "limit": "day",
+     "pool": "memory",
+     "rewards": {
+      "miss": {
+       "coins": 1,
+       "say": "So many misses…"
+      },
+      "ok": {
+       "credits": 5,
+       "coins": 1,
+       "say": "A steady match."
+      },
+      "good": {
+       "credits": 10,
+       "coins": 2,
+       "xp": 1,
+       "say": "Sharp memory!"
+      },
+      "perfect": {
+       "credits": 20,
+       "coins": 3,
+       "xp": 2,
+       "say": "A near-perfect board!"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "photo",
+   "name": "Photo Studio",
+   "icon": "item.scanner",
+   "blurb": "Backdrops and poses for team photos.",
+   "actions": [
+    {
+     "id": "photo-backdrops",
+     "name": "Backdrop shop",
+     "desc": "Buy backdrops for your photos.",
+     "kind": "buy",
+     "rows": [
+      "I256"
+     ],
+     "set": "backdrops",
+     "goods": [
+      {
+       "id": "bd-meadow",
+       "label": "Meadow",
+       "desc": "",
+       "set": "backdrops",
+       "cost": {
+        "credits": 0
+       },
+       "rarity": "common"
+      },
+      {
+       "id": "bd-sunset",
+       "label": "Sunset",
+       "desc": "",
+       "set": "backdrops",
+       "cost": {
+        "credits": 20
+       },
+       "rarity": "common"
+      },
+      {
+       "id": "bd-night",
+       "label": "Starry night",
+       "desc": "",
+       "set": "backdrops",
+       "cost": {
+        "credits": 25
+       },
+       "rarity": "common"
+      },
+      {
+       "id": "bd-arena",
+       "label": "Arena lights",
+       "desc": "",
+       "set": "backdrops",
+       "cost": {
+        "credits": 30
+       },
+       "rarity": "rare"
+      },
+      {
+       "id": "bd-aero",
+       "label": "Aero bubbles",
+       "desc": "",
+       "set": "backdrops",
+       "cost": {
+        "credits": 40
+       },
+       "rarity": "rare"
+      },
+      {
+       "id": "bd-ds",
+       "label": "Dual-screen grid",
+       "desc": "",
+       "set": "backdrops",
+       "cost": {
+        "credits": 60
+       },
+       "rarity": "epic"
+      }
+     ]
+    },
+    {
+     "id": "photo-snap",
+     "name": "Take a team photo",
+     "desc": "Choose a pose; the shot is saved to your album with the backdrop you wear.",
+     "kind": "pick",
+     "rows": [
+      "I256"
+     ],
+     "limit": "none",
+     "options": [
+      {
+       "id": "pose-line",
+       "label": "Line up",
+       "desc": "",
+       "say": "Everyone lines up and smiles.",
+       "reward": {
+        "xp": 1
+       }
+      },
+      {
+       "id": "pose-pile",
+       "label": "Dog pile",
+       "desc": "",
+       "say": "Somebody sits on somebody. Perfect.",
+       "reward": {
+        "xp": 1
+       }
+      },
+      {
+       "id": "pose-hero",
+       "label": "Hero pose",
+       "desc": "",
+       "say": "Chins up. Capes (imaginary) flapping.",
+       "reward": {
+        "xp": 1
+       }
+      },
+      {
+       "id": "pose-sleepy",
+       "label": "Sleepy pile",
+       "desc": "",
+       "say": "A very quiet photo.",
+       "reward": {
+        "xp": 1
+       }
+      }
+     ]
+    },
+    {
+     "id": "photo-equip",
+     "name": "Pick a backdrop",
+     "desc": "Wear a backdrop you own.",
+     "kind": "equip",
+     "rows": [
+      "I256"
+     ],
+     "set": "backdrops",
+     "slot": "backdrop"
+    }
+   ]
+  },
+  {
+   "id": "mirror",
+   "name": "Dressing Mirror",
+   "icon": "item.sachet",
+   "blurb": "Outfits with a twirl, tailored at the costume shop.",
+   "actions": [
+    {
+     "id": "mirror-outfit",
+     "name": "Try an outfit",
+     "desc": "Pick an outfit you own. The mirror twirls you around.",
+     "kind": "equip",
+     "rows": [
+      "I257"
+     ],
+     "set": "outfits",
+     "slot": "outfit"
+    },
+    {
+     "id": "mirror-fit",
+     "name": "Measure up at the tailor",
+     "desc": "Stand still while the tailor measures. A better fit unlocks the next outfit.",
+     "kind": "grade",
+     "rows": [
+      "I261"
+     ],
+     "limit": "run",
+     "prompt": "throw-ring",
+     "rewards": {
+      "miss": {
+       "say": "The tape snaps back. Try again later."
+      },
+      "ok": {
+       "unlock": {
+        "set": "outfits",
+        "pool": [
+         "out-scarf",
+         "out-cap",
+         "out-vest"
+        ]
+       },
+       "say": "A decent fit."
+      },
+      "good": {
+       "unlock": {
+        "set": "outfits",
+        "pool": [
+         "out-cape",
+         "out-goggles",
+         "out-kimono"
+        ]
+       },
+       "xp": 1,
+       "say": "Tailored to a T."
+      },
+      "perfect": {
+       "unlock": {
+        "set": "outfits",
+        "pool": [
+         "out-tux",
+         "out-sundress",
+         "out-armor"
+        ]
+       },
+       "xp": 2,
+       "say": "The tailor weeps with joy."
+      }
+     }
+    },
+    {
+     "id": "mirror-contest",
+     "name": "Costume contest",
+     "desc": "Show off your outfit. NPC judges vote; more outfits owned means more votes.",
+     "kind": "grade",
+     "rows": [
+      "I283"
+     ],
+     "limit": "day",
+     "prompt": "shout-tap",
+     "rewards": {
+      "miss": {
+       "credits": 2,
+       "say": "The judges shrug."
+      },
+      "ok": {
+       "credits": 8,
+       "coins": 1,
+       "say": "Polite applause."
+      },
+      "good": {
+       "credits": 15,
+       "coins": 2,
+       "xp": 1,
+       "say": "Cheers!"
+      },
+      "perfect": {
+       "credits": 30,
+       "coins": 3,
+       "xp": 2,
+       "say": "A standing ovation!"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "pets",
+   "name": "Pet Corner",
+   "icon": "item.soothe_bell",
+   "blurb": "Your past Pokémon roam here. Play with them.",
+   "actions": [
+    {
+     "id": "pets-play",
+     "name": "Play with a pet",
+     "desc": "Pick one of your pets. Playing daily builds a bond; at the bond mark they give a gift.",
+     "kind": "pick",
+     "rows": [
+      "I258"
+     ],
+     "limit": "none",
+     "dynamic": "pets",
+     "options": [],
+     "template": {
+      "id": "play",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
+       "xp": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "replica",
+   "name": "Gym Replica",
+   "icon": "item.leaders_crest",
+   "blurb": "Practice against ghost data of opponents who beat you.",
+   "actions": [
+    {
+     "id": "replica-duel",
+     "name": "Practice match",
+     "desc": "Your last team against a ghost opponent, scored with real type and level numbers. No risk.",
+     "kind": "pick",
+     "rows": [
+      "I259"
+     ],
+     "limit": "run",
+     "dynamic": "history",
+     "options": [],
+     "template": {
+      "id": "duel",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
+       "rp": 1,
+       "xp": 1
+      }
+     }
+    },
+    {
+     "id": "replica-mirror",
+     "name": "Mirror Room",
+     "desc": "Meet a ghost of your last winning or losing team and spar with it.",
+     "kind": "grade",
+     "rows": [
+      "I263"
+     ],
+     "limit": "day",
+     "prompt": "echo-rhythm",
+     "rewards": {
+      "miss": {
+       "say": "Your ghost laughs and vanishes."
+      },
+      "ok": {
+       "rp": 1,
+       "say": "You match your ghost move for move."
+      },
+      "good": {
+       "rp": 2,
+       "xp": 1,
+       "say": "You outpace your ghost."
+      },
+      "perfect": {
+       "rp": 3,
+       "xp": 2,
+       "credits": 10,
+       "say": "Your ghost salutes you."
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "museum2",
+   "name": "Relic Museum",
+   "icon": "item.map",
+   "blurb": "Place found relics on pedestals; matching sets unlock bonuses.",
+   "actions": [
+    {
+     "id": "museum-pedestal",
+     "name": "Place a relic",
+     "desc": "Relics you found in past runs. Three pedestals; each tier you fill adds a start-of-run bonus.",
+     "kind": "pick",
+     "rows": [
+      "I260"
+     ],
+     "limit": "none",
+     "dynamic": "museum",
+     "options": []
+    }
+   ]
+  },
+  {
+   "id": "daycare",
+   "name": "Daycare",
+   "icon": "item.mystery_egg",
+   "blurb": "Leave a Pokémon, collect eggs with surprising parentage.",
+   "actions": [
+    {
+     "id": "daycare-leave",
+     "name": "Leave a Pokémon",
+     "desc": "Pick from your last team. After two runs the pair-up yields an egg-gift of mixed parentage.",
+     "kind": "pick",
+     "rows": [
+      "I262"
+     ],
+     "limit": "none",
+     "dynamic": "lastTeam",
+     "options": [],
+     "template": {
+      "id": "leave",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
+       "counts": {
+        "daycare": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "daycare-collect",
+     "name": "Collect from the Daycare",
+     "desc": "Ready after two runs. Mixed-parentage eggs come as items.",
+     "kind": "pick",
+     "rows": [
+      "I262"
+     ],
+     "limit": "none",
+     "options": [
+      {
+       "id": "collect-egg",
+       "label": "Collect the egg",
+       "desc": "",
+       "say": "The caretaker beams. \"Look who has your eyes.\"",
+       "reward": {
+        "items": {
+         "lucky-egg": 1,
+         "poke-ball": 2
+        },
+        "say": "You collect a Lucky Egg and spare balls."
+       },
+       "needs": {
+        "text": "Needs two Daycare visits."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "stage",
+   "name": "Stage",
+   "icon": "item.master_ribbon",
+   "blurb": "Perform contests to win ribbons.",
+   "actions": [
+    {
+     "id": "stage-contest",
+     "name": "Perform a contest",
+     "desc": "Pick a category and a team member. Good performances win ribbons.",
+     "kind": "grade",
+     "rows": [
+      "I266"
+     ],
+     "limit": "day",
+     "prompt": "echo-rhythm",
+     "dynamic": "lastTeam",
+     "rewards": {
+      "miss": {
+       "say": "The crowd murmurs."
+      },
+      "ok": {
+       "credits": 5,
+       "say": "A decent show."
+      },
+      "good": {
+       "credits": 10,
+       "xp": 1,
+       "unlock": {
+        "set": "ribbons",
+        "pool": [
+         "rib-cool",
+         "rib-cute",
+         "rib-smart",
+         "rib-tough",
+         "rib-beauty"
+        ]
+       },
+       "say": "A ribbon for the lead!"
+      },
+      "perfect": {
+       "credits": 20,
+       "xp": 2,
+       "unlock": {
+        "set": "ribbons",
+        "pool": [
+         "rib-master",
+         "rib-cool",
+         "rib-cute",
+         "rib-smart",
+         "rib-tough",
+         "rib-beauty"
+        ]
+       },
+       "say": "A brilliant performance!"
+      }
+     },
+     "template": {
+      "id": "perform",
+      "label": "{name}",
+      "desc": "",
+      "say": ""
+     }
+    }
+   ]
+  },
+  {
+   "id": "cinema",
+   "name": "Cinema",
+   "icon": "item.map",
+   "blurb": "Rewatch your best battles and endings.",
+   "actions": [
+    {
+     "id": "cinema-play",
+     "name": "Rewatch a run",
+     "desc": "Choose a finished run and relive its top moments as a short reel.",
+     "kind": "pick",
+     "rows": [
+      "I267"
+     ],
+     "limit": "none",
+     "dynamic": "history",
+     "options": [],
+     "template": {
+      "id": "watch",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
+       "xp": 1
+      },
+      "once": true
+     }
+    },
+    {
+     "id": "cinema-theatre",
+     "name": "Cutscene theatre",
+     "desc": "Replay endings and rival arcs you have seen.",
+     "kind": "view",
+     "rows": [
+      "F112"
+     ],
+     "view": "theatre"
+    }
+   ]
+  },
+  {
+   "id": "bakery",
+   "name": "Bakery",
+   "icon": "item.strawberry_sweet",
+   "blurb": "Baked goods give pre-run buffs. Ding at the right moment.",
+   "actions": [
+    {
+     "id": "bakery-bake",
+     "name": "Bake a batch",
+     "desc": "Take the tray out when the oven dings.",
+     "kind": "grade",
+     "rows": [
+      "I268"
+     ],
+     "limit": "run",
+     "prompt": "throw-ring",
+     "rewards": {
+      "miss": {
+       "items": {
+        "strawberry-sweet": 0
+       },
+       "say": "Burnt crisps. Not even the Pokémon want them."
+      },
+      "ok": {
+       "items": {
+        "oran-berry": 2
+       },
+       "say": "A plain loaf."
+      },
+      "good": {
+       "items": {
+        "sitrus-berry": 2,
+        "x-attack": 1
+       },
+       "xp": 1,
+       "say": "Golden pastries!"
+      },
+      "perfect": {
+       "items": {
+        "sitrus-berry": 2,
+        "x-attack": 1,
+        "x-speed": 1,
+        "lucky-egg": 1
+       },
+       "xp": 2,
+       "say": "A bake worthy of a champion."
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "tea",
+   "name": "Tea Room",
+   "icon": "item.sachet",
+   "blurb": "Pour tea for a guest and hear a secret.",
+   "actions": [
+    {
+     "id": "tea-pour",
+     "name": "Pour the tea",
+     "desc": "Steady hands earn a secret. Secrets are kept in your Guest Book.",
+     "kind": "grade",
+     "rows": [
+      "I269"
+     ],
+     "limit": "day",
+     "prompt": "brace-hold",
+     "rewards": {
+      "miss": {
+       "say": "You spill it. The guest sighs and leaves."
+      },
+      "ok": {
+       "counts": {
+        "tea": 1
+       },
+       "say": "The guest sips and smiles, but says little."
+      },
+      "good": {
+       "counts": {
+        "tea": 1
+       },
+       "rp": 1,
+       "say": "The guest lowers their voice…"
+      },
+      "perfect": {
+       "counts": {
+        "tea": 1
+       },
+       "rp": 2,
+       "xp": 1,
+       "say": "A perfect cup. The guest tells you everything."
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "rooftop",
+   "name": "Rooftop",
+   "icon": "item.map",
+   "blurb": "Watch the weather forecast and choose a lucky charm.",
+   "actions": [
+    {
+     "id": "rooftop-forecast",
+     "name": "Read the forecast",
+     "desc": "A forecast seeded by the date. Cosmetic only.",
+     "kind": "view",
+     "rows": [
+      "I270"
+     ],
+     "view": "forecast"
+    },
+    {
+     "id": "rooftop-charm",
+     "name": "Choose a lucky charm",
+     "desc": "One charm per run.",
+     "kind": "pick",
+     "rows": [
+      "I270"
+     ],
+     "limit": "run",
+     "options": [
+      {
+       "id": "charm-clover",
+       "label": "Four-leaf clover",
+       "desc": "For good rolls.",
+       "say": "You tuck the clover in your cap.",
+       "reward": {
+        "items": {
+         "amulet-coin": 1
+        },
+        "note": "You carried a pressed clover for luck."
+       }
+      },
+      {
+       "id": "charm-feather",
+       "label": "Pidgey feather",
+       "desc": "For quick escapes.",
+       "say": "A brown feather, soft and light.",
+       "reward": {
+        "items": {
+         "escape-rope": 1,
+         "repel": 2
+        },
+        "note": "A Pidgey feather rode in your cap."
+       }
+      },
+      {
+       "id": "charm-pebble",
+       "label": "Smooth pebble",
+       "desc": "For steady aim.",
+       "say": "Warm from the sun.",
+       "reward": {
+        "items": {
+         "scope-lens": 1
+        },
+        "note": "A smooth pebble sat warm in your pocket."
+       }
+      },
+      {
+       "id": "charm-bell",
+       "label": "Little bell",
+       "desc": "For friendly meetings.",
+       "say": "It rings, soft and clear.",
+       "reward": {
+        "items": {
+         "soothe-bell": 1
+        },
+        "note": "A little bell chimed in your bag."
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "basement",
+   "name": "Basement",
+   "icon": "item.dna_splicers",
+   "blurb": "A secret door opens when you play the right code of Pokémon cries.",
+   "actions": [
+    {
+     "id": "basement-code",
+     "name": "Enter the cry code",
+     "desc": "Listen to the cries, then repeat the order. A new code appears after each opened vault.",
+     "kind": "puzzle",
+     "rows": [
+      "I271"
+     ],
+     "puzzle": "sequence",
+     "pool": "cries",
+     "max": 4
+    }
+   ],
+   "hidden": false
+  },
+  {
+   "id": "wall",
+   "name": "Wall of Fame",
+   "icon": "item.master_ribbon",
+   "blurb": "Sign the wall with a graffiti stylus.",
+   "actions": [
+    {
+     "id": "wall-sign",
+     "name": "Sign the wall",
+     "desc": "One signature per win, plus one just for visiting. Pick a color and a stamp.",
+     "kind": "place",
+     "rows": [
+      "I272"
+     ],
+     "view": "graffiti",
+     "max": 24
+    }
+   ]
+  },
+  {
+   "id": "wishing",
+   "name": "Wishing Tree",
+   "icon": "item.sachet",
+   "blurb": "Hang tags that give the next run flavor. They never change a roll.",
+   "actions": [
+    {
+     "id": "wishing-tag",
+     "name": "Hang a tag",
+     "desc": "Up to three tags hang at once; they are read in the run journal.",
+     "kind": "pick",
+     "rows": [
+      "I273"
+     ],
+     "limit": "none",
+     "options": [
+      {
+       "id": "wish-sea",
+       "label": "A calm sea",
+       "desc": "",
+       "say": "The tag swings in the breeze.",
+       "reward": {
+        "note": "Wish: a calm sea."
+       }
+      },
+      {
+       "id": "wish-rival",
+       "label": "A worthy rival",
+       "desc": "",
+       "say": "The tag glows faintly.",
+       "reward": {
+        "note": "Wish: a worthy rival."
+       }
+      },
+      {
+       "id": "wish-friend",
+       "label": "A new friend",
+       "desc": "",
+       "say": "The tag rustles.",
+       "reward": {
+        "note": "Wish: a new friend."
+       }
+      },
+      {
+       "id": "wish-storm",
+       "label": "One good storm",
+       "desc": "",
+       "say": "The tag flaps.",
+       "reward": {
+        "note": "Wish: one good storm."
+       }
+      },
+      {
+       "id": "wish-home",
+       "label": "A safe way home",
+       "desc": "",
+       "say": "The tag settles.",
+       "reward": {
+        "note": "Wish: a safe way home."
+       }
+      },
+      {
+       "id": "wish-shiny",
+       "label": "Something shiny",
+       "desc": "",
+       "say": "The tag sparkles, just for a moment.",
+       "reward": {
+        "note": "Wish: something shiny."
+       }
+      }
+     ],
+     "max": 3
+    }
+   ]
+  },
+  {
+   "id": "shrine",
+   "name": "Shrine",
+   "icon": "item.sachet",
+   "blurb": "Offer relics for blessings, and cleanse cursed items.",
+   "actions": [
+    {
+     "id": "shrine-offer",
+     "name": "Offer a relic",
+     "desc": "Relics from past runs. A cursed relic offered here earns Shrine Water, which cleanses a cursed relic for free at camp.",
+     "kind": "pick",
+     "rows": [
+      "I274"
+     ],
+     "limit": "none",
+     "dynamic": "relics",
+     "options": [],
+     "template": {
+      "id": "offer",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
+       "xp": 1
+      }
+     }
+    },
+    {
+     "id": "shrine-bless",
+     "name": "Receive a blessing",
+     "desc": "Spend an offering for a blessing on the next run.",
+     "kind": "pick",
+     "rows": [
+      "I274"
+     ],
+     "limit": "run",
+     "options": [
+      {
+       "id": "bless-road",
+       "label": "Blessing of the Road",
+       "desc": "Needs 1 offering.",
+       "say": "A warm breeze follows you out.",
+       "reward": {
+        "money": 300,
+        "items": {
+         "potion": 2
+        },
+        "note": "The Shrine blessed your road."
+       },
+       "cost": {
+        "offerings": 1
+       }
+      },
+      {
+       "id": "bless-hearth",
+       "label": "Blessing of the Hearth",
+       "desc": "Needs 1 offering.",
+       "say": "You feel rested.",
+       "reward": {
+        "items": {
+         "revive": 1,
+         "soothe-bell": 1
+        },
+        "note": "The Shrine blessed your hearth."
+       },
+       "cost": {
+        "offerings": 1
+       }
+      },
+      {
+       "id": "bless-water",
+       "label": "Shrine Water",
+       "desc": "Needs 1 offering. Cleanses a cursed relic for free.",
+       "say": "A bottle of clear water, cool in your palm.",
+       "reward": {
+        "stuff": {
+         "shrine-water": 1
+        },
+        "say": "You pack a bottle of Shrine Water."
+       },
+       "cost": {
+        "offerings": 1
+       }
+      }
+     ]
+    },
+    {
+     "id": "shrine-water",
+     "name": "Buy Shrine Water",
+     "desc": "No relic to spare? A priest sells a bottle for credits.",
+     "kind": "buy",
+     "rows": [
+      "I274"
+     ],
+     "set": "boxes",
+     "goods": [
+      {
+       "id": "water-bottle",
+       "label": "Shrine Water",
+       "desc": "Cleanses one cursed relic at camp.",
+       "set": "boon",
+       "cost": {
+        "credits": 30
+       },
+       "reward": {
+        "stuff": {
+         "shrine-water": 1
+        }
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pond",
+   "name": "Pond",
+   "icon": "item.water_stone",
+   "blurb": "Skip stones for tiny luck, and fish for the pond log.",
+   "actions": [
+    {
+     "id": "pond-skip",
+     "name": "Skip stones",
+     "desc": "Release as the ring closes. Each skip adds a coin of luck.",
+     "kind": "grade",
+     "rows": [
+      "I275"
+     ],
+     "limit": "run",
+     "prompt": "throw-ring",
+     "rewards": {
+      "miss": {
+       "say": "Plop. It sinks."
+      },
+      "ok": {
+       "money": 100,
+       "say": "Two skips."
+      },
+      "good": {
+       "money": 200,
+       "xp": 1,
+       "say": "Five skips!"
+      },
+      "perfect": {
+       "money": 300,
+       "xp": 1,
+       "items": {
+        "potion": 1
+       },
+       "say": "Seven skips! A little luck rubs off."
+      }
+     }
+    },
+    {
+     "id": "pond-fish",
+     "name": "Fish in the pond",
+     "desc": "Reel in the moment you feel the tug.",
+     "kind": "grade",
+     "rows": [
+      "F114"
+     ],
+     "limit": "day",
+     "prompt": "shout-tap",
+     "rewards": {
+      "miss": {
+       "say": "It got away."
+      },
+      "ok": {
+       "unlock": {
+        "set": "fish",
+        "pool": [
+         "fish-magikarp",
+         "fish-goldeen",
+         "fish-barboach"
+        ]
+       },
+       "coins": 1,
+       "say": "A small catch."
+      },
+      "good": {
+       "unlock": {
+        "set": "fish",
+        "pool": [
+         "fish-staryu",
+         "fish-wooper",
+         "fish-feebas",
+         "fish-remoraid"
+        ]
+       },
+       "coins": 2,
+       "credits": 5,
+       "say": "A fine catch!"
+      },
+      "perfect": {
+       "unlock": {
+        "set": "fish",
+        "pool": [
+         "fish-lapras",
+         "fish-wishiwashi",
+         "fish-milotic"
+        ]
+       },
+       "coins": 3,
+       "credits": 10,
+       "say": "A rare catch!"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "cafe",
+   "name": "Meowth Café",
+   "icon": "item.coin_case",
+   "blurb": "Meowth-line staff pay coins for chores. Spend them on treats.",
+   "actions": [
+    {
+     "id": "cafe-chore",
+     "name": "Do a chore",
+     "desc": "Sweep to the beat. Coins are paid by the Meowth.",
+     "kind": "grade",
+     "rows": [
+      "I276"
+     ],
+     "limit": "day",
+     "prompt": "echo-rhythm",
+     "rewards": {
+      "miss": {
+       "coins": 1,
+       "say": "\"Nya. Barely.\" One coin."
+      },
+      "ok": {
+       "coins": 3,
+       "say": "\"Nya.\" Three coins."
+      },
+      "good": {
+       "coins": 5,
+       "say": "\"Nyaa!\" Five coins."
+      },
+      "perfect": {
+       "coins": 8,
+       "xp": 1,
+       "say": "\"NYAAA!\" Eight coins and a purr."
+      }
+     }
+    },
+    {
+     "id": "cafe-menu",
+     "name": "Order a treat",
+     "desc": "Spend café coins.",
+     "kind": "pick",
+     "rows": [
+      "I276"
+     ],
+     "limit": "run",
+     "options": [
+      {
+       "id": "treat-latte",
+       "label": "Oran latte",
+       "desc": "3 coins",
+       "say": "Sweet and warm.",
+       "reward": {
+        "items": {
+         "oran-berry": 3
+        }
+       },
+       "cost": {
+        "coins": 3
+       }
+      },
+      {
+       "id": "treat-cake",
+       "label": "Persian cake",
+       "desc": "6 coins",
+       "say": "It is a very fluffy cake.",
+       "reward": {
+        "items": {
+         "sitrus-berry": 2,
+         "super-potion": 1
+        }
+       },
+       "cost": {
+        "coins": 6
+       }
+      },
+      {
+       "id": "treat-fish",
+       "label": "Pay Day special",
+       "desc": "10 coins",
+       "say": "The Meowth winks. Pay Day.",
+       "reward": {
+        "money": 600
+       },
+       "cost": {
+        "coins": 10
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "square",
+   "name": "Town Square",
+   "icon": "item.map",
+   "blurb": "Every building bounces when you step in. The sky mirrors your last run, and pets follow your cursor.",
+   "actions": [
+    {
+     "id": "square-walk",
+     "name": "Look around",
+     "desc": "Weather mirrors the last run (sun after a win, a storm after a defeat). Your pets trot after the cursor, and the Decor switch lets you drag furniture.",
+     "kind": "view",
+     "rows": [
+      "I240",
+      "I277",
+      "I279"
+     ],
+     "view": "square"
+    }
+   ]
+  },
+  {
+   "id": "seasonal",
+   "name": "Seasonal Corner",
+   "icon": "item.calendar",
+   "blurb": "The Hub swaps with the season and gets an interaction prop.",
+   "actions": [
+    {
+     "id": "seasonal-tap",
+     "name": "Visit the seasonal prop",
+     "desc": "Snowman, cherry blossoms, sunflowers or pumpkins, depending on the real month. One visit a day.",
+     "kind": "daily",
+     "rows": [
+      "I284"
+     ],
+     "limit": "day",
+     "view": "season"
+    }
+   ]
+  },
+  {
+   "id": "night",
+   "name": "Night Garden",
+   "icon": "item.lantern",
+   "blurb": "After dark the Hub fills with fireflies. Catch them for tiny gifts.",
+   "actions": [
+    {
+     "id": "night-firefly",
+     "name": "Catch a firefly",
+     "desc": "Only at night (local time 8 pm to 6 am). Tap as the ring closes.",
+     "kind": "grade",
+     "rows": [
+      "I286"
+     ],
+     "limit": "none",
+     "prompt": "throw-ring",
+     "rewards": {
+      "miss": {
+       "say": "It slips between your fingers."
+      },
+      "ok": {
+       "money": 50,
+       "say": "A tiny glow."
+      },
+      "good": {
+       "money": 100,
+       "xp": 1,
+       "say": "A bright one!"
+      },
+      "perfect": {
+       "money": 150,
+       "xp": 1,
+       "rp": 1,
+       "say": "It leaves a trail of light on your hand."
+      }
+     },
+     "needs": {
+      "text": "Only at night."
+     },
+     "max": 5
+    }
+   ]
+  },
+  {
+   "id": "devroom",
+   "name": "Developer Room",
+   "icon": "item.scanner",
+   "blurb": "A passage under the bed. The jokes are bad on purpose.",
+   "actions": [
+    {
+     "id": "dev-jokes",
+     "name": "Read the whiteboard",
+     "desc": "A new joke every visit. The first one pays Research Points.",
+     "kind": "view",
+     "rows": [
+      "I287"
+     ],
+     "view": "jokes"
+    }
+   ],
+   "hidden": true,
+   "needs": {
+    "visits": 20,
+    "text": "Visit the Town 20 times to find the passage under the bed."
+   }
+  },
+  {
+   "id": "statues",
+   "name": "Statue Vault",
+   "icon": "item.dna_splicers",
+   "blurb": "Turn four statues to face the right way and the vault opens.",
+   "actions": [
+    {
+     "id": "statue-turn",
+     "name": "Turn a statue",
+     "desc": "Each statue has four facings. The plaque gives a hint about the right ones.",
+     "kind": "puzzle",
+     "rows": [
+      "I288"
+     ],
+     "puzzle": "rotate",
+     "pool": "statues",
+     "max": 4
+    }
+   ]
+  },
+  {
+   "id": "elevator",
+   "name": "Elevator",
+   "icon": "item.map",
+   "blurb": "A panel of floor buttons, each showing a mini scene.",
+   "actions": [
+    {
+     "id": "elevator-ride",
+     "name": "Press a floor button",
+     "desc": "Floors open as you visit buildings.",
+     "kind": "view",
+     "rows": [
+      "I289"
+     ],
+     "view": "elevator"
+    }
+   ]
+  },
+  {
+   "id": "timemachine",
+   "name": "Time Machine",
+   "icon": "item.dna_splicers",
+   "blurb": "Replay a past run and imagine a different choice.",
+   "actions": [
+    {
+     "id": "time-whatif",
+     "name": "What if?",
+     "desc": "Pick a past run and a different choice. See how it might have gone (a story only; nothing about the old run changes).",
+     "kind": "pick",
+     "rows": [
+      "I290"
+     ],
+     "limit": "none",
+     "dynamic": "history",
+     "options": [],
+     "template": {
+      "id": "whatif",
+      "label": "{name}",
+      "desc": "",
+      "say": "",
+      "reward": {
+       "xp": 1,
+       "rp": 1
+      },
+      "once": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "phone",
+   "name": "Hub Phone",
+   "icon": "item.scanner",
+   "blurb": "Call NPCs for chat and favors.",
+   "actions": [
+    {
+     "id": "phone-call",
+     "name": "Make a call",
+     "desc": "One favor per contact per day.",
+     "kind": "pick",
+     "rows": [
+      "I281"
+     ],
+     "limit": "day",
+     "options": [
+      {
+       "id": "call-mom",
+       "label": "Mom",
+       "desc": "",
+       "say": "\"Eat something green, dear.\" She mails a snack.",
+       "reward": {
+        "items": {
+         "oran-berry": 1
+        }
+       },
+       "once": false
+      },
+      {
+       "id": "call-prof",
+       "label": "The Professor",
+       "desc": "",
+       "say": "\"Excellent! Send me a photo of anything strange.\"",
+       "reward": {
+        "rp": 1
+       }
+      },
+      {
+       "id": "call-nurse",
+       "label": "Nurse Joy",
+       "desc": "",
+       "say": "\"Please remember to heal your team!\" She mails a Potion.",
+       "reward": {
+        "items": {
+         "potion": 1
+        }
+       },
+       "needs": {
+        "achievements": 3
+       }
+      },
+      {
+       "id": "call-clerk",
+       "label": "The Clerk",
+       "desc": "",
+       "say": "\"A coupon for you.\"",
+       "reward": {
+        "money": 100
+       },
+       "needs": {
+        "achievements": 6
+       }
+      },
+      {
+       "id": "call-rival",
+       "label": "Your rival",
+       "desc": "",
+       "say": "\"Still training?\" They hang up before you answer.",
+       "reward": {
+        "xp": 1
+       },
+       "needs": {
+        "runs": 3
+       }
+      },
+      {
+       "id": "call-sage",
+       "label": "The Sage",
+       "desc": "",
+       "say": "\"The shrine remembers.\" Static.",
+       "reward": {
+        "xp": 1,
+        "rp": 1
+       },
+       "needs": {
+        "achievements": 12
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "lost",
+   "name": "Lost & Found",
+   "icon": "item.sachet",
+   "blurb": "Items you left behind at the end of runs return here.",
+   "actions": [
+    {
+     "id": "lost-claim",
+     "name": "Claim a lost item",
+     "desc": "Pick up what the last runs left behind. It rides with you next run.",
+     "kind": "pick",
+     "rows": [
+      "I282"
+     ],
+     "limit": "none",
+     "dynamic": "items",
+     "options": []
+    }
+   ]
+  },
+  {
+   "id": "guestbook",
+   "name": "Guestbook",
+   "icon": "item.map",
+   "blurb": "Records past visitors from your friends' ghost data and your own trainers.",
+   "actions": [
+    {
+     "id": "guestbook-view",
+     "name": "Read the guestbook",
+     "desc": "Ghosts you imported from friends sign in here with their result.",
+     "kind": "view",
+     "rows": [
+      "I280"
+     ],
+     "view": "guestbook"
+    }
+   ]
+  },
+  {
+   "id": "furniture",
+   "name": "Furniture Shop",
+   "icon": "item.coin_case",
+   "blurb": "Decorate your room, then drag the pieces anywhere.",
+   "actions": [
+    {
+     "id": "furniture-buy",
+     "name": "Buy furniture",
+     "desc": "Credits for furniture. Pieces from achievements are free.",
+     "kind": "buy",
+     "rows": [
+      "F96"
+     ],
+     "set": "decor",
+     "goods": [
+      {
+       "id": "dc-rug",
+       "label": "Round rug",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 15
+       },
+       "rarity": "common"
+      },
+      {
+       "id": "dc-lamp",
+       "label": "Floor lamp",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 20
+       },
+       "rarity": "common"
+      },
+      {
+       "id": "dc-plant",
+       "label": "Potted fern",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 20
+       },
+       "rarity": "common"
+      },
+      {
+       "id": "dc-bookcase",
+       "label": "Bookcase",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 30
+       },
+       "rarity": "common"
+      },
+      {
+       "id": "dc-sofa",
+       "label": "Plush sofa",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 45
+       },
+       "rarity": "rare"
+      },
+      {
+       "id": "dc-clock",
+       "label": "Grandfather clock",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 55
+       },
+       "rarity": "rare"
+      },
+      {
+       "id": "dc-poster",
+       "label": "Champion poster",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 25
+       },
+       "rarity": "common"
+      },
+      {
+       "id": "dc-aquarium",
+       "label": "Mini aquarium",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 70
+       },
+       "rarity": "epic"
+      },
+      {
+       "id": "dc-globe",
+       "label": "Glowing globe",
+       "desc": "",
+       "set": "decor",
+       "cost": {
+        "credits": 90
+       },
+       "rarity": "epic"
+      },
+      {
+       "id": "dc-trophy",
+       "label": "Gold trophy stand",
+       "desc": "Free once you hold 5 achievements.",
+       "set": "decor",
+       "cost": {
+        "credits": 0
+       },
+       "rarity": "rare",
+       "needs": {
+        "achievements": 5
+       }
+      },
+      {
+       "id": "dc-banner",
+       "label": "Gym banner",
+       "desc": "Free once you hold 10 achievements.",
+       "set": "decor",
+       "cost": {
+        "credits": 0
+       },
+       "rarity": "rare",
+       "needs": {
+        "achievements": 10
+       }
+      },
+      {
+       "id": "dc-crown",
+       "label": "Crown pillow",
+       "desc": "Free once you have a victory.",
+       "set": "decor",
+       "cost": {
+        "credits": 0
+       },
+       "rarity": "epic",
+       "needs": {
+        "wins": 1
+       }
+      },
+      {
+       "id": "dc-medal",
+       "label": "Medal wall",
+       "desc": "Free once you hold 25 achievements.",
+       "set": "decor",
+       "cost": {
+        "credits": 0
+       },
+       "rarity": "epic",
+       "needs": {
+        "achievements": 25
+       }
+      }
+     ]
+    },
+    {
+     "id": "furniture-place",
+     "name": "Arrange the room",
+     "desc": "Pick a piece and place it. In the Town, switch on Decor mode to drag pieces anywhere.",
+     "kind": "place",
+     "rows": [
+      "I278",
+      "F96"
+     ],
+     "view": "decor"
+    }
+   ]
+  },
+  {
+   "id": "capsule",
+   "name": "Capsule Corner",
+   "icon": "item.mystery_egg",
+   "blurb": "A gacha capsule machine for cosmetics. Tap and wiggle the capsule to open it.",
+   "actions": [
+    {
+     "id": "capsule-pull",
+     "name": "Turn the crank",
+     "desc": "One capsule costs credits (the first of each day is free). Duplicates turn into Research Points. A rare or better always drops within ten pulls.",
+     "kind": "gacha",
+     "rows": [
+      "I214"
+     ],
+     "limit": "none"
+    }
+   ]
+  },
+  {
+   "id": "jukebox",
+   "name": "Jukebox",
+   "icon": "item.pair_of_tickets",
+   "blurb": "Every unlocked track. Tracks unlock with progress.",
+   "actions": [
+    {
+     "id": "jukebox-play",
+     "name": "Play a track",
+     "desc": "Pick any unlocked track. Listening is free.",
+     "kind": "view",
+     "rows": [
+      "F110"
+     ],
+     "view": "jukebox"
+    }
+   ]
+  },
+  {
+   "id": "hall",
+   "name": "Town Hall",
+   "icon": "item.master_ribbon",
+   "blurb": "Stats, run history, quests, the season track and the collection book.",
+   "actions": [
+    {
+     "id": "hall-stats",
+     "name": "Statistics",
+     "desc": "Total runs, best streak, favourite type and more.",
+     "kind": "view",
+     "rows": [
+      "F105"
+     ],
+     "view": "stats"
+    },
+    {
+     "id": "hall-ledger",
+     "name": "Run ledger",
+     "desc": "Every run with filters and sorting. Copy a run's seed to try it again.",
+     "kind": "view",
+     "rows": [
+      "F106"
+     ],
+     "view": "ledger"
+    },
+    {
+     "id": "hall-roster",
+     "name": "Townsfolk roster",
+     "desc": "Townsfolk who move in as you earn achievements.",
+     "kind": "view",
+     "rows": [
+      "F98"
+     ],
+     "view": "roster"
+    },
+    {
+     "id": "hall-quests",
+     "name": "Daily quest board",
+     "desc": "Three quests a day by your local date, offline. Each pays when its action is done.",
+     "kind": "daily",
+     "rows": [
+      "F99"
+     ],
+     "limit": "none",
+     "view": "quests"
+    },
+    {
+     "id": "hall-gift",
+     "name": "Daily mystery gift",
+     "desc": "An envelope every day, by weekday. Streaks add a bonus.",
+     "kind": "daily",
+     "rows": [
+      "F130"
+     ],
+     "limit": "day",
+     "view": "gift"
+    },
+    {
+     "id": "hall-track",
+     "name": "Season track",
+     "desc": "A free, offline progress track. Town actions and runs earn track points.",
+     "kind": "view",
+     "rows": [
+      "F120"
+     ],
+     "view": "track"
+    },
+    {
+     "id": "hall-collections",
+     "name": "Collection book",
+     "desc": "Badges, ribbons, stickers, trading cards and more.",
+     "kind": "view",
+     "rows": [
+      "F121"
+     ],
+     "view": "collections"
+    },
+    {
+     "id": "hall-badges",
+     "name": "Badge case",
+     "desc": "Equip up to three gym badges; each gives a small perk every run.",
+     "kind": "equip",
+     "rows": [
+      "F127"
+     ],
+     "set": "badges",
+     "slot": "case"
+    },
+    {
+     "id": "hall-trails",
+     "name": "Cursor trails",
+     "desc": "Cosmetic trails for the cursor. Unlock them in capsules and the track.",
+     "kind": "equip",
+     "rows": [
+      "F102"
+     ],
+     "set": "trails",
+     "slot": "trail"
+    }
+   ]
+  }
+ ],
+ "quizzes": {
+  "library": [
+   {
+    "q": "Which type is super effective against Water?",
+    "a": [
+     "Fire",
+     "Grass",
+     "Ground"
+    ],
+    "right": 1,
+    "why": "Grass and Electric both beat Water."
+   },
+   {
+    "q": "A Pokémon with high friendship does what more often?",
+    "a": [
+     "Crit and endure",
+     "Flee",
+     "Sleep"
+    ],
+    "right": 0,
+    "why": "Bond brings crits and surviving a hit."
+   },
+   {
+    "q": "What does a Pecha Berry cure?",
+    "a": [
+     "Burn",
+     "Poison",
+     "Sleep"
+    ],
+    "right": 1,
+    "why": ""
+   },
+   {
+    "q": "Which ball is best on the first turn of a battle?",
+    "a": [
+     "Quick Ball",
+     "Net Ball",
+     "Heal Ball"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "How many badges does a region need before its League?",
+    "a": [
+     "Four",
+     "Eight",
+     "Twelve"
+    ],
+    "right": 1,
+    "why": ""
+   },
+   {
+    "q": "What do you spend Research Points on?",
+    "a": [
+     "The Research Tree",
+     "Gym fees",
+     "Berries"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "Which stat decides who moves first?",
+    "a": [
+     "Attack",
+     "Speed",
+     "Defense"
+    ],
+    "right": 1,
+    "why": ""
+   },
+   {
+    "q": "What does a Soothe Bell do?",
+    "a": [
+     "Raises friendship gains",
+     "Heals status",
+     "Lures wild Pokémon"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "Ghost-type moves cannot hit which type (in the classic rules)?",
+    "a": [
+     "Normal",
+     "Psychic",
+     "Ghost"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "Which stone evolves Oddish into Vileplume?",
+    "a": [
+     "Leaf Stone",
+     "Moon Stone",
+     "Fire Stone"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "A shiny meter fills when you…",
+    "a": [
+     "Catch the same species in a row",
+     "Lose a battle",
+     "Skip a stop"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "What does a Revive do?",
+    "a": [
+     "Brings back a fainted Pokémon",
+     "Cures poison",
+     "Raises a level"
+    ],
+    "right": 0,
+    "why": ""
+   }
+  ],
+  "matchup": [
+   {
+    "q": "Foe: Water. Best attacker?",
+    "a": [
+     "Fire",
+     "Electric",
+     "Normal"
+    ],
+    "right": 1,
+    "why": ""
+   },
+   {
+    "q": "Foe: Grass. Best attacker?",
+    "a": [
+     "Water",
+     "Fire",
+     "Ground"
+    ],
+    "right": 1,
+    "why": ""
+   },
+   {
+    "q": "Foe: Fire. Best attacker?",
+    "a": [
+     "Water",
+     "Grass",
+     "Ice"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "Foe: Flying. Best attacker?",
+    "a": [
+     "Rock",
+     "Ground",
+     "Bug"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "Foe: Ghost. Best attacker?",
+    "a": [
+     "Normal",
+     "Ghost",
+     "Fighting"
+    ],
+    "right": 1,
+    "why": ""
+   },
+   {
+    "q": "Foe: Dragon. Best attacker?",
+    "a": [
+     "Ice",
+     "Fire",
+     "Water"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "Foe: Rock. Best attacker?",
+    "a": [
+     "Fire",
+     "Water",
+     "Electric"
+    ],
+    "right": 1,
+    "why": ""
+   },
+   {
+    "q": "Foe: Psychic. Best attacker?",
+    "a": [
+     "Fighting",
+     "Dark",
+     "Normal"
+    ],
+    "right": 1,
+    "why": ""
+   },
+   {
+    "q": "Foe: Steel. Best attacker?",
+    "a": [
+     "Fire",
+     "Grass",
+     "Ice"
+    ],
+    "right": 0,
+    "why": ""
+   },
+   {
+    "q": "Foe: Dark. Best attacker?",
+    "a": [
+     "Fighting",
+     "Psychic",
+     "Ghost"
+    ],
+    "right": 0,
+    "why": ""
+   }
+  ]
+ },
+ "lore": [
+  {
+   "id": "book-rings",
+   "title": "The Ring of Types",
+   "text": "Every type beats one and falls to another, like a ring around a campfire. Learn the ring and half the road is easy."
+  },
+  {
+   "id": "book-bond",
+   "title": "On Bonds",
+   "text": "A Pokémon who trusts you will take a hit meant for itself. Feed them, name them, and sit by the fire."
+  },
+  {
+   "id": "book-regions",
+   "title": "A Trainer's Atlas",
+   "text": "Each region has eight gyms, a League and a champion who has seen a thousand trainers fall."
+  },
+  {
+   "id": "book-camp",
+   "title": "The Camper's Handbook",
+   "text": "A good camp is a pot, a bench, a bell and a quiet hour. Many runs are won before the first battle of the day."
+  },
+  {
+   "id": "book-shiny",
+   "title": "Glitter and Luck",
+   "text": "Shiny Pokémon are rare by design. Patience lights the meter faster than hope."
+  },
+  {
+   "id": "book-rivals",
+   "title": "A History of Rivals",
+   "text": "Rivals are not enemies. They are mirrors that win the days you lose."
+  },
+  {
+   "id": "book-relics",
+   "title": "Relics and Curses",
+   "text": "The old relics give power and ask a price. The Shrine will take the price, if you bring a gift."
+  },
+  {
+   "id": "book-raids",
+   "title": "Raid Etiquette",
+   "text": "Bring balance, bring berries, and do not stand in the red circle."
+  },
+  {
+   "id": "book-eggs",
+   "title": "Eggs and Daycare",
+   "text": "An egg remembers both parents. Sometimes it remembers more than they do."
+  },
+  {
+   "id": "book-night",
+   "title": "The Night Garden",
+   "text": "After dark the fireflies come out. They only ever land on people who stand still."
+  }
+ ],
+ "guests": [
+  {
+   "id": "g-sailor",
+   "who": "A retired sailor",
+   "secret": "Some wild Pokémon only show up after you have lost a battle at sea."
+  },
+  {
+   "id": "g-nurse",
+   "who": "A tired nurse",
+   "secret": "A Revive in the Bag is worth three Potions when the last fight goes wrong."
+  },
+  {
+   "id": "g-rival",
+   "who": "A masked trainer",
+   "secret": "Rivals remember how you won, not only that you did."
+  },
+  {
+   "id": "g-merchant",
+   "who": "A traveling merchant",
+   "secret": "The back-alley relic is risky, but cursed relics wash clean at the Shrine."
+  },
+  {
+   "id": "g-child",
+   "who": "A small child",
+   "secret": "If you stand very still in the Night Garden, a firefly lands on your hat."
+  },
+  {
+   "id": "g-ghost",
+   "who": "A polite ghost",
+   "secret": "Every vault has a different door code. Listen to the cries."
+  },
+  {
+   "id": "g-prof",
+   "who": "The Professor in disguise",
+   "secret": "Research Points are cheaper to earn by trying new things than by repeating old ones."
+  },
+  {
+   "id": "g-cat",
+   "who": "A very large Persian",
+   "secret": "The café pays more on days you are on time."
+  }
+ ],
+ "vignettes": {
+  "normal": [
+   "{name} stretches out on the rug and yawns. It is a good day to do nothing."
+  ],
+  "fire": [
+   "{name} warms its paws on the fire and the whole room gets cosier."
+  ],
+  "water": [
+   "{name} watches the flames hiss against a spilled cup and looks very smug."
+  ],
+  "grass": [
+   "{name} sways to the crackling, a small leaf unfurling on its head."
+  ],
+  "electric": [
+   "{name} sparks a static cat's cradle across the rug. Everyone ducks."
+  ],
+  "ice": [
+   "{name} sits just far enough from the fire to keep a little frost on its back."
+  ],
+  "fighting": [
+   "{name} does one lazy push-up beside the fireplace, then falls asleep mid-set."
+  ],
+  "poison": [
+   "{name} bubbles a quiet, happy purple stew in the corner. Nobody asks."
+  ],
+  "ground": [
+   "{name} digs a cosy hollow beside the hearth and settles in."
+  ],
+  "flying": [
+   "{name} fluffs its wings and perches on the mantel to guard the fire."
+  ],
+  "psychic": [
+   "{name} stares at the flames and sees something nobody else can."
+  ],
+  "bug": [
+   "{name} hums softly and a moth drifts in from nowhere to join it."
+  ],
+  "rock": [
+   "{name} soaks up the warmth like a sun-baked boulder."
+  ],
+  "ghost": [
+   "{name} drifts through the smoke, turning the shadows into shapes."
+  ],
+  "dragon": [
+   "{name} curls around the hearth, one eye open, humming like a kettle."
+  ],
+  "dark": [
+   "{name} sits just outside the firelight, close enough to feel it."
+  ],
+  "steel": [
+   "{name} gleams orange in the glow and clinks softly when it breathes."
+  ],
+  "fairy": [
+   "{name} dances once around the fireplace and sprinkles sparkles on the logs."
+  ],
+  "default": [
+   "{name} curls up by the fire and sighs happily."
+  ]
+ },
+ "letters": [
+  {
+   "id": "l-mom",
+   "from": "Mom",
+   "text": "Remember to eat and sleep. I put a berry in the envelope.",
+   "gift": {
+    "items": {
+     "oran-berry": 1
+    },
+    "say": "A berry falls out."
+   }
+  },
+  {
+   "id": "l-prof",
+   "from": "The Professor",
+   "text": "Your notes are the best in the lab. Keep photographing strange things.",
+   "gift": {
+    "rp": 1,
+    "say": "The Professor adds Research Points."
+   }
+  },
+  {
+   "id": "l-sailor",
+   "from": "A sailor",
+   "text": "Storms over the bay again. Be careful at sea."
+  },
+  {
+   "id": "l-clerk",
+   "from": "The Clerk",
+   "text": "A coupon for the shop. Do not spend it all in one place.",
+   "gift": {
+    "money": 150,
+    "say": "A coupon is good for ₽150."
+   }
+  },
+  {
+   "id": "l-pika",
+   "from": "A Pikachu",
+   "text": "Pika pika! (This is a drawing of you. You are very tall in it.)"
+  },
+  {
+   "id": "l-rattata",
+   "from": "A Rattata",
+   "text": "Squeak. (There is a crayon smear.) Squeak squeak."
+  },
+  {
+   "id": "l-nurse",
+   "from": "Nurse Joy",
+   "text": "Please remember to rest your team. Enclosed: a Potion.",
+   "gift": {
+    "items": {
+     "potion": 1
+    },
+    "say": "A Potion in the envelope."
+   }
+  },
+  {
+   "id": "l-fan",
+   "from": "A fan",
+   "text": "I saw you on the board! I cannot wait to see your next run."
+  },
+  {
+   "id": "l-ranger",
+   "from": "A ranger",
+   "text": "The forest is quiet this year. I think they are waiting for you."
+  },
+  {
+   "id": "l-snorlax",
+   "from": "A Snorlax",
+   "text": "Zzzz. (It signed with a paw print.)"
+  }
+ ],
+ "seasons": [
+  {
+   "id": "winter",
+   "name": "Winter",
+   "months": [
+    12,
+    1,
+    2
+   ],
+   "prop": "snowman",
+   "tap": "You roll a snowball into a snowman. It wears your scarf for a moment.",
+   "reward": {
+    "xp": 1,
+    "say": "Snow Day: +1 track point."
+   }
+  },
+  {
+   "id": "spring",
+   "name": "Spring",
+   "months": [
+    3,
+    4,
+    5
+   ],
+   "prop": "blossom",
+   "tap": "Cherry petals fall into your open hands.",
+   "reward": {
+    "rp": 1,
+    "say": "The blossom brings a little luck: +1 Research Point."
+   }
+  },
+  {
+   "id": "summer",
+   "name": "Summer",
+   "months": [
+    6,
+    7,
+    8
+   ],
+   "prop": "sunflower",
+   "tap": "The sunflower turns to face you and drops a seed.",
+   "reward": {
+    "items": {
+     "oran-berry": 2
+    },
+    "say": "The sunflower drops two seeds that grow into Oran Berries."
+   }
+  },
+  {
+   "id": "autumn",
+   "name": "Autumn",
+   "months": [
+    9,
+    11
+   ],
+   "prop": "leaves",
+   "tap": "You jump in a heap of leaves and find a coin.",
+   "reward": {
+    "money": 150,
+    "say": "A coin in the leaves: ₽150."
+   }
+  },
+  {
+   "id": "halloween",
+   "name": "Halloween",
+   "months": [
+    10
+   ],
+   "prop": "pumpkin",
+   "tap": "The pumpkin grins. A ghostly hand drops a treat.",
+   "reward": {
+    "items": {
+     "super-potion": 1
+    },
+    "xp": 1,
+    "say": "Trick or treat! A Super Potion."
+   }
+  }
+ ],
+ "track": [
+  {
+   "xp": 3,
+   "label": "Level 1",
+   "reward": {
+    "credits": 10,
+    "say": "10 credits"
+   }
+  },
+  {
+   "xp": 6,
+   "label": "Level 2",
+   "reward": {
+    "unlock": {
+     "set": "trails",
+     "pool": [
+      "tr-sparkle",
+      "tr-bubbles",
+      "tr-leaves"
+     ]
+    },
+    "say": "A cursor trail"
+   }
+  },
+  {
+   "xp": 10,
+   "label": "Level 3",
+   "reward": {
+    "rp": 2,
+    "say": "2 Research Points"
+   }
+  },
+  {
+   "xp": 15,
+   "label": "Level 4",
+   "reward": {
+    "unlock": {
+     "set": "backdrops",
+     "pool": [
+      "bd-sunset",
+      "bd-night"
+     ]
+    },
+    "say": "A photo backdrop"
+   }
+  },
+  {
+   "xp": 21,
+   "label": "Level 5",
+   "reward": {
+    "credits": 20,
+    "say": "20 credits"
+   }
+  },
+  {
+   "xp": 28,
+   "label": "Level 6",
+   "reward": {
+    "unlock": {
+     "set": "tracks",
+     "pool": [
+      "bgm.raid.basic",
+      "bgm.battle_gb"
+     ]
+    },
+    "say": "A jukebox track"
+   }
+  },
+  {
+   "xp": 36,
+   "label": "Level 7",
+   "reward": {
+    "rp": 3,
+    "say": "3 Research Points"
+   }
+  },
+  {
+   "xp": 45,
+   "label": "Level 8",
+   "reward": {
+    "unlock": {
+     "set": "outfits",
+     "pool": [
+      "out-scarf",
+      "out-cap",
+      "out-vest"
+     ]
+    },
+    "say": "An outfit"
+   }
+  },
+  {
+   "xp": 55,
+   "label": "Level 9",
+   "reward": {
+    "credits": 30,
+    "say": "30 credits"
+   }
+  },
+  {
+   "xp": 66,
+   "label": "Level 10",
+   "reward": {
+    "unlock": {
+     "set": "stickers",
+     "pool": [
+      "st-star",
+      "st-heart",
+      "st-flame"
+     ]
+    },
+    "say": "A sticker"
+   }
+  },
+  {
+   "xp": 78,
+   "label": "Level 11",
+   "reward": {
+    "rp": 5,
+    "say": "5 Research Points"
+   }
+  },
+  {
+   "xp": 91,
+   "label": "Level 12",
+   "reward": {
+    "unlock": {
+     "set": "trails",
+     "pool": [
+      "tr-rainbow",
+      "tr-fireflies"
+     ]
+    },
+    "say": "A rare cursor trail"
+   }
+  }
+ ],
+ "dailyGifts": [
+  {
+   "money": 200,
+   "say": "A coin purse: ₽200 at the start of your next run."
+  },
+  {
+   "items": {
+    "potion": 2
+   },
+   "say": "Two Potions."
+  },
+  {
+   "items": {
+    "poke-ball": 3
+   },
+   "say": "Three Poké Balls."
+  },
+  {
+   "rp": 1,
+   "say": "1 Research Point."
+  },
+  {
+   "items": {
+    "oran-berry": 3
+   },
+   "say": "Three Oran Berries."
+  },
+  {
+   "credits": 10,
+   "say": "10 credits."
+  },
+  {
+   "items": {
+    "great-ball": 2,
+    "revive": 1
+   },
+   "say": "Sunday special: Great Balls and a Revive."
+  }
+ ],
+ "dailyQuests": [
+  {
+   "id": "dq-polish",
+   "text": "Polish a trophy",
+   "action": "trophy-polish",
+   "reward": {
+    "credits": 5,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-quiz",
+   "text": "Take the library quiz",
+   "action": "library-quiz",
+   "reward": {
+    "credits": 5,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-chore",
+   "text": "Do a chore at the café",
+   "action": "cafe-chore",
+   "reward": {
+    "coins": 2,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-fish",
+   "text": "Fish in the pond",
+   "action": "pond-fish",
+   "reward": {
+    "credits": 5,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-darts",
+   "text": "Play darts",
+   "action": "arcade-darts",
+   "reward": {
+    "credits": 5,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-tea",
+   "text": "Pour tea for a guest",
+   "action": "tea-pour",
+   "reward": {
+    "rp": 1,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-mirror",
+   "text": "Spar with your ghost",
+   "action": "replica-mirror",
+   "reward": {
+    "rp": 1,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-pets",
+   "text": "Play with a pet",
+   "action": "pets-play",
+   "reward": {
+    "credits": 5,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-mail",
+   "text": "Open the mail",
+   "action": "mail-read",
+   "reward": {
+    "credits": 3,
+    "xp": 1
+   }
+  },
+  {
+   "id": "dq-contest",
+   "text": "Enter the costume contest",
+   "action": "mirror-contest",
+   "reward": {
+    "credits": 5,
+    "xp": 1
+   }
+  }
+ ],
+ "badgePerks": {
+  "normal": {
+   "items": {
+    "potion": 1
+   },
+   "say": "A normal-type badge keeps a potion in your pocket."
+  },
+  "fire": {
+   "items": {
+    "poke-ball": 1
+   },
+   "say": "A fire-type badge keeps a poke ball in your pocket."
+  },
+  "water": {
+   "items": {
+    "oran-berry": 1
+   },
+   "say": "A water-type badge keeps a oran berry in your pocket."
+  },
+  "electric": {
+   "items": {
+    "great-ball": 1
+   },
+   "say": "A electric-type badge keeps a great ball in your pocket."
+  },
+  "grass": {
+   "items": {
+    "cheri-berry": 1
+   },
+   "say": "A grass-type badge keeps a cheri berry in your pocket."
+  },
+  "ice": {
+   "items": {
+    "pecha-berry": 1
+   },
+   "say": "A ice-type badge keeps a pecha berry in your pocket."
+  },
+  "fighting": {
+   "items": {
+    "rawst-berry": 1
+   },
+   "say": "A fighting-type badge keeps a rawst berry in your pocket."
+  },
+  "poison": {
+   "items": {
+    "aspear-berry": 1
+   },
+   "say": "A poison-type badge keeps a aspear berry in your pocket."
+  },
+  "ground": {
+   "items": {
+    "persim-berry": 1
+   },
+   "say": "A ground-type badge keeps a persim berry in your pocket."
+  },
+  "flying": {
+   "items": {
+    "chesto-berry": 1
+   },
+   "say": "A flying-type badge keeps a chesto berry in your pocket."
+  },
+  "psychic": {
+   "items": {
+    "super-potion": 1
+   },
+   "say": "A psychic-type badge keeps a super potion in your pocket."
+  },
+  "bug": {
+   "items": {
+    "quick-ball": 1
+   },
+   "say": "A bug-type badge keeps a quick ball in your pocket."
+  },
+  "rock": {
+   "items": {
+    "net-ball": 1
+   },
+   "say": "A rock-type badge keeps a net ball in your pocket."
+  },
+  "ghost": {
+   "items": {
+    "dive-ball": 1
+   },
+   "say": "A ghost-type badge keeps a dive ball in your pocket."
+  },
+  "dragon": {
+   "items": {
+    "repel": 1
+   },
+   "say": "A dragon-type badge keeps a repel in your pocket."
+  },
+  "dark": {
+   "items": {
+    "x-attack": 1
+   },
+   "say": "A dark-type badge keeps a x attack in your pocket."
+  },
+  "steel": {
+   "items": {
+    "x-speed": 1
+   },
+   "say": "A steel-type badge keeps a x speed in your pocket."
+  },
+  "fairy": {
+   "items": {
+    "soothe-bell": 1
+   },
+   "say": "A fairy-type badge keeps a soothe bell in your pocket."
+  }
+ },
+ "pets": {
+  "chatter": [
+   "{name} bounces around your feet.",
+   "{name} follows your cursor like a shadow.",
+   "{name} rolls over for a belly rub.",
+   "{name} drops a small stone at your feet, very proud.",
+   "{name} sniffs the air and sneezes."
+  ],
+  "bondAt": 5
+ },
+ "gacha": {
+  "cost": {
+   "credits": 15
+  },
+  "pity": 10,
+  "pools": [
+   {
+    "rarity": "common",
+    "weight": 70,
+    "goods": [
+     {
+      "set": "stickers",
+      "id": "st-star",
+      "label": "Star sticker"
+     },
+     {
+      "set": "stickers",
+      "id": "st-heart",
+      "label": "Heart sticker"
+     },
+     {
+      "set": "stickers",
+      "id": "st-flame",
+      "label": "Flame sticker"
+     },
+     {
+      "set": "stickers",
+      "id": "st-leaf",
+      "label": "Leaf sticker"
+     },
+     {
+      "set": "stickers",
+      "id": "st-drop",
+      "label": "Droplet sticker"
+     },
+     {
+      "set": "trails",
+      "id": "tr-sparkle",
+      "label": "Sparkle trail"
+     },
+     {
+      "set": "trails",
+      "id": "tr-bubbles",
+      "label": "Bubble trail"
+     },
+     {
+      "set": "trails",
+      "id": "tr-leaves",
+      "label": "Falling leaves trail"
+     },
+     {
+      "set": "backdrops",
+      "id": "bd-sunset",
+      "label": "Sunset backdrop"
+     },
+     {
+      "set": "decor",
+      "id": "dc-rug",
+      "label": "Round rug"
+     }
+    ]
+   },
+   {
+    "rarity": "rare",
+    "weight": 25,
+    "goods": [
+     {
+      "set": "trails",
+      "id": "tr-fireflies",
+      "label": "Firefly trail"
+     },
+     {
+      "set": "backdrops",
+      "id": "bd-arena",
+      "label": "Arena lights backdrop"
+     },
+     {
+      "set": "outfits",
+      "id": "out-goggles",
+      "label": "Goggles outfit"
+     },
+     {
+      "set": "outfits",
+      "id": "out-cape",
+      "label": "Cape outfit"
+     },
+     {
+      "set": "decor",
+      "id": "dc-sofa",
+      "label": "Plush sofa"
+     },
+     {
+      "set": "stickers",
+      "id": "st-crown",
+      "label": "Crown sticker"
+     },
+     {
+      "set": "tracks",
+      "id": "bgm.raid.ultra",
+      "label": "Raid Ultra track"
+     }
+    ]
+   },
+   {
+    "rarity": "epic",
+    "weight": 5,
+    "goods": [
+     {
+      "set": "trails",
+      "id": "tr-rainbow",
+      "label": "Rainbow trail"
+     },
+     {
+      "set": "backdrops",
+      "id": "bd-aero",
+      "label": "Aero bubbles backdrop"
+     },
+     {
+      "set": "outfits",
+      "id": "out-tux",
+      "label": "Tuxedo outfit"
+     },
+     {
+      "set": "decor",
+      "id": "dc-globe",
+      "label": "Glowing globe"
+     },
+     {
+      "set": "stickers",
+      "id": "st-holo",
+      "label": "Holographic sticker"
+     },
+     {
+      "set": "tracks",
+      "id": "bgm.raid.tera",
+      "label": "Raid Tera track"
+     }
+    ]
+   }
+  ],
+  "dupe": {
+   "rp": 1,
+   "xp": 1,
+   "say": "A duplicate! It turns into 1 Research Point."
+  }
+ },
+ "tracks": [
+  {
+   "id": "bgm.hub",
+   "name": "Home Sweet Hub",
+   "unlock": "free"
+  },
+  {
+   "id": "bgm.menu",
+   "name": "Title Theme",
+   "unlock": "free"
+  },
+  {
+   "id": "bgm.shop",
+   "name": "Shop Jingle",
+   "unlock": "free"
+  },
+  {
+   "id": "bgm.event",
+   "name": "Event Fanfare",
+   "unlock": "runs:1"
+  },
+  {
+   "id": "bgm.battle",
+   "name": "Wild Battle",
+   "unlock": "runs:1"
+  },
+  {
+   "id": "bgm.battle_trainer",
+   "name": "Trainer Battle",
+   "unlock": "runs:2"
+  },
+  {
+   "id": "bgm.battle_gb",
+   "name": "Classic Battle",
+   "unlock": "gacha"
+  },
+  {
+   "id": "bgm.raid.basic",
+   "name": "Raid: Basic",
+   "unlock": "gacha"
+  },
+  {
+   "id": "bgm.raid.ultra",
+   "name": "Raid: Ultra",
+   "unlock": "gacha"
+  },
+  {
+   "id": "bgm.raid.max",
+   "name": "Raid: Max",
+   "unlock": "wins:1"
+  },
+  {
+   "id": "bgm.raid.tera",
+   "name": "Raid: Tera",
+   "unlock": "gacha"
+  },
+  {
+   "id": "bgm.credits",
+   "name": "Credits",
+   "unlock": "wins:1"
+  }
+ ],
+ "floors": [
+  {
+   "id": "f-lobby",
+   "name": "Lobby",
+   "scene": "A marble lobby, a potted fern, a ding of the bell.",
+   "building": null
+  },
+  {
+   "id": "f-garden",
+   "name": "Roof garden",
+   "scene": "Raised beds in the sun. Something is growing.",
+   "building": "garden"
+  },
+  {
+   "id": "f-library",
+   "name": "Library floor",
+   "scene": "Towering shelves. A librarian shushes you from three floors up.",
+   "building": "library"
+  },
+  {
+   "id": "f-arcade",
+   "name": "Arcade floor",
+   "scene": "Cabinets flicker. Somewhere a Pikachu is winning.",
+   "building": "arcade"
+  },
+  {
+   "id": "f-spa",
+   "name": "Spa floor",
+   "scene": "Warm steam, pale tile, the quiet murmur of a bath.",
+   "building": "hotspring"
+  },
+  {
+   "id": "f-kitchen",
+   "name": "Kitchen floor",
+   "scene": "The smell of baking. A Chansey wearing an apron winks.",
+   "building": "kitchen"
+  },
+  {
+   "id": "f-stage",
+   "name": "Stage floor",
+   "scene": "A velvet curtain, a spotlight and a very ready Meowth.",
+   "building": "stage"
+  },
+  {
+   "id": "f-basement",
+   "name": "B1",
+   "scene": "A concrete hallway and a door that hums.",
+   "building": "basement"
+  }
+ ],
+ "jokes": [
+  "There are 10 kinds of Pokémon: those who read binary and those who do not.",
+  "A TODO comment from 2019: \"fix Magikarp\".",
+  "Console log: \"if you can read this, the bug is intentional.\"",
+  "Whiteboard: \"Do NOT feed the debug Snorlax.\"",
+  "A sticky note: \"Replace placeholder.png before launch.\" The sticky note is a placeholder.",
+  "A mug reads: \"World's Okayest Programmer\".",
+  "Taped under the desk: a map labelled \"Here be seeds\".",
+  "A rubber duck sits facing a wall. It is being punished."
+ ],
+ "contest": [
+  {
+   "id": "cool",
+   "name": "Cool",
+   "types": [
+    "fire",
+    "dragon",
+    "fighting",
+    "steel"
+   ]
+  },
+  {
+   "id": "cute",
+   "name": "Cute",
+   "types": [
+    "fairy",
+    "normal",
+    "grass"
+   ]
+  },
+  {
+   "id": "smart",
+   "name": "Smart",
+   "types": [
+    "psychic",
+    "ground",
+    "electric"
+   ]
+  },
+  {
+   "id": "tough",
+   "name": "Tough",
+   "types": [
+    "rock",
+    "ground",
+    "fighting"
+   ]
+  },
+  {
+   "id": "beauty",
+   "name": "Beautiful",
+   "types": [
+    "water",
+    "ice",
+    "fairy"
+   ]
+  }
+ ],
+ "recipes": [
+  {
+   "a": "oran-berry",
+   "b": "pecha-berry",
+   "id": "r-fruit-salad",
+   "name": "Fruit salad",
+   "reward": {
+    "items": {
+     "oran-berry": 2,
+     "potion": 1
+    },
+    "say": "A bright fruit salad."
+   }
+  },
+  {
+   "a": "cheri-berry",
+   "b": "oran-berry",
+   "id": "r-hot-pie",
+   "name": "Hot pie",
+   "reward": {
+    "items": {
+     "x-attack": 1,
+     "super-potion": 1
+    },
+    "say": "A spicy pie that wakes you up."
+   }
+  },
+  {
+   "a": "rawst-berry",
+   "b": "pecha-berry",
+   "id": "r-sorbet",
+   "name": "Cool sorbet",
+   "reward": {
+    "items": {
+     "x-speed": 1,
+     "potion": 1
+    },
+    "say": "A chilled sorbet."
+   }
+  },
+  {
+   "a": "sitrus-berry",
+   "b": "lum-berry",
+   "id": "r-royal-stew",
+   "name": "Royal stew",
+   "reward": {
+    "items": {
+     "sitrus-berry": 2,
+     "revive": 1
+    },
+    "say": "A stew fit for a champion."
+   }
+  },
+  {
+   "a": "aspear-berry",
+   "b": "chesto-berry",
+   "id": "r-lemon-tea",
+   "name": "Lemon tea",
+   "reward": {
+    "items": {
+     "soothe-bell": 1,
+     "poke-ball": 2
+    },
+    "say": "A calming tea."
+   }
+  },
+  {
+   "a": "persim-berry",
+   "b": "oran-berry",
+   "id": "r-rice-ball",
+   "name": "Rice ball",
+   "reward": {
+    "items": {
+     "great-ball": 2
+    },
+    "money": 100,
+    "say": "A rice ball and a little extra."
+   }
+  }
+ ],
+ "mush": {
+  "items": {
+   "oran-berry": 1
+  },
+  "say": "Mush. Edible, technically."
+ },
+ "caps": {
+  "notes": 30,
+  "graffiti": 24,
+  "photos": 12,
+  "pins": 3,
+  "wishes": 3,
+  "boonItems": 40
+ },
+ "roster": [
+  {
+   "id": "npc-0",
+   "name": "Professor Oak-ish",
+   "role": "Professor",
+   "achievements": 0,
+   "line": "Keep your notes tidy."
+  },
+  {
+   "id": "npc-1",
+   "name": "Nurse Joy",
+   "role": "Nurse",
+   "achievements": 1,
+   "line": "Rest is a move too."
+  },
+  {
+   "id": "npc-2",
+   "name": "The Clerk",
+   "role": "Shopkeeper",
+   "achievements": 3,
+   "line": "Coupons are for friends."
+  },
+  {
+   "id": "npc-3",
+   "name": "Old Sailor",
+   "role": "Ferryman",
+   "achievements": 5,
+   "line": "The sea remembers."
+  },
+  {
+   "id": "npc-4",
+   "name": "Café Meowth",
+   "role": "Waiter",
+   "achievements": 8,
+   "line": "Nya. Table for one?"
+  },
+  {
+   "id": "npc-5",
+   "name": "The Tailor",
+   "role": "Costumer",
+   "achievements": 10,
+   "line": "Hold still."
+  },
+  {
+   "id": "npc-6",
+   "name": "The Librarian",
+   "role": "Archivist",
+   "achievements": 12,
+   "line": "Shh."
+  },
+  {
+   "id": "npc-7",
+   "name": "The Sage",
+   "role": "Shrinekeeper",
+   "achievements": 15,
+   "line": "Bring a gift."
+  },
+  {
+   "id": "npc-8",
+   "name": "The Ranger",
+   "role": "Ranger",
+   "achievements": 20,
+   "line": "The forest talks."
+  },
+  {
+   "id": "npc-9",
+   "name": "The Champion",
+   "role": "Champion",
+   "achievements": 30,
+   "line": "See you at the top."
+  }
+ ],
+ "pools": {
+  "cries": [
+   "pikachu",
+   "eevee",
+   "snorlax",
+   "meowth",
+   "jigglypuff",
+   "psyduck",
+   "togepi",
+   "lapras",
+   "gengar",
+   "mew"
+  ],
+  "memory": [
+   "bulbasaur",
+   "charmander",
+   "squirtle",
+   "pikachu",
+   "eevee",
+   "snorlax"
+  ]
+ }
+}

@@ -20,13 +20,22 @@ const CATEGORY_STORY: Record<string, string> = {
   secret: 'Some things only show themselves to the curious.',
   endgame: 'You stood at the top and looked down the road behind you.',
 };
+/** Rarity tiers (F104): the achievement's tier sets the trim color and a label (Common, Uncommon, Rare, Epic, Legendary). */
+export const RARITY = [
+  { name: 'Common', border: 0xf8d048, text: '#f8d048' },
+  { name: 'Uncommon', border: 0x78e080, text: '#78e080' },
+  { name: 'Rare', border: 0x5ac8fa, text: '#5ac8fa' },
+  { name: 'Epic', border: 0xa78bfa, text: '#a78bfa' },
+  { name: 'Legendary', border: 0xff7ad9, text: '#ff7ad9' },
+] as const;
+export const rarityOf = (a: Pick<Achievement, 'tier'>): (typeof RARITY)[number] => RARITY[Math.max(0, Math.min(RARITY.length - 1, (a.tier ?? 1) - 1))]!;
 
 export function showAchievementToasts(scene: Phaser.Scene, list: readonly Achievement[], motion: MotionLevel): void {
   list.forEach((a) => interactionLog.add(`Achievement: ${a.name}`));
   list.slice(0, 3).forEach((a, i) => {
     const box = scene.add.container(GAME_WIDTH / 2, -60).setDepth(1000);
-    const panel = drawPanel(scene, -230, 0, 460, 52, { fill: COLORS.panelDark, border: 0xf8d048 });
-    const title = scene.add.text(-214, 6, `Achievement: ${a.name}`, textStyle(17, '#f8d048'));
+    const panel = drawPanel(scene, -230, 0, 460, 52, { fill: COLORS.panelDark, border: rarityOf(a).border });
+    const title = scene.add.text(-214, 6, `${rarityOf(a).name} achievement: ${a.name}`, textStyle(17, rarityOf(a).text));
     const reward = a.reward.bankCredits ? `+${a.reward.bankCredits} credits${a.reward.title ? ` · title ${a.reward.title}` : ''}` : a.reward.title ? `Title ${a.reward.title}` : '';
     const sub = scene.add.text(-214, 28, `${a.description}${reward ? `  ${reward}` : ''}`, textStyle(13, COLORS.textMuted, { wordWrap: { width: 430 } }));
     box.add([panel, title, sub]);

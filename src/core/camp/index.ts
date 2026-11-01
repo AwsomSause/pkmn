@@ -611,6 +611,13 @@ const HANDLERS: Record<string, Handler> = {
   purify: (c) => {
     const index = Number(c.args.choice);
     const cost = CAMP.purify;
+    const camp = campOf(c.run);
+    // Shrine Water (from the Town's Shrine) lifts a curse for free.
+    if ((camp.stuff['shrine-water'] ?? 0) > 0) {
+      const msg = cleanseRelic(c.run, index);
+      addStuff(camp, 'shrine-water', -1);
+      return `${msg} The Shrine Water is used up.`;
+    }
     if (c.run.money < cost.money) fail(`The rite costs ₽${cost.money}.`);
     for (const [id, n] of mats(cost.materials)) if ((c.run.materials[id] ?? 0) < n) fail(`The rite needs ${costText(cost.materials)}.`);
     const msg = cleanseRelic(c.run, index);

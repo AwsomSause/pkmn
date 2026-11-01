@@ -2,6 +2,7 @@
 // kept apart from the run history so a replay can never change the original record.
 // Pure: no Phaser, no clock (callers pass `now`), no gameplay RNG of its own.
 
+import { freshCamp } from '../camp/schema';
 import type { Content } from '../contentSchema';
 import { addItem } from '../items';
 import { applyHeirloom } from '../memories/heirloom';
@@ -73,6 +74,10 @@ export function reconstructRun(content: Content, g: RunGenesis, replayId: string
   run.story.flags = structuredClone(g.storyFlags) as RunState['story']['flags'];
   run.money += g.grants.money;
   for (const [id, n] of Object.entries(g.grants.items)) addItem(run.inventory, id, n);
+  if (Object.keys(g.grants.stuff ?? {}).length > 0) {
+    const camp = (run.camp ??= freshCamp());
+    for (const [id, n] of Object.entries(g.grants.stuff ?? {})) camp.stuff[id] = (camp.stuff[id] ?? 0) + n;
+  }
   if (g.past) run.past = structuredClone(g.past);
   if (g.heirloom) applyHeirloom(content, run, { memories: { heirlooms: [structuredClone(g.heirloom)], claimed: [], cameos: [] } });
   run.timeline = { replayId, originRunId: g.runId, attempt };

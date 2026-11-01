@@ -5,7 +5,9 @@
 import { z } from 'zod';
 import legacyJson from '../data/legacy.json';
 import type { Content, Region } from './contentSchema';
+import { freshCamp } from './camp/schema';
 import { addItem } from './items';
+import { townStartGrants } from './town';
 import { MOVE_RANK_USES, MOVE_RANKS, moveRank } from './moveMastery';
 import { claim } from './quests';
 import type { LegacyState, Profile, RunState } from './state';
@@ -133,14 +135,19 @@ export function toggleContact(current: Profile, trainerId: string): Profile {
 }
 
 /** Everything the Tree and the contacts hand over at the start of a run. The run's own trainer is never its own contact. */
-export function startGrants(content: Content, p: Profile, runTrainerId: string): { money: number; items: Record<string, number> } {
-  const out = { money: 0, items: {} as Record<string, number> };
+export function startGrants(content: Content, p: Profile, runTrainerId: string): { money: number; items: Record<string, number>; stuff: Record<string, number> } {
+  const out = { money: 0, items: {} as Record<string, number>, stuff: {} as Record<string, number> };
   const apply = (e: LegacyEffect) => {
     if (e.kind === 'money') out.money += e.amount;
     if (e.kind === 'item' && content.items.has(e.item)) addItem(out.items, e.item, e.count);
   };
   ownedEffects(p).forEach(apply);
   for (const id of legacyOf(p).contacts) if (id !== runTrainerId && p.unlockedArchetypes.includes(id)) apply(serviceFor(id).effect);
+  // Pocket Town (W7): the boon waiting from the town, the badge case perks and the museum pedestals.
+  const town = townStartGrants(content, p);
+  out.money += town.money;
+  for (const [id, n] of Object.entries(town.items)) addItem(out.items, id, n);
+  for (const [id, n] of Object.entries(town.stuff)) out.stuff[id] = (out.stuff[id] ?? 0) + n;
   return out;
 }
 
@@ -149,6 +156,12 @@ export function applyStartGrants(content: Content, run: RunState, p: Profile): v
   const g = startGrants(content, p, run.archetypeId);
   run.money += g.money;
   for (const [id, n] of Object.entries(g.items)) addItem(run.inventory, id, n);
+  if (Object.keys(g.stuff).length > 0) {
+    const camp = (run.camp ??= freshCamp());
+    for (const [id, n] of Object.entries(g.stuff)) camp.stuff[id] = (camp.stuff[id] ?? 0) + n;
+  }
+  const notes = townStartGrants(content, p).notes;
+  for (const line of notes) run.journal.push(line);
 }
 
 // ---------- Item Museum ----------

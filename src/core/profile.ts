@@ -5,6 +5,7 @@ import { archiveRivals } from './rivals/legacy';
 import type { Content } from './contentSchema';
 import { applyRunToProfile, type RunEndSummary } from './progress';
 import { recordMuseum, recordRegionIntel } from './legacy';
+import { recordTownRun } from './town';
 import { getCampaign } from './regions';
 import { campaignCounts } from './rules';
 import { archiveParty } from './story/reunion';
@@ -96,6 +97,7 @@ export function finalizeRun(
     const museumResearch = recordMuseum(next, run, now);
     if (summary) summary.researchPoints += museumResearch;
   }
+  recordTownRun(content, next, { runId: run.runId, seed: run.seed, victory: run.victory === true, regionIndex: run.regionIndex, inventory: run.inventory, camp: run.camp });
   archiveParty(content, next, run);
   archiveRivals(next, run);
   addRunToCodex(next, run);

@@ -214,7 +214,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I210 | Smell test: sniff mystery berries, wrong guess poisons slightly |  | DONE | src/core/camp/index.ts sniff (three berries, wrong pick poisons slightly) |
 | I212 | Dowsing rod: follow vibrations to buried treasure |  | DONE | src/core/camp/index.ts dowse |
 | I213 | Cursed mirror: reveals a Pokémon's hidden trait but costs luck |  | DONE | src/core/camp/index.ts mirror (reveals talent and flavors, -1 luck) |
-| I214 | Gacha capsule machine at the Hub for cosmetics, tap-wiggle to open |  | TODO | Hub cosmetic, belongs with the W7 hub buildings |
+| I214 | Gacha capsule machine at the Hub for cosmetics, tap-wiggle to open |  | DONE | capsule-pull: tap-wiggle gacha, free daily capsule, pity, duplicates become Research |
 | I215 | Holding item swap by drag from party to party with a cute pass animation |  | PART | src/core/bag.ts giveHeld/takeOffHeld swap held items; no pass animation |
 | I216 | Item compare overlay when hovering over upgrade options |  | DONE | src/core/rewardCompare.ts, used in src/scenes/RewardScene.ts:8 (now vs after on draft cards) |
 | I217 | Wishing well: toss coins and speak a wish, outcomes seeded |  | DONE | src/core/camp/index.ts well (seeded, luck shifts the odds) |
@@ -443,72 +443,72 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 
 | # | Idea | Note | Status | Evidence |
 |---|---|---|---|---|
-| I240 | Walk the Hub, each building has an animated entry bounce |  | TODO |  |
-| I241 | Garden: water and harvest berries that carry into runs |  | TODO |  |
-| I242 | Training dojo: spar with a dummy to tweak move practice |  | TODO |  |
-| I243 | Library: read lore books, quiz reward |  | TODO |  |
-| I244 | Trophy room: polish trophies with a rub minigame |  | TODO |  |
-| I245 | Bulletin board: pin contracts and weekly events |  | PART | HubScene.ts Event Hall: weekly event + Contract Board (list, no pinning) |
-| I246 | Mailbox: letters from rivals, NPCs and Pokémon |  | PART | Hub rival letters only (hubRivalNote); no general mailbox |
-| I247 | Radio tower: choose a broadcast for next-run modifiers |  | TODO |  |
-| I248 | Kitchen: prepare run snacks with a recipe puzzle |  | TODO |  |
-| I249 | Workshop: craft balls, repair gear |  | TODO |  |
-| I250 | Greenhouse: raise evolving plants like Oddish bulbs |  | TODO |  |
-| I251 | Aquarium: feed and decorate for Water-type bonds |  | TODO |  |
-| I252 | Observatory: stargaze to choose next-run omen |  | TODO |  |
-| I253 | Hot spring: bond-and-heal session between runs |  | TODO |  |
-| I254 | Fireplace: sit with team, each chat is a short vignette |  | TODO |  |
-| I255 | Arcade corner: playable mini versions of battle and rhythm modes |  | TODO |  |
-| I256 | Photo studio: backdrops and poses for team photos |  | TODO |  |
-| I257 | Wardrobe: mirror shows trainer outfits with a twirl |  | TODO |  |
-| I258 | Pet corner: boxed Pokémon roam, you can play with them |  | TODO |  |
-| I259 | Gym replica: practice battles with ghost data of earlier opponents |  | TODO |  |
-| I260 | Museum of relics: place found relics on pedestals to unlock set bonuses |  | TODO |  |
-| I261 | Costume shop: tailor adjusts outfits with a measuring minigame |  | TODO |  |
-| I262 | Daycare: leave a Pokémon, collect eggs with surprising parentage |  | TODO |  |
-| I263 | Mirror room: meet a ghost version of your last run team |  | TODO |  |
-| I266 | Stage: perform contests to win ribbons |  | TODO |  |
-| I267 | Cinema: rewatch best battles as replays |  | PART | docs/status/memories.md Battle Replay (text only) |
-| I268 | Bakery: baked goods give pre-run buffs, ovens ding with timing |  | TODO |  |
-| I269 | Tea room: pour tea for an NPC guest to hear a secret |  | TODO |  |
-| I270 | Rooftop: watch weather forecast and choose a lucky charm |  | TODO |  |
-| I271 | Basement: secret door unlocked by a code of Pokémon cries |  | TODO |  |
-| I272 | Trainer wall of fame: sign the wall with a graffiti stylus |  | TODO |  |
-| I273 | Wishing tree: hang tags that affect next-run RNG flavor, not rolls |  | TODO |  |
-| I274 | Shrine: offer relics for blessings |  | TODO |  |
-| I275 | Pond: skip stones for tiny luck |  | TODO |  |
-| I276 | Cat/Meowth café: Meowth-line staff sells coins for chores |  | TODO |  |
-| I277 | Hub weather mirrors the last run result (storm after defeat) |  | TODO |  |
-| I278 | Hub decorations unlocked per achievement can be dragged anywhere |  | TODO |  |
-| I279 | Hub pets follow your cursor |  | TODO |  |
-| I280 | Guestbook records past visitors from friends' ghost data |  | TODO |  |
-| I281 | Hub phone: call NPCs for chat and favors |  | TODO |  |
-| I282 | Lost & found box: items dropped in runs return here |  | PART | src/core/memories/keepsakes.ts lost-and-found items return via Auction/desk event, not Hub |
-| I283 | Costume contest: show off team outfits for NPC votes |  | TODO |  |
-| I284 | Seasonal Hub swaps (snow, cherry blossom, Halloween) with new interaction props |  | TODO |  |
-| I285 | Tutorial garden: interactive explanations by Professor in minigame form |  | TODO |  |
-| I286 | Hub night mode: fireflies to catch for tiny gifts |  | TODO |  |
-| I287 | Secret passage under the bed leading to developer room jokes |  | TODO |  |
-| I288 | Statue puzzle: rotate Pokémon statues to open vault |  | TODO |  |
-| I289 | Elevator panel with floor buttons that each show a mini scene |  | TODO |  |
-| I290 | Time machine room: replay past events with different choices |  | TODO |  |
-| F29 | Practice dummy at the Hub to test movesets without risk. |  | TODO |  |
-| F96 | Hub furniture shop to decorate your room. |  | TODO |  |
-| F97 | Trophy shelf for boss kills and mastery. |  | PART | HallOfFameScene.ts champion teams/records; no per-boss shelf |
-| F98 | Hub NPC roster that grows with achievements. |  | TODO |  |
-| F99 | Daily login quest board (offline-safe, local time). |  | TODO |  |
-| F102 | Cosmetic trails for the map cursor. |  | TODO |  |
+| I240 | Walk the Hub, each building has an animated entry bounce |  | PART | TownScene.bounce entry bounce; Town is a menu of buildings, not a walkable map |
+| I241 | Garden: water and harvest berries that carry into runs |  | DONE | garden-tend (3 beds, 4 berries; grow one stage per run start; harvest becomes next-run items) |
+| I242 | Training dojo: spar with a dummy to tweak move practice |  | PART | dojo-spar: timing spar pays Research + practice points; not tied to one move |
+| I243 | Library: read lore books, quiz reward |  | DONE | library-read (10 lore books, first read pays) and library-quiz (daily quiz) |
+| I244 | Trophy room: polish trophies with a rub minigame |  | DONE | trophy-polish: hold-steady rub minigame, shine points per trophy |
+| I245 | Bulletin board: pin contracts and weekly events |  | DONE | board-pin: pin up to 3 contracts (Event Hall board stays); Town header shows pins |
+| I246 | Mailbox: letters from rivals, NPCs and Pokémon |  | DONE | mail-read: 3 seeded letters a day + a wild Pokémon note; some hold gifts |
+| I247 | Radio tower: choose a broadcast for next-run modifiers |  | DONE | radio-tune: 5 broadcasts, one per run, each a next-run gift + journal line |
+| I248 | Kitchen: prepare run snacks with a recipe puzzle |  | DONE | kitchen-cook: pick two ingredients, 6 recipes, mush otherwise; one snack per run |
+| I249 | Workshop: craft balls, repair gear |  | PART | workshop-craft balls for credits + oil tune-up; gear repair has no out-of-run gear (gadgets live in runs) |
+| I250 | Greenhouse: raise evolving plants like Oddish bulbs |  | DONE | greenhouse-tend: Oddish/Bellsprout/Sunkern/bonsai grow through named stages |
+| I251 | Aquarium: feed and decorate for Water-type bonds |  | DONE | aquarium-tend + aquarium-decor (decor of 3+ adds a Research bonus) |
+| I252 | Observatory: stargaze to choose next-run omen |  | DONE | observatory-omen: 5 omens, one per run |
+| I253 | Hot spring: bond-and-heal session between runs |  | PART | hotspring-soak: hold-steady minigame pays healing items; no per-Pokémon bond number out of run |
+| I254 | Fireplace: sit with team, each chat is a short vignette |  | DONE | fireplace-chat: type-based vignettes for your last team, first chat per species pays |
+| I255 | Arcade corner: playable mini versions of battle and rhythm modes |  | PART | arcade: rhythm, type-matchup cabinet, darts, Memory Match; not full battle/rhythm game modes |
+| I256 | Photo studio: backdrops and poses for team photos |  | DONE | photo-backdrops, photo-snap (4 poses), photo-equip |
+| I257 | Wardrobe: mirror shows trainer outfits with a twirl |  | DONE | mirror-outfit: outfits with a twirl in the Dressing Mirror |
+| I258 | Pet corner: boxed Pokémon roam, you can play with them |  | DONE | pets-play: past Pokémon, daily play, bond mark gift; pets also follow the cursor in the Town |
+| I259 | Gym replica: practice battles with ghost data of earlier opponents |  | PART | replica-duel: ghost match scored with real level numbers; not a full turn battle |
+| I260 | Museum of relics: place found relics on pedestals to unlock set bonuses |  | DONE | museum-pedestal: 3 pedestals, tier set bonus every run (money + Revive for a matching trio) |
+| I261 | Costume shop: tailor adjusts outfits with a measuring minigame |  | DONE | mirror-fit: tailor measuring timing unlocks outfits |
+| I262 | Daycare: leave a Pokémon, collect eggs with surprising parentage |  | PART | daycare-leave/collect: two runs later a mixed-parentage gift (items); no real egg yet |
+| I263 | Mirror room: meet a ghost version of your last run team |  | PART | replica-mirror: ghost spar by rhythm; no ghost team sprites |
+| I266 | Stage: perform contests to win ribbons |  | DONE | stage-contest: five categories, ribbons from good/perfect shows |
+| I267 | Cinema: rewatch best battles as replays |  | PART | cinema-play: run moments as a text reel (battle replay stays in Memories) |
+| I268 | Bakery: baked goods give pre-run buffs, ovens ding with timing |  | DONE | bakery-bake: oven-ding timing, buffs by grade |
+| I269 | Tea room: pour tea for an NPC guest to hear a secret |  | DONE | tea-pour: steady-pour minigame; guests and secrets in data |
+| I270 | Rooftop: watch weather forecast and choose a lucky charm |  | DONE | rooftop-forecast (3-day forecast) and rooftop-charm (one charm per run) |
+| I271 | Basement: secret door unlocked by a code of Pokémon cries |  | DONE | basement-code: cry-code sequence puzzle; new code after each vault |
+| I272 | Trainer wall of fame: sign the wall with a graffiti stylus |  | PART | wall-sign: color + stamp graffiti, one per win; not freehand drawing |
+| I273 | Wishing tree: hang tags that affect next-run RNG flavor, not rolls |  | DONE | wishing-tag: up to 3 tags become journal lines, never rolls |
+| I274 | Shrine: offer relics for blessings |  | DONE | shrine-offer/bless/water: relic offerings, blessings, Shrine Water cleanses cursed relics free at camp |
+| I275 | Pond: skip stones for tiny luck |  | DONE | pond-skip: skip stones for tiny money luck |
+| I276 | Cat/Meowth café: Meowth-line staff sells coins for chores |  | DONE | cafe-chore + cafe-menu: Meowth coins spent on treats |
+| I277 | Hub weather mirrors the last run result (storm after defeat) |  | DONE | townWeather mirrors the last run (sun, cloud, storm) in TownScene |
+| I278 | Hub decorations unlocked per achievement can be dragged anywhere |  | DONE | furniture-place and Decor mode: drag placed pieces anywhere; achievement decor is free |
+| I279 | Hub pets follow your cursor |  | DONE | TownScene pets follow the cursor (motion setting respected) |
+| I280 | Guestbook records past visitors from friends' ghost data |  | DONE | guestbook-view: imported ghosts and your own runs |
+| I281 | Hub phone: call NPCs for chat and favors |  | DONE | phone-call: 6 contacts that open with achievements, one favor each per day |
+| I282 | Lost & found box: items dropped in runs return here |  | DONE | lost-claim: items left in the Bag at run end wait in Lost & Found (recordTownRun) |
+| I283 | Costume contest: show off team outfits for NPC votes |  | DONE | mirror-contest: NPC votes scale with outfits owned |
+| I284 | Seasonal Hub swaps (snow, cherry blossom, Halloween) with new interaction props |  | DONE | seasonal-tap + TownScene season prop (snowman, blossom, sunflower, leaves, pumpkin) |
+| I285 | Tutorial garden: interactive explanations by Professor in minigame form |  | DONE | garden-lesson: five Professor lessons |
+| I286 | Hub night mode: fireflies to catch for tiny gifts |  | DONE | night-firefly: fireflies after 8 pm local, tap to catch |
+| I287 | Secret passage under the bed leading to developer room jokes |  | DONE | dev-jokes: Developer Room opens after 20 Town visits |
+| I288 | Statue puzzle: rotate Pokémon statues to open vault |  | DONE | statue-turn: four statues, vault changes after opening |
+| I289 | Elevator panel with floor buttons that each show a mini scene |  | DONE | elevator-ride: floors open as buildings are visited |
+| I290 | Time machine room: replay past events with different choices |  | PART | time-whatif: a story-only what-if on a past run; nothing replays |
+| F29 | Practice dummy at the Hub to test movesets without risk. |  | DONE | dojo-dummy: damage range of any last-team move vs the dummy (calcDamage) |
+| F96 | Hub furniture shop to decorate your room. |  | DONE | furniture-buy: 13 pieces, 4 free with achievements/wins |
+| F97 | Trophy shelf for boss kills and mastery. |  | DONE | trophy-shelf: achievements, champion wins, mastery; shine from polishing |
+| F98 | Hub NPC roster that grows with achievements. |  | DONE | hall-roster: 10 townsfolk move in at achievement counts |
+| F99 | Daily login quest board (offline-safe, local time). |  | DONE | hall-quests: 3 quests a day by local date, offline |
+| F102 | Cosmetic trails for the map cursor. |  | DONE | hall-trails + TownScene cursor trail (5 trails from capsules and the track) |
 | F103 | Title banners ("Dragon Tamer") equipped on the trainer card. |  | DONE | HubScene.ts Wardrobe room: title and card frame on trainer card |
-| F104 | Achievement popups with art and rarity tiers. |  | PART | src/ui/achievementToast.ts toast banner; achievements have tier field |
-| F105 | Statistics page: total runs, best streak, favourite type. |  | PART | HubScene.ts:1537 Trainer Card runs/wins/best; no favourite type page |
-| F106 | Run history list with filter/sort and replay seed copy. |  | PART | HubScene.ts:1583 openHistory run list with seed; no filter/sort/copy |
-| F110 | Music jukebox with all unlocked tracks. |  | TODO |  |
-| F112 | Cutscene replay theatre. |  | TODO |  |
-| F114 | Hub mini-games: darts, fishing pond, Memory Match. |  | TODO |  |
-| F120 | Season pass-style progress track (free, offline). |  | TODO |  |
-| F121 | Collections: badges, ribbons, stickers, trading cards. |  | PART | Research Room collection sets (HubScene.ts room research) |
-| F127 | Gym-style badge case with per-badge perk. |  | TODO |  |
-| F130 | Daily mystery gift envelope. |  | TODO |  |
+| F104 | Achievement popups with art and rarity tiers. |  | DONE | achievementToast.ts rarity tiers (Common to Legendary) color and name the popup |
+| F105 | Statistics page: total runs, best streak, favourite type. |  | DONE | hall-stats: runs, wins, win rate, best streak, favourite type and Pokémon |
+| F106 | Run history list with filter/sort and replay seed copy. |  | DONE | hall-ledger: filter (all/wins/losses), 4 sorts, press to copy a run seed |
+| F110 | Music jukebox with all unlocked tracks. |  | DONE | jukebox-play: 12 tracks unlock by runs, wins and capsules |
+| F112 | Cutscene replay theatre. |  | PART | cinema-theatre: endings and rival arcs as text; no full cutscene replay |
+| F114 | Hub mini-games: darts, fishing pond, Memory Match. |  | DONE | arcade-darts, arcade-memory (Memory Match), pond-fish (fishing pond) |
+| F120 | Season pass-style progress track (free, offline). |  | DONE | hall-track: 12-level free offline track fed by Town actions and runs |
+| F121 | Collections: badges, ribbons, stickers, trading cards. |  | DONE | hall-collections: badges, ribbons, stickers, trading cards, fish, recipes, books |
+| F127 | Gym-style badge case with per-badge perk. |  | DONE | hall-badges: equip 3 gym badges, each a type-based perk every run |
+| F130 | Daily mystery gift envelope. |  | DONE | hall-gift: weekday envelope with a streak bonus |
 
 ## W8 Challenge modes & seeds (12)
 

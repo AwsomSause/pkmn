@@ -49,7 +49,7 @@ export const RunGenesisSchema = z.object({
   past: PastDigestSchema.nullable().default(null),
   heirloom: HeirloomSchema.nullable().default(null),
   /** The Trainer Network parcel added after creation (core/legacy.ts startGrants). */
-  grants: z.object({ money: z.number().int(), items: z.record(z.string(), z.number().int()) }),
+  grants: z.object({ money: z.number().int(), items: z.record(z.string(), z.number().int()), /** Camp stuff from the Town (Shrine Water). */ stuff: z.record(z.string(), z.number().int()).optional() }),
   ruleVersion: z.number().int(),
   startedAt: z.string(),
   /** Filled in when the run is lost (null while it is still going or if it ended before this was recorded). */
