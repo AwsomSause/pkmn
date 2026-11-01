@@ -5,6 +5,9 @@ import { describe, expect, it } from 'vitest';
 import { plazaLayout, PLAZA_LIFE } from '../../src/core/plaza/layout';
 import { rareVisitorHere, sectionView, usePlaza } from '../../src/core/plaza/flow';
 import { isGiftable } from '../../src/core/events';
+import { createPokemon } from '../../src/core/pokemon';
+import { answerMentorship, planMentorship } from '../../src/core/story/mentorship';
+import { openHistory } from '../../src/core/story/record';
 import { chooseStarter, createRun } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
 import { content } from './helpers';
@@ -122,5 +125,27 @@ describe('plaza mini-events', () => {
       return;
     }
     throw new Error('no rare visitor in 40 seeds');
+  });
+});
+
+describe('plaza mentors', () => {
+  it('a mentor and protégé in the party train in the plaza, once per stage', () => {
+    const run = plazaRun('mentor-plaza');
+    run.party[0]!.level = 40;
+    const rookie = createPokemon(content, 'rattata', 20, 'rookie');
+    run.party.push(rookie);
+    openHistory(content, run, rookie.uid, rookie.speciesId, 'caught');
+    const h = run.story.histories[run.party[0]!.uid]!;
+    h.battles = 12;
+    h.bossesBeaten = 2;
+    answerMentorship(content, run, planMentorship(content, run)!, true);
+    const side = sideOf(run);
+    const l = plazaLayout(content, run, side);
+    expect(l.crowd.filter((w) => w.id.startsWith('mentor:') || w.id.startsWith('prote:'))).toHaveLength(2);
+    const lesson = sectionView(content, run, side, 'people').options.find((o) => o.id.startsWith('lesson:'))!;
+    expect(lesson).toBeTruthy();
+    const done = usePlaza(content, run, side, 'people', lesson.id);
+    expect(done.run.plaza.rep).toBeGreaterThan(run.plaza.rep);
+    expect(() => usePlaza(content, done.run, side, 'people', lesson.id)).toThrow();
   });
 });

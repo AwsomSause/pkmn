@@ -15,6 +15,7 @@ import { stageKey } from '../mapItems';
 import { getSpecies, maxHp, maxPp } from '../pokemon';
 import { typeEffectiveness } from '../battle/damage';
 import { recordTraded } from '../story/hooks';
+import { mentorPathOf, pathName } from '../story/mentorship';
 import { TYPE_NAMES, type Content, type EventBattle, type EventEffect, type TypeName } from '../contentSchema';
 import type { MapNode, RunState, SideStop } from '../state';
 import { PLAZA, type PlazaData, type PlazaNeed } from './schema';
@@ -157,6 +158,17 @@ function foeHere(run: RunState): { name: string; classId: string } | null {
   return { name: f.name, classId: f.classId };
 }
 
+/** Open mentor/apprentice pairs in the party, for the plaza's practice ground. */
+export function mentorPairs(content: Content, run: RunState): { relId: string; mentorUid: string; proteUid: string; mentor: string; prote: string; mentorSpecies: string; proteSpecies: string; path: string }[] {
+  return run.story.relationships.flatMap((r) => {
+    if (!r.open || r.kind !== 'mentorship') return [];
+    const mentor = run.party.find((m) => m.uid === r.a.id);
+    const prote = run.party.find((m) => m.uid === r.b.id);
+    if (!mentor || !prote) return [];
+    return [{ relId: r.id, mentorUid: mentor.uid, proteUid: prote.uid, mentor: getSpecies(content, mentor.speciesId).name, prote: getSpecies(content, prote.speciesId).name, mentorSpecies: mentor.speciesId, proteSpecies: prote.speciesId, path: mentorPathName(run, r) }];
+  });
+}
+
 /** A rare visitor now and then (more often with more badges): the same one for the whole stage. */
 export function rareVisitorHere(run: RunState): (typeof PLAZA_LIFE.rare)[number] | null {
   const eligible = PLAZA_LIFE.rare.filter((r) => r.minBadges <= run.badges.length);
@@ -164,6 +176,8 @@ export function rareVisitorHere(run: RunState): (typeof PLAZA_LIFE.rare)[number]
   const rng = rngFor(run, 'rare-visitor');
   return rng.chance(Math.min(0.5, 0.15 + run.badges.length * 0.05)) ? rng.pick(eligible) : null;
 }
+
+const mentorPathName = (run: RunState, r: Parameters<typeof mentorPathOf>[1]): string => pathName(mentorPathOf(run, r));
 
 function caravanHere(run: RunState): PlazaData['caravans'][number] | null {
   const rng = rngFor(run, 'caravan');
@@ -617,6 +631,9 @@ export function sectionView(content: Content, run: RunState, sideId: string, sec
       notes.push(atmosphereOf(content, run), ...reactionNotes(content, run));
       if (ev.gift.length > 0) add('gift', `The ${ev.name}: ${ev.giftText}`, ev.text, 0, usedN(run, 'gift') > 0 ? 'Already collected.' : null);
       // Mini-events: a rare visitor, the fountain, the street performer.
+      for (const m of mentorPairs(content, run)) {
+        add(`lesson:${m.relId}`, `Training lesson: ${m.mentor} and ${m.prote}`, `${m.mentor} shows ${m.prote} the ropes on the practice ground. (${m.path})`, 0, usedN(run, `lesson:${m.relId}`) > 0 ? 'Lesson done for this stage.' : null);
+      }
       const rareV = rareVisitorHere(run);
       if (rareV) add(`rare:${rareV.id}`, `Talk to the ${rareV.name}`, `${rareV.line}`, 0, usedN(run, `rare:${rareV.id}`) > 0 ? 'Already talked.' : null);
       add('fountain', 'Make a wish at the fountain', PLAZA_LIFE.fountain.text, PLAZA_LIFE.fountain.cost, usedN(run, 'fountain') > 0 ? 'Your wish is made.' : null);
@@ -828,6 +845,13 @@ export function usePlaza(content: Content, current: RunState, sideId: string, se
       effects(ev.gift);
       markUsed(run, 'gift');
       words.unshift(ev.giftText);
+      break;
+    }
+    case 'lesson': {
+      effects([{ kind: 'friendship', amount: 2, who: 'party' }]);
+      markUsed(run, `lesson:${a}`);
+      addRep(run, 1);
+      words.unshift('The lesson goes well. The whole party watches and learns.');
       break;
     }
     case 'rare': {
