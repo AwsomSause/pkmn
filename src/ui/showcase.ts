@@ -171,15 +171,24 @@ export function fitHeight(scene: Phaser.Scene, mon: Visual, maxHeight: number): 
   return mon;
 }
 
-/** Scales a picture to exactly `heightPx` tall (up or down), and again once late-loading art arrives. */
+/**
+ * Scales a picture to exactly `heightPx` tall (up or down). A placeholder that is later swapped for the real art
+ * (it emits 'art-ready') is reset to scale 1 and measured again, so the art's own pixel scale is never multiplied
+ * by the placeholder's fit.
+ */
 export function sizeToHeight(scene: Phaser.Scene, visual: Visual, heightPx: number): Visual {
   const fit = () => {
     if (!visual.active) return;
-    const natural = visual instanceof Phaser.GameObjects.Sprite ? visual.height : visual.getBounds().height / visual.scaleY;
+    if (visual instanceof Phaser.GameObjects.Sprite) {
+      if (visual.height > 0) visual.setScale(heightPx / visual.height);
+      return;
+    }
+    visual.setScale(1);
+    const natural = visual.getBounds().height;
     if (natural > 0) visual.setScale(heightPx / natural);
   };
   fit();
-  if (!(visual instanceof Phaser.GameObjects.Sprite)) scene.time.delayedCall(600, fit);
+  if (!(visual instanceof Phaser.GameObjects.Sprite)) visual.on('art-ready', fit);
   return visual;
 }
 

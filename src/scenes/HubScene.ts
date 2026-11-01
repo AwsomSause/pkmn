@@ -160,7 +160,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
   { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'tales', 'intel', 'museum', 'seeds', 'mentors', 'nook'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe', 'card'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
-  { id: 'town', label: 'Town', icon: 'item.sitrus_berry', rooms: ['town'], blurb: 'Pocket Town: gardens, shrine, library, capsule machine and more.' },
+  { id: 'town', label: 'Town', icon: 'item.map', rooms: ['town'], blurb: 'Pocket Town: gardens, shrine, library, capsule machine and more.' },
 ];
 
 const ROOM_ICON: Partial<Record<Room, string>> = {
