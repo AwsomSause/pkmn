@@ -17,7 +17,7 @@ export * from './mods';
 const PHASES: readonly RunState['phase'][] = ['reward', 'decision', 'map', 'shop'];
 const TRAIN_STATS = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 export type TrainStat = (typeof TRAIN_STATS)[number];
-export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'wake', 'showoff', 'hold', 'whistle', 'singalong', 'teamdance', 'race', 'healcircle', 'spar', 'nickname', 'favourite', 'ace'] as const;
+export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'wake', 'showoff', 'hold', 'whistle', 'singalong', 'teamdance', 'race', 'healcircle', 'spar', 'birthday', 'praise', 'scold', 'cry', 'nickname', 'favourite', 'ace'] as const;
 export type CareAction = (typeof CARE_ACTIONS)[number];
 
 export const hash = (text: string): number => {
@@ -101,6 +101,10 @@ export function careProblem(content: Content, run: RunState, partyIndex: number,
     case 'cheer': return n('cheer') >= 1 ? 'You already cheered it up at this stop.' : null;
     case 'train': return n('train') >= 1 ? 'Already training at this stop.' : !arg || !TRAIN_STATS.includes(arg as TrainStat) ? 'Pick a stat to train.' : null;
     case 'sing': return n('sing') >= 1 ? 'Already sang at this stop.' : run.eggs.length === 0 ? 'You carry no Eggs.' : null;
+    case 'birthday': return birthdayDue(run, care, content) ? null : 'It is not its catch-day.';
+    case 'praise': return n('manners') >= 1 ? 'You already spoke to it at this stop.' : null;
+    case 'scold': return n('manners') >= 1 ? 'You already spoke to it at this stop.' : null;
+    case 'cry': return arg === undefined || !CARE.cry.levels.includes(Number(arg)) ? 'Pick a volume.' : null;
     case 'teamdance': return n('teamdance') >= 1 ? 'The team already danced at this stop.' : run.party.length < 2 ? 'You need at least two Pokémon.' : null;
     case 'race': return n('race') >= 1 ? 'Already raced at this stop.' : run.party.length < 2 ? 'You need at least two Pokémon.' : null;
     case 'healcircle': return n('healcircle') >= 1 ? 'The circle already met at this stop.' : healers(content, run).length < CARE.team.healCircle.minHealers ? `A healing circle needs ${CARE.team.healCircle.minHealers} Pokémon that know a healing move.` : null;
@@ -118,6 +122,14 @@ export function careProblem(content: Content, run: RunState, partyIndex: number,
     case 'dress': return arg !== '' && arg !== undefined && !CARE.accessories[arg] ? 'Unknown accessory.' : null;
     default: return null;
   }
+}
+
+/** Whether a catch-day party is due: every `everyDays` run days since it joined, once each. */
+export function birthdayDue(run: RunState, care: Care, content?: Content): boolean {
+  if (care.joinedDay === undefined) return false;
+  if (content && !content.balance.careEffects) return false;
+  const years = Math.floor((run.clock.day - care.joinedDay) / CARE.birthday.everyDays);
+  return years >= 1 && (care.partyYear ?? 0) < years;
 }
 
 /** Party members that know a healing move (the healing circle needs several). */
@@ -213,6 +225,43 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       message = `${name} sings to the Eggs. They stir a little closer to hatching.`;
       break;
     }
+    case 'birthday': {
+      tick();
+      care.partyYear = Math.floor((run.clock.day - care.joinedDay!) / CARE.birthday.everyDays);
+      changeFriendship(content, mon, CARE.birthday.friendship);
+      setMood(care, CARE.birthday.mood);
+      const berries = [...content.catalog.values()].filter((e) => e.family.startsWith('Berries') && e.effect?.kind === 'held').map((e) => e.id).sort();
+      const cake = berries.length ? berries[hash(`cake:${mon.uid}:${care.partyYear}`) % berries.length]! : null;
+      if (cake) run.looseHeld = { ...run.looseHeld, [cake]: (run.looseHeld?.[cake] ?? 0) + 1 };
+      message = `${name} ${pickLine('birthday', seed)}${cake ? ` You share a ${content.catalog.get(cake)!.name} as cake.` : ''}`;
+      break;
+    }
+    case 'praise':
+      tick();
+      care.done.manners = 1;
+      care.manners = Math.min(0, (care.manners ?? 0) + 1);
+      changeFriendship(content, mon, CARE.manners.praiseFriendship);
+      setMood(care, CARE.manners.praiseMood);
+      message = `${name} beams at your praise.`;
+      break;
+    case 'scold': {
+      care.done.manners = 1;
+      care.manners = (care.manners ?? 0) - 1;
+      adjustBond(bondOf(run, mon.uid), { autonomy: CARE.manners.scoldAutonomy });
+      setMood(care, -1);
+      let extra = '';
+      if (care.manners <= -CARE.manners.scoldsToRelax && mon.nature !== CARE.manners.relaxedNature) {
+        mon.nature = CARE.manners.relaxedNature as typeof mon.nature;
+        care.manners = 0;
+        extra = ' Its temper settles: its nature is now Docile.';
+      }
+      message = `${name} hangs its head.${extra}`;
+      break;
+    }
+    case 'cry':
+      care.cryVolume = Number(arg);
+      message = `${name}'s cry is now at ${arg}%.`;
+      break;
     case 'teamdance': {
       tick();
       const good = tapsOf(arg) >= CARE.tap.goal;
@@ -323,6 +372,7 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
 export function careVictory(run: RunState, fought: readonly string[]): void {
   for (const mon of run.party) {
     const care = careOf(mon);
+    care.joinedDay ??= run.clock.day;
     if (fought.includes(mon.uid)) {
       care.fights += 1;
       care.wins += 1;
@@ -392,25 +442,6 @@ export function teamworkOnSwitch(run: RunState, incomingUid: string): { uid: str
     return { uid: mon.uid, partner: partner.uid, name: pair.name, stats: [...pair.stats] };
   }
   return null;
-}
-
-/** Mastery stars (M62): the lead counts the moves it used; at the threshold a move earns a star (+1 PP, +5% accuracy). Returns new stars. */
-export function careMoves(run: RunState, events: readonly { type: string; side?: string; moveId?: string }[]): string[] {
-  const battle = run.battle;
-  const mon = battle && !battle.doubles ? run.party[battle.activeIndex] : undefined;
-  const stars: string[] = [];
-  if (!mon) return stars;
-  for (const e of events) {
-    if (e.type !== 'move' || e.side !== 'player') continue;
-    const slot = mon.moves.find((m) => m.id === e.moveId);
-    if (!slot) continue;
-    slot.uses = (slot.uses ?? 0) + 1;
-    if (!slot.star && slot.uses >= CARE.stars.usesForStar) {
-      slot.star = true;
-      stars.push(slot.id);
-    }
-  }
-  return stars;
 }
 
 /** Seasonal forms (M64): at a healing stop a Pokémon of a form family takes the form of the run's current season. Returns how many changed. */

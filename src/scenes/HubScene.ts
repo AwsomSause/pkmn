@@ -195,6 +195,7 @@ interface Tile {
 export class HubScene extends Phaser.Scene {
   private picker: Picker | null = null;
   private dexInfo: DexInfo | null = null;
+  private dexTab: 'all' | 'seen' | 'owned' | 'mastered' = 'all';
   private tiles: Tile[] = [];
   private tileIndex = 2;
   /** The Wii-style glowing cursor that glides between the bottom tiles (spec §24). */
@@ -688,7 +689,20 @@ export class HubScene extends Phaser.Scene {
   private openDexSet(set: { id: string; name: string; members: string[] }): void {
     const { session } = services();
     const hinted = silhouettes(session.content, session.profile);
-    const rows: PickerRow[] = set.members.map((id) => {
+    // Tabs (W2 F54): All / Seen / Owned / Mastered. The first row cycles them.
+    const tab = this.dexTab;
+    const rankOf = (id: string) => speciesRank(session.content, id, session.profile.mastery?.[id]);
+    const keep = (id: string): boolean => {
+      const st = dexState(session.profile, id);
+      return tab === 'all' || (tab === 'seen' && st !== 'unknown') || (tab === 'owned' && st === 'caught') || (tab === 'mastered' && ['gold', 'master'].includes(rankOf(id)));
+    };
+    const shown = set.members.filter(keep);
+    const tabRow: PickerRow = {
+      problem: null,
+      hint: 'Enter switches the tab: All, Seen, Owned, Mastered (gold rank or better).',
+      draw: (scene, box) => box.add(scene.add.text(12, 12, `Tab: ${tab.toUpperCase()} (${shown.length}/${set.members.length})  ›`, textStyle(20, COLORS.gold))),
+    };
+    const rows: PickerRow[] = [tabRow, ...shown.map((id): PickerRow => {
       const sp = session.content.species.get(id)!;
       const state = dexState(session.profile, id);
       const shadow = state === 'unknown' ? hinted.get(id) : undefined;
@@ -707,7 +721,7 @@ export class HubScene extends Phaser.Scene {
           box.add(scene.add.text(64, h / 2, `${String(sp.dex).padStart(4, '0')}  ${state === 'unknown' ? '???' : sp.name}`, textStyle(22, state === 'unknown' ? COLORS.textMuted : COLORS.textLight)).setOrigin(0, 0.5));
         },
       };
-    });
+    })];
     this.closePicker();
     this.openPicker({
       title: set.name,
@@ -715,7 +729,13 @@ export class HubScene extends Phaser.Scene {
       columns: 2,
       rowHeight: 48,
       onSelect: (i) => {
-        this.dexInfo = new DexInfo(this, session.content, session.profile, set.members[i]!, () => {
+        if (i === 0) {
+          const order = ['all', 'seen', 'owned', 'mastered'] as const;
+          this.dexTab = order[(order.indexOf(this.dexTab) + 1) % order.length]!;
+          this.openDexSet(set);
+          return;
+        }
+        this.dexInfo = new DexInfo(this, session.content, session.profile, shown[i - 1]!, () => {
           this.dexInfo = null;
         });
       },

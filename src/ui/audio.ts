@@ -29,12 +29,14 @@ export function playSfx(scene: Phaser.Scene, id: string, volumeScale = 1, detune
 }
 
 /** Plays a Pokémon's cry, loading it first if this screen didn't preload it. */
-export function playCry(scene: Phaser.Scene, species: Species): void {
+export function playCry(scene: Phaser.Scene, species: Species, volumePercent = 100): void {
+  if (volumePercent <= 0) return;
+  const level = volumePercent / 100;
   const id = pokemonAssetIds(species.assets).cry;
   if (!services().assets.has(id) || services().session.settings.muted) return;
   const detune = cryDetune(services().session.profile);
-  if (scene.cache.audio.exists(id)) playSfx(scene, id, 0.6, detune);
-  else void loadAssets(scene, [id]).then(() => scene.sys.isActive() && playSfx(scene, id, 0.6, detune));
+  if (scene.cache.audio.exists(id)) playSfx(scene, id, 0.6 * level, detune);
+  else void loadAssets(scene, [id]).then(() => scene.sys.isActive() && playSfx(scene, id, 0.6 * level, detune));
 }
 
 /** Plays a sound that loads on demand (jingles, status sounds), loading it first if this screen didn't. */

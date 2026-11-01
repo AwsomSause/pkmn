@@ -23,6 +23,9 @@ M52 **Teamwork** (`data/teamwork.json`, 12 pairs like Plusle + Minun): the newco
 Whole-team activities: Team dance (tap; all moods up), Camp race (I301, fastest wins by stat), Healing circle (I326, 3 healers, heals everyone 40%), Tag-team sparring (I327, two Pokémon train a stat together). Seasonal forms now also cover Oricorio, Wormadam and Rotom. The Care menu scrolls.
 Already existing, so not rebuilt: M61 tutor and F35 relearner (`services.json` Move Tutor / relearn services).
 
+## Last PR
+I38 **Catch-day party** (every 28 run days after it first fought; friendship, mood and a berry cake). I49 **Praise / Scold** (three scolds in a row relax a nature to Docile; praise cancels scolding). F54 **Dex tabs** (All / Seen / Owned / Mastered in each Pokédex set; mastered = gold rank or better). F58 **Cry volume** per Pokémon (0-100%, Care menu; plays in battle). M62 **Mastery stars** now count in the engine, so every party member's moves count, in singles and doubles. F43 **Shiny meter** shipped separately in #502.
+
 ## Earlier (see `docs/status/party-life.md`, Bond Engine)
 I4/I5 share snack and gifts · I12 Listen (initiative) · I13 disobedience (refusal) · I16 gifts · I29/I30 fear and pride (grudges, comfort) · I37 sleep-over chats · I40/I41 last words · I291 chats · I292 bickering · I294 mentor/apprentice (mentors system) · I295 pranks · I297 jealousy/newcomer · I298 sharing food · I299 group hug · I311 evolution cheers · I312 gather round fainted · I313 revenge pact · I318 formation/synergy badge · I326 practice together · I328 gossip · I345 Spirit Link · M57 quirks · F33 friendship hearts · F59 team synergy.
 

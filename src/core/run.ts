@@ -157,7 +157,7 @@ import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealM
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
-import { careMoves, teamworkOnSwitch, careAceFell, careRest, careFaint, careVictory, releaseGift } from './care';
+import { teamworkOnSwitch, careAceFell, careRest, careFaint, careVictory, releaseGift } from './care';
 import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
 import { claimArea, nuzlockeCatchProblem, buryFallen, isHardcore } from './nuzlocke';
 import { applyMutator, mutatorCatch, mutatorDue, mutatorMoney, mutatorOffer, mutatorXp } from './mutators';
@@ -2016,7 +2016,6 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     const combo = playerCombo(content, run, outgoing, run.party[action.partyIndex]!.uid);
     if (combo) engineEvents.push(combo);
   }
-  if (content.balance.careEffects) careMoves(run, engineEvents as { type: string; side?: string; moveId?: string }[]);
   // Teamwork pairs (Plusle + Minun ...): a pair member sent in beside its partner gets a boost.
   if (action.kind === 'switch' && content.balance.careEffects) {
     const tw = teamworkOnSwitch(run, run.party[action.partyIndex]!.uid);

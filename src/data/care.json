@@ -111,6 +111,9 @@
     ],
     "dance": [
       "The whole team dances around the fire."
+    ],
+    "birthday": [
+      "has a party! Happy catch-day!"
     ]
   },
   "accessories": {
@@ -317,5 +320,26 @@
       "fights": 3,
       "statPercent": 6
     }
+  },
+  "birthday": {
+    "everyDays": 28,
+    "friendship": 10,
+    "mood": 2
+  },
+  "manners": {
+    "scoldsToRelax": 3,
+    "relaxedNature": "docile",
+    "praiseFriendship": 2,
+    "praiseMood": 1,
+    "scoldAutonomy": -6
+  },
+  "cry": {
+    "levels": [
+      0,
+      25,
+      50,
+      75,
+      100
+    ]
   }
 }

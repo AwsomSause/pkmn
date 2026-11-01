@@ -38,6 +38,9 @@ const CareDataSchema = z.object({
   whistle: z.object({ minTrust: z.number().int(), commands: z.record(z.string(), z.object({ stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'crit']), stages: z.number().int(), turns: z.number().int().positive(), line: z.string() })) }),
   singalong: z.object({ species: z.array(z.string()), friendship: z.number().int() }),
   team: z.object({ dance: z.object({ mood: z.number().int(), goodMood: z.number().int(), friendship: z.number().int() }), race: z.object({ winnerMood: z.number().int(), othersFriendship: z.number().int() }), healCircle: z.object({ moves: z.array(z.string()), minHealers: z.number().int(), healShare: z.number() }), spar: z.object({ fights: z.number().int(), statPercent: z.number() }) }),
+  birthday: z.object({ everyDays: z.number().int().min(1), friendship: z.number().int(), mood: z.number().int() }),
+  manners: z.object({ scoldsToRelax: z.number().int().min(1), relaxedNature: z.string(), praiseFriendship: z.number().int(), praiseMood: z.number().int(), scoldAutonomy: z.number().int() }),
+  cry: z.object({ levels: z.array(z.number().int().min(0).max(100)).min(2) }),
   sing: z.object({ eggSteps: z.number().int().min(1) }),
   releaseGift: z.object({ candiesPerLevels: z.number().int().min(1) }),
   quips: z.record(z.string(), z.array(z.string()).min(1)),
@@ -63,6 +66,12 @@ export const CareSchema = z.object({
   sulkUntil: z.number().int().default(-1),
   /** Hugs given this run (some friendship evolutions need one). */
   hugs: z.number().int().min(0).optional(),
+  /** The day (run clock) it joined, the last catch-day party held for it, and scold/praise balance. */
+  joinedDay: z.number().int().optional(),
+  partyYear: z.number().int().optional(),
+  manners: z.number().int().optional(),
+  /** Its cry volume in percent (default 100). */
+  cryVolume: z.number().int().min(0).max(100).optional(),
   favourite: z.boolean().optional(),
   /** Evolution on hold (B-cancel): it stays as it is until the next healing stop, then may evolve (F46, I51). */
   holdEvolve: z.boolean().optional(),

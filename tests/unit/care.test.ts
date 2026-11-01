@@ -1,14 +1,15 @@
 // Care & party life (W2): care actions, per-stop limits, mood/fatigue/talent/training stat nudges, saves.
 
 import { describe, expect, it } from 'vitest';
-import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careRest, teamworkOnSwitch, careMoves, swapForms, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
+import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careRest, teamworkOnSwitch, swapForms, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
 import { tradeCandidates } from '../../src/core/events';
 import { bondOf } from '../../src/core/bond';
 import { evolutionTarget } from '../../src/core/evolution';
 import { createPokemon, calcStats } from '../../src/core/pokemon';
-import { chooseStarter, createRun } from '../../src/core/run';
+import { createBattle } from '../../src/core/battle/engine';
+import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
 import { RunStateSchema, type RunState } from '../../src/core/state';
-import { content } from './helpers';
+import { content, toBattle } from './helpers';
 
 function setup(): RunState {
   const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'care', seed: 'care', archetypeId: 'red' }), 0));
@@ -283,13 +284,20 @@ describe('teamwork, stars, whistle, forms', () => {
     expect(teamworkOnSwitch(run, 'minun')).toBeNull();
   });
 
-  it('a move earns a mastery star after enough uses', () => {
-    const run = setup();
-    const mon = run.party[0]!;
-    run.battle = { doubles: false, activeIndex: 0 } as never;
-    const ev = Array.from({ length: CARE.stars.usesForStar }, () => ({ type: 'move', side: 'player', moveId: mon.moves[0]!.id }));
-    expect(careMoves(run, ev)).toEqual([mon.moves[0]!.id]);
-    expect(mon.moves[0]!.star).toBe(true);
+  it('a move earns a mastery star after enough real uses in battle', () => {
+    let run = toBattle(setup());
+    run.party[0]!.level = 60;
+    run.party[0]!.moves = [{ id: 'tackle', pp: 99 }];
+    for (let i = 0; i < CARE.stars.usesForStar + 5 && !run.party[0]!.moves[0]!.star; i++) {
+      run = structuredClone(run);
+      run.party[0]!.hp = 9999;
+      run.party[0]!.moves[0]!.pp = 99;
+      run.battle = createBattle('wild', [createPokemon(content, 'magikarp', 1, `e${i}`)], 0, run.party[0]!.uid);
+      run.phase = 'battle';
+      run = takeTurn(content, run, { kind: 'move', index: 0 }).run;
+    }
+    expect(run.party[0]!.moves[0]!.star).toBe(true);
+    expect(run.party[0]!.moves[0]!.uses).toBeGreaterThanOrEqual(CARE.stars.usesForStar);
   });
 
   it('Castform takes the season form at a healing stop', () => {
@@ -346,5 +354,45 @@ describe('whole-team activities and more forms', () => {
     run.clock.day = 1;
     expect(swapForms(content, run)).toBe(1);
     expect(run.party[0]!.speciesId).toBe('oricorio-pom-pom');
+  });
+});
+
+
+describe('catch-day, manners, cry volume', () => {
+  it('a catch-day party is due 28 days after it joined, once per year', () => {
+    let run = setup();
+    careVictory(run, [run.party[0]!.uid]); // records the join day
+    expect(careProblem(content, run, 0, 'birthday')).toMatch(/catch-day/);
+    run.clock.day += CARE.birthday.everyDays;
+    expect(careProblem(content, run, 0, 'birthday')).toBeNull();
+    run = careAction(content, run, 0, 'birthday').run;
+    expect(run.party[0]!.care!.mood).toBeGreaterThan(0);
+    run.encountersCompleted += 1;
+    expect(careProblem(content, run, 0, 'birthday')).toMatch(/catch-day/);
+  });
+
+  it('three scolds relax a nature to Docile; praise cancels a scolding', () => {
+    let run = setup();
+    run.party[0]!.nature = 'adamant';
+    for (let i = 0; i < CARE.manners.scoldsToRelax - 1; i++) {
+      run = careAction(content, run, 0, 'scold').run;
+      run.encountersCompleted += 1;
+    }
+    expect(run.party[0]!.nature).toBe('adamant');
+    run = careAction(content, run, 0, 'praise').run;
+    run.encountersCompleted += 1;
+    run = careAction(content, run, 0, 'scold').run;
+    expect(run.party[0]!.nature).toBe('adamant');
+    run.encountersCompleted += 1;
+    run = careAction(content, run, 0, 'scold').run;
+    run.encountersCompleted += 1;
+    run = careAction(content, run, 0, 'scold').run;
+    expect(run.party[0]!.nature).toBe('docile');
+  });
+
+  it('cry volume is stored per Pokémon and only allowed levels pass', () => {
+    const run = careAction(content, setup(), 0, 'cry', '50').run;
+    expect(run.party[0]!.care!.cryVolume).toBe(50);
+    expect(() => careAction(content, run, 0, 'cry', '33')).toThrow();
   });
 });
