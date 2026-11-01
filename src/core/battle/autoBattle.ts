@@ -14,7 +14,7 @@ import { currentEnemy, freshStages, type PokemonInstance, type RunState } from '
 import { emotionOf } from '../story/emotions';
 import { mentorPathOf, mentorshipOf } from '../story/mentorship';
 import { typeEffectiveness } from './damage';
-import { estimateDamage, moveValue, switchProblem, telegraphedAttack, type EnemyBrain, type PlayerAction } from './engine';
+import { estimateDamage, itemProblem, moveValue, switchProblem, telegraphedAttack, type EnemyBrain, type PlayerAction } from './engine';
 import { moveBlockReason } from './moveBlock';
 import { counterProblem, rallyProblem } from './spectacle';
 import { canDynamax, teraOption, zMoveOptions, type TransformRequest } from './transform';
@@ -220,6 +220,36 @@ function isDefensiveStatus(move: Move): boolean {
   return Boolean(e.heal || e.rest || e.wish || e.protect || e.cure === 'self' || e.selfState === 'endure' || e.substitute);
 }
 
+/** A healing or status-curing item for the active Pokémon, or null. Healing waits until the Pokémon is hurt enough for its character. */
+function chooseAutoItem(content: Content, run: RunState, ctx: ReturnType<typeof context>, mon: PokemonInstance, profile: AutoProfile, hp: number, canKo: boolean): AutoPick | null {
+  if (canKo) return null;
+  const battle = run.battle!;
+  const index = battle.activeIndex;
+  const name = nameOf(content, mon);
+  const max = calcStats(content, mon).hp;
+  const missing = max - mon.hp;
+  const usable = Object.keys(run.inventory)
+    .map((id) => content.items.get(id))
+    .filter((it): it is NonNullable<typeof it> => Boolean(it) && itemProblem(ctx, it!.id, index) === null);
+  // Hurt enough to bother: cautious, afraid or caring Pokémon heal earlier, bold ones late.
+  const threshold = clamp(0.25 + 0.2 * (profile.caution + profile.fear + profile.support) - 0.1 * profile.aggr, 0.12, 0.55);
+  if (hp <= threshold && missing > 0) {
+    const heals = usable
+      .filter((it) => it.effect.kind === 'healHp' || it.effect.kind === 'fullRestore')
+      .map((it) => ({ it, amount: it.effect.kind === 'healHp' ? it.effect.amount : max }))
+      .filter((h) => h.amount >= missing * 0.4 || h.it.effect.kind === 'fullRestore');
+    // The smallest one that covers what is missing, else the biggest there is.
+    const enough = heals.filter((h) => h.amount >= missing).sort((a, b) => a.amount - b.amount)[0];
+    const pick = enough ?? heals.sort((a, b) => b.amount - a.amount)[0];
+    if (pick) return { action: { kind: 'item', itemId: pick.it.id, targetIndex: index }, intent: `${name}'s trainer uses ${pick.it.name}!`, reason: `${name} is hurt and badly needs ${pick.it.name}.`, tags: ['item', 'defensive'] };
+  }
+  if (mon.status) {
+    const cure = usable.find((it) => it.effect.kind === 'cureStatus' || it.effect.kind === 'fullRestore');
+    if (cure && (mon.status.id === 'slp' || mon.status.id === 'frz' || profile.caution + profile.strategy > 0.1)) return { action: { kind: 'item', itemId: cure.id, targetIndex: index }, intent: `${name}'s trainer uses ${cure.name}!`, reason: `${name} can't fight properly while afflicted.`, tags: ['item'] };
+  }
+  return null;
+}
+
 /** Auto-Battle can only play singles; doubles stay in manual control. */
 export function autoBattleProblem(run: RunState): string | null {
   const b = run.battle;
@@ -359,6 +389,10 @@ export function chooseAutoAction(content: Content, run: RunState): AutoPick | nu
   });
   // A Pokémon that refuses a reckless order would waste the turn: don't pick those.
   const best = scored.reduce((a, b) => (b.score > a.score ? b : a));
+
+  // Bag items: a hurt or afflicted Pokémon may use a potion or a cure (it costs the turn), unless it can finish the foe.
+  const itemPick = chooseAutoItem(content, run, ctx, mon, profile, hp, best.tags.includes('ko') || (best.tags.includes('defensive') && best.score > 0.5));
+  if (itemPick) return itemPick;
 
   // Switching: a Pokémon that can't hurt the foe, or is about to be knocked out by a better matchup, may step back.
   if (!battle.doubles) {

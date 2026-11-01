@@ -161,3 +161,29 @@ describe('move descriptions', () => {
     expect(moveDescription(content.moves.get('tackle')!).length).toBeGreaterThan(5);
   });
 });
+
+describe('Auto-Battle and Bag items', () => {
+  const hurt = (stance: 'cautious' | 'aggressive') => {
+    const base = fight('rattata', 12);
+    setMoves(base, ['tackle']);
+    base.inventory = { potion: 2 };
+    base.party[0]!.hp = Math.max(1, Math.floor(calcStats(content, base.party[0]!).hp * 0.2));
+    return setStance(base, base.party[0]!.uid, stance);
+  };
+  it('a hurt cautious Pokémon uses a potion on itself', () => {
+    const pick = chooseAutoAction(content, hurt('cautious'))!;
+    expect(pick.action).toMatchObject({ kind: 'item', itemId: 'potion', targetIndex: 0 });
+    expect(pick.tags).toContain('item');
+  });
+  it('a healthy one never wastes the turn on an item', () => {
+    const run = fight('rattata', 12);
+    run.inventory = { potion: 2 };
+    expect(chooseAutoAction(content, run)!.action.kind).not.toBe('item');
+  });
+  it('goes for the knockout instead of healing', () => {
+    const run = hurt('cautious');
+    run.party[0]!.level = 30;
+    run.battle!.enemyTeam[0]!.hp = 1;
+    expect(chooseAutoAction(content, run)!.action.kind).toBe('move');
+  });
+});
