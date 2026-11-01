@@ -78,6 +78,14 @@ describe('Wii-style menu motion (spec §24)', () => {
     expect(def.next(DEFAULT_SETTINGS).menuAnimations).toBe(false);
   });
 
+  it('a settings v9 save gets Auto-Battle off and menu animations on', () => {
+    const storage = new MemoryStorageProvider();
+    const { menuAnimations: _m, autoBattle: _a, autoExplain: _e, ...old } = DEFAULT_SETTINGS;
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 9, savedAt: '', data: { ...old, sfxVolume: 0.321 } }));
+    const loaded = new SaveManager(storage, content).loadSettings();
+    expect(loaded).toMatchObject({ sfxVolume: 0.321, autoBattle: false, autoExplain: true, menuAnimations: true });
+  });
+
   it('migrates settings v10 to v11 with menu animations on', () => {
     expect(CURRENT_VERSIONS.settings).toBeGreaterThanOrEqual(11);
     const storage = new MemoryStorageProvider();

@@ -17,4 +17,15 @@ describe('run save v28', () => {
     expect(loaded.migratedFrom).toBe(27);
     expect(loaded.data.clock).toEqual({ day: 1, tick: 0, celebrated: [] });
   });
+
+  it('a version 28 run (before Auto-Battle) loads unchanged', () => {
+    const storage = new MemoryStorageProvider();
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'v29', seed: 'v29', archetypeId: 'red' }), 0));
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 28, savedAt: '', data: run }));
+    const loaded = new SaveManager(storage, content).loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status !== 'ok') return;
+    expect(loaded.migratedFrom).toBe(28);
+    expect(loaded.data.runId).toBe('v29');
+  });
 });
