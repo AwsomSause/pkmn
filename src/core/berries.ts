@@ -15,6 +15,7 @@ const BerriesSchema = z.object({
   wateredFaster: z.number().int().min(0),
   waterTypes: z.array(z.string()),
   harvestBase: z.number().int().min(1),
+  soil: z.record(z.string(), z.object({ types: z.array(z.string()), bonusYield: z.number().int().min(0), mutationMultiplier: z.number().min(0) })),
   mutationChance: z.number().min(0).max(1),
   mutatedBonus: z.number().int().min(0),
   crossChance: z.number().min(0).max(1),
@@ -28,6 +29,14 @@ const isBerry = (content: Content, id: string): boolean => !!content.catalog.get
 /** Berries a Pokémon holds that could be planted: [berry id, copies]. */
 export function plantableBerries(content: Content, mon: PokemonInstance): string[] {
   return Object.keys(mon.held ?? {}).filter((id) => isBerry(content, id) && (mon.held![id] ?? 0) > 0).sort();
+}
+
+/** The garden's soil from the stage's theme: Grass/Ground/Water/Bug stages are rich, Fire/Rock/Ice/Steel poor, the rest fair. */
+export function soilHere(content: Content, run: Pick<RunState, 'stage'>): GardenPlot['soil'] {
+  const theme = run.stage ? content.themes.get(run.stage.themeId) : undefined;
+  if (!theme) return 'fair';
+  for (const kind of ['rich', 'poor'] as const) if (theme.types.some((t) => BERRIES.soil[kind]?.types.includes(t))) return kind;
+  return 'fair';
 }
 
 /** Stages a berry needs, shortened by one when a Water- or Grass-type waters it. Never below 1. */
@@ -49,7 +58,8 @@ export function plantBerry(content: Content, run: RunState, mon: PokemonInstance
   mon.held![berryId]! -= 1;
   if (mon.held![berryId] === 0) delete mon.held![berryId];
   const rng = new Rng(hashSeed(`${run.seed}::plant::${n}`));
-  const plot: GardenPlot = { uid: `plot${n}`, berryId, left: growTime(content, run, berryId), mutated: rng.chance(BERRIES.mutationChance) };
+  const soil = soilHere(content, run);
+  const plot: GardenPlot = { uid: `plot${n}`, berryId, left: growTime(content, run, berryId), mutated: rng.chance(BERRIES.mutationChance * (BERRIES.soil[soil]?.mutationMultiplier ?? 1)), soil };
   run.garden = [...run.garden, plot];
   return plot;
 }
@@ -63,7 +73,7 @@ export function growGarden(run: RunState): void {
 export function plotLabel(content: Content, plot: GardenPlot): string {
   const name = content.catalog.get(plot.berryId)?.name ?? plot.berryId;
   const state = plot.left <= 0 ? 'ripe' : `${plot.left} stage${plot.left === 1 ? '' : 's'} left`;
-  return `${name} (${state}${plot.mutated ? ', mutated' : ''})`;
+  return `${name} (${state}${plot.mutated ? ', mutated' : ''}${plot.soil === 'fair' ? '' : `, ${plot.soil} soil`})`;
 }
 
 /**
@@ -77,7 +87,7 @@ export function harvestPlot(content: Content, run: RunState, plotUid: string): s
   const hyper = `hyper-${plot.berryId}`;
   const mutantId = plot.mutated && content.catalog.has(hyper) ? hyper : null;
   const got: string[] = [];
-  const base = BERRIES.harvestBase + (plot.mutated && !mutantId ? BERRIES.mutatedBonus : 0);
+  const base = BERRIES.harvestBase + (BERRIES.soil[plot.soil]?.bonusYield ?? 0) + (plot.mutated && !mutantId ? BERRIES.mutatedBonus : 0);
   got.push(giveItem(content, run, plot.berryId, base, rng));
   if (mutantId) got.push(giveItem(content, run, mutantId, 1, rng));
   const neighbours = run.garden.filter((p) => p.uid !== plot.uid && p.left <= 0 && p.berryId !== plot.berryId);

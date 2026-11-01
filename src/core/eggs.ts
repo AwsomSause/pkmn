@@ -163,6 +163,17 @@ export function eggWarmth(content: Content, run: Pick<RunState, 'party'>): numbe
   return Math.min(3, run.party.filter((m) => m.hp > 0 && EGGS.warmAbilities.includes(abilityOf(content, m) ?? '')).length);
 }
 
+/** A night at camp (or any warm spot): every Egg gets `steps` closer to hatching, but never hatches by it (it keeps at least 1 left). Returns how many Eggs moved. */
+export function warmEggs(run: RunState, steps = 1): number {
+  let moved = 0;
+  run.eggs = run.eggs.map((egg) => {
+    const left = Math.max(1, egg.left - steps);
+    if (left !== egg.left) moved += 1;
+    return { ...egg, left };
+  });
+  return moved;
+}
+
 /** 0 to 1: how far along the Egg is. */
 export function eggProgress(egg: Egg): number {
   const total = Math.max(1, egg.total ?? egg.left);

@@ -36,7 +36,7 @@ import { activePerks, hasPerk, perkItem, perksOf, spendUse, stageKey } from './m
 import { scavengerBonus } from './bank';
 import { addLevels, calcStats, maxHp } from './pokemon';
 import { count, countShiny, discover } from './progress';
-import { eggStatus, eggTier, layEgg } from './eggs';
+import { eggStatus, eggTier, layEgg, warmEggs } from './eggs';
 import { makeShadow, rollShadowHeart } from './shadow';
 import { addFlag } from './shadowWorld/world';
 import { grantBlessing, makeBlissful } from './shadowWorld/blissful';
@@ -825,7 +825,7 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       if (run.garden.length >= BERRIES.maxPlots || !content.catalog.has(e.berry)) return '';
       const n = (run.itemCounters?.['plots-planted'] ?? 0) + 1;
       run.itemCounters = { ...run.itemCounters, 'plots-planted': n };
-      run.garden = [...run.garden, { uid: `plot${n}`, berryId: e.berry, left: 1, mutated: e.mutated }];
+      run.garden = [...run.garden, { uid: `plot${n}`, berryId: e.berry, left: 1, mutated: e.mutated, soil: 'fair' }];
       return `A ${e.mutated ? 'glowing ' : ''}${content.catalog.get(e.berry)!.name} seedling is planted in the Berry Garden`;
     }
     case 'blessing':
@@ -920,9 +920,11 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
     case 'scout':
       scoutAhead(content, run, e.columns);
       return effectWords(content, e);
-    case 'rest':
+    case 'rest': {
       restUntilMorning(run);
-      return effectWords(content, e);
+      const warmed = warmEggs(run, 1);
+      return warmed > 0 ? `${effectWords(content, e)}; your Egg${warmed === 1 ? ' is' : 's are'} snug by the fire` : effectWords(content, e);
+    }
     case 'celebrate':
       celebrateToday(run);
       return effectWords(content, e);

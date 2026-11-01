@@ -954,7 +954,7 @@ export const EggSchema = z.object({
 export type Egg = z.infer<typeof EggSchema>;
 
 /** A berry growing in the run's garden (core/berries.ts). Ripe when `left` reaches 0. */
-export const GardenPlotSchema = z.object({ uid: z.string(), berryId: z.string(), left: z.number().int().min(0), mutated: z.boolean() });
+export const GardenPlotSchema = z.object({ uid: z.string(), berryId: z.string(), left: z.number().int().min(0), mutated: z.boolean(), soil: z.enum(['poor', 'fair', 'rich']).default('fair') });
 export type GardenPlot = z.infer<typeof GardenPlotSchema>;
 
 export const RunStateSchema = z.object({
