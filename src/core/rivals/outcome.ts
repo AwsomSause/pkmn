@@ -31,7 +31,8 @@ export function applyDefeat(rival: Rival, gain: number): Outcome {
   if (t.resilience <= o.discourageMaxResilience) {
     rival.setbacks += 1;
     rival.rivalPotential = Math.max(0, rival.rivalPotential - o.discourageLoss);
-    if (rival.setbacks >= o.retireAtSetbacks) {
+    // §21 the major rival is shaken but never quits: the run keeps its central rival.
+    if (rival.setbacks >= o.retireAtSetbacks && !rival.major) {
       rival.state = 'retired';
       return 'retired';
     }

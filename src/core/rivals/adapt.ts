@@ -22,6 +22,7 @@ import { rivalDebtLevels } from './standing';
 import { allianceHelp, identityNote } from './relations';
 import { legacyLine } from './legacy';
 import { RIVAL_CONFIG } from './schema';
+import { MAJOR } from './major';
 
 /** The story flag holding the region a rival last came back in. */
 export const rivalReturnFlag = (id: string) => `rival-return:${id}`;
@@ -48,11 +49,13 @@ export function waitingRival(run: RunState, content?: Content): Rival | null {
   const due = run.story.rivals.filter((r) => {
     if (!isHostile(r) || r.cooldown > 0) return false;
     const last = run.story.flags[rivalSeenFlag(r.id)];
-    if (typeof last === 'number' && now - last < Math.max(1, Math.max(sched.minGap, sched.intervals[r.state] ?? sched.minGap) - gapCut)) return false;
+    // §21 the major rival comes back on a schedule of its own (every `interval` stages).
+    const interval = r.major ? MAJOR.config.interval : Math.max(sched.minGap, sched.intervals[r.state] ?? sched.minGap);
+    if (typeof last === 'number' && now - last < Math.max(1, interval - gapCut)) return false;
     const met = r.memory.lastBattle.eventId === r.origin.eventId ? r.origin.where : null;
     return !met || met.region !== run.regionIndex || met.stage !== (run.stage?.index ?? null);
   });
-  due.sort((a, b) => LADDER.indexOf(b.state) - LADDER.indexOf(a.state) || b.rivalPotential - a.rivalPotential);
+  due.sort((a, b) => Number(Boolean(b.major)) - Number(Boolean(a.major)) || LADDER.indexOf(b.state) - LADDER.indexOf(a.state) || b.rivalPotential - a.rivalPotential);
   return due[0] ?? null;
 }
 

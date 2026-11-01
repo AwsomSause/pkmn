@@ -40,6 +40,9 @@ import { memoryAfterBattle } from '../memories/encounters';
 import { nemesisAfterBattle, noteNemesisBreakFree, noteNemesisFaint, noteRivalResult } from './nemesis';
 import type { StoryEventDefinition, StoryTriggerKind, Where } from './schema';
 import { rivalProgress } from '../rivals/progression';
+import { createMajorRival, learnFromBattle, recordAce, type Knockout } from '../rivals/major';
+import { maybeFormMonRival, monRivalAfterBattle, monRivalCandidate } from '../rivals/monRivals';
+import { recordSacrifice } from '../rivals/sacrifice';
 
 const ENGINE_EFFECTS = new Set<string>(Object.values(HYPER_EFFECTS));
 
@@ -204,6 +207,9 @@ export function recordBattleTurn(content: Content, before: RunState, run: RunSta
         }
         break;
       }
+      case 'sacrifice':
+        recordSacrifice(content, run);
+        break;
       case 'lastStand':
         if (e.side !== 'player' || !active.player) break;
         emit(content, run, 'survivedFatal', {
@@ -484,6 +490,17 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
     actors: fought,
     data: { result, kind: battle.kind, turns: battle.turn - 1, hpLeftShare: totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0 },
   });
+  // This battle's knockouts (rivals study them, Pokémon rivals remember them).
+  const kos = run.story.events.filter((k) => k.type === 'knockout' && k.where.battle === index);
+  const enemyKos: Knockout[] = kos.filter((k) => k.data.side === 'enemy' && k.actors[1]).map((k) => ({ foeUid: k.actors[0]!, foeSpecies: String(k.data.speciesId ?? ''), by: k.actors[1]!, moveId: typeof k.data.moveId === 'string' ? k.data.moveId : null }));
+  const playerKos = kos.filter((k) => k.data.side === 'player' && k.actors[1]).map((k) => ({ fainted: k.actors[0]!, by: k.actors[1]! }));
+  recordSacrifice(content, run);
+  monRivalAfterBattle(content, run, playerKos);
+  if (battle.kind === 'wild') {
+    const cand = monRivalCandidate(content, run, playerKos);
+    const foe = battle.enemyTeam[0];
+    if (cand && foe && content.balance.rival.depth) maybeFormMonRival(content, run, { foe, rival: cand.rival, cause: cand.cause, eventId: ended.id, where });
+  }
   // A returning trainer's rematch goes into its record.
   const back = battle.returning ? run.story.enemyProfiles.find((p) => p.id === battle.returning) : undefined;
   if (back && (result === 'win' || result === 'lose')) recordEnemyBattle(content, back, ended, result);
@@ -495,7 +512,10 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
     noteRivalResult(run, rivalBack.id, result === 'win');
     // A narrative defeat (M12) is the rival's story win, not an ordinary one.
     rivalProgress(content, run, rivalBack, result === 'win' ? 'lostToPlayer' : battle.narrative ? 'narrativeWin' : 'beatPlayer');
-    rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId), foes: fought };
+    rivalBack.memory.lastBattle = { eventId: ended.id, result: result === 'win' ? 'win' : 'lose', hpLeftShare: hpShare, turns: battle.turn - 1, team: battle.enemyTeam.filter((m) => m.uid !== battle.monRival?.uid).slice(0, 6).map((m) => m.speciesId), foes: fought };
+    // §9/§10: the ace's record, and what the rival learned from this battle.
+    recordAce(content, rivalBack, battle.enemyTeam, result === 'lose');
+    for (const text of learnFromBattle(content, run, rivalBack, enemyKos, where)) emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: rivalBack.id, outcome: 'studied' }, text });
     if (result === 'win') {
       const before = rivalBack.state;
       const outcome = applyDefeat(rivalBack, sparkGain({ hpLeftShare: hpShare, flawless: run.party.every((m) => m.hp > 0) }));
@@ -515,8 +535,18 @@ function recordBattleEnd(content: Content, run: RunState, where: Where): void {
       if (chosen) say(`${content.trainers.get(chosen.classId)?.name ?? 'Trainer'} ${chosen.name} became the rival who defines your journey`);
     }
   }
+  // §21 the guaranteed major rival: the first rival becomes a recurring character, win or lose.
+  if (battle.firstRival && content.balance.rival.depth && trainer && (result === 'win' || result === 'lose')) {
+    const major = createMajorRival(run, { classId: trainer.classId, name: trainer.name, team: battle.enemyTeam.slice(0, 6).map((m) => m.speciesId), ended, where, result: result === 'win' ? 'win' : 'lose', hpLeftShare: totalHp > 0 ? Math.round((hpLeft / totalHp) * 100) / 100 : 0, turns: battle.turn - 1, foes: fought }, content);
+    if (major) {
+      recordAce(content, major, battle.enemyTeam, result === 'lose');
+      rivalProgress(content, run, major, result === 'win' ? 'lostToPlayer' : 'beatPlayer');
+      emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: major.id, archetype: major.archetype, outcome: 'major' }, text: `${trainer.name} swore to keep up with you all the way. A rivalry for the whole journey has begun` });
+      for (const text of learnFromBattle(content, run, major, enemyKos, where)) emit(content, run, 'rivalryFormed', { where, actors: fought, data: { rival: major.id, outcome: 'studied' }, text });
+    }
+  }
   // Rival Spark: a memorable win over an ordinary trainer can make them your rival.
-  if (result === 'win' && trainer && !trainer.leaderId && battle.kind === 'trainer' && !battle.rivalId) {
+  if (result === 'win' && trainer && !trainer.leaderId && battle.kind === 'trainer' && !battle.rivalId && !battle.firstRival) {
     const rival = maybeSpark(run, {
       where,
       classId: trainer.classId,
