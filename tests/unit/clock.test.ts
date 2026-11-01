@@ -1,7 +1,7 @@
 // The run clock (spec §28) and Camp's time-of-day choices (spec §22).
 
 import { describe, expect, it } from 'vitest';
-import { periodWildWeight, shopHoursMultiplier, advanceClock, celebrateToday, freshClock, milestoneToday, periodOf, restUntilMorning } from '../../src/core/clock';
+import { periodWildWeight, seasonOf, shopHoursMultiplier, advanceClock, celebrateToday, freshClock, milestoneToday, periodOf, restUntilMorning } from '../../src/core/clock';
 import { chooseEvent, conditionMet, eventView } from '../../src/core/events';
 import { nextChoices } from '../../src/core/map';
 import { chooseNode, chooseStarter, createRun } from '../../src/core/run';
@@ -117,5 +117,43 @@ describe('saves', () => {
     const migrated = MIGRATIONS.run[27]!(old as never);
     expect(RunStateSchema.parse(migrated).clock).toEqual(freshClock());
     expect(CURRENT_VERSIONS.run).toBeGreaterThanOrEqual(28);
+  });
+});
+
+describe('seasons and NPC schedules', () => {
+  it('a new season starts a festival day, once', () => {
+    const run = newRun();
+    const len = content.balance.clock.seasonLength;
+    expect(seasonOf(content, run)).toBe('Spring');
+    run.clock.day = len + 1;
+    expect(seasonOf(content, run)).toBe('Summer');
+    expect(milestoneToday(content, run)).toBe(true);
+    celebrateToday(run);
+    expect(milestoneToday(content, run)).toBe(false);
+  });
+
+  it('every NPC trainer meeting keeps hours', () => {
+    const npcs = [...content.events.values()].filter((e) => e.id.startsWith('npc-meet-'));
+    expect(npcs.length).toBeGreaterThan(0);
+    for (const e of npcs) expect(e.requires.some((r) => r.kind === 'period')).toBe(true);
+    const run = newRun();
+    const morning = npcs.filter((e) => e.requires.every((r) => conditionMet(content, run, r))).length;
+    run.clock.tick = 3;
+    const night = npcs.filter((e) => e.requires.every((r) => conditionMet(content, run, r))).length;
+    expect(morning).toBeLessThan(npcs.length);
+    expect(night).toBeLessThan(npcs.length);
+  });
+});
+
+describe('run save v28', () => {
+  it('a version 27 run loads at day 1, morning', () => {
+    const storage = new MemoryStorageProvider();
+    const { clock: _c, ...old } = structuredClone(newRun());
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 27, savedAt: '', data: old }));
+    const loaded = new SaveManager(storage, content).loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status !== 'ok') return;
+    expect(loaded.migratedFrom).toBe(27);
+    expect(loaded.data.clock).toEqual({ day: 1, tick: 0, celebrated: [] });
   });
 });
