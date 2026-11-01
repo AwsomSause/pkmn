@@ -716,6 +716,7 @@
  },
  "clock": {
   "ticksPerStep": 1,
+  "seasonLength": 28,
   "periodWildFactor": 2,
   "shopHours": { "morning": 1, "afternoon": 0.9, "evening": 1, "night": 1.2 },
   "periodTypes": {
