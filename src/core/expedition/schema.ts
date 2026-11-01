@@ -135,7 +135,33 @@ export const MysteryEventSchema = z.object({
   options: z.array(z.object({ label: z.string(), result: z.string(), effect: MysteryEffectSchema })).min(2).max(3),
 });
 
+/** A curated rental team (spec 30): three Pokémon with moves, items and a plan, offered for a range of badge counts. */
+export const RentalMemberSchema = z.object({
+  species: z.string(),
+  moves: z.array(z.string()).min(1).max(4),
+  item: z.string().optional(),
+  /** "hidden" = the hidden ability (when the species has one). */
+  ability: z.literal('hidden').optional(),
+});
+export const RentalTeamSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  /** The plan in one line, shown before the player borrows the team. */
+  strategy: z.string().min(1),
+  minBadges: z.number().int().min(0),
+  /** null = no upper limit. */
+  maxBadges: z.number().int().min(0).nullable(),
+  /** Added to the rental level: strong teams run a little lower so they never replace the player's own party. */
+  levelOffset: z.number().int().min(-2).max(2).default(0),
+  members: z.array(RentalMemberSchema).length(3),
+});
+export type RentalTeam = z.infer<typeof RentalTeamSchema>;
+export type RentalMember = z.infer<typeof RentalMemberSchema>;
+
 export const ExpeditionFileSchema = z.object({
+  /** Rental teams by badge count. Rental levels never exceed the player's own party level plus `partyMargin`. */
+  rentalLevel: z.object({ partyMargin: z.number().int().min(0).max(10) }),
+  rentalTeams: z.array(RentalTeamSchema).min(1),
   denChance: Fraction,
   /** Expedition tier available by region index (the last covers later regions). */
   tierByRegion: z.array(z.number().int().min(1).max(4)).min(1),

@@ -123,7 +123,41 @@ export const RaidDefSchema = z.object({
 });
 export type RaidDef = z.infer<typeof RaidDefSchema>;
 
+/** How badges scale a raid (spec 31). Badges are the main progression signal; special raids take a share of it, the Grand-Enemy and gang raids none. */
+export const BadgeScalingSchema = z.object({
+  /** Extra boss levels per badge (kept at or under the region's level cap), up to `maxLevelBonus`. */
+  levelPerBadge: z.number().min(0).max(2),
+  maxLevelBonus: z.number().int().min(0).max(12),
+  /** Extra boss HP (percent of the base pool) per badge, up to `maxHpPercent`. */
+  hpPercentPerBadge: z.number().min(0).max(30),
+  maxHpPercent: z.number().int().min(0).max(300),
+  /** Each shield is worth this much more of the boss's HP per badge. */
+  shieldPointsPerBadge: z.number().min(0).max(0.05),
+  /** The charged attack hits this much harder per badge (never above ×2), and charges one turn sooner from `fasterChargeBadges`. */
+  telegraphBoostPerBadge: z.number().min(0).max(0.1),
+  fasterChargeBadges: z.number().int().min(1),
+  /** From this many badges the boss knows its second extra move, uses its hidden ability, gets one more bonus attack and (tier 3+) a last shield at 25% HP. */
+  secondMoveBadges: z.number().int().min(1),
+  hiddenAbilityBadges: z.number().int().min(1),
+  extraActionBadges: z.number().int().min(1),
+  lastShieldBadges: z.number().int().min(1),
+  /** Prize money grows by this percent per badge (up to `maxMoneyPercent`); one more draft choice and (tier 5+) one more rare-encounter token from these badge counts. */
+  moneyPercentPerBadge: z.number().min(0).max(20),
+  maxMoneyPercent: z.number().int().min(0).max(300),
+  extraDraftBadges: z.number().int().min(1),
+  rareTokenBadges: z.number().int().min(1),
+  /** The share of the badge count used by each raid kind (default 1; the Grand-Enemy and gang raids are never scaled). */
+  kindShare: z.partialRecord(z.enum(['wild', 'regional', 'rival', 'anomaly']), z.number().min(0).max(1)).default({}),
+  /** Badges needed before a den can hold a raid of tier 1 to 6 (an open tier is not enough on its own). */
+  tierBadges: z.array(z.number().int().min(0)).length(6),
+  /** Names of tiers 1 to 6 (Standard, Advanced, Elite, Exceptional, Legendary), and the label of rival and anomaly raids. */
+  tierNames: z.array(z.string().min(1)).length(6),
+  eventLabel: z.string().min(1),
+});
+export type BadgeScaling = z.infer<typeof BadgeScalingSchema>;
+
 export const RaidFileSchema = z.object({
+  badgeScaling: BadgeScalingSchema,
   /** Chance that a stage has a raid den (the Pokémon League never does). */
   denChance: z.number().min(0).max(1),
   /** Raid tiers a den can have, by region index (the last entry covers later regions). */
