@@ -2,7 +2,6 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
-import { showCaption } from '../ui/overlays';
 import { aeroMood, autoInterruption, cameraFocus, capFlash, hapticPattern } from '../core/presentation/uiPrefs';
 import { fitLine } from '../ui/fitText';
 import { filterLog, LOG_TABS, type LogTab } from '../ui/logFilter';
@@ -2103,7 +2102,6 @@ export class BattleScene extends Phaser.Scene {
     if (end.voiceJoined) await this.say(`${content.species.get(end.voiceJoined)?.name ?? 'The Pokémon'} heard your voice. It wants to come with you!`);
     if (end.badge) {
       playSfxLazy(this, `me.${services().session.settings.victoryJingle}`);
-      showCaption('Badge earned!');
       const leaderName = content.bosses.get(end.badge)?.name ?? end.badge;
       await this.playBeat(stamp(this, 'BADGE GET!', `${leaderName}'s badge`, ROLE_RIMS.gym, this.motion));
       await this.say(`You earned ${leaderName}'s badge! (${result.run.badges.length} total)`);
@@ -2149,7 +2147,6 @@ export class BattleScene extends Phaser.Scene {
         );
       } else await burstReveal(this, PLAYER_POS.x, PLAYER_POS.y - 100, 0x9fe8ff, this.motion).done;
       playSfxLazy(this, 'me.evo_success');
-      showCaption('Evolution!');
       await this.say(`Congratulations! Your ${fromName} evolved into ${toName}!`);
       for (const m of evo.learnedMoves) await this.say(`${toName} learned ${content.moves.get(m)!.name}!`);
     }

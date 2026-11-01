@@ -7,7 +7,8 @@ import { DEFAULT_SETTINGS } from '../../src/save/saveManager';
 describe('settings registry', () => {
   it('every setting id is a real settings key, and ids are unique', () => {
     const keys = Object.keys(SettingsSchema.shape);
-    for (const d of SETTINGS) expect(keys, d.id).toContain(d.id);
+    // `pad_<action>` rows edit one entry of the `gamepadMap` setting.
+    for (const d of SETTINGS) expect(keys, d.id).toContain(d.id.startsWith('pad_') ? 'gamepadMap' : d.id);
     expect(new Set(SETTINGS.map((d) => d.id)).size).toBe(SETTINGS.length);
   });
 
@@ -15,7 +16,7 @@ describe('settings registry', () => {
     for (const d of SETTINGS) {
       let s = { ...DEFAULT_SETTINGS, autoAdvance: true };
       const seen = new Set<string>();
-      for (let i = 0; i < 12 && !seen.has(d.show(s)); i++) {
+      for (let i = 0; i < 20 && !seen.has(d.show(s)); i++) {
         seen.add(d.show(s));
         s = changeSetting(s, d.id);
       }

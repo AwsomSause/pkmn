@@ -4,6 +4,7 @@
 import type { Settings } from '../core/state';
 import { DYSLEXIA_FONT_FAMILY, FONT_SCALE, themeIsLight, UI_THEMES } from '../core/presentation/uiPrefs';
 import { AERO } from './aero';
+import { setActiveSkin } from './skinPaint';
 import { COLORS, setTextPrefs } from './theme';
 
 const original = { colors: { ...COLORS }, aero: { ...AERO } };
@@ -19,6 +20,7 @@ export function applyUiSkin(settings: Pick<Settings, 'uiTheme' | 'fontSize' | 'd
 
 export function applyTheme(id: Settings['uiTheme']): void {
   appliedTheme = id;
+  setActiveSkin(id);
   const t = UI_THEMES[id];
   Object.assign(COLORS, original.colors, { background: t.background, panel: t.panel, panelDark: t.panelDark, border: t.border, borderMuted: t.borderMuted, accent: t.accent });
   Object.assign(AERO, original.aero, { glass: t.glass, glassLow: t.glassLow, rim: t.rim, sky: t.sky });

@@ -11,6 +11,8 @@ import { downloadText, pickTextFile } from '../ui/files';
 import { queueAssets } from '../ui/lazyAssets';
 import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
+import { listenForButton } from '../ui/gamepad';
+import { PAD_ACTIONS, PAD_ACTION_LABEL, remapPad } from '../core/presentation/uiPrefs';
 import { holdToConfirm } from '../ui/pointerFx';
 import { framedScreenshot, runShareCard } from '../ui/shareCard';
 import { UI_THEMES, themeIsLight, FONT_SCALE } from '../core/presentation/uiPrefs';
@@ -68,6 +70,11 @@ export class SettingsScene extends Phaser.Scene {
   }
 
   private back(): void {
+    if (this.remapping) {
+      this.stopListening?.();
+      this.remapping = false;
+      return this.render(this.menu?.index ?? 0);
+    }
     if (this.page === 'home') this.scene.start(this.from);
     else if (this.page === 'confirmReset') this.go('home');
     else this.go('home');
@@ -138,7 +145,9 @@ export class SettingsScene extends Phaser.Scene {
         back,
       ];
     }
-    return [...settingsIn(this.page).map((d) => toggleRow(d)), back];
+    const rows = settingsIn(this.page).map((d) => toggleRow(d));
+    if (this.page === 'controls') rows.push({ option: { label: this.remapping ? `Press a button for: ${PAD_ACTION_LABEL[PAD_ACTIONS[this.remapStep]!]}…` : 'Remap by pressing buttons…' }, hint: 'Press the controller button you want for each action in turn (Up, Down, Left, Right, Confirm, Back). A button already in use swaps.', action: () => this.startRemap() });
+    return [...rows, back];
   }
 
   /** A topic's entries in a scrolling list; the focused entry's full text shows below. */
@@ -162,6 +171,35 @@ export class SettingsScene extends Phaser.Scene {
       },
     });
     this.picker = picker;
+  }
+
+  private remapping = false;
+  private remapStep = 0;
+  private stopListening: (() => void) | null = null;
+
+  /** Sets every gamepad action by pressing the wanted button on the controller, one action at a time. */
+  private startRemap(): void {
+    if (this.remapping) return;
+    this.remapping = true;
+    this.remapStep = 0;
+    this.listenNext();
+  }
+
+  private listenNext(): void {
+    this.render(this.menu?.index ?? 0);
+    this.stopListening = listenForButton((n) => {
+      const { session } = services();
+      const action = PAD_ACTIONS[this.remapStep]!;
+      session.saveSettings({ ...session.settings, gamepadMap: remapPad(session.settings.gamepadMap, action, n) });
+      this.remapStep += 1;
+      if (this.remapStep >= PAD_ACTIONS.length) {
+        this.remapping = false;
+        this.stopListening = null;
+        this.notice = 'Gamepad buttons remapped.';
+        this.render(this.menu?.index ?? 0);
+      } else this.listenNext();
+    });
+    this.events.once('shutdown', () => this.stopListening?.());
   }
 
   private change(id: string): void {
@@ -254,7 +292,7 @@ export class SettingsScene extends Phaser.Scene {
     const x = 620;
     const y = 78;
     ui.add(this.add.rectangle(x, y, 300, 200, t.background).setOrigin(0).setStrokeStyle(2, t.borderMuted));
-    ui.add(this.add.rectangle(x + 14, y + 14, 272, 120, t.panel).setOrigin(0).setStrokeStyle(4, t.border));
+    ui.add(drawPanel(this, x + 14, y + 14, 272, 120, { fill: t.panel, border: t.border }));
     ui.add(this.add.text(x + 26, y + 24, t.label, textStyle(Math.round(20 * FONT_SCALE[s.fontSize]), ink, { wordWrap: { width: 250 } })).setName('preview-label'));
     ui.add(this.add.text(x + 26, y + 64, 'Sample text 123', textStyle(Math.round(16 * FONT_SCALE[s.fontSize]), ink)));
     ui.add(this.add.rectangle(x + 26, y + 100, 80, 20, t.accent).setOrigin(0));

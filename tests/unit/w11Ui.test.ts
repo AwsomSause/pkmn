@@ -4,8 +4,11 @@ import { getContent } from '../../src/data';
 import {
   aeroMood, buttonGlyph, cameraFocus, capFlash, glyphFamily, hapticPattern, holdProgress, InteractionLog, loadingTip, LOADING_TIPS,
   autoInterruption, chestReady, GLOSSARY, glossaryLinks, hotkeyIndex, idleHintDue, isShake, lyricAt, MoveUndo, NoticeStack, rowAt, swipeDir,
+  DEFAULT_PAD_MAP, jingleCaption, JINGLE_IDS, PAD_ACTIONS, remapPad,
   padActions, padJustify, shareCardRows, TOOLTIP_DELAY_MS, tiltFor, UI_THEMES, UI_THEME_ORDER,
 } from '../../src/core/presentation/uiPrefs';
+import { chamferPoints, cornerRadius, feelTween, scanlineYs, SKINS } from '../../src/core/presentation/skins';
+import { uiTween, springTuning } from '../../src/core/presentation/uiMotion';
 import { changeSetting, settingsIn } from '../../src/core/settingsRegistry';
 import { CURRENT_VERSIONS, DEFAULT_SETTINGS, SaveManager } from '../../src/save/saveManager';
 import { MemoryStorageProvider } from '../../src/save/storage';
@@ -17,11 +20,11 @@ describe('W11 settings (v12)', () => {
   it('migrates settings v11 to v12 with every new key at the old behaviour', () => {
     expect(CURRENT_VERSIONS.settings).toBeGreaterThanOrEqual(12);
     const storage = new MemoryStorageProvider();
-    const { uiTheme: _a, fontSize: _b, dyslexiaFont: _c, reducedFlash: _d, tooltipDelay: _e, popupScale: _f, transitionStyle: _g, cursorTrail: _h, holdToConfirm: _i, haptics: _j, oneHanded: _k, gamepadConfirm: _l, gamepadBack: _m, victoryJingle: _n, ...old } = DEFAULT_SETTINGS;
+    const { uiTheme: _a, fontSize: _b, dyslexiaFont: _c, reducedFlash: _d, tooltipDelay: _e, popupScale: _f, transitionStyle: _g, cursorTrail: _h, holdToConfirm: _i, haptics: _j, oneHanded: _k, gamepadMap: _l, victoryJingle: _n, ...old } = DEFAULT_SETTINGS;
     storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 11, savedAt: '', data: { ...old, sfxVolume: 0.21 } }));
     const loaded = new SaveManager(storage, content).loadSettings();
     expect(loaded.sfxVolume).toBe(0.21);
-    expect(loaded).toMatchObject({ uiTheme: 'classic', fontSize: 'normal', dyslexiaFont: false, reducedFlash: false, tooltipDelay: 'normal', popupScale: 1, transitionStyle: 'fade', cursorTrail: false, holdToConfirm: false, haptics: false, oneHanded: 'off', gamepadConfirm: 0, gamepadBack: 1, victoryJingle: 'badge' });
+    expect(loaded).toMatchObject({ uiTheme: 'classic', fontSize: 'normal', dyslexiaFont: false, reducedFlash: false, tooltipDelay: 'normal', popupScale: 1, transitionStyle: 'fade', cursorTrail: false, holdToConfirm: false, haptics: false, oneHanded: 'off', gamepadMap: { up: 12, down: 13, left: 14, right: 15, confirm: 0, back: 1 }, victoryJingle: 'badge' });
   });
   it('defaults satisfy the schema and bad values are rejected', () => {
     expect(SettingsSchema.safeParse(DEFAULT_SETTINGS).success).toBe(true);
@@ -29,7 +32,7 @@ describe('W11 settings (v12)', () => {
     expect(SettingsSchema.safeParse({ ...DEFAULT_SETTINGS, popupScale: 9 }).success).toBe(false);
   });
   it('every new setting cycles back to where it started', () => {
-    for (const id of ['uiTheme', 'fontSize', 'dyslexiaFont', 'reducedFlash', 'tooltipDelay', 'popupScale', 'transitionStyle', 'cursorTrail', 'holdToConfirm', 'haptics', 'oneHanded', 'gamepadConfirm', 'victoryJingle']) {
+    for (const id of ['uiTheme', 'fontSize', 'dyslexiaFont', 'reducedFlash', 'tooltipDelay', 'popupScale', 'transitionStyle', 'cursorTrail', 'holdToConfirm', 'haptics', 'oneHanded', 'victoryJingle']) {
       let s = DEFAULT_SETTINGS;
       const seen = new Set<string>();
       for (let i = 0; i < 12; i++) {
@@ -40,17 +43,25 @@ describe('W11 settings (v12)', () => {
       expect(SettingsSchema.safeParse(s).success, id).toBe(true);
     }
   });
-  it('the gamepad confirm and back buttons never collide', () => {
+  it('every gamepad action is remappable and a taken button swaps instead of doubling up', () => {
     let s = DEFAULT_SETTINGS;
-    for (let i = 0; i < 9; i++) {
-      s = changeSetting(s, 'gamepadConfirm');
-      expect(s.gamepadConfirm).not.toBe(s.gamepadBack);
-      s = changeSetting(s, 'gamepadBack');
-      expect(s.gamepadConfirm).not.toBe(s.gamepadBack);
+    for (const a of PAD_ACTIONS) for (let i = 0; i < 20; i++) {
+      s = changeSetting(s, `pad_${a}`);
+      expect(new Set(Object.values(s.gamepadMap)).size).toBe(6);
     }
+    expect(remapPad(DEFAULT_PAD_MAP, 'confirm', 1)).toMatchObject({ confirm: 1, back: 0 });
+    expect(remapPad(DEFAULT_PAD_MAP, 'up', 7)).toMatchObject({ up: 7, down: 13 });
+  });
+  it('migrates settings v12 to v13 keeping the old confirm and back buttons', () => {
+    const storage = new MemoryStorageProvider();
+    const { gamepadMap: _m, ...rest } = DEFAULT_SETTINGS;
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 12, savedAt: '', data: { ...rest, gamepadConfirm: 2, gamepadBack: 3 } }));
+    const loaded = new SaveManager(storage, content).loadSettings();
+    expect(loaded.gamepadMap).toEqual({ up: 12, down: 13, left: 14, right: 15, confirm: 2, back: 3 });
+    expect((loaded as Record<string, unknown>).gamepadConfirm).toBeUndefined();
   });
   it('the Controls category lists the controller and layout settings', () => {
-    expect(settingsIn('controls').map((d) => d.id)).toEqual(expect.arrayContaining(['holdToConfirm', 'haptics', 'oneHanded', 'gamepadConfirm', 'gamepadBack']));
+    expect(settingsIn('controls').map((d) => d.id)).toEqual(expect.arrayContaining(['holdToConfirm', 'haptics', 'oneHanded', 'pad_confirm', 'pad_back']));
   });
 });
 
@@ -79,13 +90,13 @@ describe('themes, flash, tooltips', () => {
 describe('gamepad, haptics, hold, tilt, tips, log, share', () => {
   const idle = { buttons: Array<boolean>(16).fill(false), axes: [0, 0] };
   it('maps the d-pad, stick and the chosen face buttons', () => {
-    expect([...padActions(idle, 0, 1)]).toEqual([]);
+    expect([...padActions(idle, DEFAULT_PAD_MAP)]).toEqual([]);
     const press = (i: number) => ({ ...idle, buttons: idle.buttons.map((_, j) => j === i) });
-    expect(padActions(press(12), 0, 1).has('up')).toBe(true);
-    expect(padActions(press(0), 0, 1).has('confirm')).toBe(true);
-    expect(padActions(press(0), 2, 0).has('back')).toBe(true);
-    expect(padActions({ ...idle, axes: [0.9, 0] }, 0, 1).has('right')).toBe(true);
-    expect(padActions({ ...idle, axes: [0, -0.9] }, 0, 1).has('up')).toBe(true);
+    expect(padActions(press(12), DEFAULT_PAD_MAP).has('up')).toBe(true);
+    expect(padActions(press(0), DEFAULT_PAD_MAP).has('confirm')).toBe(true);
+    expect(padActions(press(0), { ...DEFAULT_PAD_MAP, back: 0, confirm: 2 }).has('back')).toBe(true);
+    expect(padActions({ ...idle, axes: [0.9, 0] }, DEFAULT_PAD_MAP).has('right')).toBe(true);
+    expect(padActions({ ...idle, axes: [0, -0.9] }, DEFAULT_PAD_MAP).has('up')).toBe(true);
   });
   it('picks glyphs by controller family', () => {
     expect(glyphFamily('Xbox 360 Controller (STANDARD GAMEPAD)')).toBe('xbox');
@@ -195,5 +206,49 @@ describe('W11 batch 2 rules', () => {
     expect(autoInterruption(80, 100, false, true)).toMatch(/raid/);
     expect(autoInterruption(80, 100, true, false)).toMatch(/boss/);
     expect(autoInterruption(80, 100, false, false)).toBeNull();
+  });
+});
+
+describe('skins and captions', () => {
+  it('every theme has a skin and DS, Wii and Cyber build their own panel shapes', () => {
+    for (const id of UI_THEME_ORDER) expect(SKINS[id]).toBeDefined();
+    expect(new Set([SKINS.ds.shape, SKINS.wii.shape, SKINS.cyber.shape, SKINS.aero.shape, SKINS.classic.shape]).size).toBe(5);
+    expect(SKINS.cyber.scanlines).toBe(true);
+    expect(SKINS.ds.shadow).toBeGreaterThan(0);
+    expect(SKINS.classic.feel).toBe('default');
+  });
+  it('geometry helpers stay inside the panel', () => {
+    expect(cornerRadius(SKINS.wii, 100, 30)).toBe(15);
+    expect(cornerRadius(SKINS.classic, 100, 30)).toBe(0);
+    const pts = chamferPoints(10, 20, 100, 50, 12);
+    expect(pts).toHaveLength(8);
+    expect(Math.min(...pts.map((p) => p.x))).toBe(10);
+    expect(Math.max(...pts.map((p) => p.y))).toBe(70);
+    expect(chamferPoints(0, 0, 10, 10, 99)[0]).toEqual({ x: 5, y: 0 });
+    const lines = scanlineYs(0, 40);
+    expect(lines[0]).toBe(4);
+    expect(Math.max(...lines)).toBeLessThan(36);
+  });
+  it('motion feel differs per skin but reduced and off stay calm', () => {
+    const wii = uiTween('popupOpen', 'full', 1, 'bouncy');
+    const ds = uiTween('popupOpen', 'full', 1, 'snappy');
+    const cy = uiTween('popupOpen', 'full', 1, 'glitch');
+    const base = uiTween('popupOpen', 'full', 1);
+    expect(wii.ms).toBeGreaterThan(base.ms);
+    expect(ds.ms).toBeLessThan(base.ms);
+    expect(cy.ms).toBeLessThan(base.ms);
+    expect(wii.ease).toBe('Elastic.easeOut');
+    expect(ds.bounce).toBe(false);
+    expect(uiTween('popupOpen', 'reduced', 1, 'bouncy').bounce).toBe(false);
+    expect(uiTween('popupOpen', 'off', 1, 'bouncy').ms).toBe(0);
+    expect(springTuning('full', 1, 'bouncy').damping).toBeLessThan(springTuning('full', 1).damping);
+    expect(feelTween('default').ease).toBeNull();
+  });
+  it('every jingle and fanfare has a caption', () => {
+    for (const id of ['me.item_get', 'me.key_item', 'me.badge', 'me.pkmn_get', 'me.evo_start', 'me.evo_success', 'me.heal', 'me.save', 'me.tm_get', 'me.berry', 'me.forget_move', 'bgm.victory_wild', 'bgm.victory_trainer', 'bgm.victory_leader', 'bgm.victory_elite', 'bgm.raid.capture.basic', 'bgm.raid.capture.ultra', 'bgm.raid.capture.max', 'bgm.raid.capture.tera']) {
+      expect(jingleCaption(id), id).toBeTruthy();
+      expect(JINGLE_IDS).toContain(id);
+    }
+    expect(jingleCaption('bgm.menu')).toBeNull();
   });
 });

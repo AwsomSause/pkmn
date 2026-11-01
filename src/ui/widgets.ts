@@ -1,5 +1,6 @@
 // Reusable screen pieces: panels, selectable menus and HP/XP bars.
 
+import { activeSkin, hasOwnShapes, paintSkinPanel } from './skinPaint';
 import Phaser from 'phaser';
 import { BAR_SHADES, COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, mixColor, textStyle } from './theme';
 import { playSfx } from './audio';
@@ -28,6 +29,9 @@ export function paintWindow(
   const fill = opts.fill ?? COLORS.panel;
   const border = opts.border ?? COLORS.border;
   const alpha = opts.alpha ?? 1;
+  // The DS, Wii and Cyber skins build their own panel shapes; Aero uses glass.
+  if (hasOwnShapes()) return paintSkinPanel(g, x, y, w, h, { fill, border, alpha, thin: opts.thin });
+  if (activeSkin().shape === 'glass') return paintGlass(g, x, y, w, h, { tint: fill, rim: mixColor(border, 0xffffff, 0.35), alpha: alpha * 0.92 });
   const trim = opts.thin ? 2 : 3;
   const outline = 0x181818;
   // Outline, then trim, each with corners clipped by one art pixel more.

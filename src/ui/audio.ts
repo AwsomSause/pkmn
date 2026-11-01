@@ -1,6 +1,8 @@
 // Music and sound effects. Only plays assets that exist in the manifest,
 // and respects the player's volume/mute settings.
 
+import { jingleCaption } from '../core/presentation/uiPrefs';
+import { showCaption } from './overlays';
 import type Phaser from 'phaser';
 import { pokemonAssetIds } from '../assets/catalog';
 import type { Species } from '../core/contentSchema';
@@ -37,6 +39,8 @@ export function playCry(scene: Phaser.Scene, species: Species): void {
 
 /** Plays a sound that loads on demand (jingles, status sounds), loading it first if this screen didn't. */
 export function playSfxLazy(scene: Phaser.Scene, id: string, volumeScale = 1): void {
+  // Lyric-style caption for every jingle (also when the sound is muted, which is when captions help most).
+  captionJingle(id);
   if (!services().assets.has(id) || services().session.settings.muted) return;
   if (scene.cache.audio.exists(id)) playSfx(scene, id, volumeScale);
   else void loadAssets(scene, [id]).then(() => scene.sys.isActive() && playSfx(scene, id, volumeScale));
@@ -47,6 +51,7 @@ let currentMusic: { id: string; sound: Phaser.Sound.BaseSound } | null = null;
 export function playMusic(scene: Phaser.Scene, id: string): void {
   const { session, assets } = services();
   if (currentMusic?.id === id && currentMusic.sound.isPlaying) return;
+  captionJingle(id);
   stopMusic();
   if (!assets.has(id) || session.settings.muted) return;
   try {
@@ -129,4 +134,9 @@ export function startAmbient(scene: Phaser.Scene, period: 'morning' | 'afternoon
   } catch {
     // Audio is never critical.
   }
+}
+
+function captionJingle(id: string): void {
+  const text = jingleCaption(id);
+  if (text) showCaption(text);
 }

@@ -8,6 +8,7 @@
 import moveFlagsJson from '../data/moveFlags.json';
 import type Phaser from 'phaser';
 import { COLORS, mixColor } from './theme';
+import { hasOwnShapes, paintSkinPanel, skinBackdrop } from './skinPaint';
 
 export const AERO = {
   /** Deep glass behind text. */
@@ -40,6 +41,7 @@ export interface GlassOpts {
 export function paintGlass(g: Phaser.GameObjects.Graphics, x: number, y: number, w: number, h: number, opts: GlassOpts = {}): Phaser.GameObjects.Graphics {
   const tint = opts.tint ?? AERO.glass;
   const rim = opts.rim ?? AERO.rim;
+  if (hasOwnShapes()) return paintSkinPanel(g, x, y, w, h, { fill: mixColor(tint, 0xffffff, 0.08), border: rim, alpha: opts.alpha ?? 0.92 });
   const r = Math.min(opts.radius ?? 18, h / 2, w / 2);
   const a = opts.alpha ?? 0.92;
   if (opts.glow !== false) {
@@ -206,6 +208,7 @@ export function aeroBackdrop(scene: Phaser.Scene, motion: MotionLevel, tint: num
   g.fillStyle(tint, 0.08);
   g.fillEllipse(W / 2, H * 0.82, W * 1.4, H * 0.38);
   root.add(g);
+  skinBackdrop(scene, root, W, H, motion);
   if (motion === 'off') return root;
   const has = (k: string) => scene.textures.exists(k);
   if (has('pack.ebdx.lightA')) {
