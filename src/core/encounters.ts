@@ -2,7 +2,7 @@
 // Elite Four and champion encounters.
 
 import { enemyLevelOffset } from './archetypes';
-import type { Archetype, BossTeam, Campaign, Content, StatName, Theme } from './contentSchema';
+import type { Archetype, ArchetypeModifier, BossTeam, Campaign, Content, StatName, Theme } from './contentSchema';
 import { createPokemon, getSpecies, maxHp } from './pokemon';
 import { hashSeed, Rng } from './rng';
 import type { LevelBreakdown, PokemonInstance } from './state';
@@ -128,12 +128,55 @@ export interface WildPlan {
 /** A wild Pokémon from the stage's theme (preferring the region's own Pokémon). */
 /** A trainer's perks on which wild species turn up (Fire-types less often, rare Pokémon more); undefined when there are none. */
 function wildWeightMod(content: Content, archetype: Archetype): ((speciesId: string) => number) | undefined {
-  if (!archetype.modifiers.some((m) => m.kind === 'typeEncounterWeight' || m.kind === 'statEncounterWeight' || (m.kind === 'encounterWeightMultiplier' && m.group === 'rare'))) return undefined;
+  if (!archetype.modifiers.some((m) => m.kind === 'typeEncounterWeight' || m.kind === 'speciesEncounterWeight' || m.kind === 'statEncounterWeight' || (m.kind === 'encounterWeightMultiplier' && m.group === 'rare'))) return undefined;
   return (speciesId) => {
     const s = content.species.get(speciesId)!;
     const best = (Object.entries(s.baseStats).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0] ?? ['hp'])[0];
-    return wildWeightPerk(archetype.modifiers, s.types, baseStatTotal(s) >= content.balance.rareEncounterBst, best);
+    return wildWeightPerk(archetype.modifiers, s.types, baseStatTotal(s) >= content.balance.rareEncounterBst, best) * speciesWeightPerk(content, archetype.modifiers, speciesId);
   };
+}
+
+/** The base species of an evolution line ("vaporeon" -> "eevee"). */
+function lineRoot(content: Content, speciesId: string): string {
+  let id = speciesId;
+  for (let i = 0; i < 6; i++) {
+    const from = content.species.get(id)?.evolvesFrom;
+    if (!from || !content.species.has(from)) break;
+    id = from;
+  }
+  return id;
+}
+
+const evolvers = new WeakMap<Content, Set<string>>();
+/** Whether some species evolves from this one. */
+function evolvesFurther(content: Content, speciesId: string): boolean {
+  let set = evolvers.get(content);
+  if (!set) {
+    set = new Set([...content.species.values()].flatMap((x) => (x.evolvesFrom ? [x.evolvesFrom] : [])));
+    evolvers.set(content, set);
+  }
+  return set.has(speciesId);
+}
+
+/** `speciesEncounterWeight` modifiers (event weeks): dual-types, babies, pseudo-legends, whole evolution lines. */
+export function speciesWeightPerk(content: Content, mods: readonly ArchetypeModifier[], speciesId: string): number {
+  let v = 1;
+  const s = content.species.get(speciesId);
+  if (!s) return v;
+  for (const m of mods) {
+    if (m.kind !== 'speciesEncounterWeight') continue;
+    const traitOk = !m.trait
+      || (m.trait === 'dual' && s.types.length === 2)
+      || (m.trait === 'mono' && s.types.length === 1)
+      || (m.trait === 'baby' && s.tags.includes('baby'))
+      || (m.trait === 'pseudo' && s.evolutionStage === 3 && baseStatTotal(s) >= 600 && !isLegendaryLike(s))
+      || (m.trait === 'unevolved' && evolvesFurther(content, speciesId))
+      || (m.trait === 'fullyEvolved' && !evolvesFurther(content, speciesId));
+    if (m.generation !== undefined && s.generation !== m.generation) continue;
+    const lineOk = !m.lines || m.lines.includes(lineRoot(content, speciesId));
+    if (traitOk && lineOk) v *= m.value;
+  }
+  return v;
 }
 
 const combineWeights = (a?: (id: string) => number, b?: (id: string) => number): ((id: string) => number) | undefined => (a && b ? (id) => a(id) * b(id) : a ?? b);

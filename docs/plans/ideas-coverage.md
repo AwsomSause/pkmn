@@ -531,104 +531,104 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 
 | # | Idea | Note | Status | Evidence |
 |---|---|---|---|---|
-| E1 | Fire Week: Fire types spawn more, Burn never fails to land on bosses |  | TODO |  |
-| E2 | Water Week: tide meter on every map; Water moves gain +1 priority at high tide |  | TODO |  |
-| E3 | Grass Week: overgrown routes; Grass starters and Leech Seed shops |  | TODO |  |
-| E4 | Electric Week: Charge counters that carry between battles |  | TODO |  |
-| E5 | Ice Week: every route has a frozen lake shortcut; Hail starts every fight |  | TODO |  |
-| E6 | Fighting Week: dojo stops replace Pokémon Centers; Focus Sash rewards |  | TODO |  |
+| E1 | Fire Week: Fire types spawn more, Burn never fails to land on bosses |  | PART | src/data/gameEvents.json fire-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E2 | Water Week: tide meter on every map; Water moves gain +1 priority at high tide |  | PART | src/data/gameEvents.json water-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E3 | Grass Week: overgrown routes; Grass starters and Leech Seed shops |  | PART | src/data/gameEvents.json grass-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E4 | Electric Week: Charge counters that carry between battles |  | DONE | src/data/gameEvents.json electric-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E5 | Ice Week: every route has a frozen lake shortcut; Hail starts every fight |  | PART | src/data/gameEvents.json ice-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E6 | Fighting Week: dojo stops replace Pokémon Centers; Focus Sash rewards |  | PART | src/data/gameEvents.json fighting-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E7 | Poison Week: Toxic Swamp biome; antidote discount and Poison Point everywhere |  | PART | src/data/events.json:7479 toxic-swamp event stop |
-| E8 | Ground Week: sinkhole stops that drop you a floor with a gift |  | TODO |  |
-| E9 | Flying Week: sky routes skip one stop; Flying types gain evasion |  | TODO |  |
-| E10 | Psychic Week: telepathy hints reveal the next enemy move once per fight |  | TODO |  |
+| E8 | Ground Week: sinkhole stops that drop you a floor with a gift |  | PART | src/data/gameEvents.json ground-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E9 | Flying Week: sky routes skip one stop; Flying types gain evasion |  | PART | src/data/gameEvents.json flying-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E10 | Psychic Week: telepathy hints reveal the next enemy move once per fight |  | PART | src/data/gameEvents.json psychic-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E11 | Bug Week: Bug Catching Contest with a size-ranked prize |  | PART | src/data/events.json:7682 bug-contest event stop (no week, no size-ranked tiers) |
-| E12 | Rock Week: Hardhat trainers, fossil digs at every cave stop |  | TODO |  |
-| E13 | Ghost Week: haunted stops; Ghost types swap sides at turn 5 |  | TODO |  |
-| E14 | Dragon Hatchling Week: baby Dragons spawn and grow with each win |  | TODO |  |
-| E15 | Dark Week: night-only map, every shop sells Dark held items |  | TODO |  |
-| E16 | Steel Week: metal forge stops upgrade held items to +1 |  | TODO |  |
-| E17 | Fairy Week: Fairy ring stops heal and charm wild Pokémon |  | TODO |  |
-| E18 | Normal Week: Normal types get a flat stat boost; plain-vanilla challenge runs |  | TODO |  |
-| E19 | Dual-Type Week: only dual types appear; STAB stacks reward |  | TODO |  |
+| E12 | Rock Week: Hardhat trainers, fossil digs at every cave stop |  | PART | src/data/gameEvents.json rock-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E13 | Ghost Week: haunted stops; Ghost types swap sides at turn 5 |  | PART | src/data/gameEvents.json ghost-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E14 | Dragon Hatchling Week: baby Dragons spawn and grow with each win |  | PART | src/data/gameEvents.json dragon-hatchling-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E15 | Dark Week: night-only map, every shop sells Dark held items |  | PART | src/data/gameEvents.json dark-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E16 | Steel Week: metal forge stops upgrade held items to +1 |  | PART | src/data/gameEvents.json steel-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E17 | Fairy Week: Fairy ring stops heal and charm wild Pokémon |  | PART | src/data/gameEvents.json fairy-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E18 | Normal Week: Normal types get a flat stat boost; plain-vanilla challenge runs |  | DONE | src/data/gameEvents.json normal-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E19 | Dual-Type Week: only dual types appear; STAB stacks reward |  | PART | src/data/gameEvents.json dual-type-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E20 | Mono-Type Spotlight: the game picks a random type each day for the week |  | TODO |  |
-| E21 | Starter Fever Week: starters of every region spawn and evolve faster |  | TODO |  |
-| E22 | Baby Pokémon Week: baby forms spawn; evolving them gives bonus XP |  | TODO |  |
-| E23 | Pseudo-Legend Week: 600 BST lines appear in routes at low odds |  | TODO |  |
-| E24 | Eeveelution Week: Eevee appears every stop and evolves by new triggers |  | TODO |  |
+| E21 | Starter Fever Week: starters of every region spawn and evolve faster |  | PART | src/data/gameEvents.json starter-fever-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E22 | Baby Pokémon Week: baby forms spawn; evolving them gives bonus XP |  | PART | src/data/gameEvents.json baby-pokemon-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E23 | Pseudo-Legend Week: 600 BST lines appear in routes at low odds |  | DONE | src/data/gameEvents.json pseudo-legend-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E24 | Eeveelution Week: Eevee appears every stop and evolves by new triggers |  | PART | src/data/gameEvents.json eeveelution-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E25 | Fossil Week: revived fossils join the shop pool with a fossil lab stop |  | PART | src/data/services.json fossil service (Fossil Restoration stop) |
-| E26 | Valentine's Duo Week: double-battle runs with a partner NPC |  | TODO |  |
-| E27 | Leap Day Special: once every four years, a 29th-day mythic encounter |  | TODO |  |
+| E26 | Valentine's Duo Week: double-battle runs with a partner NPC |  | PART | src/data/gameEvents.json valentines-duo-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E27 | Leap Day Special: once every four years, a 29th-day mythic encounter |  | DONE | src/data/gameEvents.json leap-day-special (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E28 | April Fools Mixup: names and sprites randomly swapped for fun, no stat change |  | TODO |  |
 | E29 | Cherry Blossom Picnic: picnic stops restore berries and friendship |  | PART | src/data/events.json:19637 cherry-blossom + src/data/events.json:26505 friendship-picnic |
-| E30 | Pride Rainbow Parade: rainbow badge cosmetics and a parade stop for every type |  | TODO |  |
-| E31 | Midsummer Night: shortest-night event with Fairy and Bug spawns |  | TODO |  |
-| E32 | Fireworks Festival: Fireworks mini-game at map ends gives crit buffs |  | TODO |  |
+| E30 | Pride Rainbow Parade: rainbow badge cosmetics and a parade stop for every type |  | PART | src/data/gameEvents.json pride-rainbow-parade (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E31 | Midsummer Night: shortest-night event with Fairy and Bug spawns |  | DONE | src/data/gameEvents.json midsummer-night (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E32 | Fireworks Festival: Fireworks mini-game at map ends gives crit buffs |  | PART | src/data/gameEvents.json fireworks-festival (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E33 | Back to School: Academy quizzes award TMs for correct answers |  | PART | src/data/events.json:26960 academy-exam + src/data/gameEvents.json:2197 trainer-academy (Sep 1-14) |
 | E34 | Autumn Harvest Moon: berry farming and a Harvest Moon boss |  | PART | src/data/gameEvents.json:1317 harvest-festival + harvest-berry-fair event |
-| E35 | Thanksgiving Feast: cook a meal stop, buffs last the whole run |  | TODO |  |
-| E36 | Black Friday Sale: every shop 40 percent off but stock is random |  | TODO |  |
-| E37 | Winter Solstice: longest-night event, Ghost and Dark spawn boosts |  | TODO |  |
+| E35 | Thanksgiving Feast: cook a meal stop, buffs last the whole run |  | PART | src/data/gameEvents.json thanksgiving-feast (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E36 | Black Friday Sale: every shop 40 percent off but stock is random |  | PART | src/data/gameEvents.json black-friday-sale (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E37 | Winter Solstice: longest-night event, Ghost and Dark spawn boosts |  | DONE | src/data/gameEvents.json winter-solstice (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E38 | Christmas Eve Gift Swap: swap one item with a ghost NPC for a surprise |  | DONE | src/data/events.json:41718 christmas-eve-gift-swap (gameEvent-gated, winter festival) |
-| E39 | New Moon Night: no weather, no crits, pure stat battles |  | TODO |  |
-| E40 | Full Moon Rise: Moonlight moves boosted, Lunar-themed bosses |  | TODO |  |
+| E39 | New Moon Night: no weather, no crits, pure stat battles |  | PART | src/data/gameEvents.json new-moon-night (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E40 | Full Moon Rise: Moonlight moves boosted, Lunar-themed bosses |  | PART | src/data/gameEvents.json full-moon-rise (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E41 | Eclipse Day: day and night rules flip mid-run |  | TODO |  |
-| E42 | Spring Equinox: balanced rules, all four seasons' berries at once |  | TODO |  |
-| E43 | Autumn Equinox: autumn forms of seasonal Pokémon |  | TODO |  |
-| E44 | Friday the 13th: Ghost spawn up, crits can't be lucky or unlucky |  | TODO |  |
-| E45 | Palindrome Date: dates like 11/11 trigger a mirror-battle event |  | TODO |  |
+| E42 | Spring Equinox: balanced rules, all four seasons' berries at once |  | PART | src/data/gameEvents.json spring-equinox (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E43 | Autumn Equinox: autumn forms of seasonal Pokémon |  | PART | src/data/gameEvents.json autumn-equinox (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E44 | Friday the 13th: Ghost spawn up, crits can't be lucky or unlucky |  | PART | src/data/gameEvents.json friday-the-13th (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E45 | Palindrome Date: dates like 11/11 trigger a mirror-battle event |  | PART | src/data/gameEvents.json palindrome-date (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E46 | Lunar New Year Dragon Parade: parade bosses with red-envelope rewards |  | PART | src/data/events.json:26452 lunar-lantern-walk + src/data/gameEvents.json:1585 lunar-new-year |
-| E47 | Diwali Light Walk: lanterns light hidden stops on the map |  | TODO |  |
-| E48 | Mid-Autumn Moon Cake: moon cake item restores PP across the party |  | TODO |  |
-| E49 | Day of the Dead Remembrance: revive fainted run Pokémon once as spirits |  | TODO |  |
+| E47 | Diwali Light Walk: lanterns light hidden stops on the map |  | PART | src/data/gameEvents.json diwali-light-walk (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E48 | Mid-Autumn Moon Cake: moon cake item restores PP across the party |  | PART | src/data/gameEvents.json mid-autumn-moon-cake (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E49 | Day of the Dead Remembrance: revive fainted run Pokémon once as spirits |  | PART | src/data/gameEvents.json day-of-the-dead (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E50 | Oktoberfest-style Brew Fair: berry juice contest for a team buff |  | PART | src/data/events.json:35450 berry-fest-contest in berry-festival |
-| E51 | Weekend Warm-up: every Friday evening, double XP for 24 hours |  | TODO |  |
-| E52 | Global Milestone Bar: all battles won this week fill a shared bar with unlockable rewards |  | TODO |  |
-| E53 | Community Catch-a-thon: total captures across everyone this week unlock a legend |  | TODO |  |
-| E54 | Boss Hunt: one huge boss HP bar shared across all runs |  | TODO |  |
-| E55 | Type of the Day: community votes the next day's featured type |  | TODO |  |
-| E56 | Daily Seed Challenge: same seed for everyone, leaderboard by score |  | PART | src/core/rules.ts:275 dailySeed + Daily mode (no leaderboard) |
-| E57 | Weekly Seed Gauntlet: five fixed seeds, total score ranking |  | TODO |  |
-| E58 | Ghost Run Leaderboard: race another player's recorded run as a ghost |  | TODO |  |
-| E59 | Monthly Hall of Fame: top runs displayed in the Hub |  | PART | src/scenes/HallOfFameScene.ts local Hall of Fame (not monthly/global) |
-| E60 | Rival Clash Event: your rival's team is another player's snapshot team |  | TODO |  |
-| E61 | Community Naming Vote: vote on the name of a new in-game location |  | TODO |  |
-| E62 | Shiny Hunt Week: shiny odds rise, global shiny counter on the Hub |  | TODO |  |
-| E63 | Friendship Chain: link codes boost buffs for those who share them |  | TODO |  |
-| E64 | Community Pokédex Drive: fill the Pokédex pages as a team for a prize |  | TODO |  |
-| E65 | Global Hatch-a-thon: hatches count toward a shared egg reward |  | TODO |  |
-| E66 | Worldwide Trade Day: ghost trade offers appear in every town |  | TODO |  |
-| E67 | Tournament Brackets: weekly single-elimination snapshot tournament |  | PART | src/data/events.json:24511 tournament-entry..final rival circuit events (not weekly snapshot) |
-| E68 | Speedrun Sprint: fastest clear of a fixed route wins cosmetics |  | TODO |  |
-| E69 | No-Faint Challenge Week: flawless runs get a medal and board entry |  | TODO |  |
-| E70 | Underdog Cup: only low-BST Pokémon allowed, with its own trophy |  | TODO |  |
-| E71 | Blind Draft Weekend: shared draft pools, no repeats |  | TODO |  |
-| E72 | Seasonal League Season: ranked ladder resets each month |  | TODO |  |
-| E73 | Mentor Week: veterans' recorded advice pops up as hints for new players |  | TODO |  |
-| E74 | Spectator Mode Night: watch replay of the best run of the week |  | TODO |  |
-| E75 | Bounty Board: weekly global bounties on specific Pokémon |  | TODO |  |
-| E76 | Community Chest: everyone's leftover items fill a lottery pool |  | TODO |  |
-| E77 | Legendary Birds Sweep: all three birds roam the map in turn | N, but: N (Make it a week like Legendary Beasts/Dogs) | TODO |  |
+| E51 | Weekend Warm-up: every Friday evening, double XP for 24 hours |  | DONE | src/data/gameEvents.json weekend-warm-up (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E52 | Global Milestone Bar: all battles won this week fill a shared bar with unlockable rewards |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E53 | Community Catch-a-thon: total captures across everyone this week unlock a legend |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E54 | Boss Hunt: one huge boss HP bar shared across all runs |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E55 | Type of the Day: community votes the next day's featured type |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E56 | Daily Seed Challenge: same seed for everyone, leaderboard by score |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E57 | Weekly Seed Gauntlet: five fixed seeds, total score ranking |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E58 | Ghost Run Leaderboard: race another player's recorded run as a ghost |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E59 | Monthly Hall of Fame: top runs displayed in the Hub |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E60 | Rival Clash Event: your rival's team is another player's snapshot team |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E61 | Community Naming Vote: vote on the name of a new in-game location |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E62 | Shiny Hunt Week: shiny odds rise, global shiny counter on the Hub |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E63 | Friendship Chain: link codes boost buffs for those who share them |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E64 | Community Pokédex Drive: fill the Pokédex pages as a team for a prize |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E65 | Global Hatch-a-thon: hatches count toward a shared egg reward |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E66 | Worldwide Trade Day: ghost trade offers appear in every town |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E67 | Tournament Brackets: weekly single-elimination snapshot tournament |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E68 | Speedrun Sprint: fastest clear of a fixed route wins cosmetics |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E69 | No-Faint Challenge Week: flawless runs get a medal and board entry |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E70 | Underdog Cup: only low-BST Pokémon allowed, with its own trophy |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E71 | Blind Draft Weekend: shared draft pools, no repeats |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E72 | Seasonal League Season: ranked ladder resets each month |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E73 | Mentor Week: veterans' recorded advice pops up as hints for new players |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E74 | Spectator Mode Night: watch replay of the best run of the week |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E75 | Bounty Board: weekly global bounties on specific Pokémon |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E76 | Community Chest: everyone's leftover items fill a lottery pool |  | DROPPED | Kice 2026-11-01 Q1: community and global events are skipped (W9c) |
+| E77 | Legendary Birds Sweep: all three birds roam the map in turn | N, but: N (Make it a week like Legendary Beasts/Dogs) | DONE | src/data/gameEvents.json legendary-birds-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E78 | Legendary Beasts Chase: Raikou, Entei, Suicune keep running each stop | N, but: N (Already Legendary Beast/dogs week) | DONE | src/data/gameEvents.json:710 legendary-beasts-chase weekly + roamer-raikou/entei/suicune events |
 | E79 | Weather Trio Showdown: Kyogre, Groudon, Rayquaza reshape the map |  | PART | src/data/legendaryEvents.json legend-kyogre/groudon/rayquaza (+raid versions) separate gates, not a trio week |
 | E80 | Creation Trio Week: Dialga, Palkia, Giratina warp time and space rules |  | PART | legendaryEvents.json legend-dialga/palkia/giratina (separate gates) |
-| E81 | Swords of Justice Duel: four Pokémon fight with shared HP |  | TODO |  |
+| E81 | Swords of Justice Duel: four Pokémon fight with shared HP |  | PART | src/data/gameEvents.json swords-of-justice-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E82 | Tao Trio Gauntlet: Reshiram, Zekrom, Kyurem escalation |  | PART | legendaryEvents.json legend-reshiram/zekrom/kyurem (separate gates; kyurem-black/white events) |
-| E83 | Mythical Mirage Day: a mythical shows up as an unwinnable illusion first |  | TODO |  |
+| E83 | Mythical Mirage Day: a mythical shows up as an unwinnable illusion first |  | PART | src/data/gameEvents.json mythical-mirage-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E84 | Ultra Beast Breach: Ultra Wormholes open mid-run |  | TODO |  |
-| E85 | Paradox Tide: Paradox forms take over the wild pool |  | TODO |  |
+| E85 | Paradox Tide: Paradox forms take over the wild pool |  | DONE | src/data/gameEvents.json paradox-tide-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E86 | Tower of Legends: climb 50 floors of ranked legends |  | PART | src/data/gameEvents.json:1127 tower-of-legends (5 floors, not 50) |
 | E87 | Titan Week: giant Titan Pokémon with weak-point targeting |  | TODO |  |
-| E89 | Gym Leader Rematch Week: leaders return with upgraded teams |  | TODO |  |
-| E90 | Elite Four Sweep: back-to-back-to-back champions for score |  | TODO |  |
-| E91 | Champion Cup Weekend: bracket against past champions |  | TODO |  |
+| E89 | Gym Leader Rematch Week: leaders return with upgraded teams |  | DONE | src/data/gameEvents.json gym-rematch-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E90 | Elite Four Sweep: back-to-back-to-back champions for score |  | DONE | src/data/gameEvents.json elite-four-sweep (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E91 | Champion Cup Weekend: bracket against past champions |  | DONE | src/data/gameEvents.json champion-cup-weekend (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E92 | Team Rocket Invasion: rocket grunts block routes |  | PART | src/data/events.json rocket-ambush / rocket-roadblock events |
 | E93 | Team Aqua vs Team Magma Showdown: pick a side for a bonus |  | PART | src/data/events.json aqua-flood / magma-drill events (no pick-a-side bonus) |
-| E94 | Team Galactic Machination: time mechanics warped by a boss |  | TODO |  |
+| E94 | Team Galactic Machination: time mechanics warped by a boss |  | DONE | src/data/gameEvents.json galactic-machination (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E95 | Team Plasma Liberation: free Pokémon from forced trade |  | DONE | src/data/gameEvents.json:874 plasma-operation weekly with 3 stops + plasma-protest event |
-| E96 | Team Flare Experiment: Mega stone tests give weird buffs |  | TODO |  |
-| E97 | Aether Foundation Rescue: rescue Pokémon from the lab |  | TODO |  |
+| E96 | Team Flare Experiment: Mega stone tests give weird buffs |  | DONE | src/data/gameEvents.json flare-experiment (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E97 | Aether Foundation Rescue: rescue Pokémon from the lab |  | DONE | src/data/gameEvents.json aether-rescue (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E98 | Macro Cosmos Meeting: fight the executives in a boardroom battle |  | TODO |  |
-| E99 | Eternatus Vigil: the sky darkens; a slow countdown with a final boss |  | TODO |  |
+| E99 | Eternatus Vigil: the sky darkens; a slow countdown with a final boss |  | PART | src/data/gameEvents.json eternatus-vigil (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E100 | Rival Gauntlet: face every rival in one run |  | DONE | src/data/events.json:24261 rival-gauntlet-entry |
 | E101 | Legendary Trainer Showcase: Red, Blue, Cynthia, Steven cameo battles |  | PART | src/data/events.json red-on-the-mountain, champion-lunch, ash-training events |
 | E102 | Shadow Pokémon Outbreak: shadowed Pokémon appear and can be purified |  | DONE | src/data/events.json:32623 shadow-outbreak..shadow-purified + src/core/shadow.ts |
@@ -636,27 +636,27 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | E104 | Dynamax Adventure: Max raid with a pass-and-capture loop |  | TODO |  |
 | E105 | Z-Move Trial: trial stops hand out Z-crystals |  | PART | src/data/events.json:23299 z-form-trial and z-sigil events |
 | E106 | Mega Evolution Showcase: Mega stones appear in shops |  | PART | src/data/events.json:1802 mega-bazaar + workshop crafts Mega Stones |
-| E107 | Grand Opening Sale: new stock each day this week |  | TODO |  |
-| E109 | Berry Bonanza: berry shops stock every variety |  | TODO |  |
-| E110 | TM Tuesday: a fresh TM at half price every Tuesday |  | TODO |  |
-| E111 | Held-Item Hurricane: held items pop up in every wild battle |  | TODO |  |
-| E112 | Coupon Week: scratch coupons attach to any purchase |  | TODO |  |
-| E113 | Bankruptcy Sale: shops sell everything one stop only |  | TODO |  |
-| E114 | Prize Wheel Weekend: spin a wheel after every win |  | TODO |  |
-| E115 | Lottery Draw: weekly run tickets give prize drawings |  | TODO |  |
+| E107 | Grand Opening Sale: new stock each day this week |  | DONE | src/data/gameEvents.json grand-opening-sale (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E109 | Berry Bonanza: berry shops stock every variety |  | PART | src/data/gameEvents.json berry-bonanza (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E110 | TM Tuesday: a fresh TM at half price every Tuesday |  | PART | src/data/gameEvents.json tm-tuesday (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E111 | Held-Item Hurricane: held items pop up in every wild battle |  | PART | src/data/gameEvents.json held-item-hurricane (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E112 | Coupon Week: scratch coupons attach to any purchase |  | DONE | src/data/gameEvents.json coupon-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E113 | Bankruptcy Sale: shops sell everything one stop only |  | DONE | src/data/gameEvents.json bankruptcy-sale (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E114 | Prize Wheel Weekend: spin a wheel after every win |  | PART | src/data/gameEvents.json prize-wheel-weekend (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E115 | Lottery Draw: weekly run tickets give prize drawings |  | PART | src/data/gameEvents.json lottery-draw (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E116 | Black Market Week: shady stalls with cursed and powerful items |  | PART | src/data/events.json:1181 black-market event + market service |
 | E117 | Auction House Week: bid against ghost NPCs |  | PART | services.json auction service (Auction House stop) |
 | E118 | Traveling Merchant Festival: three merchants per map |  | TODO |  |
 | E119 | Rental Week: borrow any Pokémon for one battle |  | PART | src/data/events.json:24198 borrowed-ally |
 | E120 | Piggy Bank Event: leftover gold is doubled at run end |  | TODO |  |
-| E121 | Inflation Day: prices climb but drops are better |  | TODO |  |
+| E121 | Inflation Day: prices climb but drops are better |  | DONE | src/data/gameEvents.json inflation-day (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E122 | Craft Fair: item crafting stops at every town |  | PART | src/core/crafting.ts + workshop service stop |
-| E123 | Pokémart Loyalty Points: spend gold to earn points toward a rare gift |  | TODO |  |
+| E123 | Pokémart Loyalty Points: spend gold to earn points toward a rare gift |  | DONE | src/data/gameEvents.json loyalty-points-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E124 | Delivery Rush: courier quests with a bonus for speed |  | PART | src/data/events.json:24783 deliver-oaks-parcel and other deliver-* events |
 | E125 | Trade-In Week: swap spare Pokémon for item bundles |  | PART | src/data/events.json:11657 global-trade + trade service |
 | E126 | Gacha Capsule Week: capsule stalls with rare-item pity timer |  | TODO |  |
-| E127 | Nuzlocke Week: one capture per area, permadeath bonus |  | TODO |  |
-| E128 | Hardcore Hour: bosses are tougher but pay triple |  | TODO |  |
+| E127 | Nuzlocke Week: one capture per area, permadeath bonus |  | PART | W8 Weekly Gauntlet has a Nuzlocke week (docs/status/challenge-modes.md); modes are picked in Run Prep, not forced by an event |
+| E128 | Hardcore Hour: bosses are tougher but pay triple |  | PART | src/data/gameEvents.json hardcore-hour (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E129 | Pacifist Week: no wild battles; catch with berries and charm |  | TODO |  |
 | E130 | Speed Week: turn timer on every decision, bonus for fast clears |  | TODO |  |
 | E131 | Random Moves Week: everyone's moveset is shuffled |  | TODO |  |
@@ -669,23 +669,23 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | E139 | Mirror Match Week: every trainer fights with your own team type |  | PART | src/data/events.json:13887 mirror-match event |
 | E140 | Weather Wars: weather changes each turn |  | TODO |  |
 | E141 | Terrain Takeover: random terrain for each fight |  | TODO |  |
-| E142 | Gravity Week: Flying moves and levitating lose immunity |  | TODO |  |
-| E143 | Trick Room Week: slow Pokémon move first everywhere |  | TODO |  |
-| E144 | Tailwind Week: one-side speed boost for first three turns |  | TODO |  |
-| E145 | Critical Week: crit rate doubled for everyone, enemy included |  | TODO |  |
+| E142 | Gravity Week: Flying moves and levitating lose immunity |  | DONE | src/data/gameEvents.json gravity-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E143 | Trick Room Week: slow Pokémon move first everywhere |  | DONE | src/data/gameEvents.json trick-room-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E144 | Tailwind Week: one-side speed boost for first three turns |  | DONE | src/data/gameEvents.json tailwind-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E145 | Critical Week: crit rate doubled for everyone, enemy included |  | DONE | src/data/gameEvents.json critical-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E146 | Luck Week: miss and hit odds gently pulled toward the middle |  | TODO |  |
 | E147 | One-Move Wonder: each Pokémon gets one move for the run |  | TODO |  |
-| E148 | No Items Week: bag locked, but healing wells at stops |  | TODO |  |
-| E149 | No Healing Week: only Pokémon Centers heal |  | TODO |  |
-| E150 | Glass Cannon Week: every stat except HP is raised, HP is lowered |  | TODO |  |
+| E148 | No Items Week: bag locked, but healing wells at stops |  | PART | src/data/gameEvents.json no-items-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E149 | No Healing Week: only Pokémon Centers heal |  | PART | src/data/gameEvents.json no-healing-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E150 | Glass Cannon Week: every stat except HP is raised, HP is lowered |  | DONE | src/data/gameEvents.json glass-cannon-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E151 | Tiny Terror Week: Small sprites, big attack boost |  | TODO |  |
-| E152 | Giant Week: huge sprites, speed penalty, HP boost |  | TODO |  |
-| E153 | Only Starters Week: only starter lines allowed |  | TODO |  |
-| E154 | Only Fully Evolved: no NFEs allowed, higher difficulty |  | TODO |  |
-| E155 | Only Unevolved Week: NFEs get an Eviolite for free |  | TODO |  |
-| E156 | Gen 1 Throwback: Gen 1-only Pokémon pool with a retro skin |  | TODO |  |
+| E152 | Giant Week: huge sprites, speed penalty, HP boost |  | PART | src/data/gameEvents.json giant-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E153 | Only Starters Week: only starter lines allowed |  | DONE | src/data/gameEvents.json only-starters-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E154 | Only Fully Evolved: no NFEs allowed, higher difficulty |  | DONE | src/data/gameEvents.json only-fully-evolved-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E155 | Only Unevolved Week: NFEs get an Eviolite for free |  | PART | src/data/gameEvents.json only-unevolved-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E156 | Gen 1 Throwback: Gen 1-only Pokémon pool with a retro skin |  | PART | src/data/gameEvents.json gen-1-throwback (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E157 | Gen 3 Throwback: Hoenn only |  | PART | runRules.json:81 single-region-dex modifier |
-| E158 | Gen 5 Throwback: Unova only, animated sprites flavor |  | TODO |  |
+| E158 | Gen 5 Throwback: Unova only, animated sprites flavor |  | PART | src/data/gameEvents.json gen-5-throwback (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E159 | Sync Week: whoever leads your team sets everyone's type |  | TODO |  |
 | E160 | Map Mutator Week: random mutators on each stop |  | TODO |  |
 | E161 | Hidden Path Week: secret branches show up on the map |  | DONE | src/data/gameEvents.json:961 hidden-path-week (signpost/shortcut/keeper events) |
@@ -695,28 +695,28 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | E167 | Cave Expedition Week: underground maps with rare ores |  | PART | src/data/expeditions.json quarry/crystal-hollow expeditions |
 | E168 | Island Hopping Week: ferry nodes connect maps |  | PART | src/data/events.json:8800 ss-ticket-ferry |
 | E169 | Volcano Eruption: lava reshapes the map each stop |  | PART | src/data/events.json:19686 volcano-rim event |
-| E170 | Earthquake Tremors: stops swap places mid-run |  | TODO |  |
-| E171 | Flood Event: water routes open, land routes close |  | TODO |  |
+| E170 | Earthquake Tremors: stops swap places mid-run |  | PART | src/data/gameEvents.json earthquake-tremors (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E171 | Flood Event: water routes open, land routes close |  | PART | src/data/gameEvents.json flood-event (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E172 | Blizzard Week: some stops locked until you clear a snowdrift puzzle |  | PART | src/data/events.json:19111 blizzard-pass event |
 | E173 | Heat Wave: Fire types gain, fatigue accumulates |  | PART | src/data/events.json:19038 heatwave event |
-| E174 | Aurora Night: aurora nodes offer rare Ice spawns |  | TODO |  |
+| E174 | Aurora Night: aurora nodes offer rare Ice spawns |  | PART | src/data/gameEvents.json aurora-night (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E175 | Mystery Dungeon Week: maze-like random floors |  | DONE | src/data/gameEvents.json:1045 mystery-dungeon-week (md-* events) |
 | E176 | Safari Zone Week: no battling, catch only |  | PART | src/data/events.json:10910 safari-zone event + services.json safari + catch-carnival |
 | E177 | Bug Contest Day: net catch, rank by size |  | PART | src/data/events.json:7682 bug-contest event |
 | E178 | Pokéathlon Day: minigame-style athletic stops |  | PART | src/data/events.json:2402 pokeathlon event |
-| E179 | Underground Week: dig stops reveal buried gifts |  | TODO |  |
-| E180 | Ruins Expedition: puzzle stops with glyph decoding |  | TODO |  |
-| E181 | Sunken Ship Dive: underwater stop chain |  | TODO |  |
-| E182 | Sky Tower Climb: vertical map with checkpoints |  | TODO |  |
-| E183 | Magical Forest Maze: loops until you find the exit rule |  | TODO |  |
+| E179 | Underground Week: dig stops reveal buried gifts |  | PART | src/data/gameEvents.json underground-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E180 | Ruins Expedition: puzzle stops with glyph decoding |  | PART | src/data/gameEvents.json ruins-expedition (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E181 | Sunken Ship Dive: underwater stop chain |  | PART | src/data/gameEvents.json sunken-ship-dive (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E182 | Sky Tower Climb: vertical map with checkpoints |  | PART | src/data/gameEvents.json sky-tower-climb (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E183 | Magical Forest Maze: loops until you find the exit rule |  | PART | src/data/gameEvents.json magical-forest-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E184 | Ghost Town Visit: ghost NPCs at every stop with stories |  | DONE | src/data/events.json:41237 ghost-town-gate/market/hall events |
-| E185 | Festival Street: stalls and games every few nodes |  | TODO |  |
-| E186 | Lighthouse Beacon: stops light up on the map |  | TODO |  |
+| E185 | Festival Street: stalls and games every few nodes |  | PART | src/data/gameEvents.json festival-street-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E186 | Lighthouse Beacon: stops light up on the map |  | PART | src/data/gameEvents.json lighthouse-beacon-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E187 | Train Ride Special: express nodes skip a stop with a conductor puzzle |  | TODO |  |
 | E188 | Campfire Tales: rest stops with story choices |  | DONE | src/data/gameEvents.json:796 campfire-tales-week + tale-* events |
-| E189 | Roadside Rival: random rival ambush on route |  | TODO |  |
+| E189 | Roadside Rival: random rival ambush on route |  | PART | src/data/gameEvents.json roadside-rival-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E190 | Egg Tank Week: eggs hatch after N wins instead of steps |  | TODO |  |
-| E191 | Shiny Charm Day: shiny odds boosted for one day |  | TODO |  |
+| E191 | Shiny Charm Day: shiny odds boosted for one day |  | DONE | src/data/gameEvents.json shiny-charm-day (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E192 | Mastery Marathon: mastery XP doubled for a weekend |  | TODO |  |
 | E193 | Trainer Card Week: card stamps for a milestone reward |  | TODO |  |
 | E194 | Stamp Rally: collect a stamp at each region type for a prize |  | TODO |  |
@@ -728,7 +728,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | E200 | Rival Trading Cards: collectible cards from rivals |  | TODO |  |
 | E201 | Nickname Contest: names rated by a judge NPC for items |  | TODO |  |
 | E202 | Friendship Level Week: friendship growth doubled |  | PART | src/data/gameEvents.json:1674 friendship-festival (+50% friendship) |
-| E203 | Evolution Festival: evolutions give bonus items |  | TODO |  |
+| E203 | Evolution Festival: evolutions give bonus items |  | DONE | src/data/gameEvents.json evolution-festival (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E204 | Mega Stone Hunt: Mega stones spawn in encounter pools | strong yes | PART | data/megaStones.json; raid Mega Stone rewards; workshop crafts |
 | E205 | Form Change Week: form-change items sold cheap |  | TODO |  |
 | E206 | Move Tutor Tour: tutors visit every town |  | PART | services.json tutor + move-tutor event |
@@ -736,10 +736,10 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | E208 | Hidden Ability Week: HA odds raised |  | TODO |  |
 | E209 | Nature Mint Week: mints in all shops |  | TODO |  |
 | E210 | IV Training Week: stat training minigames |  | PART | src/data/events.json:17365 ev-trainer + dojo service |
-| E211 | EV Boot Camp: train a stat in the camp stops |  | TODO |  |
+| E211 | EV Boot Camp: train a stat in the camp stops |  | DONE | src/data/gameEvents.json ev-boot-camp (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E212 | Contest Spectacular: Pokémon Contests as a side event |  | PART | src/data/events.json:2479 contest-hall event |
 | E213 | Showcase Week: show off your best Pokémon to earn a rare prize |  | TODO |  |
-| E214 | Pokémon Photography Week: take in-game snapshots for scores |  | TODO |  |
+| E214 | Pokémon Photography Week: take in-game snapshots for scores |  | PART | src/data/gameEvents.json photography-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E216 | Welcome-Back Bundle: lapsed players return to a gift and a streak freeze |  | TODO |  |
 | E217 | Login Streak Calendar: 28-day calendar with a rare prize |  | TODO |  |
 | E218 | Daily Quest Boards: three small goals per day |  | PART | src/core/contracts.ts Contract Board (3 daily + 2 weekly goals) |

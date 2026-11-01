@@ -57,12 +57,40 @@ export function weeklyEventOn(content: Content, date: Date): GameEvent | null {
 /** The edition key of an event on a date: "rivalry-week@2026-W44", "spooky-season@2026". */
 export function editionKey(event: GameEvent, date: Date): string {
   if (event.seedRule === 'isoWeek') return `${event.id}@${isoWeek(date).label}`;
+  if (event.seedRule === 'day') return `${event.id}@${ymd(date)}`;
   // A window that wraps the new year (Dec–Jan) belongs to the year it started in.
   const s = event.schedule;
   const year = date.getUTCFullYear();
   const wrapped = s.kind === 'yearly' && s.start > s.end && monthDay(date) <= s.end;
   return `${event.id}@${wrapped ? year - 1 : year}`;
 }
+
+const ymd = (date: Date) => `${date.getUTCFullYear()}-${monthDay(date)}`;
+
+/** The moon's age as a share of its 29.53-day cycle at noon UTC of a date (0 = new moon, 0.5 = full). */
+export function moonPhase(date: Date): number {
+  const noon = Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 12);
+  const days = noon / DAY + 2440587.5 - 2451550.1; // since the new moon of 2000-01-06
+  return (((days / 29.530588853) % 1) + 1) % 1;
+}
+const nearPhase = (date: Date, at: number) => {
+  const d = Math.abs(moonPhase(date) - at);
+  return Math.min(d, 1 - d) * 29.530588853 < 0.5;
+};
+
+/** Day rules for `daily` schedules: pure functions of the UTC date. */
+export const DAILY_RULES: Record<string, (date: Date) => boolean> = {
+  friday13: (d) => d.getUTCDay() === 5 && d.getUTCDate() === 13,
+  newMoon: (d) => nearPhase(d, 0),
+  fullMoon: (d) => nearPhase(d, 0.5),
+  friday: (d) => d.getUTCDay() === 5,
+  tuesday: (d) => d.getUTCDay() === 2,
+  // MM/DD reads the same backwards: 01/10, 02/20, 03/30, 10/01, 11/11, 12/21.
+  palindrome: (d) => {
+    const m = String(d.getUTCMonth() + 1).padStart(2, '0');
+    return String(d.getUTCDate()).padStart(2, '0') === m[1]! + m[0]!;
+  },
+};
 
 export const eventIdOf = (edition: string) => edition.split('@')[0]!;
 
@@ -76,6 +104,16 @@ export interface ActiveGameEvent {
 }
 
 const yearlyEvents = (content: Content) => [...content.gameEvents.values()].filter((e) => e.schedule.kind === 'yearly');
+const calendarEvents = (content: Content) => [...content.gameEvents.values()].filter((e) => e.schedule.kind === 'yearly' || e.schedule.kind === 'daily');
+const dayStart = (date: Date) => Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
+/** The window of a calendar event in words: "01-25 to 02-12", "every Friday", "new moon". */
+export function scheduleText(event: GameEvent): string {
+  const s = event.schedule;
+  if (s.kind === 'yearly') return s.start === s.end ? s.start : `${s.start} to ${s.end}`;
+  if (s.kind === 'daily') return { friday13: 'every Friday the 13th', newMoon: 'every new moon', fullMoon: 'every full moon', friday: 'every Friday', tuesday: 'every Tuesday', palindrome: 'palindrome dates (11/11...)' }[s.rule];
+  return 'weekly';
+}
 
 /**
  * The Event Archive (plan Part 4b): every week one holiday or themed event that is outside its dates
@@ -102,6 +140,10 @@ export function activeGameEvents(content: Content, date: Date): ActiveGameEvent[
   const md = monthDay(date);
   for (const event of content.gameEvents.values()) {
     const s = event.schedule;
+    if (s.kind === 'daily') {
+      if (DAILY_RULES[s.rule]!(date)) out.push({ event, edition: editionKey(event, date), endsIn: dayStart(date) + DAY - date.getTime() });
+      continue;
+    }
     if (s.kind !== 'yearly' || !inYearlyWindow(md, s.start, s.end)) continue;
     const [m, d] = s.end.split('-').map(Number) as [number, number];
     let end = Date.UTC(date.getUTCFullYear(), m - 1, d + 1);
@@ -116,6 +158,13 @@ export function activeGameEvents(content: Content, date: Date): ActiveGameEvent[
 /** Milliseconds until a yearly event's next window opens (0 while it is on). */
 export function nextWindowIn(event: GameEvent, date: Date): number {
   const s = event.schedule;
+  if (s.kind === 'daily') {
+    for (let i = 0; i <= 400; i++) {
+      const day = new Date(dayStart(date) + i * DAY);
+      if (DAILY_RULES[s.rule]!(day)) return i === 0 ? 0 : day.getTime() - date.getTime();
+    }
+    return Number.MAX_SAFE_INTEGER;
+  }
   if (s.kind !== 'yearly') return 0;
   if (inYearlyWindow(monthDay(date), s.start, s.end)) return 0;
   const [m, d] = s.start.split('-').map(Number) as [number, number];
@@ -126,7 +175,7 @@ export function nextWindowIn(event: GameEvent, date: Date): number {
 
 /** The holiday calendar for the Event Hall: every holiday/themed event, soonest first. */
 export function holidayCalendar(content: Content, date: Date): { event: GameEvent; startsIn: number }[] {
-  return yearlyEvents(content).map((event) => ({ event, startsIn: nextWindowIn(event, date) })).sort((a, b) => a.startsIn - b.startsIn);
+  return calendarEvents(content).map((event) => ({ event, startsIn: nextWindowIn(event, date) })).sort((a, b) => a.startsIn - b.startsIn);
 }
 
 /** The weekly events of the next few weeks (the Event Hall's "coming up"). */

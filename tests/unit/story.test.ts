@@ -94,8 +94,8 @@ describe('story foundation: random streams', () => {
     rewards: (RAW_CONTENT.rewards as { id: string }[]).filter((r) => !r.id.startsWith('deal-')),
     // The Camp Council (one more rest spot) the Relic Shrine and the world events (milestones, rare sites, callbacks, legendary route, the exploration events, weather fronts, roamers and camps) would shift what an old seed meets, so they are left out too.
     events: { events: (RAW_CONTENT.events as { events: { id: string; group?: string }[] }).events.filter((e) => !['camp-council', 'relic-shrine', 'a-quiet-hello', 'borrowed-ally'].includes(e.id) && !['Run Milestones', 'World Sites', 'World Callbacks', 'Legendary Route', 'Habitats', 'Routes', 'Emergent Stories', 'Roaming Legendaries', 'Checkpoint Camps', 'Exploration', 'Secret Paths', 'Landmarks', 'Mystery Dungeon', 'Tower of Legends', 'Hidden Paths', 'Legendary Beasts Chase', 'Campfire Tales', 'Plasma Operation'].includes(e.group ?? '') && !eventItemIds.some((id) => JSON.stringify(e).includes(id))) },
-    // The exploration weeks (APPROVED.md section 6) came later too.
-    gameEvents: { events: (RAW_CONTENT.gameEvents as { events: { id: string }[] }).events.filter((g) => !['legendary-beasts-chase', 'campfire-tales-week', 'plasma-operation', 'hidden-path-week', 'mystery-dungeon-week', 'tower-of-legends'].includes(g.id)) },
+    // The exploration weeks (APPROVED.md section 6) and the W9 calendar events came later too.
+    gameEvents: { events: (RAW_CONTENT.gameEvents as { events: { id: string; contentTags: string[] }[] }).events.filter((g) => !g.contentTags.includes('w9') && !['legendary-beasts-chase', 'campfire-tales-week', 'plasma-operation', 'hidden-path-week', 'mystery-dungeon-week', 'tower-of-legends'].includes(g.id)) },
     // Wild pairs and Tate & Liza's double battle came later too.
     // SOS calls (Z7) and the Advanced AI port (Z8: KO bonus, danger switch; aai.ts reads) came later too, and so did spreadsheet availability (slack 100 and flat rarity = every species open at the old odds) and the Encounter Director's threat budgets (opened up).
     // Trainer tiers (M10 §2) change ordinary trainers' teams.

@@ -16,7 +16,7 @@ import { availableMentors, bondOf, categoryName, mentorUnlocked, MENTORS, tierNa
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthProgress, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
-import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, upcomingWeekly } from '../core/gameEvents';
+import { activeGameEvents, durationText, gameRewardText, holidayCalendar, objectiveViews, rewardEarned, scheduleText, upcomingWeekly } from '../core/gameEvents';
 import { moveLore, moveRank, topMoves } from '../core/moveMastery';
 import { noteOpen, noteProblem, researchNotes, silhouettes } from '../core/researchNotes';
 import { collectionSets, MILESTONE_PAY, researchTotals, setProgress } from '../core/collection';
@@ -650,12 +650,15 @@ export class HubScene extends Phaser.Scene {
     if (upcoming.length > 0) header('Coming up', COLORS.textLight, 'Weekly events rotate every Monday (UTC). Each one comes back in a later week.');
     for (const u of upcoming) header(`  ${u.event.name}  ·  in ${durationText(u.startsIn)}`, COLORS.textMuted, `${u.event.description}  Rules: ${u.event.ruleText}`);
     header('Holiday calendar', COLORS.textLight, 'Holiday and themed events come back every year (dates in UTC). Outside its dates, each one also returns from the Event Archive for a week, in turn.');
-    for (const c of holidayCalendar(content, now)) {
-      const sched = c.event.schedule;
-      const dates = sched.kind === 'yearly' ? `${sched.start} to ${sched.end}` : '';
+    const calendar = holidayCalendar(content, now);
+    // Many events share the calendar: the ones on now and the next 14 to open are listed, then a count.
+    const shown = calendar.filter((c, i) => c.startsIn === 0 || i < 14 + calendar.filter((x) => x.startsIn === 0).length);
+    for (const c of shown) {
+      const dates = scheduleText(c.event);
       const when = c.startsIn === 0 ? 'on now' : `in ${durationText(c.startsIn)}`;
       header(`  ${rewardEarned(p, c.event.id) ? '✓' : '•'} ${c.event.name}  ·  ${dates}  ·  ${when}`, c.startsIn === 0 ? c.event.visualTheme.color : COLORS.textMuted, `${c.event.description}  Reward: ${gameRewardText(content, c.event.reward)}`, c.startsIn === 0, 15);
     }
+    if (calendar.length > shown.length) header(`  …and ${calendar.length - shown.length} more calendar events later in the year`, COLORS.textMuted, 'They open on their dates (UTC) and come back every year.');
     const archive = [...content.gameEvents.values()].filter((e) => rewardEarned(p, e.id));
     if (archive.length > 0) header(`Earned: ${archive.map((e) => e.name).join(', ')}`, COLORS.good, 'Event rewards you have earned for good.');
     this.openPicker({ title: 'Event Hall', rows, columns: 1, rowHeight: 44, onSelect: () => undefined, onBack: () => this.closePicker() });
