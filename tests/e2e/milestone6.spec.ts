@@ -55,8 +55,8 @@ test('Pokémon art is loaded when a screen needs it, not at start-up', async ({ 
     (window as any).__pkr.game.textures.getTextureKeys().filter((k: string) => k.startsWith('pokemon.front.')).length,
   );
   // Only the starter choices' sprites and the few Pokémon shown off on the title
-  // screen and the Hub (one, plus one per Hub tile) have been needed so far (there are over 1,200).
-  expect(loadedAtStart).toBeLessThanOrEqual(3 + 1 + 5);
+  // screen and the Hub (one, plus one per Hub tile; the Hub has grown by a tile) have been needed so far (there are over 1,200).
+  expect(loadedAtStart).toBeLessThanOrEqual(3 + 1 + 6);
 
   await page.keyboard.press('Enter');
   await waitForScene(page, 'Battle');
