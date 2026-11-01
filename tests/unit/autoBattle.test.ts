@@ -11,6 +11,7 @@ import { CURRENT_VERSIONS, MIGRATIONS, SaveManager } from '../../src/save/saveMa
 import { MemoryStorageProvider } from '../../src/save/storage';
 import type { RunState } from '../../src/core/state';
 import { openHistory } from '../../src/core/story/record';
+import { makeDoubles } from '../../src/core/battle/doubles';
 import { content } from './helpers';
 
 function fight(enemy = 'rattata', enemyLevel = 10): RunState {
@@ -186,6 +187,39 @@ describe('Auto-Battle and Bag items', () => {
     run.party[0]!.level = 30;
     run.battle!.enemyTeam[0]!.hp = 1;
     expect(chooseAutoAction(content, run)!.action.kind).toBe('move');
+  });
+});
+
+describe('Auto-Battle in double battles', () => {
+  function duo() {
+    const make = (species: string, level: number, uid: string, moves: string[]) => {
+      const m = createPokemon(content, species, level, uid);
+      m.moves = moves.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
+      return m;
+    };
+    const run = structuredClone(chooseStarter(content, createRun(content, { runId: 'ad', seed: 'autodbl', archetypeId: 'red' }), 0));
+    run.party = [make('charizard', 40, 'p0', ['flamethrower', 'tackle']), make('gyarados', 40, 'p1', ['waterfall', 'tackle'])];
+    const team = [make('venusaur', 45, 'e0', ['tackle']), make('blastoise', 45, 'e1', ['tackle'])];
+    run.battle = createBattle('trainer', team, 0, 'p0', { classId: 'ace-trainer', name: 'Pat', leaderId: null });
+    makeDoubles(run.battle, run.party);
+    run.phase = 'battle';
+    return run;
+  }
+  it('commands both Pokémon, aims each at a foe, and plays through the engine', () => {
+    const run = duo();
+    const pick = chooseAutoAction(content, run)!;
+    expect(pick.action.kind).toBe('double');
+    const commands = (pick.action as { commands: ({ target?: { side: string } } | null)[] }).commands;
+    expect(commands.filter(Boolean)).toHaveLength(2);
+    expect(commands.every((c) => !c || c.target?.side === 'enemy')).toBe(true);
+    const before = JSON.stringify(run);
+    expect(chooseAutoAction(content, run)).toEqual(pick);
+    expect(JSON.stringify(run)).toBe(before);
+    const result = takeTurn(content, run, pick.action);
+    expect(result.run.battle!.turn).toBe(run.battle!.turn + 1);
+  });
+  it('is no longer blocked in doubles', () => {
+    expect(autoBattleProblem(duo())).toBeNull();
   });
 });
 

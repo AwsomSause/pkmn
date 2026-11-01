@@ -24,6 +24,7 @@ import { buyCandyPerk } from '../core/candyShop';
 import { loanProblem, runBankFlags, vaultTake, buyTier, exchange, type ExchangeDirection } from '../core/bank';
 import { buyLicense, savePreset, unlockPool } from '../core/runPrep';
 import type { PlayerAction } from '../core/battle/engine';
+import { autoCommands } from '../core/battle/doubles';
 import { chooseAutoAction, setStance, type AutoPick, type Stance } from '../core/battle/autoBattle';
 import type { DramaLine } from '../core/drama';
 import * as Exp from '../core/expedition/flow';
@@ -389,8 +390,9 @@ export class GameSession {
     marked.battle!.autoUsed = true;
     const tries: PlayerAction[] = [pick.action];
     if (pick.action.kind === 'move' && (pick.action.transform || pick.action.rally)) tries.push({ kind: 'move', index: pick.action.index });
-    const plain = marked.party[marked.battle!.activeIndex]?.moves.findIndex((m) => m.pp > 0) ?? -1;
-    tries.push({ kind: 'move', index: plain });
+    if (marked.battle!.doubles) {
+      if (!marked.battle!.needsSwitch) tries.push({ kind: 'double', commands: autoCommands({ battle: marked.battle!, party: marked.party, content: this.content }) });
+    } else tries.push({ kind: 'move', index: marked.party[marked.battle!.activeIndex]?.moves.findIndex((m) => m.pp > 0) ?? -1 });
     for (const [n, action] of tries.entries()) {
       try {
         const result = Run.takeTurn(this.content, marked, action, this.settings.dialogueFrequency);

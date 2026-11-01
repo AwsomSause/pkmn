@@ -1232,7 +1232,8 @@ export class BattleScene extends Phaser.Scene {
   private nextPrompt(): void {
     this.refreshMusicState();
     if (this.duo) {
-      if (this.run.battle?.needsSwitch) this.openPartyPicker(true);
+      if (this.autoOn && !autoBattleProblem(this.run)) void this.runAuto();
+      else if (this.run.battle?.needsSwitch) this.openPartyPicker(true);
       else {
         this.commands = [];
         this.promptSpot(0);
@@ -1450,7 +1451,10 @@ export class BattleScene extends Phaser.Scene {
       this.autoCancel = false;
       this.setAuto(false);
       this.flash('Manual control: you choose every action again.');
-      this.showRootMenu();
+      if (this.duo) {
+        this.commands = [];
+        this.promptSpot(0);
+      } else this.showRootMenu();
       return;
     }
     await this.act(pick.action, true);
