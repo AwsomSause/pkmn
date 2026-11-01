@@ -181,9 +181,11 @@ import { freshSpectacle } from './battle/spectacle';
 import { memoryPick } from './memories/encounters';
 import { noteReplayTurn, sealReplay } from './memories/replay';
 import { noteSkips, worldStageStart } from './memories/world';
+import { evilStageStart } from './evil/teams';
 import { beginNemesisBattle, counterTypes, dueNemesis, isHunted, markHunted, nemesisMember, nemesisTrainerPlan } from './story/nemesis';
 import type { Nemesis } from './story/schema';
 import { answerMentorship, graduateMentorships, planMentorship } from './story/mentorship';
+import { applyLessons, bondOf, mentorBadgeWon, startMentorship } from './mentors';
 import { answerAskLead, planAskLead } from './story/askLead';
 import { planReunion, reunionPokemon } from './story/reunion';
 
@@ -219,6 +221,8 @@ export interface NewRunOptions {
   candyPerks?: string[];
   /** The account's unlocked trainers; map events that recruit one of them stop appearing (itemCounters `owned:<id>`). */
   ownedTrainers?: readonly string[];
+  /** The profile's bonds with mentors (core/mentors): lasting trust, graduations and the fellow apprentices who return. */
+  mentorBonds?: Profile['mentorBonds'];
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -281,6 +285,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     disabledMechanics: disabledByRules(rules),
     rules,
     runQuest: pickRunQuest(content, opts.seed),
+    mentor: null,
     mastery: runMasteryPerks(content, opts),
     gameEvents: [...(opts.gameEvents ?? [])],
     baseAttributes: opts.attributes ? readAttributes(content, opts.attributes) : zeroAttributes(),
@@ -301,6 +306,9 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     minigame: null,
     minigames: { stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {}, effects: 0, discount: null },
   };
+  // A mentor chosen on the Preparation Desk (it must still be unlocked; the desk checks that, this only needs the bond).
+  run.mentor = startMentorship(opts.seed, prep.mentorId ?? null, bondOf({ mentorBonds: opts.mentorBonds ?? {} }, prep.mentorId ?? ''));
+  if (run.mentor) applyLessons(content, run, false);
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
   recordRunStarted(content, run);
@@ -512,6 +520,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   tellCampfire(content, run);
   tellAct(content, run);
   worldStageStart(content, run);
+  evilStageStart(content, run);
   applyGrandInfluence(content, run);
   growCrisis(content, run);
   grandGauntlet(content, run);
@@ -2334,6 +2343,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   const badge = won && classId === GYM_LEADER_CLASS ? won : null;
   if (badge) {
     run.badges.push(badge);
+    mentorBadgeWon(content, run);
     // Coin Case: interest on the money held; Fashion Case: Charisma per stage cleared.
     const interest = Math.floor((run.money * passivePercent(content, run, 'gymInterest')) / 100);
     run.money += interest;

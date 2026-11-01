@@ -10,7 +10,7 @@ import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
 import type { PokemonInstance, RunState } from '../../src/core/state';
 import { familyId } from '../../src/core/mastery';
 import { adaptMove, canonPlan, characterOf, createMajorRival, learnFromBattle, MAJOR, majorNote, recordAce, withAceProgress } from '../../src/core/rivals/major';
-import { beginMonRivalBattle, carriedMonRival, dueMonRival, maybeFormMonRival, monRivalCandidate, monRivalMember, rivalCatchesMonRival } from '../../src/core/rivals/monRivals';
+import { beginMonRivalBattle, carriedMonRival, dueMonRival, monRivalState, maybeFormMonRival, monRivalCandidate, monRivalMember, rivalCatchesMonRival } from '../../src/core/rivals/monRivals';
 import { armSacrifice, recordSacrifice, SACRIFICE_TITLE, sacrificeEcho } from '../../src/core/rivals/sacrifice';
 import { waitingRival } from '../../src/core/rivals/adapt';
 import { RIVAL_PROFILES } from '../../src/core/rivals/schema';
@@ -219,6 +219,28 @@ describe('Pokémon rivals across stages (§11)', () => {
     expect(m.owner).toBe(r.id);
     expect(carriedMonRival(run, r)?.id).toBe(m.id);
     expect(dueMonRival(content, run)).toBeNull();
+  });
+});
+
+describe('Camp scenes for Pokémon rivals (§11, §29)', () => {
+  it('the event condition follows the rival Pokémon: open, carried, then sacrificed', () => {
+    const run = baseRun();
+    expect(monRivalState(run, 'open')).toBe(false);
+    expect(monRivalState(run, 'any')).toBe(false);
+    const m = monRival(run);
+    expect(monRivalState(run, 'any')).toBe(true);
+    expect(monRivalState(run, 'open')).toBe(true);
+    m.owner = 'rival-major';
+    expect([monRivalState(run, 'open'), monRivalState(run, 'carried')]).toEqual([false, true]);
+    m.sacrificed = true;
+    expect([monRivalState(run, 'carried'), monRivalState(run, 'sacrificed')]).toEqual([false, true]);
+  });
+
+  it('the rival trail stop needs a Pokémon rival and has a choice for each state', () => {
+    const camp = content.events.get('camp-rival-trail')!;
+    const states = camp.choices.flatMap((c) => (c.requires ?? []).filter((r) => r.kind === 'monRival').map((r) => (r as { state: string }).state));
+    expect(states.sort()).toEqual(['carried', 'open', 'sacrificed']);
+    expect(camp.requires).toEqual([{ kind: 'monRival', state: 'any' }]);
   });
 });
 

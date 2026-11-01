@@ -7,8 +7,9 @@ import { hashSeed, Rng } from '../rng';
 import { stageKey } from '../mapItems';
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
-import { plazaView, plazaVisitors, rareVisitorHere, type PlazaSectionId, type PlazaView } from './flow';
+import { mentorPairs, plazaView, plazaVisitors, rareVisitorHere, type PlazaSectionId, type PlazaView } from './flow';
 import { PLAZA_LIFE, type DistrictId } from './life';
+import { plazaAgent, plazaVillain } from '../evil/plaza';
 
 export { PLAZA_LIFE, type DistrictId };
 
@@ -114,13 +115,23 @@ export function plazaLayout(content: Content, run: RunState, sideId: string): Pl
     // Travellers: a different few every stage.
     const travelers = [...PLAZA_LIFE.travelers].map((t) => ({ t, k: rng.float() })).sort((a, b) => a.k - b.k).slice(0, 3 + (run.regionIndex >= 2 ? 1 : 0));
     travelers.forEach(({ t }, i) => add({ id: `trav:${i}`, kind: 'traveler', name: t.name, line: `${t.name}: "${t.line}"`, home: (['gathering', 'social', 'trading', 'market'] as DistrictId[])[i % 4]! }));
+    // Evil Teams (spec §33): a disguised member blends into the crowd; the executive you have met may be back.
+    const agent = plazaAgent(content, run);
+    if (agent) add({ id: 'evil:agent', kind: 'traveler', name: agent.name, line: `${agent.name}: "${agent.line}" (Something is off about them. See People.)`, home: 'trading', color: Number(`0x${agent.team.color.slice(1)}`) });
+    const villain = plazaVillain(content, run);
+    if (villain) add({ id: 'evil:villain', kind: 'foe', name: villain.name, line: `${villain.name}: ${villain.line}`, home: 'social', color: Number(`0x${villain.team.color.slice(1)}`) });
     // A rare visitor now and then (more often the further you are).
     const r = rareVisitorHere(run);
     if (r) add({ id: `rare:${r.id}`, kind: 'rare', name: r.name, line: `${r.name}: "${r.line}" (Talk to them in the Gathering Square.)`, home: 'gathering', color: 0xf8e060 });
+    // Mentors and their protégés train side by side on the practice ground (Social Terrace).
+    for (const m of mentorPairs(content, run)) {
+      add({ id: `mentor:${m.relId}`, kind: 'pokemon', name: m.mentor, line: `${m.mentor} is teaching ${m.prote} (${m.path}). Join the lesson at the Gathering Square.`, home: 'social', speciesId: m.mentorSpecies, color: 0xffffff });
+      add({ id: `prote:${m.relId}`, kind: 'pokemon', name: m.prote, line: `${m.prote} copies every move ${m.mentor} makes.`, home: 'social', speciesId: m.proteSpecies, follows: `mentor:${m.relId}`, color: 0xffffff });
+    }
     // Pokémon wander and follow: a few of your own region's species, and one beside most trainers.
     const species = [...content.species.values()].filter((s) => s.assets && s.id).slice(0, 400);
     if (species.length > 0) {
-      const trainers = crowd.filter((w) => w.kind !== 'caravan');
+      const trainers = crowd.filter((w) => w.kind !== 'caravan' && w.kind !== 'pokemon');
       const n = Math.min(SPECIES_STAGE_CAP, trainers.length + 2);
       for (let i = 0; i < n; i++) {
         const owner = trainers[i];

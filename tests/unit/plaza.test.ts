@@ -404,3 +404,44 @@ describe('plaza saves', () => {
     expect(RunStateSchema.parse(old).plaza).toEqual({ rep: 0, friends: {}, flags: [], errands: [], done: [], used: {}, foes: [], club: null, visits: 0 });
   });
 });
+
+describe('Egg traders (Trading Post)', () => {
+  it('sells a mystery Egg once per trader per stage, and the Egg is fixed by the seed', () => {
+    const run = plazaRun('eggshop');
+    const buy = options(run, 'eggs').find((o) => o.id === 'egg:nest-keeper:buy')!;
+    expect(buy.problem).toBeNull();
+    const out = use(run, 'eggs', buy.id).run;
+    expect(out.eggs).toHaveLength(1);
+    expect(out.eggs[0]).toMatchObject({ kind: 'mystery', total: expect.any(Number) });
+    expect(out.money).toBeLessThan(run.money);
+    expect(options(out, 'eggs').find((o) => o.id === 'egg:nest-keeper:buy')!.problem).not.toBeNull();
+    const again = use(plazaRun('eggshop'), 'eggs', buy.id).run;
+    expect(again.eggs[0]).toEqual(out.eggs[0]);
+  });
+
+  it('swaps one of your Eggs for a fresh one, and not for free money', () => {
+    const run = plazaRun('eggswap');
+    use(run, 'eggs', 'egg:ranger-pell:buy');
+    const bought = use(run, 'eggs', 'egg:ranger-pell:buy').run;
+    const mine = bought.eggs[0]!;
+    const swap = options(bought, 'eggs').find((o) => o.id === `egg:nest-keeper:${mine.uid}`)!;
+    expect(swap.cost).toBe(0);
+    const out = use(bought, 'eggs', swap.id).run;
+    expect(out.eggs).toHaveLength(1);
+    expect(out.eggs[0]!.uid).not.toBe(mine.uid);
+    expect(out.eggs[0]!.left).toBe(out.eggs[0]!.total);
+    expect(out.money).toBe(bought.money);
+  });
+
+  it('refuses a purchase when you already carry four Eggs', () => {
+    const run = plazaRun('eggcap');
+    for (const id of ['nest-keeper', 'ranger-pell', 'old-breeder']) {
+      const r = use(run, 'eggs', `egg:${id}:buy`).run;
+      run.eggs = r.eggs;
+      run.plaza = r.plaza;
+      run.money = 20000;
+    }
+    run.eggs.push({ ...run.eggs[0]!, uid: 'extra' });
+    expect(options(run, 'eggs').filter((o) => o.id.endsWith(':buy')).every((o) => o.problem !== null)).toBe(true);
+  });
+});

@@ -76,6 +76,13 @@ export function battleConditions(content: Content, run: RunState): Conditions {
     if (held.length) out.yours.push(`Holding: ${held.join(', ')}`);
     const s = calcStats(content, mon);
     out.yours.push(`HP ${mon.hp}/${s.hp}`);
+    const hyper = battle.hyper;
+    const bond = run.story.histories[mon.uid]?.bond;
+    if (bond && bond.hyperReadiness >= 40) out.yours.push(`Hyper readiness ${Math.round(bond.hyperReadiness)}%${bond.hyperReadiness >= 60 ? ' (Overdrive is near)' : ''}`);
+    if (hyper?.guard[mon.uid]) out.yours.push(`Guarded by teammates for ${hyper.guard[mon.uid]} more turn(s)`);
+    if (hyper?.outdo.includes(mon.uid)) out.yours.push('Out to outdo a teammate rival (hits harder)');
+    const rival = Object.entries(hyper?.rivals ?? {}).find(([key]) => key.startsWith(`${mon.uid}|`));
+    if (rival) out.yours.push(`Rival of the foe's kind: ${rival[1] === 'reckless' ? 'turning reckless' : 'calm'}`);
   }
   const foe = currentEnemy(battle);
   const foeSpecies = getSpecies(content, foe.speciesId);
@@ -85,6 +92,9 @@ export function battleConditions(content: Content, run: RunState): Conditions {
   if (foeStatus) out.foe.push(foeStatus);
   const foeStages = stageLine(battle.enemyStages);
   if (foeStages) out.foe.push(foeStages);
+  const rage = battle.hyper?.rage[foe.uid];
+  if (rage?.state === 'warned') out.foe.push('Riled up: about to unleash its rage (Brace to calm it)');
+  else if (rage && rage.hits > 0 && rage.state === 'calm') out.foe.push(`Getting riled up (${rage.hits} hit${rage.hits > 1 ? 's' : ''} taken)`);
   if (battle.autoUsed) out.foe.push('Auto-Battle was used: EXP halved');
   return out;
 }

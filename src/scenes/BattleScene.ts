@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { fitLine } from '../ui/fitText';
 import { modeBattleLine } from '../core/modeObjectives';
 import { isUltimateBattle, ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
 import { buildEpilogue } from '../core/ending';
@@ -759,6 +760,8 @@ export class BattleScene extends Phaser.Scene {
     box.container.setVisible(true);
     box.name.setText(`${this.speciesName(mon)}${genderSign(content, mon)}${mon.shiny ? ' ★' : ''}`);
     box.level.setText(`Lv${mon.level}`);
+    // A long name stops short of the level and the form symbol instead of running under them.
+    fitLine(box.name, box.level.x - box.level.width - box.name.x - 40);
     box.hpText?.setText(`${Math.max(0, mon.hp)}/${max}`);
     box.statusBadge?.destroy();
     box.statusBadge = undefined;
@@ -1829,9 +1832,10 @@ export class BattleScene extends Phaser.Scene {
     this.clearMenus();
     this.picker = new Picker(this, {
       glass: true,
+      dock: true,
       title: 'Bag',
       columns: 2,
-      rowHeight: 48,
+      rowHeight: 34,
       rows: ids.map((id) => bagRow(content, run.inventory, id, problem(id))),
       onSelect: (i) => {
         const id = ids[i]!;
@@ -1841,7 +1845,7 @@ export class BattleScene extends Phaser.Scene {
       },
       onBack: () => this.showRootMenu(),
     });
-    this.showTabs('item', 'band');
+    this.showTabs('item');
   }
 
   private openItemTarget(itemId: string): void {
@@ -1851,9 +1855,10 @@ export class BattleScene extends Phaser.Scene {
     this.clearMenus();
     this.picker = new Picker(this, {
       glass: true,
+      dock: true,
       title: `Use ${item.name} on which Pokémon?`,
-      columns: 2,
-      rowHeight: 78,
+      columns: 3,
+      rowHeight: 70,
       rows: partyRows(content, run.party, (i) => itemProblem(this.battleCtx(), itemId, i), (i) => (i === run.battle!.activeIndex ? 'IN BATTLE' : undefined)),
       onSelect: (i) => this.submit({ kind: 'item', itemId, targetIndex: i }),
       onBack: () => this.openBag(),
@@ -1872,9 +1877,10 @@ export class BattleScene extends Phaser.Scene {
       const onField = [0, 1].map((s) => indexAt(view, 'player', s as Spot));
       const taken = this.commands.flatMap((c) => (c?.action.kind === 'switch' ? [c.action.partyIndex] : []));
       this.picker = new Picker(this, {
+        dock: true,
         title: forced ? 'Send out which Pokémon?' : `Switch ${this.speciesName(this.activeMon())} for which Pokémon?`,
-        columns: 2,
-        rowHeight: 78,
+        columns: 3,
+        rowHeight: 70,
         rows: partyRows(content, run.party, (i) => doublesSwitchProblem(view, i, taken), (i) => (onField.includes(i) ? 'IN BATTLE' : undefined)),
         onSelect: (i) => (forced ? void this.act({ kind: 'switch', partyIndex: i }) : this.submit({ kind: 'switch', partyIndex: i })),
         onBack: forced ? undefined : () => this.showRootMenu(),
@@ -1883,16 +1889,17 @@ export class BattleScene extends Phaser.Scene {
     }
     this.picker = new Picker(this, {
       glass: true,
+      dock: true,
       title: forced ? 'Send out which Pokémon?' : 'Party',
-      columns: 2,
-      rowHeight: 78,
+      columns: 3,
+      rowHeight: 70,
       rows: partyRows(content, run.party, (i) => (forced ? switchProblem(this.battleCtx(), i) : null), (i) => (i === run.battle!.activeIndex && !forced ? 'IN BATTLE' : undefined)),
       // The cursor starts on the first Pokémon that can switch in.
       start: forced ? undefined : Math.max(0, run.party.findIndex((_, i) => switchProblem(this.battleCtx(), i) === null)),
       onSelect: (i) => (forced ? void this.act({ kind: 'switch', partyIndex: i }) : this.showPartyActions(i)),
       onBack: forced ? undefined : () => this.showRootMenu(),
     });
-    if (!forced) this.showTabs('party', 'band');
+    if (!forced) this.showTabs('party');
   }
 
   // ---------- taking a turn ----------
@@ -2185,7 +2192,7 @@ export class BattleScene extends Phaser.Scene {
           if (sprite && sprite.alpha < 1) sprite.setAlpha(1);
           await this.refreshInfoBox(box, mon!, true);
           // Defiance struck the foe back; Protective Instinct hurt the teammate that stepped in.
-          if (e.foeHpAfter !== undefined && this.shown.enemy) {
+          if (e.foeHpAfter !== undefined && this.shown.enemy && (!e.foeUid || e.foeUid === this.shown.enemy.uid)) {
             this.shown.enemy.hp = e.foeHpAfter;
             await this.refreshInfoBox(this.enemyBox, this.shown.enemy, true);
           }

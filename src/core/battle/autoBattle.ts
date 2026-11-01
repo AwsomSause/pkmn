@@ -174,6 +174,14 @@ export function autoProfile(content: Content, run: RunState, mon: PokemonInstanc
   const fear = clamp((1 - hp) * 0.6 + outmatch * 0.5 - Math.max(0, confidence) * 0.4 - Math.max(0, p.risk) * 0.3, 0, 1);
   const fallen = run.party.filter((m) => m.hp <= 0).length;
   const anger = clamp(fallen * 0.25 + bond.strain / 200 + (emotion?.id === 'justice' ? 0.15 : 0), 0, 1);
+  // Hyper moments building in this fight: a rival teammate to outdo, a heated rivalry, a foe about to rage.
+  const hy = battle?.hyper;
+  if (hy) {
+    if (hy.outdo.includes(mon.uid)) { p.aggr += 0.1; notes.push('Wants to outdo a teammate rival'); }
+    if (Object.entries(hy.rivals).some(([key, v]) => key.startsWith(`${mon.uid}|`) && v === 'reckless')) { p.aggr += 0.15; p.risk += 0.1; notes.push('Reckless against its rival'); }
+    if (foe && hy.rage[foe.uid]?.state === 'warned') { p.caution += 0.15; notes.push('Sees the foe\'s rage coming'); }
+    if (hy.guard[mon.uid]) p.caution += 0.05;
+  }
   if (fear >= 0.5) notes.push('Rattled right now');
   if (anger >= 0.4) notes.push('Angry about the fight so far');
   p.aggr += anger * 0.3;

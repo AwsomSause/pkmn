@@ -40254,6 +40254,117 @@
    "room": true
   },
   {
+   "id": "camp-rival-trail",
+   "name": "A Rival's Trail",
+   "group": "Camp",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "monRival",
+     "state": "any"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c24",
+    "effect": "sparkle"
+   },
+   "intro": "A quiet clearing off the road. One of your Pokémon stops here and will not move on: something about its rival is on its mind.",
+   "choices": [
+    {
+     "label": "Remember the rival who took the blow",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "sacrificed"
+      }
+     ],
+     "success": {
+      "text": "Nobody plays tonight. The Pokémon it saved sits closest to the fire and watches the dark where its rival used to be. The others lean in around it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    },
+    {
+     "label": "Train for the rematch with its rival",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "open"
+      }
+     ],
+     "success": {
+      "text": "One of your Pokémon will not sit still. Somewhere out there is the one with the mark, and next time it means to win.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk about the rival that joined a trainer",
+     "requires": [
+      {
+       "kind": "monRival",
+       "state": "carried"
+      }
+     ],
+     "success": {
+      "text": "Its rival rides with another trainer now. Your Pokémon growls at the thought, then settles. It will be ready.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Move on",
+     "success": {
+      "text": "You coax it along. It looks back once.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
    "id": "camp-prepare",
    "name": "Before You Go",
    "group": "Camp",
@@ -46408,6 +46519,3017 @@
        {
         "kind": "research",
         "amount": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "stranded-trainer",
+   "name": "A Trainer in Trouble",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.npc_youngster"
+    ],
+    "tint": "#2a3a20",
+    "effect": "none"
+   },
+   "intro": "A young trainer kneels on the road beside three fainted Pokémon. \"I pushed them too hard... I don't have any potions left.\"",
+   "choices": [
+    {
+     "label": "Share your supplies (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "You patch up their team. \"I won't forget this!\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "choice",
+        "id": "stranded-trainer",
+        "pick": "helped",
+        "text": "Helped a stranded young trainer",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Point them to the Pokémon Center",
+     "success": {
+      "text": "\"Right... thanks, I guess.\" They limp away.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "stranded-trainer",
+        "pick": "directed",
+        "text": "Sent a stranded trainer on their way",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take their Poké Balls",
+     "success": {
+      "text": "They are too tired to stop you. You will remember the look on their face.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "great-ball",
+         "ultra-ball",
+         "dusk-ball"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -10
+       },
+       {
+        "kind": "choice",
+        "id": "stranded-trainer",
+        "pick": "robbed",
+        "text": "Robbed a stranded young trainer",
+        "weight": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "stranded-trainer-friend",
+   "name": "The Trainer You Helped",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 3,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "stranded-trainer",
+     "pick": "helped"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_youngster"
+    ],
+    "tint": "#2a4a30",
+    "effect": "glint"
+   },
+   "intro": "A raider blocks the road, and then a familiar voice shouts: \"Hey! That's the one who saved my team!\" The young trainer you helped is back, their Lucario at full strength.",
+   "choices": [
+    {
+     "label": "Fight side by side",
+     "success": {
+      "text": "\"My turn to help you!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Road Raider",
+       "ally": "lucario",
+       "size": 2,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1200
+        },
+        {
+         "kind": "friendship",
+         "amount": 10
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask for advice instead",
+     "success": {
+      "text": "They share a training trick they learned since.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "stranded-trainer-revenge",
+   "name": "The Trainer You Robbed",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 3,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "stranded-trainer",
+     "pick": "robbed"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_youngster"
+    ],
+    "tint": "#3a2020",
+    "effect": "shake"
+   },
+   "intro": "The young trainer you robbed is waiting at the bridge, their team trained hard since. \"Remember me? I do.\"",
+   "choices": [
+    {
+     "label": "Battle them",
+     "success": {
+      "text": "\"I trained every day for this.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Vengeful Trainer",
+       "size": 3,
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 800
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Apologize and pay them back (₽600)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 600
+      }
+     ],
+     "success": {
+      "text": "They take the money and walk off without a word.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -600
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 6
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-dispute",
+   "name": "Rangers and Prospectors",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonranger_m",
+     "boss.npc_engineer"
+    ],
+    "tint": "#304020",
+    "effect": "none"
+   },
+   "intro": "Pokémon Rangers and a mining company argue over the same valley. Both want your support, and both will remember your answer.",
+   "choices": [
+    {
+     "label": "Back the Rangers",
+     "success": {
+      "text": "The Rangers pin a badge on your jacket. The miners spit on the ground.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "ranger-favor",
+        "name": "Ranger Badge",
+        "effects": [
+         {
+          "kind": "captureMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "valley-dispute",
+        "pick": "rangers",
+        "text": "Sided with the Rangers over the miners",
+        "weight": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Back the Prospectors",
+     "success": {
+      "text": "The company gives you a share of the dig. The Rangers turn their backs.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "prospector-share",
+        "name": "Prospector Share",
+        "effects": [
+         {
+          "kind": "moneyMultiplier",
+          "value": 1.15
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "valley-dispute",
+        "pick": "prospectors",
+        "text": "Sided with the miners over the Rangers",
+        "weight": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay out of it",
+     "success": {
+      "text": "Both sides call you a coward. At least nobody is angry.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "valley-dispute",
+        "pick": "neutral",
+        "text": "Stayed out of the valley dispute",
+        "weight": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-rangers-rescue",
+   "name": "The Rangers Call for Help",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "valley-dispute",
+     "pick": "rangers"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonranger_f"
+    ],
+    "tint": "#305020",
+    "effect": "sparkle"
+   },
+   "intro": "A Ranger waves you down. \"A landslide trapped wild Pokémon. You stood with us, so we trust you.\"",
+   "choices": [
+    {
+     "label": "Dig them out",
+     "success": {
+      "text": "One of them refuses to leave your side.",
+      "effects": [
+       {
+        "kind": "join",
+        "levelBonus": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Guard the dig site",
+     "success": {
+      "text": "Wild Pokémon, scared and angry, burst out of the rubble!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "levelBonus": 1,
+       "chain": 2,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 40
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-miners-grudge",
+   "name": "The Foreman's Grudge",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "valley-dispute",
+     "pick": "rangers"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_engineer",
+     "boss.npc_hiker"
+    ],
+    "tint": "#40301a",
+    "effect": "none"
+   },
+   "intro": "The mining foreman blocks the road with his crew. \"You cost us the valley. Now you pay.\"",
+   "choices": [
+    {
+     "label": "Battle the foreman",
+     "success": {
+      "text": "\"Rocks don't forgive, kid.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Mine Foreman",
+       "types": [
+        "ground",
+        "steel",
+        "rock"
+       ],
+       "size": 3,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "hard-stone",
+          "iron-ball",
+          "star-piece"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Pay their losses (₽1000)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1000
+      }
+     ],
+     "success": {
+      "text": "They pocket it and let you pass.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1000
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-miners-dividend",
+   "name": "The Prospector Dividend",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "valley-dispute",
+     "pick": "prospectors"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_engineer"
+    ],
+    "tint": "#40381a",
+    "effect": "glint"
+   },
+   "intro": "The mining company sends a cart down the road. \"Your share, partner. And our shop is open to friends.\"",
+   "choices": [
+    {
+     "label": "Take the dividend",
+     "success": {
+      "text": "A heavy bag of coins, and a stall opens up beside you.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1500
+       },
+       {
+        "kind": "addStop",
+        "stop": "shop"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "valley-rangers-grudge",
+   "name": "Angry Rangers",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "valley-dispute",
+     "pick": "prospectors"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_pokemonranger_m"
+    ],
+    "tint": "#203a20",
+    "effect": "none"
+   },
+   "intro": "A Ranger captain stops you. \"You sold out the valley. The wild Pokémon here know your face now.\"",
+   "choices": [
+    {
+     "label": "Battle the captain",
+     "success": {
+      "text": "\"For the valley!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Ranger Captain",
+       "types": [
+        "grass",
+        "bug",
+        "flying"
+       ],
+       "size": 3,
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 900
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Help replant the valley",
+     "success": {
+      "text": "It takes all day. The captain nods, a little.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 5
+       },
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ledge-riolu",
+   "name": "A Stranded Riolu",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#20304a",
+    "effect": "none",
+    "pokemon": "riolu"
+   },
+   "intro": "A small Riolu is stuck on a crumbling ledge above a river, crying for help.",
+   "choices": [
+    {
+     "label": "Climb down and rescue it",
+     "check": "strength",
+     "success": {
+      "text": "You pull it up just as the ledge gives way. It clings to you, then runs into the forest, looking back once.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5
+       },
+       {
+        "kind": "choice",
+        "id": "ledge-riolu",
+        "pick": "rescued",
+        "text": "Rescued a stranded Riolu",
+        "weight": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "You slip and scrape your team on the rocks. Riolu scrambles to safety on its own.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.15
+       },
+       {
+        "kind": "choice",
+        "id": "ledge-riolu",
+        "pick": "tried",
+        "text": "Tried to rescue a stranded Riolu",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You walk on. The crying fades behind you.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "ledge-riolu",
+        "pick": "left",
+        "text": "Left a stranded Riolu behind",
+        "weight": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ledge-riolu-return",
+   "name": "Riolu Remembers",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 3,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "ledge-riolu",
+     "pick": "rescued"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#20406a",
+    "effect": "sparkle",
+    "pokemon": "riolu"
+   },
+   "intro": "Something small drops from a tree and lands in front of you. It is the Riolu you saved, bigger now, and it wants to come along.",
+   "choices": [
+    {
+     "label": "Welcome it to the team",
+     "success": {
+      "text": "Riolu joins you, aura glowing.",
+      "effects": [
+       {
+        "kind": "join",
+        "species": [
+         "riolu"
+        ],
+        "levelBonus": 2,
+        "shinyMultiplier": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Tell it to stay free",
+     "success": {
+      "text": "It nods, and gives you a berry it was saving.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "friendship",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "old-shrine-offering",
+   "name": "The Old Shrine",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [
+     "boss.npc_channeler"
+    ],
+    "tint": "#302040",
+    "effect": "fog"
+   },
+   "intro": "An old shrine asks for an offering. Locals say what you give here changes your whole journey.",
+   "choices": [
+    {
+     "label": "Offer ₽2000",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 2000
+      }
+     ],
+     "success": {
+      "text": "The bell rings by itself. Your Pokémon feel lighter.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -2000
+       },
+       {
+        "kind": "relic",
+        "id": "shrine-blessing",
+        "name": "Shrine Blessing",
+        "effects": [
+         {
+          "kind": "healingMultiplier",
+          "value": 1.15
+         },
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "old-shrine",
+        "pick": "money",
+        "text": "Gave ₽2000 at the old shrine",
+        "weight": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Offer one of your items",
+     "success": {
+      "text": "The item vanishes. The wild seems to welcome you.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "relic",
+        "id": "shrine-luck",
+        "name": "Shrine Luck",
+        "effects": [
+         {
+          "kind": "captureMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "encounterWeightMultiplier",
+          "group": "rare",
+          "value": 1.2
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "old-shrine",
+        "pick": "item",
+        "text": "Gave up an item at the old shrine",
+        "weight": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave nothing",
+     "success": {
+      "text": "Nothing happens. The wind feels colder.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "old-shrine",
+        "pick": "none",
+        "text": "Gave nothing at the old shrine",
+        "weight": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "old-shrine-spirit",
+   "name": "The Shrine Spirit",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 5,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "old-shrine"
+    },
+    {
+     "kind": "choice",
+     "id": "old-shrine",
+     "pick": "none",
+     "made": false
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#202a50",
+    "effect": "sparkle"
+   },
+   "intro": "The shrine bell rings far behind you, and a legendary beast is waiting on the road ahead. It has come to see who gave the offering.",
+   "choices": [
+    {
+     "label": "Face it",
+     "success": {
+      "text": "It roars, then waits for you to make the first move.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "suicune",
+        "entei",
+        "raikou"
+       ],
+       "levelBonus": 5,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 60
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Bow and step aside",
+     "success": {
+      "text": "It passes by, and your team feels braver for it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "road-fork",
+   "name": "The Fork in the Road",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "tint": "#304030",
+    "effect": "none"
+   },
+   "intro": "Three roads lead on toward the next towns. A signpost warns that once you choose, there is no going back.",
+   "choices": [
+    {
+     "label": "The mountain pass",
+     "success": {
+      "text": "Thin air and tough trainers. Every battle teaches more.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "mountain-road",
+        "name": "Mountain Road",
+        "effects": [
+         {
+          "kind": "xpMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "enemyLevelOffset",
+          "value": 1
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "road-fork",
+        "pick": "mountain",
+        "text": "Took the hard mountain pass",
+        "weight": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "The coast road",
+     "success": {
+      "text": "Sea air, warm rain, and Water Pokémon everywhere.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "coast-road",
+        "name": "Coast Road",
+        "effects": [
+         {
+          "kind": "healingMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "typeEncounterWeight",
+          "type": "water",
+          "value": 1.5
+         }
+        ]
+       },
+       {
+        "kind": "front",
+        "weather": "rain",
+        "columns": 3
+       },
+       {
+        "kind": "choice",
+        "id": "road-fork",
+        "pick": "coast",
+        "text": "Took the gentle coast road",
+        "weight": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "The forest trail",
+     "success": {
+      "text": "Dense trees, and Pokémon that hide in them.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "forest-road",
+        "name": "Forest Trail",
+        "effects": [
+         {
+          "kind": "typeEncounterWeight",
+          "type": "grass",
+          "value": 1.5
+         },
+         {
+          "kind": "captureMultiplier",
+          "value": 1.05
+         }
+        ]
+       },
+       {
+        "kind": "choice",
+        "id": "road-fork",
+        "pick": "forest",
+        "text": "Took the forest trail",
+        "weight": 3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-asks-help",
+   "name": "Your Rival Needs a Hand",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#30305a",
+    "effect": "none"
+   },
+   "intro": "Your rival is surrounded by wild Pokémon and their team is worn out. \"Don't just stand there! ...Please?\"",
+   "choices": [
+    {
+     "label": "Jump in and help",
+     "success": {
+      "text": "\"Fine, I owe you one. Don't make it weird.\"",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "choice",
+         "id": "rival-help",
+         "pick": "helped",
+         "text": "Helped your rival when they were cornered",
+         "weight": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Let them handle it",
+     "success": {
+      "text": "\"Thanks for nothing!\" They fight their way out alone, furious.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "rival-help",
+        "pick": "refused",
+        "text": "Left your rival to fight alone",
+        "weight": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-asks-help-repaid",
+   "name": "Your Rival Repays You",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "rival-help",
+     "pick": "helped"
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#30406a",
+    "effect": "hearts"
+   },
+   "intro": "Your rival jogs up with a bag. \"Here. We're even now. And next time we battle, I'm not holding back, because you'd hate that.\"",
+   "choices": [
+    {
+     "label": "Accept the gift",
+     "success": {
+      "text": "Your rival grins and runs off.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "max-revive",
+         "rare-candy",
+         "full-restore"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 5
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-asks-help-grudge",
+   "name": "A Bitter Rival",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "rival-help",
+     "pick": "refused"
+    },
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#4a2030",
+    "effect": "shake"
+   },
+   "intro": "Your rival is waiting, arms crossed. \"You left me out there. I haven't forgotten.\"",
+   "choices": [
+    {
+     "label": "Battle",
+     "success": {
+      "text": "\"This is for that day.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival",
+       "rival": true,
+       "size": 3,
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1500
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "strangers-map",
+   "name": "A Stranger's Map",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "boss.npc_gambler"
+    ],
+    "tint": "#2a2030",
+    "effect": "none"
+   },
+   "intro": "A hooded stranger offers you a map. \"It leads to a Legendary's lair. Only ₽500. Trust me.\"",
+   "choices": [
+    {
+     "label": "Trust them (₽500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "chance": 0.6,
+     "success": {
+      "text": "The map looks real: old ink, true landmarks.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "choice",
+        "id": "strangers-map",
+        "pick": "trusted",
+        "text": "Trusted a stranger's treasure map",
+        "weight": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "The map is a fake. The stranger is long gone.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "choice",
+        "id": "strangers-map",
+        "pick": "scammed",
+        "text": "Was scammed by a stranger's map",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Turn them down",
+     "success": {
+      "text": "\"Your loss.\" The stranger melts into the crowd.",
+      "effects": [
+       {
+        "kind": "choice",
+        "id": "strangers-map",
+        "pick": "refused",
+        "text": "Refused a stranger's map",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Report them",
+     "success": {
+      "text": "The police thank you. Turns out they sell fakes all over town.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       },
+       {
+        "kind": "choice",
+        "id": "strangers-map",
+        "pick": "reported",
+        "text": "Reported a map seller to the police",
+        "weight": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "strangers-map-lair",
+   "name": "The Hidden Lair",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "strangers-map",
+     "pick": "trusted"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#203a5a",
+    "effect": "sparkle"
+   },
+   "intro": "The stranger's map was real. Behind a waterfall, something legendary is sleeping.",
+   "choices": [
+    {
+     "label": "Wake it",
+     "success": {
+      "text": "It opens its eyes.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "lugia",
+        "ho-oh",
+        "latias",
+        "latios"
+       ],
+       "levelBonus": 5,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 60
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Take the treasure and tiptoe out",
+     "success": {
+      "text": "You leave it sleeping, and leave richer.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "comet-shard",
+         "star-piece",
+         "big-nugget"
+        ]
+       },
+       {
+        "kind": "money",
+        "amount": 1000
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "research-offer",
+   "name": "A Special Opportunity",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.npc_scientist"
+    ],
+    "tint": "#203040",
+    "effect": "none"
+   },
+   "intro": "A researcher has two offers. \"Take my prototype today, or fund my work and get something much better later.\"",
+   "choices": [
+    {
+     "label": "Take the prototype now",
+     "success": {
+      "text": "Your next reward draft will have more to choose from.",
+      "effects": [
+       {
+        "kind": "betterDraft",
+        "extra": 1
+       },
+       {
+        "kind": "choice",
+        "id": "research-offer",
+        "pick": "now",
+        "text": "Took a researcher's prototype right away",
+        "weight": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fund the research (₽1500)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1500
+      }
+     ],
+     "success": {
+      "text": "\"You won't regret it. Probably.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1500
+       },
+       {
+        "kind": "choice",
+        "id": "research-offer",
+        "pick": "funded",
+        "text": "Funded a researcher's long project",
+        "weight": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "research-offer-payoff",
+   "name": "The Research Pays Off",
+   "group": "Lasting Choices",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 4,
+   "callback": true,
+   "requires": [
+    {
+     "kind": "choice",
+     "id": "research-offer",
+     "pick": "funded"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.npc_scientist"
+    ],
+    "tint": "#204060",
+    "effect": "glint"
+   },
+   "intro": "The researcher you funded finds you, out of breath. \"It worked! And you get the first results!\"",
+   "choices": [
+    {
+     "label": "Collect your share",
+     "success": {
+      "text": "A box of prototypes and a page of notes.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "rare-candy",
+         "max-revive",
+         "life-orb",
+         "expert-belt"
+        ],
+        "count": 2
+       },
+       {
+        "kind": "research",
+        "amount": 60
+       },
+       {
+        "kind": "betterDraft",
+        "extra": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-ravi-ironhand-lesson",
+   "name": "Captain Ravi's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "ravi-ironhand"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.black_belt_m"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Captain Ravi Ironhand finds you between stops. \"Eyes up. We start at the first bell.\" Pressure battles and clean finishes.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"That was clean. Do it again.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Captain notices. \"That was clean. Do it again.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"Sloppy. We drill it until it is not.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "ravi-ironhand",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Led a coastal guard unit for twenty years before turning to training. Believes every battle is won in the week before it. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Captain Ravi Ironhand shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-marigold-hatch-lesson",
+   "name": "Marigold's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "marigold-hatch"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Marigold Hatch finds you between stops. \"Sit, sit. Nobody grows on an empty stomach.\" Eggs, bonds and patient growth.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"See how it leans on you? That is trust.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Marigold notices. \"See how it leans on you? That is trust.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"You pushed it too far, dear. Look at it.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "marigold-hatch",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Runs a daycare on a hilltop farm. Has hatched more Eggs than anyone in three regions and names every one. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Marigold Hatch shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-linden-vale-lesson",
+   "name": "Dr. Linden's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "linden-vale"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.oak"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Dr. Linden Vale finds you between stops. \"Hold still, I want to sketch that stance.\" Studying Pokémon so battles are never a surprise.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"Fascinating! You did exactly what the data said you would not.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Dr. notices. \"Fascinating! You did exactly what the data said you would not.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"You skipped the observation phase again.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "linden-vale",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "A lab dropout who found the field more honest. Fills notebooks with sketches of everything that moves. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Dr. Linden Vale shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-juno-trailwind-lesson",
+   "name": "Juno's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "juno-trailwind"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Juno Trailwind finds you between stops. \"Boots on. The road does not wait.\" Shortcuts, hidden spots and rare finds.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"Now you are reading the ground. Good.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Juno notices. \"Now you are reading the ground. Good.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"You walked right past it. Look again.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "juno-trailwind",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Has walked every route twice and some of them backwards. Trades maps for stories. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Juno Trailwind shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-celeste-ribbon-lesson",
+   "name": "Celeste's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "celeste-ribbon"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Celeste Ribbon finds you between stops. \"Chin up. The audience is watching, even when it is empty.\" Showmanship, charm and status play.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"Darling, that was a performance.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Celeste notices. \"Darling, that was a performance.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"That was effective but dull. Again.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "celeste-ribbon",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Won three Grand Festivals and retired to teach style. Insists a move is only good if it looks good. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Celeste Ribbon shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-sable-oakridge-lesson",
+   "name": "Sable's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "sable-oakridge"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "boss.cynthia-masters"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Sable Oakridge finds you between stops. \"I am not here to be impressive. Let us begin.\" Composure under the biggest stages.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"That is how a champion thinks.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Sable notices. \"That is how a champion thinks.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"Disappointing. You know better.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "sable-oakridge",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Held the title for nine years and left it on a Tuesday. Never explained why. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Sable Oakridge shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-dax-corvane-lesson",
+   "name": "Dax's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "dax-corvane"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.blue"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Dax Corvane finds you between stops. \"Do not smile. This is a rivalry, not a lesson.\" Learning by being beaten.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"Fine. That was... good. Do not let it go to your head.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Dax notices. \"Fine. That was... good. Do not let it go to your head.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"You are better than that! Prove it!\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "dax-corvane",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "A rival trainer who lost to you once and decided that the best way to beat you was to make you better. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Dax Corvane shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-brook-tidewater-lesson",
+   "name": "Brook's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "brook-tidewater"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fisherman"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Brook of Tidewater finds you between stops. \"One type. Done properly. That is the whole lesson.\" Specialising in one type and doing it well.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"You are starting to flow.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Brook notices. \"You are starting to flow.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"Do not fight the current. Use it.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "brook-tidewater",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Keeps a water gym by a harbour and still fixes the roof herself. Takes teaching as seriously as her badge. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Brook of Tidewater shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-vesper-nox-lesson",
+   "name": "Vesper's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "vesper-nox"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Vesper Nox finds you between stops. \"Do not tell me your plan. Show me your second plan.\" Setting up and punishing mistakes.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"Elegant. I almost did not see it.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Vesper notices. \"Elegant. I almost did not see it.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"You telegraphed that. A child could read it.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "vesper-nox",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Sits at the end of the Elite Four and hates being the last obstacle. Teaches to find someone who can beat them. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Vesper Nox shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-ysolde-marrow-lesson",
+   "name": "Ysolde's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "ysolde-marrow"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Ysolde Marrow finds you between stops. \"Quiet. The old ones listen better than people do.\" Myths, legends and the places they sleep.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"Yes. That is what the third scroll said.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Ysolde notices. \"Yes. That is what the third scroll said.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"You forgot the source. Always the source.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "ysolde-marrow",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Spent forty years collecting stories of legendary Pokémon. Believes each myth hides one true fact. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Ysolde Marrow shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-tobias-satchel-lesson",
+   "name": "Tobias's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "tobias-satchel"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Tobias Satchel finds you between stops. \"Everything has a price. The good stuff has two.\" Items, holding and trading.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"You used that item perfectly. I would have charged for that.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Tobias notices. \"You used that item perfectly. I would have charged for that.\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"You wasted it! That was premium!\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "tobias-satchel",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "A pedlar who stocked a hundred adventurers and learned what each one forgot to pack. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Tobias Satchel shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-fenwick-eon-lesson",
+   "name": "Fenwick's Lesson",
+   "group": "Mentors",
+   "requires": [
+    {
+     "kind": "mentor",
+     "id": "fenwick-eon"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.bug_catcher"
+    ],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Fenwick Eon finds you between stops. \"There is a form in there. Be patient with it.\" Evolution timing and forms.",
+   "choices": [
+    {
+     "label": "Listen closely",
+     "success": {
+      "text": "\"Oh! It is starting. Do you see?\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "trust": 4,
+        "loyalty": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Try it your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "It works, and Fenwick notices. \"Oh! It is starting. Do you see?\"",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "It goes wrong. \"You skipped a stage. Stages matter.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "loyalty": 1,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about their past",
+     "requires": [
+      {
+       "kind": "mentor",
+       "id": "fenwick-eon",
+       "trustAtLeast": 20
+      }
+     ],
+     "success": {
+      "text": "Believes every Pokémon is halfway to something else. Tracks evolution lines on a wall of string. They seem lighter for having said it.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Fenwick Eon shared how their story began",
+        "importance": 55
+       },
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 4
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-training-session",
+   "name": "Training Session",
+   "group": "Mentors",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "mentor"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a44",
+    "effect": "shake"
+   },
+   "intro": "Your mentor sets up a training session on a quiet stretch of road.",
+   "choices": [
+    {
+     "label": "Drill hard",
+     "success": {
+      "text": "Everyone is out of breath, and stronger.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "strength",
+        "amount": 4
+       },
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "damage",
+        "share": 0.15
+       },
+       {
+        "kind": "mentor",
+        "trust": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Study the basics",
+     "success": {
+      "text": "A quiet hour with the notebook pays off.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 4
+       },
+       {
+        "kind": "mentor",
+        "trust": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Rest and talk",
+     "success": {
+      "text": "Sometimes the lesson is to stop.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       },
+       {
+        "kind": "mentor",
+        "loyalty": 3,
+        "trust": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-disagreement",
+   "name": "A Disagreement",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "trustAtLeast": 20
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#442a2a",
+    "effect": "flicker"
+   },
+   "intro": "Your mentor wants the safe road. You can see a shortcut, and a very good reason to take it.",
+   "choices": [
+    {
+     "label": "Follow your mentor",
+     "success": {
+      "text": "You take the safe road. Your mentor nods, and you bite your tongue.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": 5,
+        "loyalty": -3,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Argue your case",
+     "success": {
+      "text": "It gets loud. It also gets honest.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -3,
+        "loyalty": 5,
+        "disagree": true
+       }
+      ]
+     }
+    },
+    {
+     "label": "Find a compromise",
+     "check": "intelligence",
+     "success": {
+      "text": "You both give a little and the plan is better for it.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "Neither of you is happy.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "disagree": true
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-fellow-duel",
+   "name": "The Fellow Apprentice",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a3a44",
+    "effect": "spin"
+   },
+   "intro": "Your fellow apprentice blocks the path with a grin. \"Let us see who has learned more.\"",
+   "choices": [
+    {
+     "label": "Spar fairly",
+     "check": "strength",
+     "success": {
+      "text": "You win by a nose. They laugh it off.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "rivalry": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "They win, and rub it in a little.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "loyalty": 1,
+        "rivalry": -2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share notes instead",
+     "success": {
+      "text": "You trade notes. Both of you leave knowing more.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 3
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 2,
+        "rivalry": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Needle them",
+     "success": {
+      "text": "They storm off. Your mentor sees all of it.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -4
+       },
+       {
+        "kind": "mentor",
+        "trust": -2,
+        "rivalry": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-mission-offer",
+   "name": "A Mission",
+   "group": "Mentors",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "mentor",
+     "trustAtLeast": 10,
+     "mission": "none"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a44",
+    "effect": "glint"
+   },
+   "intro": "Your mentor hands you a folded note. \"A real task. Only if you are ready.\"",
+   "choices": [
+    {
+     "label": "Accept the mission",
+     "success": {
+      "text": "You read it twice, and pocket it.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "mission": "start"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not yet",
+     "success": {
+      "text": "Your mentor tucks the note away. \"Later, then.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-personal-story",
+   "name": "A Story by the Fire",
+   "group": "Mentors",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "mentor",
+     "trustAtLeast": 45
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#44301a",
+    "effect": "fire"
+   },
+   "intro": "Your mentor, unusually quiet, begins to tell you why they teach.",
+   "choices": [
+    {
+     "label": "Listen",
+     "success": {
+      "text": "You do not interrupt. It is the right call.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Your mentor opened up by the fire",
+        "importance": 65
+       },
+       {
+        "kind": "mentor",
+        "trust": 6,
+        "loyalty": 4
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share your own story",
+     "success": {
+      "text": "You tell yours. It sits between you like a second fire.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "You and your mentor traded stories",
+        "importance": 65
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 6
+       }
+      ]
+     }
+    },
+    {
+     "label": "Change the subject",
+     "success": {
+      "text": "The moment passes, a little colder.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "mentor-graduation-trial",
+   "name": "The Final Lesson",
+   "group": "Mentors",
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "mentor",
+     "trustAtLeast": 60
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a442a",
+    "effect": "sparkle"
+   },
+   "intro": "Your mentor stops on the road. \"There is nothing left to teach you. Show me what you have learned.\"",
+   "choices": [
+    {
+     "label": "Give it everything",
+     "check": "strength",
+     "success": {
+      "text": "It is the best you have ever done. Your mentor smiles.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "You passed your mentor's final lesson",
+        "importance": 80
+       },
+       {
+        "kind": "mentor",
+        "trust": 8,
+        "loyalty": 5
+       }
+      ]
+     },
+     "failure": {
+      "text": "You fall short, and your mentor says it is fine.",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": 2,
+        "loyalty": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask them to watch",
+     "success": {
+      "text": "They watch. They do not say a word. They do not need to.",
+      "effects": [
+       {
+        "kind": "moment",
+        "text": "Your mentor watched you the whole way",
+        "importance": 75
+       },
+       {
+        "kind": "mentor",
+        "trust": 3,
+        "loyalty": 8
+       }
+      ]
+     }
+    },
+    {
+     "label": "Test them back",
+     "success": {
+      "text": "Your mentor laughs. \"Cheeky. Good.\"",
+      "effects": [
+       {
+        "kind": "mentor",
+        "trust": -1,
+        "loyalty": 3,
+        "rivalry": 2,
+        "disagree": true
        }
       ]
      }

@@ -4,6 +4,7 @@ import Phaser from 'phaser';
 import { BAR_SHADES, COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, mixColor, textStyle } from './theme';
 import { playSfx } from './audio';
 import type { InputAction } from './input';
+import { fitLine } from './fitText';
 import { AERO, paintGlass, type MotionLevel } from './aero';
 import { glideIn, nudge, popIn, uiTiming, WiiCursor } from './wiiMotion';
 import { staggerDelay } from '../core/presentation/uiMotion';
@@ -215,6 +216,8 @@ export class Menu {
         .setAlpha(opt.disabled ? 0.4 : 1)
         .setInteractive({ useHandCursor: !opt.disabled })
         .setData('noJuice', true);
+      // A long label stops at the item's edge (and at the next column) instead of running over its neighbour.
+      fitLine(text, this.itemWidth - 40);
       text.on('pointerover', () => {
         if (!opt.disabled && this.enabled) this.focus(i, false);
       });
@@ -371,8 +374,17 @@ export class Menu {
     }
   }
 
+  /** Menu closing (spec §24): input stops at once; the options fade and drift away, then the menu is gone. */
   destroy(): void {
-    this.container.destroy();
+    this.enabled = false;
+    const c = this.container;
+    const t = uiTiming('popupClose');
+    if (!t.ms || !c.active || !c.visible) {
+      c.destroy();
+      return;
+    }
+    this.labels.forEach((l) => l.disableInteractive());
+    this.scene.tweens.add({ targets: c, alpha: 0, x: c.x + 10 * t.travel, duration: t.ms, ease: t.ease, onComplete: () => c.destroy() });
   }
 }
 

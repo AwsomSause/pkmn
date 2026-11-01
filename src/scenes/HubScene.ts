@@ -3,6 +3,7 @@
 // Run History and save data. Everything
 // here reads and changes the permanent profile only.
 
+import { fitLine } from '../ui/fitText';
 import { candyPerkProblem } from '../core/candyShop';
 import { researchLines } from '../core/trainerResearch';
 import { BANK_MAX_TIER, bankTier, exchangeProblem, nextTier, tierProblem } from '../core/bank';
@@ -11,6 +12,7 @@ import { STANDARD_CHOICE } from '../core/rules';
 import { decodeSeedCode, encodeSeedCode } from '../core/seedCode';
 import { contractBoard, contractDone, contractRewardText } from '../core/contracts';
 import Phaser from 'phaser';
+import { availableMentors, bondOf, categoryName, mentorUnlocked, MENTORS, tierName } from '../core/mentors';
 import { ATTRIBUTE_LABELS, attributeEffectText, attributeRange, attributeText, growthProgress, growthText, isMeter, readAttributes } from '../core/attributes';
 import { ACHIEVEMENT_CATEGORIES, ATTRIBUTE_KEYS, STARTER_POOL_CATEGORIES, type Achievement, type Archetype, type QuestReward, type Species, type StarterPoolCategory } from '../core/contentSchema';
 import { claimProblem, requirementParts, requirementProgress, trainerStatus, type TrainerStatus } from '../core/progress';
@@ -44,7 +46,7 @@ import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
 import { WiiCursor } from '../ui/wiiMotion';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'options' | 'save' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -63,6 +65,7 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'events', label: 'Event Hall', blurb: "This week's event, holiday events, the Contract Board, objectives and rewards (Enter)." },
   { room: 'fame', label: 'Hall of Fame', blurb: 'Champion teams, unusual wins, rare Pokémon, records and Legacy Cards (Enter).' },
   { room: 'legacy', label: 'Legacy Gallery', blurb: 'Every past Trainer: their team, Ace, rivals, final battle and ending. Relive the Moment (Enter).' },
+  { room: 'mentors', label: 'Mentors', blurb: 'Your mentors and apprentices: trust, lessons learned, graduations and the mentors still to unlock (Enter).' },
   { room: 'memories', label: 'Memories', blurb: 'Run Journal, Hall of Memories, Memory Lane, fallen Trainers, battle replays and Legacy Heirlooms (Enter).' },
   { room: 'tree', label: 'Research Tree', blurb: 'Spend Research Points on small start-of-run perks and deeper intel (Enter).' },
   { room: 'prestige', label: 'Prestige', blurb: 'Rise a rank for a title and more contacts. Nothing you own is ever deleted (Enter).' },
@@ -145,7 +148,7 @@ const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: st
   { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['options', 'save', 'back'], blurb: 'Game settings, save data, and the way back to the title screen.' },
   { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
   { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'intel', 'museum', 'seeds'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
+  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'intel', 'museum', 'seeds', 'mentors'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
   { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe', 'card'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
 ];
 
@@ -311,7 +314,7 @@ export class HubScene extends Phaser.Scene {
       const lit = paintWindow(this.add.graphics(), 0, 0, w, h, { fill: 0x3a3048, border: COLORS.accent }).setVisible(false);
       const icon = itemVisual(this, t.icon, w / 2, big ? 42 : 38, big ? 3 : 2) as Tile['icon'];
       const text = t.id === 'trainers' && ready > 0 ? `${t.label} (${ready}!)` : t.label;
-      const label = this.add.text(w / 2, h - 26, text, textStyle(big ? 28 : 24)).setOrigin(0.5, 0.5);
+      const label = fitLine(this.add.text(w / 2, h - (big ? 34 : 30), text, textStyle(big ? 28 : 24)).setOrigin(0.5, 0.5), w - 24);
       root.add([idle, lit, icon, label]);
       const zone = this.add.zone(0, 0, w, h).setOrigin(0).setInteractive({ useHandCursor: true });
       zone.on('pointerover', () => {
@@ -479,6 +482,10 @@ export class HubScene extends Phaser.Scene {
         const t = researchTotals(c, p);
         return `Met ${t.met} · Caught ${t.caught} of ${t.total}`;
       }
+      case 'mentors': {
+        const met = MENTORS.filter((m) => bondOf(p, m.id).runs > 0).length;
+        return `${availableMentors(p).length} of ${MENTORS.length} mentors open, ${met} met`;
+      }
       case 'codex': {
         const t = codexTotals(c, p);
         return `${t.found} of ${t.total} moments found`;
@@ -535,6 +542,9 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'codex':
         this.openCodex();
+        break;
+      case 'mentors':
+        this.openMentors();
         break;
       case 'wardrobe':
         this.openWardrobe();
@@ -1536,6 +1546,24 @@ export class HubScene extends Phaser.Scene {
   }
 
   /** Hyper moment codex: every story moment, found ones named with how often you saw them, the rest hidden. */
+  private openMentors(): void {
+    const { profile } = services().session;
+    const rows: PickerRow[] = MENTORS.map((m) => {
+      const open = mentorUnlocked(m, profile);
+      const bond = bondOf(profile, m.id);
+      return {
+        problem: null,
+        hint: open ? `${categoryName(m)}. ${m.personality} ${m.teaching} Strength: ${m.strength} Weakness: ${m.weakness}` : `Locked: ${m.unlockText}`,
+        draw: (scene, box, w, h) => {
+          box.add(scene.add.text(12, h / 2, open ? m.name : '???', textStyle(16, open ? COLORS.textLight : COLORS.textMuted)).setOrigin(0, 0.5));
+          const right = open ? `${tierName(bond.bestTier)} · trust ${bond.trust} · ${bond.graduated} graduated` : categoryName(m);
+          box.add(scene.add.text(w - 12, h / 2, right, textStyle(13, COLORS.textMuted)).setOrigin(1, 0.5));
+        },
+      };
+    });
+    this.openPicker({ title: 'Mentors', rows, columns: 1, rowHeight: 40, onSelect: () => undefined, onBack: () => this.closePicker() });
+  }
+
   private openCodex(): void {
     const { session } = services();
     const order = ['survival', 'bond', 'emotion', 'rivalry', 'enemy', 'evolution', 'legacy', 'flavour'];

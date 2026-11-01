@@ -139,6 +139,8 @@ export const feels = (id: string): Json => ({ kind: 'emotion', id });
 export const at = (...periods: string[]): Json => ({ kind: 'period', in: periods });
 /** The run clock: today is an uncelebrated milestone day. */
 export const milestone: Json = { kind: 'milestone' };
+/** §11/§29 Pokémon rival state: open, carried (a trainer caught it), sacrificed, or any of them. */
+export const monRival = (state: 'open' | 'carried' | 'sacrificed' | 'any'): Json => ({ kind: 'monRival', state });
 /** Sleep until the next morning (a new day begins). */
 export const rest = (): Json => ({ kind: 'rest' });
 /** Today's milestone celebration is held (pays once per milestone). */

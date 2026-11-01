@@ -9,6 +9,7 @@ import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
 import type { TotemFile } from './totem/schema';
 import type { ShadowWorldFile } from './shadowWorld/schema';
+import type { EvilFile } from './evil/schema';
 import type { ExpeditionFile } from './expedition/schema';
 import type { MinigameFile } from './minigame/schema';
 
@@ -1251,7 +1252,8 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   /** Hit by a super-effective move: heal a share of max HP (Enigma). */
   z.object({ hook: z.literal('berrySuper'), fraction: z.number().positive() }),
   /** Hit by a physical (or special) move: the attacker loses a share of its max HP (Jaboca, Rowap). */
-  z.object({ hook: z.literal('berryRetaliate'), category: z.enum(['physical', 'special']), fraction: z.number().positive() }),
+  /** Hit by this category: the attacker loses `fraction` of its HP (Jaboca, Rowap), or the holder raises `stat` (Kee, Maranga). */
+  z.object({ hook: z.literal('berryRetaliate'), category: z.enum(['physical', 'special']), fraction: z.number().positive().optional(), stat: z.enum(['def', 'spd']).optional(), stages: z.number().int().positive().default(1) }),
   /** While this terrain is up: a stat rises once, then the seed is used up (Electric, Grassy, Misty and Psychic Seed). */
   z.object({ hook: z.literal('terrainSeed'), terrain: TerrainSchema, stat: z.enum(['def', 'spd']), stages: z.number().int().positive() }),
 ]);
@@ -2366,10 +2368,22 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('rivalPath'), path: z.enum(['friend', 'rival', 'between']) }),
   /** Living Rival: a rival you beat in your last meeting (it has something to prove). */
   z.object({ kind: z.literal('rivalBeaten') }),
+  /** §11/§29: a Pokémon rival is still out there (`open`), rides with a trainer rival (`carried`), or gave itself up (`sacrificed`), or any of these (`any`). */
+  z.object({ kind: z.literal('monRival'), state: z.enum(['open', 'carried', 'sacrificed', 'any']) }),
   /** Event Director: a party member with a species tag (legendary, mythical, delta, zform...). */
   z.object({ kind: z.literal('partyTag'), tag: z.enum(SPECIES_TAGS) }),
   /** The Pokémon you started with (still in the party) has this type, species or species tag: starter-tagged events. */
   z.object({ kind: z.literal('starter'), type: TypeNameSchema.optional(), species: z.string().optional(), tag: z.enum(SPECIES_TAGS).optional() }).refine((c) => c.type !== undefined || c.species !== undefined || c.tag !== undefined, { message: 'a starter condition needs a type, species or tag' }),
+  /** Mentors (spec section 15): you train under a mentor, optionally this one / this category, with enough trust or loyalty, having learned a lesson, or at a mission state. */
+  z.object({
+    kind: z.literal('mentor'),
+    id: z.string().optional(),
+    category: z.string().optional(),
+    trustAtLeast: z.number().int().min(0).max(100).optional(),
+    loyaltyAtLeast: z.number().int().min(0).max(100).optional(),
+    lesson: z.string().optional(),
+    mission: z.enum(['none', 'active', 'done']).optional(),
+  }),
   /** A Blissful Pokémon is in the party / a Shadow Pokémon is in the party (APPROVED.md §12-14). */
   z.object({ kind: z.literal('partyBlissful') }),
   z.object({ kind: z.literal('partyShadow') }),
@@ -2407,6 +2421,25 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('roaming') }),
   /** Convoy Mode: an escort is (or is not) under your care this stage. */
   z.object({ kind: z.literal('convoy'), active: z.boolean().default(true) }),
+  /**
+   * Evil Teams (core/evil): the run's team is this one; its storyline is at this beat and the next beat is due (or at
+   * least `after` beats in); this operation is running in the region; heat at least; a defector; how the story ended
+   * (one of `ends`); at least `stopped` operations foiled or infiltrated.
+   */
+  z.object({
+    kind: z.literal('evil'),
+    team: z.string().optional(),
+    beat: z.number().int().min(0).max(6).optional(),
+    /** At least this many beats played. */
+    after: z.number().int().min(0).max(7).optional(),
+    op: z.string().optional(),
+    heat: z.number().int().min(0).optional(),
+    defector: z.boolean().optional(),
+    ends: z.array(z.enum(['none', 'defeated', 'exposed', 'allied'])).optional(),
+    stopped: z.number().int().min(0).optional(),
+  }),
+  /** Permanent choices (spec §17): a choice made earlier this run (`pick`: that answer; `made: false`: not made yet). */
+  z.object({ kind: z.literal('choice'), id: z.string().min(1), pick: z.string().optional(), made: z.boolean().default(true) }),
 ]);
 export type EventCondition = z.infer<typeof EventConditionSchema>;
 
@@ -2515,6 +2548,15 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('hunt'), finish: z.boolean().default(false) }),
   /** An NPC trainer joins your roster for good (unlocked when the run ends; the run records it in `itemCounters["recruit:<id>"]`). */
   z.object({ kind: z.literal('recruit'), trainer: z.string().min(1) }),
+  /** Mentors (spec section 15): moves mentor trust, loyalty or the rivalry with the fellow apprentice; `mission: start` takes the mentor's mission, `disagree` notes a disagreement. */
+  z.object({
+    kind: z.literal('mentor'),
+    trust: z.number().int().default(0),
+    loyalty: z.number().int().default(0),
+    rivalry: z.number().int().default(0),
+    mission: z.enum(['start']).optional(),
+    disagree: z.boolean().default(false),
+  }),
   z.object({ kind: z.literal('count'), counter: z.enum(['eventClues', 'eventBossesWon', 'eventFinalesWon']), amount: z.number().int().positive().default(1) }),
   /** Exploration: the map shows this many more columns ahead for the rest of the stage (fog of war). */
   z.object({ kind: z.literal('scout'), columns: z.number().int().min(1).max(20) }),
@@ -2528,6 +2570,21 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('convoy'), name: z.string().min(1), hp: z.number().int().min(1).max(9).default(4) }),
   /** Convoy Mode: the escort recovers this much health. */
   z.object({ kind: z.literal('convoyHeal'), amount: z.number().int().min(1).max(9) }),
+  /**
+   * Evil Teams (core/evil): the storyline moves on a beat; heat rises (or cools); the region's operation ends;
+   * a recurring villain speaks (their line follows your past meetings); a member defects; the team's story ends.
+   */
+  z.object({
+    kind: z.literal('evil'),
+    beat: z.boolean().default(false),
+    heat: z.number().int().default(0),
+    op: z.enum(['foiled', 'infiltrated', 'succeeded', 'joined']).optional(),
+    talk: z.enum(['grunt', 'specialist', 'executive', 'leader']).optional(),
+    defect: z.boolean().default(false),
+    end: z.enum(['defeated', 'exposed', 'allied']).optional(),
+  }),
+  /** Permanent choices (spec §17): records a decision in the run's choice history (the first answer to an id stands). */
+  z.object({ kind: z.literal('choice'), id: z.string().regex(/^[a-z][a-z0-9-]*$/), pick: z.string().min(1), text: z.string().min(1), weight: z.number().int().min(1).max(3).default(1) }),
 ]);
 export type EventEffect = z.infer<typeof EventEffectSchema>;
 
@@ -2561,6 +2618,8 @@ export const EventBattleSchema = z.discriminatedUnion('kind', [
     rival: z.boolean().default(false),
     /** A species that fights beside you as a temporary ally (a double battle; needs two or more foes). */
     ally: z.string().optional(),
+    /** Evil Teams: a member of the run's team at this rank (their Pokémon, name and battle rule; core/evil). */
+    evil: z.enum(['grunt', 'specialist', 'executive', 'leader']).optional(),
     name: z.string(),
     size: z.number().int().min(1).max(6).default(2),
     /** How many of the trainer's Pokémon (the first ones) are Shadow Pokémon a Snag Ball can take. */
@@ -2739,6 +2798,8 @@ export interface Content {
   /** Totem Pokémon (totems.json, core/totem). */
   totems: TotemFile;
   shadowWorld: ShadowWorldFile;
+  /** Evil Teams (evilTeams.json, core/evil). */
+  evilTeams: EvilFile;
   /** Mega-Expeditions (expeditions.json, core/expedition). */
   expeditions: ExpeditionFile;
   /** Legendary world events (legendaryEvents.json, core/legendary): their events are merged into `expeditions`. */

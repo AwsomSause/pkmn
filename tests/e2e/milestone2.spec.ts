@@ -192,7 +192,7 @@ test('switch Pokémon from the party menu, and give a reward to a chosen Pokémo
   await page.keyboard.press('Enter'); // Protein → asks which Pokémon
   await page.waitForTimeout(200);
   await page.screenshot({ path: 'test-results/m2-reward-target.png' });
-  await page.keyboard.press('ArrowRight');
+  await page.keyboard.press('ArrowDown'); // the Pokémon screen lists the party top to bottom: slot 2
   await page.keyboard.press('Enter');
   await expect.poll(async () => (await run(page)).log.rewardsTaken.length, { timeout: 10_000 }).toBe(1);
   const after = await run(page);
