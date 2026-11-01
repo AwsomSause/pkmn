@@ -8,6 +8,7 @@
 
 import { setCalendar } from '../core/clock';
 import { giveHeld, takeOffHeld } from '../core/bag';
+import { campAction, freshCampProfile, recordFirstUse, wearLauncher, type CampArgs } from '../core/camp';
 import { careAction, type CareAction } from '../core/care';
 import { interactionLog } from '../core/presentation/uiPrefs';
 import type { Achievement, Content } from '../core/contentSchema';
@@ -530,8 +531,35 @@ export class GameSession {
   useItem(itemId: string, partyIndex: number, evolveTo?: string): string {
     const result = Run.useItemOutsideBattle(this.content, this.requireRun(), itemId, partyIndex, evolveTo);
     this.run = result.run;
+    // The first use of an item narrates a journal line (W3, I223); the journal also keeps a run-spanning list in the profile.
+    const profile = structuredClone(this.profile);
+    const pc = (profile.camp ??= freshCampProfile());
+    const mon = this.run.party[partyIndex];
+    const line = recordFirstUse(this.content, this.run, pc, itemId, mon ? mon.care?.nickname || (this.content.species.get(mon.speciesId)?.name ?? 'Your Pokémon') : 'Your Pokémon');
     this.persistRun();
-    return result.message;
+    if (line) { this.profile = profile; this.checkSave(this.saves.saveProfile(this.profile)); }
+    return line ? `${result.message} ${line}` : result.message;
+  }
+
+  /** A camp action (gadgets, kitchen, workshop, market, finds; see core/camp). Returns the message and whether it worked. */
+  camp(id: string, args: CampArgs = {}): { message: string; ok: boolean } {
+    const result = campAction(this.content, this.requireRun(), this.profile.camp, id, args);
+    if (!result.ok) return { message: result.message, ok: false };
+    this.run = result.run;
+    const profile = structuredClone(this.profile);
+    profile.camp = result.pc;
+    this.profile = profile;
+    this.checkSave(this.saves.saveProfile(this.profile));
+    this.persistRun();
+    return { message: result.message, ok: true };
+  }
+
+  /** Spends one Ball Launcher use for a skill throw. */
+  useLauncher(): void {
+    const run = structuredClone(this.requireRun());
+    wearLauncher(run);
+    this.run = run;
+    this.persistRun();
   }
 
   cashIn(itemId: string): string {

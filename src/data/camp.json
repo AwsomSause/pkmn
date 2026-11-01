@@ -1,0 +1,1496 @@
+{
+  "note": "Camp, gadgets and crafting (W3). Every number for core/camp lives here. Handlers are in core/camp/index.ts (one per action id); a test checks every action here has a handler.",
+  "gadgets": [
+    {
+      "id": "compass",
+      "name": "Compass",
+      "blurb": "Points to the nearest rare stop (raid, Totem, roamer, hidden event, expedition).",
+      "uses": 8,
+      "repair": {
+        "scrap": 2
+      },
+      "bench": {
+        "scrap": 3,
+        "aether": 1
+      }
+    },
+    {
+      "id": "binoculars",
+      "name": "Binoculars",
+      "blurb": "Zoom the map one column ahead and spot the stops there.",
+      "uses": 8,
+      "repair": {
+        "scrap": 2
+      },
+      "bench": {
+        "scrap": 3,
+        "fiber": 1
+      }
+    },
+    {
+      "id": "lantern",
+      "name": "Lantern",
+      "blurb": "Reveals hidden stops ahead. Burns 1 oil per use.",
+      "uses": 10,
+      "repair": {
+        "scrap": 1,
+        "ember": 1
+      },
+      "bench": {
+        "scrap": 2,
+        "ember": 2
+      }
+    },
+    {
+      "id": "dowsing-rod",
+      "name": "Dowsing Rod",
+      "blurb": "Vibrates near buried treasure; dig where it hums.",
+      "uses": 6,
+      "repair": {
+        "fiber": 2
+      },
+      "bench": {
+        "fiber": 3,
+        "aether": 1
+      }
+    },
+    {
+      "id": "telescope",
+      "name": "Telescope",
+      "blurb": "Stargaze to read the weather forecast.",
+      "uses": 6,
+      "repair": {
+        "scrap": 2
+      },
+      "bench": {
+        "scrap": 3,
+        "tide": 2
+      },
+      "page": true
+    },
+    {
+      "id": "camera",
+      "name": "Camera",
+      "blurb": "Photograph your Pokémon for the photo album.",
+      "uses": 12,
+      "repair": {
+        "scrap": 2,
+        "aether": 1
+      },
+      "bench": {
+        "scrap": 4,
+        "aether": 2
+      },
+      "page": true
+    },
+    {
+      "id": "radio",
+      "name": "Radio",
+      "blurb": "Tune a station: each gives a short buff.",
+      "uses": 8,
+      "repair": {
+        "scrap": 2
+      },
+      "bench": {
+        "scrap": 3,
+        "ember": 1,
+        "tide": 1
+      },
+      "page": true
+    },
+    {
+      "id": "instrument",
+      "name": "Flute",
+      "blurb": "Play a tune to calm or provoke wild Pokémon.",
+      "uses": 8,
+      "repair": {
+        "fiber": 2
+      },
+      "bench": {
+        "fiber": 3,
+        "tide": 1
+      }
+    },
+    {
+      "id": "net",
+      "name": "Bug Net",
+      "blurb": "Gently sweep up bug silk without hurting anyone.",
+      "uses": 6,
+      "repair": {
+        "fiber": 1
+      },
+      "bench": {
+        "fiber": 2,
+        "scrap": 1
+      }
+    },
+    {
+      "id": "tent",
+      "name": "Tent",
+      "blurb": "Pitch camp with a timing skill; better pitch, better rest.",
+      "uses": 6,
+      "repair": {
+        "fiber": 2
+      },
+      "bench": {
+        "fiber": 4,
+        "scrap": 2
+      }
+    },
+    {
+      "id": "fireworks",
+      "name": "Fireworks",
+      "blurb": "Light them at camp to lift the whole team's morale. One use.",
+      "uses": 1,
+      "repair": {},
+      "bench": {
+        "ember": 2
+      }
+    },
+    {
+      "id": "glow-stick",
+      "name": "Glow Stick",
+      "blurb": "Wave signals to allies in dark caves; also shows hidden stops. One use.",
+      "uses": 1,
+      "repair": {},
+      "bench": {
+        "tide": 1,
+        "fiber": 1
+      }
+    },
+    {
+      "id": "alarm-tag",
+      "name": "Alarm Tag",
+      "blurb": "Stops thieves at the stall and the vending machine.",
+      "uses": 4,
+      "repair": {
+        "scrap": 1
+      },
+      "bench": {
+        "scrap": 2,
+        "aether": 1
+      }
+    },
+    {
+      "id": "prop",
+      "name": "Prop Item",
+      "blurb": "A convincing fake. Bluff a stall customer for a better price.",
+      "uses": 3,
+      "repair": {
+        "fiber": 1
+      },
+      "bench": {
+        "fiber": 2,
+        "scrap": 1
+      }
+    },
+    {
+      "id": "lucky-charm",
+      "name": "Lucky Charm",
+      "blurb": "Reroll one slot in the camp market each stop.",
+      "uses": 5,
+      "repair": {
+        "aether": 1
+      },
+      "bench": {
+        "aether": 2,
+        "scrap": 2
+      },
+      "page": true
+    },
+    {
+      "id": "mirror",
+      "name": "Cursed Mirror",
+      "blurb": "Shows a Pokémon's hidden trait. Costs 1 luck.",
+      "uses": 3,
+      "repair": {},
+      "bench": {
+        "aether": 3
+      },
+      "page": true
+    },
+    {
+      "id": "label-printer",
+      "name": "Label Printer",
+      "blurb": "Rename items for notes. Labels last the whole run.",
+      "uses": 99,
+      "repair": {},
+      "bench": {
+        "scrap": 2
+      }
+    },
+    {
+      "id": "launcher",
+      "name": "Ball Launcher",
+      "blurb": "Throwing a ball becomes a skill shot: a perfect throw raises the catch rate.",
+      "uses": 12,
+      "repair": {
+        "scrap": 2
+      },
+      "bench": {
+        "scrap": 4,
+        "ember": 1
+      }
+    }
+  ],
+  "limits": {
+    "stopPerAction": 1
+  },
+  "actions": [
+    {
+      "id": "compass",
+      "group": "gadgets",
+      "name": "Compass",
+      "desc": "Find the nearest rare stop.",
+      "gadget": "compass",
+      "limit": "stop",
+      "args": "none"
+    },
+    {
+      "id": "binoculars",
+      "group": "gadgets",
+      "name": "Binoculars",
+      "desc": "Zoom the map ahead and spot the stops.",
+      "gadget": "binoculars",
+      "limit": "stop",
+      "args": "none"
+    },
+    {
+      "id": "lantern",
+      "group": "gadgets",
+      "name": "Lantern",
+      "desc": "Reveal hidden stops ahead (1 oil).",
+      "gadget": "lantern",
+      "limit": "stop",
+      "args": "none"
+    },
+    {
+      "id": "dowse",
+      "group": "gadgets",
+      "name": "Dowsing Rod",
+      "desc": "Dig where the rod hums.",
+      "gadget": "dowsing-rod",
+      "limit": "stop",
+      "args": "none"
+    },
+    {
+      "id": "telescope",
+      "group": "gadgets",
+      "name": "Telescope",
+      "desc": "Read the forecast in the stars.",
+      "gadget": "telescope",
+      "limit": "stop",
+      "args": "none"
+    },
+    {
+      "id": "photo",
+      "group": "gadgets",
+      "name": "Camera",
+      "desc": "Photograph a party Pokémon.",
+      "gadget": "camera",
+      "limit": "stop",
+      "args": "party"
+    },
+    {
+      "id": "radio",
+      "group": "gadgets",
+      "name": "Radio",
+      "desc": "Tune a station for a buff.",
+      "gadget": "radio",
+      "limit": "stop",
+      "args": "choice",
+      "choices": [
+        "news",
+        "rock",
+        "lullaby",
+        "quiz"
+      ]
+    },
+    {
+      "id": "flute",
+      "group": "gadgets",
+      "name": "Flute",
+      "desc": "Calm or provoke the wild.",
+      "gadget": "instrument",
+      "limit": "stop",
+      "args": "choice",
+      "choices": [
+        "calm",
+        "provoke"
+      ]
+    },
+    {
+      "id": "net",
+      "group": "gadgets",
+      "name": "Bug Net",
+      "desc": "Sweep up bug silk.",
+      "gadget": "net",
+      "limit": "stop",
+      "args": "none"
+    },
+    {
+      "id": "tent",
+      "group": "gadgets",
+      "name": "Pitch the Tent",
+      "desc": "A timing skill sets how well the team rests.",
+      "gadget": "tent",
+      "limit": "stage",
+      "args": "grade"
+    },
+    {
+      "id": "fireworks",
+      "group": "gadgets",
+      "name": "Fireworks",
+      "desc": "Team morale up.",
+      "gadget": "fireworks",
+      "limit": "stop",
+      "args": "none"
+    },
+    {
+      "id": "glow",
+      "group": "gadgets",
+      "name": "Glow Stick",
+      "desc": "Signal your allies.",
+      "gadget": "glow-stick",
+      "limit": "stop",
+      "args": "none"
+    },
+    {
+      "id": "mirror",
+      "group": "gadgets",
+      "name": "Cursed Mirror",
+      "desc": "See a Pokémon's hidden trait (-1 luck).",
+      "gadget": "mirror",
+      "limit": "none",
+      "args": "party"
+    },
+    {
+      "id": "launcher",
+      "group": "gadgets",
+      "name": "Ball Launcher",
+      "desc": "Switch skill throws on or off.",
+      "gadget": "launcher",
+      "limit": "none",
+      "args": "none"
+    },
+    {
+      "id": "pot",
+      "group": "kitchen",
+      "name": "Cooking Pot",
+      "desc": "Cook up to three berries into a team-wide meal.",
+      "limit": "stop",
+      "args": "berries"
+    },
+    {
+      "id": "combine",
+      "group": "kitchen",
+      "name": "Combine",
+      "desc": "Mix two things. Try any pair; recipes you discover go in the cookbook.",
+      "limit": "none",
+      "args": "pair"
+    },
+    {
+      "id": "mix",
+      "group": "kitchen",
+      "name": "Mix Potions",
+      "desc": "Mix two potions and guess the ratio. A bad mix bubbles harmlessly.",
+      "limit": "stop",
+      "args": "mix"
+    },
+    {
+      "id": "sniff",
+      "group": "kitchen",
+      "name": "Sniff Test",
+      "desc": "Sniff three mystery berries and pick one. A wrong pick poisons slightly.",
+      "limit": "stage",
+      "args": "choice",
+      "choices": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "id": "page",
+      "group": "kitchen",
+      "name": "Read a Recipe Page",
+      "desc": "Read a page you found to unlock a recipe.",
+      "limit": "none",
+      "args": "none"
+    },
+    {
+      "id": "bench",
+      "group": "workshop",
+      "name": "Bench",
+      "desc": "Craft a gadget from materials.",
+      "limit": "none",
+      "args": "choice"
+    },
+    {
+      "id": "forge",
+      "group": "workshop",
+      "name": "Forge",
+      "desc": "Repair a worn gadget.",
+      "limit": "none",
+      "args": "choice"
+    },
+    {
+      "id": "recycle",
+      "group": "workshop",
+      "name": "Recycle",
+      "desc": "Turn a Bag item into parts.",
+      "limit": "none",
+      "args": "item"
+    },
+    {
+      "id": "fuse",
+      "group": "workshop",
+      "name": "TM Fusion",
+      "desc": "A Plate or Memory plus a TM stock makes a TM of the Plate's type.",
+      "limit": "none",
+      "args": "choice"
+    },
+    {
+      "id": "seal",
+      "group": "workshop",
+      "name": "Ball Seal",
+      "desc": "Stick a seal on your balls for the next catches.",
+      "limit": "none",
+      "args": "choice",
+      "choices": [
+        "star",
+        "heart",
+        "leaf",
+        "bolt"
+      ]
+    },
+    {
+      "id": "label",
+      "group": "workshop",
+      "name": "Label Printer",
+      "desc": "Name an item.",
+      "gadget": "label-printer",
+      "limit": "none",
+      "args": "label"
+    },
+    {
+      "id": "tidy",
+      "group": "workshop",
+      "name": "Tidy the Bag",
+      "desc": "Sort the Bag by type, rarity, or recently used.",
+      "limit": "none",
+      "args": "choice",
+      "choices": [
+        "type",
+        "rarity",
+        "recent",
+        "name"
+      ]
+    },
+    {
+      "id": "hat",
+      "group": "workshop",
+      "name": "Hat",
+      "desc": "Tip your hat: a hat changes how customers treat you.",
+      "limit": "none",
+      "args": "choice",
+      "choices": [
+        "none",
+        "cap",
+        "top",
+        "crown"
+      ]
+    },
+    {
+      "id": "stall",
+      "group": "market",
+      "name": "Set Up a Stall",
+      "desc": "Show an item in the window; a customer makes an offer. Haggle, bluff or take it.",
+      "limit": "stop",
+      "args": "stall"
+    },
+    {
+      "id": "market",
+      "group": "market",
+      "name": "Camp Market",
+      "desc": "Rotating limited stock: mystery box, risky goods, token goods.",
+      "limit": "none",
+      "args": "choice"
+    },
+    {
+      "id": "shelf",
+      "group": "market",
+      "name": "TM Shelf",
+      "desc": "Preview and teach the TMs you keep.",
+      "limit": "none",
+      "args": "shelf"
+    },
+    {
+      "id": "shake",
+      "group": "camp",
+      "name": "Shake the Bag",
+      "desc": "Hidden pockets might hold something.",
+      "limit": "stage",
+      "args": "none"
+    },
+    {
+      "id": "well",
+      "group": "camp",
+      "name": "Wishing Well",
+      "desc": "Toss a coin and speak a wish.",
+      "limit": "stage",
+      "args": "choice",
+      "choices": [
+        "wealth",
+        "health",
+        "luck",
+        "friends"
+      ]
+    },
+    {
+      "id": "vending",
+      "group": "camp",
+      "name": "Vending Machine",
+      "desc": "Shake it for a free item. It might jam.",
+      "limit": "stage",
+      "args": "none"
+    },
+    {
+      "id": "bottle",
+      "group": "camp",
+      "name": "Bottle Message",
+      "desc": "Open a message in a bottle and reply.",
+      "limit": "none",
+      "args": "choice",
+      "choices": [
+        "kind",
+        "funny",
+        "ignore"
+      ]
+    },
+    {
+      "id": "scraps",
+      "group": "camp",
+      "name": "Assemble Map Scraps",
+      "desc": "Four scraps make a treasure map.",
+      "limit": "none",
+      "args": "none"
+    },
+    {
+      "id": "chest",
+      "group": "camp",
+      "name": "Locked Chest",
+      "desc": "Open it with a key, or pick the lock (timing skill).",
+      "limit": "none",
+      "args": "grade"
+    },
+    {
+      "id": "capsule",
+      "group": "camp",
+      "name": "Time Capsule",
+      "desc": "Bury an item to dig up in a later run, or dig one up.",
+      "limit": "none",
+      "args": "item"
+    },
+    {
+      "id": "parcel",
+      "group": "camp",
+      "name": "Parcels and Letters",
+      "desc": "Wrap a gift, take a parcel, or deliver one unopened.",
+      "limit": "none",
+      "args": "choice"
+    },
+    {
+      "id": "distract",
+      "group": "camp",
+      "name": "Throw a Distraction",
+      "desc": "Throw an item to distract the next wild Pokémon.",
+      "limit": "none",
+      "args": "item"
+    },
+    {
+      "id": "altar",
+      "group": "camp",
+      "name": "Relic Altar",
+      "desc": "Trade two relics for one of a higher tier.",
+      "limit": "stage",
+      "args": "choice"
+    },
+    {
+      "id": "purify",
+      "group": "camp",
+      "name": "Cleanse a Curse",
+      "desc": "Lift a cursed relic's curse (needs the Shrine, or a camp rite).",
+      "limit": "none",
+      "args": "choice"
+    },
+    {
+      "id": "sniffItem",
+      "group": "camp",
+      "name": "Item Sniff",
+      "desc": "Hold an item up: your lead sniffs and hints at its effect.",
+      "limit": "none",
+      "args": "item"
+    }
+  ],
+  "combos": [
+    {
+      "id": "tea",
+      "name": "Berry Tea",
+      "a": "any:berry",
+      "b": "mat:fiber",
+      "gives": {
+        "kind": "brew",
+        "heal": 0.25,
+        "mood": 1,
+        "text": "A warm tea. The team feels better."
+      }
+    },
+    {
+      "id": "oil",
+      "name": "Lantern Oil",
+      "a": "mat:ember",
+      "b": "mat:fiber",
+      "gives": {
+        "kind": "stuff",
+        "stuff": "oil",
+        "amount": 3
+      }
+    },
+    {
+      "id": "key",
+      "name": "Skeleton Key",
+      "a": "mat:scrap",
+      "b": "mat:scrap",
+      "gives": {
+        "kind": "stuff",
+        "stuff": "key",
+        "amount": 1
+      }
+    },
+    {
+      "id": "potion",
+      "name": "Herbal Potion",
+      "a": "mat:fiber",
+      "b": "mat:tide",
+      "gives": {
+        "kind": "item",
+        "item": "potion",
+        "amount": 1
+      }
+    },
+    {
+      "id": "super",
+      "name": "Better Potion",
+      "a": "bag:potion",
+      "b": "bag:potion",
+      "gives": {
+        "kind": "item",
+        "item": "super-potion",
+        "amount": 1
+      }
+    },
+    {
+      "id": "hyper",
+      "name": "Best Potion",
+      "a": "bag:super-potion",
+      "b": "bag:super-potion",
+      "gives": {
+        "kind": "item",
+        "item": "hyper-potion",
+        "amount": 1
+      },
+      "locked": true
+    },
+    {
+      "id": "great",
+      "name": "Tuned Ball",
+      "a": "bag:poke-ball",
+      "b": "mat:scrap",
+      "gives": {
+        "kind": "item",
+        "item": "great-ball",
+        "amount": 1
+      }
+    },
+    {
+      "id": "ultra",
+      "name": "Tuned Great Ball",
+      "a": "bag:great-ball",
+      "b": "mat:aether",
+      "gives": {
+        "kind": "item",
+        "item": "ultra-ball",
+        "amount": 1
+      },
+      "locked": true
+    },
+    {
+      "id": "firework",
+      "name": "Fireworks",
+      "a": "mat:ember",
+      "b": "mat:ember",
+      "gives": {
+        "kind": "gadget",
+        "gadget": "fireworks"
+      }
+    },
+    {
+      "id": "glowstick",
+      "name": "Glow Stick",
+      "a": "mat:tide",
+      "b": "mat:fiber",
+      "gives": {
+        "kind": "gadget",
+        "gadget": "glow-stick"
+      }
+    },
+    {
+      "id": "cure",
+      "name": "Soothing Salve",
+      "a": "bag:potion",
+      "b": "mat:fiber",
+      "gives": {
+        "kind": "item",
+        "item": "full-heal",
+        "amount": 1
+      },
+      "locked": true
+    },
+    {
+      "id": "silk",
+      "name": "Bug Silk Rope",
+      "a": "mat:fiber",
+      "b": "mat:fiber",
+      "gives": {
+        "kind": "stuff",
+        "stuff": "rope",
+        "amount": 1
+      }
+    },
+    {
+      "id": "star",
+      "name": "Star Dust",
+      "a": "mat:aether",
+      "b": "mat:aether",
+      "gives": {
+        "kind": "mat",
+        "mat": "star-core",
+        "amount": 1
+      },
+      "locked": true
+    }
+  ],
+  "pot": {
+    "battles": 3,
+    "perBerry": 0.02,
+    "maxBerries": 3,
+    "mood": 1,
+    "meals": {
+      "spicy": {
+        "name": "Spicy Stew",
+        "effect": {
+          "kind": "damageMultiplier",
+          "value": 1
+        }
+      },
+      "dry": {
+        "name": "Dry Roast",
+        "effect": {
+          "kind": "damageTakenMultiplier",
+          "value": 1
+        }
+      },
+      "sweet": {
+        "name": "Sweet Pudding",
+        "effect": {
+          "kind": "xpMultiplier",
+          "value": 1
+        }
+      },
+      "bitter": {
+        "name": "Bitter Soup",
+        "effect": {
+          "kind": "healingMultiplier",
+          "value": 1
+        }
+      },
+      "sour": {
+        "name": "Sour Salad",
+        "effect": {
+          "kind": "moneyMultiplier",
+          "value": 1
+        }
+      }
+    },
+    "note": "Meal strength = 1 +/- perBerry x berries, with more of the same flavor counting double. Damage taken goes down, not up."
+  },
+  "radio": {
+    "battles": 3,
+    "news": {
+      "effects": [
+        {
+          "kind": "xpMultiplier",
+          "value": 1.1
+        }
+      ]
+    },
+    "rock": {
+      "effects": [
+        {
+          "kind": "damageMultiplier",
+          "value": 1.08
+        }
+      ]
+    },
+    "lullaby": {
+      "effects": [
+        {
+          "kind": "damageTakenMultiplier",
+          "value": 0.92
+        }
+      ]
+    },
+    "quiz": {
+      "effects": [
+        {
+          "kind": "moneyMultiplier",
+          "value": 1.2
+        }
+      ]
+    }
+  },
+  "flute": {
+    "calm": {
+      "effects": [
+        {
+          "kind": "captureMultiplier",
+          "value": 1.2
+        }
+      ],
+      "battles": 2
+    },
+    "provoke": {
+      "effects": [
+        {
+          "kind": "encounterWeightMultiplier",
+          "group": "rare",
+          "value": 2
+        }
+      ],
+      "battles": 2
+    }
+  },
+  "tent": {
+    "heal": {
+      "miss": 0.25,
+      "ok": 0.5,
+      "good": 0.75,
+      "perfect": 1
+    },
+    "mood": {
+      "miss": 0,
+      "ok": 0,
+      "good": 1,
+      "perfect": 2
+    },
+    "fatigue": {
+      "miss": 1,
+      "ok": 2,
+      "good": 3,
+      "perfect": 99
+    }
+  },
+  "fireworks": {
+    "mood": 1,
+    "friendship": 3
+  },
+  "glow": {
+    "friendship": 2
+  },
+  "dowse": {
+    "chance": 0.6,
+    "money": [
+      60,
+      180
+    ],
+    "materials": 2,
+    "chestChance": 0.2
+  },
+  "photo": {
+    "firstMoney": 40,
+    "friendship": 2,
+    "mood": 1
+  },
+  "net": {
+    "silk": 2,
+    "friendshipBug": 2
+  },
+  "mirror": {
+    "luck": -1
+  },
+  "shake": {
+    "chance": 0.7,
+    "money": [
+      20,
+      70
+    ]
+  },
+  "well": {
+    "coin": 10,
+    "wealth": [
+      30,
+      120
+    ],
+    "health": 0.2,
+    "friends": 3,
+    "luckGood": 1,
+    "luckBad": -1,
+    "chance": 0.55
+  },
+  "vending": {
+    "price": 0,
+    "jam": 0.25,
+    "thief": 0.15,
+    "stolen": 40,
+    "table": [
+      {
+        "item": "potion",
+        "weight": 5
+      },
+      {
+        "item": "poke-ball",
+        "weight": 4
+      },
+      {
+        "item": "super-potion",
+        "weight": 2
+      },
+      {
+        "item": "great-ball",
+        "weight": 2
+      },
+      {
+        "item": "full-heal",
+        "weight": 1
+      }
+    ]
+  },
+  "bottle": {
+    "texts": [
+      "Fish are biting off the east shore!",
+      "To whoever finds this: be kind to your team.",
+      "I buried something under the third tree.",
+      "The champion once cried at a recipe.",
+      "Never trust a vending machine on Mondays."
+    ],
+    "kind": {
+      "money": [
+        30,
+        90
+      ]
+    },
+    "funny": {
+      "friendship": 2
+    }
+  },
+  "scraps": {
+    "pieces": 4,
+    "money": [
+      120,
+      300
+    ],
+    "materials": 3,
+    "item": "ultra-ball"
+  },
+  "chest": {
+    "money": [
+      80,
+      220
+    ],
+    "materials": 3,
+    "item": "hyper-potion",
+    "lockpick": {
+      "miss": 0.2,
+      "ok": 0.5,
+      "good": 0.8,
+      "perfect": 1
+    }
+  },
+  "capsule": {
+    "note": "Bury one item; it comes back in your next run."
+  },
+  "stall": {
+    "base": 0.8,
+    "haggle": 0.25,
+    "bluffBonus": 0.4,
+    "bluffFail": 0.2,
+    "hat": {
+      "none": 0,
+      "cap": 0.05,
+      "top": 0.1,
+      "crown": 0.15
+    },
+    "theft": 0.12,
+    "customers": [
+      "a hiker",
+      "a picnicker",
+      "a collector",
+      "a lost tourist"
+    ]
+  },
+  "mixPotions": {
+    "ratios": [
+      "1:1",
+      "1:2",
+      "2:1"
+    ],
+    "success": {
+      "item": "hyper-potion",
+      "amount": 1
+    },
+    "fail": "bubbles and pops harmlessly"
+  },
+  "sniff": {
+    "poison": 0.08,
+    "reward": {
+      "money": [
+        30,
+        80
+      ]
+    }
+  },
+  "recycle": {
+    "perCost": 0.5,
+    "minScrap": 1
+  },
+  "fuse": {
+    "sameTypeCopies": 2,
+    "differentCopies": 1,
+    "plates": {
+      "fist-plate": "fighting",
+      "sky-plate": "flying",
+      "toxic-plate": "poison",
+      "earth-plate": "ground",
+      "stone-plate": "rock",
+      "insect-plate": "bug",
+      "spooky-plate": "ghost",
+      "iron-plate": "steel",
+      "flame-plate": "fire",
+      "splash-plate": "water",
+      "meadow-plate": "grass",
+      "zap-plate": "electric",
+      "mind-plate": "psychic",
+      "icicle-plate": "ice",
+      "draco-plate": "dragon",
+      "dread-plate": "dark",
+      "pixie-plate": "fairy",
+      "fighting-memory": "fighting",
+      "flying-memory": "flying",
+      "poison-memory": "poison",
+      "ground-memory": "ground",
+      "rock-memory": "rock",
+      "bug-memory": "bug",
+      "ghost-memory": "ghost",
+      "steel-memory": "steel",
+      "fire-memory": "fire",
+      "water-memory": "water",
+      "grass-memory": "grass",
+      "electric-memory": "electric",
+      "psychic-memory": "psychic",
+      "ice-memory": "ice",
+      "dragon-memory": "dragon",
+      "dark-memory": "dark",
+      "fairy-memory": "fairy"
+    }
+  },
+  "tmShelf": {
+    "choices": 3
+  },
+  "seals": {
+    "star": {
+      "battles": 3,
+      "effects": [
+        {
+          "kind": "captureMultiplier",
+          "value": 1.15
+        }
+      ]
+    },
+    "heart": {
+      "battles": 3,
+      "effects": [
+        {
+          "kind": "friendshipMultiplier",
+          "value": 1.25
+        }
+      ]
+    },
+    "leaf": {
+      "battles": 3,
+      "effects": [
+        {
+          "kind": "healingMultiplier",
+          "value": 1.15
+        }
+      ]
+    },
+    "bolt": {
+      "battles": 3,
+      "effects": [
+        {
+          "kind": "xpMultiplier",
+          "value": 1.08
+        }
+      ]
+    },
+    "cost": {
+      "fiber": 1
+    }
+  },
+  "distract": {
+    "effects": [
+      {
+        "kind": "damageTakenMultiplier",
+        "value": 0.88
+      }
+    ],
+    "battles": 1
+  },
+  "launcher": {
+    "perfect": 1.5,
+    "good": 1.25,
+    "ok": 1,
+    "miss": 0.75
+  },
+  "market": {
+    "slots": 4,
+    "lucky": 1,
+    "tokenName": "Camp Token",
+    "tokensPerAction": 1,
+    "goods": [
+      {
+        "id": "mystery",
+        "name": "Mystery Box",
+        "price": 200,
+        "blurb": "Odds are listed in the box.",
+        "kind": "mystery",
+        "limit": 3
+      },
+      {
+        "id": "recipe-page",
+        "name": "Recipe Page",
+        "price": 150,
+        "blurb": "Unlocks a locked recipe.",
+        "kind": "stuff",
+        "stuff": "recipe-page",
+        "limit": 2
+      },
+      {
+        "id": "key",
+        "name": "Skeleton Key",
+        "price": 90,
+        "blurb": "Opens a locked chest.",
+        "kind": "stuff",
+        "stuff": "key",
+        "limit": 3
+      },
+      {
+        "id": "oil",
+        "name": "Lantern Oil",
+        "price": 60,
+        "blurb": "Three measures of oil.",
+        "kind": "stuff",
+        "stuff": "oil",
+        "amount": 3,
+        "limit": 4
+      },
+      {
+        "id": "scrap-piece",
+        "name": "Map Scrap",
+        "price": 110,
+        "blurb": "One piece of a treasure map.",
+        "kind": "stuff",
+        "stuff": "scrap-piece",
+        "limit": 2
+      },
+      {
+        "id": "bottle",
+        "name": "Bottle",
+        "price": 40,
+        "blurb": "A sealed bottle with a message.",
+        "kind": "stuff",
+        "stuff": "bottle",
+        "limit": 3
+      },
+      {
+        "id": "cursed-ring",
+        "name": "Back-alley Relic",
+        "price": 120,
+        "blurb": "Risky: a strong relic with a curse.",
+        "kind": "relic",
+        "curse": true,
+        "limit": 2,
+        "risky": true
+      },
+      {
+        "id": "sealed-letter",
+        "name": "Sealed Letter",
+        "price": 30,
+        "blurb": "Deliver it unopened for moral points.",
+        "kind": "stuff",
+        "stuff": "letter",
+        "limit": 3
+      },
+      {
+        "id": "tm-random",
+        "name": "TM Crate",
+        "price": 180,
+        "blurb": "A TM of a random type for the shelf.",
+        "kind": "stuff",
+        "stuff": "tm",
+        "limit": 3
+      }
+    ],
+    "tokenGoods": [
+      {
+        "id": "token-core",
+        "name": "Star Core",
+        "tokens": 6,
+        "blurb": "A rare material.",
+        "kind": "mat",
+        "mat": "star-core",
+        "amount": 1,
+        "limit": 2
+      },
+      {
+        "id": "token-page",
+        "name": "Recipe Page",
+        "tokens": 3,
+        "blurb": "Unlocks a locked recipe.",
+        "kind": "stuff",
+        "stuff": "recipe-page",
+        "limit": 3
+      },
+      {
+        "id": "token-relic",
+        "name": "Clean Relic",
+        "tokens": 8,
+        "blurb": "A relic with no curse.",
+        "kind": "relic",
+        "curse": false,
+        "limit": 1
+      }
+    ],
+    "mysteryOdds": [
+      {
+        "label": "Scrap and fiber",
+        "weight": 40,
+        "kind": "mats"
+      },
+      {
+        "label": "Potion",
+        "weight": 25,
+        "kind": "item",
+        "item": "potion"
+      },
+      {
+        "label": "Great Ball x2",
+        "weight": 15,
+        "kind": "item",
+        "item": "great-ball",
+        "amount": 2
+      },
+      {
+        "label": "Locked chest",
+        "weight": 10,
+        "kind": "stuff",
+        "stuff": "chest"
+      },
+      {
+        "label": "Star Core",
+        "weight": 5,
+        "kind": "mat",
+        "mat": "star-core"
+      },
+      {
+        "label": "Relic",
+        "weight": 5,
+        "kind": "relic"
+      },
+      {
+        "label": "TM",
+        "weight": 5,
+        "kind": "stuff",
+        "stuff": "tm"
+      }
+    ]
+  },
+  "relics": [
+    {
+      "id": "fang",
+      "name": "Wolf Fang",
+      "tier": 1,
+      "effects": [
+        {
+          "kind": "damageMultiplier",
+          "value": 1.05
+        }
+      ],
+      "curse": null,
+      "blurb": "+5% damage."
+    },
+    {
+      "id": "feather",
+      "name": "Swift Feather",
+      "tier": 1,
+      "effects": [
+        {
+          "kind": "statMultiplier",
+          "stat": "spe",
+          "value": 1.05
+        }
+      ],
+      "curse": null,
+      "blurb": "+5% Speed."
+    },
+    {
+      "id": "coin",
+      "name": "Lucky Coin",
+      "tier": 1,
+      "effects": [
+        {
+          "kind": "moneyMultiplier",
+          "value": 1.1
+        }
+      ],
+      "curse": null,
+      "blurb": "+10% money."
+    },
+    {
+      "id": "idol",
+      "name": "Gold Idol",
+      "tier": 2,
+      "effects": [
+        {
+          "kind": "damageMultiplier",
+          "value": 1.12
+        }
+      ],
+      "curse": {
+        "effects": [
+          {
+            "kind": "damageTakenMultiplier",
+            "value": 1.1
+          }
+        ],
+        "text": "Takes 10% more damage."
+      },
+      "blurb": "+12% damage."
+    },
+    {
+      "id": "skull",
+      "name": "Grinning Skull",
+      "tier": 2,
+      "effects": [
+        {
+          "kind": "xpMultiplier",
+          "value": 1.2
+        }
+      ],
+      "curse": {
+        "effects": [
+          {
+            "kind": "healingMultiplier",
+            "value": 0.8
+          }
+        ],
+        "text": "Healing is 20% weaker."
+      },
+      "blurb": "+20% XP."
+    },
+    {
+      "id": "crown",
+      "name": "Pale Crown",
+      "tier": 3,
+      "effects": [
+        {
+          "kind": "damageMultiplier",
+          "value": 1.2
+        },
+        {
+          "kind": "xpMultiplier",
+          "value": 1.1
+        }
+      ],
+      "curse": {
+        "effects": [
+          {
+            "kind": "moneyMultiplier",
+            "value": 0.8
+          },
+          {
+            "kind": "damageTakenMultiplier",
+            "value": 1.05
+          }
+        ],
+        "text": "Money -20%, damage taken +5%."
+      },
+      "blurb": "+20% damage, +10% XP."
+    },
+    {
+      "id": "stone",
+      "name": "Heart Stone",
+      "tier": 3,
+      "effects": [
+        {
+          "kind": "friendshipMultiplier",
+          "value": 1.3
+        },
+        {
+          "kind": "healingMultiplier",
+          "value": 1.2
+        }
+      ],
+      "curse": null,
+      "blurb": "+30% friendship, +20% healing."
+    }
+  ],
+  "purify": {
+    "money": 150,
+    "materials": {
+      "aether": 1
+    }
+  },
+  "altar": {
+    "need": 2
+  },
+  "curseLuckLoss": 1,
+  "scenarios": {
+    "Healing and status items": "Use it between fights when a team member is hurt.",
+    "Battle boosters": "Save it for a boss fight; it lasts the battle.",
+    "Capture and party items": "Use before a catch or when swapping the team.",
+    "Map and encounter items": "Use on the map to shape what you meet next.",
+    "Valuables": "Sell it at a shop, or recycle it for parts.",
+    "Key items": "Keep it handy; it opens a story or stop.",
+    "TMs and HMs": "Teach it to a team member who can use the move.",
+    "Berries": "Hold it, or toss it in the cooking pot.",
+    "Evolution items": "Use it on a Pokémon that is ready to change.",
+    "Plates": "Hold it to boost a type for the whole team.",
+    "Memories": "Give it to Silvally, or fuse it into a TM.",
+    "default": "Use it when it fits the moment."
+  },
+  "narration": {
+    "Healing": "{mon} sighs happily after the first {item}.",
+    "Battle": "{item} fizzles through {mon}: a first for this run.",
+    "default": "You use {item} for the first time. {mon} tilts its head."
+  },
+  "sniffHints": {
+    "Healing": "smells like fresh herbs: it should patch someone up",
+    "Berries": "smells sweet and a little bitter: good in a pot",
+    "Battle": "smells sharp and sparky: a fight item",
+    "TMs": "smells like old paper: a lesson inside",
+    "Evolution": "smells like a storm about to break",
+    "default": "smells faintly of dust; hard to say"
+  }
+}

@@ -8,6 +8,7 @@
 //   - Map effects still running (run.mapEffects): repels, flutes...
 // Reads state only; changes nothing and rolls nothing.
 
+import { itemScenario, labelOf, sortKey } from './camp';
 import type { CatalogEntry, Content, Rarity } from './contentSchema';
 import { catalogTargetProblem } from './catalog';
 import { mapItemCopies } from './mapItems';
@@ -201,8 +202,17 @@ export function bagEntries(content: Content, run: RunState): BagEntry[] {
     });
   }
   const order = { bag: 0, held: 1, loose: 2, team: 3, map: 4 } as const;
-  // Bag items keep the order they were obtained in; the rest sort by name.
-  return out.map((e, i) => ({ e, i })).sort((a, b) => order[a.e.source] - order[b.e.source] || (a.e.source === 'bag' ? a.i - b.i : a.e.name.localeCompare(b.e.name))).map((x) => x.e);
+  // Camp (W3): a printed label tags the name, and each entry shows an example of when to use it.
+  for (const e of out) {
+    const label = labelOf(run, e.itemId);
+    if (label) e.name = `${e.name} "${label}"`;
+    if (e.source === 'bag' || e.source === 'loose') e.description = `${e.description} ${itemScenario(content, e.itemId)}`;
+  }
+  // Bag items keep the order they were obtained in; the rest sort by name. The Camp's Tidy Bag can re-sort everything.
+  const sorted = out.map((e, i) => ({ e, i })).sort((a, b) => order[a.e.source] - order[b.e.source] || (a.e.source === 'bag' ? a.i - b.i : a.e.name.localeCompare(b.e.name))).map((x) => x.e);
+  const mode = run.camp?.bagSort ?? 'obtained';
+  if (mode === 'obtained') return sorted;
+  return sorted.map((e, i) => ({ e, i, k: sortKey(run, mode, e) })).sort((a, b) => (a.k < b.k ? -1 : a.k > b.k ? 1 : a.i - b.i)).map((x) => x.e);
 }
 
 export function entriesInPocket(entries: readonly BagEntry[], pocket: BagPocket): BagEntry[] {

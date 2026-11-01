@@ -111,4 +111,5 @@ To look something up: `grep -n '"id": "pikachu"' src/data/species.json` then rea
 
 Director's source packs and plan copies are in the project files folder (`/mnt/project-files/`): `images.zip`, `audio.zip`, `bosses/`, `items/`, `data/move-dataset/`, `plan/`. Only open them when importing.
 
+- `src/core/camp/` + `src/data/camp.json` + `src/ui/campMenu.ts`: Camp (W3): gadgets, kitchen, workshop, market, finds; one handler per action id.
 - `src/core/crafting.ts` + `src/data/crafting.json`: crafting materials, drops, recipes; the Workshop is a service in `core/services/flow.ts`.

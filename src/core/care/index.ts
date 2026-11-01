@@ -19,7 +19,7 @@ export type TrainStat = (typeof TRAIN_STATS)[number];
 export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'wake', 'nickname', 'favourite', 'ace'] as const;
 export type CareAction = (typeof CARE_ACTIONS)[number];
 
-const hash = (text: string): number => {
+export const hash = (text: string): number => {
   let h = 2166136261;
   for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619);
   return h >>> 0;
