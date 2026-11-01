@@ -155,7 +155,7 @@ import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealM
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
-import { careFaint, careVictory, releaseGift } from './care';
+import { careAceFell, careFaint, careVictory, releaseGift } from './care';
 import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
 import { claimArea, nuzlockeCatchProblem, buryFallen, isHardcore } from './nuzlocke';
 import { applyMutator, mutatorCatch, mutatorDue, mutatorMoney, mutatorOffer, mutatorXp } from './mutators';
@@ -2019,6 +2019,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     if (fainted) {
       changeFriendship(content, fainted, content.balance.friendship.perFaint);
       careFaint(fainted);
+      if (fainted.care?.ace) careAceFell(run, fainted.uid);
     }
   }
 
@@ -2680,6 +2681,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     } else if (choice.kind === 'replace') {
       const old = run.party[choice.partyIndex];
       if (!old) throw new Error('Choose a party member to replace');
+      if (old.care?.favourite) throw new Error('A favourite cannot be swapped out. Unmark it in Care first.');
       const problem = joinProblem(content, run, caught.speciesId, old.uid);
       if (problem) throw new Error(problem);
       run.party[choice.partyIndex] = caught;

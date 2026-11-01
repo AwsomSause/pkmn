@@ -13,6 +13,9 @@ I27 fetch (may bring back a berry) · I39 bedtime story (once per run, needs tru
 
 Tap mini-interactions (press Enter fast): I6 tickle/cheer, I8 groom swipe, I33 wake-up (new Wake up action). 18 new party scenes in `partyLife.json` (75 total): I301 race, I302 wrestling, I309 Ditto copy, I315 item quarrel, I316 comedy duo, I322 pecking order, I323 bully/victim (moral choice), I330 food fight, I331 photo spots, I332 sleepy chain, I333 big sibling, I334 travel song, I335 comfy spot, I305 nest, I306 pack leader, I314 dark lead (cave/night), I300 duet, I308 item swap. F57 follower: the map token already shows your lead Pokémon.
 
+## Follow-up PR
+Favourite = never offered as trade fodder, cannot be swapped out of the party. Ace = marked ace on the Nuzlocke memorial, and its fall drops the team's mood a step. Map: your lead walks beside the current stop (F57), a small bonded Pokémon rides on its back (I20), and it dozes off with a floating z after 20 s idle (I9, I32). Scrapbook photos show the team striking personality poses (I18). F45 evolution preview on the Stats tab, F49 heal-first hint on Overview. 12 more scenes: I307 territory, I319 ancient bond, I324 shared dream, I325 star pupil, I338 matchmaker, I339 group dance, I340 team vote, I341 carried, I342/I343 doubt then reconciliation, I344 turn sacrifice, I320 translator.
+
 ## Earlier (see `docs/status/party-life.md`, Bond Engine)
 I4/I5 share snack and gifts · I12 Listen (initiative) · I13 disobedience (refusal) · I16 gifts · I29/I30 fear and pride (grudges, comfort) · I37 sleep-over chats · I40/I41 last words · I291 chats · I292 bickering · I294 mentor/apprentice (mentors system) · I295 pranks · I297 jealousy/newcomer · I298 sharing food · I299 group hug · I311 evolution cheers · I312 gather round fainted · I313 revenge pact · I318 formation/synergy badge · I326 practice together · I328 gossip · I345 Spirit Link · M57 quirks · F33 friendship hearts · F59 team synergy.
 

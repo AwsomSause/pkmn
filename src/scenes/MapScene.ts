@@ -21,6 +21,7 @@ import { FRAME_ASSET_IDS, headerBar } from '../ui/frames';
 import { currentColumn, findNode } from '../core/map';
 import { runPerks } from '../core/archetypes';
 import { frontRunner, isFalseProtagonist, rivalTitle, TIMELINE } from '../core/timeline/frontRunner';
+import { bondOf } from '../core/bond';
 import { boxCapacity } from '../core/trainerPerks';
 import { hiddenItemNode, mapItemSummary, repelActive } from '../core/mapItems';
 import { expeditionPreview } from '../core/expedition/flow';
@@ -60,6 +61,9 @@ const COL_SPACING = 104;
 const ROW_SPACING = 92;
 const MAP_LEFT = 70;
 const MAP_MID_Y = 245;
+const PIGGYBACK_WEIGHT = 8;
+const PIGGYBACK_AFFECTION = 60;
+const IDLE_NAP_MS = 20000;
 const NODE_RADIUS = 24;
 /** How far the League's last battle sits above its first. */
 const LEAGUE_RISE = 120;
@@ -376,6 +380,7 @@ export class MapScene extends Phaser.Scene {
         g.strokeCircle(x, y, r + 6);
       }
       mapLayer.add(g);
+      if (isCurrent) this.addFollower(mapLayer, x, y, r);
       if (reachable) {
         // A soft halo that breathes under each node you can travel to.
         const halo = this.add.circle(x, y, r + 8, AERO.sky, 0.35).setBlendMode('ADD');
@@ -577,6 +582,35 @@ export class MapScene extends Phaser.Scene {
       },
     });
     return 420;
+  }
+
+  /** Your lead Pokémon walks beside the current stop; a small bonded friend rides on its back and it dozes off when you idle (W2 I9, I20, F57). Presentation only. */
+  private addFollower(layer: Phaser.GameObjects.Container, x: number, y: number, r: number): void {
+    const { session } = services();
+    const run = session.run!;
+    const lead = run.party.find((m) => m.hp > 0);
+    const species = lead && session.content.species.get(lead.speciesId);
+    if (!lead || !species) return;
+    const fx = x - r - 20;
+    const icon = pokemonIcon(this, species, fx, y + 4, 1.1) as Phaser.GameObjects.Sprite;
+    layer.add(icon);
+    const rider = run.party.find((m) => m.uid !== lead.uid && m.hp > 0 && (session.content.species.get(m.speciesId)?.weight ?? 99) <= PIGGYBACK_WEIGHT && bondOf(run, m.uid).affection >= PIGGYBACK_AFFECTION);
+    const riderSpecies = rider && session.content.species.get(rider.speciesId);
+    const riderIcon = riderSpecies ? (pokemonIcon(this, riderSpecies, fx, y - 14, 0.7) as Phaser.GameObjects.Sprite) : null;
+    if (riderIcon) layer.add(riderIcon);
+    if (this.motion === 'off') return;
+    const bob = [icon, ...(riderIcon ? [riderIcon] : [])];
+    this.tweens.add({ targets: bob, y: '-=3', duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+    // After a while with no input the lead nods off with a floating "z".
+    const zzz = this.add.text(fx + 12, y - 16, 'z', textStyle(16, '#e8f6ff', { stroke: '#0b2a4a', strokeThickness: 3 })).setAlpha(0);
+    layer.add(zzz);
+    this.time.delayedCall(IDLE_NAP_MS, () => {
+      if (!zzz.active) return;
+      icon.setAlpha(0.8);
+      this.tweens.add({ targets: zzz, alpha: 1, y: '-=18', duration: 1400, repeat: -1, ease: 'Sine.easeOut' });
+    });
+    this.input.once('pointermove', () => zzz.active && (zzz.destroy(), icon.setAlpha(1)));
+    this.input.keyboard?.once('keydown', () => zzz.active && (zzz.destroy(), icon.setAlpha(1)));
   }
 
   private addOption(option: Option, makeCursor: () => Phaser.GameObjects.Graphics, hit: { x: number; y: number; w: number; h: number }): void {

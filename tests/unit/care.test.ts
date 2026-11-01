@@ -1,7 +1,8 @@
 // Care & party life (W2): care actions, per-stop limits, mood/fatigue/talent/training stat nudges, saves.
 
 import { describe, expect, it } from 'vitest';
-import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
+import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
+import { tradeCandidates } from '../../src/core/events';
 import { calcStats } from '../../src/core/pokemon';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { RunStateSchema, type RunState } from '../../src/core/state';
@@ -200,5 +201,36 @@ describe('tap mini-interactions', () => {
     expect(careAction(content, run, 0, 'wake', 'tap:9').run.party[0]!.care!.fatigue).toBe(3 - CARE.tap.wakeFatigue - CARE.tap.wakeBonusFatigue);
     expect(careProblem(content, setup(), 0, 'wake')).toMatch(/not tired/);
     expect(tapsOf('tap:abc')).toBe(0);
+  });
+});
+
+describe('favourite, ace, previews', () => {
+  it('a favourite is never offered as trade fodder and cannot be swapped out', () => {
+    let run = setup();
+    const want = { species: [], minLevel: 0 } as never;
+    expect(tradeCandidates(content, run, want).length).toBe(1);
+    run = careAction(content, run, 0, 'favourite').run;
+    expect(tradeCandidates(content, run, want).length).toBe(0);
+  });
+
+  it('an ace is remembered on the memorial and its fall shakes the team', () => {
+    let run = setup();
+    run.party.push({ ...structuredClone(run.party[0]!), uid: 'friend', care: undefined });
+    run.party[1]!.level = 99;
+    run = careAction(content, run, 0, 'ace').run;
+    run.rules = { ...run.rules, mode: 'nuzlocke' } as never;
+    careAceFell(run, run.party[0]!.uid);
+    expect(run.party[1]!.care!.mood).toBe(-1);
+    expect(run.party[0]!.care!.ace).toBe(true);
+  });
+
+  it('shows evolutions and the heal-first suggestion', () => {
+    const run = setup();
+    const mon = run.party[0]!;
+    const lines = evolutionPreview(content, mon);
+    expect(Array.isArray(lines)).toBe(true);
+    expect(healFirst(content, run)).toBeNull();
+    mon.hp = 1;
+    expect(healFirst(content, run)?.uid).toBe(mon.uid);
   });
 });

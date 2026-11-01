@@ -166,7 +166,7 @@ export function tradeCandidates(content: Content, run: RunState, want: TradeWant
   return run.party
     .filter((m) => {
       const sp = content.species.get(m.speciesId);
-      if (!sp) return false;
+      if (!sp || m.care?.favourite) return false;
       return (
         (want.species.length === 0 || want.species.includes(m.speciesId)) &&
         (!want.type || sp.types.includes(want.type)) &&

@@ -25,7 +25,7 @@ import { playSfx } from './audio';
 import { loadAssets } from './lazyAssets';
 import type { FieldMenuHost } from './fieldMenus';
 import type { InputAction } from './input';
-import { ACCESSORIES, CARE, CARE_ACTIONS, TAP_ACTIONS, moodWord, careProblem, favoriteFlavor, hatedFlavor, type CareAction } from '../core/care';
+import { ACCESSORIES, evolutionPreview, healFirst, CARE, CARE_ACTIONS, TAP_ACTIONS, moodWord, careProblem, favoriteFlavor, hatedFlavor, type CareAction } from '../core/care';
 import { emotionDot, type PickerLike } from './partyPanel';
 import { bondView, compareStats, compareTarget, historyView, moveEffectLines, readiness, traitLines, xpProgress, type Readiness } from './pokemonInfo';
 import { itemVisual, pokemonIcon } from './sprites';
@@ -573,8 +573,10 @@ class PokemonScreen implements PickerLike {
     this.panel(box, 0, 166, 382, 74);
     box.add(scene.add.circle(20, 188, 7, STATE_COLOR[r.state]).setStrokeStyle(2, 0x061528));
     this.text(box, 36, 178, `Battle readiness: ${r.label}`, 18, STATE_TEXT[r.state]);
+    const hf = healFirst(this.content, this.run);
+    const healTip = hf && hf.uid === mon.uid ? ' Heal this one first.' : '';
     const status = mon.hp <= 0 ? 'Fainted' : mon.status ? STATUS_LABELS[mon.status.id]?.label ?? mon.status.id : 'No status condition';
-    this.text(box, 14, 202, `${status}. ${r.notes.join(' ')}`.trim(), 14, '#d0e4f4', { wordWrap: { width: 354 }, maxLines: 2 });
+    this.text(box, 14, 202, `${status}. ${r.notes.join(' ')}${healTip}`.trim(), 14, '#d0e4f4', { wordWrap: { width: 354 }, maxLines: 2 });
     // Right column.
     const rx = 400;
     const rw = RIGHT_W - rx;
@@ -666,7 +668,7 @@ class PokemonScreen implements PickerLike {
       box.add(g);
     }
     this.panel(box, 0, 292, RIGHT_W, 40, 0.4);
-    this.text(box, 12, 302, `Nature: ${info.nature ?? 'unknown'}`, 15, '#ffffff', { fixedWidth: RIGHT_W - 24 });
+    this.text(box, 12, 302, `Nature: ${info.nature ?? 'unknown'}${evolutionPreview(this.content, mon).length ? `  ·  Next: ${evolutionPreview(this.content, mon).slice(0, 2).join(' / ')}` : ''}`, 15, '#ffffff', { fixedWidth: RIGHT_W - 24 });
   }
 
   // ----- Moves -----

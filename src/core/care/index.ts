@@ -270,4 +270,23 @@ export function careFaint(mon: PokemonInstance): void {
   setMood(care, CARE.faintMood);
 }
 
+/** What a Pokémon can become, as short phrases ("Raichu at Lv.30", "Raichu with an item"), for the summary (F45). */
+export function evolutionPreview(content: Content, mon: PokemonInstance): string[] {
+  const sp = content.species.get(mon.speciesId);
+  if (!sp) return [];
+  const name = (id: string) => content.species.get(id)?.name ?? id;
+  return sp.evolutions.map((e) => (e.level !== undefined ? `${name(e.to)} at Lv.${e.level}` : e.item === content.balance.friendship.evolutionItem ? `${name(e.to)} with high friendship` : `${name(e.to)} with an item`));
+}
+
+/** Heal-order suggestion (F49): the hurt Pokémon to heal first (lowest share of HP, fainted last), or null when all are full. */
+export function healFirst(content: Content, run: RunState): PokemonInstance | null {
+  const hurt = run.party.filter((m) => m.hp > 0 && m.hp < maxHp(content, m)).sort((a, b) => a.hp / maxHp(content, a) - b.hp / maxHp(content, b));
+  return hurt[0] ?? null;
+}
+
+/** The ace fell: the rest of the party is shaken (mood drops a step). */
+export function careAceFell(run: RunState, uid: string): void {
+  for (const m of run.party) if (m.uid !== uid) setMood(careOf(m), -1);
+}
+
 export { careMultiplier };
