@@ -21,6 +21,7 @@ describe('unified Bag', () => {
     expect(bagEntryText(charcoal)).toMatch(/Held by .+ ×2\. Up to 3 per Pokémon/);
     // Held items are not Bag items: the inventory is unchanged and nothing is counted twice.
     expect(run.inventory).toEqual({ 'poke-ball': 5, potion: 2 });
+    expect(entries.find((e) => e.itemId === 'potion')!.rarity).toBe(content.rewards.get('potion')!.rarity);
     expect(entriesInPocket(entries, 'balls').map((e) => e.itemId)).toEqual(['poke-ball']);
     expect(entriesInPocket(entries, 'all')).toHaveLength(entries.length);
   });
