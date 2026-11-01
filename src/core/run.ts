@@ -113,6 +113,7 @@ import { pickRaidRival } from './raid/rivalAlly';
 import { RAID_MEMORY_FRIENDSHIP, RETURNING_HP_PERCENT, RETURNING_LEVEL_BONUS, cheerLevelFor, pickApproach, raidMemories, applyBossHp, describeMechanics, describeRewards, freshRaidBattle, getRaid, placeRaidDens, raidLevel, raidSpecies, type RaidPreview } from './raid/raid';
 import type { RaidApproach, RaidDef } from './raid/schema';
 import { placeExpeditionGate } from './expedition/gate';
+import { placeLegendaryGate } from './legendary/legendary';
 import { pickStones } from './expedition/flow';
 import { gainBattleMaterials, RARE_TOKEN_EFFECTS } from './crafting';
 import { minigameDiscount, placeMinigameStop } from './minigame/gate';
@@ -513,6 +514,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   placeGangDen(content, run);
   placeTotem(content, run);
   placeExpeditionGate(content, run);
+  placeLegendaryGate(content, run);
   placeMinigameStop(content, run);
   placeServiceStop(run);
   placePlaza(run);

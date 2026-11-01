@@ -49,6 +49,8 @@ export const TotemDefSchema = z.object({
   /** The Totem lives on stages whose theme includes this type. */
   type: TypeNameSchema,
   blurb: z.string().min(1),
+  /** The finale of a Legendary world event: never drawn for a den or an ordinary expedition. */
+  legendary: z.boolean().default(false),
   species: z.array(z.string()).min(1),
   levelBonus: z.number().int().min(0).max(8),
   hpBoostPercent: z.number().int().min(0).max(600),

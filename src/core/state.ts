@@ -507,10 +507,22 @@ export const MinigameSessionSchema = z.object({
 });
 export type MinigameSession = z.infer<typeof MinigameSessionSchema>;
 
+/** The run's Legendary world event record (rules in core/legendary). */
+export const LegendaryRecordSchema = z.object({
+  offered: z.array(z.string()),
+  completed: z.array(z.string()),
+  failed: z.array(z.string()),
+  extracted: z.array(z.string()),
+  /** Gates placed per region index (as a string key), for the per-region limit. */
+  placed: z.record(z.string(), z.number().int().min(0)),
+  outcomes: z.array(z.object({ id: z.string(), outcome: z.enum(['completed', 'failed', 'extracted']), region: z.number().int().min(0), stage: z.number().int().min(0) })),
+});
+export type LegendaryRecord = z.infer<typeof LegendaryRecordSchema>;
+
 /** A Mega-Expedition in progress (rules in core/expedition). */
 export const ExpeditionStateSchema = z.object({
   id: z.string(),
-  nodes: z.array(z.object({ id: z.string(), layer: z.number().int().min(0), kind: z.string(), next: z.array(z.string()), done: z.boolean() })),
+  nodes: z.array(z.object({ id: z.string(), layer: z.number().int().min(0), kind: z.string(), next: z.array(z.string()), done: z.boolean(), blocked: z.boolean().optional() })),
   /** The last node finished (null before the first). */
   current: z.string().nullable(),
   /** The node being fought or decided now. */
@@ -1069,6 +1081,8 @@ export const RunStateSchema = z.object({
     discount: z.object({ percent: z.number().int(), stage: z.number().int() }).nullable().default(null),
   }).default(() => ({ stage: -1, money: 0, items: 0, plays: {}, attempts: {}, best: {}, effects: 0, discount: null })),
   expeditions: z.object({ completed: z.array(z.string()), failed: z.array(z.string()), unlocked: z.array(z.string()), last: z.array(z.string()).default([]) }).default(() => ({ completed: [], failed: [], unlocked: [], last: [] })),
+  /** Legendary world events (core/legendary): gates placed per region, and what happened with each event. Optional: older runs have none. */
+  legendary: LegendaryRecordSchema.optional(),
   totems: z.object({ entered: z.number().int().min(0), won: z.number().int().min(0), lost: z.number().int().min(0), done: z.array(z.string()), unlocks: z.array(z.string()), research: z.number().int().min(0) }).default(() => ({ entered: 0, won: 0, lost: 0, done: [], unlocks: [], research: 0 })),
   /** Crafting materials held (material id → count; core/crafting.ts). Run-only. */
   materials: z.record(z.string(), z.number().int().min(0)).default(() => ({})),
