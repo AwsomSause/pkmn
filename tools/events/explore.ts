@@ -48,7 +48,7 @@ export const CAMP_EVENTS: Json[] = [
       ch('Plan the route', out('You spread a map and study the road ahead.', scout(6), gym(), rp(15))),
       ch('Morning drills (morning)', out('Moves practised until they are second nature.', lv(1, 'party'), rp(20)), { requires: [at('morning', 'afternoon')] }),
       ch('Stargaze (night)', out('Under a wide sky nobody says much. Your party feels calm and sure.', fr(4, 'party'), rp(40), good(1), heal(0.2)), { requires: [at('night')] }),
-      ch('Celebrate the milestone', out('A day to remember. The whole party feasts, and a stranger leaves a small gift by the fire.', celebrate(), fr(10, 'party'), heal(1), any(...TREASURE), any(...VITAMINS), rp(60), good(1)), { requires: [milestone] }),
+      ch('Celebrate the occasion', out('A day to remember. The whole party feasts, and a stranger leaves a small gift by the fire.', celebrate(), fr(10, 'party'), heal(1), any(...TREASURE), any(...VITAMINS), rp(60), good(1)), { requires: [milestone] }),
     ]),
 ];
 

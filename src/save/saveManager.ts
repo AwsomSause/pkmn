@@ -35,7 +35,7 @@ export const ACTIVE_SLOT_KEY = `${KEY_PREFIX}.slot`;
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 30, settings: 11, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 14, run: 31, settings: 11, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -296,6 +296,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
       const run = data as Json;
       return { ...run, rules: run.rules && typeof run.rules === 'object' ? { ...(run.rules as Json), weeks: true } : run.rules };
     },
+    // v31 (real-date celebrations): runs started before it know no real-world date yet.
+    30: (data) => ({ ...(data as Json), calendar: { today: null, startedOn: null } }),
   },
   settings: {
     // v2 (Milestone 9): battle animation settings.

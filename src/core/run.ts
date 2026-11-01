@@ -291,6 +291,7 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
     story: withChampionTeam(createStoryState(), opts.runHistory ?? []),
     partyLife: createPartyLife(),
     clock: freshClock(),
+    calendar: { today: null, startedOn: null },
     legacyRival: pickLegacyRival(opts.rivalArchive ?? [], opts.seed),
     rentalsUsed: [],
     raids: { entered: 0, won: 0, lost: 0, bestTier: 0, done: [], escaped: [], unlockedTier: opts.raidTierUnlocked ?? 6 },
