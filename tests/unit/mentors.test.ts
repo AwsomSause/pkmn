@@ -15,6 +15,7 @@ import {
   getMentor,
   makeFellow,
   mentorBadgeWon,
+  mentorHudLine,
   mentorEnding,
   mentorProblems,
   mentorStopEvent,
@@ -281,5 +282,21 @@ describe('the fellow apprentice as a real battle', () => {
     const ev = content.events.get('mentor-apprentice-showdown')!;
     expect(ev.minStage).toBe(4);
     expect(ev.choices[0]!.success.battle).toMatchObject({ kind: 'trainer', apprentice: true, size: 3 });
+  });
+});
+
+describe('map HUD line', () => {
+  it('is null without a mentor and names mentor, tier, trust, loyalty, rival and mission with one', () => {
+    expect(mentorHudLine(start('h-none', null))).toBeNull();
+    const run = start('h-line');
+    const line = mentorHudLine(run)!;
+    expect(line).toContain('Mentor Ravi');
+    expect(line).toContain('Newcomer');
+    expect(line).toContain(run.mentor!.fellow.name);
+    expect(line).not.toContain('Mission');
+    applyEffect(content, run, { kind: 'mentor', trust: 0, loyalty: 0, rivalry: 0, mission: 'start', disagree: false }, new Rng(hashSeed('x')));
+    changeMentor(content, run, { rivalry: 2 });
+    expect(mentorHudLine(run)).toContain('+2');
+    expect(mentorHudLine(run)).toContain('Mission 2');
   });
 });

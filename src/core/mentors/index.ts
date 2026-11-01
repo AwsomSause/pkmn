@@ -445,6 +445,17 @@ export function mentorSummaryLines(run: Pick<RunState, 'mentor'>): string[] {
   ];
 }
 
+/** One short line for the map HUD: who, the tier, trust and loyalty, the standing against the fellow apprentice and the mission. */
+export function mentorHudLine(run: Pick<RunState, 'mentor'>): string | null {
+  const m = run.mentor;
+  const mentor = getMentor(m?.id);
+  if (!m || !mentor) return null;
+  const first = mentor.name.replace(/^(Captain|Dr\.)\s+/, '').split(' ')[0];
+  const standing = m.rivalry === 0 ? 'even' : m.rivalry > 0 ? `+${m.rivalry}` : `${m.rivalry}`;
+  const mission = m.mission.state === 'active' ? `  ·  Mission ${m.mission.bossesLeft}` : '';
+  return `Mentor ${first}  ·  ${tierName(m.tier)}  ·  Trust ${m.trust}  ·  Loyalty ${m.loyalty}  ·  vs ${m.fellow.name} ${standing}${mission}`;
+}
+
 export function mentorBlurb(m: Mentor): string[] {
   return [`${m.name}, ${m.title}`, `${categoryName(m)}. ${m.personality}`, m.background, `Teaches: ${m.teaching}`, `Strength: ${m.strength} Weakness: ${m.weakness}`];
 }

@@ -1,0 +1,1 @@
+- Mentor follow-up 2 (spec §15): the map HUD shows one line under the stage title while you train under a mentor: name, tier, trust, loyalty, standing against the fellow apprentice and the mission's badges left (`mentorHudLine` in `core/mentors`, `mentor-hud` text in `MapScene`). Hidden in League stages. No save change.
