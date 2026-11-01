@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import { createBattle } from '../../src/core/battle/engine';
 import { hatchEgg } from '../../src/core/eggs';
 import { createProfile, finalizeRun } from '../../src/core/profile';
-import { applyHeirloom, chooseHeirloom, pendingHeirloom, spendHeirloom } from '../../src/core/memories/heirloom';
+import { applyHeirloom, chooseHeirloom, deliverLegacyEgg, legacyEggWaiting, pendingHeirloom, spendHeirloom } from '../../src/core/memories/heirloom';
 import { fallenTrainers, hallOfMemories, journalEntry, memoryLane } from '../../src/core/memories/journal';
 import { claimPast, pastDigest } from '../../src/core/memories/past';
 import { memoryAfterBattle, memoryPick, startPastGauntlet } from '../../src/core/memories/encounters';
@@ -163,6 +163,12 @@ describe('Legacy heirlooms and descendants', () => {
     const run = started('hl-next');
     const given = applyHeirloom(content, run, p)!;
     expect(given.runId).toBe('hl-b');
+    // F118: the egg waits for a Daycare or Ranch; nothing is laid at the start.
+    expect(run.eggs).toHaveLength(0);
+    expect(legacyEggWaiting(run)).toBe(true);
+    expect(deliverLegacyEgg(content, run)).toContain('Legacy Egg joined');
+    expect(deliverLegacyEgg(content, run)).toBeNull();
+    expect(legacyEggWaiting(run)).toBe(false);
     expect(run.eggs).toHaveLength(1);
     expect(run.eggs[0]!.lineage).toMatchObject({ runId: 'hl-b', moveId: moveOpt.moveId });
     const mon = hatchEgg(content, run, run.eggs[0]!);
@@ -175,6 +181,7 @@ describe('Legacy heirlooms and descendants', () => {
     const t = chooseHeirloom(profileWith(['hl-c', false]), 'hl-c', 'trait');
     const run2 = started('hl-next2');
     applyHeirloom(content, run2, t);
+    deliverLegacyEgg(content, run2);
     expect(hatchEgg(content, run2, run2.eggs[0]!).nature).toBe('adamant');
     // A keepsake joins the bag instead.
     const k = chooseHeirloom(profileWith(['hl-d', false]), 'hl-d', 'item');
@@ -375,11 +382,13 @@ describe('a new run and Revisit This Timeline', () => {
     session.changeProfile(() => chooseHeirloom(profileWith(['rv-a', false], ['rv-b', false]), 'rv-b', 'egg'));
     const original = structuredClone(session.newRun('red', 'rv-seed'));
     expect(original.past!.ghosts.length).toBe(2);
-    expect(original.eggs).toHaveLength(1);
+    expect(original.eggs).toHaveLength(0);
+    expect(original.past?.legacyEgg).toBeTruthy();
     expect(session.profile.memories.heirlooms.find((h) => h.runId === 'rv-b')!.spent).toBe(true);
     const g = session.timeline.genesis[0]!;
     const replay = reconstructRun(content, g, replayIdFor(g.runId, 1), 1);
     expect(replay.past).toEqual(original.past);
     expect(replay.eggs).toEqual(original.eggs);
+    expect(replay.past?.legacyEgg).toEqual(original.past?.legacyEgg);
   });
 });

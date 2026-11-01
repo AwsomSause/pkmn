@@ -23,6 +23,7 @@ import { setMasteryPicks } from '../core/mastery';
 import { applyStartGrants, startGrants } from '../core/legacy';
 import { applyHeirloom, chooseHeirloom, pendingHeirloom, spendHeirloom } from '../core/memories/heirloom';
 import { pastDigest } from '../core/memories/past';
+import { inheritFlags } from '../core/rivals/ledger';
 import * as Timeline from '../core/timeline/genesis';
 import { captureOrigin, timelineOutcome } from '../core/timeline/frontRunner';
 import { buyCandyPerk } from '../core/candyShop';
@@ -231,6 +232,7 @@ export class GameSession {
     // Memories: what earlier runs left behind (ghosts, keepsakes, old friends, the chosen heirloom). Picked from the profile, not rolled.
     this.syncCalendar();
     this.run.past = pastDigest(this.content, this.profile);
+    Object.assign(this.run.story.flags, inheritFlags(this.profile.legacyRuns)); // W6: promises a rival made last run
     const heirloomUsed = pendingHeirloom(this.profile);
     const heirloom = applyHeirloom(this.content, this.run, this.profile);
     if (heirloom) this.profile = spendHeirloom(this.profile, heirloom.runId);

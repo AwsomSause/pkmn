@@ -401,43 +401,43 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 
 | # | Idea | Note | Status | Evidence |
 |---|---|---|---|---|
-| I159 | Rival texts you after major wins with taunts or support |  | TODO |  |
-| I160 | Rival sends a care package if their relationship score is high |  | PART | events.json rival-gift (rival ally hands trained Pokemon); docs/status/rival-gift-swap.md |
-| I161 | Rival leaves a note on the map after passing through a node first |  | TODO |  |
-| I162 | Rival sabotages a shop by buying out stock if hostile |  | TODO |  |
+| I159 | Rival texts you after major wins with taunts or support |  | DONE | events.json rival-text-support / rival-text-taunt (tools/events/rivalLegacy.ts) |
+| I160 | Rival sends a care package if their relationship score is high |  | DONE | events.json rival-care-package + rival-gift; docs/status/w6.md |
+| I161 | Rival leaves a note on the map after passing through a node first |  | DONE | events.json rival-map-note |
+| I162 | Rival sabotages a shop by buying out stock if hostile |  | DONE | events.json rival-buyout |
 | I163 | Rival tag-team encounter: temporarily ally against a common boss |  | DONE | src/core/raid/rivalAlly.ts named rival strikes raid boss; src/core/rivals/living.ts:71 finaleAssistRival |
-| I164 | Rival asks for advice on a team choice, your answer changes their roster later |  | TODO |  |
-| I165 | Rival challenges you mid-event to a one-turn duel for bragging rights |  | PART | docs/status/coverage-tracker.md:217 unscheduled rival challenge (rivals/transfer.ts); not one-turn duel |
-| I166 | Rival holds a grudge when you steal their catch spot |  | TODO |  |
+| I164 | Rival asks for advice on a team choice, your answer changes their roster later |  | DONE | events.json rival-asks-advice; core/rivals/adapt.ts advisedTypes puts the advised type on their next roster |
+| I165 | Rival challenges you mid-event to a one-turn duel for bragging rights |  | DONE | events.json rival-one-turn-duel (1v1 rival trainer) |
+| I166 | Rival holds a grudge when you steal their catch spot |  | DONE | events.json rival-grudge-spot |
 | I167 | Rival visits your Hub and comments on trophies |  | DONE | src/core/rivals/living.ts:123 hubRivalNote visit comments on trophies; src/scenes/HubScene.ts:280 |
-| I168 | Rival gives you a berry before a boss and you feel the weight of gratitude |  | TODO |  |
-| I169 | Rival's Pokémon greet your Pokémon with emotes before battles |  | TODO |  |
-| I170 | Rival's gift can be a trap if their trust is low |  | TODO |  |
+| I168 | Rival gives you a berry before a boss and you feel the weight of gratitude |  | DONE | events.json rival-berry-boss |
+| I169 | Rival's Pokémon greet your Pokémon with emotes before battles |  | DONE | events.json rival-mon-greeting |
+| I170 | Rival's gift can be a trap if their trust is low |  | DONE | events.json rival-trap-gift |
 | I171 | Rival rescue: save them from a wild horde to flip their attitude |  | DONE | events.json living-rival-rescue + rival-asks-help; docs/status/living-rival.md |
-| I172 | Rival coaching: they critique your last battle log |  | TODO |  |
-| I173 | Rival race minigame to reach a node first for first pick of items |  | TODO |  |
+| I172 | Rival coaching: they critique your last battle log |  | DONE | events.json rival-coaching |
+| I173 | Rival race minigame to reach a node first for first pick of items |  | DONE | events.json rival-race (speed check) |
 | I174 | Rival trades a Pokémon with you at an event |  | DONE | events.json rival-swap (trade party member); docs/status/rival-gift-swap.md |
-| I175 | Rival eavesdrop scene: you overhear their plans, choose to act or ignore |  | TODO |  |
-| I176 | Rival's mood changes with your win streak, shown by a portrait expression |  | TODO |  |
-| I177 | Rival's mentor shows up if you wrong them |  | TODO |  |
+| I175 | Rival eavesdrop scene: you overhear their plans, choose to act or ignore |  | DONE | events.json rival-eavesdrop |
+| I176 | Rival's mood changes with your win streak, shown by a portrait expression |  | DONE | core/rivals/ledger.ts rivalMood; Hub shows a face badge beside the rival note plus the expression in the visit text |
+| I177 | Rival's mentor shows up if you wrong them |  | DONE | events.json rival-mentor-appears |
 | I178 | Rival joins the final boss as surprise helper if friendship is max |  | DONE | src/core/rivals/living.ts:71 finaleAssistRival, final boss assist for friend rival |
-| I179 | Rival memorial if they fall in a hard mode, with a bonus relic |  | TODO |  |
-| I180 | Rival picks a nickname for you that persists between runs |  | TODO |  |
-| I181 | Rival shares a drink after a close fight, revealing a secret move |  | TODO |  |
-| I182 | Rival's scoreboard: head-to-head record shown in Hub |  | PART | src/scenes/HallOfFameScene.ts:118 Rival Hall of Fame (met N x, badges); no head-to-head record |
-| I183 | Rival mind games: bait you with a fake lead Pokémon |  | TODO |  |
-| I184 | Rival's Pokémon wins and gloats; losing triggers training montage |  | PART | events.json living-rival-montage; src/core/rivals/narrativeDefeat.ts (rival win), no gloat/montage on loss trigger |
-| I185 | Rival writes a letter at run's end in their own voice |  | PART | src/core/rivals/living.ts:102 rivalLetter shown in Hub after a run; not an end-of-run screen |
-| I186 | Rival cosplay event: they copy your team and you copy theirs |  | TODO |  |
-| I187 | Rival promise: they ask for a rematch at a specific node, kept across runs |  | TODO |  |
+| I179 | Rival memorial if they fall in a hard mode, with a bonus relic |  | DONE | events.json rival-memorial (fallen rival Pokemon, relic) |
+| I180 | Rival picks a nickname for you that persists between runs |  | DONE | core/rivals/ledger.ts rivalNickname (stable between runs), shown in Hub, Hall of Fame, run-end letter; events.json rival-nickname |
+| I181 | Rival shares a drink after a close fight, revealing a secret move |  | DONE | events.json rival-shared-drink (egg move) |
+| I182 | Rival's scoreboard: head-to-head record shown in Hub |  | DONE | core/rivals/ledger.ts headToHead; Hall of Fame Rivalry Ledger row and Hub visit line |
+| I183 | Rival mind games: bait you with a fake lead Pokémon |  | DONE | events.json rival-mind-games |
+| I184 | Rival's Pokémon wins and gloats; losing triggers training montage |  | DONE | events.json rival-gloat (silence leads to training, or rematch) |
+| I185 | Rival writes a letter at run's end in their own voice |  | DONE | core/rivals/ledger.ts endOfRunLetter; GameOverScene shows it at run end |
+| I186 | Rival cosplay event: they copy your team and you copy theirs |  | DONE | events.json rival-cosplay |
+| I187 | Rival promise: they ask for a rematch at a specific node, kept across runs |  | DONE | events.json rival-promise-make / rival-promise-kept; carry-* flags in legacy record narrative -> inherit-* at next run start (ledger.ts) |
 | M99 | **Rival adaptation**: the rival counter-picks based on your last team's types. |  | DONE | src/core/rivals/adapt.ts:63,86 rival swaps member to resist player's most-used type |
 | M113 | **Seeded rival run**: replay a ghost of a previous run's team as a rival boss. |  | DONE | src/core/memories/encounters.ts ghost trainer/Previous-Run Gauntlet; docs/status/memories.md |
 | M114 | **Hall of memories**: past runs leave a "memory" the hub can replay as short story vignettes. |  | DONE | src/scenes/MemoriesScene.ts Hall of Memories vignettes; src/core/memories/journal.ts |
 | F30 | Mirror matches: fight a ghost of your own previous winning team. |  | DONE | events.json living-rival-clash (recorded Hall of Fame team / past run team); memories ghost trainers |
-| F118 | Legacy: choose one Pokémon to pass to the next run as an egg. | Y (But make it only appear at Daycare/Ranch events) | PART | src/core/memories/heirloom.ts Legacy Egg for next run; not limited to Daycare/Ranch events |
-| F126 | Rival rivalry ledger showing win/loss history. |  | PART | src/scenes/HallOfFameScene.ts:118 Rival Hall of Fame; src/core/rivals/chronicle.ts |
+| F118 | Legacy: choose one Pokémon to pass to the next run as an egg. | Y (But make it only appear at Daycare/Ranch events) | DONE | core/memories/heirloom.ts deliverLegacyEgg; egg waits in run.past.legacyEgg and is handed over at Daycare Couple / Daycare Drop-In / legacy-ranch only |
+| F126 | Rival rivalry ledger showing win/loss history. |  | DONE | Hall of Fame Rivalry Ledger row (ledger.ts headToHead) + chronicle.ts |
 | F157 | Rival letters between runs summarising their progress. |  | DONE | src/core/rivals/living.ts:102 rivalLetter with badge progress, shown in Hub |
-| F173 | Cameo trainers from past runs appear as allies. |  | TODO |  |
+| F173 | Cameo trainers from past runs appear as allies. |  | DONE | events.json cameo-veteran-lucario / cameo-veteran-garchomp (ally battles, need past teams); ally species is themed, not the real past team |
 
 ## W7 Hub & meta progression (66)
 

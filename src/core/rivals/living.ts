@@ -120,7 +120,7 @@ type ArchivedLike = Parameters<typeof rivalLetter>[0];
  * What the Hub shows about a rival from a past run, or null when there is none. Most visits bring a letter;
  * every third one the rival is there in person and comments on your trophies and run history. Pure.
  */
-export function hubRivalNote(archive: readonly ArchivedLike[], seed: number, home: { achievements: number; runsEnded: number }): { kind: 'letter' | 'visit'; text: string; tone: RivalLetter['tone'] } | null {
+export function hubRivalNote(archive: readonly ArchivedLike[], seed: number, home: { achievements: number; runsEnded: number; nickname?: string; board?: string; expression?: string }): { kind: 'letter' | 'visit'; text: string; tone: RivalLetter['tone'] } | null {
   if (archive.length === 0) return null;
   const rival = archive[Math.abs(seed) % archive.length]!;
   const letter = rivalLetter(rival, seed);
@@ -129,5 +129,8 @@ export function hubRivalNote(archive: readonly ArchivedLike[], seed: number, hom
   const talk = letter.tone === 'warm' ? `You have ${trophies} and ${home.runsEnded} run${home.runsEnded === 1 ? '' : 's'} behind you. I am proud, and I am not saying it twice.`
     : letter.tone === 'sharp' ? `${trophies}, ${home.runsEnded} run${home.runsEnded === 1 ? '' : 's'}. It is not enough to stop me.`
     : `${trophies}. ${home.runsEnded} run${home.runsEnded === 1 ? '' : 's'}. I came to see for myself.`;
-  return { kind: 'visit', text: `${rival.name} stopped by the Hub: "${talk}"`, tone: letter.tone };
+  const nick = home.nickname ? ` ${home.nickname}.` : '';
+  const face = home.expression ? ` (${home.expression}.)` : '';
+  const board = home.board ? ` Head to head: ${home.board}.` : '';
+  return { kind: 'visit', text: `${rival.name} stopped by the Hub${face}: "${talk}${nick}"${board}`, tone: letter.tone };
 }

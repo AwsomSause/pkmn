@@ -7,6 +7,7 @@ import { z } from 'zod';
 import cfgJson from '../data/legacyRuns.json';
 import type { Content } from './contentSchema';
 import { getBoss } from './regions';
+import { carryFlags } from './rivals/ledger';
 import type { LegacyMon, LegacyRun, PokemonInstance, Profile, RunRecord, RunState } from './state';
 
 const LegacyRunsConfigSchema = z.object({
@@ -148,7 +149,7 @@ export function buildLegacyRun(content: Content, run: RunState, now: string, his
       shinies: counters.shiniesFound ?? 0,
       rivalWins: counters.rivalBattlesWon ?? 0,
     },
-    narrative: [...new Set([...run.gameEvents, ...run.story.appliedEffects])],
+    narrative: [...new Set([...run.gameEvents, ...run.story.appliedEffects, ...carryFlags(run.story.flags)])],
     chronicle: [...run.story.chronicle]
       .sort((a, b) => b.importance - a.importance || a.seq - b.seq)
       .slice(0, LEGACY_RUNS.chronicleKept)

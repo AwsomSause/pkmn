@@ -325,6 +325,7 @@ export const PLAN_EVENTS: Json[] = [
   ev('daycare-couple', 'Daycare Couple', H, { stop: 'daycare', effect: 'hearts' }, 'An old couple at a fence. "We\'ll raise one for you!"', [
     ch('Leave a Pokémon', out('It\'s grown while you were away!', lv(3)), { requires: [party(2)] }),
     ch('Ask about eggs', out('They found an Egg! Keep it warm and it will hatch.', egg({ lv: -6, left: 2 }))),
+    ch('Ask about an old friend\'s egg', out('"Oh, that one! It has been waiting for you."', { kind: 'legacyEgg' }), { requires: [{ kind: 'legacyEgg' }] }),
   ]),
   ev('lost-child', 'Lost Child', H, { effect: 'hearts' }, 'Two preschoolers are crying.', [
     ch('Help them home', out('Their parent rewards you warmly.', good(10), attr('love', 5), $(700))),

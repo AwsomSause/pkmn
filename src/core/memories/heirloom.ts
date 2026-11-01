@@ -72,13 +72,31 @@ export function applyHeirloom(content: Content, run: RunState, profile: Pick<Pro
     emit(content, run, 'storyMoment', { actors: [], data: { def: 'heirloom', suppressed: false }, importance: 60, text });
     return { runId: h.runId, text };
   }
-  const rng = new Rng(hashSeed(`${run.seed}::heirloom::${h.runId}`));
-  const egg = layEgg(content, run, h.speciesId, { level: MEMORIES.heirloom.eggLevel, left: MEMORIES.heirloom.eggStages, unit: 'stage', source: 'Legacy Egg' }, rng);
+  // F118: the Legacy Egg is only handed over at a Daycare or Ranch stop (the `legacyEgg` effect), so it waits in the run's digest.
   const trait = option.id === 'move' ? `knows ${moveName(content, option.moveId ?? '')}` : option.id === 'trait' ? `has a ${option.nature} nature` : 'carries the family look';
-  egg.lineage = { ancestor: h.name, runId: h.runId, trait, ...(option.id === 'move' && option.moveId ? { moveId: option.moveId } : {}), ...(option.id === 'trait' && option.nature ? { nature: option.nature } : {}) };
-  const text = `${h.name}'s Legacy Egg joined the party: its descendant ${trait}.`;
+  run.past ??= { ghosts: [], gauntlet: [], keepsakes: [], friends: [], used: [] };
+  run.past.legacyEgg = { runId: h.runId, speciesId: h.speciesId, name: h.name, kind: option.id === 'move' ? 'move' : option.id === 'trait' ? 'trait' : 'egg', trait, ...(option.moveId ? { moveId: option.moveId } : {}), ...(option.nature ? { nature: option.nature } : {}) };
+  const text = `${h.name}'s Legacy Egg waits for you at a Daycare or Ranch: its descendant ${trait}.`;
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'heirloom', suppressed: false }, importance: 60, text });
   return { runId: h.runId, text };
+}
+
+/** True while a Legacy Egg is waiting for a Daycare or Ranch. */
+export function legacyEggWaiting(run: Pick<RunState, 'past'>): boolean {
+  return !!run.past?.legacyEgg;
+}
+
+/** Hands over the waiting Legacy Egg (mutates `run`); returns the words, or null when none waits or the party and egg slots are full. */
+export function deliverLegacyEgg(content: Content, run: RunState): string | null {
+  const w = run.past?.legacyEgg;
+  if (!w || !run.past) return null;
+  const rng = new Rng(hashSeed(`${run.seed}::heirloom::${w.runId}`));
+  const egg = layEgg(content, run, w.speciesId, { level: MEMORIES.heirloom.eggLevel, left: MEMORIES.heirloom.eggStages, unit: 'stage', source: 'Legacy Egg' }, rng);
+  egg.lineage = { ancestor: w.name, runId: w.runId, trait: w.trait, ...(w.kind === 'move' && w.moveId ? { moveId: w.moveId } : {}), ...(w.kind === 'trait' && w.nature ? { nature: w.nature } : {}) };
+  run.past.legacyEgg = null;
+  const text = `${w.name}'s Legacy Egg joined the party: its descendant ${w.trait}.`;
+  emit(content, run, 'storyMoment', { actors: [], data: { def: 'heirloom-egg', suppressed: false }, importance: 70, text });
+  return text;
 }
 
 /** Marks a heirloom as handed over (a copy of the profile). */

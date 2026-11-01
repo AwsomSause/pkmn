@@ -370,6 +370,7 @@ export const MORE_EVENTS: Json[] = [
   ev('pokemon-daycare-visit', 'Daycare Drop-In', H, { rarity: 'uncommon', cast: ['trainer.hiker'], effect: 'hearts', tint: '#283018' }, 'The daycare man waves. "Leave one with us a while?"', [
     ch('Leave the lead for a bit', out('It comes back stronger.', lv(2), fr(5, 'lead'))),
     ch('Ask about eggs', out('"Here, this one was left behind."', egg({ lv: -3, shiny: 2, left: 3 }))),
+    ch('Ask about the egg an old friend left', out('"Ah, yes. That one has been waiting for you."', { kind: 'legacyEgg' }), { requires: [{ kind: 'legacyEgg' }] }),
   ]),
   ev('stray-kitten', 'Stray Kitten', H, { rarity: 'common', pokemon: 'skitty', effect: 'hearts' }, 'A hungry little cat Pokémon mews at you.', [
     ch('Feed it', out('It purrs and joins you.', lose(), join({ species: ['skitty', 'meowth', 'purrloin', 'espurr', 'litleo', 'sprigatito'], lv: -1 }))),
