@@ -73,7 +73,8 @@ import totemsJson from './totems.json';
 import shadowWorldJson from './shadowWorld.json';
 import { ShadowWorldFileSchema } from '../core/shadowWorld/schema';
 import expeditionsJson from './expeditions.json';
-import { ExpeditionFileSchema } from '../core/expedition/schema';
+import legendaryJson from './legendaryEvents.json';
+import { ExpeditionFileSchema, LegendaryFileSchema } from '../core/expedition/schema';
 import minigamesJson from './minigames.json';
 import { MinigameFileSchema } from '../core/minigame/schema';
 import { MINIGAMES } from '../core/minigame/games';
@@ -120,6 +121,7 @@ export interface RawContent {
   totems: unknown;
   shadowWorld: unknown;
   expeditions: unknown;
+  legendaryEvents: unknown;
   minigames: unknown;
   zMoves: unknown;
   maxMoves: unknown;
@@ -173,6 +175,7 @@ export const RAW_CONTENT: RawContent = {
   totems: totemsJson,
   shadowWorld: shadowWorldJson,
   expeditions: expeditionsJson,
+  legendaryEvents: legendaryJson,
   minigames: minigamesJson,
   // Generated: npm run data:zmoves.
   zMoves: zMovesJson,
@@ -238,14 +241,17 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
   const balance = parse(BalanceSchema, raw.balance, 'balance.json', problems);
   const story = parse(StoryConfigSchema, raw.story, 'story.json', problems);
   const raids = parse(RaidFileSchema, raw.raids, 'raids.json', problems);
-  const totems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
+  const baseTotems = parse(TotemFileSchema, raw.totems, 'totems.json', problems);
   const shadowWorld = parse(ShadowWorldFileSchema, raw.shadowWorld, 'shadowWorld.json', problems);
   const eventsFile = parse(EventsFileSchema, raw.events, 'events.json', problems);
-  const expeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
+  const baseExpeditions = parse(ExpeditionFileSchema, raw.expeditions, 'expeditions.json', problems);
+  const legend = parse(LegendaryFileSchema, raw.legendaryEvents, 'legendaryEvents.json', problems);
+  const totems = baseTotems && legend ? { ...baseTotems, totems: [...baseTotems.totems, ...legend.totems] } : null;
+  const expeditions = baseExpeditions && legend ? { ...baseExpeditions, expeditions: [...baseExpeditions.expeditions, ...legend.events] } : null;
   const minigames = parse(MinigameFileSchema, raw.minigames, 'minigames.json', problems);
   const zMoves = parse(ZMoveDataSchema, raw.zMoves, 'zMoves.json', problems);
   const maxMoves = parse(MaxMoveDataSchema, raw.maxMoves, 'maxMoves.json', problems);
-  if (!quests || !gameEventsFile || !eventsFile || !story || !raids || !totems || !shadowWorld || !expeditions || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
+  if (!quests || !gameEventsFile || !eventsFile || !story || !raids || !totems || !shadowWorld || !expeditions || !legend || !minigames || !zMoves || !maxMoves || !species || !moves || !abilities || !typeChart || !archetypes || !achievements || !runPrep || !rewards || !items || !itemCatalog || !learnables || !trainers || !bossProfiles || !bossTeams || !regions || !themes || !shop || !ruleset || !trainerTiers || !balance) {
     throw new ContentError(problems);
   }
 
@@ -284,6 +290,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     totems,
     shadowWorld,
     expeditions,
+    legendaryGate: { gateChance: legend.gateChance, perRegion: legend.perRegion },
     minigames,
     zMoves,
     maxMoves,
@@ -369,6 +376,14 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (fin.kind === 'megaBoss') for (const id of fin.species) if (!megaSpecies.has(id)) problems.push(`expeditions.json "${e.id}" finale ${id} has no Mega Stone`);
     if (fin.kind === 'raid' && !raids.raids.some((r) => r.id === fin.raidId)) problems.push(`expeditions.json "${e.id}" finale raid is unknown`);
     if (fin.kind === 'totem' && !totems.totems.some((t) => t.id === fin.totemId)) problems.push(`expeditions.json "${e.id}" finale Totem is unknown`);
+    if (e.legendary) {
+      const l = e.legendary;
+      for (const id of [l.species, ...l.wild]) if (!content.species.has(id)) problems.push(`legendaryEvents.json "${e.id}" has unknown species "${id}"`);
+      for (const n of l.npcs) for (const o of n.options) if (o.effect.item && !content.items.has(o.effect.item)) problems.push(`legendaryEvents.json "${e.id}" NPC "${n.id}" gives unknown item`);
+      if (fin.kind !== 'totem') problems.push(`legendaryEvents.json "${e.id}" must end with a Totem finale`);
+      else if (!totems.totems.find((t) => t.id === fin.totemId)?.legendary) problems.push(`legendaryEvents.json "${e.id}" finale Totem must be a legendary one`);
+      if (e.partyMode !== 'own') problems.push(`legendaryEvents.json "${e.id}" must use your own party`);
+    }
     if (e.partyMode === 'rental' && e.nodeWeights.recruit) problems.push(`expeditions.json "${e.id}": a rental expedition cannot have recruit nodes`);
   }
   for (const g of minigames.games) {

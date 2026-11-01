@@ -10,6 +10,8 @@ export interface RouteNode {
   kind: ExpeditionNodeKind;
   next: string[];
   done: boolean;
+  /** Collapsed by a Legendary event: no longer reachable. */
+  blocked?: boolean;
 }
 
 const COMBAT: ExpeditionNodeKind[] = ['wild', 'trainer', 'elite', 'totem'];

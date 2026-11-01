@@ -17,6 +17,8 @@ import { maxHp } from '../pokemon';
 import { hashSeed, Rng } from '../rng';
 import { getRaid } from '../raid/raid';
 import { getTotem } from '../totem/totem';
+import { recordBattleStarted } from '../story/hooks';
+import { afterStop, applyBattleEnvironment, legendaryRecord, recordOutcome, stageRules } from '../legendary/legendary';
 import { newMon, requireStage, startEncounter, startRaidBattle, startTotemBattle } from '../run';
 import type { Content, Item } from '../contentSchema';
 import type { ExpeditionState, MapNode, RunState } from '../state';
@@ -46,6 +48,8 @@ export interface ExpeditionPreview {
   finale: string;
   rewards: string[];
   rules: string[];
+  /** Set for a Legendary world event: its presentation (omen, lore, whether the chance is temporary...). */
+  legendary?: { speciesId: string; epithet: string; rarity: string; omen: string; lore: string[]; temporaryNote: string; tint: string; accent: string; modifiers: string[]; stage: string[] };
 }
 
 const PARTY_TEXT: Record<string, string> = {
@@ -66,6 +70,10 @@ export function expeditionPreview(content: Content, run: RunState, sideId: strin
   return {
     id: def.id, name: def.name, tier: def.tier, blurb: def.blurb, partyMode: def.partyMode, partyText: PARTY_TEXT[def.partyMode]!,
     nodes: `${def.nodes.min}–${def.nodes.max} stops`, finale, rewards,
+    legendary: def.legendary && {
+      speciesId: def.legendary.species, epithet: def.legendary.epithet, rarity: def.legendary.rarity, omen: def.legendary.omen, lore: def.legendary.lore, temporaryNote: def.legendary.temporaryNote,
+      tint: def.legendary.visual.tint, accent: def.legendary.visual.accent, modifiers: def.legendary.modifiers, stage: stageRules(def, 0),
+    },
     rules: ['Loot is kept when you extract or finish.', `Losing a fight forfeits the loot (${Math.round(def.failureKeep * 100)}% of its money is kept).`, 'You never lose your own Pokémon.'],
   };
 }
@@ -123,6 +131,11 @@ export function beginExpedition(content: Content, current: RunState, sideId: str
     exp.status = 'choice';
     exp.choice = { kind: 'combined', title: 'Choose one recruit', left: 1, options: draftOptions(content, rentalOptions(def, pick, 3), exp.level) };
   }
+  if (def.legendary) {
+    const rec = legendaryRecord(run);
+    if (!rec.offered.includes(def.id)) rec.offered.push(def.id);
+    exp.log.push(`${def.name}: ${def.legendary.omen}`);
+  }
   run.phase = 'expedition';
   return run;
 }
@@ -153,14 +166,18 @@ export function nodeById(exp: ExpeditionState, id: string): RouteNode {
 export function availableNodes(exp: ExpeditionState): RouteNode[] {
   if (exp.status !== 'route') return [];
   const ids = exp.current === null ? exp.nodes.filter((n) => n.layer === 0).map((n) => n.id) : nodeById(exp, exp.current).next;
-  return ids.map((id) => nodeById(exp, id)).filter((n) => !n.done);
+  return ids.map((id) => nodeById(exp, id)).filter((n) => !n.done && !n.blocked);
 }
 
-function complete(exp: ExpeditionState, nodeId: string): void {
-  nodeById(exp, nodeId).done = true;
+function complete(content: Content, run: RunState, exp: ExpeditionState, nodeId: string): void {
+  const node = nodeById(exp, nodeId);
+  node.done = true;
   exp.current = nodeId;
   exp.node = null;
   exp.status = 'route';
+  // A Legendary stage acts on the party and on the route after every stop (but not after its finale).
+  const def = getExpedition(content, exp.id);
+  if (def.legendary && node.kind !== 'finale') exp.log.push(...afterStop(content, run, exp, def, node.layer));
 }
 
 function tierName(tier: number): 'early' | 'mid' | 'late' | 'grand' {
@@ -183,20 +200,29 @@ export function chooseExpeditionNode(content: Content, current: RunState, nodeId
     run.battle!.expedition = true;
     exp.status = 'battle';
     exp.log.push(`${nodeLabel(target.kind)}.`);
+    // A Legendary stage sets the weather and terrain of its fights (the finale Totem brings its own).
+    if (def.legendary && target.kind !== 'finale') {
+      const line = applyBattleEnvironment(def, run.battle!, target.layer, new Rng(hashSeed(`${run.seed}::legend-env::${exp.id}:${nodeId}`)));
+      if (line) exp.log.push(line);
+    }
   };
   switch (target.kind as ExpeditionNodeKind) {
     case 'wild':
     case 'trainer':
     case 'elite': {
       const column = getCampaign(content, run.campaignId).columns;
+      if (def.legendary && target.kind === 'wild') {
+        fight(() => startLegendWild(content, run, rng.pick(def.legendary!.wild), exp.level + def.legendary!.wildLevelBonus));
+        break;
+      }
       const node: MapNode = { id: `exp-${nodeId}`, column, row: 0, kind: target.kind === 'wild' ? 'wild' : 'trainer', harder: target.kind === 'elite', next: [], sides: [], note: '' };
       fight(() => startEncounter(content, run, node));
       if (target.kind === 'elite') run.battle!.ai = Math.max(run.battle!.ai, 0.5);
       break;
     }
     case 'totem': {
-      const pool = content.totems.totems.filter((t) => t.tier === tierName(def.tier));
-      const totem = rng.pick(pool.length > 0 ? pool : content.totems.totems);
+      const pool = content.totems.totems.filter((t) => t.tier === tierName(def.tier) && !t.legendary);
+      const totem = rng.pick(pool.length > 0 ? pool : content.totems.totems.filter((t) => !t.legendary));
       fight(() => startTotemBattle(content, run, totem, rng.pick(totem.species), Math.min(exp.level + totem.levelBonus, exp.level + 4)));
       break;
     }
@@ -208,6 +234,7 @@ export function chooseExpeditionNode(content: Content, current: RunState, nodeId
     }
     case 'finale': {
       const fin = def.finale;
+      if (def.legendary) exp.log.push(def.legendary.finale.intro);
       if (fin.kind === 'raid') {
         const raid = getRaid(content, fin.raidId);
         fight(() => startRaidBattle(content, run, raid, rng.pick(raid.species), Math.min(exp.level + raid.levelBonus, exp.level + 5)));
@@ -222,20 +249,20 @@ export function chooseExpeditionNode(content: Content, current: RunState, nodeId
     case 'cache': {
       for (const c of def.cache) if (rng.chance(c.chance)) addLoot(exp, c.item, 1);
       exp.log.push('You found a cache of supplies.');
-      complete(exp, nodeId);
+      complete(content, run, exp, nodeId);
       break;
     }
     case 'research': {
       exp.loot.research += 1;
       exp.log.push(`Research station: ${exp.loot.research}/${def.researchGoal}.`);
-      complete(exp, nodeId);
+      complete(content, run, exp, nodeId);
       break;
     }
     case 'megaEnergy': {
       exp.loot.energy += 1;
       exp.log.push(`Mega Energy collected (${exp.loot.energy}).`);
       grantMegaIfReady(content, run, exp, def, rng);
-      complete(exp, nodeId);
+      complete(content, run, exp, nodeId);
       break;
     }
     case 'rest': {
@@ -247,7 +274,8 @@ export function chooseExpeditionNode(content: Content, current: RunState, nodeId
       break;
     }
     case 'mystery': {
-      const ev = rng.pick(content.expeditions.mysteryEvents);
+      const npc = def.legendary ? rng.pick(def.legendary.npcs) : null;
+      const ev = npc ? { id: `npc:${npc.id}`, text: `${npc.name}: ${npc.text}`, options: npc.options } : rng.pick(content.expeditions.mysteryEvents);
       exp.status = 'choice';
       exp.choice = { kind: 'mystery', title: ev.text, left: 1, options: ev.options.map((o) => ({ label: o.label, detail: '', speciesId: undefined })) };
       exp.log.push(ev.id);
@@ -285,6 +313,18 @@ function grantMegaIfReady(content: Content, run: RunState, exp: ExpeditionState,
     return;
   }
   exp.log.push('Mega Energy gathered, but nobody in your party can use a Mega Stone yet.');
+}
+
+/** A wild fight on a Legendary stage, from the event's own table. */
+function startLegendWild(content: Content, run: RunState, speciesId: string, level: number): void {
+  const activeIndex = run.party.findIndex((p) => p.hp > 0);
+  const mon = newMon(content, run, speciesId, level, 'e');
+  mon.hp = maxHp(content, mon);
+  run.battle = createBattle('wild', [mon], activeIndex, run.party[activeIndex]!.uid);
+  run.battle.ai = 0.5;
+  discover(run, speciesId, false);
+  run.phase = 'battle';
+  recordBattleStarted(content, run);
 }
 
 function startMegaGuardian(content: Content, run: RunState, speciesId: string, level: number, hpBoost: number): void {
@@ -329,12 +369,16 @@ export function resolveExpeditionChoice(content: Content, current: RunState, ind
       exp.log.push('You foraged for supplies.');
     }
   } else {
-    const ev = content.expeditions.mysteryEvents.find((e) => e.id === exp.log[exp.log.length - 1]);
+    const last = exp.log[exp.log.length - 1]!;
+    const npc = last.startsWith('npc:') ? def.legendary?.npcs.find((n) => `npc:${n.id}` === last) : null;
+    const ev = npc ? { options: npc.options } : content.expeditions.mysteryEvents.find((e) => e.id === last);
     const eff = ev?.options[index]?.effect ?? {};
     if (ev) exp.log.push(ev.options[index]!.result);
     if (eff.heal) for (const mon of run.party) mon.hp = Math.min(maxHp(content, mon), mon.hp + Math.ceil(maxHp(content, mon) * eff.heal));
     if (eff.hurt) for (const mon of run.party) if (mon.hp > 0) mon.hp = Math.max(1, mon.hp - Math.ceil(maxHp(content, mon) * eff.hurt));
-    if (eff.money) exp.loot.money += eff.money;
+    // Gains go into the loot (kept on extraction); a price is paid from your purse.
+    if (eff.money && eff.money > 0) exp.loot.money += eff.money;
+    if (eff.money && eff.money < 0) run.money = Math.max(0, run.money + eff.money);
     if (eff.item) addLoot(exp, eff.item, 1);
     if (eff.research) exp.loot.research += eff.research;
     if (eff.energy) {
@@ -343,7 +387,7 @@ export function resolveExpeditionChoice(content: Content, current: RunState, ind
     }
   }
   exp.choice = null;
-  if (exp.node) complete(exp, exp.node);
+  if (exp.node) complete(content, run, exp, exp.node);
   else exp.status = 'route';
   return run;
 }
@@ -359,7 +403,7 @@ export function settleExpedition(content: Content, current: RunState): RunState 
   if (result === 'lose') return finish(content, run, 'failed');
   const node = nodeById(e, e.node!);
   if (node.kind === 'elite') addLoot(e, getExpedition(content, e.id).cache[0]!.item, 1);
-  complete(e, node.id);
+  complete(content, run, e, node.id);
   return node.kind === 'finale' ? finish(content, run, 'completed') : run;
 }
 
@@ -409,6 +453,12 @@ function finish(content: Content, run: RunState, outcome: 'completed' | 'extract
       run.expeditions.completed.push(def.id);
       summary.push(`Completed! ₽${money}${stones.length ? `, ${stones.join(', ')}` : ''}${exp.loot.research >= def.researchGoal ? ', research goal reached' : ''}.`);
     }
+  }
+  if (def.legendary) {
+    recordOutcome(run, def, outcome);
+    const f = def.legendary.finale;
+    if (outcome === 'completed') summary.unshift(f.win);
+    else if (outcome === 'failed') summary.unshift(f.lose);
   }
   run.expeditions.last = summary;
   run.expedition = null;

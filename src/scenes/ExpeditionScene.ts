@@ -3,6 +3,7 @@
 
 import Phaser from 'phaser';
 import { availableNodes, getExpedition, nodeLabel } from '../core/expedition/flow';
+import { stageRules } from '../core/legendary/legendary';
 import { maxHp } from '../core/pokemon';
 import type { ExpeditionState, RunState } from '../core/state';
 import { services } from '../game/services';
@@ -39,10 +40,16 @@ export class ExpeditionScene extends Phaser.Scene {
     }
     const exp = run.expedition;
     const def = getExpedition(session.content, exp.id);
-    const song = expeditionTrack(def.tier);
+    const song = def.legendary?.music ?? expeditionTrack(def.tier);
     void loadAssets(this, [song]).then(() => { if (this.scene.isActive()) playMusic(this, song); });
     if (this.textures.exists('ui.raid.adv_header')) this.add.image(GAME_WIDTH / 2, 22, 'ui.raid.adv_header').setDisplaySize(GAME_WIDTH * 0.7, 56).setAlpha(0.5);
-    this.add.text(GAME_WIDTH / 2, 22, `${def.name}  ·  Tier ${def.tier}`, textStyle(32, COLORS.textLight)).setOrigin(0.5);
+    const legend = def.legendary;
+    if (legend) {
+      // A Legendary stage has its own colour wash and accent line.
+      this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, Number.parseInt(legend.visual.tint.slice(1), 16), 0.28).setDepth(-1);
+      this.add.text(GAME_WIDTH / 2, 8, `LEGENDARY EVENT  ·  ${legend.epithet}`, textStyle(12, legend.visual.accent)).setOrigin(0.5, 0);
+    }
+    this.add.text(GAME_WIDTH / 2, 22, legend ? def.name : `${def.name}  ·  Tier ${def.tier}`, textStyle(32, COLORS.textLight)).setOrigin(0.5);
     const route = drawPanel(this, 16, 48, GAME_WIDTH - 32, 200, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
     slideIn(this, route, 0, -16, session.settings.battleAnimations);
     this.drawRoute(exp);
@@ -51,6 +58,10 @@ export class ExpeditionScene extends Phaser.Scene {
     const items = Object.entries(loot.items).map(([id, n]) => `${n} ${id.replace(/-/g, ' ')}`);
     this.add.text(24, 282, `Loot: ₽${loot.money}${items.length ? `, ${items.join(', ')}` : ''}  ·  Mega Energy ${loot.energy}/${def.megaCost}  ·  Research ${loot.research}/${def.researchGoal}`, textStyle(15, '#f0e0a0', { wordWrap: { width: GAME_WIDTH - 48 } }));
     this.add.text(24, 306, exp.log.slice(-2).join('  ·  '), textStyle(14, '#a8d0a8', { wordWrap: { width: GAME_WIDTH - 48 } }));
+    if (legend) {
+      const layer = exp.current ? exp.nodes.find((n) => n.id === exp.current)!.layer + 1 : 0;
+      this.add.text(GAME_WIDTH - 24, 258, stageRules(def, layer).join('  ·  '), textStyle(12, legend.visual.accent, { wordWrap: { width: 420 }, align: 'right' })).setOrigin(1, 0);
+    }
 
     const options: { label: string; detail?: string; act: () => void }[] = [];
     if (exp.choice) {
@@ -104,7 +115,7 @@ export class ExpeditionScene extends Phaser.Scene {
     }
     for (const n of exp.nodes) {
       const p = pos.get(n.id)!;
-      const style = GLYPH[n.kind] ?? { glyph: '·', color: 0x888888 };
+      const style = n.blocked ? { glyph: '✗', color: 0x503030 } : (GLYPH[n.kind] ?? { glyph: '·', color: 0x888888 });
       const bright = lit.has(n.id) || n.id === exp.node;
       g.fillStyle(style.color, n.done ? 0.35 : bright ? 1 : 0.7);
       g.fillCircle(p.x, p.y, 20);

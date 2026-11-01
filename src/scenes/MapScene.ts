@@ -85,6 +85,9 @@ const SIDE_STYLE: Record<SideStop['kind'], { color: number; glyph: string }> = {
 const SIDE_LABEL: Record<SideStop['kind'], string> = { heal: 'Heal', shop: 'Shop', fish: 'Fish', raid: 'Raid', totem: 'Totem', event: 'Event', expedition: 'Expedition', minigame: 'Minigame', service: 'Service', plaza: 'Plaza' };
 /** A node in the fog: a grey token with a "?" until you scout, see further or get close. */
 const FOG_STYLE = { color: 0x56607a, glyph: '?', label: 'Fog' };
+/** A Legendary world event's gate (an expedition gate whose expedition has a `legendary` block). */
+const LEGEND_STYLE = { color: 0xf0c030, glyph: '✦' };
+const legendOf = (expeditionId: string | undefined) => (expeditionId ? services().session.content.expeditions.expeditions.find((e) => e.id === expeditionId && e.legendary) : undefined);
 /** A roaming Legendary's stop and a checkpoint camp. */
 const ROAMER_STYLE = { color: 0xf0c030, glyph: '★' };
 const CAMP_STYLE = { color: 0x58a860, glyph: '▲' };
@@ -411,7 +414,7 @@ export class MapScene extends Phaser.Scene {
       n.sides.forEach((side, i) => {
         const sx = x + NODE_RADIUS + 4 + i * 22;
         const sy = y - NODE_RADIUS - 2;
-        const s = fog ? HIDDEN_STYLE : side.roamer ? ROAMER_STYLE : side.eventId === 'camp-checkpoint' ? CAMP_STYLE : side.kind === 'event' ? (stopIsHidden(content, run, n, side) ? HIDDEN_STYLE : stopStyle(content.events.get(side.eventId ?? '')?.stop)) : SIDE_STYLE[side.kind];
+        const s = fog ? HIDDEN_STYLE : side.kind === 'expedition' && legendOf(side.expeditionId) ? LEGEND_STYLE : side.roamer ? ROAMER_STYLE : side.eventId === 'camp-checkpoint' ? CAMP_STYLE : side.kind === 'event' ? (stopIsHidden(content, run, n, side) ? HIDDEN_STYLE : stopStyle(content.events.get(side.eventId ?? '')?.stop)) : SIDE_STYLE[side.kind];
         const sg = this.add.graphics();
         sg.fillStyle(0x181818, side.used ? 0.3 : 1);
         sg.fillRect(sx - 11, sy - 11, 22, 22);
@@ -453,7 +456,7 @@ export class MapScene extends Phaser.Scene {
     const currentNode = stage.current ? findNode(stage.map, stage.current) : null;
     for (const side of currentNode?.sides ?? []) {
       if (side.kind !== 'shop' && side.used && !(side.kind === 'service' && serviceReusable(side))) continue;
-      buttons.push({ option: { kind: 'side', side }, label: SIDE_LABEL[side.kind], color: side.kind === 'event' && !stopIsHidden(content, run, currentNode!, side) ? stopStyle(content.events.get(side.eventId ?? '')?.stop).color : SIDE_STYLE[side.kind].color });
+      buttons.push({ option: { kind: 'side', side }, label: side.kind === 'expedition' && legendOf(side.expeditionId) ? 'Legendary' : SIDE_LABEL[side.kind], color: side.kind === 'expedition' && legendOf(side.expeditionId) ? LEGEND_STYLE.color : side.kind === 'event' && !stopIsHidden(content, run, currentNode!, side) ? stopStyle(content.events.get(side.eventId ?? '')?.stop).color : SIDE_STYLE[side.kind].color });
     }
     if (this.itemRows().length > 0) buttons.push({ option: { kind: 'items' }, label: 'Items', color: COLORS.panel });
     if (boxCapacity(runPerks(content, services().session.run!)) > 0) buttons.push({ option: { kind: 'box' }, label: 'PC', color: COLORS.panel });
@@ -611,6 +614,7 @@ export class MapScene extends Phaser.Scene {
           const def = SERVICES.services.find((x) => x.id === option.side.serviceId);
           return `${def?.name ?? 'Service'}: ${def?.blurb ?? ''}`;
         }
+        if (option.side.kind === 'expedition' && legendOf(option.side.expeditionId)) return option.side.used ? 'Legendary event: already visited.' : `Legendary event: ${legendOf(option.side.expeditionId)!.legendary!.omen} Temporary: it is gone when you leave this stage.`;
         if (option.side.kind === 'expedition') return option.side.used ? 'Expedition gate: already used.' : 'Expedition gate: a branching adventure with its own party rules. Loot is kept when you extract. You never lose your own Pokémon.';
         if (option.side.kind === 'totem') return option.side.used ? 'Totem territory: already fought.' : 'Totem territory: a guardian with an aura, allies and phases. Losing never ends your run.';
         if (option.side.kind === 'raid') return option.side.used ? 'Raid den: already fought.' : 'Raid den: a boss with shields and phases. See its tier and rewards before you commit.';
@@ -873,19 +877,19 @@ export class MapScene extends Phaser.Scene {
     const pv = expeditionPreview(session.content, session.run!, sideId);
     const picker: Picker = new Picker(this, {
       glass: true,
-      title: `Expedition - Tier ${pv.tier}: ${pv.name}`,
+      title: pv.legendary ? `Legendary Event - ${pv.legendary.epithet}` : `Expedition - Tier ${pv.tier}: ${pv.name}`,
       columns: 1,
       rowHeight: 190,
       rows: [
         {
           problem: null,
-          hint: `${pv.blurb} ${pv.partyText} ${pv.nodes}. Finale: ${pv.finale}. Rewards: ${pv.rewards.join(', ')}. ${pv.rules.join(' ')}`,
+          hint: pv.legendary ? `${pv.legendary.omen} ${pv.legendary.lore.join(' ')} ${pv.legendary.temporaryNote} Stage: ${pv.legendary.stage.join(' ')} ${pv.legendary.modifiers.join('; ')}. Finale: ${pv.finale}. Rewards: ${pv.rewards.join(', ')}. You are never forced to enter.` : `${pv.blurb} ${pv.partyText} ${pv.nodes}. Finale: ${pv.finale}. Rewards: ${pv.rewards.join(', ')}. ${pv.rules.join(' ')}`,
           draw: (scene, box, w) => {
-            box.add(scene.add.text(16, 8, `${pv.name}  ·  ${pv.nodes}  ·  ${pv.partyMode} party`, textStyle(22)));
-            box.add(scene.add.text(16, 42, `${pv.blurb} ${pv.partyText}`, textStyle(16, '#ffd0a0', { wordWrap: { width: w - 32 } })));
+            box.add(scene.add.text(16, 8, pv.legendary ? `LEGENDARY EVENT  ·  ${pv.name}  ·  ${pv.nodes}` : `${pv.name}  ·  ${pv.nodes}  ·  ${pv.partyMode} party`, textStyle(pv.legendary ? 20 : 22, pv.legendary?.accent)));
+            box.add(scene.add.text(16, 42, pv.legendary ? `${pv.legendary.omen} ${pv.legendary.lore[0]}` : `${pv.blurb} ${pv.partyText}`, textStyle(16, '#ffd0a0', { wordWrap: { width: w - 32 } })));
             box.add(scene.add.text(16, 96, `Finale: ${pv.finale}`, textStyle(16, '#a0d0ff', { wordWrap: { width: w - 32 } })));
             box.add(scene.add.text(16, 124, `Rewards: ${pv.rewards.join(' · ')}`, textStyle(16, '#c0f0c0', { wordWrap: { width: w - 32 } })));
-            box.add(scene.add.text(16, 152, pv.rules.join(' '), textStyle(14, '#d8d0e0', { wordWrap: { width: w - 32 } })));
+            box.add(scene.add.text(16, 152, pv.legendary ? `${pv.legendary.temporaryNote} ${pv.legendary.stage.join(' ')}` : pv.rules.join(' '), textStyle(14, '#d8d0e0', { wordWrap: { width: w - 32 } })));
           },
         },
       ],

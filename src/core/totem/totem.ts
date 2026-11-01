@@ -26,9 +26,9 @@ export function totemTier(content: Content, regionIndex: number): TotemDef['tier
 /** The Totem of a stage: one whose type is in the stage's theme (its home), else any of the region's tier. */
 export function pickTotemFor(content: Content, run: Pick<RunState, 'seed' | 'regionIndex'>, themeTypes: readonly string[], key: string): TotemDef {
   const tier = totemTier(content, run.regionIndex);
-  const inTier = content.totems.totems.filter((t) => t.tier === tier);
+  const inTier = content.totems.totems.filter((t) => t.tier === tier && !t.legendary);
   const home = inTier.filter((t) => themeTypes.includes(t.type));
-  const pool = home.length > 0 ? home : inTier.length > 0 ? inTier : content.totems.totems;
+  const pool = home.length > 0 ? home : inTier.length > 0 ? inTier : content.totems.totems.filter((t) => !t.legendary);
   return new Rng(hashSeed(`${run.seed}::totem-pick::${key}`)).pick(pool);
 }
 

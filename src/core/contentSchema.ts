@@ -2702,6 +2702,8 @@ export interface Content {
   shadowWorld: ShadowWorldFile;
   /** Mega-Expeditions (expeditions.json, core/expedition). */
   expeditions: ExpeditionFile;
+  /** Legendary world events (legendaryEvents.json, core/legendary): their events are merged into `expeditions`. */
+  legendaryGate: { gateChance: number; perRegion: number };
   /** Minigames (minigames.json, core/minigame). */
   minigames: MinigameFile;
   zMoves: ZMoveData;
