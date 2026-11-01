@@ -1906,6 +1906,25 @@ export const BalanceSchema = z.object({
    * weight for the next slot (lowered further by Luck, see luckDraftVariety).
    */
   repeatFamilyWeight: z.number().min(0).max(1),
+  /** Smart item distribution (core/itemDistribution.ts, Major Update §1): how the run's situation tilts draft odds. */
+  itemDistribution: z.object({
+    /** False: every reward counts as relevance 1 and tier weights are left alone (old-seed tests). */
+    enabled: z.boolean(),
+    /** Weight of a type item (Charcoal, gems) when no party member knows a move of its type. */
+    offTypeWeight: z.number().min(0).max(1),
+    /** Each owned copy divides a reward's weight by (1 + ownedPenalty x copies). */
+    ownedPenalty: z.number().min(0),
+    /** Healing weight with nobody hurt, plus needBonus x the share of the party that needs it. */
+    healIdleWeight: z.number().min(0),
+    needBonus: z.number().min(0),
+    /** Rare and epic tier weights grow by this share per badge, counting up to badgeCap badges. */
+    rarePerBadge: z.number().min(0),
+    epicPerBadge: z.number().min(0),
+    badgeCap: z.number().int().min(0),
+    /** Each epic already taken this run multiplies the epic weight by this, down to the floor. */
+    epicRepeatDecay: z.number().min(0).max(1),
+    epicRepeatFloor: z.number().min(0).max(1),
+  }),
   /**
    * Held items bosses carry (director, answer 3): how many for each role, the
    * rarity weights, and how much the rare and epic weights grow per region.

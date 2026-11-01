@@ -22,6 +22,7 @@
   "epic": 0.85
  },
  "repeatFamilyWeight": 0.5,
+ "itemDistribution": { "enabled": true, "offTypeWeight": 0.25, "ownedPenalty": 0.5, "healIdleWeight": 0.5, "needBonus": 2, "rarePerBadge": 0.04, "epicPerBadge": 0.08, "badgeCap": 16, "epicRepeatDecay": 0.6, "epicRepeatFloor": 0.3 },
  "bossHeldItems": {
   "gym": 1,
   "elite": 2,
