@@ -67,6 +67,19 @@ test('the Pokémon screen shows tabs, explains held items and reorders the party
   expect(t.some((s) => s.includes('Attack is ×1.5') && s.includes('Locked'))).toBe(true);
   expect(t.some((s) => s.startsWith('2 items, 3 effects active'))).toBe(true);
   await page.screenshot({ path: 'test-results/pokemon-items.png' });
+  // Take off: Enter opens the action menu, "Review items" (4th entry) focuses the list, Enter takes the Choice Band into the Bag.
+  await page.keyboard.press('Enter');
+  for (let i = 0; i < 4; i++) await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(300);
+  const bag = await page.evaluate(() => {
+    const run = (window as any).__pkr.session.run;
+    return { held: run.party[0].held, loose: run.looseHeld };
+  });
+  expect(bag.held['choice-band']).toBeUndefined();
+  expect(bag.loose['choice-band']).toBe(1);
+  await page.keyboard.press('Escape');
   for (const tab of ['Bond', 'History', 'Traits']) {
     await page.keyboard.press('ArrowRight');
     await page.waitForTimeout(300);
