@@ -1,11 +1,12 @@
 // Legendary world events (spec 19): data, triggers, stage rules, route changes, saves.
 
 import { describe, expect, it } from 'vitest';
-import { validateRoute } from '../../src/core/expedition/graph';
+import { generateRoute, validateRoute } from '../../src/core/expedition/graph';
 import { availableNodes, beginExpedition, chooseExpeditionNode, expeditionPreview, extractExpedition, resolveExpeditionChoice, settleExpedition } from '../../src/core/expedition/flow';
 import { LegendaryFileSchema } from '../../src/core/expedition/schema';
 import { eligibleLegendary, envAt, legendaryEvents, legendaryProblem, placeLegendaryGate } from '../../src/core/legendary/legendary';
 import { placeExpeditionGate } from '../../src/core/expedition/gate';
+import { LEGEND_TRACK_IDS, legendLayout, legendMusic } from '../../src/core/legendary/identity';
 import { UIE_ARENAS } from '../../src/assets/catalog';
 import { LEGEND_SHAPES, legendAnimId } from '../../src/core/presentation/legendAnims';
 import { resolveAnim } from '../../src/core/presentation/animRegistry';
@@ -355,5 +356,38 @@ describe('legendary presentation cues', () => {
     for (const sh of LEGEND_SHAPES) expect(resolveAnim(legendAnimId(sh), animSettingsFrom(DEFAULT_SETTINGS)), sh).toBeTruthy();
     const species = new Set(evs.map((d) => legendLook(content, d)!.arena + '/' + legendLook(content, d)!.shape));
     expect(species.size).toBeGreaterThan(15);
+  });
+
+  it('every event has victory and defeat cards', () => {
+    for (const def of legendaryEvents(content)) {
+      const c = legendCards(content, def)!;
+      expect(c.won.title).toMatch(/YIELDS$/);
+      expect(c.lost.title).toMatch(/PREVAILS$/);
+    }
+  });
+
+  it('every event has its own layout and music, and every layout makes a valid route', () => {
+    const evs = legendaryEvents(content);
+    const layouts = new Set<string>();
+    const songs = new Set<string>();
+    for (const def of evs) {
+      const lay = legendLayout(def);
+      expect(lay, def.id).toBeTruthy();
+      layouts.add(lay!.id);
+      const m = legendMusic(content, def)!;
+      expect(LEGEND_TRACK_IDS).toContain(m.route);
+      expect(LEGEND_TRACK_IDS).toContain(m.fight);
+      expect(m.key).toBeGreaterThanOrEqual(-5);
+      expect(m.key).toBeLessThanOrEqual(6);
+      songs.add(`${m.route}|${m.fight}|${m.key}`);
+      for (let i = 0; i < 6; i++) {
+        const nodes = generateRoute(def, new Rng(hashSeed(`route:${def.id}:${i}`)));
+        expect(validateRoute(def, nodes), def.id).toEqual([]);
+        expect(nodes.filter((n) => n.layer === 0)).toHaveLength(1);
+        expect(nodes.map((n) => n.layer).reduce((a, b) => Math.max(a, b), 0)).toBe(lay!.sizes.length - 1);
+      }
+    }
+    expect(layouts.size).toBe(8);
+    expect(songs.size).toBeGreaterThan(evs.length * 0.7);
   });
 });

@@ -78,6 +78,7 @@ import { environmentStory } from '../core/presentation/environmentStory';
 import { crisisLevel } from '../core/story/crisis';
 import { moveRank } from '../core/moveMastery';
 import { chargeUp, cinematic, prefetchCinematics, type CineKind } from '../ui/battleFx/cinematics';
+import { legendMusic } from '../core/legendary/identity';
 import { legendKit, legendLook } from '../core/legendary/visuals';
 import { addLegendLook } from '../ui/legendFx';
 import { bossVictoryCard, burstReveal, exitWipe, hop, introTransition, stamp, titleCard, type Beat, type IntroKind, phaseBanner, speechBubble } from '../ui/battleFx/spectacle';
@@ -833,6 +834,14 @@ export class BattleScene extends Phaser.Scene {
     if (this.motion === 'full') this.tweens.add({ targets: g, alpha: 0.25, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
   }
 
+  /** The event's own song, key and ambience when this fight belongs to a Legendary world event. */
+  private legendMusicOn(): ReturnType<typeof legendMusic> {
+    const { session } = services();
+    const run = session.run;
+    const def = run?.battle?.expedition && run.expedition ? session.content.expeditions.expeditions.find((e) => e.id === run.expedition!.id) : undefined;
+    return def?.legendary ? legendMusic(session.content, def) : null;
+  }
+
   /** True when this fight belongs to a Legendary world event (it then uses the event's own battleback). */
   private legendArenaOn(): boolean {
     const { session } = services();
@@ -876,6 +885,8 @@ export class BattleScene extends Phaser.Scene {
 
   /** The raid or Totem song (presentation only). */
   private raidTrack(battle: RunState['battle'] & object): string | null {
+    const legend = this.legendMusicOn();
+    if (legend) return legend.fight;
     const { content } = services().session;
     const tier = battle.raid ? content.raids.raids.find((r) => r.id === battle.raid!.id)?.tier ?? 1 : null;
     return raidMusic(tier, Boolean(battle.totem), battle.raid?.id ?? 'totem');
@@ -1234,7 +1245,8 @@ export class BattleScene extends Phaser.Scene {
   private startProceduralAudio(battle: BattleState): void {
     const { session } = services();
     const types = battle.trainer && isBossClass(battle.trainer.classId) ? session.content.species.get(currentEnemy(battle).speciesId)?.types : this.run.stage ? getTheme(session.content, this.run.stage.themeId).types : undefined;
-    setAmbience(this, ambienceFor(types?.[0]));
+    const lm = this.legendMusicOn();
+    setAmbience(this, lm?.ambience ?? ambienceFor(types?.[0]));
     if (battle.trainer && (isBossClass(battle.trainer.classId) || battle.trainer.classId === 'rival')) playMotif(this, battle.trainer.leaderId ?? battle.trainer.classId);
     this.refreshMusicState();
     this.events.once('shutdown', () => stopProceduralAudio());
@@ -1246,7 +1258,7 @@ export class BattleScene extends Phaser.Scene {
     const foe = currentEnemy(battle);
     const me = this.activeMon();
     const share = (m: PokemonInstance) => m.hp / Math.max(1, calcStats(services().session.content, m).hp);
-    setRegionKey(regionIdentity(this.run.regionOrder[this.run.regionIndex]).key);
+    setRegionKey(this.legendMusicOn()?.key ?? regionIdentity(this.run.regionOrder[this.run.regionIndex]).key);
     setMusicState(this, musicState({
       boss: Boolean(battle.raid || battle.totem || (battle.trainer && isBossClass(battle.trainer.classId))),
       lastFoe: battle.enemyIndex >= battle.enemyTeam.length - 1 && battle.enemyTeam.length > 1,

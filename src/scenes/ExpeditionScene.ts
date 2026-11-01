@@ -16,6 +16,8 @@ import type { ExpeditionState, RunState } from '../core/state';
 import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { playMusic, playSfx } from '../ui/audio';
+import { legendMusic } from '../core/legendary/identity';
+import { setAmbience, setMusicState, setRegionKey, stopProceduralAudio } from '../ui/procAudio';
 import { loadAssets } from '../ui/lazyAssets';
 import { EXPEDITION_TRACK_IDS, expeditionTrack } from '../core/presentation/battleMusic';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
@@ -39,15 +41,39 @@ export class ExpeditionScene extends Phaser.Scene {
   create(): void {
     const { session } = services();
     let run = session.run!;
+    const settlingId = run.expedition?.battleResult ? run.expedition.id : null;
     if (run.expedition?.battleResult) run = session.settleExpedition();
     if (run.phase !== 'expedition' || !run.expedition) {
       // The expedition ended (finished, extracted or failed): back to the map with the result.
-      this.scene.start(sceneForRun(run), { notice: run.expeditions.last.join(' '), focus: 0 });
+      const go = () => this.scene.start(sceneForRun(run), { notice: run.expeditions.last.join(' '), focus: 0 });
+      // A Legendary stage ends with its own victory or defeat card before returning to the map.
+      const endedDef = settlingId ? getExpedition(session.content, settlingId) : null;
+      const cards = endedDef?.legendary ? legendCards(session.content, endedDef) : null;
+      const result = run.legendary?.outcomes.at(-1);
+      if (cards && result?.id === settlingId) {
+        const won = result.outcome === 'completed';
+        const motion = session.settings.battleAnimations;
+        const kit = legendKit(session.content, endedDef!, 0);
+        const card = won ? cards.won : cards.lost;
+        if (kit && motion !== 'off') {
+          void titleCard(this, card.title, card.sub, won ? kit.accent : 0x8a8aa0, motion).done.then(go);
+          return;
+        }
+      }
+      go();
       return;
     }
     const exp = run.expedition;
     const def = getExpedition(session.content, exp.id);
-    const song = def.legendary?.music ?? expeditionTrack(def.tier);
+    const music = legendMusic(session.content, def);
+    const song = music?.route ?? expeditionTrack(def.tier);
+    if (music) {
+      // The event's own key and ambience bed under its song (synth layers; silent when audio is unavailable).
+      setRegionKey(music.key);
+      setAmbience(this, music.ambience);
+      setMusicState(this, 'tense');
+      this.events.once('shutdown', () => stopProceduralAudio());
+    }
     void loadAssets(this, [song]).then(() => { if (this.scene.isActive()) playMusic(this, song); });
     if (this.textures.exists('ui.raid.adv_header')) this.add.image(GAME_WIDTH / 2, 22, 'ui.raid.adv_header').setDisplaySize(GAME_WIDTH * 0.7, 56).setAlpha(0.5);
     const legend = def.legendary;
