@@ -812,7 +812,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I447 | Final boss pre-fight conversation tree changing the fight's rules |  | DONE | src/data/events.json (tools/events/w10.ts) final-conversation (three answers become relics that change later fights; limited: not the final boss only) |
 | I495 | Weather-based petting: rain makes Pokémon snuggle under the trainer's umbrella |  | DONE | src/data/events.json umbrella-share (rain event, party snuggles in); no separate petting animation |
 | I496 | Tap a wild Pokémon silhouette on the map to hear its cry before engaging |  | DONE | MapScene key C plays the cry of a Pokémon from the stage habitat (no name shown) + event tap-the-silhouette |
-| I497 | Rename a node on the map; the label shows up in later runs' ghost data |  | DONE | MapScene key N names the node you stand on (MapNode.name, shown in its description); carrying names into later ghost data not built |
+| I497 | Rename a node on the map; the label shows up in later runs' ghost data |  | DONE | MapScene key N or the Name button names the node you stand on; names are kept in profile.nook.nodeNames and return in later runs on the same spot |
 | I498 | Share an umbrella with an NPC during a storm event for a friendship bump |  | DONE | src/data/events.json (tools/events/w10.ts) umbrella-share |
 | I499 | Pokémon waves goodbye at the Hub gate as you depart on a new run |  | DONE | src/core/hubNook.ts goodbyeLine, shown as the run starts (RunPrepScene) |
 | I500 | Tap-to-wave at passing NPC caravans; each wave may drop a trinket |  | DONE | src/data/events.json (tools/events/w10.ts) passing-caravan (wave, maybe a trinket) |

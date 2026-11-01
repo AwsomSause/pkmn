@@ -7,7 +7,7 @@
 // pillar with a bigger token, and the champion stands in turning gold rays
 // (Visual Bible: "a deliberate escalation from normal stages").
 
-import { renameNode } from '../core/hubNook';
+import { nookOf, renameNode } from '../core/hubNook';
 import { habitatList } from '../core/habitat';
 import { clockLabel, periodOf, PERIOD_LOOK } from '../core/clock';
 import { modeObjectives, objectivesLine } from '../core/modeObjectives';
@@ -183,16 +183,22 @@ export class MapScene extends Phaser.Scene {
     this.endArmed = false;
     const { session } = services();
     const run = session.run!;
-    // W10 (I496): C plays the cry of a Pokémon that lives on this stage, without saying which.
-    this.input.keyboard?.on('keydown-C', () => {
+    // W10 (I496/I507/I497): C hears a cry, H holds the lead's paw, N names the node. Keys and touch buttons share one handler each.
+    const stageKey = (nodeId: string): string => {
+      const n = run.stage?.map.nodes.find((x) => x.id === nodeId);
+      return `${run.regionOrder[run.regionIndex]}:${run.stage?.themeId}:${n?.column}:${n?.row}`;
+    };
+    // Names given in earlier runs come back on the same spots (same region, theme, column and row).
+    const known = session.profile.nook?.nodeNames ?? {};
+    for (const n of run.stage?.map.nodes ?? []) if (!n.name && known[stageKey(n.id)]) n.name = known[stageKey(n.id)];
+    const doCry = (): void => {
       const names = habitatList(content, run);
       if (names.length === 0) return;
       const pick = names[Math.floor(Math.random() * names.length)]!; // presentation only, never gameplay RNG
-      const sp = [...content.species.values()].find((s) => s.name === pick);
+      const sp = [...content.species.values()].find((x) => x.name === pick);
       if (sp) playCry(this, sp);
-    });
-    // W10 (I507): H holds your lead's paw on the node you stand on: its friendship grows once per node.
-    this.input.keyboard?.on('keydown-H', () => {
+    };
+    const doHand = (): void => {
       const lead = run.party[0];
       const cur = run.stage?.current;
       if (!lead || !cur) return;
@@ -202,18 +208,29 @@ export class MapScene extends Phaser.Scene {
       lead.friendship = Math.min(255, (lead.friendship ?? 0) + 2);
       session.saveRunNow();
       notify(`${content.species.get(lead.speciesId)?.name ?? 'Your lead'} squeezes your hand. It feels braver.`);
-    });
-    // W10 (I497): N names the node you stand on; the name shows in its description.
-    this.input.keyboard?.on('keydown-N', () => {
+    };
+    const doName = (): void => {
       const cur = run.stage?.current;
-      const node = run.stage?.map.nodes.find((n) => n.id === cur);
+      const node = run.stage?.map.nodes.find((x) => x.id === cur);
       if (!node || typeof window === 'undefined' || typeof window.prompt !== 'function') return;
       const text = window.prompt('Name this place (up to 24 letters, empty clears):', node.name ?? '');
       if (text === null) return;
       const renamed = renameNode(run, node.id, text);
-      node.name = renamed.stage!.map.nodes.find((n) => n.id === node.id)!.name;
+      node.name = renamed.stage!.map.nodes.find((x) => x.id === node.id)!.name;
+      const names = { ...(session.profile.nook?.nodeNames ?? {}) };
+      if (node.name) names[stageKey(node.id)] = node.name; else delete names[stageKey(node.id)];
+      session.changeProfile((pr) => ({ ...pr, nook: { ...nookOf(pr), nodeNames: names } }));
       session.saveRunNow();
       this.scene.restart({ notice: node.name ? `You named this place "${node.name}".` : 'The name is cleared.', focus: this.index });
+    };
+    this.input.keyboard?.on('keydown-C', doCry);
+    this.input.keyboard?.on('keydown-H', doHand);
+    this.input.keyboard?.on('keydown-N', doName);
+    [['Cry (C)', doCry], ['Hold paw (H)', doHand], ['Name place (N)', doName]].forEach(([label, fn], i) => {
+      const btn = this.add.text(16 + i * 150, GAME_HEIGHT - 28, label as string, textStyle(14, COLORS.textMuted)).setDepth(50).setInteractive({ useHandCursor: true });
+      btn.on('pointerover', () => btn.setColor(COLORS.textLight));
+      btn.on('pointerout', () => btn.setColor(COLORS.textMuted));
+      btn.on('pointerdown', fn as () => void);
     });
     const content = session.content;
     const stage = run.stage!;

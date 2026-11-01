@@ -179,6 +179,7 @@ describe('W10 PART-row hooks', () => {
     expect(m.reputationOf(p).rank).toBe('Stranger');
     expect(m.reputationOf(r.profile).score).toBeGreaterThan(m.reputationOf(p).score);
     expect(m.localLeaderboard(p)).toEqual([]);
+    expect(p.nook.nodeNames).toEqual({});
   });
   it('a named egg hatches with its name, once', async () => {
     const { hatchEgg } = await import('../../src/core/eggs');
@@ -197,7 +198,8 @@ describe('W10 PART-row hooks', () => {
     run.story.flags['ev:charity'] = 3;
     expect(buildEpilogue(content, run).some((l) => l.includes('orphanage'))).toBe(true);
   });
-  it('the cheered drama tag exists in the data', () => {
-    expect(Object.keys(content.drama?.flavor ?? { cheered: 1 })).toContain('cheered');
+  it('the cheered drama tag exists in the data', async () => {
+    const { DRAMA } = await import('../../src/core/drama/schema');
+    expect(Object.keys(DRAMA.flavor)).toContain('cheered');
   });
 });

@@ -1555,6 +1555,8 @@ export const ProfileSchema = z.object({
     donated: z.number().int().min(0).default(0),
     jokes: z.number().int().min(0).default(0),
     stamps: z.number().int().min(0).default(0),
+    /** W10 (I497): names given to map spots, kept for later runs (key: region:theme:column:row). */
+    nodeNames: z.record(z.string(), z.string()).default({}),
   }).prefault({}),
   /** Heirlooms, Lost-and-Found claims and cameos seen across runs (core/memories). */
   memories: MemoriesSchema.default({ heirlooms: [], claimed: [], cameos: [] }),

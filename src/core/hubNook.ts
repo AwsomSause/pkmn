@@ -25,7 +25,7 @@ const NookDataSchema = z.object({
 export const NOOK = NookDataSchema.parse(nookJson);
 
 export type Nook = Profile['nook'];
-export const nookOf = (p: Pick<Profile, 'nook'>): Nook => p.nook ?? { cookieDay: null, cookies: 0, wishDay: null, wishPaid: true, wishes: 0, note: null, noteDelivered: true, codesUsed: [], donated: 0, jokes: 0, stamps: 0 };
+export const nookOf = (p: Pick<Profile, 'nook'>): Nook => p.nook ?? { cookieDay: null, cookies: 0, wishDay: null, wishPaid: true, wishes: 0, note: null, noteDelivered: true, codesUsed: [], donated: 0, jokes: 0, stamps: 0, nodeNames: {} };
 
 /** A stable small number from text (never gameplay RNG). */
 export function hashText(text: string): number {
