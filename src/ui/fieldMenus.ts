@@ -18,6 +18,8 @@ import { runPerks } from '../core/archetypes';
 import { canCashIn, partyCapacity } from '../core/run';
 import { legacyCard } from '../core/story/legacy';
 import { chronicleStories } from '../core/story/storybook';
+import { evilSummary } from '../core/evil/teams';
+import { choiceHistory } from '../core/evil/choices';
 import { EMOTION_NAMES } from '../core/story/emotions';
 import { services } from '../game/services';
 import { bagRow, emotionDot, partyRows, Picker, speciesRow, type PickerLike } from './partyPanel';
@@ -155,6 +157,24 @@ export function openStoryMenu(host: FieldMenuHost): void {
       },
     }];
   });
+  // Evil Team (spec §16) and the run's lasting choices (spec §17).
+  const evil = evilSummary(content, run);
+  const choiceRows = [
+    ...(evil ? [{
+      problem: null,
+      hint: evil.lines.join('  ·  '),
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 8, `⚑ ${evil.title}`, textStyle(20, evil.color, { fixedWidth: w - 28 })));
+      },
+    }] : []),
+    ...choiceHistory(run).map((c) => ({
+      problem: null,
+      hint: `${c.weight >= 3 ? 'Run-defining choice' : c.weight === 2 ? 'Lasting choice' : 'Small choice'}  ·  Region ${c.region + 1} · Stage ${c.stage + 1}`,
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 8, `${'◆'.repeat(c.weight)} ${c.text}`, textStyle(20, c.weight >= 3 ? '#ffb070' : c.weight === 2 ? '#ffe0a0' : '#d8d0e0', { fixedWidth: w - 28 })));
+      },
+    })),
+  ];
   const storyRows = chronicleStories(content, run).map((st) => ({
     problem: null,
     hint: `${st.body}  ·  ${st.tags.join(' · ')}`,
@@ -178,10 +198,10 @@ export function openStoryMenu(host: FieldMenuHost): void {
   });
   const picker: Picker = new Picker(host.scene, {
     glass: true,
-    title: rows.length + rivalRows.length + legacyRows.length + storyRows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
+    title: rows.length + rivalRows.length + legacyRows.length + storyRows.length + choiceRows.length > 0 ? 'Story so far' : 'Story so far: nothing memorable yet',
     columns: 1,
     rowHeight: 40,
-    rows: [...storyRows, ...legacyRows, ...rivalRows, ...rows],
+    rows: [...storyRows, ...choiceRows, ...legacyRows, ...rivalRows, ...rows],
     onSelect: () => undefined,
     onBack: () => close(host, picker),
   });
