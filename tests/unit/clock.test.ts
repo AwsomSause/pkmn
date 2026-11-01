@@ -169,3 +169,15 @@ describe('camp talks', () => {
     expect(open(run).slice(1).filter(Boolean)).toHaveLength(1); // exactly one rival talk fits their path
   });
 });
+
+describe('camp bonding', () => {
+  it('time together at camp builds chemistry and lets grudges go', () => {
+    const run = atEvent(newRun(), 'camp-party');
+    run.clock.tick = 3; // night: stories by the fire
+    run.party.push({ ...run.party[0]!, uid: 'friend' });
+    run.partyLife.grudges.push({ uid: run.party[0]!.uid, species: 'rattata', since: 1, settled: false });
+    const done = chooseEvent(content, run, 'test-event', 2).run;
+    expect(done.partyLife.pairs.some((p) => p.points > 0)).toBe(true);
+    expect(done.partyLife.grudges.every((g) => g.settled)).toBe(true);
+  });
+});

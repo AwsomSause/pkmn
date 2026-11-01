@@ -5,7 +5,7 @@
 // Rival events (Rival Clash, Rival Gauntlet) belong to the rival work.
 
 import { readFileSync } from 'node:fs';
-import { $, at, celebrate, monRival, lv, milestone, rest, ability, any, att, ch, convoy, convoyHeal, cure, egg, ev, ferry, fight, flag, escorting, flagIs, fr, front, good, gym, has, heal, hurt, item, join, leave, lose, out, ptype, reveal, room, roomFrom, rp, scout, trainer, wild, type Json, HELD, TREASURE, VITAMINS, BERRIES, SNACKS, HEALING } from './dsl.ts';
+import { $, at, bond, celebrate, monRival, lv, milestone, rest, ability, any, att, ch, convoy, convoyHeal, cure, egg, ev, ferry, fight, flag, escorting, flagIs, fr, front, good, gym, has, heal, hurt, item, join, leave, lose, out, ptype, reveal, room, roomFrom, rp, scout, trainer, wild, type Json, HELD, TREASURE, VITAMINS, BERRIES, SNACKS, HEALING } from './dsl.ts';
 
 const balance = JSON.parse(readFileSync(new URL('../../src/data/balance.json', import.meta.url), 'utf8')) as { world: { roamers: { species: string; name: string; gameEvent: string | null }[] } };
 const clue = (amount = 1): Json => ({ kind: 'count', counter: 'eventClues', amount });
@@ -38,14 +38,14 @@ export const CAMP_EVENTS: Json[] = [
     ]),
   ev('camp-party', 'Around the Fire', 'Camp', { rarity: 'common', minStage: 1, effect: 'sparkle', tint: '#2a1c1c' },
     'The Pokémon drift toward each other: some play, some argue, some just want company. The hour decides what feels right.', [
-      ch('Morning play (morning)', out('Rolling, racing and wrestling in the dew. A few scraped knees, a lot of laughter.', fr(6, 'party'), rp(15)), { requires: [at('morning')] }),
-      ch('Sunny-afternoon contest (afternoon)', out('A friendly contest in the warm light. Winners crow, losers promise a rematch. Everyone is closer for it.', fr(5, 'party'), heal(0.15), rp(20)), { requires: [at('afternoon')] }),
-      ch('Stories by the fire (evening or night)', out('Stories, a song, and someone\'s joke you will remember. Everyone feels closer.', heal(0.3), fr(9, 'party'), rp(30), good(1)), { requires: [at('evening', 'night')] }),
+      ch('Morning play (morning)', out('Rolling, racing and wrestling in the dew. A few scraped knees, a lot of laughter.', fr(6, 'party'), bond(8, 4), rp(15)), { requires: [at('morning')] }),
+      ch('Sunny-afternoon contest (afternoon)', out('A friendly contest in the warm light. Winners crow, losers promise a rematch. Everyone is closer for it.', fr(5, 'party'), bond(6, 6), heal(0.15), rp(20)), { requires: [at('afternoon')] }),
+      ch('Stories by the fire (evening or night)', out('Stories, a song, and someone\'s joke you will remember. Everyone feels closer.', heal(0.3), fr(9, 'party'), bond(10, 6, true), rp(30), good(1)), { requires: [at('evening', 'night')] }),
       ch('Sit and talk with someone', out('The fire burns low. Who do you want to talk to?', room('camp-talk'))),
     ]),
   ev('camp-talk', 'Quiet Talk', 'Camp', { rarity: 'common', minStage: 1, effect: 'hearts', tint: '#241c2a' },
     'Away from the others, the night is long enough for a real conversation.', [
-      ch('Talk with your partner', out('You sit with your lead for a while. Not much is said. It is enough.', fr(8, 'lead'), rp(10))),
+      ch('Talk with your partner', out('You sit with your lead for a while. Not much is said. It is enough.', fr(8, 'lead'), bond(3, 2), rp(10))),
       ch('Talk about your rival (a friend)', out('You wonder aloud where they are camped tonight. Your party agrees: they would probably share the fire. You feel less alone on the road.', fr(4, 'party'), flag('rival-friend', 1), good(1), rp(20)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'friend' }] }),
       ch('Talk about your rival (a rival)', out('You go over every move they made against you. Your party listens, and by the end you all know what to do next time. Tension and focus.', fr(3, 'party'), flag('rival-heat', 1), lv(1, 'lead'), rp(25)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'rival' }] }),
       ch('Talk about the rival who is unsure', out('You do not know what they want yet. Neither do they. You decide to leave the door open.', fr(4, 'party'), rp(15)), { requires: [{ kind: 'rivalMet', atLeast: 1 }, { kind: 'rivalPath', path: 'between' }] }),

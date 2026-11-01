@@ -2480,6 +2480,8 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   /** A ferry: jump to a node next to the gym (SS Ticket). */
   z.object({ kind: z.literal('skipAhead') }),
   z.object({ kind: z.literal('heal'), share: z.number().min(0).max(1) }),
+  /** Camp: time together. Every pair of party Pokémon gains chemistry and loses tension; optionally old grudges are let go. */
+  z.object({ kind: z.literal('campBond'), chemistry: z.number().int().min(0).max(30), calm: z.number().int().min(0).max(30), settle: z.boolean().default(false) }),
   /** The run clock: sleep until the next morning (a new day begins). */
   z.object({ kind: z.literal('rest') }),
   /** The run clock: today's milestone celebration is held (so it pays once). */
