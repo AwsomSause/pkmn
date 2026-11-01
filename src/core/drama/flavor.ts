@@ -10,6 +10,9 @@ import { DRAMA, type DialogueCategory } from './schema';
 import type { Candidate, PlanCtx } from './events';
 import type { DramaEvent } from './index';
 
+/** What a taught parrot (event parrot-teacher) squawks in battle, by the phrase flag. */
+export const PARROT_PHRASES: Record<number, string> = { 1: 'GOOD LUCK! GOOD LUCK!', 2: 'NEVER GIVE UP! NEVER GIVE UP!', 3: '(a soft little lullaby hum)' };
+
 /** The tags that colour this trainer's lines, strongest first. Non-rivals only get the type tag. */
 export function flavorTags(c: PlanCtx): string[] {
   const tags: string[] = [];
@@ -20,6 +23,7 @@ export function flavorTags(c: PlanCtx): string[] {
     else if (b.trust >= 70 && b.affection >= 60) tags.push('devoted');
     if (c.rival.state === 'ally') tags.push('ally');
     if (b.respect >= 70) tags.push('respect');
+    if (Number(c.run.story.flags['ev:rival-cheer'] ?? 0) > 0) tags.push('cheered');
   }
   if (getArchetype(c.content, c.run.archetypeId).signatureTypes[0]) tags.push('specialist');
   // Ideas W5 (I130/I131/I136/I135): leaders and the Elite react to your badges, your team's type coverage, your reputation and a returning player.
@@ -92,6 +96,20 @@ export function playerDeclarationCandidates(c: PlanCtx): Candidate[] {
       cue: { style: kind, moveId: e.moveId },
       speaker: 'You',
     });
+    // W10 (I502): a parrot you taught a phrase repeats it once in a battle, right after a big moment.
+    const phrase = PARROT_PHRASES[Number(c.run.story.flags['ev:parrot-phrase'] ?? 0)];
+    if (phrase && !seen.includes(`parrot:${c.key}`)) {
+      seen.push(`parrot:${c.key}`);
+      out.push({
+        ev: { id: `${c.key}:t${c.turn}:e${i}:parrot`, kind: 'playerMove', turn: c.turn, at: i, data: { moveId: e.moveId } },
+        category: 'signature',
+        tier: 'tactical',
+        pool: [phrase],
+        vars: {},
+        cue: { style: kind, moveId: e.moveId },
+        speaker: 'Parrot',
+      });
+    }
   });
   return out;
 }

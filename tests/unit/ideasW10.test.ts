@@ -144,3 +144,62 @@ describe('Corner Nook', () => {
     expect(j2.profile.nook.jokes).toBe(2);
   });
 });
+
+describe('W10 follow-ups', () => {
+  it('photo contest needs camp photos; profLine only for the first run; renameNode names and clears', async () => {
+    const { profLine, renameNode } = await import('../../src/core/hubNook');
+    const run = newRun('photo');
+    expect(content.events.has('photo-contest')).toBe(true);
+    const node = run.stage!.map.nodes[0]!;
+    node.sides = [{ id: 'ph', kind: 'event', eventId: 'photo-contest', used: false } as never];
+    run.stage!.current = node.id;
+    expect(() => chooseEvent(content, run, 'ph', 0)).toThrow();
+    run.camp = { photos: ['pikachu', 'eevee', 'mew'] } as never;
+    expect(chooseEvent(content, run, 'ph', 0).success).toBe(true);
+    expect(profLine(0)).toBeTruthy();
+    expect(profLine(3)).toBeNull();
+    const named = renameNode(run, node.id, '  Cozy   Hill ');
+    expect(named.stage!.map.nodes[0]!.name).toBe('Cozy Hill');
+    expect(renameNode(named, node.id, '').stage!.map.nodes[0]!.name).toBeUndefined();
+  });
+});
+
+describe('W10 PART-row hooks', () => {
+  it('stamps, leaderboard and reputation', async () => {
+    const m = await import('../../src/core/hubNook');
+    const p = createProfile(content, 'rep');
+    expect(m.stampsOwed(p)).toBe(0);
+    expect(() => m.stampCeremony(p)).toThrow();
+    const q = { ...p, stats: { ...p.stats, runsEnded: 8, battlesWon: 40 } };
+    expect(m.stampsOwed(q)).toBe(4);
+    const r = m.stampCeremony(q);
+    expect(r.profile.nook.stamps).toBe(4);
+    expect(r.profile.bankCredits).toBe(4 * NOOK.stamps.credits);
+    expect(m.stampsOwed(r.profile)).toBe(0);
+    expect(m.reputationOf(p).rank).toBe('Stranger');
+    expect(m.reputationOf(r.profile).score).toBeGreaterThan(m.reputationOf(p).score);
+    expect(m.localLeaderboard(p)).toEqual([]);
+    expect(p.nook.nodeNames).toEqual({});
+  });
+  it('a named egg hatches with its name, once', async () => {
+    const { hatchEgg } = await import('../../src/core/eggs');
+    const run = newRun('egg');
+    run.story.flags['ev:egg-name'] = 2;
+    const egg = { speciesId: 'pikachu', level: 3, shiny: false, eggMoves: [], tier: 'common' } as never;
+    const mon = hatchEgg(content, run, egg);
+    expect(mon.care?.nickname).toBe('Midnight');
+    expect(run.story.flags['ev:egg-name']).toBe(0);
+    expect(hatchEgg(content, run, egg).care?.nickname).toBeUndefined();
+  });
+  it('the epilogue echoes kindness and a kept charity', async () => {
+    const { buildEpilogue } = await import('../../src/core/ending');
+    const run = newRun('end');
+    run.victory = true;
+    run.story.flags['ev:charity'] = 3;
+    expect(buildEpilogue(content, run).some((l) => l.includes('orphanage'))).toBe(true);
+  });
+  it('the cheered drama tag exists in the data', async () => {
+    const { DRAMA } = await import('../../src/core/drama/schema');
+    expect(Object.keys(DRAMA.flavor)).toContain('cheered');
+  });
+});

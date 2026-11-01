@@ -124,6 +124,15 @@
    "A distant Slowpoke finally gets the joke."
   ]
  },
+ "stamps": { "everyRuns": 2, "max": 10, "credits": 10, "title": "Stamp Collector", "ceremony": "The stamp-keeper presses a bright stamp onto your card, rings a little bell, and the whole room claps." },
+ "leaderboard": { "size": 5 },
+ "reputation": [
+  { "score": 0, "rank": "Stranger", "greeting": "\"Hello, traveller.\"" },
+  { "score": 10, "rank": "Familiar Face", "greeting": "\"Oh, you again! Welcome back.\"" },
+  { "score": 30, "rank": "Local Favourite", "greeting": "\"There they are! Kettle is on.\"" },
+  { "score": 70, "rank": "Hub Hero", "greeting": "\"The Hub hero! Everyone, look busy!\"" },
+  { "score": 150, "rank": "Living Legend", "greeting": "\"They named a bench after you. We are not joking.\"" }
+ ],
  "goodbyes": [
   "Your Pokémon waves from the Hub gate: \"Come back soon!\"",
   "A little wave from the gate. Your team waves back.",

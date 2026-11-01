@@ -421,6 +421,16 @@ export const W10_EVENTS: Json[] = [
     ]),
 ];
 
+export const W10_PHOTO: Json[] = [
+  ev('photo-contest', 'The Photo Contest', G, { stop: 'contest', rarity: 'uncommon', minStage: 2, cast: ['trainer.lacey'], tint: '#2a2030', effect: 'sparkle' },
+    'A judge with a big camera strap runs a contest: "Show me your best camp photo of your Pokémon!"', [
+      ch('Enter your album (3+ camp photos)', out('The judges flip through your album and gasp. First prize!', $(600), item('rare-candy'), fr(2), moment('Won the photo contest with camp photos.', 55)), { requires: [{ kind: 'photos', atLeast: 3 }] }),
+      ch('Enter your best photo (1+ camp photo)', out('A lovely shot. Second place and a ribbon.', $(250), fr(1)), { requires: [{ kind: 'photos', atLeast: 1 }] }),
+      ch('Take a quick photo now (Luck)', out('Blink, flash. Somehow it works. Third place!', $(100), fr(1)), { check: 'luck', fail: out('A blurry thumb. Everyone laughs kindly.') }),
+    ]),
+];
+W10_EVENTS.push(...W10_PHOTO);
+
 function attrSpeed(): Json {
   return { kind: 'attribute', key: 'speed', amount: 1 };
 }

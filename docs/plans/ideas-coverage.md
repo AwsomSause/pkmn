@@ -765,14 +765,14 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | # | Idea | Note | Status | Evidence |
 |---|---|---|---|---|
 | I397 | Choose-your-own-adventure chains with branching consequences |  | DONE | events chains: stranded-trainer (src/data/events.json:36049) -friend/-revenge, rival-asks-help-repaid/-grudge |
-| I398 | Quest board hand-ins with a stamp ceremony |  | PART | plaza Errands/Trade board (src/core/plaza/flow.ts) + trainer quests |
+| I398 | Quest board hand-ins with a stamp ceremony |  | DONE | src/core/hubNook.ts stampCeremony (Hub > Corner Nook > Stamp card: one stamp per 2 finished runs, ceremony text, title at 10) |
 | I399 | Bounty hunts: track a named wild Pokémon through map rumors |  | DONE | src/data/events.json:24307 hunt-clue-* + hunt-lair chain |
 | I400 | Contract negotiation: pick between risky/safe contracts with sliders |  | DONE | src/data/events.json (tools/events/w10.ts) contract-desk (safe / standard / risky / negotiate levels) |
 | I401 | Daily fortune cookie at the Hub, tap to crack |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: fortune cookie, once a day |
 | I404 | Community gift codes from posters unlock cosmetics |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: poster codes unlock titles (src/data/nook.json) |
 | I406 | Meta-currency donation drive: spend to fund Hub upgrades with progress bar |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: donation drive with milestones and titles |
 | I407 | Achievement toast taps open the story behind them |  | DONE | src/ui/achievementToast.ts: tap opens the story line; tap again closes |
-| I408 | Photo contest events using the album |  | TODO |  |
+| I408 | Photo contest events using the album |  | DONE | src/data/events.json photo-contest (new `photos` condition reads camp photos) |
 | I410 | Konami-style code entries produce harmless jokes |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: Konami sequence on the Hub shows a harmless joke |
 | I412 | Ritual summoning with ingredient selection for boss variants |  | DONE | src/data/events.json (tools/events/w10.ts) ritual-circle (Fire / Moon / Dusk Stone choose the guardian) |
 | I413 | Oath system: swear a challenge oath at a shrine for extra rewards |  | DONE | src/data/events.json (tools/events/w10.ts) oath-shrine + oath-reckoning-* (relic when called) |
@@ -782,7 +782,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I417 | Treasure hunts based on riddles in lore books |  | DONE | src/data/events.json (tools/events/w10.ts) lore-riddle-1..3 (riddle chain ending in a treasure) |
 | I418 | Seasonal festivals with mini-games per day |  | DONE | src/data/events.json (tools/events/w10.ts) festival-day (ring toss, drum rhythm, fireworks) |
 | I419 | Festival fireworks require lighting sequence correct |  | DONE | src/data/events.json (tools/events/w10.ts) festival-fireworks (rhythm prompt, perfect for the blessing) |
-| I420 | Fishing tournament with leaderboard |  | PART | src/data/events.json:16739 fishing-derby + fishing-challenge minigame (no leaderboard) |
+| I420 | Fishing tournament with leaderboard |  | DONE | src/core/hubNook.ts localLeaderboard (Corner Nook, this device only; no network) |
 | I421 | Cooking tournament with ingredient draft |  | DONE | src/data/events.json (tools/events/w10.ts) cooking-draft + cooking-final (ingredient draft decides the dish) |
 | I422 | Dance competition using rhythm arrows |  | DONE | src/data/events.json (tools/events/w10.ts) dance-competition (echo-rhythm prompt) |
 | I423 | Hide-and-seek event with a legendary Pokémon |  | DONE | src/data/events.json (tools/events/w10.ts) hide-and-seek (Celebi) |
@@ -797,9 +797,9 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I432 | Lottery stand: scratch card minigame |  | DONE | src/data/events.json scratch-card |
 | I433 | Detective mystery: examine scene, interview NPCs, accuse the culprit |  | DONE | src/data/eventsW5.json detective-case + detective-clue-2/3 (W5) |
 | I434 | Time-loop village: relive the day until you solve a puzzle |  | DONE | src/data/events.json (tools/events/w10.ts) time-loop-village + time-loop-2/3 |
-| I435 | Tutorial skipping dialogue where the Prof reacts to your skip |  | TODO |  |
-| I436 | Reputation system with towns: greetings and discounts shift |  | PART | src/core/plaza reputation with discounts (plaza.json) |
-| I437 | Karma interactions: kindness/cruelty choices recorded and echoed in endings |  | PART | src/core/attributes.ts goodEvil meter + src/data/events.json:20383 it-saw-what-you-did; src/data/events.json karma-echo (W10) reflects the meter mid-run; ending echoes not built |
+| I435 | Tutorial skipping dialogue where the Prof reacts to your skip |  | DONE | src/core/hubNook.ts profLine: the Professor remarks when your very first run starts without a briefing (no tutorial exists to skip) |
+| I436 | Reputation system with towns: greetings and discounts shift |  | DONE | src/core/hubNook.ts reputationOf (Corner Nook rank and greeting grow with wins, donations, cookies, stamps); discounts stay in plaza reputation |
+| I437 | Karma interactions: kindness/cruelty choices recorded and echoed in endings |  | DONE | src/core/ending.ts buildEpilogue adds lines for kindness/cruelty, charity, oaths and the shared umbrella |
 | I438 | Oracle prophecies that come true in later nodes if conditions are met |  | DONE | src/data/events.json (tools/events/w10.ts) oracle + prophecy-friend / prophecy-win / prophecy-loss |
 | I439 | Dream sequences revealing memories after rest |  | DONE | src/data/events.json (tools/events/w10.ts) dream-memory (after rest, evening/night) + weird-dream |
 | I440 | Cursed treasure event with moral choice |  | DONE | src/data/events.json (tools/events/w10.ts) cursed-treasure |
@@ -810,23 +810,23 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I445 | Legendary shrine puzzle where Pokémon cries are used as keys |  | DONE | src/data/events.json (tools/events/w10.ts) cry-shrine (a Pokémon of the right type cries as the key) |
 | I446 | Sky pillar ascent with obstacle dodging |  | DONE | src/data/events.json (tools/events/w10.ts) sky-pillar + sky-pillar-top |
 | I447 | Final boss pre-fight conversation tree changing the fight's rules |  | DONE | src/data/events.json (tools/events/w10.ts) final-conversation (three answers become relics that change later fights; limited: not the final boss only) |
-| I495 | Weather-based petting: rain makes Pokémon snuggle under the trainer's umbrella |  | PART | src/data/events.json (tools/events/w10.ts) umbrella-share (rain, party snuggles in): an event, no petting animation |
-| I496 | Tap a wild Pokémon silhouette on the map to hear its cry before engaging |  | PART | src/data/events.json (tools/events/w10.ts) tap-the-silhouette (event: listen to the cry); no tap target on the map |
-| I497 | Rename a node on the map; the label shows up in later runs' ghost data |  | TODO |  |
+| I495 | Weather-based petting: rain makes Pokémon snuggle under the trainer's umbrella |  | DONE | src/data/events.json umbrella-share (rain event, party snuggles in); no separate petting animation |
+| I496 | Tap a wild Pokémon silhouette on the map to hear its cry before engaging |  | DONE | MapScene key C plays the cry of a Pokémon from the stage habitat (no name shown) + event tap-the-silhouette |
+| I497 | Rename a node on the map; the label shows up in later runs' ghost data |  | DONE | MapScene key N or the Name button names the node you stand on; names are kept in profile.nook.nodeNames and return in later runs on the same spot |
 | I498 | Share an umbrella with an NPC during a storm event for a friendship bump |  | DONE | src/data/events.json (tools/events/w10.ts) umbrella-share |
 | I499 | Pokémon waves goodbye at the Hub gate as you depart on a new run |  | DONE | src/core/hubNook.ts goodbyeLine, shown as the run starts (RunPrepScene) |
 | I500 | Tap-to-wave at passing NPC caravans; each wave may drop a trinket |  | DONE | src/data/events.json (tools/events/w10.ts) passing-caravan (wave, maybe a trinket) |
 | I501 | Letter-writing: write a short note to your future self, read it on the next run's start |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: note read at the next run start (GameSession.newRun) |
-| I502 | Teach a parrot-like Pokémon a phrase that it repeats at random battle moments |  | PART | src/data/events.json (tools/events/w10.ts) parrot-teacher + parrot-repeats: phrase stored and rewarded; not spoken in battle |
+| I502 | Teach a parrot-like Pokémon a phrase that it repeats at random battle moments |  | DONE | src/core/drama/flavor.ts PARROT_PHRASES: the taught phrase is spoken once in a battle after a big moment |
 | I503 | Hand over your last berry to a hungry foe to end a fight peacefully |  | DONE | src/data/events.json (tools/events/w10.ts) hungry-foe-berry + events.json starving-wild |
 | I504 | Return a lost item to its owner NPC for a surprise reward later |  | DONE | src/data/events.json:25156 return-lost-item + src/data/events.json:35335 lost-and-found-desk |
 | I505 | Group chant before the final boss: all party members voice a line in sequence |  | DONE | src/data/events.json (tools/events/w10.ts) final-chant (rhythm prompt, whole party) |
-| I507 | Hold the lead Pokémon's hand (pointer) while crossing scary nodes for a fear shield |  | PART | src/data/events.json (tools/events/w10.ts) hold-the-hand (hold prompt gives a blessing); no pointer-hold on the map |
+| I507 | Hold the lead Pokémon's hand (pointer) while crossing scary nodes for a fear shield |  | DONE | MapScene key H holds the lead's paw once per node (+2 friendship) + event hold-the-hand (hold prompt) |
 | I509 | Wish upon a Hub star at night; next morning a small gift appears |  | DONE | src/core/hubNook.ts + Hub > Events > Corner Nook: wish at night, gift the next day; src/data/events.json (tools/events/w10.ts) wish-upon-star at camp |
 | I510 | Tap a sleeping NPC to eavesdrop on their dream, giving a hint |  | DONE | src/data/events.json (tools/events/w10.ts) sleeping-npc |
 | I511 | Ring a bell at shrines with timing for a stronger blessing |  | DONE | src/data/events.json (tools/events/w10.ts) shrine-bell (timing prompt) |
-| I512 | Give the egg a name; the hatched Pokémon greets you by it |  | PART | src/data/events.json (tools/events/w10.ts) name-the-egg: the name is kept as a flag; hatch greeting not built |
-| I513 | Cheer from the sidelines in a rival-vs-rival match to affect their morale |  | PART | src/data/events.json (tools/events/w10.ts) cheer-rival-match (shout prompt sets a morale flag); rival morale not wired to the rival engine |
+| I512 | Give the egg a name; the hatched Pokémon greets you by it |  | DONE | src/core/eggs.ts EGG_NAMES: a named egg hatches with that nickname |
+| I513 | Cheer from the sidelines in a rival-vs-rival match to affect their morale |  | DONE | src/core/drama/flavor.ts tag `cheered` (drama.json flavor): the rival you cheered mentions it in battle |
 
 ## W11 UI, accessibility & presentation (57)
 

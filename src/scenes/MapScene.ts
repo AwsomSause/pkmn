@@ -7,6 +7,7 @@
 // pillar with a bigger token, and the champion stands in turning gold rays
 // (Visual Bible: "a deliberate escalation from normal stages").
 
+import { nookOf, renameNode } from '../core/hubNook';
 import { habitatList } from '../core/habitat';
 import { clockLabel, periodOf, PERIOD_LOOK } from '../core/clock';
 import { modeObjectives, objectivesLine } from '../core/modeObjectives';
@@ -35,7 +36,8 @@ import { blindMap } from '../core/rules';
 import { arenaFor, getTheme } from '../core/themes';
 import type { MapNode, SideStop } from '../core/state';
 import { services } from '../game/services';
-import { playMusic, playSfx, playSfxLazy, playMusicLazy } from '../ui/audio';
+import { playCry, playMusic, playSfx, playSfxLazy, playMusicLazy } from '../ui/audio';
+import { notify } from '../ui/overlays';
 import { mapTrack } from '../core/presentation/battleMusic';
 import { openBondMenu } from '../ui/bondMenu';
 import { openPartyScene, openScrapbook } from '../ui/partyLifeUi';
@@ -181,6 +183,55 @@ export class MapScene extends Phaser.Scene {
     this.endArmed = false;
     const { session } = services();
     const run = session.run!;
+    // W10 (I496/I507/I497): C hears a cry, H holds the lead's paw, N names the node. Keys and touch buttons share one handler each.
+    const stageKey = (nodeId: string): string => {
+      const n = run.stage?.map.nodes.find((x) => x.id === nodeId);
+      return `${run.regionOrder[run.regionIndex]}:${run.stage?.themeId}:${n?.column}:${n?.row}`;
+    };
+    // Names given in earlier runs come back on the same spots (same region, theme, column and row).
+    const known = session.profile.nook?.nodeNames ?? {};
+    for (const n of run.stage?.map.nodes ?? []) if (!n.name && known[stageKey(n.id)]) n.name = known[stageKey(n.id)];
+    const doCry = (): void => {
+      const names = habitatList(content, run);
+      if (names.length === 0) return;
+      const pick = names[Math.floor(Math.random() * names.length)]!; // presentation only, never gameplay RNG
+      const sp = [...content.species.values()].find((x) => x.name === pick);
+      if (sp) playCry(this, sp);
+    };
+    const doHand = (): void => {
+      const lead = run.party[0];
+      const cur = run.stage?.current;
+      if (!lead || !cur) return;
+      const key = `hand:${cur}`;
+      if (run.story.flags[key]) return void notify('You are already holding paws here.');
+      run.story.flags[key] = 1;
+      lead.friendship = Math.min(255, (lead.friendship ?? 0) + 2);
+      session.saveRunNow();
+      notify(`${content.species.get(lead.speciesId)?.name ?? 'Your lead'} squeezes your hand. It feels braver.`);
+    };
+    const doName = (): void => {
+      const cur = run.stage?.current;
+      const node = run.stage?.map.nodes.find((x) => x.id === cur);
+      if (!node || typeof window === 'undefined' || typeof window.prompt !== 'function') return;
+      const text = window.prompt('Name this place (up to 24 letters, empty clears):', node.name ?? '');
+      if (text === null) return;
+      const renamed = renameNode(run, node.id, text);
+      node.name = renamed.stage!.map.nodes.find((x) => x.id === node.id)!.name;
+      const names = { ...(session.profile.nook?.nodeNames ?? {}) };
+      if (node.name) names[stageKey(node.id)] = node.name; else delete names[stageKey(node.id)];
+      session.changeProfile((pr) => ({ ...pr, nook: { ...nookOf(pr), nodeNames: names } }));
+      session.saveRunNow();
+      this.scene.restart({ notice: node.name ? `You named this place "${node.name}".` : 'The name is cleared.', focus: this.index });
+    };
+    this.input.keyboard?.on('keydown-C', doCry);
+    this.input.keyboard?.on('keydown-H', doHand);
+    this.input.keyboard?.on('keydown-N', doName);
+    [['Cry (C)', doCry], ['Hold paw (H)', doHand], ['Name place (N)', doName]].forEach(([label, fn], i) => {
+      const btn = this.add.text(16 + i * 150, GAME_HEIGHT - 28, label as string, textStyle(14, COLORS.textMuted)).setDepth(50).setInteractive({ useHandCursor: true });
+      btn.on('pointerover', () => btn.setColor(COLORS.textLight));
+      btn.on('pointerout', () => btn.setColor(COLORS.textMuted));
+      btn.on('pointerdown', fn as () => void);
+    });
     const content = session.content;
     const stage = run.stage!;
     const theme = getTheme(content, stage.themeId);
@@ -675,13 +726,14 @@ export class MapScene extends Phaser.Scene {
         const frontNote = frontHere ? `${FRONT_LABEL[frontHere.weather] ?? frontHere.weather} front: battles here start in ${frontHere.weather}.\n` : '';
         const boss = this.bossFor(n);
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
+        const named = n.name ? `"${n.name}"  ·  ` : '';
         const kind = boss ? `${boss.title}${types}` : KIND_STYLE[n.kind].label;
         const risk = n.harder ? '  ·  Risk: high (better rewards)' : boss ? '  ·  Risk: boss' : '';
         const sides = n.sides.map((s) => (s.kind === 'heal' ? 'healing spot' : s.kind === 'fish' ? 'fishing spot' : s.kind === 'raid' ? 'raid den' : s.kind === 'totem' ? 'Totem territory' : s.kind === 'expedition' ? 'expedition gate' : s.kind === 'service' ? (SERVICES.services.find((x) => x.id === s.serviceId)?.name ?? 'service') : s.kind === 'event' ? (stopIsHidden(content, services().session.run!, n, s) ? 'mystery "?" stop' : `${content.events.get(s.eventId ?? '')?.name ?? 'event'} stop`) : s.kind === 'plaza' ? 'Trainer Plaza' : 'shop'));
         const seen = this.previewText(n) || (n.kind === 'wild' ? `Habitat: likely ${habitatList(services().session.content, services().session.run!).join(', ')}` : '');
         const route = routeKind(services().session.run!, n);
         const anomaly = stageAnomaly(services().session.content, services().session.run!);
-        return `${frontNote}${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
+        return `${named}${frontNote}${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
         if (option.side.kind === 'plaza') return 'Trainer Plaza: the middle of the stage. Stalls, traders, a Battle Club, errands and gossip. Rest, shop and plan before you go on.';
