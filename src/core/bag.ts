@@ -77,6 +77,12 @@ function catalogPocket(entry: CatalogEntry): BagEntry['pocket'] {
   return 'other';
 }
 
+/** A Bag item's rarity: the reward card that gives it, else the catalog entry with its id; null when neither exists (shop-only balls). */
+function bagItemRarity(content: Content, id: string): Rarity | null {
+  for (const r of content.rewards.values()) if (r.effect.kind === 'addItem' && r.effect.item === id) return r.rarity;
+  return content.catalog.get(id)?.rarity ?? null;
+}
+
 const catalogIcon = (content: Content, id: string): string | null => content.rewards.get(`item:${id}`)?.iconAssetId ?? null;
 
 /** Every item the run owns: Bag items first (in the order obtained), then held, team and map items (by name). */
@@ -92,7 +98,7 @@ export function bagEntries(content: Content, run: RunState): BagEntry[] {
       pocket: ITEM_POCKET[item.category] ?? 'other',
       name: item.name,
       description: item.description,
-      rarity: null,
+      rarity: bagItemRarity(content, id),
       quantity: n,
       max: null,
       holders: [],
