@@ -50,7 +50,10 @@ export function config(i: number) {
     const next = [...modifierIds, pick(modifiers)];
     if (rulesProblem({ modeId, difficultyId, modifierIds: next, deathBlock: false }) === null) modifierIds = next;
   }
-  return { i, seed: `pt${i}`, archetypeId, modeId, difficultyId, modifierIds, deathBlock: rng.int(0, 4) === 0 };
+  // Death-Block cannot be combined with a Nuzlocke mode (rulesProblem says so): only ask for it where it is allowed.
+  const wantsBlock = rng.int(0, 4) === 0;
+  const deathBlock = wantsBlock && rulesProblem({ modeId, difficultyId, modifierIds, deathBlock: true }) === null;
+  return { i, seed: `pt${i}`, archetypeId, modeId, difficultyId, modifierIds, deathBlock };
 }
 
 for (let i = from; i < from + count; i++) {
