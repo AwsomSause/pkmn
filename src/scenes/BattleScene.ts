@@ -2,6 +2,7 @@
 // battle engine; this scene only shows the state, collects the player's
 // choice (Fight / Bag / Pokémon) and plays back the events each turn produces.
 
+import { fitLine } from '../ui/fitText';
 import { modeBattleLine } from '../core/modeObjectives';
 import { isUltimateBattle, ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
 import { buildEpilogue } from '../core/ending';
@@ -750,6 +751,8 @@ export class BattleScene extends Phaser.Scene {
     box.container.setVisible(true);
     box.name.setText(`${this.speciesName(mon)}${genderSign(content, mon)}${mon.shiny ? ' ★' : ''}`);
     box.level.setText(`Lv${mon.level}`);
+    // A long name stops short of the level and the form symbol instead of running under them.
+    fitLine(box.name, box.level.x - box.level.width - box.name.x - 40);
     box.hpText?.setText(`${Math.max(0, mon.hp)}/${max}`);
     box.statusBadge?.destroy();
     box.statusBadge = undefined;

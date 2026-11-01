@@ -3,6 +3,7 @@
 // bar for each bond value that fills in with a little overshoot. Read-only;
 // nothing here changes the run.
 
+import { fitLine } from './fitText';
 import type Phaser from 'phaser';
 import { bondMood, bondOf } from '../core/bond';
 import { partyRoles } from '../core/partyRoles';
@@ -29,7 +30,7 @@ function bondRow(content: Content, run: RunState, mon: PokemonInstance, motion: 
     draw: (scene, box, w) => {
       const icon = pokemonIcon(scene, species, 32, 34, 1.4);
       box.add(icon);
-      box.add(scene.add.text(64, 10, species.name, textStyle(22)));
+      box.add(fitLine(scene.add.text(64, 10, species.name, textStyle(22)), w - 64 - 124));
       box.add(scene.add.text(64, 36, `${cap(bond.trait)} · Lv${mon.level} · ${partyRoles(content, mon).join(' / ')}`, textStyle(15, '#bfe9ff')));
       // Mood bubble: a glossy pill that floats.
       const pill = scene.add.container(w - 62, 22);
