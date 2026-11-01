@@ -19,6 +19,15 @@ export interface RunRecap {
   stamps: string[];
   /** A short, kind hint on what to try next time, from the cause of defeat. */
   tip: string | null;
+  /** Ideas W4: the run's key moments in the order they happened, each with where ("R1 S2 L7"). */
+  timeline: { where: string; text: string }[];
+}
+
+/** The run's most memorable moments (up to `count`), put back in the order they happened. */
+export function runTimeline(run: RunState, count = 8): { where: string; text: string }[] {
+  return topMoments(run.story, count)
+    .sort((a, b) => a.seq - b.seq)
+    .map((m) => ({ where: `R${m.where.region + 1}${m.where.stage !== null ? ` S${m.where.stage + 1}` : ''}${m.where.level ? ` L${m.where.level}` : ''}`, text: m.text }));
 }
 
 const name = (content: Content, id: string) => content.species.get(id)?.name ?? id;
@@ -56,5 +65,6 @@ export function buildRecap(content: Content, run: RunState): RunRecap {
     rivals: run.story.rivals.map((r) => `${r.name} ${stateText[r.state] ?? r.state}`),
     stamps: runStamps(run),
     tip: run.victory || !by ? null : `Next time, bring an answer to ${name(content, by.speciesId)}: look at its types in the move panel before the fight.`,
+    timeline: runTimeline(run),
   };
 }

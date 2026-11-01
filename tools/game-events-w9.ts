@@ -298,6 +298,44 @@ const exploration: Spec[] = [
   explore('roadside-rival-week', 'Roadside Rival Week', 92, 'A rival can jump out at any time.', 'Rivals are 1 level higher.', [{ kind: 'rivalLevelOffset', value: 1 }], ['rival-asks-help', 'camp-rival-trail', 'rival-views', 'old-rival-old-friend', 'rival-feud'], [G.rivals(2), G.events(5), G.trainers(15)], 'Road Rival', '#e06040', 'item.leaders_crest'),
 ];
 
+// ---------------- 9g after W4: the map's own node types (traversal obstacles, tools/events/w4.ts set pieces) ----------------
+// Each exploration week also tilts which obstacles the map gets (src/data/traversal.json) and adds one or two
+// more per stage, and features its W4 set pieces. E160 and E187 needed W4 and are added here.
+const tw = (obstacle: string, value = 4): Json => ({ kind: 'traversalWeight', obstacle, value });
+const more = (count = 1): Json => ({ kind: 'traversalExtra', count });
+const W4_PATCH: Record<string, { mods: Json[]; featured: string[]; rule: string }> = {
+  'treasure-map-week': { mods: [], featured: ['w4-old-chart', 'w4-sundial'], rule: 'The chart seller is about with Treasure Maps.' },
+  'caravan-week': { mods: [], featured: ['w4-wandering-trainer'], rule: 'Travelling trainers tag along.' },
+  'cave-expedition-week': { mods: [tw('dark-cave'), tw('boulder'), more()], featured: ['w4-cave-echo'], rule: 'Dark caves and boulders block more paths.' },
+  'island-hopping-week': { mods: [tw('lake', 6), more()], featured: ['w4-raft', 'w4-dive'], rule: 'Lakes cut the islands apart: bring a surfer.' },
+  'volcano-eruption': { mods: [tw('lava-river', 6), tw('wildfire'), more(2)], featured: [], rule: 'Lava rivers and wildfires cross the map.' },
+  'earthquake-tremors': { mods: [tw('rockslide', 8), tw('cracked-wall'), more(2), { kind: 'stopShuffle', every: 3 }], featured: ['w4-cave-echo'], rule: 'Fresh rockslides and cracked walls block the roads, and every 3 nodes a tremor swaps two stops ahead.' },
+  'flood-event': { mods: [tw('lake', 4), tw('river', 4), more(2)], featured: ['w4-raft'], rule: 'Flooded lakes and rivers cut the land routes.' },
+  'blizzard-week': { mods: [tw('snowdrift', 30), tw('river'), more(2)], featured: ['w4-avalanche'], rule: 'Snowdrifts lock some stops until a Fire or Ground-type clears them.' },
+  'heat-wave': { mods: [tw('wildfire', 6), more()], featured: [], rule: 'Wildfires break out on the road.' },
+  'safari-zone-week': { mods: [tw('thicket'), more()], featured: ['w4-tracks'], rule: 'Follow the tracks through the long grass.' },
+  'underground-week': { mods: [tw('soft-wall', 8), more()], featured: ['w4-old-chart'], rule: 'Earthen walls hide tunnels for a Ground-type to dig.' },
+  'ruins-expedition': { mods: [tw('statues', 6), more()], featured: ['w4-pressure-plates', 'w4-sundial', 'w4-portal-switches'], rule: 'Puzzle rooms and silent statues fill the ruins.' },
+  'sunken-ship-dive': { mods: [tw('lake', 3)], featured: ['w4-dive'], rule: 'Dive spots with an oxygen meter lead down to the wreck.' },
+  'sky-tower-climb': { mods: [tw('cliff', 5), tw('cloud-gap', 5), tw('rock-face'), more(2), { kind: 'towerClimb', checkpointEvery: 5 }], featured: ['w4-zip-line', 'w4-balloon'], rule: 'The map climbs like a tower, with a healing checkpoint every 5 levels; cliffs and cloud gaps need a flyer.' },
+  'magical-forest-week': { mods: [tw('fairy-ring', 6), tw('thicket'), more(), { kind: 'placeEvent', eventId: 'w4-forest-maze' }], featured: ['w4-mirror-maze'], rule: 'Every stage has a looping forest clearing to find the way out of; fairy rings lead to hidden groves.' },
+  'ghost-town-week': { mods: [tw('spirit-door', 8), more()], featured: ['w4-haunted-manor', 'w4-night-watch'], rule: 'Spectral doors only Ghost-types can open.' },
+  'festival-street-week': { mods: [], featured: ['w4-arcade-cabinet', 'w4-balloon'], rule: 'Arcade cabinets hide behind the stalls.' },
+  'lighthouse-beacon-week': { mods: [], featured: ['w4-beacon-fire'], rule: 'Beacon fires light the road ahead.' },
+  'roadside-rival-week': { mods: [], featured: ['w4-wandering-trainer'], rule: 'Somebody is following you.' },
+};
+for (const sp of exploration) {
+  const p = W4_PATCH[sp.id];
+  if (!p) continue;
+  sp.mods = [...sp.mods, ...p.mods];
+  sp.featured = [...(sp.featured ?? []), ...p.featured];
+  sp.rule = `${sp.rule} ${p.rule}`;
+}
+const w4Weeks: Spec[] = [
+  explore('map-mutator-week', 'Map Mutator Week', 192, 'Every stage is full of obstacles and odd places.', 'Three more traversal obstacles on every stage, of every kind.', [more(3)], ['w4-time-rift', 'w4-gravity-well', 'w4-portal-switches', 'w4-riddle-signpost'], [G.events(6), G.wins(20), G.catches(6)], 'Map Mutant', '#a060e0', 'item.map'),
+  explore('train-ride-special', 'Train Ride Special', 292, 'Express trains run on every route.', 'Shops cost 5% less.', [{ kind: 'priceMultiplier', group: 'all', value: 0.95 }], ['w4-express-train', 'w4-zip-line', 'w4-riddle-signpost'], [G.events(5), G.wins(20), G.trainers(10)], 'Conductor', '#c06040', 'item.pair_of_tickets'),
+];
+
 // ---------------- 9h: collection, progression and QoL (the ones with a real rule today) ----------------
 
 const meta: Spec[] = [
@@ -311,5 +349,5 @@ const meta: Spec[] = [
   { id: 'photography-week', name: 'Pokémon Photography Week', when: week(352), desc: 'Photo spots all over the map.', rule: 'Photo shoots and scenic stops turn up more often.', mods: [], goals: [G.events(5), G.catches(8), G.wins(20)], reward: { researchPoints: 300, title: 'Photographer' }, color: '#80d0e0', icon: 'item.scanner', tags: ['collection'], featured: ['elesa-photoshoot', 'rest-photo', 'rainbow-bridge', 'cherry-blossom', 'moonlit-path'] },
 ];
 
-export const W9_SPECS: Spec[] = [...typeWeeks, ...speciesWeeks, ...calendar, ...bossWeeks, ...econ, ...rules, ...exploration, ...meta];
+export const W9_SPECS: Spec[] = [...typeWeeks, ...speciesWeeks, ...calendar, ...bossWeeks, ...econ, ...rules, ...exploration, ...w4Weeks, ...meta];
 export const W9_EVENTS: Json[] = W9_SPECS.map(build);

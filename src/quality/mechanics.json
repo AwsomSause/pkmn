@@ -519,5 +519,81 @@
    "tests/unit/spectacle.test.ts"
   ],
   "note": "Takes the first ordinary trainer slot once per region on a seeded roll; it is a normal trainer (no second badge) that fights with boss rules."
+ },
+ {
+  "id": "traversal-obstacles",
+  "name": "Traversal obstacles: type, ability or weather crosses map obstacles for a reward, else a detour",
+  "status": "supported",
+  "code": [
+   "src/core/traversal.ts",
+   "src/data/traversal.json"
+  ],
+  "tests": [
+   "tests/unit/w4World.test.ts"
+  ],
+  "note": "22 obstacles (ideas W4). Placed once per stage from the run seed, never closing a path; the node battle happens either way. Seasonal kinds read the run calendar."
+ },
+ {
+  "id": "event-skill-prompts",
+  "name": "Skill-prompt event choices: the player grade decides the outcome",
+  "status": "supported",
+  "code": [
+   "src/core/events.ts",
+   "src/core/interaction/prompt.ts"
+  ],
+  "tests": [
+   "tests/unit/w4World.test.ts"
+  ],
+  "note": "A skipped prompt or a bot counts as ok; no roll is used."
+ },
+ {
+  "id": "wandering-trainer",
+  "name": "Wandering trainer and travelling companion",
+  "status": "supported",
+  "code": [
+   "src/core/wanderer.ts"
+  ],
+  "tests": [
+   "tests/unit/w4World.test.ts"
+  ],
+  "note": "Tails you for a few nodes, then challenges; beaten, it catches up once per stage for the next stages."
+ },
+ {
+  "id": "regional-landmarks",
+  "name": "Regional landmarks with lasting effects",
+  "status": "supported",
+  "code": [
+   "src/core/traversal.ts",
+   "tools/events/w4.ts"
+  ],
+  "tests": [
+   "tests/unit/w4World.test.ts"
+  ],
+  "note": "One per region, placed on its second stage; each choice is a relic (a run-long modifier, once)."
+ },
+ {
+  "id": "treasure-map",
+  "name": "Treasure Map: a dig-site detour a few columns ahead",
+  "status": "supported",
+  "code": [
+   "src/core/run.ts"
+  ],
+  "tests": [
+   "tests/unit/w4World.test.ts"
+  ],
+  "note": "From the Items menu; prefers a node off your current path."
+ },
+ {
+  "id": "time-rift-preview",
+  "name": "Time rift: preview the battles ahead for the stage",
+  "status": "supported",
+  "code": [
+   "src/core/run.ts",
+   "src/core/events.ts"
+  ],
+  "tests": [
+   "tests/unit/w4World.test.ts"
+  ],
+  "note": "Uses the same preview copy as the scouting items, so no roll changes."
  }
 ]

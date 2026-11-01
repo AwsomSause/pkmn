@@ -7370,6 +7370,30 @@
   }
  },
  {
+  "id": "treasure-map",
+  "name": "Treasure Map",
+  "family": "Map and encounter items",
+  "description": "From the map: a dig site opens beside a node a few columns ahead (a detour off your path). One use",
+  "rarity": "rare",
+  "stacksOn": "player",
+  "max": 2,
+  "how": "use",
+  "icon": "old-sea-map",
+  "status": "supported",
+  "effect": {
+   "kind": "perk",
+   "lasts": {
+    "for": "manual",
+    "count": 1
+   },
+   "perks": [
+    {
+     "perk": "treasureMap"
+    }
+   ]
+  }
+ },
+ {
   "id": "black-flute",
   "name": "Black Flute",
   "family": "Map and encounter items",

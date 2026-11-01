@@ -100,17 +100,22 @@ export class GameOverScene extends Phaser.Scene {
           this.tweens.add({ targets: runText, scaleX: 1, duration: 140, ease: 'Sine.easeOut', onComplete: () => runText.setInteractive({ useHandCursor: true }) });
         } });
       });
-      // The run's story: the chronicle's five most memorable moments.
-      const moments = topMoments(run.story);
+      // The run's story: the most memorable moments as a timeline, in the order they happened (ideas W4, F89).
+      const moments = topMoments(run.story, 5).sort((x, y) => x.seq - y.seq);
       if (moments.length > 0) {
         const name = (uid: string | undefined) => {
           const species = uid ? run.story.histories[uid]?.speciesId : undefined;
           return species ? `${session.content.species.get(species)?.name ?? species}: ` : '';
         };
-        const lines = moments.map((m) => `★ ${m.type === 'runEnded' || m.actors.length !== 1 ? '' : name(m.actors[0])}${m.text}`);
+        const where = (m: (typeof moments)[number]) => `R${m.where.region + 1}${m.where.stage !== null ? `·S${m.where.stage + 1}` : ''}`;
+        const lines = moments.map((m) => `${where(m)}  ★ ${m.type === 'runEnded' || m.actors.length !== 1 ? '' : name(m.actors[0])}${m.text}`);
         drawPanel(this, 24, 366, GAME_WIDTH - 48, 118, { fill: COLORS.panelDark, border: COLORS.borderMuted, thin: true });
-        this.add.text(44, 374, 'Moments of this run', textStyle(17, '#f0d060'));
-        this.add.text(44, 394, lines.join('\n'), textStyle(16, COLORS.textLight, { lineSpacing: 1, wordWrap: { width: GAME_WIDTH - 88 } }));
+        this.add.text(44, 374, 'Run timeline', textStyle(17, '#f0d060')).setName('run-timeline');
+        // A line from the first moment to the last, with a dot per moment.
+        const line = this.add.graphics();
+        line.lineStyle(2, 0xf0d060, 0.6).lineBetween(36, 400, 36, 400 + (moments.length - 1) * 17);
+        moments.forEach((_, i) => line.fillStyle(0xf0d060, 1).fillCircle(36, 403 + i * 17, 3));
+        this.add.text(44, 394, lines.join('\n'), textStyle(15, COLORS.textLight, { lineSpacing: 1, wordWrap: { width: GAME_WIDTH - 88 } }));
       }
     }
     const summary = session.lastRunSummary;

@@ -256,72 +256,72 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 
 | # | Idea | Note | Status | Evidence |
 |---|---|---|---|---|
-| I346 | Tap trees to shake loose berries or wild Pokémon |  | TODO |  |
-| I347 | Swim, climb, or glide across map tiles, determined by team's types |  | TODO |  |
-| I348 | Cut and pull bushes with Grass types to reveal paths |  | TODO |  |
-| I349 | Strength push boulders to open shortcuts |  | TODO |  |
-| I350 | Light torches with Fire types to cross dark caves |  | TODO |  |
-| I351 | Surf across lakes with Water types for safe passage |  | PART | events.json lost-at-sea partyType water gate (event-level, no tile traversal) |
-| I352 | Ice bridges frozen by Ice types let you cross rivers |  | TODO |  |
-| I353 | Weather clash: summon rain to extinguish fires blocking a path |  | TODO |  |
-| I354 | Dig tunnels under walls with Ground types |  | PART | events.json quarry-2, mudslide-rescue partyType ground |
-| I355 | Fly over cliffs with Flying types, costing stamina |  | PART | events.json lookout-tower, windswept-spire-1 partyType flying |
-| I356 | Mind-read statues with Psychic types to learn clues |  | TODO |  |
-| I357 | Spectral doors that only Ghost types open |  | TODO |  |
-| I358 | Electric panels powered by Electric types |  | TODO |  |
-| I359 | Poison swamp tiles cleared by Steel/Poison types |  | TODO |  |
-| I360 | Cracked walls broken by Fighting types |  | TODO |  |
-| I361 | Fairy rings: step in to dance and enter a hidden grove |  | TODO |  |
-| I362 | Rock climbing minigame with a Rock type partner |  | TODO |  |
-| I363 | Zip-line rides between map nodes with timing taps |  | TODO |  |
-| I364 | Hot-air balloon event: steer by wind icons |  | TODO |  |
-| I365 | Raft crossing with fishing along the way |  | TODO |  |
-| I366 | Campfire map light reveals nearby unseen nodes |  | TODO |  |
+| I346 | Tap trees to shake loose berries or wild Pokémon |  | DONE | tools/events/w4.ts w4-berry-tree (shake: berries, or a wild Pokémon falls out) |
+| I347 | Swim, climb, or glide across map tiles, determined by team's types |  | DONE | src/core/traversal.ts obstacles on map nodes crossed by party type: swim (lake), climb (rock-face), glide (cliff, cloud-gap); src/data/traversal.json |
+| I348 | Cut and pull bushes with Grass types to reveal paths |  | DONE | src/data/traversal.json thicket (Grass cuts a path: berries + reveals stops) |
+| I349 | Strength push boulders to open shortcuts |  | DONE | src/data/traversal.json boulder (Fighting/Rock: scout 2 + item) |
+| I350 | Light torches with Fire types to cross dark caves |  | DONE | src/data/traversal.json dark-cave (Fire or Illuminate lights it) |
+| I351 | Surf across lakes with Water types for safe passage |  | DONE | src/data/traversal.json lake (Water surfs: fishing spot + item); core/traversal.ts crossObstacle |
+| I352 | Ice bridges frozen by Ice types let you cross rivers |  | DONE | src/data/traversal.json river (Ice bridge) |
+| I353 | Weather clash: summon rain to extinguish fires blocking a path |  | DONE | src/data/traversal.json wildfire: a Water type or a rain front over the node clears it (crossingFor how=weather) |
+| I354 | Dig tunnels under walls with Ground types |  | DONE | src/data/traversal.json soft-wall (Ground digs: buried treasure) |
+| I355 | Fly over cliffs with Flying types, costing stamina |  | DONE | src/data/traversal.json cliff (Flying: scout 3, costs the flyer 15% HP) |
+| I356 | Mind-read statues with Psychic types to learn clues |  | DONE | src/data/traversal.json statues (Psychic reads them: gym team preview + research) |
+| I357 | Spectral doors that only Ghost types open |  | DONE | src/data/traversal.json spirit-door (Ghost) |
+| I358 | Electric panels powered by Electric types |  | DONE | src/data/traversal.json power-panel (Electric) |
+| I359 | Poison swamp tiles cleared by Steel/Poison types |  | DONE | src/data/traversal.json poison-swamp (Poison/Steel; detour poisons) |
+| I360 | Cracked walls broken by Fighting types |  | DONE | src/data/traversal.json cracked-wall (Fighting) |
+| I361 | Fairy rings: step in to dance and enter a hidden grove |  | DONE | src/data/traversal.json fairy-ring (Fairy dances: opens the w4-hidden-grove room) |
+| I362 | Rock climbing minigame with a Rock type partner |  | DONE | tools/events/w4.ts w4-rock-climb (climb-rhythm prompt with a Rock-type) + src/data/traversal.json rock-face |
+| I363 | Zip-line rides between map nodes with timing taps |  | DONE | tools/events/w4.ts w4-zip-line (zip-line timing prompt: express move) |
+| I364 | Hot-air balloon event: steer by wind icons |  | DONE | tools/events/w4.ts w4-balloon (balloon-drag prompt steers by the wind flags) |
+| I365 | Raft crossing with fishing along the way |  | DONE | tools/events/w4.ts w4-raft (fishing spot on the way; Water-type tows: express) |
+| I366 | Campfire map light reveals nearby unseen nodes |  | DONE | tools/events/w4.ts w4-beacon-fire (scout 2-4 columns) |
 | I367 | Fog banks hide nodes until cleared by a Flying or Psychic type |  | DONE | src/scenes/MapScene.ts:354 foggedAt/isFogged, core/world sightRange (Flying/scout see further) |
-| I368 | Campsite night watch assignments with random events |  | TODO |  |
-| I369 | Footprints: follow tracks to hidden wild Pokémon |  | PART | events.json legend-clue-tracks / form-clue-tracks / hunt-clue-* lead to lair |
+| I368 | Campsite night watch assignments with random events |  | DONE | tools/events/w4.ts w4-night-watch (who keeps watch: battle, luck roll, Dark-type) |
+| I369 | Footprints: follow tracks to hidden wild Pokémon |  | DONE | tools/events/w4.ts w4-tracks -> w4-tracks-deep (hidden rare wild, shiny x3) |
 | I370 | Weathervane: spin it to change the weather for the next battle |  | DONE | events.json weather-vane (front effect sets rain/sun for next columns) |
-| I371 | Sundial puzzle at ruins |  | TODO |  |
-| I372 | Lightning rod: gather storm bonus on stormy nodes |  | TODO |  |
-| I373 | Avalanche escape sequence with swipe dodges |  | TODO |  |
-| I374 | Tide pools reveal items only at low tide |  | TODO |  |
+| I371 | Sundial puzzle at ruins |  | DONE | tools/events/w4.ts w4-sundial (riddle puzzle) |
+| I372 | Lightning rod: gather storm bonus on stormy nodes |  | DONE | tools/events/w4.ts w4-lightning-rod (Electric-type rides the strike) |
+| I373 | Avalanche escape sequence with swipe dodges |  | DONE | tools/events/w4.ts w4-avalanche (dodge-tap prompt) |
+| I374 | Tide pools reveal items only at low tide |  | DONE | tools/events/w4.ts w4-low-tide (search only in the morning low tide, or camp till then) |
 | I375 | Day-night toggles which map interactions are available |  | DONE | events period requirement; docs/status/camp-day-night.md (npc-meet-* by hour) |
-| I376 | Seasonal events change terrain (flooded, frozen) |  | TODO |  |
-| I377 | Ruins pressure plates: step in correct order |  | TODO |  |
-| I378 | Mirror mazes with Psychic guidance |  | TODO |  |
-| I379 | Haunted house room-by-room exploration with jump scares |  | PART | events.json haunted-house, spooky-haunted-mansion (single-room, no jump scares) |
-| I380 | Bridge toll: pay with item, battle or favor |  | TODO |  |
-| I381 | Signposts with riddles, answers unlock shortcuts |  | PART | events.json hidden-path-signpost (revealStops shortcut, no riddle) |
+| I376 | Seasonal events change terrain (flooded, frozen) |  | DONE | src/data/traversal.json flooded-path (Spring only), frozen-pond (Winter only), snowdrift (Winter weight); tools/events/w4.ts w4-spring-flood, w4-winter-lake (season condition) |
+| I377 | Ruins pressure plates: step in correct order |  | DONE | tools/events/w4.ts w4-pressure-plates -> w4-plates-2 -> w4-plates-3 (order puzzle) |
+| I378 | Mirror mazes with Psychic guidance |  | DONE | tools/events/w4.ts w4-mirror-maze (Psychic guides; else Intelligence check) |
+| I379 | Haunted house room-by-room exploration with jump scares |  | DONE | tools/events/w4.ts w4-haunted-manor -> hall (jump scare: brace-hold prompt) -> attic |
+| I380 | Bridge toll: pay with item, battle or favor |  | DONE | tools/events/w4.ts w4-toll-bridge (pay money, an item, battle or a favor) |
+| I381 | Signposts with riddles, answers unlock shortcuts |  | DONE | tools/events/w4.ts w4-riddle-signpost (right answer: shortcut = express move) |
 | I382 | Wandering merchant caravan that appears at random nodes |  | DONE | plaza caravanChance (plaza.json, plazaLife.json caravan section) |
-| I383 | Ghost lantern parade at Halloween nodes |  | TODO |  |
+| I383 | Ghost lantern parade at Halloween nodes |  | DONE | tools/events/w4.ts w4-lantern-parade (spooky-season game event only) |
 | I384 | Meteor shower event: wish on shooting stars |  | DONE | events.json meteor-shower (make a wish: heal + love) |
-| I385 | Volcano lava rivers need Water cooling interactions |  | PART | events.json ember-vent-1 / fiery-fallout partyType water |
-| I386 | Quicksand rescue: team pulls someone out together |  | TODO |  |
-| I387 | Spider webs: Fire types burn through, Bug types walk |  | TODO |  |
-| I388 | Cave echo: shout to reveal hidden chambers |  | TODO |  |
-| I389 | Underwater diving interludes with oxygen meter |  | TODO |  |
-| I390 | Skyline cloud-hopping with Flying escort |  | TODO |  |
-| I391 | Abandoned lab terminals to hack with logic puzzles |  | TODO |  |
-| I392 | Arcade cabinets at hidden nodes |  | PART | events.json game-corner, slot-machine, voltorb-flip |
-| I393 | Graffiti walls: paint to unlock hint arrows |  | TODO |  |
-| I394 | Gravity wells in space-themed Ultra Space nodes |  | TODO |  |
-| I395 | Time-rift nodes alter seeds to preview alternate outcomes |  | TODO |  |
-| I396 | Portal puzzle switches lead to warp nodes |  | TODO |  |
-| M93 | **Wandering trainer**: a trainer follows you and challenges after a few nodes. |  | TODO |  |
-| M94 | **Landmarks**: unique per-region nodes with persistent effects for the rest of the run. |  | TODO |  |
+| I385 | Volcano lava rivers need Water cooling interactions |  | DONE | src/data/traversal.json lava-river (Water or rain cools it) |
+| I386 | Quicksand rescue: team pulls someone out together |  | DONE | tools/events/w4.ts w4-quicksand (party of 3+ pull together: pull-hold prompt) |
+| I387 | Spider webs: Fire types burn through, Bug types walk |  | DONE | src/data/traversal.json spider-web (Fire burns or Bug walks; detour paralyses) |
+| I388 | Cave echo: shout to reveal hidden chambers |  | DONE | tools/events/w4.ts w4-cave-echo (echo-rhythm prompt) -> w4-echo-chamber |
+| I389 | Underwater diving interludes with oxygen meter |  | DONE | tools/events/w4.ts w4-dive -> dive-1 -> dive-2 (oxygen meter as a story flag; Water-type gives more air; dive-hold prompt) |
+| I390 | Skyline cloud-hopping with Flying escort |  | DONE | src/data/traversal.json cloud-gap (Flying/Dragon escort) |
+| I391 | Abandoned lab terminals to hack with logic puzzles |  | DONE | tools/events/w4.ts w4-lab-terminal (number-sequence logic puzzle; Electric hacks it) |
+| I392 | Arcade cabinets at hidden nodes |  | DONE | tools/events/w4.ts w4-arcade-cabinet (secret stop, throw-ring high score) + events game-corner/slot-machine/voltorb-flip |
+| I393 | Graffiti walls: paint to unlock hint arrows |  | DONE | tools/events/w4.ts w4-graffiti-wall (hint arrows: scout + reveal stops) |
+| I394 | Gravity wells in space-themed Ultra Space nodes |  | DONE | tools/events/w4.ts w4-gravity-well (Ultra Space rip: slingshot express, fight, study) |
+| I395 | Time-rift nodes alter seeds to preview alternate outcomes |  | DONE | tools/events/w4.ts w4-time-rift (riftPreview: map previews every next battle this stage; step through) |
+| I396 | Portal puzzle switches lead to warp nodes |  | DONE | tools/events/w4.ts w4-portal-switches (switch-order puzzle: warp = express) |
+| M93 | **Wandering trainer**: a trainer follows you and challenges after a few nodes. |  | DONE | src/core/wanderer.ts (tails you N nodes, then a challenge stop) + tools/events/w4.ts w4-wandering-trainer/w4-wanderer-challenge |
+| M94 | **Landmarks**: unique per-region nodes with persistent effects for the rest of the run. |  | DONE | tools/events/w4.ts LANDMARKS (one per region, 13) placed by core/traversal.ts placeLandmark on each region's 2nd stage; choices are relics (lasting run modifiers) |
 | M95 | **Branching event outcomes**: past choices change which event variants appear later. |  | DONE | events.json choice effect + callback requires (strangers-map -> strangers-map-lair) |
 | F65 | Day/night cycle per run affecting encounters. |  | DONE | src/core/clock.ts run clock, balance.clock.periodTypes wild shift; docs/status/camp-day-night.md |
 | F68 | Campfire stop: rest, cook berries into buffs. | Y (Comes with Berry Rework) | DONE | events.json camp-checkpoint/camp-prepare; docs/status/camp-day-night.md |
 | F70 | Caravan shop that appears randomly with unique stock. |  | DONE | docs/status/trainer-plaza-rework.md + plazaLife.json caravan, stock changes every stage |
 | F73 | Biome-themed map backgrounds with parallax. |  | DONE | src/scenes/MapScene.ts:195 parallax scenery |
-| F74 | "Danger level" slider for the whole run with score multiplier. | N, but: N (Fuck you Quinton) | PART | docs/plans/coverage-tracker.md Phase E1 5 difficulties + multiplier (no slider) |
-| F75 | Checkpoint save-and-quit with a gentle "resume" banner. |  | PART | src/scenes/MainMenuScene.ts:39 Continue from latest slot with run card |
-| F85 | Map legend overlay with icon meanings. |  | TODO |  |
-| F87 | Treasure maps item revealing a hidden node. | Y (But make it item + detour) | PART | events.json strangers-map (map to legendary lair, no item+detour) |
-| F89 | Run recap with a timeline of key moments. |  | PART | src/core/recap.ts buildRecap highlights (no timeline) |
-| F92 | Random travelling NPCs who follow you across layers. |  | PART | events.json convoy-* escorts, companion-meet (3 stretches) |
-| F93 | Seasonal map skins tied to real-world date. |  | TODO |  |
-| F95 | Auto-scroll map toward the current node on resume. |  | TODO |  |
+| F74 | "Danger level" slider for the whole run with score multiplier. | N, but: N (Fuck you Quinton) | DROPPED | Kice answered N |
+| F75 | Checkpoint save-and-quit with a gentle "resume" banner. |  | DONE | src/scenes/MapScene.ts "Welcome back" banner on a continued run (GameSession.takeResumed) |
+| F85 | Map legend overlay with icon meanings. |  | DONE | src/scenes/MapScene.ts toggleLegend (L key / "L: map legend" tag): nodes, stops, badges, obstacles |
+| F87 | Treasure maps item revealing a hidden node. | Y (But make it item + detour) | DONE | itemCatalog treasure-map (perk treasureMap) + run.ts useMapAction: dig site 2-4 columns ahead, off your path; sold at w4-old-chart |
+| F89 | Run recap with a timeline of key moments. |  | DONE | src/core/recap.ts runTimeline + GameOverScene "Run timeline" (moments in order with region/stage) |
+| F92 | Random travelling NPCs who follow you across layers. |  | DONE | src/core/wanderer.ts companion: the beaten wanderer catches up once per stage for 3 stages (w4-wanderer-visit) |
+| F93 | Seasonal map skins tied to real-world date. |  | DONE | src/ui/seasonSkin.ts real-date season tint + drifting petals/sun/leaves/snow on the map |
+| F95 | Auto-scroll map toward the current node on resume. |  | DONE | src/scenes/MapScene.ts: on a continued run the map glides from the start to the current node |
 
 ## W5 NPCs, shops & story (69)
 
@@ -687,34 +687,34 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | E157 | Gen 3 Throwback: Hoenn only |  | PART | runRules.json:81 single-region-dex modifier |
 | E158 | Gen 5 Throwback: Unova only, animated sprites flavor |  | PART | src/data/gameEvents.json gen-5-throwback (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E159 | Sync Week: whoever leads your team sets everyone's type |  | TODO |  |
-| E160 | Map Mutator Week: random mutators on each stop |  | TODO |  |
+| E160 | Map Mutator Week: random mutators on each stop |  | DONE | gameEvents map-mutator-week: traversalExtra 3 obstacles per stage + rift/gravity/portal stops (tools/game-events-w9.ts w4Weeks) |
 | E161 | Hidden Path Week: secret branches show up on the map |  | DONE | src/data/gameEvents.json:961 hidden-path-week (signpost/shortcut/keeper events) |
-| E163 | Treasure Map Week: collect pieces to find a hidden stop |  | PART | old-sea-map-island / treasure-cache events |
+| E163 | Treasure Map Week: collect pieces to find a hidden stop |  | DONE | treasure-map-week features w4-old-chart (Treasure Map item -> hidden dig site) |
 | E164 | Caravan Week: a caravan follows you and sells things |  | PART | src/data/events.json:49573 convoy-merchant-cart |
 | E166 | Weather Map Week: forecast tells you which node has storms |  | PART | src/data/events.json:43922 weather-vane event |
-| E167 | Cave Expedition Week: underground maps with rare ores |  | PART | src/data/expeditions.json quarry/crystal-hollow expeditions |
-| E168 | Island Hopping Week: ferry nodes connect maps |  | PART | src/data/events.json:8800 ss-ticket-ferry |
-| E169 | Volcano Eruption: lava reshapes the map each stop |  | PART | src/data/events.json:19686 volcano-rim event |
-| E170 | Earthquake Tremors: stops swap places mid-run |  | PART | src/data/gameEvents.json earthquake-tremors (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
-| E171 | Flood Event: water routes open, land routes close |  | PART | src/data/gameEvents.json flood-event (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
-| E172 | Blizzard Week: some stops locked until you clear a snowdrift puzzle |  | PART | src/data/events.json:19111 blizzard-pass event |
+| E167 | Cave Expedition Week: underground maps with rare ores |  | DONE | cave-expedition-week: more dark caves/boulders on the map (traversalWeight) + w4-cave-echo |
+| E168 | Island Hopping Week: ferry nodes connect maps |  | DONE | island-hopping-week: lakes cut the map (traversalWeight lake) + w4-raft/w4-dive |
+| E169 | Volcano Eruption: lava reshapes the map each stop |  | DONE | volcano-eruption: lava rivers and wildfires on the map (traversalWeight, +2 per stage) |
+| E170 | Earthquake Tremors: stops swap places mid-run |  | DONE | earthquake-tremors: rockslides block nodes; stopShuffle every 3 nodes swaps two stops ahead (traversal.ts tremorStep) |
+| E171 | Flood Event: water routes open, land routes close |  | DONE | flood-event: lakes/rivers block land routes unless a Water/Ice type crosses (+2 per stage) |
+| E172 | Blizzard Week: some stops locked until you clear a snowdrift puzzle |  | DONE | blizzard-week: snowdrift obstacles lock nodes until a Fire/Ground type clears them |
 | E173 | Heat Wave: Fire types gain, fatigue accumulates |  | PART | src/data/events.json:19038 heatwave event |
 | E174 | Aurora Night: aurora nodes offer rare Ice spawns |  | PART | src/data/gameEvents.json aurora-night (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E175 | Mystery Dungeon Week: maze-like random floors |  | DONE | src/data/gameEvents.json:1045 mystery-dungeon-week (md-* events) |
 | E176 | Safari Zone Week: no battling, catch only |  | PART | src/data/events.json:10910 safari-zone event + services.json safari + catch-carnival |
 | E177 | Bug Contest Day: net catch, rank by size |  | PART | src/data/events.json:7682 bug-contest event |
 | E178 | Pokéathlon Day: minigame-style athletic stops |  | PART | src/data/events.json:2402 pokeathlon event |
-| E179 | Underground Week: dig stops reveal buried gifts |  | PART | src/data/gameEvents.json underground-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
-| E180 | Ruins Expedition: puzzle stops with glyph decoding |  | PART | src/data/gameEvents.json ruins-expedition (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
-| E181 | Sunken Ship Dive: underwater stop chain |  | PART | src/data/gameEvents.json sunken-ship-dive (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
-| E182 | Sky Tower Climb: vertical map with checkpoints |  | PART | src/data/gameEvents.json sky-tower-climb (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
-| E183 | Magical Forest Maze: loops until you find the exit rule |  | PART | src/data/gameEvents.json magical-forest-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E179 | Underground Week: dig stops reveal buried gifts |  | DONE | underground-week: earthen walls a Ground type digs under (buried treasure) |
+| E180 | Ruins Expedition: puzzle stops with glyph decoding |  | DONE | ruins-expedition: silent statues + w4-pressure-plates/w4-sundial/w4-portal-switches puzzle stops |
+| E181 | Sunken Ship Dive: underwater stop chain |  | DONE | sunken-ship-dive features w4-dive (oxygen-meter dive chain to the wreck) |
+| E182 | Sky Tower Climb: vertical map with checkpoints |  | DONE | sky-tower-climb: towerClimb draws the map rising (MapScene TOWER_RISE) with a heal checkpoint every 5 levels (traversal.ts placeWeekStops); cliffs/cloud gaps need a flyer |
+| E183 | Magical Forest Maze: loops until you find the exit rule |  | DONE | magical-forest-week: placeEvent puts w4-forest-maze on each stage; wrong paths loop back (room), the glowing-mushroom path or a Grass-type gets out |
 | E184 | Ghost Town Visit: ghost NPCs at every stop with stories |  | DONE | src/data/events.json:41237 ghost-town-gate/market/hall events |
-| E185 | Festival Street: stalls and games every few nodes |  | PART | src/data/gameEvents.json festival-street-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
-| E186 | Lighthouse Beacon: stops light up on the map |  | PART | src/data/gameEvents.json lighthouse-beacon-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
-| E187 | Train Ride Special: express nodes skip a stop with a conductor puzzle |  | TODO |  |
+| E185 | Festival Street: stalls and games every few nodes |  | PART | festival-street-week features w4-arcade-cabinet and w4-balloon; no stall every few nodes |
+| E186 | Lighthouse Beacon: stops light up on the map |  | DONE | lighthouse-beacon-week: wild preview + w4-beacon-fire lights the road ahead |
+| E187 | Train Ride Special: express nodes skip a stop with a conductor puzzle |  | DONE | gameEvents train-ride-special + w4-express-train (conductor puzzle: express skips a stop) |
 | E188 | Campfire Tales: rest stops with story choices |  | DONE | src/data/gameEvents.json:796 campfire-tales-week + tale-* events |
-| E189 | Roadside Rival: random rival ambush on route |  | PART | src/data/gameEvents.json roadside-rival-week (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
+| E189 | Roadside Rival: random rival ambush on route |  | DONE | roadside-rival-week features w4-wandering-trainer (tails you, then ambushes) |
 | E190 | Egg Tank Week: eggs hatch after N wins instead of steps |  | TODO |  |
 | E191 | Shiny Charm Day: shiny odds boosted for one day |  | DONE | src/data/gameEvents.json shiny-charm-day (tools/game-events-w9.ts; docs/status/w9-live-events.md) |
 | E192 | Mastery Marathon: mastery XP doubled for a weekend |  | TODO |  |

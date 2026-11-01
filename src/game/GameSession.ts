@@ -7,6 +7,7 @@
 //   - when the run ends (profile first, then the run record is cleared)
 
 import { spendTownStart, townAction, visitBuilding, type TownArgs, type TownResult } from '../core/town';
+import type { Grade } from '../core/interaction/prompt';
 import { setCalendar } from '../core/clock';
 import { deliverNote, pendingNote } from '../core/hubNook';
 import { emit } from '../core/story/record';
@@ -20,7 +21,6 @@ import { awardLiveAchievements, claimTrainer, setActiveTitle, type RunEndSummary
 import { setCardFrame, setCryTheme, setMenuArena } from '../core/wardrobe';
 import { buyNote } from '../core/researchNotes';
 import { makeRandomSeed } from '../core/rng';
-import type { Grade } from '../core/interaction/prompt';
 import { chooseEvent, type EventResult } from '../core/events';
 import { activeGameEvents } from '../core/gameEvents';
 import { setMasteryPicks } from '../core/mastery';
@@ -267,6 +267,7 @@ export class GameSession {
     if (this.savedRun.status !== 'ok') throw new Error('No saved run to continue');
     this.run = Run.prepareLoadedRun(this.content, this.savedRun.data);
     this.syncCalendar();
+    this.resumed = this.run.phase === 'map';
     if (this.run !== this.savedRun.data) this.persistRun();
     if (this.run.phase === 'over') this.finishRun();
     this.changed();
@@ -308,8 +309,22 @@ export class GameSession {
     return run;
   }
 
+  /** What happened on the way to the last node chosen (an obstacle crossed or gone round, ideas W4), for the map. */
+  lastCrossing: string | null = null;
+  /** Set when a saved run is continued; the map takes it once to show the "welcome back" banner (ideas W4). */
+  private resumed = false;
+
+  /** Whether the run was just continued from a save (true once, then false). */
+  takeResumed(): boolean {
+    const was = this.resumed;
+    this.resumed = false;
+    return was;
+  }
+
   chooseNode(nodeId: string): RunState {
-    this.run = Run.chooseNode(this.content, this.requireRun(), nodeId);
+    const moved = Run.chooseNodeWithNotes(this.content, this.requireRun(), nodeId);
+    this.run = moved.run;
+    this.lastCrossing = moved.crossing;
     this.syncCalendar();
     this.persistRun();
     return this.run;

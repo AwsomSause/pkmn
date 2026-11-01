@@ -58503,6 +58503,4503 @@
      }
     }
    ]
+  },
+  {
+   "id": "w4-berry-tree",
+   "name": "A Laden Tree",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "types": [
+    "grass",
+    "bug"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c2a14",
+    "effect": "shake"
+   },
+   "intro": "A tree heavy with fruit leans over the path. Something rustles in the top branches.",
+   "choices": [
+    {
+     "label": "Shake it gently",
+     "success": {
+      "text": "A few berries drop into your hands.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Shake it hard",
+     "chance": 0.5,
+     "success": {
+      "text": "Berries rain down, and a shiny thing falls with them!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "star-piece",
+         "nugget",
+         "tinymushroom"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Something falls out of the tree, and it is not happy.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "bug",
+        "grass"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "oran-berry",
+          "sitrus-berry",
+          "lum-berry"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-hidden-grove",
+   "name": "The Hidden Grove",
+   "group": "World & Traversal",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [
+    "fairy"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c2a",
+    "effect": "sparkle"
+   },
+   "intro": "Past the ring of mushrooms the air turns warm and sweet. Tiny lights drift between flowers that should not grow here.",
+   "choices": [
+    {
+     "label": "Rest among the flowers",
+     "success": {
+      "text": "Everyone wakes up healed and happy.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Follow the lights",
+     "success": {
+      "text": "A shy Fairy-type follows you back out of the grove.",
+      "effects": [
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "fairy"
+        ],
+        "levelBonus": 1,
+        "shinyMultiplier": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Gather the dew",
+     "success": {
+      "text": "The dew sparkles in a jar.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fairy-feather",
+         "moon-stone",
+         "shiny-stone"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-zip-line",
+   "name": "The Zip-Line",
+   "group": "World & Traversal",
+   "stop": "detour",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "flying",
+    "electric"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#14243a",
+    "effect": "float"
+   },
+   "intro": "A cable runs from this hilltop far down the valley. A harness hangs from it, waiting.",
+   "choices": [
+    {
+     "label": "Ride it (let go at the right moment)",
+     "prompt": {
+      "id": "zip-line",
+      "needs": "good"
+     },
+     "success": {
+      "text": "You let go right over the platform and land running, a whole level ahead!",
+      "effects": [
+       {
+        "kind": "express"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     },
+     "failure": {
+      "text": "You let go late and tumble into the bushes. Next time.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.08
+       }
+      ]
+     }
+    },
+    {
+     "label": "Your Flying-type carries the line",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "flying"
+      }
+     ],
+     "success": {
+      "text": "It glides the whole party down the cable.",
+      "effects": [
+       {
+        "kind": "express"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk down",
+     "success": {
+      "text": "You take the path down like everyone else.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-rock-climb",
+   "name": "The Climbing Wall",
+   "group": "World & Traversal",
+   "stop": "detour",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "rock",
+    "fighting"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2014",
+    "effect": "shake"
+   },
+   "intro": "A cliff of good grey rock with a nest of shining stones at the top. Your Rock-type could anchor the rope.",
+   "choices": [
+    {
+     "label": "Climb with your Rock-type anchoring",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "rock"
+      }
+     ],
+     "prompt": {
+      "id": "climb-rhythm",
+      "needs": "ok"
+     },
+     "success": {
+      "text": "Hold after hold, all the way up. The nest is full of stones!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fire-stone",
+         "water-stone",
+         "thunder-stone",
+         "leaf-stone",
+         "moon-stone",
+         "sun-stone",
+         "dusk-stone",
+         "dawn-stone",
+         "shiny-stone",
+         "ice-stone"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "hard-stone",
+         "star-piece"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "lead"
+       }
+      ]
+     },
+     "failure": {
+      "text": "You slip near the top. The rope holds, but you come down empty-handed.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.06
+       }
+      ]
+     }
+    },
+    {
+     "label": "Free climb",
+     "prompt": {
+      "id": "climb-rhythm",
+      "needs": "perfect"
+     },
+     "success": {
+      "text": "You make it, just. One stone was in reach.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "fire-stone",
+         "water-stone",
+         "thunder-stone",
+         "leaf-stone",
+         "moon-stone",
+         "sun-stone",
+         "dusk-stone",
+         "dawn-stone",
+         "shiny-stone",
+         "ice-stone"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "Halfway up you think better of it.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.04
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-balloon",
+   "name": "The Hot-Air Balloon",
+   "group": "World & Traversal",
+   "stop": "detour",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "flying",
+    "fire"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#3a2a14",
+    "effect": "float"
+   },
+   "intro": "A balloonist offers you a ride. The wind flags on the basket show which way the air is moving.",
+   "choices": [
+    {
+     "label": "Steer by the wind flags",
+     "prompt": {
+      "id": "balloon-drag",
+      "needs": "good"
+     },
+     "success": {
+      "text": "You ride the wind right over the stage and see far ahead.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 4
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pretty-wing",
+         "star-piece"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "A gust spins you round. You still see a little way ahead.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 1
+       },
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let the balloonist fly",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 200
+      }
+     ],
+     "success": {
+      "text": "A gentle, short ride.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 2
+       },
+       {
+        "kind": "money",
+        "amount": -200
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay on the ground",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-raft",
+   "name": "The Raft Crossing",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#102838",
+    "effect": "rain"
+   },
+   "intro": "A raft is tied at the river bank. The current would carry you a long way, and the fish are biting.",
+   "choices": [
+    {
+     "label": "Fish on the way down",
+     "success": {
+      "text": "You float down the river with a line in the water. Good spot for it.",
+      "effects": [
+       {
+        "kind": "addStop",
+        "stop": "fish"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl",
+         "big-pearl",
+         "mystic-water",
+         "star-piece"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Your Water-type tows the raft",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      }
+     ],
+     "success": {
+      "text": "It pulls the raft fast downstream: a level ahead, and a fishing spot where you land.",
+      "effects": [
+       {
+        "kind": "express"
+       },
+       {
+        "kind": "addStop",
+        "stop": "fish"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave the raft",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-beacon-fire",
+   "name": "The Beacon Fire",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "types": [
+    "fire"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1a0c",
+    "effect": "fire"
+   },
+   "intro": "An old beacon of stacked wood stands on a rise. Lit, it would light the whole road ahead.",
+   "choices": [
+    {
+     "label": "Light it with your Fire-type",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      }
+     ],
+     "success": {
+      "text": "The beacon roars up. You can see a long way ahead now.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 4
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "lead"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Light a small campfire",
+     "success": {
+      "text": "Enough light to see the next stretch, and a warm rest.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 2
+       },
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on in the dark",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-night-watch",
+   "name": "Night Watch",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "types": [
+    "dark",
+    "ghost"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#0c0c1c",
+    "effect": "fog"
+   },
+   "intro": "You camp for the night. Somebody has to keep watch.",
+   "choices": [
+    {
+     "label": "Your lead keeps watch",
+     "success": {
+      "text": "Late at night, something creeps into camp. Your lead is ready.",
+      "effects": [
+       {
+        "kind": "rest"
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "dark",
+        "ghost"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 20
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "oran-berry",
+          "sitrus-berry",
+          "lum-berry"
+         ]
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Take turns",
+     "chance": 0.6,
+     "success": {
+      "text": "A quiet night. Everyone sleeps well.",
+      "effects": [
+       {
+        "kind": "rest"
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     },
+     "failure": {
+      "text": "In the morning, something is missing from the bag.",
+      "effects": [
+       {
+        "kind": "rest"
+       },
+       {
+        "kind": "loseItem"
+       }
+      ]
+     }
+    },
+    {
+     "label": "A Dark-type keeps watch",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "dark"
+      }
+     ],
+     "success": {
+      "text": "Nothing gets past it. It even caught a thief in the act.",
+      "effects": [
+       {
+        "kind": "rest"
+       },
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "life-orb",
+         "choice-band",
+         "lucky-punch",
+         "macho-brace",
+         "smoke-ball"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-tracks",
+   "name": "Fresh Tracks",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#1c1c14",
+    "effect": "none"
+   },
+   "intro": "Big, fresh tracks lead off the path into the long grass.",
+   "choices": [
+    {
+     "label": "Follow the tracks",
+     "success": {
+      "text": "The tracks go deeper. You are getting close.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "w4-tracks-deep"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave them",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-tracks-deep",
+   "name": "The End of the Tracks",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#1c1c14",
+    "effect": "glint"
+   },
+   "intro": "The tracks end at a hollow under a fallen tree. Something big is sleeping inside.",
+   "choices": [
+    {
+     "label": "Wake it up",
+     "success": {
+      "text": "It wakes up, and it is rare!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 3,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 30
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Sneak away",
+     "success": {
+      "text": "You leave it sleeping and take a strange feather you found by the hollow.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pretty-wing",
+         "star-piece"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-lightning-rod",
+   "name": "The Lightning Rod",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "electric",
+    "flying"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1a1a2c",
+    "effect": "flicker"
+   },
+   "intro": "A tall iron rod on a hilltop. Storm clouds are gathering over it.",
+   "choices": [
+    {
+     "label": "Your Electric-type rides the strike",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "electric"
+      }
+     ],
+     "success": {
+      "text": "The bolt hits the rod and your Pokémon soaks it up. It feels stronger!",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "thunderstone",
+         "magnet"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Catch the storm in a jar",
+     "chance": 0.5,
+     "success": {
+      "text": "The jar crackles. Worth a lot to a collector.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 600
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     },
+     "failure": {
+      "text": "The shock knocks everyone back.",
+      "effects": [
+       {
+        "kind": "status",
+        "status": "paralysis"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Get off the hill",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-avalanche",
+   "name": "Avalanche!",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "ice",
+    "rock"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c2a3a",
+    "effect": "snow"
+   },
+   "intro": "A rumble from above. The whole slope is coming down!",
+   "choices": [
+    {
+     "label": "Dodge the falling snow",
+     "prompt": {
+      "id": "dodge-tap",
+      "needs": "good"
+     },
+     "success": {
+      "text": "You dodge at the last second, and the slide uncovers something.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nevermeltice",
+         "icy-rock",
+         "star-piece"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     },
+     "failure": {
+      "text": "The snow catches the party.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Your Ice-type holds the snow back",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "ice"
+      }
+     ],
+     "success": {
+      "text": "It freezes the slope solid. Everyone walks on safely.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nevermeltice",
+         "icy-rock"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Run for it",
+     "success": {
+      "text": "You get clear, but not cleanly.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.08
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-low-tide",
+   "name": "The Tide Pools",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#102030",
+    "effect": "rain"
+   },
+   "intro": "Rock pools along the shore. The tide is out in the mornings, and then the pools are full of treasure.",
+   "choices": [
+    {
+     "label": "Search the pools (low tide)",
+     "requires": [
+      {
+       "kind": "period",
+       "in": [
+        "morning"
+       ]
+      }
+     ],
+     "success": {
+      "text": "Shells, pearls and a stranded Pokémon you help back to the sea.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl",
+         "big-pearl",
+         "mystic-water",
+         "star-piece"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl",
+         "big-pearl",
+         "mystic-water",
+         "star-piece"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Camp until low tide",
+     "success": {
+      "text": "You sleep by the shore. In the morning the pools are open, and you find one pearl before you go.",
+      "effects": [
+       {
+        "kind": "rest"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl",
+         "big-pearl"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Move on",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-spring-flood",
+   "name": "The Flooded Meadow",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "season",
+     "in": [
+      "Spring"
+     ]
+    }
+   ],
+   "types": [
+    "water",
+    "grass"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#14283a",
+    "effect": "rain"
+   },
+   "intro": "The spring melt has turned the meadow into a shallow lake. Flowers poke up through the water.",
+   "choices": [
+    {
+     "label": "Your Water-type swims you across",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      }
+     ],
+     "success": {
+      "text": "Easy. You find things the flood washed up.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "damp-rock",
+         "miracle-seed",
+         "mystic-water"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wade it",
+     "success": {
+      "text": "Wet, muddy and slow.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.06
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-winter-lake",
+   "name": "The Frozen Lake",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "season",
+     "in": [
+      "Winter"
+     ]
+    }
+   ],
+   "types": [
+    "ice"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c2a3a",
+    "effect": "snow"
+   },
+   "intro": "Winter has frozen the lake hard. Across the ice is a shortcut.",
+   "choices": [
+    {
+     "label": "Skate across",
+     "chance": 0.6,
+     "success": {
+      "text": "You slide all the way over, a level ahead!",
+      "effects": [
+       {
+        "kind": "express"
+       }
+      ]
+     },
+     "failure": {
+      "text": "The ice cracks and you scramble back.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.08
+       }
+      ]
+     }
+    },
+    {
+     "label": "Your Ice-type thickens the ice",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "ice"
+      }
+     ],
+     "success": {
+      "text": "Safe as a road. A level ahead.",
+      "effects": [
+       {
+        "kind": "express"
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nevermeltice",
+         "icy-rock"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk round",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-mirror-maze",
+   "name": "The Mirror Maze",
+   "group": "Puzzles",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "psychic",
+    "fairy"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a3a",
+    "effect": "glint"
+   },
+   "intro": "A maze of mirrors. Every way looks like every other way.",
+   "choices": [
+    {
+     "label": "Your Psychic-type guides you",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "psychic"
+      }
+     ],
+     "success": {
+      "text": "It walks straight through as if the mirrors were not there. At the centre: a prize.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "life-orb",
+         "choice-band",
+         "lucky-punch",
+         "macho-brace",
+         "smoke-ball"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "scout",
+        "columns": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Find your own way",
+     "check": "intelligence",
+     "success": {
+      "text": "You find the centre and its prize.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "life-orb",
+         "choice-band",
+         "lucky-punch",
+         "macho-brace",
+         "smoke-ball"
+        ]
+       }
+      ]
+     },
+     "failure": {
+      "text": "You walk into mirror after mirror and leave with a headache.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.06
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not today",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-haunted-manor",
+   "name": "The Haunted Manor",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "ghost",
+    "dark"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#140c1c",
+    "effect": "flicker"
+   },
+   "intro": "The door of the old manor swings open by itself. Room after room, all dark.",
+   "choices": [
+    {
+     "label": "Go in",
+     "success": {
+      "text": "The door slams shut behind you.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "w4-haunted-hall"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not a chance",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-haunted-hall",
+   "name": "The Haunted Manor: the Hall",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "ghost"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#140c1c",
+    "effect": "flicker"
+   },
+   "intro": "Portraits line the hall. Their eyes follow you. Then one of them screams!",
+   "choices": [
+    {
+     "label": "Hold your nerve",
+     "prompt": {
+      "id": "brace-hold",
+      "needs": "ok"
+     },
+     "success": {
+      "text": "You do not flinch. The portrait looks almost disappointed. On to the next room.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "w4-haunted-attic"
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     },
+     "failure": {
+      "text": "Everyone runs out of the manor screaming.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": -2,
+        "who": "party"
+       },
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "Your Ghost-type talks to the portrait",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "ghost"
+      }
+     ],
+     "success": {
+      "text": "They chat like old friends. The portrait points the way up.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "w4-haunted-attic"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Run out",
+     "success": {
+      "text": "You run out, and nobody blames you.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-haunted-attic",
+   "name": "The Haunted Manor: the Attic",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "ghost"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#140c1c",
+    "effect": "fog"
+   },
+   "intro": "In the attic, a chest, and something sitting on it, waiting for you.",
+   "choices": [
+    {
+     "label": "Face it",
+     "success": {
+      "text": "The ghost of the manor attacks!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "ghost"
+       ],
+       "levelBonus": 3,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "spell-tag",
+          "reaper-cloth",
+          "dusk-stone"
+         ]
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 40
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Ask nicely for the chest",
+     "check": "charisma",
+     "success": {
+      "text": "It shrugs and floats away. The chest is full.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "It does not like being asked. You leave fast.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.08
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-toll-bridge",
+   "name": "The Toll Bridge",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "tint": "#2a2014",
+    "effect": "none"
+   },
+   "intro": "A rope bridge over a gorge, and a big trainer on it with a sign: TOLL.",
+   "choices": [
+    {
+     "label": "Pay ₽500",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "success": {
+      "text": "He waves you over. The far side has a good view of the road ahead.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "scout",
+        "columns": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Pay with an item",
+     "success": {
+      "text": "He takes something from your bag and lets you cross.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "scout",
+        "columns": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Battle for the bridge",
+     "success": {
+      "text": "\"Beat me and it's free.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Bridge Keeper",
+       "classId": "roughneck",
+       "size": 2,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "scout",
+         "columns": 2
+        },
+        {
+         "kind": "money",
+         "amount": 400
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Do him a favor",
+     "success": {
+      "text": "You carry his supplies across. He lets you keep a tip.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.08
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "scout",
+        "columns": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-quicksand",
+   "name": "Quicksand!",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "types": [
+    "ground"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2010",
+    "effect": "shake"
+   },
+   "intro": "A hiker is sinking in quicksand, shouting for help!",
+   "choices": [
+    {
+     "label": "Everyone pull together",
+     "requires": [
+      {
+       "kind": "partySize",
+       "atLeast": 3
+      }
+     ],
+     "prompt": {
+      "id": "pull-hold",
+      "needs": "ok"
+     },
+     "success": {
+      "text": "The whole team pulls, and out he comes! He gives you everything in his pockets.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "He slips back in. You get him out in the end, but everyone is worn out.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Your Grass-type throws a vine",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "grass"
+      }
+     ],
+     "success": {
+      "text": "He climbs out along the vine.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Run for help",
+     "success": {
+      "text": "You find some rope and pull him out. He thanks you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-cave-echo",
+   "name": "The Echoing Cave",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "rock",
+    "ground"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c1814",
+    "effect": "shake"
+   },
+   "intro": "Every sound in this cave comes back to you, twice. Somewhere the echo sounds different, as if there is a room behind the rock.",
+   "choices": [
+    {
+     "label": "Shout in rhythm and listen",
+     "prompt": {
+      "id": "echo-rhythm",
+      "needs": "good"
+     },
+     "success": {
+      "text": "You find the hollow wall. Behind it: a hidden chamber!",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "w4-echo-chamber"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Your shouting wakes up the cave.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "poison",
+        "flying"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Walk on quietly",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-echo-chamber",
+   "name": "The Hidden Chamber",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "rock"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#1c1814",
+    "effect": "glint"
+   },
+   "intro": "A sealed room of crystal. Nobody has stood here in a very long time.",
+   "choices": [
+    {
+     "label": "Take the crystals",
+     "success": {
+      "text": "Beautiful, and worth a fortune.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "hard-stone",
+         "star-piece",
+         "nugget",
+         "rare-bone",
+         "moon-stone"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "hard-stone",
+         "star-piece",
+         "nugget",
+         "rare-bone",
+         "moon-stone"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wake the guardian",
+     "success": {
+      "text": "A Rock-type older than the cave steps out.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "rock"
+       ],
+       "levelBonus": 3,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "fire-stone",
+          "water-stone",
+          "thunder-stone",
+          "leaf-stone",
+          "moon-stone",
+          "sun-stone",
+          "dusk-stone",
+          "dawn-stone",
+          "shiny-stone",
+          "ice-stone"
+         ]
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-dive",
+   "name": "The Diving Spot",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "water"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#0c1c30",
+    "effect": "rain"
+   },
+   "intro": "Clear deep water, and a wreck far below. You can hold your breath for a while. A Water-type could help.",
+   "choices": [
+    {
+     "label": "Dive with a Water-type",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      }
+     ],
+     "success": {
+      "text": "It carries extra air for you. Oxygen: 4.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "oxygen",
+        "amount": -99
+       },
+       {
+        "kind": "flag",
+        "key": "oxygen",
+        "amount": 4
+       },
+       {
+        "kind": "addEvent",
+        "eventId": "w4-dive-1"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Dive alone",
+     "success": {
+      "text": "One deep breath. Oxygen: 2.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "oxygen",
+        "amount": -99
+       },
+       {
+        "kind": "flag",
+        "key": "oxygen",
+        "amount": 2
+       },
+       {
+        "kind": "addEvent",
+        "eventId": "w4-dive-1"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay dry",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-dive-1",
+   "name": "Under the Water",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "water"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#0c1c30",
+    "effect": "rain"
+   },
+   "intro": "Shells and pearls on the sand, and the dark shape of the wreck below.",
+   "choices": [
+    {
+     "label": "Go deeper (1 oxygen)",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "oxygen",
+       "atLeast": 2,
+       "atMost": 99
+      }
+     ],
+     "success": {
+      "text": "Down to the wreck.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "oxygen",
+        "amount": -1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl",
+         "big-pearl",
+         "mystic-water",
+         "star-piece"
+        ]
+       },
+       {
+        "kind": "addEvent",
+        "eventId": "w4-dive-2"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Hold your breath and push on",
+     "prompt": {
+      "id": "dive-hold",
+      "needs": "good"
+     },
+     "success": {
+      "text": "You make it down on one breath.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl",
+         "big-pearl",
+         "mystic-water",
+         "star-piece"
+        ]
+       },
+       {
+        "kind": "addEvent",
+        "eventId": "w4-dive-2"
+       }
+      ]
+     },
+     "failure": {
+      "text": "You surface gasping with a handful of shells.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl"
+        ]
+       },
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "Surface",
+     "success": {
+      "text": "You come up with a pearl.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "pearl",
+         "big-pearl"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-dive-2",
+   "name": "The Wreck",
+   "group": "World & Traversal",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "water",
+    "ghost"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#081428",
+    "effect": "fog"
+   },
+   "intro": "Inside the wreck, a captain's chest, and something guarding it in the dark.",
+   "choices": [
+    {
+     "label": "Open the chest (1 oxygen)",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "oxygen",
+       "atLeast": 1,
+       "atMost": 99
+      }
+     ],
+     "success": {
+      "text": "Gold and old treasure!",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "oxygen",
+        "amount": -1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fight the guardian",
+     "success": {
+      "text": "It comes at you out of the dark!",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "water",
+        "ghost"
+       ],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 30
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Surface now",
+     "success": {
+      "text": "You are out of air. You kick for the surface.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-lab-terminal",
+   "name": "The Old Lab Terminal",
+   "group": "Puzzles",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "electric",
+    "steel"
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#0c1c1c",
+    "effect": "flicker"
+   },
+   "intro": "An abandoned lab. One terminal still glows: \"PASSWORD: the next number. 3, 6, 12, 24, ?\"",
+   "choices": [
+    {
+     "label": "Type 48",
+     "success": {
+      "text": "ACCESS GRANTED. A locker clicks open.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "up-grade",
+         "dubious-disc",
+         "magnet",
+         "electirizer"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       }
+      ]
+     }
+    },
+    {
+     "label": "Type 36",
+     "success": {
+      "text": "ACCESS DENIED. A security Pokémon wakes up.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "electric",
+        "steel"
+       ],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    },
+    {
+     "label": "Your Electric-type hacks it",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "electric"
+      }
+     ],
+     "success": {
+      "text": "A jolt in the right place, and everything opens.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "up-grade",
+         "dubious-disc",
+         "magnet"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-arcade-cabinet",
+   "name": "A Forgotten Arcade Cabinet",
+   "group": "World & Traversal",
+   "rarity": "rare",
+   "minStage": 1,
+   "secret": [
+    {
+     "kind": "attribute",
+     "key": "luck",
+     "atLeast": 10
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1438",
+    "effect": "glint"
+   },
+   "intro": "Behind a shed, an old arcade cabinet still runs. \"INSERT ₽100\".",
+   "choices": [
+    {
+     "label": "Play for the high score",
+     "prompt": {
+      "id": "throw-ring",
+      "needs": "good"
+     },
+     "success": {
+      "text": "NEW HIGH SCORE! The cabinet pays out tickets for a prize.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "life-orb",
+         "choice-band",
+         "lucky-punch",
+         "macho-brace",
+         "smoke-ball"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     },
+     "failure": {
+      "text": "GAME OVER. You walk away humming the music.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk away",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-graffiti-wall",
+   "name": "The Graffiti Wall",
+   "group": "World & Traversal",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c2a",
+    "effect": "none"
+   },
+   "intro": "A wall covered in painted arrows and tags. Some arrows point to things the map does not show.",
+   "choices": [
+    {
+     "label": "Paint your own arrows",
+     "success": {
+      "text": "You paint the way ahead, and see it clearer.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 2
+       },
+       {
+        "kind": "revealStops"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Read the old tags",
+     "success": {
+      "text": "One tag is a gym trainer's team, written out in full.",
+      "effects": [
+       {
+        "kind": "gymPreview"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave a tag for the next trainer",
+     "success": {
+      "text": "Somebody will smile at it one day.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-gravity-well",
+   "name": "The Gravity Well",
+   "group": "World & Traversal",
+   "rarity": "rare",
+   "minStage": 3,
+   "types": [
+    "psychic",
+    "steel",
+    "dark"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#0c0c24",
+    "effect": "spin"
+   },
+   "intro": "A rip in the air. Stones float round it, pulled in slow circles. Beyond it you can see stars in the daytime: Ultra Space.",
+   "choices": [
+    {
+     "label": "Slingshot round it",
+     "success": {
+      "text": "The well flings you far down the road, a level ahead.",
+      "effects": [
+       {
+        "kind": "express"
+       },
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fight what fell through",
+     "success": {
+      "text": "Something strange came through the rip, heavy and fast.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "psychic",
+        "steel"
+       ],
+       "levelBonus": 3,
+       "shinyMultiplier": 2,
+       "win": [
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "leftovers",
+          "focus-sash",
+          "choice-band",
+          "choice-specs",
+          "choice-scarf",
+          "life-orb",
+          "eviolite",
+          "rocky-helmet"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 40
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Study it",
+     "success": {
+      "text": "Your notes are worth a lot to the lab.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 50
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-time-rift",
+   "name": "The Time Rift",
+   "group": "World & Traversal",
+   "rarity": "rare",
+   "minStage": 2,
+   "types": [
+    "psychic",
+    "dragon"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c0c2c",
+    "effect": "spin"
+   },
+   "intro": "A shimmer in the road. Through it you see the road ahead, with every battle already happening.",
+   "choices": [
+    {
+     "label": "Look through the rift",
+     "success": {
+      "text": "You see who waits at the next stops, for the rest of this stage.",
+      "effects": [
+       {
+        "kind": "riftPreview"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Step through",
+     "chance": 0.5,
+     "success": {
+      "text": "You come out somewhere better, with a better choice of reward.",
+      "effects": [
+       {
+        "kind": "betterDraft",
+        "extra": 1
+       },
+       {
+        "kind": "scout",
+        "columns": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "The rift spits you back out, dizzy.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.08
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-portal-switches",
+   "name": "The Portal Switches",
+   "group": "Puzzles",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "psychic"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c1c2c",
+    "effect": "spin"
+   },
+   "intro": "Three switches and a dead portal. A plaque: \"Sky before sea, and sea before stone.\"",
+   "choices": [
+    {
+     "label": "Sky, sea, stone",
+     "success": {
+      "text": "The portal hums open and warps you a level ahead!",
+      "effects": [
+       {
+        "kind": "express"
+       },
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stone, sea, sky",
+     "success": {
+      "text": "The portal sputters and spits out some junk.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "stardust"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sea, sky, stone",
+     "success": {
+      "text": "The portal opens the wrong way, and something comes through.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "psychic"
+       ],
+       "levelBonus": 1,
+       "shinyMultiplier": 1,
+       "win": []
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-sundial",
+   "name": "The Sundial Ruins",
+   "group": "Puzzles",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "rock",
+    "psychic"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2414",
+    "effect": "glint"
+   },
+   "intro": "An old sundial in the ruins, its arm loose. Carved round it: \"Turn me to where my shadow is shortest, and I will open.\"",
+   "choices": [
+    {
+     "label": "Turn it to noon",
+     "success": {
+      "text": "Stone grinds on stone. A hidden drawer slides out.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "sun-stone",
+         "heat-rock"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Turn it to dawn",
+     "success": {
+      "text": "Nothing happens.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Turn it to dusk",
+     "success": {
+      "text": "The ground shakes a little, then nothing.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.04
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-pressure-plates",
+   "name": "The Plate Room",
+   "group": "Puzzles",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "rock",
+    "ground"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2014",
+    "effect": "shake"
+   },
+   "intro": "Three stone plates: a sun, a moon and a star. A mural over them shows the sky through one night: the sun goes down, the moon comes up, then the stars come out.",
+   "choices": [
+    {
+     "label": "Step on the sun",
+     "success": {
+      "text": "Click. The sun plate stays down.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "w4-plates-2"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Step on the moon",
+     "success": {
+      "text": "A dart shoots out of the wall!",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.06
+       }
+      ]
+     }
+    },
+    {
+     "label": "Step on the star",
+     "success": {
+      "text": "A dart shoots out of the wall!",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.06
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-plates-2",
+   "name": "The Plate Room: Second Plate",
+   "group": "Puzzles",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "rock"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2014",
+    "effect": "shake"
+   },
+   "intro": "The sun plate is down. Two plates left: the moon and the star.",
+   "choices": [
+    {
+     "label": "Step on the moon",
+     "success": {
+      "text": "Click. The moon plate goes down.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "w4-plates-3"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Step on the star",
+     "success": {
+      "text": "The floor drops and you climb out bruised.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-plates-3",
+   "name": "The Plate Room: Last Plate",
+   "group": "Puzzles",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "types": [
+    "rock"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2014",
+    "effect": "glint"
+   },
+   "intro": "Only the star is left.",
+   "choices": [
+    {
+     "label": "Step on the star",
+     "success": {
+      "text": "A vault opens: the treasure of the ruins!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 50
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-riddle-signpost",
+   "name": "The Riddle Signpost",
+   "group": "Puzzles",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#1c2014",
+    "effect": "none"
+   },
+   "intro": "A signpost with no place names, only a riddle: \"The more of me you take, the more you leave behind. Answer, and the short way opens.\"",
+   "choices": [
+    {
+     "label": "\"Footsteps\"",
+     "success": {
+      "text": "The sign swings round to point at a hidden shortcut. A level ahead!",
+      "effects": [
+       {
+        "kind": "express"
+       },
+       {
+        "kind": "scout",
+        "columns": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"Time\"",
+     "success": {
+      "text": "Nothing happens. Good guess, though.",
+      "effects": []
+     }
+    },
+    {
+     "label": "\"Berries\"",
+     "success": {
+      "text": "Nothing happens, and you feel a bit silly.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-express-train",
+   "name": "The Express Train",
+   "group": "Puzzles",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2a1c14",
+    "effect": "rattle"
+   },
+   "intro": "A train stops at a little halt. The conductor grins: \"Express, one stop skipped! Ticket is free if you can tell me: which carriage is the engine pulling last?\"",
+   "choices": [
+    {
+     "label": "\"The one at the back\"",
+     "success": {
+      "text": "\"Ha! Right you are. All aboard!\" The train skips a stop.",
+      "effects": [
+       {
+        "kind": "express"
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"The first one\"",
+     "success": {
+      "text": "\"Nope. But you can buy a ticket.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "Buy a ticket (₽300)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "The express skips a stop.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "express"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-lantern-parade",
+   "name": "The Ghost Lantern Parade",
+   "group": "World & Traversal",
+   "gameEvent": "spooky-season",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "types": [
+    "ghost",
+    "fire"
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c0c24",
+    "effect": "flicker"
+   },
+   "intro": "At dusk, a parade of floating lanterns drifts down the road. Ghost-types carry them, humming.",
+   "choices": [
+    {
+     "label": "Join the parade",
+     "success": {
+      "text": "You walk with the lanterns until midnight. One Ghost-type stays with you.",
+      "effects": [
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "ghost"
+        ],
+        "levelBonus": 1,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Light a lantern for an old friend",
+     "success": {
+      "text": "Your lantern floats up with the others.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 20
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "spell-tag",
+         "reaper-cloth"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Watch from the side",
+     "success": {
+      "text": "It is beautiful.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-forest-maze",
+   "name": "The Looping Forest",
+   "group": "Puzzles",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [
+    "grass",
+    "fairy"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#142a1c",
+    "effect": "fog"
+   },
+   "intro": "Every path out of this clearing leads back into it. A carving on a stump says: \"Walk only where the mushrooms glow.\"",
+   "choices": [
+    {
+     "label": "Take the path with the tall trees",
+     "success": {
+      "text": "...and you walk back into the same clearing.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.03
+       },
+       {
+        "kind": "addEvent",
+        "eventId": "w4-forest-maze"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the path with the flowers",
+     "success": {
+      "text": "...and you walk back into the same clearing. The flowers giggle.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.03
+       },
+       {
+        "kind": "addEvent",
+        "eventId": "w4-forest-maze"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the path where the mushrooms glow",
+     "success": {
+      "text": "The trees part. You are out, and a forest spirit leaves you a gift.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "miracle-seed",
+         "fairy-feather",
+         "leaf-stone",
+         "shiny-stone"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       },
+       {
+        "kind": "scout",
+        "columns": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Your Grass-type asks the trees",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "grass"
+      }
+     ],
+     "success": {
+      "text": "The trees answer it and open the way out.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "miracle-seed",
+         "leaf-stone"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-wandering-trainer",
+   "name": "Someone Is Following You",
+   "group": "World & Traversal",
+   "stop": "special",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#1c1c24",
+    "effect": "none"
+   },
+   "intro": "For a while now, the same trainer has been a few steps behind you. They duck behind a tree when you look.",
+   "choices": [
+    {
+     "label": "Let them follow",
+     "success": {
+      "text": "\"You noticed? ...Fine. I'll challenge you when I'm ready.\"",
+      "effects": [
+       {
+        "kind": "wanderer",
+        "nodes": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Challenge them now",
+     "success": {
+      "text": "\"Okay, okay! Let's battle!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Wandering Trainer",
+       "classId": "youngster",
+       "size": 2,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 300
+        },
+        {
+         "kind": "research",
+         "amount": 15
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Lose them in the crowd",
+     "check": "luck",
+     "success": {
+      "text": "You slip away. They will not find you again.",
+      "effects": []
+     },
+     "failure": {
+      "text": "They are still behind you. \"Nice try!\"",
+      "effects": [
+       {
+        "kind": "wanderer",
+        "nodes": 3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-wanderer-challenge",
+   "name": "The Wanderer Steps Out",
+   "group": "World & Traversal",
+   "stop": "special",
+   "rarity": "common",
+   "minStage": 1,
+   "room": true,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#24141c",
+    "effect": "shake"
+   },
+   "intro": "The trainer who has been following you steps out onto the path. \"I've watched how you battle. Now it's my turn!\"",
+   "choices": [
+    {
+     "label": "Accept the challenge",
+     "success": {
+      "text": "\"Here I come!\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Wandering Trainer",
+       "classId": "youngster",
+       "size": 3,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "research",
+         "amount": 30
+        },
+        {
+         "kind": "wandererFriend",
+         "stages": 3
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "\"Not yet. Keep following.\"",
+     "success": {
+      "text": "\"Fine. But I won't wait forever.\"",
+      "effects": [
+       {
+        "kind": "wanderer",
+        "nodes": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Tell them to go home",
+     "success": {
+      "text": "They shrug and walk off.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-wanderer-visit",
+   "name": "Your Travelling Companion",
+   "group": "World & Traversal",
+   "stop": "special",
+   "rarity": "common",
+   "minStage": 1,
+   "room": true,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#1c2414",
+    "effect": "hearts"
+   },
+   "intro": "The wandering trainer you beat catches up with you again. \"Thought you could use a hand on this stretch.\"",
+   "choices": [
+    {
+     "label": "Share supplies",
+     "success": {
+      "text": "They patch up your team.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade tips",
+     "success": {
+      "text": "They tell you what is on the road ahead.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 3
+       },
+       {
+        "kind": "betterDraft",
+        "extra": 0
+       }
+      ]
+     }
+    },
+    {
+     "label": "Spar a little",
+     "success": {
+      "text": "A friendly round. Your lead learns something.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "lead"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-old-chart",
+   "name": "The Old Chart Seller",
+   "group": "World & Traversal",
+   "stop": "merchant",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#2a2014",
+    "effect": "none"
+   },
+   "intro": "A hiker unrolls a stained chart. \"An X, see? Never had the time to dig it up.\"",
+   "choices": [
+    {
+     "label": "Buy it (₽800)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 800
+      }
+     ],
+     "success": {
+      "text": "The Treasure Map is yours. Use it from the map's Items menu.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -800
+       },
+       {
+        "kind": "item",
+        "id": "treasure-map",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a story for it",
+     "check": "charisma",
+     "success": {
+      "text": "He likes your story and hands it over.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "treasure-map",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "\"Nice story. Still ₽800.\"",
+      "effects": []
+     }
+    },
+    {
+     "label": "No thanks",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-treasure-dig",
+   "name": "X Marks the Spot",
+   "group": "World & Traversal",
+   "stop": "detour",
+   "rarity": "rare",
+   "minStage": 1,
+   "types": [
+    "ground"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2010",
+    "effect": "glint"
+   },
+   "intro": "The X on your map is right here, under a crooked stone.",
+   "choices": [
+    {
+     "label": "Dig",
+     "success": {
+      "text": "A buried chest!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Your Ground-type digs",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "ground"
+      }
+     ],
+     "success": {
+      "text": "It digs deeper than you could: two chests!",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "choice-band",
+         "choice-specs",
+         "choice-scarf",
+         "life-orb",
+         "eviolite",
+         "rocky-helmet"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "poke-ball",
+         "great-ball",
+         "ultra-ball"
+        ]
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-kanto",
+   "name": "The Moon Crater",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "kanto"
+     ]
+    }
+   ],
+   "types": [
+    "fairy",
+    "rock"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#1c1c2c",
+    "effect": "glint"
+   },
+   "intro": "A crater on the mountain where a moon rock fell long ago. Clefairy dance round it at night. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Take a sliver of moon rock",
+     "success": {
+      "text": "Rare Pokémon seem drawn to it.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-kanto-a",
+        "name": "Moon Sliver",
+        "effects": [
+         {
+          "kind": "encounterWeightMultiplier",
+          "group": "rare",
+          "value": 1.15
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Dance with the Clefairy",
+     "success": {
+      "text": "Your team feels lighter, friendlier.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-kanto-b",
+        "name": "Moon Dance",
+        "effects": [
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.25
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-johto",
+   "name": "The Bell Tower",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "johto"
+     ]
+    }
+   ],
+   "types": [
+    "fire",
+    "flying"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#2a1a0c",
+    "effect": "glint"
+   },
+   "intro": "A tall tower with a great bell at the top. A rainbow feather is caught in the rail. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Ring the bell",
+     "success": {
+      "text": "Its sound stays with your team: Fire moves burn hotter.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-johto-a",
+        "name": "Bell Echo",
+        "effects": [
+         {
+          "kind": "typeDamageMultiplier",
+          "type": "fire",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep the rainbow feather",
+     "success": {
+      "text": "It makes catching easier.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-johto-b",
+        "name": "Rainbow Feather",
+        "effects": [
+         {
+          "kind": "captureMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-hoenn",
+   "name": "The Sky Pillar",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "hoenn"
+     ]
+    }
+   ],
+   "types": [
+    "dragon",
+    "flying"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#14243a",
+    "effect": "glint"
+   },
+   "intro": "An ancient tower over the sea, older than any town. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Climb to the top",
+     "success": {
+      "text": "The wind up there stays in your team: Dragon moves hit harder.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-hoenn-a",
+        "name": "Pillar Wind",
+        "effects": [
+         {
+          "kind": "typeDamageMultiplier",
+          "type": "dragon",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Read the old carvings",
+     "success": {
+      "text": "Research pays more for the rest of the run.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-hoenn-b",
+        "name": "Pillar Carvings",
+        "effects": [
+         {
+          "kind": "researchMultiplier",
+          "value": 1.2
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-sinnoh",
+   "name": "The Spear Pillar Ruins",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "sinnoh"
+     ]
+    }
+   ],
+   "types": [
+    "steel",
+    "water"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#1c2a3a",
+    "effect": "glint"
+   },
+   "intro": "Broken columns on top of the highest mountain. Time feels strange here. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Touch the diamond column",
+     "success": {
+      "text": "Your Steel-types feel tougher.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-sinnoh-a",
+        "name": "Diamond Dust",
+        "effects": [
+         {
+          "kind": "typeDamageMultiplier",
+          "type": "steel",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Touch the pearl column",
+     "success": {
+      "text": "Your Water-types feel stronger.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-sinnoh-b",
+        "name": "Pearl Dust",
+        "effects": [
+         {
+          "kind": "typeDamageMultiplier",
+          "type": "water",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-unova",
+   "name": "The Dragonspiral Tower",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "unova"
+     ]
+    }
+   ],
+   "types": [
+    "dragon",
+    "electric"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#1c1c2a",
+    "effect": "glint"
+   },
+   "intro": "A spiral tower of black and white stone. Thunder rolls round it. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Take the white stone chip",
+     "success": {
+      "text": "Prize money is a little better.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-unova-a",
+        "name": "White Chip",
+        "effects": [
+         {
+          "kind": "moneyMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the black stone chip",
+     "success": {
+      "text": "Electric moves hit harder.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-unova-b",
+        "name": "Black Chip",
+        "effects": [
+         {
+          "kind": "typeDamageMultiplier",
+          "type": "electric",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-kalos",
+   "name": "The Prism Tower",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "kalos"
+     ]
+    }
+   ],
+   "types": [
+    "electric",
+    "fairy"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c2a",
+    "effect": "glint"
+   },
+   "intro": "A great tower of light in the middle of the city. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Climb to the lights",
+     "success": {
+      "text": "Fairy moves shine brighter.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-kalos-a",
+        "name": "Prism Light",
+        "effects": [
+         {
+          "kind": "typeDamageMultiplier",
+          "type": "fairy",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Shop in its arcade",
+     "success": {
+      "text": "Shops give you a better price from now on.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-kalos-b",
+        "name": "Prism Card",
+        "effects": [
+         {
+          "kind": "priceMultiplier",
+          "group": "all",
+          "value": 0.92
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-alola",
+   "name": "The Altar of the Sun",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "alola"
+     ]
+    }
+   ],
+   "types": [
+    "fire",
+    "psychic"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#3a2a0c",
+    "effect": "glint"
+   },
+   "intro": "An altar where the sun touches the ground first each morning. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Watch the sunrise",
+     "success": {
+      "text": "Your team feels faster.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-alola-a",
+        "name": "Sunrise",
+        "effects": [
+         {
+          "kind": "statMultiplier",
+          "stat": "spe",
+          "value": 1.04
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave an offering",
+     "success": {
+      "text": "Rare items turn up more often.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-alola-b",
+        "name": "Sun Blessing",
+        "effects": [
+         {
+          "kind": "rareItemWeight",
+          "value": 1.2
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-galar",
+   "name": "The Slumbering Weald",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "galar"
+     ]
+    }
+   ],
+   "types": [
+    "fairy",
+    "fighting"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#1c2a24",
+    "effect": "glint"
+   },
+   "intro": "A misty forest where two old heroes are said to sleep. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Take the rusted sword",
+     "success": {
+      "text": "Your team hits a little harder.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-galar-a",
+        "name": "Rusted Sword",
+        "effects": [
+         {
+          "kind": "statMultiplier",
+          "stat": "atk",
+          "value": 1.04
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the rusted shield",
+     "success": {
+      "text": "Your team takes hits a little better.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-galar-b",
+        "name": "Rusted Shield",
+        "effects": [
+         {
+          "kind": "statMultiplier",
+          "stat": "def",
+          "value": 1.04
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-paldea",
+   "name": "Area Zero's Edge",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "paldea"
+     ]
+    }
+   ],
+   "types": [
+    "dragon",
+    "psychic"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#1c142a",
+    "effect": "glint"
+   },
+   "intro": "The rim of the great crater. Strange crystals grow out of the cliffs. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Take a Tera crystal",
+     "success": {
+      "text": "Rare Pokémon turn up more often.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-paldea-a",
+        "name": "Tera Shard",
+        "effects": [
+         {
+          "kind": "encounterWeightMultiplier",
+          "group": "rare",
+          "value": 1.15
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take notes for the academy",
+     "success": {
+      "text": "Research pays more.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-paldea-b",
+        "name": "Field Notes",
+        "effects": [
+         {
+          "kind": "researchMultiplier",
+          "value": 1.2
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-torren",
+   "name": "The Torren Waterfall",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "torren"
+     ]
+    }
+   ],
+   "types": [
+    "water",
+    "rock"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#0c2030",
+    "effect": "glint"
+   },
+   "intro": "A waterfall so tall its top is lost in cloud. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Stand under the falls",
+     "success": {
+      "text": "Your team feels tougher.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-torren-a",
+        "name": "Falls Spirit",
+        "effects": [
+         {
+          "kind": "statMultiplier",
+          "stat": "spd",
+          "value": 1.04
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Pan for gold",
+     "success": {
+      "text": "Prize money is a little better.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-torren-b",
+        "name": "Gold Flake",
+        "effects": [
+         {
+          "kind": "moneyMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-frontier",
+   "name": "The Frontier Lighthouse",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "frontier-isles"
+     ]
+    }
+   ],
+   "types": [
+    "water",
+    "electric"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#14243a",
+    "effect": "glint"
+   },
+   "intro": "A lighthouse on the farthest rock of the isles. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Light the lamp",
+     "success": {
+      "text": "You catch Pokémon a little more easily.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-frontier-a",
+        "name": "Lamp Light",
+        "effects": [
+         {
+          "kind": "captureMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the keeper's log",
+     "success": {
+      "text": "Research pays more.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-frontier-b",
+        "name": "Keeper's Log",
+        "effects": [
+         {
+          "kind": "researchMultiplier",
+          "value": 1.2
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-trial",
+   "name": "The Great Totem Stone",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "trial-archipelago"
+     ]
+    }
+   ],
+   "types": [
+    "ground",
+    "grass"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#1c2a14",
+    "effect": "glint"
+   },
+   "intro": "A giant carved stone at the heart of the islands. Totem Pokémon gather near it. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Touch the stone",
+     "success": {
+      "text": "Your team feels stronger.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-trial-a",
+        "name": "Totem Mark",
+        "effects": [
+         {
+          "kind": "statMultiplier",
+          "stat": "spa",
+          "value": 1.04
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave a trial token",
+     "success": {
+      "text": "Your team grows closer to you.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-trial-b",
+        "name": "Trial Token",
+        "effects": [
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.25
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "w4-landmark-grand",
+   "name": "The Grand Hall of Origins",
+   "group": "Regional Landmarks",
+   "stop": "landmark",
+   "rarity": "rare",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "region",
+     "ids": [
+      "grand"
+     ]
+    }
+   ],
+   "types": [
+    "dragon",
+    "normal"
+   ],
+   "room": true,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2414",
+    "effect": "glint"
+   },
+   "intro": "A hall with a statue for every region you have crossed. Whatever you take from here stays with you for the rest of the run.",
+   "choices": [
+    {
+     "label": "Bow to the statues",
+     "success": {
+      "text": "Your team hits harder.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-grand-a",
+        "name": "Champion's Resolve",
+        "effects": [
+         {
+          "kind": "statMultiplier",
+          "stat": "atk",
+          "value": 1.04
+         },
+         {
+          "kind": "statMultiplier",
+          "stat": "spa",
+          "value": 1.04
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sign the hall's book",
+     "success": {
+      "text": "Prize money is better for the rest of the run.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "landmark-grand-b",
+        "name": "Signed Book",
+        "effects": [
+         {
+          "kind": "moneyMultiplier",
+          "value": 1.15
+         }
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       }
+      ]
+     }
+    }
+   ]
   }
  ]
 }

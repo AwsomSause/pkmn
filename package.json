@@ -54,6 +54,7 @@
     "data:npc-events": "node tools/build-npc-events.ts",
     "data:world-events": "node tools/build-world-events.ts",
     "data:w10-events": "node tools/build-w10-events.ts",
+    "data:w4-events": "node tools/build-w4-events.ts",
     "data:trainer-unlocks": "node tools/build-trainer-unlocks.ts",
     "data:legendary-events": "node tools/build-legendary-events.ts",
     "data:game-events": "node tools/build-game-events.ts",
