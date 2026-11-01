@@ -225,18 +225,18 @@ export class RewardScene extends Phaser.Scene {
       this.choose(draftIndex, 0);
       return;
     }
-    this.picker = new Picker(this, {
-      glass: true,
-      title: `Give the ${reward.name} to which Pokémon?`,
-      columns: 2,
-      rowHeight: 78,
-      rows: partyRows(content, run.party, (i) => rewardTargetProblem(content, run, reward, i)),
-      onSelect: (i) => {
-        this.closePicker();
-        this.choose(draftIndex, i);
+    openPokemonMenu(
+      this.fieldHost(),
+      0,
+      {
+        title: `Give the ${reward.name} to which Pokémon?`,
+        problemFor: (i) => rewardTargetProblem(content, run, reward, i),
+        onPick: (i) => {
+          this.picker = null;
+          this.choose(draftIndex, i);
+        },
       },
-      onBack: () => this.closePicker(),
-    });
+    );
   }
 
   private fieldHost(): FieldMenuHost {
