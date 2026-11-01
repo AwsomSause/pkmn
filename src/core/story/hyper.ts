@@ -26,6 +26,7 @@ export const HYPER_EFFECTS: Partial<Record<StoryTriggerKind, StoryEffectSpec['ki
   defiance: 'defy',
   protectiveInstinct: 'intercept',
   emotionalAwakening: 'awaken',
+  limitBreak: 'limitBreak',
   megaOverdrive: 'flair',
   zHeart: 'flair',
   dynamaxResolve: 'flair',

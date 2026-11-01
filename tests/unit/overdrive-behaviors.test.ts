@@ -133,3 +133,27 @@ describe('Emotional Awakening', () => {
     expect(hypers(resolveTurn(c, { kind: 'move', index: 0 }))).toHaveLength(0);
   });
 });
+
+describe('Pushed Beyond Its Limits', () => {
+  const setup = (hpShare: number) => {
+    const player = createPokemon(content, 'snorlax', 50, 'p1');
+    player.moves = [{ id: 'tackle', pp: 35 }];
+    const max = calcStats(content, player).hp;
+    player.hp = Math.floor(max * hpShare);
+    return { player, max, ctx: ctxFor([player], foe('splash', 30), certain(['limitBreak'])) };
+  };
+
+  it('a badly hurt Pokémon pays HP strain (never to 0) and its move cannot miss', () => {
+    const { player, max, ctx } = setup(0.4);
+    const before = player.hp;
+    const [e] = hypers(resolveTurn(ctx, { kind: 'move', index: 0 }));
+    expect(e).toMatchObject({ defId: 'pushed-beyond-limits', uid: 'p1' });
+    expect(player.hp).toBe(before - Math.floor(max * 0.15));
+    expect(player.hp).toBeGreaterThanOrEqual(1);
+  });
+
+  it('does not happen from healthy HP', () => {
+    const { ctx } = setup(0.9);
+    expect(hypers(resolveTurn(ctx, { kind: 'move', index: 0 }))).toHaveLength(0);
+  });
+});

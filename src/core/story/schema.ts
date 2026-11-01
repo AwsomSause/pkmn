@@ -473,6 +473,18 @@ export const StoryEffectSpecSchema = z.discriminatedUnion('kind', [
     lines: z.partialRecord(z.enum(EMOTIONS), z.object({ ability: z.string(), cost: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)) })),
     fallback: z.object({ ability: z.string(), cost: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)) }),
   }),
+  /**
+   * Battle scope, your side (Pushed Beyond Its Limits): a Pokémon at or below `maxHpShare` HP
+   * pushes one damaging move past what it can normally do: the move cannot miss and hits
+   * `damage` harder (0.4 = +40%), but the strain costs `strain` of its max HP first (never
+   * below 1 HP) (the engine does it).
+   */
+  z.object({
+    kind: z.literal('limitBreak'),
+    damage: z.number().min(0).max(2),
+    strain: z.number().min(0).max(0.5),
+    maxHpShare: z.number().gt(0).max(1),
+  }),
   z.object({
     kind: z.literal('boost'),
     stats: z.partialRecord(BoostStatSchema, z.number().int().min(-6).max(6)),
@@ -490,7 +502,7 @@ export const PriorityTierSchema = z.enum(PRIORITY_TIERS);
 export type PriorityTier = z.infer<typeof PriorityTierSchema>;
 
 /** The conditions the code knows how to check. A definition names one; new kinds need code. */
-export const STORY_TRIGGERS = ['starterDestiny', 'sacrificeStand', 'lastStand', 'comebackRevenge', 'promiseKept', 'wildAmbush', 'wildKin', 'chemistryPerfect', 'notUntilOver', 'overdriveExhaustion', 'chemistryCover', 'chemistryDuo', 'chemistryTested', 'chemistryUnlikely', 'rivalResentment', 'rivalFear', 'rivalRespect', 'grandOmen', 'grandShadow', 'grandGrudge', 'crisisLoom', 'crisisAid', 'championRespect', 'championRecall', 'eliteForce', 'eliteWall', 'eliteMind', 'eliteTempo', 'toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays', 'overdriveDetermination', 'overdriveBravery', 'overdriveJustice', 'overdriveKindness', 'overdrivePatience', 'overdriveIntegrity', 'overdrivePerseverance', 'dualEmotion', 'emotionalClash', 'understandEachOther', 'wontLetFriendFight', 'wantsToProve', 'feelsLeftOut', 'gatheringEverything', 'gatherUnleashed', 'fightingBeyondLimits', 'lostComposure', 'rememberDefeat', 'notOverBetweenUs', 'fightingForPride', 'angerDangerous', 'somethingToProve', 'hunterHunted', 'enemyWillReturn', 'nemesisReckoning', 'rivalryGrown', 'studiedStrategy', 'notForgottenKindness', 'notForgottenCruelty', 'bitterRivalry', 'rivalryMutual', 'friendlyTag', 'generationalRivalry', 'grudgeFoe', 'oldAcquaintance', 'revengePact', 'pairSynergy', 'defiance', 'protectiveInstinct', 'emotionalAwakening'] as const;
+export const STORY_TRIGGERS = ['starterDestiny', 'sacrificeStand', 'lastStand', 'comebackRevenge', 'promiseKept', 'wildAmbush', 'wildKin', 'chemistryPerfect', 'notUntilOver', 'overdriveExhaustion', 'chemistryCover', 'chemistryDuo', 'chemistryTested', 'chemistryUnlikely', 'rivalResentment', 'rivalFear', 'rivalRespect', 'grandOmen', 'grandShadow', 'grandGrudge', 'crisisLoom', 'crisisAid', 'championRespect', 'championRecall', 'eliteForce', 'eliteWall', 'eliteMind', 'eliteTempo', 'toughenedItOut', 'hungInThere', 'feltABond', 'pushedBackUp', 'enemyRiledUp', 'heatedRivalry', 'friendlyCompetition', 'trainerReturns', 'megaOverdrive', 'zHeart', 'dynamaxResolve', 'teraTrueColors', 'signatureAwakening', 'secondWind', 'notGivenUp', 'rememberedTraining', 'brokeLimits', 'somethingAwakened', 'instinctsTookOver', 'refusedWeakness', 'turnedPainIntoPower', 'makeYouProud', 'cameToAid', 'moreThanTeammates', 'knowsYouBelieve', 'evolvedBeyond', 'enemyUnshaken', 'enemyInstinct', 'enemyLearned', 'protectingTrainer', 'partnerFall', 'willNotLetDown', 'somethingDifferent', 'waitingForBattle', 'somethingWatching', 'studentLearned', 'studentSurpassed', 'lastLesson', 'differentWays', 'overdriveDetermination', 'overdriveBravery', 'overdriveJustice', 'overdriveKindness', 'overdrivePatience', 'overdriveIntegrity', 'overdrivePerseverance', 'dualEmotion', 'emotionalClash', 'understandEachOther', 'wontLetFriendFight', 'wantsToProve', 'feelsLeftOut', 'gatheringEverything', 'gatherUnleashed', 'fightingBeyondLimits', 'lostComposure', 'rememberDefeat', 'notOverBetweenUs', 'fightingForPride', 'angerDangerous', 'somethingToProve', 'hunterHunted', 'enemyWillReturn', 'nemesisReckoning', 'rivalryGrown', 'studiedStrategy', 'notForgottenKindness', 'notForgottenCruelty', 'bitterRivalry', 'rivalryMutual', 'friendlyTag', 'generationalRivalry', 'grudgeFoe', 'oldAcquaintance', 'revengePact', 'pairSynergy', 'defiance', 'protectiveInstinct', 'emotionalAwakening', 'limitBreak'] as const;
 export type StoryTriggerKind = (typeof STORY_TRIGGERS)[number];
 
 /** Attributes a Hyper chance can read: the plain ones, and each end of the two meters. */
