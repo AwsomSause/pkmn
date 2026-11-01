@@ -29,6 +29,7 @@ const CareDataSchema = z.object({
   accessories: z.record(z.string(), z.object({ stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe']), percent: z.number() })),
   fetch: z.object({ chance: z.number().min(0).max(1), friendship: z.number().int() }),
   story: z.object({ friendship: z.number().int(), mood: z.number().int(), minFriendship: z.number().int() }),
+  tap: z.object({ goal: z.number().int(), windowMs: z.number().int(), cheerBonusMood: z.number().int(), groomBonusFriendship: z.number().int(), wakeFatigue: z.number().int(), wakeBonusFatigue: z.number().int() }),
   sing: z.object({ eggSteps: z.number().int().min(1) }),
   releaseGift: z.object({ candiesPerLevels: z.number().int().min(1) }),
   quips: z.record(z.string(), z.array(z.string()).min(1)),

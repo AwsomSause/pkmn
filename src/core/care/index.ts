@@ -16,7 +16,7 @@ export * from './mods';
 const PHASES: readonly RunState['phase'][] = ['reward', 'decision', 'map', 'shop'];
 const TRAIN_STATS = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 export type TrainStat = (typeof TRAIN_STATS)[number];
-export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'nickname', 'favourite', 'ace'] as const;
+export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'fetch', 'story', 'wake', 'nickname', 'favourite', 'ace'] as const;
 export type CareAction = (typeof CARE_ACTIONS)[number];
 
 const hash = (text: string): number => {
@@ -100,12 +100,20 @@ export function careProblem(content: Content, run: RunState, partyIndex: number,
     case 'cheer': return n('cheer') >= 1 ? 'You already cheered it up at this stop.' : null;
     case 'train': return n('train') >= 1 ? 'Already training at this stop.' : !arg || !TRAIN_STATS.includes(arg as TrainStat) ? 'Pick a stat to train.' : null;
     case 'sing': return n('sing') >= 1 ? 'Already sang at this stop.' : run.eggs.length === 0 ? 'You carry no Eggs.' : null;
+    case 'wake': return n('wake') >= 1 ? 'Already woken at this stop.' : care.fatigue <= 0 ? 'It is not tired.' : null;
     case 'fetch': return n('fetch') >= 1 ? 'Already played fetch at this stop.' : null;
     case 'story': return care.storyHeard ? 'It has heard its bedtime story.' : mon.friendship < CARE.story.minFriendship ? 'It does not trust you enough to listen yet.' : null;
     case 'dress': return arg !== '' && arg !== undefined && !CARE.accessories[arg] ? 'Unknown accessory.' : null;
     default: return null;
   }
 }
+
+/** Taps a tap-mini-interaction reported ("tap:7"); the UI counts them, the rules clamp and judge them. */
+export const tapsOf = (arg?: string): number => {
+  const m = /^tap:(\d{1,3})$/.exec(arg ?? '');
+  return m ? Math.min(99, Number(m[1])) : 0;
+};
+export const TAP_ACTIONS: readonly CareAction[] = ['cheer', 'groom', 'wake'];
 
 /** The accessory names, in menu order. */
 export const ACCESSORIES = Object.keys(CARE.accessories);
@@ -158,7 +166,7 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       tick();
       mon.status = null;
       care.sparkle = true;
-      changeFriendship(content, mon, CARE.groom.friendship);
+      changeFriendship(content, mon, CARE.groom.friendship + (tapsOf(arg) >= CARE.tap.goal ? CARE.tap.groomBonusFriendship : 0));
       message = `${name} ${pickLine('groom', seed)}`;
       break;
     case 'lullaby': {
@@ -171,7 +179,7 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
     }
     case 'cheer':
       tick();
-      setMood(care, CARE.cheer.mood + (care.mood < 0 ? CARE.cheer.lowMoodBonus : 0));
+      setMood(care, CARE.cheer.mood + (care.mood < 0 ? CARE.cheer.lowMoodBonus : 0) + (tapsOf(arg) >= CARE.tap.goal ? CARE.tap.cheerBonusMood : 0));
       message = `${name} ${pickLine('cheer', seed)} Mood: ${moodWord(care.mood)}.`;
       break;
     case 'train':
@@ -186,6 +194,11 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       message = `${name} sings to the Eggs. They stir a little closer to hatching.`;
       break;
     }
+    case 'wake':
+      tick();
+      care.fatigue = Math.max(0, care.fatigue - CARE.tap.wakeFatigue - (tapsOf(arg) >= CARE.tap.goal ? CARE.tap.wakeBonusFatigue : 0));
+      message = `${name} ${pickLine('wake', seed)}`;
+      break;
     case 'fetch': {
       tick();
       changeFriendship(content, mon, CARE.fetch.friendship);

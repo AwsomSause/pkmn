@@ -1,7 +1,7 @@
 // Care & party life (W2): care actions, per-stop limits, mood/fatigue/talent/training stat nudges, saves.
 
 import { describe, expect, it } from 'vitest';
-import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
+import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
 import { calcStats } from '../../src/core/pokemon';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { RunStateSchema, type RunState } from '../../src/core/state';
@@ -187,5 +187,18 @@ describe('fetch and bedtime story', () => {
     run = careAction(content, run, 0, 'story').run;
     expect(careProblem(content, run, 0, 'story')).toMatch(/heard/);
     expect(run.party[0]!.care!.mood).toBe(CARE.story.mood);
+  });
+});
+
+describe('tap mini-interactions', () => {
+  it('a good tapping gives the cheer, groom and wake bonuses; a poor one does not', () => {
+    const a = careAction(content, setup(), 0, 'cheer', `tap:${CARE.tap.goal}`).run.party[0]!.care!.mood;
+    const b = careAction(content, setup(), 0, 'cheer', 'tap:1').run.party[0]!.care!.mood;
+    expect(a - b).toBe(CARE.tap.cheerBonusMood);
+    const run = setup();
+    careOf(run.party[0]!).fatigue = 3;
+    expect(careAction(content, run, 0, 'wake', 'tap:9').run.party[0]!.care!.fatigue).toBe(3 - CARE.tap.wakeFatigue - CARE.tap.wakeBonusFatigue);
+    expect(careProblem(content, setup(), 0, 'wake')).toMatch(/not tired/);
+    expect(tapsOf('tap:abc')).toBe(0);
   });
 });

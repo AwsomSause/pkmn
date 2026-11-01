@@ -98,6 +98,9 @@
     ],
     "story": [
       "listens with wide eyes and settles down happy."
+    ],
+    "wake": [
+      "blinks awake and stretches."
     ]
   },
   "accessories": {
@@ -136,5 +139,13 @@
     "friendship": 5,
     "mood": 2,
     "minFriendship": 60
+  },
+  "tap": {
+    "goal": 6,
+    "windowMs": 4000,
+    "cheerBonusMood": 1,
+    "groomBonusFriendship": 2,
+    "wakeFatigue": 1,
+    "wakeBonusFatigue": 1
   }
 }

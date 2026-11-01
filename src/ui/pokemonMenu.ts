@@ -25,7 +25,7 @@ import { playSfx } from './audio';
 import { loadAssets } from './lazyAssets';
 import type { FieldMenuHost } from './fieldMenus';
 import type { InputAction } from './input';
-import { ACCESSORIES, CARE_ACTIONS, moodWord, careProblem, favoriteFlavor, hatedFlavor, type CareAction } from '../core/care';
+import { ACCESSORIES, CARE, CARE_ACTIONS, TAP_ACTIONS, moodWord, careProblem, favoriteFlavor, hatedFlavor, type CareAction } from '../core/care';
 import { emotionDot, type PickerLike } from './partyPanel';
 import { bondView, compareStats, compareTarget, historyView, moveEffectLines, readiness, traitLines, xpProgress, type Readiness } from './pokemonInfo';
 import { itemVisual, pokemonIcon } from './sprites';
@@ -89,6 +89,8 @@ class PokemonScreen implements PickerLike {
   private careMenu = false;
   private trainStat = 0;
   private accIdx = 0;
+  /** A tap mini-interaction in progress: tap Enter/click the goal number of times in the window. */
+  private tap: { id: CareAction; count: number; until: number; timer?: Phaser.Time.TimerEvent } | null = null;
   private reordered = false;
   private notice = 'Party order updated.';
   private closed = false;
@@ -146,6 +148,14 @@ class PokemonScreen implements PickerLike {
   // ---------- input ----------
   handle(action: InputAction): void {
     if (this.closed) return;
+    if (this.tap) {
+      if (action === 'confirm') {
+        this.tap.count += 1;
+        if (this.tap.count >= CARE.tap.goal) this.finishTap();
+      } else if (action === 'back') this.finishTap();
+      this.render();
+      return;
+    }
     this.flash = '';
     const n = this.party.length;
     if (this.mode === 'menu') {
@@ -224,6 +234,7 @@ class PokemonScreen implements PickerLike {
       p('train', `Train ${stat.toUpperCase()} ‹ ›`, 'Left/right picks the stat. +8% for its next 3 fights, once per stop.', stat),
       p('sing', 'Sing to Eggs', 'Hum to the Eggs you carry: they move 1 step closer to hatching (never hatch by it). Once per stop.'),
       p('dress', `Dress: ${this.mon.care?.accessory ?? 'none'} ‹ ›`, 'Left/right picks scarf, bow, glasses, band or anklet (+2% to one stat). Enter wears it; "none" takes it off.', ACCESSORY_CHOICES[this.accIdx] || ''),
+      p('wake', 'Wake up', 'Tap Enter fast to shake off tiredness (1 less, 2 with a good tapping). Once per stop.'),
       p('fetch', 'Play fetch', 'Throw a ball: it may bring back a berry. Once per stop.'),
       p('story', 'Bedtime story', 'Once per run, for Pokémon that trust you: friendship and mood rise.'),
       p('nickname', 'Nickname', 'Give it a name (up to 12 letters). Leave it empty to clear.'),
@@ -271,9 +282,23 @@ class PokemonScreen implements PickerLike {
     this.render();
   }
 
-  private doCare(id: CareAction): void {
+  private finishTap(): void {
+    const t = this.tap;
+    if (!t) return;
+    t.timer?.remove(false);
+    this.tap = null;
+    this.doCare(t.id, `tap:${t.count}`);
+    this.render();
+  }
+
+  private doCare(id: CareAction, forced?: string): void {
+    if (!forced && (TAP_ACTIONS as readonly string[]).includes(id)) {
+      const timer = this.host.scene.time.delayedCall(CARE.tap.windowMs, () => this.finishTap());
+      this.tap = { id, count: 0, until: Date.now() + CARE.tap.windowMs, timer };
+      return;
+    }
     try {
-      let arg: string | undefined;
+      let arg: string | undefined = forced;
       if (id === 'train') arg = TRAIN_CHOICES[this.trainStat];
       if (id === 'dress') arg = ACCESSORY_CHOICES[this.accIdx] ?? '';
       if (id === 'nickname') {
@@ -374,6 +399,7 @@ class PokemonScreen implements PickerLike {
   }
 
   private footerText(): string {
+    if (this.tap) return `Tap Enter! ${this.tap.count}/${CARE.tap.goal} (Esc to stop)`;
     if (this.flash) return this.flash;
     if (this.pick && this.mode === 'list') return this.pick.problemFor(this.sel) ?? `Enter: choose ${this.nameOf(this.mon)}.  Up/down Pokémon · left/right tab.`;
     const r = readiness(this.content, this.mon);
