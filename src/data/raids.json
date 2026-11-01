@@ -21,7 +21,14 @@
       "rival": 0.5,
       "anomaly": 0.5
     },
-    "tierBadges": [0, 0, 2, 4, 6, 8],
+    "tierBadges": [
+      0,
+      0,
+      2,
+      4,
+      6,
+      8
+    ],
     "tierNames": [
       "Standard",
       "Advanced",
@@ -30,7 +37,40 @@
       "Exceptional",
       "Legendary"
     ],
-    "eventLabel": "Event"
+    "eventLabel": "Event",
+    "reinforcements": [
+      {
+        "minBadges": 4,
+        "minTier": 3,
+        "atHp": 0.6
+      },
+      {
+        "minBadges": 8,
+        "minTier": 4,
+        "atHp": 0.3
+      }
+    ],
+    "minionLevelOffset": -4,
+    "minionByType": {
+      "normal": "rattata",
+      "fire": "quilava",
+      "water": "wartortle",
+      "grass": "ivysaur",
+      "electric": "pikachu",
+      "fighting": "machoke",
+      "poison": "golbat",
+      "ground": "sandslash",
+      "flying": "pidgeotto",
+      "psychic": "kadabra",
+      "bug": "butterfree",
+      "rock": "graveler",
+      "ghost": "haunter",
+      "dragon": "dragonair",
+      "dark": "umbreon",
+      "steel": "steelix",
+      "fairy": "clefairy",
+      "ice": "dewgong"
+    }
   },
   "denChance": 0.45,
   "tiersByRegion": [
@@ -1629,5 +1669,69 @@
       },
       "timerTurns": 24
     }
-  ]
+  ],
+  "denTriggers": [
+    {
+      "id": "shadow-unrest",
+      "text": "Shadow activity has stirred this place up.",
+      "flag": {
+        "key": "shadow-activity",
+        "min": 3
+      },
+      "chanceBonus": 0.12,
+      "prefer": "anomaly"
+    },
+    {
+      "id": "legendary-omen",
+      "text": "A Legendary omen has strange Pokémon gathering.",
+      "legendary": true,
+      "chanceBonus": 0.1,
+      "prefer": "anomaly"
+    },
+    {
+      "id": "weekend-rush",
+      "text": "It is the weekend, and trainers are out hunting dens.",
+      "weekend": true,
+      "chanceBonus": 0.08
+    },
+    {
+      "id": "harvest-season",
+      "text": "Autumn is the season of the big dens.",
+      "months": [
+        9,
+        10,
+        11
+      ],
+      "chanceBonus": 0.06,
+      "prefer": "regional"
+    },
+    {
+      "id": "spring-season",
+      "text": "Spring brings rival trainers out to the dens.",
+      "months": [
+        3,
+        4,
+        5
+      ],
+      "chanceBonus": 0.06,
+      "prefer": "rival"
+    },
+    {
+      "id": "far-travels",
+      "text": "Word has spread: dens appear more often this far from home.",
+      "minRegion": 2,
+      "chanceBonus": 0.05
+    },
+    {
+      "id": "kind-deeds",
+      "text": "Your kindness is remembered: a rival is drawn to the den.",
+      "flag": {
+        "key": "kindness",
+        "min": 3
+      },
+      "chanceBonus": 0.06,
+      "prefer": "rival"
+    }
+  ],
+  "maxTriggerBonus": 0.3
 }

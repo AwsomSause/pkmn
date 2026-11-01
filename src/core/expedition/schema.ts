@@ -163,6 +163,8 @@ export const ExpeditionFileSchema = z.object({
   /** Rental teams by badge count. Rental levels never exceed the player's own party level plus `partyMargin`. */
   rentalLevel: z.object({ partyMargin: z.number().int().min(0).max(10) }),
   rentalTeams: z.array(RentalTeamSchema).min(1),
+  /** Draft, recruit and combined offers: from `minBadges` the offered Pokémon are at least evolution stage `minStage` (relaxed when too few remain). */
+  offerStages: z.array(z.object({ minBadges: z.number().int().min(0), minStage: z.number().int().min(1).max(3) })).min(1),
   denChance: Fraction,
   /** Expedition tier available by region index (the last covers later regions). */
   tierByRegion: z.array(z.number().int().min(1).max(4)).min(1),

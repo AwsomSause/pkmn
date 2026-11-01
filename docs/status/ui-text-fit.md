@@ -10,4 +10,6 @@
 
 **Test.** `tests/e2e/textClipping.spec.ts` (no level text on nodes, map panel in bounds with 6 Pokémon + 4 eggs, long names on Shop/Party/Bag/Summary/Bonds).
 
-**Known limits.** Screens drawn with custom code (Event, Reward cards, raid/Totem boxes, Plaza) were checked by screenshot with normal names only; Reward cards use a name source the long-name test did not reach. The Bag shows two stray frame rectangles near the bottom right (not from this change; Bag thread). Saves unchanged.
+**Follow-up (Reward, Event).** Reward cards stack the notes from the bottom edge and cut the name/description with "..."; the Event title, choices, intro, odds, risk and cost are fitted. Swept with long names, no overlap: Plaza, Save Slots, Run Prep (5 pages), Hub rooms, battle pages and move menu. Mentor and Evil Team screens are not on main yet (only data); Camp is an Event screen.
+
+**Known limits.** Raid/Totem boxes were checked with normal names only. The Bag shows two stray frame rectangles near the bottom right (not from this change; Bag thread). Saves unchanged.

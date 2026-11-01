@@ -161,11 +161,37 @@ describe('real-world dates', () => {
 });
 
 describe('camp talks', () => {
-  it('rival talks open once a rival has been met, on the matching path', () => {
+  it('the rival talk opens once a rival has been met, and leads to the room that fits their path', () => {
     const run = atEvent(newRun(), 'camp-talk');
     const open = (r: RunState) => eventView(content, r, 'test-event').choices.map((c) => c.locked === null);
-    expect(open(run)).toEqual([true, false, false, false]); // no rival met yet
+    expect(open(run)).toEqual([true, false, false]); // no rival, no mentor
     run.story.rivals.push({ ...(run.story.rivals[0] ?? ({} as never)), encounters: 1 } as never);
-    expect(open(run).slice(1).filter(Boolean)).toHaveLength(1); // exactly one rival talk fits their path
+    expect(open(run)[1]).toBe(true);
+    const room = atEvent(run, 'camp-rival');
+    expect(eventView(content, room, 'test-event').choices.filter((c) => c.locked === null).length).toBeGreaterThan(0);
+  });
+});
+
+describe('camp bonding', () => {
+  it('time together at camp builds chemistry and lets grudges go', () => {
+    const run = atEvent(newRun(), 'camp-party');
+    run.clock.tick = 3; // night: stories by the fire
+    run.party.push({ ...run.party[0]!, uid: 'friend' });
+    run.partyLife.grudges.push({ uid: run.party[0]!.uid, species: 'rattata', since: 1, settled: false });
+    const done = chooseEvent(content, run, 'test-event', 2).run;
+    expect(done.partyLife.pairs.some((p) => p.points > 0)).toBe(true);
+    expect(done.partyLife.grudges.every((g) => g.settled)).toBe(true);
+  });
+});
+
+describe('mentor talks', () => {
+  it('only open with a mentor, and the mission can be asked for once', () => {
+    const run = atEvent(newRun(), 'camp-talk');
+    const open = (r: RunState) => eventView(content, r, 'test-event').choices.map((c) => c.locked === null);
+    expect(open(run)[2]).toBe(false); // no mentor
+    const mentored = atEvent(newRun(), 'camp-mentor');
+    mentored.mentor = { mentorId: 'x' } as never;
+    mentored.clock.tick = 3;
+    expect(eventView(content, mentored, 'test-event').choices).toHaveLength(4);
   });
 });

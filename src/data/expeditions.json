@@ -1490,5 +1490,19 @@
         }
       ]
     }
+  ],
+  "offerStages": [
+    {
+      "minBadges": 0,
+      "minStage": 1
+    },
+    {
+      "minBadges": 3,
+      "minStage": 2
+    },
+    {
+      "minBadges": 6,
+      "minStage": 3
+    }
   ]
 }

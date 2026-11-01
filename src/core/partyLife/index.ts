@@ -223,6 +223,14 @@ export function partyLifeVictory(content: Content, run: RunState): void {
   state.pacts = state.pacts.filter((p) => p.until >= n);
 }
 
+/** Time together at camp: every pair in the party warms up and cools down; old grudges can be let go (mutates `run`). */
+export function partyLifeBond(run: RunState, chemistry: number, calm: number, settle: boolean): void {
+  const party = run.party;
+  for (let i = 0; i < party.length; i++) for (let j = i + 1; j < party.length; j++) addChem(run, party[i]!.uid, party[j]!.uid, chemistry, -calm);
+  if (settle) for (const g of life(run).grudges) g.settled = true;
+  life(run).ctx.camp = true;
+}
+
 /** A rest stop was used: the next scene may be a campfire. */
 export function partyLifeCamp(run: RunState): void {
   life(run).ctx.camp = true;

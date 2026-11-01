@@ -7,7 +7,7 @@ import { hashSeed, Rng } from '../rng';
 import { stageKey } from '../mapItems';
 import type { Content } from '../contentSchema';
 import type { RunState } from '../state';
-import { mentorPairs, plazaView, plazaVisitors, rareVisitorHere, type PlazaSectionId, type PlazaView } from './flow';
+import { mentorOf, mentorPairs, plazaView, plazaVisitors, rareVisitorHere, type PlazaSectionId, type PlazaView } from './flow';
 import { PLAZA_LIFE, type DistrictId } from './life';
 import { plazaAgent, plazaVillain } from '../evil/plaza';
 
@@ -123,6 +123,12 @@ export function plazaLayout(content: Content, run: RunState, sideId: string): Pl
     // A rare visitor now and then (more often the further you are).
     const r = rareVisitorHere(run);
     if (r) add({ id: `rare:${r.id}`, kind: 'rare', name: r.name, line: `${r.name}: "${r.line}" (Talk to them in the Gathering Square.)`, home: 'gathering', color: 0xf8e060 });
+    // Your mentor and fellow apprentice practise on the Social Terrace.
+    const mm = mentorOf(run);
+    if (mm) {
+      add({ id: `mentor:${mm.mentor.id}`, kind: 'regular', name: mm.mentor.name, line: `${mm.mentor.name}, ${mm.mentor.title}: "${mm.mentor.lines.greet}"`, home: 'social', color: 0xf0c050 });
+      add({ id: `fellow:${mm.fellow.name}`, kind: 'rival', name: mm.fellow.name, line: `${mm.fellow.name}: "${mm.fellow.veteran ? 'Back for more, and further along than last time.' : 'Same teacher, same road. Let us see who gets there first.'}"`, home: 'social', color: 0x58a8e8 });
+    }
     // Mentors and their protégés train side by side on the practice ground (Social Terrace).
     for (const m of mentorPairs(content, run)) {
       add({ id: `mentor:${m.relId}`, kind: 'pokemon', name: m.mentor, line: `${m.mentor} is teaching ${m.prote} (${m.path}). Join the lesson at the Gathering Square.`, home: 'social', speciesId: m.mentorSpecies, color: 0xffffff });

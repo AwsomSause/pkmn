@@ -4,8 +4,12 @@
 import Phaser from 'phaser';
 import { availableNodes, getExpedition, nodeLabel } from '../core/expedition/flow';
 import { stageRules } from '../core/legendary/legendary';
-import { legendCards, legendKit } from '../core/legendary/visuals';
-import { addLegendLook } from '../ui/legendFx';
+import { legendCards, legendKit, legendLook } from '../core/legendary/visuals';
+import { resolveAnim } from '../core/presentation/animRegistry';
+import { legendAnimId } from '../core/presentation/legendAnims';
+import { animSettingsFrom } from '../core/accessibility';
+import { uieArenaId } from '../assets/catalog';
+import { addLegendLook, playSignature } from '../ui/legendFx';
 import { titleCard } from '../ui/battleFx/spectacle';
 import { maxHp } from '../core/pokemon';
 import type { ExpeditionState, RunState } from '../core/state';
@@ -58,6 +62,14 @@ export class ExpeditionScene extends Phaser.Scene {
       const cards = legendCards(session.content, def)!;
       const finaleNext = !exp.choice && exp.status === 'route' && availableNodes(exp).some((n) => n.kind === 'finale');
       const opening = exp.current === null && !exp.choice;
+      const look = legendLook(session.content, def)!;
+      // The event's own battleback behind the route (Essentials/UIE art), loaded on demand.
+      const arenaId = uieArenaId(look.arena);
+      void loadAssets(this, [arenaId]).then(() => {
+        if (!this.scene.isActive() || !this.textures.exists(arenaId)) return;
+        this.add.image(0, 0, arenaId).setOrigin(0).setDisplaySize(GAME_WIDTH, GAME_HEIGHT).setAlpha(0.45).setDepth(-2);
+      });
+      if (opening || finaleNext) playSignature(this, look.shape, resolveAnim(legendAnimId(look.shape), animSettingsFrom(session.settings)));
       if (opening || finaleNext) titleCard(this, finaleNext ? cards.finale.title : cards.intro.title, finaleNext ? cards.finale.sub : cards.intro.sub, kit.accent, motion);
       this.add.text(GAME_WIDTH / 2, 8, `LEGENDARY EVENT  ·  ${legend.epithet}`, textStyle(12, legend.visual.accent)).setOrigin(0.5, 0);
     }

@@ -476,6 +476,11 @@ export const RaidBattleSchema = z.object({
   draftDelta: z.number().int().default(0),
   /** The badge count this raid was scaled for (core/raid/scaling.ts); fixed when the fight starts, so a reload never changes the boss. */
   badges: z.number().int().min(0).default(0),
+  /** Reinforcements called so far, and the minion on the field now (the boss rejoins when it faints). */
+  summonsUsed: z.number().int().min(0).default(0),
+  minionUid: z.string().nullable().default(null),
+  /** The boss's own uid (a minion swaps into its place on the field); null in fights saved before reinforcements. */
+  bossUid: z.string().nullable().default(null),
 });
 export type RaidBattle = z.infer<typeof RaidBattleSchema>;
 
@@ -730,6 +735,8 @@ export const SideStopSchema = z.object({
   raidId: z.string().optional(),
   /** A raid boss that escaped earlier and is back, stronger. */
   returning: z.boolean().optional(),
+  /** A raid den placed because of what the world was doing (raids.json denTriggers): the trigger ids. */
+  triggers: z.array(z.string()).optional(),
   /** A Totem's territory: which Totem (totems.json) lives here. */
   totemId: z.string().optional(),
   /** An expedition gate: which expedition (expeditions.json) starts here. */

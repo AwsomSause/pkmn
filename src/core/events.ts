@@ -54,6 +54,7 @@ import { applyReward, rewardTargetProblem } from './rewards';
 import { focusIs, MYSTERY_EXTRA_STOPS, regionFocus } from './campaign/focus';
 import { emit } from './story/record';
 import { recordBattleStarted } from './story/hooks';
+import { partyLifeBond } from './partyLife';
 import { celebrateToday, milestoneToday, periodOf, PERIOD_LABEL, restUntilMorning } from './clock';
 import { BERRIES } from './berries';
 import { getTheme, typesPool } from './themes';
@@ -611,6 +612,8 @@ export function effectWords(content: Content, e: EventEffect): string {
       return `trade away ${e.want.label}`;
     case 'heal':
       return e.share >= 1 ? 'full heal' : `heal ${Math.round(e.share * 100)}%`;
+    case 'campBond':
+      return e.settle ? 'the party grows closer and lets old grudges go' : 'the party grows closer';
     case 'rest':
       return 'sleep until morning';
     case 'celebrate':
@@ -949,6 +952,9 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
     }
     case 'scout':
       scoutAhead(content, run, e.columns);
+      return effectWords(content, e);
+    case 'campBond':
+      partyLifeBond(run, e.chemistry, e.calm, e.settle);
       return effectWords(content, e);
     case 'rest': {
       restUntilMorning(run);

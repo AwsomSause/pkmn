@@ -2,6 +2,7 @@
 // a single Pokémon (vitamins, Rare Candy) ask which party member gets them.
 // Before choosing, the player can also use Bag items or change the lead.
 
+import { fitBlock } from '../ui/fitText';
 import Phaser from 'phaser';
 import { rewardSynergy } from '../core/rewardSynergy';
 import { compareReward } from '../core/rewardCompare';
@@ -82,16 +83,29 @@ export class RewardScene extends Phaser.Scene {
       const icon = itemVisual(this, reward.iconAssetId, 0, -89, 2.5) as Phaser.GameObjects.Image;
       card.add(icon);
       revealPop(this, icon, 120 + i * 70);
-      card.add(this.add.text(0, -51, reward.name, textStyle(24, COLORS.text, { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0));
+      const wrapW = cardW - 16;
+      const nameText = this.add.text(0, -51, reward.name, textStyle(24, COLORS.text, { align: 'center', wordWrap: { width: wrapW } })).setOrigin(0.5, 0);
+      card.add(fitBlock(nameText, wrapW, 34));
       card.add(this.add.text(0, -17, reward.rarity.toUpperCase(), textStyle(16, Phaser.Display.Color.IntegerToColor(rarityColor).rgba)).setOrigin(0.5, 0));
       // A team or player item already at its max: picking it re-rolls the draft for free.
       const reroll = isRerollReward(content, run, reward);
-      card.add(this.add.text(-cardW / 2 + 12, 9, reroll ? 'You already have the most of this. Pick it for a free re-roll!' : reward.description, textStyle(17, reroll ? '#f0e0a0' : '#cfe0f0', { wordWrap: { width: cardW - 24 } })));
+      const desc = this.add.text(-cardW / 2 + 12, 9, reroll ? 'You already have the most of this. Pick it for a free re-roll!' : reward.description, textStyle(17, reroll ? '#f0e0a0' : '#cfe0f0', { wordWrap: { width: cardW - 24 } }));
+      // The notes under the description stack upwards from the card's bottom edge, each at most two lines;
+      // the description gets whatever room is left, so no two blocks ever overlap.
+      const notes: Phaser.GameObjects.Text[] = [];
       const cmp = compareReward(content, run, reward);
-      if (cmp) card.add(this.add.text(0, 84, `Now ${cmp.now}  →  After ${cmp.after}\n${cmp.label}`, textStyle(13, '#ffe9a8', { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0));
+      if (cmp) notes.push(this.add.text(0, 0, `Now ${cmp.now}  →  After ${cmp.after}\n${cmp.label}`, textStyle(13, '#ffe9a8', { align: 'center', wordWrap: { width: wrapW } })).setOrigin(0.5, 0));
       const why = rewardSynergy(content, run, reward);
-      if (why) card.add(this.add.text(0, 118, why, textStyle(13, '#9fe8c8', { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 1));
-      if ((run.draftCarry ?? []).includes(rewardId)) card.add(this.add.text(0, 101, 'Locked: in the next draft too', textStyle(14, '#f0e0a0', { align: 'center', wordWrap: { width: cardW - 16 } })).setOrigin(0.5, 0));
+      if (why) notes.push(this.add.text(0, 0, why, textStyle(13, '#9fe8c8', { align: 'center', wordWrap: { width: wrapW } })).setOrigin(0.5, 0));
+      if ((run.draftCarry ?? []).includes(rewardId)) notes.push(this.add.text(0, 0, 'Locked: in the next draft too', textStyle(14, '#f0e0a0', { align: 'center', wordWrap: { width: wrapW } })).setOrigin(0.5, 0));
+      let bottom = 128;
+      for (const n of notes.reverse()) {
+        fitBlock(n, wrapW, 36);
+        n.setY(bottom - n.height);
+        bottom -= n.height + 3;
+        card.add(n);
+      }
+      card.add(fitBlock(desc, cardW - 24, Math.max(36, bottom - 9)));
       this.cards.push(card);
       // Cards deal in one after another with a bounce.
       if (this.motion !== 'off') {

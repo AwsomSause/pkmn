@@ -12,7 +12,7 @@ import { grandRaidFor } from '../story/grandEnemy';
 import type { TypeName } from '../contentSchema';
 import { isUnlockedAt } from '../availability';
 import { levelCap } from '../regions';
-import type { RaidApproach, RaidDef, RaidPhase } from './schema';
+import type { DenTrigger, RaidApproach, RaidDef, RaidPhase } from './schema';
 import { badgeLevelBonus, raidTierName, scaledRaid, tierOpenAtBadges } from './scaling';
 
 export function getRaid(content: Content, id: string): RaidDef {
@@ -39,8 +39,30 @@ export function highestOpenTier(content: Content, run: Partial<Pick<RunState, 'r
   return Math.min(6, Math.max(content.raids.openTiers, raids.unlockedTier + 1, raids.bestTier + 1));
 }
 
+/**
+ * The den triggers that hold right now (spec 31 "Integration"): evil team operations, Legendary omens, the calendar,
+ * regional progress and the player's own choices. Pure: reads the run, rolls nothing.
+ */
+export function activeDenTriggers(content: Content, run: Pick<RunState, 'story' | 'legendary' | 'calendar' | 'regionIndex'>): DenTrigger[] {
+  const today = run.calendar?.today ? new Date(`${run.calendar.today}T12:00:00Z`) : null;
+  const valid = today !== null && !Number.isNaN(today.getTime());
+  return content.raids.denTriggers.filter((t) => {
+    if (t.flag && Number(run.story.flags[`ev:${t.flag.key}`] ?? 0) < t.flag.min) return false;
+    if (t.legendary && !(run.legendary?.offered.length)) return false;
+    if (t.weekend && !(valid && [0, 6].includes(today!.getUTCDay()))) return false;
+    if (t.months && !(valid && t.months.includes(today!.getUTCMonth() + 1))) return false;
+    if (t.minRegion !== undefined && run.regionIndex < t.minRegion) return false;
+    return true;
+  });
+}
+
+/** The den chance the active triggers add (capped by raids.json maxTriggerBonus). */
+export function triggerChanceBonus(content: Content, triggers: DenTrigger[]): number {
+  return Math.min(content.raids.maxTriggerBonus, triggers.reduce((n, t) => n + t.chanceBonus, 0));
+}
+
 /** Which raid sits in a den: a seeded pick among the raids of the allowed tiers (stable for a given run, stage and den). */
-export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regionIndex'> & Partial<Pick<RunState, 'raids' | 'badges'>>, key: string): RaidDef {
+export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regionIndex'> & Partial<Pick<RunState, 'raids' | 'badges'>>, key: string, prefer?: RaidDef['kind']): RaidDef {
   const open = highestOpenTier(content, run);
   // Badges open the tiers one by one (spec 31): a tier needs its badge count as well as its region.
   const badges = run.badges?.length ?? Infinity;
@@ -54,7 +76,10 @@ export function pickRaidFor(content: Content, run: Pick<RunState, 'seed' | 'regi
   const cap = levelCap(content, run.regionIndex);
   const end = Math.max(1, cap - content.balance.difficulty.capMargin);
   const unlocked = tiered.filter((r) => r.species.every((id) => isUnlockedAt(content, id, raidLevel(r, end, cap) + (Number.isFinite(badges) ? Math.min(cap - raidLevel(r, end, cap), badgeLevelBonus(content.raids.badgeScaling, r, badges)) : 0))));
-  const pool = unlocked.length > 0 ? unlocked : tiered;
+  const base = unlocked.length > 0 ? unlocked : tiered;
+  // A world trigger steers the den to the kind it calls for, when that kind exists among the allowed raids.
+  const preferred = prefer ? base.filter((r) => r.kind === prefer) : [];
+  const pool = preferred.length > 0 ? preferred : base;
   const rng = new Rng(hashSeed(`${run.seed}::raid-pick::${key}`));
   return rng.pick(pool.length > 0 ? pool : content.raids.raids.filter((r) => !r.gang && !r.legendary));
 }
@@ -73,6 +98,9 @@ export function freshRaidBattle(def: RaidDef, badges = 0): RaidBattle {
   return {
     id: def.id,
     badges,
+    summonsUsed: 0,
+    minionUid: null,
+    bossUid: null,
     pendingShields: def.shield ? [...def.shield.at].sort((a, b) => b - a) : [],
     shieldHp: 0,
     shieldMax: 0,
@@ -111,6 +139,8 @@ export function applyBossHp(def: RaidDef, boss: PokemonInstance): void {
 export function absorbHit(content: Content, battle: BattleState, boss: PokemonInstance, amount: number): number {
   const raid = battle.raid;
   if (!raid || amount <= 0) return amount;
+  // A called minion has no shield: only the boss does.
+  if (raid.minionUid !== null && boss.uid === raid.minionUid) return amount;
   if (raid.shieldHp > 0) {
     raid.shieldHp = Math.max(0, raid.shieldHp - amount);
     if (raid.shieldHp === 0) {
@@ -216,6 +246,15 @@ export function advanceRaid(content: Content, battle: BattleState, boss: Pokemon
   raid.notes = [];
   if (raid.cheerOffense > 0) raid.cheerOffense -= 1;
   if (raid.cheerDefense > 0) raid.cheerDefense -= 1;
+  const onMinion = raid.minionUid !== null && boss.uid === raid.minionUid;
+  if (onMinion) {
+    // Only the timer runs while a minion is in front: the boss's phases and charge wait for it to return.
+    if (raid.timerLeft !== null) {
+      raid.timerLeft -= 1;
+      if (raid.timerLeft <= 0) actions.push({ kind: 'timeout' });
+    }
+    return actions;
+  }
   if (boss.hp <= 0) return actions;
   const rot = def.modifiers.rotatingWeakness;
   if (rot) {
@@ -252,11 +291,30 @@ export function advanceRaid(content: Content, battle: BattleState, boss: Pokemon
 /** True (and counted) when the boss may take a bonus attack now: under the HP line, within its limit. */
 export function takeExtraAction(content: Content, battle: BattleState, boss: PokemonInstance): boolean {
   const raid = battle.raid;
-  if (!raid || boss.hp <= 0) return false;
+  if (!raid || boss.hp <= 0 || (raid.minionUid !== null && boss.uid === raid.minionUid)) return false;
   const extra = raidDef(content, raid).extraActions;
   if (!extra || raid.extraUsed >= extra.max || boss.hp / maxHp(content, boss) > extra.belowHp) return false;
   raid.extraUsed += 1;
   return true;
+}
+
+/** A reinforcement the boss calls now (checked at the start of a turn, while the boss itself is in front): the minion's species and level. */
+export function reinforcementDue(content: Content, battle: BattleState): { speciesId: string; level: number; uid: string; text: string } | null {
+  const raid = battle.raid;
+  const boss = raid?.bossUid ? battle.enemyTeam.find((e) => e.uid === raid.bossUid) : undefined;
+  if (!raid || !boss || boss.hp <= 0 || battle.enemyTeam[battle.enemyIndex]?.uid !== boss.uid) return null;
+  const lines = raidDef(content, raid).summons;
+  const line = lines[raid.summonsUsed];
+  if (line === undefined || boss.hp / maxHp(content, boss) > line) return null;
+  const type = content.species.get(boss.speciesId)?.types[0];
+  const speciesId = type ? content.raids.badgeScaling.minionByType[type] : undefined;
+  if (!speciesId || !content.species.has(speciesId)) return null;
+  return {
+    speciesId,
+    level: Math.max(2, boss.level + content.raids.badgeScaling.minionLevelOffset),
+    uid: `${boss.uid}-minion${raid.summonsUsed + 1}`,
+    text: `The boss calls for help: ${content.species.get(speciesId)!.name} joins the fight!`,
+  };
 }
 
 /** What the player sees about a raid before and during the fight. */
@@ -290,6 +348,7 @@ export function describeMechanics(def: RaidDef, scale?: { content: Content; badg
   if (m.noHealing) out.push('no healing');
   if (m.rotatingWeakness) out.push('rotating weakness');
   if (def.extraMoves.length > 0) out.push(`${4 + def.extraMoves.length} moves`);
+  if (def.summons.length > 0) out.push(`${def.summons.length} reinforcement${def.summons.length > 1 ? 's' : ''}`);
   return out;
 }
 
@@ -313,12 +372,14 @@ export function placeRaidDens(content: Content, run: RunState): void {
   const rng = new Rng(hashSeed(`${run.seed}::raid-den::${run.regionIndex}:${stage.index}`));
   placeGrandEnemy(content, run, rng);
   if (placeReturning(content, run, rng)) return;
-  if (!rng.chance(content.raids.denChance + focusDenBonus(run, 'raids'))) return;
+  const triggers = activeDenTriggers(content, run);
+  if (!rng.chance(content.raids.denChance + focusDenBonus(run, 'raids') + triggerChanceBonus(content, triggers))) return;
   const candidates = stage.map.nodes.filter((n) => n.column < stage.map.columns && !n.sides.some((s) => s.kind === 'raid'));
   if (candidates.length === 0) return;
   const node = rng.pick(candidates);
-  const def = pickRaidFor(content, run, `${run.regionIndex}:${stage.index}`);
-  node.sides.push({ id: `raid-${stage.index}`, kind: 'raid', raidId: def.id, used: false });
+  const prefer = triggers.find((t) => t.prefer)?.prefer;
+  const def = pickRaidFor(content, run, `${run.regionIndex}:${stage.index}`, prefer);
+  node.sides.push({ id: `raid-${stage.index}`, kind: 'raid', raidId: def.id, used: false, ...(triggers.length > 0 ? { triggers: triggers.map((t) => t.id) } : {}) });
 }
 
 /** The Grand-Enemy's fight for this stage, if the campaign calls for one: a den beside a node of its own pick. */
