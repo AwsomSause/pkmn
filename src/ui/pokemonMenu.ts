@@ -83,6 +83,7 @@ class PokemonScreen implements PickerLike {
   private cursor = 0;
   private menuIdx = 0;
   private reordered = false;
+  private notice = 'Party order updated.';
   private closed = false;
   private flash = '';
   private loadingKey = '';
@@ -176,6 +177,8 @@ class PokemonScreen implements PickerLike {
         this.pick.onPick(choice);
         return;
       }
+    } else if (action === 'confirm' && this.mode === 'detail' && this.tabName === 'Items') {
+      this.takeOff();
     } else if (action === 'confirm') {
       if (this.mode === 'detail') this.mode = 'list';
       else {
@@ -234,13 +237,31 @@ class PokemonScreen implements PickerLike {
     }
   }
 
+  /** Takes the focused held item off into the Bag (session.takeOffHeld, Major Update §4). */
+  private takeOff(): void {
+    const item = heldBuild(this.content, this.mon).items[this.cursor];
+    if (!item) return;
+    try {
+      this.flash = services().session.takeOffHeld(this.sel, item.id);
+      this.notice = this.flash;
+      this.reordered = true;
+      playSfx(this.host.scene, 'ui.select');
+      const left = heldBuild(this.content, this.mon).items.length;
+      this.cursor = Math.max(0, Math.min(this.cursor, left - 1));
+      if (left === 0) this.mode = 'list';
+    } catch (e) {
+      playSfx(this.host.scene, 'ui.error');
+      this.flash = e instanceof Error ? e.message : 'That did not work.';
+    }
+  }
+
   private nameOf(mon: PokemonInstance): string {
     return lookSpecies(this.content, mon).name;
   }
 
   private leave(): void {
     this.close();
-    if (this.reordered) this.host.changed('Party order updated.');
+    if (this.reordered) this.host.changed(this.notice);
     else this.host.setPicker(null);
   }
 
@@ -295,7 +316,7 @@ class PokemonScreen implements PickerLike {
       const o = this.menuOptions()[this.menuIdx]!;
       return o.problem ?? o.hint;
     }
-    if (this.mode === 'detail') return this.tabName === 'Items' ? 'Up/down: pick an item. Enter or Esc: back to the party.' : 'Up/down: pick a move. Enter or Esc: back to the party.';
+    if (this.mode === 'detail') return this.tabName === 'Items' ? 'Up/down: pick an item. Enter: take it off into the Bag. Esc: back.' : 'Up/down: pick a move. Enter or Esc: back to the party.';
     return `${this.nameOf(this.mon)}: ${r.label}${r.notes.length ? ` · ${r.notes.join(' ')}` : '.'}  Up/down Pokémon · left/right tab.`;
   }
 
@@ -606,7 +627,7 @@ class PokemonScreen implements PickerLike {
     const w = RIGHT_W - x;
     this.panel(box, x, 28, w, 304);
     if (it.icon) box.add(itemVisual(scene, it.icon, x + 24, 56, 1.4));
-    this.text(box, x + 50, 40, `${it.name}${it.copies > 1 ? ` ×${it.copies}` : ''}`, 20, '#ffffff', { fixedWidth: w - 60 });
+    this.text(box, x + 50, 40, `${it.name}${it.copies > 1 ? ` ×${it.copies}` : ''}`, 20, '#ffffff', { fixedWidth: w - 140 });
     this.text(box, x + 50, 64, `${MODE_TEXT[it.mode]}${it.consumed ? ' · used up' : ''}`, 13, it.mode === 'passive' ? '#9af0a8' : '#ffe08a');
     const lines: string[] = [];
     lines.push(it.description);
@@ -615,6 +636,15 @@ class PokemonScreen implements PickerLike {
     if (it.conditions.length > 0) lines.push(`When: ${it.conditions.join(', ')}.`);
     lines.push(`Stacking: ${it.stacking}`);
     if (it.detail.length > 0 && this.mode === 'detail') lines.push(...it.detail);
+    if (!this.pick) {
+      const btn = this.text(box, x + w - 14, 40, 'Take off', 16, '#fff2b0').setOrigin(1, 0).setName('take-off-item').setInteractive({ useHandCursor: true });
+      btn.on('pointerdown', () => {
+        if (this.closed) return;
+        this.cursor = cursor;
+        this.takeOff();
+        this.render();
+      });
+    }
     this.text(box, x + 14, 88, lines.join('\n'), 13, '#e8f6ff', { wordWrap: { width: w - 28 }, lineSpacing: 3, maxLines: 17 });
   }
 
