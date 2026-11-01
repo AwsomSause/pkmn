@@ -155,7 +155,7 @@ import { bondEvolves, bondLessons, bondVictory, enemyCombo, playerCombo, revealM
 import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
-import { careFaint, careVictory } from './care';
+import { careFaint, careVictory, releaseGift } from './care';
 import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
 import { claimArea, nuzlockeCatchProblem, buryFallen, isHardcore } from './nuzlocke';
 import { applyMutator, mutatorCatch, mutatorDue, mutatorMoney, mutatorOffer, mutatorXp } from './mutators';
@@ -2689,7 +2689,7 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
       message = `${name} was sent to the PC.`;
     } else if (choice.kind === 'release') {
       assertCanRelease(content, run, joinProblem(content, run, caught.speciesId) !== null);
-      const candies = candiesForRelease(content, caught.level);
+      const candies = candiesForRelease(content, caught.level) + releaseGift(content, caught.level);
       run.candies += candies;
       count(run, 'candiesEarned', candies);
       count(run, 'caughtToCandies');

@@ -1,7 +1,7 @@
 // Care & party life (W2): care actions, per-stop limits, mood/fatigue/talent/training stat nudges, saves.
 
 import { describe, expect, it } from 'vitest';
-import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
+import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
 import { calcStats } from '../../src/core/pokemon';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { RunStateSchema, type RunState } from '../../src/core/state';
@@ -136,5 +136,32 @@ describe('saves', () => {
     expect(RunStateSchema.parse(JSON.parse(JSON.stringify(run))).party[0]!.care!.mood).toBe(CARE.hug.mood);
     const old = JSON.parse(JSON.stringify(setup()));
     expect(RunStateSchema.parse(old).party[0]!.care).toBeUndefined();
+  });
+});
+
+describe('dress-up, egg songs and release gifts', () => {
+  it('an accessory gives a tiny buff to one stat and can come off', () => {
+    let run = setup();
+    const base = calcStats(content, run.party[0]!);
+    run = careAction(content, run, 0, 'dress', 'scarf').run;
+    expect(calcStats(content, run.party[0]!).def).toBeGreaterThanOrEqual(base.def);
+    expect(careMultiplier(run.party[0]!.care, 'def')).toBeGreaterThan(1);
+    expect(() => careAction(content, run, 0, 'dress', 'crown')).toThrow();
+    run = careAction(content, run, 0, 'dress', '').run;
+    expect(careMultiplier(run.party[0]!.care, 'def')).toBe(1);
+  });
+
+  it('singing moves Eggs one step but never hatches them, once per stop', () => {
+    const run = setup();
+    expect(careProblem(content, run, 0, 'sing')).toMatch(/no Eggs/);
+    run.eggs = [{ kind: 'ordinary', left: 1, unit: 'battle', speciesId: 'pidgey', level: 3 } as never, { kind: 'ordinary', left: 4, unit: 'battle', speciesId: 'pidgey', level: 3 } as never];
+    const out = careAction(content, run, 0, 'sing').run;
+    expect(out.eggs.map((e) => e.left)).toEqual([1, 3]);
+    expect(careProblem(content, out, 0, 'sing')).toMatch(/Already/);
+  });
+
+  it('release gift is a few extra candies by level', () => {
+    expect(releaseGift(content, 45)).toBe(2);
+    expect(releaseGift(content, 5)).toBe(0);
   });
 });

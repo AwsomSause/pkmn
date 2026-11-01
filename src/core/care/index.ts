@@ -5,6 +5,7 @@
 
 import { adjustBond, bondOf } from '../bond';
 import type { Content } from '../contentSchema';
+import { warmEggs } from '../eggs';
 import { changeFriendship } from '../friendship';
 import { maxHp } from '../pokemon';
 import type { PokemonInstance, RunState } from '../state';
@@ -15,7 +16,7 @@ export * from './mods';
 const PHASES: readonly RunState['phase'][] = ['reward', 'decision', 'map', 'shop'];
 const TRAIN_STATS = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 export type TrainStat = (typeof TRAIN_STATS)[number];
-export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'nickname', 'favourite', 'ace'] as const;
+export const CARE_ACTIONS = ['pet', 'hug', 'feed', 'groom', 'lullaby', 'cheer', 'train', 'sing', 'dress', 'nickname', 'favourite', 'ace'] as const;
 export type CareAction = (typeof CARE_ACTIONS)[number];
 
 const hash = (text: string): number => {
@@ -98,8 +99,18 @@ export function careProblem(content: Content, run: RunState, partyIndex: number,
     case 'lullaby': return n('lullaby') >= 1 ? 'Already tucked in at this stop.' : mon.hp >= maxHp(content, mon) ? 'It is not hurt.' : null;
     case 'cheer': return n('cheer') >= 1 ? 'You already cheered it up at this stop.' : null;
     case 'train': return n('train') >= 1 ? 'Already training at this stop.' : !arg || !TRAIN_STATS.includes(arg as TrainStat) ? 'Pick a stat to train.' : null;
+    case 'sing': return n('sing') >= 1 ? 'Already sang at this stop.' : run.eggs.length === 0 ? 'You carry no Eggs.' : null;
+    case 'dress': return arg !== '' && arg !== undefined && !CARE.accessories[arg] ? 'Unknown accessory.' : null;
     default: return null;
   }
+}
+
+/** The accessory names, in menu order. */
+export const ACCESSORIES = Object.keys(CARE.accessories);
+
+/** Bonus candies when a caught Pokémon is released (a small gift by level). */
+export function releaseGift(content: Content, level: number): number {
+  return content.balance.careEffects ? Math.floor(level / CARE.releaseGift.candiesPerLevels) : 0;
 }
 
 /** One care action on a party Pokémon. Returns a new run and a message; throws when not allowed. */
@@ -165,6 +176,18 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       tick();
       care.train = { stat: arg as TrainStat, left: CARE.train.fights };
       message = `${name} will train ${arg!.toUpperCase()} for the next ${CARE.train.fights} fights (+${CARE.train.statPercent}%).`;
+      break;
+    case 'sing': {
+      tick();
+      warmEggs(run, CARE.sing.eggSteps);
+      changeFriendship(content, mon, 1);
+      message = `${name} sings to the Eggs. They stir a little closer to hatching.`;
+      break;
+    }
+    case 'dress':
+      if (arg) care.accessory = arg;
+      else delete care.accessory;
+      message = arg ? `${name} puts on the ${arg} (+${CARE.accessories[arg]!.percent}% ${CARE.accessories[arg]!.stat.toUpperCase()}).` : `${name} takes its accessory off.`;
       break;
     case 'nickname': {
       const text = (arg ?? '').replace(/\s+/g, ' ').trim().slice(0, CARE.nicknameMax);

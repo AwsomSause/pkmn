@@ -25,7 +25,7 @@ import { playSfx } from './audio';
 import { loadAssets } from './lazyAssets';
 import type { FieldMenuHost } from './fieldMenus';
 import type { InputAction } from './input';
-import { CARE_ACTIONS, moodWord, careProblem, favoriteFlavor, hatedFlavor, type CareAction } from '../core/care';
+import { ACCESSORIES, CARE_ACTIONS, moodWord, careProblem, favoriteFlavor, hatedFlavor, type CareAction } from '../core/care';
 import { emotionDot, type PickerLike } from './partyPanel';
 import { bondView, compareStats, compareTarget, historyView, moveEffectLines, readiness, traitLines, xpProgress, type Readiness } from './pokemonInfo';
 import { itemVisual, pokemonIcon } from './sprites';
@@ -52,6 +52,7 @@ const STATE_COLOR: Record<Readiness['state'], number> = { ready: 0x6ee87a, cauti
 const STATE_TEXT: Record<Readiness['state'], string> = { ready: '#9af0a8', caution: '#ffe08a', down: '#ff9a9a' };
 const MODE_TEXT: Record<HeldItemInfo['mode'], string> = { passive: 'Always on', activated: 'Triggers in battle', mixed: 'Always on + triggers' };
 
+const ACCESSORY_CHOICES = ['', ...ACCESSORIES];
 const TRAIN_CHOICES = ['atk', 'def', 'spa', 'spd', 'spe'] as const;
 type Mode = 'list' | 'menu' | 'detail';
 interface MenuOption {
@@ -87,6 +88,7 @@ class PokemonScreen implements PickerLike {
   /** The Care sub-menu is open (pet, hug, feed...). */
   private careMenu = false;
   private trainStat = 0;
+  private accIdx = 0;
   private reordered = false;
   private notice = 'Party order updated.';
   private closed = false;
@@ -156,7 +158,10 @@ class PokemonScreen implements PickerLike {
           this.careMenu = false;
           this.menuIdx = 0;
         } else this.mode = 'list';
-      } else if ((action === 'left' || action === 'right') && this.careMenu) this.trainStat = (this.trainStat + (action === 'right' ? 1 : 4)) % 5;
+      } else if ((action === 'left' || action === 'right') && this.careMenu) {
+        if (this.menuIdx === 8) this.accIdx = (this.accIdx + (action === 'right' ? 1 : ACCESSORY_CHOICES.length - 1)) % ACCESSORY_CHOICES.length;
+        else this.trainStat = (this.trainStat + (action === 'right' ? 1 : 4)) % 5;
+      }
       this.render();
       return;
     }
@@ -217,6 +222,8 @@ class PokemonScreen implements PickerLike {
       p('lullaby', 'Lullaby', 'Tuck it in: heals 20% of its HP, once per stop.'),
       p('cheer', 'Cheer up', 'Lift its mood (more when it is down). Mood nudges stats by 1% a step.'),
       p('train', `Train ${stat.toUpperCase()} ‹ ›`, 'Left/right picks the stat. +8% for its next 3 fights, once per stop.', stat),
+      p('sing', 'Sing to Eggs', 'Hum to the Eggs you carry: they move 1 step closer to hatching (never hatch by it). Once per stop.'),
+      p('dress', `Dress: ${this.mon.care?.accessory ?? 'none'} ‹ ›`, 'Left/right picks scarf, bow, glasses, band or anklet (+2% to one stat). Enter wears it; "none" takes it off.', ACCESSORY_CHOICES[this.accIdx] || ''),
       p('nickname', 'Nickname', 'Give it a name (up to 12 letters). Leave it empty to clear.'),
       { id: 'favourite', label: care?.favourite ? 'Unfavourite' : 'Favourite', problem: null, hint: 'Favourites are never offered as swap or trade fodder.' },
       { id: 'ace', label: care?.ace ? 'Unmark ace' : 'Mark ace', problem: null, hint: 'Your ace is remembered on the Hub memorial wall if it falls.' },
@@ -266,6 +273,7 @@ class PokemonScreen implements PickerLike {
     try {
       let arg: string | undefined;
       if (id === 'train') arg = TRAIN_CHOICES[this.trainStat];
+      if (id === 'dress') arg = ACCESSORY_CHOICES[this.accIdx] ?? '';
       if (id === 'nickname') {
         const answer = typeof window !== 'undefined' && typeof window.prompt === 'function' ? window.prompt('Nickname (up to 12 letters, empty clears):', this.mon.care?.nickname ?? '') : null;
         if (answer === null) return;
@@ -602,6 +610,32 @@ class PokemonScreen implements PickerLike {
         this.text(box, RIGHT_W - 8, y, c.delta === 0 ? '=' : `${c.delta > 0 ? '+' : ''}${c.delta}`, 18, col).setOrigin(1, 0.5);
       }
     });
+    {
+      // Stat radar (F41): base stats against the scale, drawn small beside the nature line.
+      const cx = RIGHT_W - 48;
+      const cy = 266;
+      const rad = 26;
+      const g = scene.add.graphics();
+      const pt = (i: number, f: number) => ({ x: cx + Math.sin((i / 6) * Math.PI * 2) * rad * f, y: cy - Math.cos((i / 6) * Math.PI * 2) * rad * f });
+      g.lineStyle(1, AERO.rim, 0.5);
+      [1, 0.5].forEach((f) => {
+        g.beginPath();
+        info.stats.forEach((_, i) => (i === 0 ? g.moveTo(pt(i, f).x, pt(i, f).y) : g.lineTo(pt(i, f).x, pt(i, f).y)));
+        g.closePath();
+        g.strokePath();
+      });
+      g.fillStyle(0x7fd8ff, 0.45).lineStyle(2, 0xbfe9ff, 0.9);
+      g.beginPath();
+      info.stats.forEach((s, i) => {
+        const f = Math.max(0.08, Math.min(1, s.base / BASE_STAT_SCALE));
+        if (i === 0) g.moveTo(pt(i, f).x, pt(i, f).y);
+        else g.lineTo(pt(i, f).x, pt(i, f).y);
+      });
+      g.closePath();
+      g.fillPath();
+      g.strokePath();
+      box.add(g);
+    }
     this.panel(box, 0, 292, RIGHT_W, 40, 0.4);
     this.text(box, 12, 302, `Nature: ${info.nature ?? 'unknown'}`, 15, '#ffffff', { fixedWidth: RIGHT_W - 24 });
   }

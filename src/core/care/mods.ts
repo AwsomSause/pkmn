@@ -26,6 +26,9 @@ const CareDataSchema = z.object({
   faintMood: z.number().int(),
   benchedWinsToSulk: z.number().int().min(1),
   nicknameMax: z.number().int().min(1),
+  accessories: z.record(z.string(), z.object({ stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe']), percent: z.number() })),
+  sing: z.object({ eggSteps: z.number().int().min(1) }),
+  releaseGift: z.object({ candiesPerLevels: z.number().int().min(1) }),
   quips: z.record(z.string(), z.array(z.string()).min(1)),
 });
 export const CARE = CareDataSchema.parse(careJson);
@@ -50,6 +53,8 @@ export const CareSchema = z.object({
   favourite: z.boolean().optional(),
   ace: z.boolean().optional(),
   sparkle: z.boolean().optional(),
+  /** Dress-up: a worn accessory (a key of data/care.json accessories) with a tiny stat buff. */
+  accessory: z.string().optional(),
   /** Hidden talent: a stat that grew on its own after enough fights. */
   talent: z.enum(['atk', 'def', 'spa', 'spd', 'spe']).optional(),
   /** Training focus: this stat gets a boost for `left` more fights. */
@@ -64,5 +69,7 @@ export function careMultiplier(care: Care | undefined, stat: string): number {
   let pct = mood * CARE.moodStatPercent - Math.min(care.fatigue, CARE.fatigue.max) * CARE.fatigue.statPercent;
   if (care.talent === stat) pct += CARE.talent.statPercent;
   if (care.train && care.train.left > 0 && care.train.stat === stat) pct += CARE.train.statPercent;
+  const acc = care.accessory ? CARE.accessories[care.accessory] : undefined;
+  if (acc && acc.stat === stat) pct += acc.percent;
   return Math.max(0.5, 1 + pct / 100);
 }

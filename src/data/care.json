@@ -1,27 +1,124 @@
 {
-  "flavors": ["spicy", "dry", "sweet", "bitter", "sour"],
+  "flavors": [
+    "spicy",
+    "dry",
+    "sweet",
+    "bitter",
+    "sour"
+  ],
   "moodRange": 3,
   "moodStatPercent": 1,
-  "fatigue": { "perFight": 1, "max": 4, "statPercent": 5, "benchedRecovery": 2 },
-  "pet": { "perStop": 3, "friendship": 1 },
-  "hug": { "friendship": 3, "affection": 3, "mood": 1 },
-  "feed": { "liked": { "friendship": 3, "mood": 1 }, "neutral": { "friendship": 1, "mood": 0 }, "hated": { "friendship": -1, "mood": -1 }, "sulkStops": 1 },
-  "groom": { "friendship": 1 },
-  "lullaby": { "healShare": 0.2, "friendship": 1 },
-  "cheer": { "mood": 1, "lowMoodBonus": 1 },
-  "train": { "fights": 3, "statPercent": 8 },
-  "talent": { "afterFights": 10, "minFriendship": 100, "statPercent": 6 },
+  "fatigue": {
+    "perFight": 1,
+    "max": 4,
+    "statPercent": 5,
+    "benchedRecovery": 2
+  },
+  "pet": {
+    "perStop": 3,
+    "friendship": 1
+  },
+  "hug": {
+    "friendship": 3,
+    "affection": 3,
+    "mood": 1
+  },
+  "feed": {
+    "liked": {
+      "friendship": 3,
+      "mood": 1
+    },
+    "neutral": {
+      "friendship": 1,
+      "mood": 0
+    },
+    "hated": {
+      "friendship": -1,
+      "mood": -1
+    },
+    "sulkStops": 1
+  },
+  "groom": {
+    "friendship": 1
+  },
+  "lullaby": {
+    "healShare": 0.2,
+    "friendship": 1
+  },
+  "cheer": {
+    "mood": 1,
+    "lowMoodBonus": 1
+  },
+  "train": {
+    "fights": 3,
+    "statPercent": 8
+  },
+  "talent": {
+    "afterFights": 10,
+    "minFriendship": 100,
+    "statPercent": 6
+  },
   "winMood": 1,
   "faintMood": -1,
   "benchedWinsToSulk": 3,
   "nicknameMax": 12,
   "quips": {
-    "pet": ["leans into your hand.", "purrs and wiggles.", "closes its eyes happily."],
-    "hug": ["hugs you back tightly.", "nuzzles your shoulder."],
-    "likedBerry": ["gobbles it up happily!", "loves that flavor!"],
-    "hatedBerry": ["makes a sour face and sulks.", "spits it out."],
-    "lullaby": ["drifts into a peaceful doze.", "hums along sleepily."],
-    "groom": ["sparkles after the brushing.", "feels fresh and tidy."],
-    "cheer": ["giggles and perks up.", "bounces back a little."]
+    "pet": [
+      "leans into your hand.",
+      "purrs and wiggles.",
+      "closes its eyes happily."
+    ],
+    "hug": [
+      "hugs you back tightly.",
+      "nuzzles your shoulder."
+    ],
+    "likedBerry": [
+      "gobbles it up happily!",
+      "loves that flavor!"
+    ],
+    "hatedBerry": [
+      "makes a sour face and sulks.",
+      "spits it out."
+    ],
+    "lullaby": [
+      "drifts into a peaceful doze.",
+      "hums along sleepily."
+    ],
+    "groom": [
+      "sparkles after the brushing.",
+      "feels fresh and tidy."
+    ],
+    "cheer": [
+      "giggles and perks up.",
+      "bounces back a little."
+    ]
+  },
+  "accessories": {
+    "scarf": {
+      "stat": "def",
+      "percent": 2
+    },
+    "bow": {
+      "stat": "spd",
+      "percent": 2
+    },
+    "glasses": {
+      "stat": "spa",
+      "percent": 2
+    },
+    "band": {
+      "stat": "atk",
+      "percent": 2
+    },
+    "anklet": {
+      "stat": "spe",
+      "percent": 2
+    }
+  },
+  "sing": {
+    "eggSteps": 1
+  },
+  "releaseGift": {
+    "candiesPerLevels": 20
   }
 }
