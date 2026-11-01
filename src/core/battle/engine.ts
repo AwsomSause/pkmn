@@ -2209,6 +2209,15 @@ function hyperAwaken(ctx: BattleContext, c: Combatant, events: BattleEvent[]): b
   return true;
 }
 
+/** The stronger move a Limit Break reaches for in place of `move` (same type), or null. */
+function limitBreakMove(ctx: BattleContext, move: Move): Move | null {
+  const def = ctx.content.story.definitions.find((d) => d.triggerConditions.trigger === 'limitBreak');
+  if (def?.effect?.kind !== 'limitBreak') return null;
+  const id = def.effect.moves[move.type];
+  const found = id ? ctx.content.moves.get(id) : undefined;
+  return found && found.supported && found.category !== 'status' && found.id !== move.id ? found : null;
+}
+
 /** The damage bonus of the Limit Break in progress (0 when none); set only while that one move runs. */
 let limitBreakDamage = 0;
 /** The Pokémon whose move is running (Defiance strikes back at it, also in double battles). */
@@ -2670,7 +2679,10 @@ function runMove(ctx: BattleContext, user: Combatant, target: Combatant, move: M
   movingAttacker = user;
   try {
     limitBreakDamage = tryLimitBreak(ctx, user, move, events);
-    runMoveInner(ctx, user, target, move, movedFirst, events);
+    // Pushed Beyond Its Limits: it reaches for a stronger move it does not know.
+    const reached = limitBreakDamage > 0 ? limitBreakMove(ctx, move) : null;
+    if (reached) events.push({ type: 'move', side: user.side, moveId: reached.id });
+    runMoveInner(ctx, user, target, reached ?? move, movedFirst, events);
   } finally {
     moveIgnoresAbility = false;
     limitBreakDamage = 0;

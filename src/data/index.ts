@@ -438,6 +438,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     if (def.effect?.kind !== expected || def.duration !== duration) {
       problems.push(`story.json "${def.id}": a ${def.triggerConditions.trigger} event needs a "${expected}" effect and ${duration} duration`);
     }
+    if (def.effect?.kind === 'limitBreak') for (const id of Object.values(def.effect.moves)) if (!content.moves.has(id)) problems.push(`story.json "${def.id}" uses unknown move "${id}"`);
     for (const m of def.triggerConditions.needsMemory ?? []) {
       if (!HISTORY_MEMORIES.includes(m) && !storyIds.has(m)) problems.push(`story.json "${def.id}" needs unknown memory "${m}"`);
     }
