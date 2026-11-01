@@ -2,6 +2,8 @@
 // the campaign, starter pool, draft rule and one preparation, check the Run
 // Build Summary, save or load a loadout preset, then roll the starters.
 
+import { goodbyeLine } from '../core/hubNook';
+import { notify } from '../ui/overlays';
 import { loanProblem, presetSlotCount } from '../core/bank';
 import { LICENSES, licenseName, type LicenseId } from '../core/license';
 import Phaser from 'phaser';
@@ -475,6 +477,7 @@ export class RunPrepScene extends Phaser.Scene {
       daily = weekly;
     }
     session.newRun(this.archetypeId, seed, undefined, prep, rules, daily?.starters);
+    notify(goodbyeLine(seed ?? this.archetypeId));
     this.scene.start('StarterSelect');
   }
 

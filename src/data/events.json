@@ -53491,6 +53491,4922 @@
      }
     }
    ]
+  },
+  {
+   "id": "contract-desk",
+   "name": "The Contract Desk",
+   "group": "Set Pieces",
+   "stop": "special",
+   "rarity": "uncommon",
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2b2a1e",
+    "effect": "none"
+   },
+   "intro": "A broker slides three contracts across the desk. \"Every job pays. How hard do you want to push the slider?\"",
+   "choices": [
+    {
+     "label": "Safe contract: small pay, no risk",
+     "success": {
+      "text": "A tidy job. The broker stamps it paid.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 150
+       },
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Standard contract: fair pay, some risk (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You read the fine print and take the extra clause. Paid in full.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 450
+       }
+      ]
+     },
+     "failure": {
+      "text": "A clause bites. You get the base pay only.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 150
+       },
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Risky contract: huge pay, big risk (Luck)",
+     "check": "luck",
+     "success": {
+      "text": "Every die rolls your way. The broker whistles and counts the cash.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 1200
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The deal collapses and you cover the damages.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Negotiate the slider yourself (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "You talk the broker up to the standard pay with the safe clause.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 400
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "The broker laughs and takes a fee for his time.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -60
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ritual-circle",
+   "name": "The Summoning Circle",
+   "group": "Set Pieces",
+   "stop": "shrine",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#1b1030",
+    "effect": "glint"
+   },
+   "intro": "A chalk circle glows with three empty dishes. \"Choose an offering,\" whispers the keeper. \"What comes depends on what you give.\"",
+   "choices": [
+    {
+     "label": "Offer a Fire Stone (a fiery guardian)",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "fire-stone"
+      }
+     ],
+     "success": {
+      "text": "The circle roars. A blazing guardian steps out, and it wants a fight.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "fire-stone"
+       }
+      ],
+      "battle": {
+       "kind": "trainer",
+       "name": "Ember Guardian",
+       "classId": "hex-maniac",
+       "size": 2,
+       "types": [
+        "fire"
+       ],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "item",
+         "id": "rare-candy",
+         "count": 1
+        },
+        {
+         "kind": "research",
+         "amount": 4
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Offer a Moon Stone (a lunar guardian)",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "moon-stone"
+      }
+     ],
+     "success": {
+      "text": "Moonlight pours through the chalk. A pale guardian rises, silent and fast.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "moon-stone"
+       }
+      ],
+      "battle": {
+       "kind": "trainer",
+       "name": "Moon Guardian",
+       "classId": "hex-maniac",
+       "size": 2,
+       "types": [
+        "fairy",
+        "psychic"
+       ],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "item",
+         "id": "max-potion",
+         "count": 1
+        },
+        {
+         "kind": "research",
+         "amount": 4
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Offer a Dusk Stone (a shadow guardian)",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "dusk-stone"
+      }
+     ],
+     "success": {
+      "text": "The candles gutter. A shadow guardian bows, then lunges.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "dusk-stone"
+       }
+      ],
+      "battle": {
+       "kind": "trainer",
+       "name": "Shadow Guardian",
+       "classId": "hex-maniac",
+       "size": 2,
+       "types": [
+        "ghost",
+        "dark"
+       ],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "item",
+         "id": "reaper-cloth",
+         "count": 1
+        },
+        {
+         "kind": "research",
+         "amount": 4
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Offer nothing and step out of the circle",
+     "success": {
+      "text": "The chalk fades. Nothing answers.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "oath-shrine",
+   "name": "The Oath Stone",
+   "group": "Set Pieces",
+   "stop": "shrine",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1c2a1c",
+    "effect": "none"
+   },
+   "intro": "An old stone bears three hand-shaped hollows. \"Swear an oath, and the road will ask you to keep it. Keep it and you are paid.\"",
+   "choices": [
+    {
+     "label": "Swear the Oath of Steel (lose some HP now)",
+     "success": {
+      "text": "You press your hand to the stone. It bites cold. You will not forget the pain.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.2
+       },
+       {
+        "kind": "flag",
+        "key": "oath-steel",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Swore the Oath of Steel at the shrine.",
+        "importance": 55
+       }
+      ]
+     }
+    },
+    {
+     "label": "Swear the Oath of Mercy (give up ₽100)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "success": {
+      "text": "You leave your coins in the hollow. Your Pokémon seem calmer.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "flag",
+        "key": "oath-mercy",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Swore the Oath of Mercy at the shrine.",
+        "importance": 55
+       }
+      ]
+     }
+    },
+    {
+     "label": "Swear the Oath of Speed (leave a berry)",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "oran-berry"
+      }
+     ],
+     "success": {
+      "text": "A berry on the stone, a promise on your lips. The wind picks up.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "oran-berry"
+       },
+       {
+        "kind": "flag",
+        "key": "oath-speed",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Swore the Oath of Speed at the shrine.",
+        "importance": 55
+       }
+      ]
+     }
+    },
+    {
+     "label": "Swear nothing",
+     "success": {
+      "text": "The stone is just a stone. You walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "oath-reckoning",
+   "name": "The Oath Is Called",
+   "group": "Set Pieces",
+   "stop": "shrine",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "oath-steel",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1c2a1c",
+    "effect": "none"
+   },
+   "intro": "The shrine keeper waits at a crossroads. \"You swore an oath of Steel. Have you held to it?\"",
+   "choices": [
+    {
+     "label": "Show how far you have come (Strength)",
+     "check": "strength",
+     "success": {
+      "text": "He nods. \"Steel kept.\" A charm drops into your hand.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "oath-steel-charm",
+        "name": "Oath of Steel",
+        "effects": [
+         {
+          "kind": "xpMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "moneyMultiplier",
+          "value": 1.05
+         }
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "oath-steel",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Kept the Oath of Steel.",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "Your grip wavers. He sighs and lets you go with a lesson.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       },
+       {
+        "kind": "flag",
+        "key": "oath-steel",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Admit you struggled",
+     "success": {
+      "text": "\"Honesty is a smaller reward.\" He hands you a few coins.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 100
+       },
+       {
+        "kind": "flag",
+        "key": "oath-steel",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "oath-reckoning-mercy",
+   "name": "The Oath Is Called: Mercy",
+   "group": "Set Pieces",
+   "stop": "shrine",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "oath-mercy",
+     "atLeast": 1,
+     "atMost": 1
+    },
+    {
+     "kind": "meter",
+     "key": "goodEvil",
+     "side": "positive",
+     "atLeast": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1c2a1c",
+    "effect": "none"
+   },
+   "intro": "A child runs up with a thank-you flower. \"The shrine said you kept your mercy!\"",
+   "choices": [
+    {
+     "label": "Take the flower",
+     "success": {
+      "text": "It is more than a flower. It glows faintly in your Bag.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "oath-mercy-charm",
+        "name": "Oath of Mercy",
+        "effects": [
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.15
+         },
+         {
+          "kind": "researchMultiplier",
+          "value": 1.05
+         }
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "oath-mercy",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "oath-reckoning-speed",
+   "name": "The Oath Is Called: Speed",
+   "group": "Set Pieces",
+   "stop": "shrine",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "oath-speed",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1c2a1c",
+    "effect": "none"
+   },
+   "intro": "The wind swirls around you at a bend in the road. The oath you swore sits lightly on your shoulder.",
+   "choices": [
+    {
+     "label": "Run with it",
+     "success": {
+      "text": "You feel quick. The road feels short.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "oath-speed-charm",
+        "name": "Oath of Speed",
+        "effects": [
+         {
+          "kind": "xpMultiplier",
+          "value": 1.08
+         }
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "speed",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "oath-speed",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "token-exchange",
+   "name": "The Token Exchange",
+   "group": "Set Pieces",
+   "stop": "trade",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "tint": "#2a1e2a",
+    "effect": "none"
+   },
+   "intro": "A stall sells rarities for tokens only. \"Nuggets, Star Pieces, Comet Shards: that is what I take.\"",
+   "choices": [
+    {
+     "label": "Trade a Nugget",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "nugget"
+      }
+     ],
+     "success": {
+      "text": "\"Pleasure.\" You get a rare held item.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "nugget"
+       },
+       {
+        "kind": "item",
+        "id": "choice-band",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a Star Piece",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "star-piece"
+      }
+     ],
+     "success": {
+      "text": "\"Lovely.\" You get a rare held item.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "star-piece"
+       },
+       {
+        "kind": "item",
+        "id": "life-orb",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Trade a Comet Shard",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "comet-shard"
+      }
+     ],
+     "success": {
+      "text": "\"Wow.\" The stallkeeper whispers and hands you a Tera Orb.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "comet-shard"
+       },
+       {
+        "kind": "item",
+        "id": "tera-orb",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Browse only",
+     "success": {
+      "text": "You admire the stall and move on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "voting-booth",
+   "name": "The Voting Booth",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#1e2a2a",
+    "effect": "none"
+   },
+   "intro": "A little booth with three ballots stands on the road. \"Everyone votes,\" the sign says. Your Pokémon crowd around it.",
+   "choices": [
+    {
+     "label": "Vote for the quiet path (the party votes: rest)",
+     "success": {
+      "text": "The party votes for rest. A few of them yawn and approve.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Vote for the long road (the party votes: scout)",
+     "success": {
+      "text": "The party votes for a look around. The map opens up.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Vote for a gamble (Luck)",
+     "check": "luck",
+     "success": {
+      "text": "The party voted for chaos and chaos votes back.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "A tie. Everyone sulks.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": -1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let the Fire types decide",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      }
+     ],
+     "success": {
+      "text": "The warm ones vote for a feast.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "court-case",
+   "name": "The Court of the Road",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#2a2218",
+    "effect": "none"
+   },
+   "intro": "A small crowd. A Meowth stands accused of breaking a farmer's fence. The judge squints at you. \"Will you speak for the defendant?\"",
+   "choices": [
+    {
+     "label": "Defend with logic (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You point out the fence was already rotten. The judge dismisses the case.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 250
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "court-won",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The judge is not moved. You pay the fine.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       }
+      ]
+     }
+    },
+    {
+     "label": "Defend with a heartfelt speech (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "The crowd weeps. The judge takes off his glasses and wipes his eyes.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "court-won",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Your speech lands badly.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -60
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say nothing",
+     "success": {
+      "text": "The Meowth is fined. It glares at you for the rest of the day.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "lore-riddle-1",
+   "name": "The Lore Book: First Riddle",
+   "group": "Set Pieces",
+   "stop": "library",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "A dusty book falls open. \"I have a hundred hands and cannot hold. I tick and tock, and I am old. Where do I rest?\"",
+   "choices": [
+    {
+     "label": "\"The clock tower\"",
+     "success": {
+      "text": "A page turns by itself. The next riddle waits.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "lore-riddle-2"
+       },
+       {
+        "kind": "flag",
+        "key": "lore-riddle",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"The lighthouse\"",
+     "success": {
+      "text": "Wrong. The book snaps shut, but a coin falls out.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 30
+       }
+      ]
+     }
+    },
+    {
+     "label": "Close the book",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "lore-riddle-2",
+   "name": "The Lore Book: Second Riddle",
+   "group": "Set Pieces",
+   "stop": "library",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "\"I am sweet in the spring and sour in the fall. I wear a coat and hide a stone. What am I?\"",
+   "choices": [
+    {
+     "label": "\"A berry\"",
+     "success": {
+      "text": "The final page opens to a map.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "lore-riddle-3"
+       },
+       {
+        "kind": "flag",
+        "key": "lore-riddle",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"A cloud\"",
+     "success": {
+      "text": "The book hums, unimpressed.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "lore-riddle-3",
+   "name": "The Lore Book: The Treasure",
+   "group": "Set Pieces",
+   "stop": "treasure",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "The map ends under an old tree. A chest sits half-buried.",
+   "choices": [
+    {
+     "label": "Dig it up",
+     "success": {
+      "text": "Inside: a heap of old coins and a lucky egg.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "item",
+        "id": "lucky-egg",
+        "count": 1
+       },
+       {
+        "kind": "flag",
+        "key": "lore-riddle",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Solved the lore book riddles and found the treasure.",
+        "importance": 55
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "festival-day",
+   "name": "Festival Day",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#3a2030",
+    "effect": "sparkle"
+   },
+   "intro": "Paper lanterns, drums, and three stalls. \"Today there is a game for everyone.\"",
+   "choices": [
+    {
+     "label": "Ring toss (skill)",
+     "prompt": {
+      "id": "throw-ring",
+      "needs": "good"
+     },
+     "success": {
+      "text": "The ring settles perfectly. The stallkeeper hands over a prize.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "hyper-potion",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "The ring bounces away. A consolation sweet.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "soda-pop",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Beat the drum (rhythm)",
+     "prompt": {
+      "id": "echo-rhythm",
+      "needs": "good"
+     },
+     "success": {
+      "text": "The crowd claps along. A bonus for the best drummer!",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "You drop the beat. Everyone laughs with you.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Light the fireworks",
+     "success": {
+      "text": "The lighting crew nods and hands you the matches.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "festival-fireworks"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "festival-fireworks",
+   "name": "Festival Fireworks",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.fairy_tale_girl"
+    ],
+    "tint": "#101030",
+    "effect": "sparkle"
+   },
+   "intro": "Five fuses, one chance. Light them in the right order: the show depends on it.",
+   "choices": [
+    {
+     "label": "Light them in sequence (rhythm)",
+     "prompt": {
+      "id": "echo-rhythm",
+      "needs": "perfect"
+     },
+     "success": {
+      "text": "The sky blooms in gold and green. A spirit of the festival blesses you.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-bloom"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "Lit the festival fireworks perfectly.",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "A string of sparks and one sad fizz. Still pretty.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let the crew do it",
+     "success": {
+      "text": "A fine show. You enjoy it from the grass.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "cooking-draft",
+   "name": "Cooking Tournament: The Draft",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2218",
+    "effect": "none"
+   },
+   "intro": "A tournament table with six ingredients. You draft two, then cook. \"Choose with care!\"",
+   "choices": [
+    {
+     "label": "Draft Honey and a Sitrus Berry (sweet)",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "honey"
+      }
+     ],
+     "success": {
+      "text": "A sweet, rich dish.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "cooking-final"
+       },
+       {
+        "kind": "flag",
+        "key": "dish-sweet",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Draft a Big Mushroom and a Lum Berry (earthy)",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "big-mushroom"
+      }
+     ],
+     "success": {
+      "text": "An earthy, bold dish.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "cooking-final"
+       },
+       {
+        "kind": "flag",
+        "key": "dish-earthy",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Draft whatever is left (plain)",
+     "success": {
+      "text": "A plain dish, but cooked honestly.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "cooking-final"
+       },
+       {
+        "kind": "flag",
+        "key": "dish-plain",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cooking-final",
+   "name": "Cooking Tournament: The Judges",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2218",
+    "effect": "none"
+   },
+   "intro": "Three judges taste your dish in silence.",
+   "choices": [
+    {
+     "label": "Serve the sweet dish",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "dish-sweet",
+       "atLeast": 1,
+       "atMost": 99
+      }
+     ],
+     "success": {
+      "text": "\"Delightful!\" You take first.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Serve the earthy dish",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "dish-earthy",
+       "atLeast": 1,
+       "atMost": 99
+      }
+     ],
+     "success": {
+      "text": "\"Bold!\" Second place, and a prize.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "item",
+        "id": "big-mushroom",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Serve the plain dish",
+     "success": {
+      "text": "\"Honest.\" Third place. The party enjoys leftovers.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 100
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "dance-competition",
+   "name": "The Dance Competition",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "tint": "#2a1030",
+    "effect": "sparkle"
+   },
+   "intro": "The floor is packed. Judges raise their scorecards. \"Match the arrows!\"",
+   "choices": [
+    {
+     "label": "Dance with perfect timing (rhythm)",
+     "prompt": {
+      "id": "echo-rhythm",
+      "needs": "perfect"
+     },
+     "success": {
+      "text": "A flawless routine. You win the crown.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 600
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "A few missteps, but a lot of heart.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 100
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Dance freestyle (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "The crowd loves it.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 250
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "You trip. The crowd cheers anyway.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Judge instead",
+     "success": {
+      "text": "You score the dancers fairly. They tip you.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 100
+       },
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "hide-and-seek",
+   "name": "A Game of Hide and Seek",
+   "group": "Set Pieces",
+   "stop": "mirage",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [],
+    "pokemon": "celebi",
+    "tint": "#14301c",
+    "effect": "sparkle"
+   },
+   "intro": "Leaves rustle. Something tiny giggles and ducks behind a tree. A voice in your head: \"Find me!\"",
+   "choices": [
+    {
+     "label": "Search by sight (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You spot a flicker of green. The little time traveller stops playing and fights.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "celebi"
+       ],
+       "types": [],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "item",
+         "id": "rare-candy",
+         "count": 1
+        },
+        {
+         "kind": "research",
+         "amount": 4
+        }
+       ]
+      }
+     },
+     "failure": {
+      "text": "You search for an hour. The giggle fades.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wait quietly (Luck)",
+     "check": "luck",
+     "success": {
+      "text": "It comes to you. It leaves a gift and a wink.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-wild-grace"
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Nothing. The wind rises.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Call out to it",
+     "success": {
+      "text": "It giggles from somewhere else. You laugh too.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "escape-room",
+   "name": "The Locked Cellar",
+   "group": "Set Pieces",
+   "stop": "hideout",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#1c1c28",
+    "effect": "none"
+   },
+   "intro": "The door slams. The cellar has three locks and a note: \"The way out is in the order of things.\"",
+   "choices": [
+    {
+     "label": "Search the shelves (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "A brass key under a jar. One lock turns.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "escape-room-2"
+       },
+       {
+        "kind": "flag",
+        "key": "escape-key",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "Dust and jars. Nothing useful.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Force the door (Strength)",
+     "check": "strength",
+     "success": {
+      "text": "The hinges give way. You are out, a bit scraped.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The door does not budge.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Call for help (Charisma)",
+     "check": "charisma",
+     "success": {
+      "text": "Someone hears you and lets you out. They share a secret.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "You wait a long while.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "escape-room-2",
+   "name": "The Locked Cellar: The Second Lock",
+   "group": "Set Pieces",
+   "stop": "hideout",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#1c1c28",
+    "effect": "none"
+   },
+   "intro": "The brass key opens a small chest with a riddle: \"Three bottles. The leftmost lies. The rightmost lies. The middle one tells the truth.\"",
+   "choices": [
+    {
+     "label": "Take the middle bottle",
+     "success": {
+      "text": "A hidden latch clicks. The way out opens, and your Pokémon cheer.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 250
+       },
+       {
+        "kind": "item",
+        "id": "revive",
+        "count": 1
+       },
+       {
+        "kind": "flag",
+        "key": "escape-key",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Escaped the locked cellar.",
+        "importance": 55
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the leftmost bottle",
+     "success": {
+      "text": "Smoke. You stagger out into daylight.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "heist-plan",
+   "name": "The Heist Plan",
+   "group": "Set Pieces",
+   "stop": "hideout",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.biker"
+    ],
+    "tint": "#1c1c20",
+    "effect": "none"
+   },
+   "intro": "A shady crew needs a lookout, a safecracker and a driver. \"You pick the plan. We execute.\"",
+   "choices": [
+    {
+     "label": "Lookout (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You set the watch rotation.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "heist-go"
+       },
+       {
+        "kind": "flag",
+        "key": "heist-role",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The plan falls apart in the first minute. Crew bails.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Safecracker (Luck)",
+     "check": "luck",
+     "success": {
+      "text": "You pick the lock with your whiskers crossed.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "heist-go"
+       },
+       {
+        "kind": "flag",
+        "key": "heist-role",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "The alarm goes off.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Driver (Speed)",
+     "check": "speed",
+     "success": {
+      "text": "You are the fastest thing on the road.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "heist-go"
+       },
+       {
+        "kind": "flag",
+        "key": "heist-role",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "You miss the turn.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Refuse the job",
+     "success": {
+      "text": "You walk away. The crew mutters.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "heist-go",
+   "name": "The Heist: Execution",
+   "group": "Set Pieces",
+   "stop": "hideout",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.biker"
+    ],
+    "tint": "#1c1c20",
+    "effect": "none"
+   },
+   "intro": "Everyone is in position. The vault door is a bit ajar.",
+   "choices": [
+    {
+     "label": "Go in quietly",
+     "success": {
+      "text": "The vault is empty. A single coin on a pedestal. Whose heist was this?",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       },
+       {
+        "kind": "moment",
+        "text": "Helped with a heist that went oddly well.",
+        "importance": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take only what the crew is owed",
+     "success": {
+      "text": "You split the take evenly. The crew thinks you are strange. You feel better.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 450
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Return everything to the owner",
+     "success": {
+      "text": "The owner weeps with gratitude and gives you a reward.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 600
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       },
+       {
+        "kind": "moment",
+        "text": "Returned the loot after a heist.",
+        "importance": 60
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "hall-of-mirrors",
+   "name": "The Hall of Mirrors",
+   "group": "Set Pieces",
+   "stop": "mirage",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "boss.Spr_Pt_Looker"
+    ],
+    "tint": "#1c2030",
+    "effect": "glint"
+   },
+   "intro": "A hall of mirrors. In each, a version of you, showing what you did on this run.",
+   "choices": [
+    {
+     "label": "Look into the mirror of kindness",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "positive",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "A warm light. The reflection nods.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look into the mirror of cruelty",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "negative",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "A cold glare. It does not blink first.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look into the mirror of the middle road",
+     "success": {
+      "text": "You look ordinary. You like ordinary.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 3
+       },
+       {
+        "kind": "money",
+        "amount": 200
+       }
+      ]
+     }
+    },
+    {
+     "label": "Break the mirror (Strength)",
+     "check": "strength",
+     "success": {
+      "text": "Seven years of luck, spent in one go. Shards glitter on the floor.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "star-piece",
+        "count": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": -1
+       }
+      ]
+     },
+     "failure": {
+      "text": "You cut your hand.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "karma-echo",
+   "name": "An Echo of What You Did",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 4,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#20202a",
+    "effect": "none"
+   },
+   "intro": "A stranger stops you. \"I have heard what you do on this road. Strangers talk.\"",
+   "choices": [
+    {
+     "label": "Listen to the kind rumours",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "positive",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "They are kind. A shopkeeper sends a gift.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 200
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Listen to the dark rumours",
+     "requires": [
+      {
+       "kind": "meter",
+       "key": "goodEvil",
+       "side": "negative",
+       "atLeast": 2
+      }
+     ],
+     "success": {
+      "text": "They are dark. They fear you a little.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 200
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Listen to the boring rumours",
+     "success": {
+      "text": "There are none. It is a quiet road.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "charity-drive",
+   "name": "The Charity Drive",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "A stall collects for the village orphanage. \"Whatever you can spare.\"",
+   "choices": [
+    {
+     "label": "Give ₽100",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 100
+      }
+     ],
+     "success": {
+      "text": "\"Bless you.\" She writes your name in the ledger.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -100
+       },
+       {
+        "kind": "flag",
+        "key": "charity",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give ₽500",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 500
+      }
+     ],
+     "success": {
+      "text": "The ledger gets a gold star.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -500
+       },
+       {
+        "kind": "flag",
+        "key": "charity",
+        "amount": 3
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give a Potion",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "potion"
+      }
+     ],
+     "success": {
+      "text": "\"Useful!\"",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "potion"
+       },
+       {
+        "kind": "flag",
+        "key": "charity",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk past",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "charity-favor",
+   "name": "The Charity Remembers",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "charity",
+     "atLeast": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "The ledger-keeper recognises you from a distance. \"Your kindness came back to us. Let us return the favour.\"",
+   "choices": [
+    {
+     "label": "Accept her gift",
+     "success": {
+      "text": "A meal, a map, and a pouch of coins.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "money",
+        "amount": 400
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       },
+       {
+        "kind": "flag",
+        "key": "charity",
+        "amount": -9
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "wounded-rare",
+   "name": "The Wounded Rare",
+   "group": "Set Pieces",
+   "stop": "wild",
+   "rarity": "rare",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c1c",
+    "effect": "none"
+   },
+   "intro": "A rare Pokémon lies hurt beside the road. It sees you and tries to rise.",
+   "choices": [
+    {
+     "label": "Catch it while it is weak",
+     "success": {
+      "text": "You step forward. It fights back, scared.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [
+        "dragon",
+        "psychic",
+        "fairy"
+       ],
+       "levelBonus": 2,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 2
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Heal it and let it go",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "potion"
+      }
+     ],
+     "success": {
+      "text": "It nuzzles you, and leaves a feather.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "item",
+        "id": "hyper-potion",
+        "count": 1
+       },
+       {
+        "kind": "loseItem",
+        "id": "potion"
+       },
+       {
+        "kind": "flag",
+        "key": "mercy-rare",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Carry it to safety (Strength)",
+     "check": "strength",
+     "success": {
+      "text": "It recovers and chooses to follow you.",
+      "effects": [
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "dragon",
+         "psychic",
+         "fairy"
+        ],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "It slips away in the night.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "ghost-trader",
+   "name": "The Ghost Trader",
+   "group": "Set Pieces",
+   "stop": "haunted",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#14102a",
+    "effect": "glint"
+   },
+   "intro": "A spectral figure behind a counter. \"I deal in what you do not need. Give me something you love, and I will give you something stranger.\"",
+   "choices": [
+    {
+     "label": "Give up a Pokémon (it will be remembered)",
+     "success": {
+      "text": "The ghost smiles and takes your Pokémon. In its place, a Ghost-type presses against your leg.",
+      "effects": [
+       {
+        "kind": "tradeAway",
+        "want": {
+         "label": "a Pokémon"
+        }
+       },
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [
+         "ghost"
+        ],
+        "levelBonus": 4,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       },
+       {
+        "kind": "moment",
+        "text": "Traded a Pokémon to the Ghost Trader.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Give up ₽300",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "success": {
+      "text": "The ghost counts coins that are not there. A relic slides across the counter.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "relic",
+        "id": "ghost-ledger",
+        "name": "Ghost Trader's Ledger",
+        "effects": [
+         {
+          "kind": "moneyMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "researchMultiplier",
+          "value": 1.1
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Refuse politely",
+     "success": {
+      "text": "\"A pity,\" says the ghost. It turns into mist.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "black-market-auction",
+   "name": "The Black-Market Auction",
+   "group": "Set Pieces",
+   "stop": "special",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "tint": "#1c1020",
+    "effect": "none"
+   },
+   "intro": "A warehouse, a masked auctioneer, and five bidders. The lot: a glowing egg in a crate. \"Opening bid: ₽300.\"",
+   "choices": [
+    {
+     "label": "Bid ₽300 (low)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 300
+      }
+     ],
+     "chance": 0.35,
+     "success": {
+      "text": "You win unopposed. A quiet crowd, a quiet egg.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -300
+       },
+       {
+        "kind": "item",
+        "id": "lucky-egg",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Gambler outbids you; you lose nothing.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Bid ₽700 (medium)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 700
+      }
+     ],
+     "chance": 0.65,
+     "success": {
+      "text": "You outbid the Gambler and the Scientist. The egg is yours.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -700
+       },
+       {
+        "kind": "item",
+        "id": "lucky-egg",
+        "count": 1
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Scientist goes higher. You lose the lot.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Bid ₽1500 (high)",
+     "requires": [
+      {
+       "kind": "money",
+       "atLeast": 1500
+      }
+     ],
+     "chance": 0.9,
+     "success": {
+      "text": "Nobody dares. The egg is yours, and a bonus.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -1500
+       },
+       {
+        "kind": "item",
+        "id": "lucky-egg",
+        "count": 1
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "item",
+        "id": "revive",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "A masked stranger bids ₽2000. You lose the lot.",
+      "effects": []
+     }
+    },
+    {
+     "label": "Pass",
+     "success": {
+      "text": "You slip out before the bidding ends.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "game-show-1",
+   "name": "The Game Show: Round One",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "tint": "#2a1030",
+    "effect": "sparkle"
+   },
+   "intro": "Lights, music, a host with a huge grin. \"Three questions! You have three lifelines: ask the audience, 50/50, phone a friend. Question one: which type is super effective against Water?\"",
+   "choices": [
+    {
+     "label": "Electric",
+     "success": {
+      "text": "\"Correct!\"",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "game-show-2"
+       },
+       {
+        "kind": "flag",
+        "key": "gameshow-score",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fire",
+     "success": {
+      "text": "\"Oh no!\" The host sighs. The show ends.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Use a lifeline: Ask the audience",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "gameshow-life",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "The audience shouts \"Electric!\" \"Correct!\" says the host.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "game-show-2"
+       },
+       {
+        "kind": "flag",
+        "key": "gameshow-score",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "gameshow-life",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "game-show-2",
+   "name": "The Game Show: Round Two",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "tint": "#2a1030",
+    "effect": "sparkle"
+   },
+   "intro": "\"Question two: how many types are there in the game?\"",
+   "choices": [
+    {
+     "label": "18",
+     "success": {
+      "text": "\"Correct!\"",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "game-show-3"
+       },
+       {
+        "kind": "flag",
+        "key": "gameshow-score",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "16",
+     "success": {
+      "text": "\"Oh, so close.\" You get a participation prize.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Use a lifeline: 50/50",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "gameshow-life",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "The host removes two wrong answers. You pick 18.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "game-show-3"
+       },
+       {
+        "kind": "flag",
+        "key": "gameshow-score",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "gameshow-life",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "game-show-3",
+   "name": "The Game Show: The Final Question",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.guitarist"
+    ],
+    "tint": "#2a1030",
+    "effect": "sparkle"
+   },
+   "intro": "\"Final question for the grand prize: which Pokémon is number 25?\"",
+   "choices": [
+    {
+     "label": "Pikachu",
+     "success": {
+      "text": "\"WINNER!\" Confetti. A grand prize.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Won the game show.",
+        "importance": 55
+       }
+      ]
+     }
+    },
+    {
+     "label": "Raichu",
+     "success": {
+      "text": "\"Close!\" A consolation prize.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 200
+       }
+      ]
+     }
+    },
+    {
+     "label": "Use a lifeline: Phone a friend",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "gameshow-life",
+       "atLeast": 0,
+       "atMost": 0
+      }
+     ],
+     "success": {
+      "text": "Your lead Pokémon lets out a cry. \"That sounds like a Pikachu.\"",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "flag",
+        "key": "gameshow-life",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "time-loop-village",
+   "name": "The Village That Repeats",
+   "group": "Set Pieces",
+   "stop": "mirage",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1c2a30",
+    "effect": "glint"
+   },
+   "intro": "The bell rings noon. A child drops a basket. A cart tips over. The bell rings noon again. Something is wrong with this village.",
+   "choices": [
+    {
+     "label": "Stay and watch the day",
+     "success": {
+      "text": "You see the cart tip over before you do anything else.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "time-loop-2"
+       },
+       {
+        "kind": "flag",
+        "key": "loop-clue",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Run",
+     "success": {
+      "text": "You run. The road loops back.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "time-loop-2",
+   "name": "The Village That Repeats: Day Two",
+   "group": "Set Pieces",
+   "stop": "mirage",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1c2a30",
+    "effect": "none"
+   },
+   "intro": "Noon again. This time you are ready. You know the cart will tip, the child will drop the basket, and the baker will drop the loaf.",
+   "choices": [
+    {
+     "label": "Catch the basket",
+     "success": {
+      "text": "The child smiles. The bell skips.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "time-loop-3"
+       },
+       {
+        "kind": "flag",
+        "key": "loop-clue",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stop the cart",
+     "success": {
+      "text": "The cart rolls on. Something else breaks.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "time-loop-3"
+       },
+       {
+        "kind": "flag",
+        "key": "loop-clue",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "time-loop-3",
+   "name": "The Village That Repeats: Day Three",
+   "group": "Set Pieces",
+   "stop": "mirage",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "tint": "#1c2a30",
+    "effect": "none"
+   },
+   "intro": "Noon. The baker looks up and, for the first time, meets your eyes. \"I have been waiting for you to ask.\"",
+   "choices": [
+    {
+     "label": "Ask the baker what he did",
+     "requires": [
+      {
+       "kind": "flag",
+       "key": "loop-clue",
+       "atLeast": 2,
+       "atMost": 99
+      }
+     ],
+     "success": {
+      "text": "\"I wished the day would not end.\" He sighs. The bell strikes one. Everything unfreezes.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "research",
+        "amount": 5
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "relic",
+        "id": "loop-clock",
+        "name": "Broken Clock",
+        "effects": [
+         {
+          "kind": "xpMultiplier",
+          "value": 1.1
+         },
+         {
+          "kind": "researchMultiplier",
+          "value": 1.1
+         }
+        ]
+       },
+       {
+        "kind": "moment",
+        "text": "Broke the time loop in a village.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Say nothing",
+     "success": {
+      "text": "The bell strikes noon. Again.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "oracle",
+   "name": "The Oracle of the Road",
+   "group": "Set Pieces",
+   "stop": "shrine",
+   "rarity": "rare",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#1c1030",
+    "effect": "glint"
+   },
+   "intro": "The Oracle opens her eyes. \"I will speak one thing. You may carry it or leave it.\"",
+   "choices": [
+    {
+     "label": "\"You will find a friend in need.\"",
+     "success": {
+      "text": "She speaks. You carry it with you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "prophecy-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "The Oracle foretold a friend in need.",
+        "importance": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"You will win when it matters.\"",
+     "success": {
+      "text": "She speaks. You carry it with you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "prophecy-win",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "The Oracle foretold a win when it mattered.",
+        "importance": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"You will lose something dear.\"",
+     "success": {
+      "text": "She speaks. You carry it with you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "prophecy-loss",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "The Oracle foretold a loss.",
+        "importance": 50
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask for nothing",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "prophecy-friend",
+   "name": "The Prophecy: A Friend in Need",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "prophecy-friend",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.youngster_m"
+    ],
+    "tint": "#20202a",
+    "effect": "none"
+   },
+   "intro": "A young trainer trips and spills their Poké Balls. The Oracle's words come back to you.",
+   "choices": [
+    {
+     "label": "Help",
+     "success": {
+      "text": "The prophecy comes true. They give you a rare gift.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "rare-candy",
+        "count": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "prophecy-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "The Oracle was right: helped a friend in need.",
+        "importance": 60
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk on",
+     "success": {
+      "text": "Nothing happens. You wonder.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "prophecy-friend",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "prophecy-win",
+   "name": "The Prophecy: A Win That Matters",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "prophecy-win",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.roughneck"
+    ],
+    "tint": "#20202a",
+    "effect": "none"
+   },
+   "intro": "A challenger calls you out. The Oracle's words come back to you.",
+   "choices": [
+    {
+     "label": "Take the challenge",
+     "success": {
+      "text": "The prophecy is on your side. Fight!",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Challenger",
+       "classId": "veteran",
+       "size": 2,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "item",
+         "id": "rare-candy",
+         "count": 1
+        },
+        {
+         "kind": "money",
+         "amount": 400
+        },
+        {
+         "kind": "flag",
+         "key": "prophecy-win",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Decline",
+     "success": {
+      "text": "Nothing happens. You wonder.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "prophecy-win",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "prophecy-loss",
+   "name": "The Prophecy: Loss",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "prophecy-loss",
+     "atLeast": 1,
+     "atMost": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "tint": "#20202a",
+    "effect": "none"
+   },
+   "intro": "You reach into your Bag. Something is gone. The Oracle's words come back to you.",
+   "choices": [
+    {
+     "label": "Accept it",
+     "success": {
+      "text": "The loss was small. The lesson was not.",
+      "effects": [
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "research",
+        "amount": 4
+       },
+       {
+        "kind": "flag",
+        "key": "prophecy-loss",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "dream-memory",
+   "name": "A Dream After Rest",
+   "group": "Set Pieces",
+   "stop": "rest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [],
+    "tint": "#101030",
+    "effect": "sparkle"
+   },
+   "intro": "You close your eyes. The road fades, and you see something from earlier.",
+   "choices": [
+    {
+     "label": "Follow the dream",
+     "requires": [
+      {
+       "kind": "period",
+       "in": [
+        "night",
+        "evening"
+       ]
+      }
+     ],
+     "success": {
+      "text": "You wake up knowing something new about your party.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       },
+       {
+        "kind": "moment",
+        "text": "Dreamed about a past memory.",
+        "importance": 45
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay awake",
+     "success": {
+      "text": "You stay awake and watch the stars.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "cursed-treasure",
+   "name": "The Cursed Treasure",
+   "group": "Set Pieces",
+   "stop": "treasure",
+   "rarity": "rare",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "tint": "#201020",
+    "effect": "glint"
+   },
+   "intro": "A chest wrapped in chains hums. A note: \"Whoever takes this pays for it. Someone else will pay if you do not.\"",
+   "choices": [
+    {
+     "label": "Take it and bear the curse",
+     "success": {
+      "text": "Gold, at a cost. The air feels heavier.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 900
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": -1
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take it and share the curse (give up an item)",
+     "success": {
+      "text": "You split the burden. Your Bag is lighter, and so is the curse.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "loseItem"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You walk on, lighter in conscience.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Open it with the right words (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "The chains fall. Inside: treasure, no curse.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 700
+       },
+       {
+        "kind": "item",
+        "id": "nugget",
+        "count": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "The chains hold. The curse bites a little.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "archaeology-dig",
+   "name": "The Careful Dig",
+   "group": "Set Pieces",
+   "stop": "fossil",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.bill"
+    ],
+    "tint": "#2a2218",
+    "effect": "none"
+   },
+   "intro": "A professor hands you a brush and a chisel. \"Gently now. The fossil does not forgive haste.\"",
+   "choices": [
+    {
+     "label": "Chisel the stone (aim)",
+     "prompt": {
+      "id": "aim-drag",
+      "needs": "good"
+     },
+     "success": {
+      "text": "The shell cracks away clean. A fossil, whole.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "old-amber",
+        "count": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "A chip off the corner. The fossil is damaged, but you get something.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "old-amber",
+        "count": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Brush the dust (hold steady)",
+     "prompt": {
+      "id": "brace-hold",
+      "needs": "good"
+     },
+     "success": {
+      "text": "The surface reveals a perfect shape.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "helix-fossil",
+        "count": 1
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     },
+     "failure": {
+      "text": "You brush too hard.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it to the professor",
+     "success": {
+      "text": "He thanks you and pays a fee.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 150
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "museum-return",
+   "name": "Return to the Museum",
+   "group": "Set Pieces",
+   "stop": "library",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "trainer.lenora"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "The curator looks heartbroken. \"Someone stole our relics. If you find one, please bring it back.\"",
+   "choices": [
+    {
+     "label": "Return a Rare Bone",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "rare-bone"
+      }
+     ],
+     "success": {
+      "text": "\"You found it!\" The curator weeps.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "rare-bone"
+       },
+       {
+        "kind": "money",
+        "amount": 700
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       },
+       {
+        "kind": "moment",
+        "text": "Returned a relic to the museum.",
+        "importance": 60
+       }
+      ]
+     }
+    },
+    {
+     "label": "Return a Relic Gold",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "relic-gold"
+      }
+     ],
+     "success": {
+      "text": "\"Wonderful!\"",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "relic-gold"
+       },
+       {
+        "kind": "money",
+        "amount": 900
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       },
+       {
+        "kind": "moment",
+        "text": "Returned a relic to the museum.",
+        "importance": 60
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep it",
+     "success": {
+      "text": "You keep the relic. It will be worth more some day.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": -1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Look around",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "cry-shrine",
+   "name": "The Shrine of Cries",
+   "group": "Set Pieces",
+   "stop": "shrine",
+   "rarity": "rare",
+   "minStage": 4,
+   "scene": {
+    "cast": [],
+    "tint": "#201830",
+    "effect": "glint"
+   },
+   "intro": "The door has three notches shaped like sound. \"Only a living cry opens it.\"",
+   "choices": [
+    {
+     "label": "Let the Fire Pokémon cry",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "fire"
+      }
+     ],
+     "success": {
+      "text": "The door glows. The cry opened it.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-hearth"
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let the Water Pokémon cry",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "water"
+      }
+     ],
+     "success": {
+      "text": "The door ripples open.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-clarity"
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let the Grass Pokémon cry",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "grass"
+      }
+     ],
+     "success": {
+      "text": "The door blooms open.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-bloom"
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let your lead Pokémon cry",
+     "success": {
+      "text": "A cry in your lead's voice. The door opens a crack.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sky-pillar",
+   "name": "The Sky Pillar",
+   "group": "Set Pieces",
+   "stop": "tower",
+   "rarity": "rare",
+   "minStage": 5,
+   "scene": {
+    "cast": [
+     "trainer.dragon_tamer"
+    ],
+    "tint": "#102040",
+    "effect": "glint"
+   },
+   "intro": "The pillar climbs into the clouds. Crumbling floors, loose stones, and a very long drop.",
+   "choices": [
+    {
+     "label": "Climb carefully (timing)",
+     "prompt": {
+      "id": "throw-ring",
+      "needs": "good"
+     },
+     "success": {
+      "text": "Ledge by ledge, you reach the top. The sky opens.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "sky-pillar-top"
+       },
+       {
+        "kind": "flag",
+        "key": "sky-climb",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "A stone gives way. You slide, scraped.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fly up (a Flying type)",
+     "requires": [
+      {
+       "kind": "partyType",
+       "type": "flying"
+      }
+     ],
+     "success": {
+      "text": "Wings do the work. You reach the top.",
+      "effects": [
+       {
+        "kind": "addEvent",
+        "eventId": "sky-pillar-top"
+       },
+       {
+        "kind": "flag",
+        "key": "sky-climb",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Turn back",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "sky-pillar-top",
+   "name": "The Top of the Pillar",
+   "group": "Set Pieces",
+   "stop": "tower",
+   "rarity": "rare",
+   "minStage": 5,
+   "scene": {
+    "cast": [
+     "trainer.dragon_tamer"
+    ],
+    "tint": "#102040",
+    "effect": "glint"
+   },
+   "intro": "The wind is loud. A shrine, a clear sky, and a ledge to rest on.",
+   "choices": [
+    {
+     "label": "Rest and take in the view",
+     "success": {
+      "text": "Your party recovers.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 4
+       },
+       {
+        "kind": "moment",
+        "text": "Climbed the Sky Pillar.",
+        "importance": 65
+       }
+      ]
+     }
+    },
+    {
+     "label": "Pray at the shrine",
+     "success": {
+      "text": "A dragon's shadow passes overhead. A scale falls.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "dragon-scale",
+        "count": 1
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-wild-grace"
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "final-conversation",
+   "name": "Before the Last Door",
+   "group": "Set Pieces",
+   "stop": "tower",
+   "rarity": "rare",
+   "minStage": 8,
+   "scene": {
+    "cast": [
+     "boss.cynthia-masters"
+    ],
+    "tint": "#1c1c28",
+    "effect": "glint"
+   },
+   "intro": "The last door stands before you. A voice speaks from behind it: \"Before we fight: what do you want?\"",
+   "choices": [
+    {
+     "label": "\"To win.\"",
+     "success": {
+      "text": "\"Then I will make it hard.\" The room sharpens.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "final-pride",
+        "name": "Pride Before the Fall",
+        "effects": [
+         {
+          "kind": "enemyLevelOffset",
+          "value": 2
+         },
+         {
+          "kind": "xpMultiplier",
+          "value": 1.15
+         }
+        ]
+       },
+       {
+        "kind": "moment",
+        "text": "Told the last door: to win.",
+        "importance": 60
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"To understand you.\"",
+     "success": {
+      "text": "\"Then I will show you.\" The room softens.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "final-calm",
+        "name": "A Calm Before the Storm",
+        "effects": [
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.15
+         },
+         {
+          "kind": "healingMultiplier",
+          "value": 1.15
+         }
+        ]
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -1
+       },
+       {
+        "kind": "moment",
+        "text": "Told the last door: to understand.",
+        "importance": 60
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"To protect my friends.\"",
+     "success": {
+      "text": "\"Then fight for them.\" Your party steps forward, together.",
+      "effects": [
+       {
+        "kind": "relic",
+        "id": "final-bond",
+        "name": "Together at the Door",
+        "effects": [
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.2
+         },
+         {
+          "kind": "xpMultiplier",
+          "value": 1.05
+         }
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Told the last door: to protect my friends.",
+        "importance": 60
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "final-chant",
+   "name": "The Group Chant",
+   "group": "Set Pieces",
+   "stop": "tower",
+   "rarity": "rare",
+   "minStage": 8,
+   "requires": [
+    {
+     "kind": "partySize",
+     "atLeast": 3
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1c1c28",
+    "effect": "sparkle"
+   },
+   "intro": "Your party gathers. Each of them has a cry, a call, a word. \"Together,\" they say. One by one, they start the chant.",
+   "choices": [
+    {
+     "label": "Lead the chant (rhythm)",
+     "prompt": {
+      "id": "echo-rhythm",
+      "needs": "good"
+     },
+     "success": {
+      "text": "Every voice lands on the beat. The air hums. Your party feels invincible.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-hearth"
+       },
+       {
+        "kind": "moment",
+        "text": "The whole party chanted before the last battle.",
+        "importance": 65
+       }
+      ]
+     },
+     "failure": {
+      "text": "The chant wavers, but the spirit holds.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.5
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Listen quietly",
+     "success": {
+      "text": "They chant without you. It sounds like home.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "umbrella-share",
+   "name": "One Umbrella, Two Trainers",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.lacey"
+    ],
+    "tint": "#1c2a38",
+    "effect": "rain"
+   },
+   "intro": "Rain. A stranger without an umbrella huddles under a tree. Your Pokémon look up at your umbrella.",
+   "choices": [
+    {
+     "label": "Share the umbrella",
+     "success": {
+      "text": "You walk together. She waves goodbye at the next fork. Your Pokémon snuggle in.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "umbrella-friend",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep it for the party",
+     "success": {
+      "text": "Everyone stays dry. The stranger shrugs.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "passing-caravan",
+   "name": "The Passing Caravan",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "A caravan rolls by on the other road. Drivers wave. A child leans out the back window.",
+   "choices": [
+    {
+     "label": "Wave back",
+     "chance": 0.7,
+     "success": {
+      "text": "The child throws you a trinket.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "potion",
+         "oran-berry",
+         "honey",
+         "soda-pop"
+        ]
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Everyone waves. The caravan rolls on.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wave with the whole party",
+     "success": {
+      "text": "The Pokémon cheer. Someone in the caravan throws a bigger gift.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "great-ball",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "parrot-teacher",
+   "name": "The Parrot Pokémon",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "pokemon": "chatot",
+    "tint": "#1c3020",
+    "effect": "none"
+   },
+   "intro": "A chatty bird Pokémon hops onto your shoulder. \"Teach me something!\"",
+   "choices": [
+    {
+     "label": "Teach it \"Good luck!\"",
+     "success": {
+      "text": "\"GOOD LUCK!\" it squawks. A luck charm falls out of the sky.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "parrot-phrase",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Teach it \"Never give up!\"",
+     "success": {
+      "text": "\"NEVER GIVE UP!\" it squawks. Your party perks up.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "parrot-phrase",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Teach it a lullaby",
+     "success": {
+      "text": "It hums it back, softly. Your party nods off for a moment.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "flag",
+        "key": "parrot-phrase",
+        "amount": 3
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "parrot-repeats",
+   "name": "The Parrot Remembers",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "parrot-phrase",
+     "atLeast": 1
+    }
+   ],
+   "callback": true,
+   "scene": {
+    "cast": [],
+    "pokemon": "chatot",
+    "tint": "#1c3020",
+    "effect": "none"
+   },
+   "intro": "A familiar squawk overhead. The parrot has been repeating what you taught it, to everyone it meets.",
+   "choices": [
+    {
+     "label": "Thank it",
+     "success": {
+      "text": "It repeats your phrase, delighted. Somewhere, someone is cheered up.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "money",
+        "amount": 150
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "hungry-foe-berry",
+   "name": "A Hungry Foe",
+   "group": "Set Pieces",
+   "stop": "wild",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1c",
+    "effect": "none"
+   },
+   "intro": "A wild Pokémon growls at you, its stomach louder than its warning.",
+   "choices": [
+    {
+     "label": "Give it your last berry",
+     "requires": [
+      {
+       "kind": "item",
+       "id": "oran-berry"
+      }
+     ],
+     "success": {
+      "text": "It eats, calms down, and wanders off. The fight is over.",
+      "effects": [
+       {
+        "kind": "loseItem",
+        "id": "oran-berry"
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fight",
+     "success": {
+      "text": "It lunges. Fine.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 0,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Back away slowly",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "hold-the-hand",
+   "name": "The Dark Crossing",
+   "group": "Set Pieces",
+   "stop": "detour",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "scene": {
+    "cast": [],
+    "tint": "#101020",
+    "effect": "none"
+   },
+   "intro": "A scary stretch of road. Strange noises. Your lead Pokémon grips your sleeve.",
+   "choices": [
+    {
+     "label": "Hold steady and walk together (hold)",
+     "prompt": {
+      "id": "brace-hold",
+      "needs": "ok"
+     },
+     "success": {
+      "text": "You cross together, hand in paw. A calm fear shield settles over the party.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "blessing",
+        "id": "blessing-hearth"
+       }
+      ]
+     },
+     "failure": {
+      "text": "Your lead trembles. You cross anyway.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Run across",
+     "success": {
+      "text": "You make it, panting.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.05
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "wish-upon-star",
+   "name": "A Wish Upon a Star",
+   "group": "Set Pieces",
+   "stop": "camp",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#101030",
+    "effect": "sparkle"
+   },
+   "intro": "A star blinks overhead. Your Pokémon look at you. \"Make a wish!\"",
+   "choices": [
+    {
+     "label": "Wish for a friend",
+     "success": {
+      "text": "In the morning, a small gift lies near your tent.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "oran-berry",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "wish-star",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wish for luck",
+     "success": {
+      "text": "In the morning, a coin rests on your boot.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 100
+       },
+       {
+        "kind": "attribute",
+        "key": "luck",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "wish-star",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wish for peace",
+     "success": {
+      "text": "In the morning, the air is still and soft.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.4
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -1
+       },
+       {
+        "kind": "flag",
+        "key": "wish-star",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "sleeping-npc",
+   "name": "A Sleeping Stranger",
+   "group": "Set Pieces",
+   "stop": "event",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#1c1c28",
+    "effect": "none"
+   },
+   "intro": "A trainer is asleep against a rock, muttering. You could lean in.",
+   "choices": [
+    {
+     "label": "Eavesdrop on the dream",
+     "success": {
+      "text": "\"...the east path... the key under the bridge...\" You learn something.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Wake them politely",
+     "success": {
+      "text": "They yawn, embarrassed, and give you a snack.",
+      "effects": [
+       {
+        "kind": "item",
+        "id": "oran-berry",
+        "count": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let them sleep",
+     "success": {
+      "text": "You tiptoe past. Your Pokémon are very quiet too.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "shrine-bell",
+   "name": "The Shrine Bell",
+   "group": "Set Pieces",
+   "stop": "shrine",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#2a2218",
+    "effect": "none"
+   },
+   "intro": "A great bell hangs under a roof of old wood. A rope dangles. \"Ring it at the right moment,\" says a faded sign.",
+   "choices": [
+    {
+     "label": "Ring the bell on time (timing)",
+     "prompt": {
+      "id": "throw-ring",
+      "needs": "perfect"
+     },
+     "success": {
+      "text": "The note rings out clean. A warm blessing settles over the party.",
+      "effects": [
+       {
+        "kind": "blessing",
+        "id": "blessing-hearth"
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "A dull clang. Still, a small blessing.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ring it without thinking",
+     "success": {
+      "text": "Clang! A small blessing.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cheer-rival-match",
+   "name": "A Rival Match to Cheer",
+   "group": "Set Pieces",
+   "stop": "contest",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "scene": {
+    "cast": [
+     "boss.hop"
+    ],
+    "tint": "#20202a",
+    "effect": "none"
+   },
+   "intro": "Two trainers you know face off in a friendly match. The crowd is split. You have a voice.",
+   "choices": [
+    {
+     "label": "Cheer for the first trainer (shout!)",
+     "prompt": {
+      "id": "shout-tap",
+      "needs": "good"
+     },
+     "success": {
+      "text": "Your shout lands. Their morale soars. They win, and thank you later.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-cheer",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "money",
+        "amount": 200
+       }
+      ]
+     },
+     "failure": {
+      "text": "Your shout is lost in the noise. They lose by a hair.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Cheer for the second trainer (shout!)",
+     "prompt": {
+      "id": "shout-tap",
+      "needs": "good"
+     },
+     "success": {
+      "text": "Your shout lands. Their morale soars. They win, and thank you later.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-cheer",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "money",
+        "amount": 200
+       }
+      ]
+     },
+     "failure": {
+      "text": "Your shout is lost in the noise.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stay neutral",
+     "success": {
+      "text": "A good match. You clap for both.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "name-the-egg",
+   "name": "Naming the Egg",
+   "group": "Set Pieces",
+   "stop": "daycare",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "tint": "#2a2218",
+    "effect": "none"
+   },
+   "intro": "An egg sits warm in your pack. The caretaker holds a pen. \"It will hear its name before it hatches.\"",
+   "choices": [
+    {
+     "label": "Name it \"Sunny\"",
+     "success": {
+      "text": "The egg wiggles. Whatever hatches will know it.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "egg-name",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Name it \"Midnight\"",
+     "success": {
+      "text": "The egg thumps once.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "egg-name",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Name it \"Pebble\"",
+     "success": {
+      "text": "The egg is very still.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "egg-name",
+        "amount": 3
+       },
+       {
+        "kind": "friendship",
+        "amount": 1,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "tap-the-silhouette",
+   "name": "A Silhouette in the Grass",
+   "group": "Set Pieces",
+   "stop": "wild",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#101820",
+    "effect": "none"
+   },
+   "intro": "A shape moves in the tall grass. You hear a faint cry and you could guess its owner.",
+   "choices": [
+    {
+     "label": "Listen closely (Intelligence)",
+     "check": "intelligence",
+     "success": {
+      "text": "You recognise the cry. You know exactly what it is, and how to sneak up.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 2
+       }
+      ]
+     },
+     "failure": {
+      "text": "Too many cries mixed together.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Step in",
+     "success": {
+      "text": "The silhouette turns around.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [],
+       "types": [],
+       "levelBonus": 0,
+       "shinyMultiplier": 1,
+       "win": [
+        {
+         "kind": "research",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
   }
  ]
 }
