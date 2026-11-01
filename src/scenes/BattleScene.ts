@@ -27,6 +27,7 @@ import { findNode } from '../core/map';
 import { bossInfo, currentRegion, type BossInfo } from '../core/regions';
 import { isFinalBoss, type RunEvent, type TurnResult } from '../core/run';
 import { noBattleItems } from '../core/rules';
+import { isHardcore, nuzlockeCatchProblem } from '../core/nuzlocke';
 import type { PresentationCue } from '../core/story/queue';
 import { currentEnemy, type BattleState, type PokemonInstance, type RunState } from '../core/state';
 import { isBossClass } from '../core/trainerPerks';
@@ -1839,7 +1840,7 @@ export class BattleScene extends Phaser.Scene {
     const doubles = run.battle?.doubles;
     const idx = doubles ? run.party.indexOf(this.activeMon()) : -1;
     const battle = doubles && idx >= 0 && idx !== run.battle!.activeIndex ? { ...run.battle!, activeIndex: idx } : run.battle!;
-    return { content: services().session.content, battle, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules) };
+    return { content: services().session.content, battle, party: run.party, inventory: run.inventory, disabledMechanics: run.disabledMechanics, perks: runPerks(services().session.content, run), noBattleItems: noBattleItems(run.rules), setStyle: isHardcore(run.rules), catchBlocked: nuzlockeCatchProblem(battle) };
   }
 
   private openBag(): void {

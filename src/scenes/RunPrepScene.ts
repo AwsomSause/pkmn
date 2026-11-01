@@ -29,7 +29,10 @@ import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { Menu } from '../ui/widgets';
 import { AERO, drawGlass, glassPanel as drawPanel, type MotionLevel } from '../ui/aero';
 import { dailySetup } from '../core/daily';
-import { dailyClaimKey, getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
+import { boardLines } from '../core/boards';
+import { decodeGhostCode, keepGhost } from '../core/ghost';
+import { weeklyClaimKey, weeklySeed, weeklySetup } from '../core/weekly';
+import { dailyClaimKey, dailySeed, getDifficulty, getMode, getModifier, RUN_RULES, rulesLines, STANDARD_CHOICE, type RulesChoice } from '../core/rules';
 import { isClaimed } from '../core/quests';
 
 export interface RunPrepData {
@@ -214,6 +217,12 @@ export class RunPrepScene extends Phaser.Scene {
       y += 6;
       for (const l of rulesLines(this.rules)) line(l, 15, '#c8e0f0');
       if (getMode(this.rules.modeId)?.dailySeed) for (const l of dailySetup(content, new Date().toISOString(), this.prep, this.rules).lines) line(l, 15, '#f0e0a0');
+      if (getMode(this.rules.modeId)?.weeklySeed) {
+        const now = new Date().toISOString();
+        for (const l of weeklySetup(content, now, this.prep, this.rules).lines) line(l, 15, '#f0e0a0');
+        for (const l of boardLines(profile, 'weekly', weeklySeed(now))) line(l, 14, '#c8d8a0');
+      }
+      if (getMode(this.rules.modeId)?.dailySeed) for (const l of boardLines(profile, 'daily', dailySeed(new Date().toISOString()))) line(l, 14, '#c8d8a0');
       y += 6;
       line(`${rule.description}`, 15, '#d8d0e0');
       const locked = [
@@ -407,6 +416,16 @@ export class RunPrepScene extends Phaser.Scene {
       case 'seed': {
         const value = window.prompt('Seed for this run (leave empty for a random one):', this.seed ?? '');
         if (value === null) return;
+        // A friend's ghost code (GH1.…): their seed code plus what they did, shown against your run at the end.
+        if (value.trim().startsWith('GH1.')) {
+          const ghost = decodeGhostCode(value);
+          if (!ghost.ok) return this.refresh({}, { notice: ghost.reason });
+          services().session.changeProfile((pr) => keepGhost(pr, ghost.parts.seed, ghost.ghost));
+          this.seed = ghost.parts.seed;
+          const trainer = services().session.content.archetypes.has(ghost.parts.archetypeId) ? ghost.parts.archetypeId : this.archetypeId;
+          this.scene.restart({ archetypeId: trainer, prep: this.prep, seed: this.seed, focus: this.focusIndex, rules: ghost.parts.rules, page: this.page, notice: `Ghost of ${ghost.ghost.from} loaded: race their seed.` } satisfies RunPrepData);
+          return;
+        }
         // A shared seed code (PR1.…) also sets the trainer and the rules.
         if (value.trim().startsWith('PR1.')) {
           const code = decodeSeedCode(value);
@@ -443,6 +462,17 @@ export class RunPrepScene extends Phaser.Scene {
       const key = dailyClaimKey(today);
       rules = { ...daily.rules, noRewards: isClaimed(session.profile, key) };
       if (!rules.noRewards) session.claimOnce(key);
+    }
+    if (getMode(rules.modeId)?.weeklySeed) {
+      // Weekly Gauntlet: the week is the seed; the themed ruleset replaces the menu's; account rewards pay once a week.
+      const now = new Date().toISOString();
+      const weekly = weeklySetup(session.content, now, this.prep, rules);
+      seed = weekly.seed;
+      prep = weekly.prep;
+      const key = weeklyClaimKey(now);
+      rules = { ...weekly.rules, noRewards: isClaimed(session.profile, key) };
+      if (!rules.noRewards) session.claimOnce(key);
+      daily = weekly;
     }
     session.newRun(this.archetypeId, seed, undefined, prep, rules, daily?.starters);
     this.scene.start('StarterSelect');

@@ -95,6 +95,6 @@ export function battleConditions(content: Content, run: RunState): Conditions {
   const rage = battle.hyper?.rage[foe.uid];
   if (rage?.state === 'warned') out.foe.push('Riled up: about to unleash its rage (Brace to calm it)');
   else if (rage && rage.hits > 0 && rage.state === 'calm') out.foe.push(`Getting riled up (${rage.hits} hit${rage.hits > 1 ? 's' : ''} taken)`);
-  if (battle.autoUsed) out.foe.push('Auto-Battle was used: EXP halved');
+  if (battle.autoUsed) out.foe.push('Auto-Battle was used: EXP and prize money at 35%');
   return out;
 }

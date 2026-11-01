@@ -1,0 +1,18 @@
+{
+  "note": "Modifier Run (idea F77): every few completed encounters the player picks 1 of 3 blessings/curses. They stack for the rest of the run. Curses pay more at the end (rewardBonus).",
+  "every": 5,
+  "choices": 3,
+  "mutators": [
+    { "id": "fat-purse", "name": "Fat Purse", "kind": "blessing", "blurb": "Battle prize money +40%.", "money": 1.4 },
+    { "id": "quick-learner", "name": "Quick Learner", "kind": "blessing", "blurb": "EXP from battles +30%.", "xp": 1.3 },
+    { "id": "lucky-catch", "name": "Lucky Catch", "kind": "blessing", "blurb": "Poké Balls work 30% better.", "catch": 1.3 },
+    { "id": "easy-foes", "name": "Easy Foes", "kind": "blessing", "blurb": "Enemies are 2 levels lower.", "enemyLevel": -2 },
+    { "id": "big-bounty", "name": "Big Bounty", "kind": "blessing", "blurb": "Prize money +80%, EXP -10%.", "money": 1.8, "xp": 0.9 },
+    { "id": "tough-foes", "name": "Tough Foes", "kind": "curse", "blurb": "Enemies are 2 levels higher. End rewards +10%.", "enemyLevel": 2, "rewardBonus": 0.1 },
+    { "id": "lean-wallet", "name": "Lean Wallet", "kind": "curse", "blurb": "Prize money -30%. End rewards +10%.", "money": 0.7, "rewardBonus": 0.1 },
+    { "id": "slow-learner", "name": "Slow Learner", "kind": "curse", "blurb": "EXP -25%. End rewards +10%.", "xp": 0.75, "rewardBonus": 0.1 },
+    { "id": "shy-wilds", "name": "Shy Wilds", "kind": "curse", "blurb": "Poké Balls work 30% worse. End rewards +5%.", "catch": 0.7, "rewardBonus": 0.05 },
+    { "id": "hard-hitters", "name": "Hard Hitters", "kind": "curse", "blurb": "Enemies are 3 levels higher. End rewards +20%.", "enemyLevel": 3, "rewardBonus": 0.2 },
+    { "id": "poverty", "name": "Poverty", "kind": "curse", "blurb": "Prize money -50%. End rewards +15%.", "money": 0.5, "rewardBonus": 0.15 }
+  ]
+}

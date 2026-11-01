@@ -687,6 +687,8 @@ export const BattleStateSchema = z.object({
   spectacle: SpectacleBattleSchema.optional(),
   /** Auto-Battle (spec §32): the Pokémon chose at least one action this battle by themselves, so its EXP is reduced (core/run.ts awardExperience). Never cleared mid-battle. */
   autoUsed: z.boolean().optional(),
+  /** Nuzlocke: this wild Pokémon is not the area's first encounter, so it can't be caught (core/nuzlocke.ts). */
+  nuzlockeNoCatch: z.boolean().optional(),
   /** A fight on an expedition route: afterwards the run goes back to the expedition, not the map or a draft. */
   expedition: z.boolean().optional(),
   /** A double battle (core/battle/doubles.ts): the second Pokémon on each side. */
@@ -818,6 +820,8 @@ export const PendingDecisionSchema = z.discriminatedUnion('kind', [
   /** A Pokémon that knows four moves wants to learn another. */
   z.object({ kind: z.literal('learnMove'), uid: z.string(), moveId: z.string() }),
   /** A caught Pokémon waiting to join the party (or be released for candies). */
+  /** Modifier Run: pick 1 of 3 blessings/curses every few map stops (core/mutators.ts). */
+  z.object({ kind: z.literal('mutator'), choices: z.array(z.string()).min(1) }),
   z.object({ kind: z.literal('caught'), mon: PokemonInstanceSchema, /** A beaten raid boss joining: the raid's tier (picks the capture jingle). */ raidTier: z.number().int().min(1).max(6).optional() }),
   /** A TM or HM: pick which of these moves the Pokémon learns (or skip). */
   z.object({ kind: z.literal('teachMove'), uid: z.string(), itemName: z.string(), moveIds: z.array(z.string()).min(1) }),
@@ -1116,6 +1120,13 @@ export const RunStateSchema = z.object({
   perkEffects: z.array(ArchetypeModifierSchema).default([]),
   /** Bank licenses owned when the run began (Scavenger, Fortune, Survival work inside the run). Older runs have none. */
   licenses: z.array(z.string()).optional(),
+  /** Nuzlocke and Hardcore Nuzlocke: areas whose one catch is spent and the fallen (core/nuzlocke.ts). */
+  nuzlocke: z.object({
+    areas: z.array(z.string()),
+    memorial: z.array(z.object({ uid: z.string(), speciesId: z.string(), level: z.number().int(), shiny: z.boolean(), ace: z.boolean(), area: z.string(), cause: z.string() })),
+  }).optional(),
+  /** Modifier Run: the blessings and curses picked so far (they stack). */
+  mutators: z.array(z.string()).optional(),
   /** Effects of the last temporary signature choice per mechanic, so the next choice can replace them. */
   /** Encore! Hype carried between battles (reset after a boss battle). */
   hype: z.number().int().min(0).default(0),
@@ -1376,6 +1387,10 @@ export const LegacySchema = z.object({
   regionIntel: z.record(z.string(), z.object({ visits: z.number().int().min(0), clears: z.number().int().min(0), bestBadges: z.number().int().min(0) })).default({}),
   /** Seed Shelf: shared seed codes kept for later (core/seedCode.ts). */
   seedShelf: z.array(z.object({ code: z.string(), label: z.string(), at: z.string() })).default([]),
+  /** Local Daily and Weekly scoreboards (core/boards.ts): the best runs on this device, by board key. */
+  boards: z.record(z.string(), z.array(z.object({ key: z.string(), runId: z.string(), at: z.string(), archetypeId: z.string(), score: z.number().int(), badges: z.number().int(), encounters: z.number().int(), victory: z.boolean() }))).default({}),
+  /** Co-op ghosts imported from a friend's code, by seed (core/ghost.ts). */
+  ghosts: z.record(z.string(), z.object({ from: z.string(), victory: z.boolean(), badges: z.number().int(), regionReached: z.number().int(), encounters: z.number().int(), team: z.array(z.string()), actions: z.array(z.string()) })).default({}),
 });
 export type LegacyState = z.infer<typeof LegacySchema>;
 

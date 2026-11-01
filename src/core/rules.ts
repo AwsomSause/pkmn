@@ -65,7 +65,7 @@ export const RunRulesDataSchema = z.object({
     once: z.object({ pool: z.string().optional(), trainer: z.string().optional(), title: z.string().optional(), bankCredits: z.number().int().optional(), text: z.string() }),
     repeat: z.object({ bankCredits: z.number().int().optional(), candies: z.number().int().optional(), text: z.string() }),
   })),
-  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), maxWipes: z.number().int().min(1).optional(), xpScale: z.number().positive().optional(), spookyChance: z.number().min(0).max(1).optional(), campaignId: z.string().optional(), bundles: z.array(z.string()).optional(), rewardScale: z.number().min(0).max(1).optional(), blurb: z.string() })).min(1),
+  modes: z.array(z.object({ id: z.string(), name: z.string(), status: Status, progressionEligible: z.boolean(), checkpoints: z.boolean(), wipeMoneyLoss: z.number().min(0).max(1).optional(), dailySeed: z.boolean().optional(), weeklySeed: z.boolean().optional(), loopLevelBonus: z.number().int().optional(), loopLimit: z.number().int().min(1).optional(), maxWipes: z.number().int().min(1).optional(), xpScale: z.number().positive().optional(), spookyChance: z.number().min(0).max(1).optional(), campaignId: z.string().optional(), bundles: z.array(z.string()).optional(), rewardScale: z.number().min(0).max(1).optional(), /** Nuzlocke / Modifier Run: added to the reward multiplier. */ rewardBonus: z.number().min(0).optional(), /** Nuzlocke rules (core/nuzlocke.ts). */ nuzlocke: z.enum(['standard', 'hardcore']).optional(), /** Modifier Run: a blessing/curse pick every N completed encounters (core/mutators.ts). */ mutatorEvery: z.number().int().min(1).optional(), blurb: z.string() })).min(1),
 });
 export const RUN_RULES = RunRulesDataSchema.parse(rulesJson);
 
@@ -93,6 +93,7 @@ export function rulesProblem(choice: RulesChoice): string | null {
   if (!mode) return `Unknown mode "${choice.modeId}"`;
   if (mode.status !== 'supported') return `${mode.name} is not available yet`;
   if (!getDifficulty(choice.difficultyId)) return `Unknown difficulty "${choice.difficultyId}"`;
+  if (mode.nuzlocke && choice.deathBlock) return 'Death-Block cannot be used in a Nuzlocke (fainted Pokémon are lost for good)';
   if (new Set(choice.modifierIds).size !== choice.modifierIds.length) return 'A modifier is chosen twice';
   for (const id of choice.modifierIds) {
     const m = getModifier(id);
@@ -113,7 +114,7 @@ export function rewardMultiplier(choice: RulesChoice): number {
   const mode = getMode(choice.modeId);
   if (!mode?.progressionEligible || choice.noRewards) return 0;
   const difficulty = getDifficulty(choice.difficultyId)?.multiplier ?? 1;
-  const bonus = choice.modifierIds.reduce((sum, id) => sum + (getModifier(id)?.bonus ?? 0), 0);
+  const bonus = choice.modifierIds.reduce((sum, id) => sum + (getModifier(id)?.bonus ?? 0), 0) + (mode.rewardBonus ?? 0);
   const capped = Math.min(RUN_RULES.multiplierCap, difficulty * (1 + bonus));
   const scaled = capped * (mode.rewardScale ?? 1);
   const total = choice.deathBlock ? scaled * RUN_RULES.deathBlock.multiplier : scaled;

@@ -149,12 +149,12 @@ describe('Auto-Battle EXP', () => {
     const result = takeTurn(content, run, { kind: 'move', index: 0 });
     return result.run.party[0]!.xp - before;
   }
-  it('halves EXP for a battle that used Auto-Battle', () => {
+  it('cuts EXP to 35% for a battle that used Auto-Battle', () => {
     const manual = winWith(false);
     const auto = winWith(true);
     expect(manual).toBeGreaterThan(1);
     expect(auto).toBe(Math.floor(manual * content.balance.difficulty.autoBattleXp));
-    expect(content.balance.difficulty.autoBattleXp).toBe(0.5);
+    expect(content.balance.difficulty.autoBattleXp).toBe(0.35);
   });
   it('the flag survives a save round trip, so switching to manual later cannot undo it', () => {
     const run = fight();

@@ -12,6 +12,10 @@ import { attributeChanges } from '../core/attributes';
 import { topMoments } from '../core/story/record';
 import { buildRecap } from '../core/recap';
 import { encodeSeedCode } from '../core/seedCode';
+import { boardKey } from '../core/boards';
+import { encodeGhostCode, ghostFor, ghostFromRecord, ghostLines } from '../core/ghost';
+import { getMutator } from '../core/mutators';
+import { memorialLines } from '../core/nuzlocke';
 import { campaignCounts, getMode } from '../core/rules';
 import Phaser from 'phaser';
 import { timelineOutcome, TIMELINE } from '../core/timeline/frontRunner';
@@ -52,6 +56,15 @@ export class GameOverScene extends Phaser.Scene {
       const leadName = lead ? `${session.content.species.get(lead.speciesId)?.name} (Lv${lead.level})` : '—';
       const by = run.log.defeatedBy;
       const byName = by ? `${by.trainer ? `${by.trainer}'s ` : ''}${session.content.species.get(by.speciesId)?.name ?? by.speciesId} (Lv${by.level})` : null;
+      const ghost = ghostFor(session.profile, run.seed);
+      // G copies a ghost code of this run for a friend to race (core/ghost.ts).
+      const record = session.profile.legacyRuns?.find((r) => r.runId === run.runId);
+      if (record) {
+        this.input.keyboard?.on('keydown-G', () => {
+          const code = encodeGhostCode({ seed: run.seed, archetypeId: run.archetypeId, rules: run.rules }, ghostFromRecord(record, 'A friend'));
+          void navigator.clipboard?.writeText(code).catch(() => undefined);
+        });
+      }
       this.add.text(
         44,
         84,
@@ -64,8 +77,11 @@ export class GameOverScene extends Phaser.Scene {
           `Money left: ₽${run.money}`,
           `Candies earned: ${run.candies}`,
           ...(byName ? [`Defeated by ${byName}`] : []),
-          `Seed: ${run.seed}`,
+          `Seed: ${run.seed}${record ? '  (G: copy ghost code)' : ''}`,
           `Seed code: ${encodeSeedCode({ seed: run.seed, archetypeId: run.archetypeId, rules: run.rules })}`,
+          ...(ghost ? ghostLines(ghost, { victory: !!run.victory, badges: run.badges.length, encounters: run.encountersCompleted }, (id) => session.content.species.get(id)?.name ?? id).slice(0, 5) : []),
+          ...(run.nuzlocke?.memorial.length ? ['Memorial:', ...memorialLines(session.content, run).slice(0, 6)] : []),
+          ...(run.mutators?.length ? [`Modifiers: ${run.mutators.map((id) => getMutator(id)?.name ?? id).join(', ')}`] : []),
           ...recapLines,
         ].join('\n'),
         textStyle(15, COLORS.text, { lineSpacing: 2, wordWrap: { width: 410 } }),
@@ -133,7 +149,7 @@ export class GameOverScene extends Phaser.Scene {
         if (i === 1 && run) {
           // Same seed, trainer, preparation and rules. Daily seeds pay their account rewards once, so a retry pays nothing.
           const { note: _note, ...prep } = run.prep;
-          const rules = { modeId: run.rules.modeId, difficultyId: run.rules.difficultyId, modifierIds: run.rules.modifierIds, deathBlock: run.rules.deathBlock, ...(getMode(run.rules.modeId)?.dailySeed ? { noRewards: true } : {}) };
+          const rules = { modeId: run.rules.modeId, difficultyId: run.rules.difficultyId, modifierIds: run.rules.modifierIds, deathBlock: run.rules.deathBlock, ...(getMode(run.rules.modeId)?.dailySeed || boardKey(run.seed) ? { noRewards: true } : {}) };
           session.newRun(run.archetypeId, run.seed, undefined, prep, rules);
           this.scene.start('StarterSelect');
           return;

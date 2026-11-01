@@ -35,10 +35,10 @@ export const LEGACY = z.object({
   seedShelf: z.object({ slots: z.number().int() }),
 }).parse(legacyJson);
 
-const EMPTY: LegacyState = { prestige: 0, tree: [], contacts: [], museum: [], regionIntel: {}, seedShelf: [] };
+const EMPTY: LegacyState = { prestige: 0, tree: [], contacts: [], museum: [], regionIntel: {}, seedShelf: [], boards: {}, ghosts: {} };
 export const legacyOf = (p: Pick<Profile, 'legacy'>): LegacyState => ({ ...EMPTY, ...p.legacy });
 /** Returns a new profile with its legacy state changed. */
-const withLegacy = (p: Profile, change: (l: LegacyState) => void): Profile => {
+export const withLegacy = (p: Profile, change: (l: LegacyState) => void): Profile => {
   const profile = structuredClone(p);
   const l = legacyOf(profile);
   change(l);

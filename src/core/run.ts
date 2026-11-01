@@ -155,6 +155,8 @@ import { trackFeelings } from './bond/feelings';
 import { openingDrama, planDrama, type DialogueFrequency, type DramaLine } from './drama';
 import { createStoryState, emit } from './story/record';
 import { createPartyLife, partyLifeCamp, partyLifeTurn, partyLifeVictory } from './partyLife';
+import { claimArea, nuzlockeCatchProblem, buryFallen, isHardcore } from './nuzlocke';
+import { applyMutator, mutatorCatch, mutatorDue, mutatorMoney, mutatorOffer, mutatorXp } from './mutators';
 import { openingWild, softenOpeningMoves, extendEndless, spookyWild, noBattleItems, noEvolution, bossRemix, noHealStops, noRevives, quickWinBonus, battleMoneyScale, disabledByRules, joinProblem, lockSpecies, makeRules, partyCap, pickGeneration, randomDraft, rulesCampaign, startScale, wantsCheckpoint, wantsGenerationLock, wantsRandomDraft, wantsTypeLock, getMode, RUN_RULES, type RulesChoice } from './rules';
 import { withChampionTeam } from './story/championDefense';
 import { grandGauntlet, gauntletRival, markGauntletFight } from './story/gauntlet';
@@ -1012,6 +1014,7 @@ export function fish(content: Content, current: RunState, sideId: string, index:
   if (pick.shiny) countShiny(run, pick.speciesId);
   run.battle = createBattle('wild', [enemy], activeIndex, run.party[activeIndex]!.uid);
   run.battle.fishing = true;
+  claimArea(run);
   discover(run, enemy.speciesId, false);
   run.phase = 'battle';
   recordBattleStarted(content, run);
@@ -1242,10 +1245,17 @@ function narrativeDefeatEnd(content: Content, run: RunState, def: NonNullable<Re
   continueAfterDecisions(content, run);
 }
 
+/** Who beat the fallen, for the memorial. */
+function battleCause(content: Content, battle: BattleState): string {
+  const foe = currentEnemy(battle);
+  return battle.trainer ? `lost to ${battle.trainer.name}` : `lost to a wild ${getSpecies(content, foe.speciesId).name}`;
+}
+
 /** A lost or timed-out raid: no rewards, the party is back on its feet, and the run goes on. */
 function failRaid(content: Content, run: RunState): void {
   const battle = run.battle!;
   const raidId = battle.raid?.id ?? battle.totem!.id;
+  buryFallen(content, run, battleCause(content, battle));
   if (battle.raid && getRaid(content, battle.raid.id).grand) endGrandBattle(content, run, false, run.party[battle.activeIndex]?.uid);
   const frac = battle.totem ? content.totems.failureHealFraction : content.raids.failureHealFraction;
   // The timer ran out: the boss escapes and comes back in a later stage, changed (once).
@@ -1403,6 +1413,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       const echo = sacrificeEcho(content, run, enemy.speciesId, activeUid);
       if (echo) run.battle.rivalNote = echo;
     }
+    claimArea(run);
     const setup = wildBattleSetup(content, run, mods);
     if (setup.drop) run.itemCounters = { ...run.itemCounters, 'pinap-drop': 1 };
     if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
@@ -1912,7 +1923,7 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     rng,
     captureRng,
     speciesCaught: run.log.speciesCaught,
-    catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(run.battle!)) * wildCatchMultiplier(content, run),
+    catchMultiplier: captureMultiplier(archetype) * attributes.catchRate * throwMultiplier(content, run, currentEnemy(run.battle!)) * wildCatchMultiplier(content, run) * mutatorCatch(run),
     healMultiplier: healingMultiplier(archetype) * attributes.healing,
     typeModifiers: typeModifiers(archetype),
     perks: archetype.modifiers,
@@ -1922,6 +1933,8 @@ function battleContext(content: Content, run: RunState, rng: Rng, captureRng: Rn
     hyper: hyperRng ? buildHyperContext(content, run, hyperRng) : undefined,
     teamItems: run.passives,
     noBattleItems: noBattleItems(run.rules),
+    setStyle: isHardcore(run.rules),
+    catchBlocked: nuzlockeCatchProblem(run.battle!),
     bondScore: (uid) => bondScoreOf(run.story.histories[uid]?.bond),
   };
 }
@@ -2038,6 +2051,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
     return { run, events, end, defeated: false, cues, drama };
   }
   if (battle.outcome === 'lose' && battle.expedition && run.expedition) {
+    buryFallen(content, run, battleCause(content, battle));
     run.expedition.battleResult = 'lose';
     run.battle = null;
     run.phase = 'expedition';
@@ -2148,7 +2162,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
   const archetype = runArchetype(content, run);
   const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
-  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (getMode(run.rules.modeId)?.xpScale ?? 1) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.autoUsed ? content.balance.difficulty.autoBattleXp : 1) * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
+  const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (getMode(run.rules.modeId)?.xpScale ?? 1) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.autoUsed ? content.balance.difficulty.autoBattleXp : 1) * mutatorXp(run) * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);
@@ -2204,6 +2218,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
     run.party = run.party.filter((m) => m.uid !== battle.loaner);
     battle.participants = battle.participants.filter((u) => u !== battle.loaner);
   }
+  // Nuzlocke: the fallen are lost for good.
+  buryFallen(content, run, battleCause(content, battle));
   const archetype = runArchetype(content, run);
   let base: number;
   const topLevel = Math.max(...battle.enemyTeam.map((m) => m.level));
@@ -2233,7 +2249,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   // Trainers.md perks: boss prize money, and the prize after catching a wild Pokémon.
   const perks = runPerks(content, run);
   if (battle.outcome === 'caught') moneyGained = Math.floor(moneyGained * catchMoneyPerk(perks));
-  moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules));
+  moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules) * mutatorMoney(run) * (battle.autoUsed ? content.balance.difficulty.autoBattleXp : 1));
   if (battle.kind === 'trainer') moneyGained += quickWinBonus(run.rules, battle.turn - 1);
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
@@ -2450,6 +2466,8 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   run.encountersCompleted += 1;
   count(run, 'encountersCompleted');
   run.log.battlesWon += 1;
+  // Modifier Run: every few battles, pick a blessing or curse.
+  if (!run.victory && mutatorDue(getMode(run.rules.modeId)?.mutatorEvery, run.encountersCompleted)) run.pending.push({ kind: 'mutator', choices: mutatorOffer(run, (run.mutators ?? []).length) });
   // Eggs: one more battle (won or caught) for every battle Egg (stage Eggs count at each new stage).
   if (!run.victory) tickEggs(content, run, 'battle');
   // A Pokémon from a past run comes to meet you (after any caught Pokémon's decision).
@@ -2602,6 +2620,7 @@ export type DecisionChoice =
   | { kind: 'release' }
   | { kind: 'sendToBox' }
   | { kind: 'signature'; optionIndex: number }
+  | { kind: 'mutator'; optionIndex: number }
   | { kind: 'keepsake' }
   | { kind: 'teachMove'; moveIndex: number }
   | { kind: 'ppUpMove'; moveIndex: number }
@@ -2722,6 +2741,12 @@ export function resolveDecision(content: Content, current: RunState, choice: Dec
     } else {
       throw new Error('Choose a move to teach, or skip');
     }
+  } else if (decision.kind === 'mutator') {
+    if (choice.kind !== 'mutator') throw new Error('Choose one of the modifiers');
+    const id = decision.choices[choice.optionIndex];
+    if (!id) throw new Error('Choose one of the modifiers');
+    const m = applyMutator(run, id);
+    message = `${m.name}: ${m.blurb}`;
   } else if (decision.kind === 'signature') {
     if (choice.kind !== 'signature') throw new Error('Choose one of the options');
     const chosen = chooseSignatureOption(run, choice.optionIndex);
