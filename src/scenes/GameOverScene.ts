@@ -5,6 +5,7 @@
 // composition centered on the last party"): in victory they hop in and gold
 // confetti falls; in defeat they settle in quietly, a little dimmed.
 
+import { endOfRunLetter, rivalNickname } from '../core/rivals/ledger';
 import { RANK_NAMES } from '../core/mastery';
 import { contractRewardText } from '../core/contracts';
 import { gameRewardText } from '../core/gameEvents';
@@ -146,6 +147,10 @@ export class GameOverScene extends Phaser.Scene {
     } else {
       lines.push('This run was already added to your profile.');
     }
+    // I185: a rival writes to you the moment the run ends, in their own voice.
+    const newest = session.profile.legacyRuns[0];
+    const letter = newest && run && newest.runId === run.runId ? endOfRunLetter(newest, rivalNickname(session.profile.legacyRuns)) : null;
+    if (letter) lines.push('', `Letter from ${letter.from}: "${letter.text}"`);
     const reflection = run && !won ? whatIf(session.content, run) : null;
     if (reflection) lines.unshift(reflection, '');
     this.add.text(500, 84, lines.join('\n'), textStyle(18, COLORS.textLight, { lineSpacing: 3, wordWrap: { width: GAME_WIDTH - 540 } }));

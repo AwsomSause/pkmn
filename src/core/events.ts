@@ -32,6 +32,7 @@ import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { pastGauntletLeft, startPastGauntlet } from './memories/encounters';
 import { nextKeepsake, recoverKeepsake } from './memories/keepsakes';
+import { deliverLegacyEgg, legacyEggWaiting } from './memories/heirloom';
 import { noteChoice } from './memories/world';
 import { applyEvilEffect, evilBattle, evilBattleWon, evilConditionMet, evilConditionText } from './evil/teams';
 import { choiceMade, recordChoice } from './evil/choices';
@@ -152,6 +153,8 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return (run.past?.gauntlet.length ?? 0) >= c.atLeast && pastGauntletLeft(run) === 0 && !run.story.flags['pgaunt:started'];
     case 'keepsake':
       return nextKeepsake(run) !== null;
+    case 'legacyEgg':
+      return legacyEggWaiting(run);
     case 'partyTag':
       return run.party.some((m) => content.species.get(m.speciesId)?.tags.includes(c.tag));
     case 'bond':
@@ -288,6 +291,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs ${c.atLeast} teams from past runs`;
     case 'keepsake':
       return 'Needs an item from an earlier run';
+    case 'legacyEgg':
+      return 'Needs a Legacy Egg from an earlier run';
   }
 }
 
@@ -695,6 +700,8 @@ export function effectWords(content: Content, e: EventEffect): string {
       return `${e.teams} of your old teams will come for you`;
     case 'recoverKeepsake':
       return 'an item from an earlier run';
+    case 'legacyEgg':
+      return 'a Legacy Egg';
     case 'tournament':
       return e.round === 9 ? 'tournament over' : 'tournament round';
     case 'recruit':
@@ -929,6 +936,8 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       return startPastGauntlet(content, run, e.teams) > 0 ? effectWords(content, e) : 'no old teams to face yet';
     case 'recoverKeepsake':
       return recoverKeepsake(content, run) ?? 'nothing was left to recover';
+    case 'legacyEgg':
+      return deliverLegacyEgg(content, run) ?? 'there was no egg to hand over';
     case 'recruit':
       run.itemCounters = { ...run.itemCounters, [`recruit:${e.trainer}`]: 1 };
       recordChoice(content, run, { id: `recruit-${e.trainer}`, pick: 'yes', text: `Recruited ${content.archetypes.get(e.trainer)?.name ?? e.trainer} to your roster`, weight: 2 });

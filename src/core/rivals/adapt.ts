@@ -76,6 +76,12 @@ export function usedTypes(content: Content, run: RunState): TypeName[] {
   return [...counts.entries()].sort((a, b) => b[1] - a[1]).map(([type]) => type);
 }
 
+/** W6 I164: the type you told your rival to build around (events rival-asks-advice) is on their next roster. */
+export function advisedTypes(run: RunState): TypeName[] {
+  const flags = run.story.flags;
+  return (['water', 'fire'] as const).filter((t) => Number(flags[`ev:rival-advised-${t}`] ?? 0) > 0 || Number(flags[`ev:inherit-rival-advice-${t}`] ?? 0) > 0);
+}
+
 export interface RivalReturn {
   plan: TrainerPlan;
   /** What the rival learned, shown before the battle (null if nothing in its team helps). */
@@ -115,7 +121,7 @@ function baseReturn(content: Content, run: RunState, rival: Rival, plan: Trainer
   const type = mostUsedType(content, run);
   const seen = bondNote(rival);
   // A trainer perk (Blue, Gen 3): the rival always carries a Pokémon of some type (Blaine: Water).
-  const planned = withTeamTypes(content, revised, rivalTeamTypes(perks));
+  const planned = withTeamTypes(content, revised, [...rivalTeamTypes(perks), ...advisedTypes(run)]);
   if (!type || !mods.canAdapt || rival.adaptations.length >= mods.adaptCap) return { plan: planned, note: seen };
   const bias = (speciesId: string) => mods.statBias.reduce((sum, stat) => sum + (getSpecies(content, speciesId).baseStats[stat as 'hp'] ?? 0), 0);
   // One counter-pick for the type you use most; a trainer perk adds a counter for the next most used types.

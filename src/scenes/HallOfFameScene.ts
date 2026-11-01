@@ -5,6 +5,7 @@
 import Phaser from 'phaser';
 import { hallOfFame } from '../core/hallOfFame';
 import { rivalHallOfFame } from '../core/legacyRuns';
+import { headToHead, rivalNickname, scoreboardLine } from '../core/rivals/ledger';
 import type { RunRecord } from '../core/state';
 import { services } from '../game/services';
 import { AERO, type MotionLevel } from '../ui/aero';
@@ -127,6 +128,18 @@ export class HallOfFameScene extends Phaser.Scene {
           heading(box, `⚔ Rival Hall of Fame · ${rv.name}${rv.title ? ` · ${TITLE[rv.title]}` : ''}`, '#ff9fb8');
           if (rv.signature) icon(box, rv.signature, 40, 64, 1.8, false, i);
           box.add(this.add.text(80, 46, `${rv.signature ? `${name(rv.signature)}  ·  ` : ''}${region}  ·  met ${rv.encounters}×  ·  ${rv.relationship}  ·  ${rv.defeatedByYou ? 'You beat them' : 'Undefeated by you'}`, textStyle(16, '#ffffff', { wordWrap: { width: w - 100 } })));
+        },
+      });
+    }
+    // Rivalry ledger (F126, I182): the head-to-head record with every rival you have fought, over all runs.
+    const board = headToHead(session.profile.legacyRuns);
+    if (board.length > 0) {
+      rows.push({
+        problem: null,
+        hint: board.map(scoreboardLine).join(' · '),
+        draw: (_scene, box, w) => {
+          heading(box, `⚔ Rivalry Ledger · they call you “${rivalNickname(session.profile.legacyRuns)}”`, '#ff9fb8');
+          box.add(this.add.text(20, 46, board.slice(0, 3).map(scoreboardLine).join('\n'), textStyle(15, '#ffffff', { wordWrap: { width: w - 40 } })));
         },
       });
     }

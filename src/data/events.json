@@ -4729,6 +4729,22 @@
        }
       ]
      }
+    },
+    {
+     "label": "Ask about an old friend's egg",
+     "requires": [
+      {
+       "kind": "legacyEgg"
+      }
+     ],
+     "success": {
+      "text": "\"Oh, that one! It has been waiting for you.\"",
+      "effects": [
+       {
+        "kind": "legacyEgg"
+       }
+      ]
+     }
     }
    ]
   },
@@ -16281,6 +16297,22 @@
         "shinyMultiplier": 2,
         "left": 3,
         "unit": "battle"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ask about the egg an old friend left",
+     "requires": [
+      {
+       "kind": "legacyEgg"
+      }
+     ],
+     "success": {
+      "text": "\"Ah, yes. That one has been waiting for you.\"",
+      "effects": [
+       {
+        "kind": "legacyEgg"
        }
       ]
      }
@@ -51461,6 +51493,2001 @@
         }
        ]
       }
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-text-support",
+   "name": "A Message From a Friend",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#242030",
+    "effect": "hearts"
+   },
+   "intro": "Your phone buzzes after the last fight. It is your rival: \"Saw the result. Nobody else could have done that. Keep going.\"",
+   "choices": [
+    {
+     "label": "Write back (safe)",
+     "success": {
+      "text": "You trade three messages and a bad joke. It helps more than you expected.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival texted after a big win: support, and a bad joke.",
+        "importance": 60
+       }
+      ]
+     }
+    },
+    {
+     "label": "Read it twice and pocket the phone",
+     "success": {
+      "text": "Some things are better left unanswered.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-text-taunt",
+   "name": "A Message From an Adversary",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "flicker"
+   },
+   "intro": "Your phone buzzes after the last fight. Your rival: \"One win. Do not get comfortable. I am coming for the rest.\"",
+   "choices": [
+    {
+     "label": "Reply with a single word: \"Good.\"",
+     "success": {
+      "text": "The three dots appear and disappear for a full minute. Your team feels sharper.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": 2
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Ignore it (safe)",
+     "success": {
+      "text": "You mute the thread and walk on lighter than before.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-care-package",
+   "name": "A Care Package",
+   "group": "Rival Interactions",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a30",
+    "effect": "hearts"
+   },
+   "intro": "A parcel is waiting at the healing stop. The tag says only: \"Heard it was rough. - your rival\". Inside are supplies packed with surprising care.",
+   "choices": [
+    {
+     "label": "Open it (safe)",
+     "success": {
+      "text": "Berries, a full set of potions and a note: \"Do not lose before I get my rematch.\"",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "money",
+        "amount": 500
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival sent a care package.",
+        "importance": 65
+       }
+      ]
+     }
+    },
+    {
+     "label": "Share it with the team",
+     "success": {
+      "text": "Everyone gets a portion. They remember who it came from.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-trap-gift",
+   "name": "A Gift You Should Question",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d24",
+    "effect": "flicker"
+   },
+   "intro": "A boxed gift with your rival's handwriting on the tag sits on a bench. The wrapping is too neat for someone who hates you.",
+   "choices": [
+    {
+     "label": "Open it anyway (risky)",
+     "check": "intelligence",
+     "success": {
+      "text": "A smoke bomb. Your team coughs through the next battle in their heads, and you laugh in spite of yourself.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "life-orb",
+         "choice-band",
+         "lucky-punch",
+         "macho-brace",
+         "smoke-ball"
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival left you a prank gift.",
+        "importance": 55
+       }
+      ]
+     },
+     "failure": {
+      "text": "It was a trap: the box burst. Your team is rattled.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 2
+       },
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Have a Pokémon sniff it first (safe)",
+     "success": {
+      "text": "Your lead growls at the box. You leave it on the bench for the next fool.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "lead"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-map-note",
+   "name": "A Note Left Behind",
+   "group": "Rival Interactions",
+   "rarity": "common",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#242030",
+    "effect": "float"
+   },
+   "intro": "Scratched into a signpost, in a hand you know: \"Been here first. The path to the east is safe. The one north is not. - R.\"",
+   "choices": [
+    {
+     "label": "Trust the note (safe)",
+     "success": {
+      "text": "You take the east path. The note was right.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    },
+    {
+     "label": "Take the path it warns against",
+     "check": "luck",
+     "success": {
+      "text": "Probably a trick. Probably.",
+      "effects": [
+       {
+        "kind": "skipAhead"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "It was not a trick. You limp back.",
+      "effects": [
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Add a note of your own",
+     "success": {
+      "text": "\"Slow down. - Me.\" You hope they read it.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-buyout",
+   "name": "Emptied Shelves",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d18",
+    "effect": "rattle"
+   },
+   "intro": "The shopkeeper wrings their hands: \"Your rival came through and bought out every ball and potion. Paid double. Said you would need them.\"",
+   "choices": [
+    {
+     "label": "Pay the shopkeeper for their trouble",
+     "success": {
+      "text": "You buy what is left at a steep markup. Your rival's grin is almost audible.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": -400
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Track down the rival (risky)",
+     "success": {
+      "text": "They are three roads away, already waving a bag of your potions.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Hoarder",
+       "rival": true,
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 900
+        },
+        {
+         "kind": "heal",
+         "share": 1
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "oran-berry",
+          "sitrus-berry",
+          "lum-berry"
+         ]
+        },
+        {
+         "kind": "flag",
+         "key": "rival-heat",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Shrug and move on",
+     "success": {
+      "text": "There will be other shops.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-asks-advice",
+   "name": "Advice, Reluctantly",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2a30",
+    "effect": "sparkle"
+   },
+   "intro": "Your rival blocks the road, arms folded. \"I am not asking for help. I am asking what you would pick. A strong Fire team, or a Water team that hits everything twice?\"",
+   "choices": [
+    {
+     "label": "\"Go Water. Always Water.\"",
+     "success": {
+      "text": "They nod, hating how sensible it sounds. Next time they meet you, they will have taken it.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "carry-rival-advice-water",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-advised-water",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival asked your advice: you told them Water.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "\"Fire. Hit first, hit hard.\"",
+     "success": {
+      "text": "A slow grin. \"That is what I was going to do.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "carry-rival-advice-fire",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-advised-fire",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival asked your advice: you told them Fire.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Tell them to figure it out",
+     "success": {
+      "text": "They glare. Then they spend an hour working it out and win by a hair next time.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-advised-none",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-one-turn-duel",
+   "name": "Bragging Rights",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1d",
+    "effect": "spin"
+   },
+   "intro": "Mid-stride, your rival grabs your sleeve. \"One Pokémon each. Whoever is standing after one turn wins bragging rights. Deal?\"",
+   "choices": [
+    {
+     "label": "Deal (risky)",
+     "success": {
+      "text": "Both of you call your lead at once.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Bragging Rights",
+       "rival": true,
+       "size": 1,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 400
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You won bragging rights in a one-Pokémon duel.",
+         "importance": 65
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Decline, with a smile (safe)",
+     "success": {
+      "text": "\"Coward.\" They are smiling too.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-grudge-spot",
+   "name": "Their Spot",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "partySize",
+     "atLeast": 3
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d24",
+    "effect": "rattle"
+   },
+   "intro": "Your rival has been camped beside a tall patch of grass for hours, waiting on one Pokémon. You see it and your Poké Ball is already in your hand.",
+   "choices": [
+    {
+     "label": "Catch it first",
+     "success": {
+      "text": "It is yours. They will remember.",
+      "effects": [
+       {
+        "kind": "join",
+        "shadow": false,
+        "species": [],
+        "types": [],
+        "levelBonus": 0,
+        "shinyMultiplier": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 2
+       },
+       {
+        "kind": "moment",
+        "text": "You caught the Pokémon your rival had waited hours for.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let them have it (safe)",
+     "success": {
+      "text": "They catch it, stunned that you stepped aside. A long, quiet moment follows.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "You gave your rival their catch.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Race them for it (risky)",
+     "success": {
+      "text": "You both lunge for the Poké Ball at the same moment.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Catch Race",
+       "rival": true,
+       "size": 2,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "join",
+         "shadow": false,
+         "species": [],
+         "types": [],
+         "levelBonus": 0,
+         "shinyMultiplier": 1
+        },
+        {
+         "kind": "flag",
+         "key": "rival-heat",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-berry-boss",
+   "name": "A Berry for the Road",
+   "group": "Rival Interactions",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1d",
+    "effect": "hearts"
+   },
+   "intro": "Your rival catches up to you outside the gate with a single berry in their hand, unripe at the edges. \"For luck. Do not make a big deal of it.\"",
+   "choices": [
+    {
+     "label": "Take it and say thank you",
+     "success": {
+      "text": "You hold it as you go in. It is heavier than a berry should be.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival gave you a berry before a big fight.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Tell them to keep it for themselves",
+     "success": {
+      "text": "They press it into your palm anyway.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "oran-berry",
+         "sitrus-berry",
+         "lum-berry"
+        ]
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-mon-greeting",
+   "name": "Greetings Between Teams",
+   "group": "Rival Interactions",
+   "rarity": "common",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a38",
+    "effect": "hearts"
+   },
+   "intro": "Before you can even speak, the two teams spill out of their balls. Your Pokémon and your rival's Pokémon bow, squeak, and bump noses like old schoolmates.",
+   "choices": [
+    {
+     "label": "Let them play (safe)",
+     "success": {
+      "text": "For five minutes there is no rival, just pals.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Join in",
+     "success": {
+      "text": "You and your rival end up on the grass, laughing.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "attribute",
+        "key": "love",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-coaching",
+   "name": "The Post-Mortem",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2230",
+    "effect": "sparkle"
+   },
+   "intro": "Your rival has been reading about your last battle. \"Your lead was in the wrong slot. You wasted your first turn. And you flinch when the crowd gets loud.\"",
+   "choices": [
+    {
+     "label": "Listen and take notes (safe)",
+     "success": {
+      "text": "It stings. It also helps. Your next battle will go smoother.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "attribute",
+        "key": "intelligence",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival coached you through your last fight.",
+        "importance": 65
+       }
+      ]
+     }
+    },
+    {
+     "label": "Argue",
+     "success": {
+      "text": "You are both a little right. A very loud half hour follows.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-race",
+   "name": "First Pick",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1d",
+    "effect": "spin"
+   },
+   "intro": "A crate of supplies sits on the far side of the field. Your rival is already looking at it, already leaning forward. \"First one there gets first pick.\"",
+   "choices": [
+    {
+     "label": "Race them",
+     "check": "speed",
+     "success": {
+      "text": "You get there a half step ahead. First pick is yours.",
+      "effects": [
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "leftovers",
+         "focus-sash",
+         "life-orb",
+         "choice-band",
+         "lucky-punch",
+         "macho-brace",
+         "smoke-ball"
+        ]
+       },
+       {
+        "kind": "money",
+        "amount": 300
+       },
+       {
+        "kind": "moment",
+        "text": "You beat your rival to the crate.",
+        "importance": 55
+       }
+      ]
+     },
+     "failure": {
+      "text": "They get there first and take the best thing. You settle for scraps.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 150
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Let them go ahead",
+     "success": {
+      "text": "They take the best thing and leave you a nice second.",
+      "effects": [
+       {
+        "kind": "money",
+        "amount": 200
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-eavesdrop",
+   "name": "Overheard",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d1d28",
+    "effect": "fog"
+   },
+   "intro": "Behind a thin wall you hear your rival on a call, speaking quietly. They are planning something: which road they will take, which gym they will challenge first.",
+   "choices": [
+    {
+     "label": "Take notes (risky)",
+     "check": "intelligence",
+     "success": {
+      "text": "You know their route. When you meet, you will be ready.",
+      "effects": [
+       {
+        "kind": "revealStops"
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     },
+     "failure": {
+      "text": "A board creaks. They know you were there.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Walk away (safe)",
+     "success": {
+      "text": "Some secrets are not yours to carry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You overheard your rival and left without a word.",
+        "importance": 60
+       }
+      ]
+     }
+    },
+    {
+     "label": "Knock and say hello",
+     "success": {
+      "text": "They stop talking mid-sentence, then laugh. \"Of course it is you.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-mentor-appears",
+   "name": "Their Mentor Comes Calling",
+   "group": "Rival Interactions",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 3
+    },
+    {
+     "kind": "flag",
+     "key": "rival-heat",
+     "atLeast": 3,
+     "atMost": 99
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a1d24",
+    "effect": "rattle"
+   },
+   "intro": "A weathered trainer with a familiar way of standing blocks the bridge. \"You have been unkind to my student. I would like to understand why.\"",
+   "choices": [
+    {
+     "label": "Explain yourself (safe)",
+     "check": "charisma",
+     "success": {
+      "text": "The mentor listens. You leave with a quieter conscience and a sharper tongue.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       },
+       {
+        "kind": "moment",
+        "text": "You explained yourself to your rival's mentor.",
+        "importance": 65
+       }
+      ]
+     },
+     "failure": {
+      "text": "They shake their head, unconvinced. \"I will see for myself.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Accept the challenge (risky)",
+     "success": {
+      "text": "\"Fine. Show me.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival's Mentor",
+       "classId": "veteran",
+       "size": 4,
+       "types": [],
+       "levelBonus": 3,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1200
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 60
+        },
+        {
+         "kind": "flag",
+         "key": "rival-heat",
+         "amount": -2
+        },
+        {
+         "kind": "moment",
+         "text": "You faced your rival's mentor and held your own.",
+         "importance": 80
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-memorial",
+   "name": "A Memorial",
+   "group": "Rival Interactions",
+   "rarity": "rare",
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "monRival",
+     "state": "sacrificed"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2230",
+    "effect": "rain"
+   },
+   "intro": "A small stone stands on a hill, a few wilted flowers around it. The Poké Ball charm beside it is your rival's. They are kneeling there, completely silent.",
+   "choices": [
+    {
+     "label": "Kneel beside them (safe)",
+     "success": {
+      "text": "You stay as long as they want. They leave you the charm.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "moment",
+        "text": "You kept a vigil beside your rival for the Pokémon they lost.",
+        "importance": 85
+       },
+       {
+        "kind": "relic",
+        "id": "rival-charm",
+        "name": "Fallen Partner's Charm",
+        "effects": [
+         {
+          "kind": "friendshipMultiplier",
+          "value": 1.15
+         },
+         {
+          "kind": "priceMultiplier",
+          "value": 1.05
+         }
+        ]
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave a flower and go",
+     "success": {
+      "text": "You put it down and leave them to it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-shared-drink",
+   "name": "One for the Road",
+   "group": "Rival Interactions",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalBeaten"
+    },
+    {
+     "kind": "rivalPath",
+     "path": "friend"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1d",
+    "effect": "hearts"
+   },
+   "intro": "After a close fight, your rival drops onto the bench beside you and hands over a cold drink. \"Do not tell anyone. I am going to teach you something.\"",
+   "choices": [
+    {
+     "label": "Learn the trick (safe)",
+     "success": {
+      "text": "A move you would never have found on your own. They watch your lead try it and almost smile.",
+      "effects": [
+       {
+        "kind": "eggMove"
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival taught you a secret move over a drink.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Just enjoy the drink",
+     "success": {
+      "text": "The silence is its own kind of gift.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-mind-games",
+   "name": "A Fake Lead",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "flicker"
+   },
+   "intro": "Your rival's team is in the open and their strongest-looking Pokémon sits in front. Too obviously in front. The corner of their mouth twitches.",
+   "choices": [
+    {
+     "label": "Call the bluff (risky)",
+     "check": "intelligence",
+     "success": {
+      "text": "Their real lead was waiting in the back. You see it coming and your team is ready.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 40
+       },
+       {
+        "kind": "moment",
+        "text": "You saw through your rival's fake lead.",
+        "importance": 70
+       },
+       {
+        "kind": "money",
+        "amount": 500
+       }
+      ]
+     },
+     "failure": {
+      "text": "It was no bluff. You eat the first hit.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "damage",
+        "share": 0.15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fight them straight",
+     "success": {
+      "text": "You do not play their game.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rival's Bluff",
+       "rival": true,
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 500
+        },
+        {
+         "kind": "flag",
+         "key": "rival-heat",
+         "amount": 1
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-gloat",
+   "name": "The Victory Lap",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "rivalPath",
+     "path": "rival"
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#38202a",
+    "effect": "sparkle"
+   },
+   "intro": "Your rival's team is still on the field, cheering. They look at you and do a slow lap around the grass. \"Say it with me: second place.\"",
+   "choices": [
+    {
+     "label": "Take it in silence (safe)",
+     "success": {
+      "text": "You nod and start planning. The training montage begins in your head.",
+      "effects": [
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "attribute",
+        "key": "ragePeace",
+        "amount": -1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-heat",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival gloated. You went away and trained.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Demand a rematch (risky)",
+     "success": {
+      "text": "\"Now? Fine.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Gloating Rival",
+       "rival": true,
+       "size": 3,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 800
+        },
+        {
+         "kind": "levels",
+         "amount": 1,
+         "who": "party"
+        },
+        {
+         "kind": "flag",
+         "key": "rival-heat",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You won the rematch right after the gloat.",
+         "importance": 80
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-cosplay",
+   "name": "Wearing Each Other's Colours",
+   "group": "Rival Interactions",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#242038",
+    "effect": "sparkle"
+   },
+   "intro": "Your rival turns up in a jacket that looks just like yours, a lookalike ball on their belt. They grin: \"Swap for a day? I wear yours, you wear mine.\"",
+   "choices": [
+    {
+     "label": "Swap (safe)",
+     "success": {
+      "text": "You walk one town in their shoes. It humbles both of you.",
+      "effects": [
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 2
+       },
+       {
+        "kind": "friendship",
+        "amount": 3,
+        "who": "party"
+       },
+       {
+        "kind": "moment",
+        "text": "You and your rival swapped styles for a day.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Fight in costume",
+     "success": {
+      "text": "\"Two imposters. Last one standing is the real one.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Costume Rival",
+       "rival": true,
+       "size": 3,
+       "types": [],
+       "levelBonus": 1,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 1
+        },
+        {
+         "kind": "research",
+         "amount": 20
+        }
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-promise-make",
+   "name": "Same Place, Next Time",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    },
+    {
+     "kind": "flag",
+     "key": "carry-rival-promise",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#1d2230",
+    "effect": "sparkle"
+   },
+   "intro": "Your rival looks at the map in your hands. \"If this run ends before we get to settle it, meet me at the end of the next one. Same place. Same ground. Promise?\"",
+   "choices": [
+    {
+     "label": "Promise (it holds past this run)",
+     "success": {
+      "text": "They shake your hand. The deal is made.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "carry-rival-promise",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "You promised your rival a rematch. It will be kept in your next run.",
+        "importance": 85
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not tonight",
+     "success": {
+      "text": "\"Then I will find you anyway.\"",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-promise-kept",
+   "name": "The Promise Kept",
+   "group": "Rival Interactions",
+   "rarity": "rare",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "flag",
+     "key": "inherit-rival-promise",
+     "atLeast": 1,
+     "atMost": 99
+    },
+    {
+     "kind": "flag",
+     "key": "rival-promise-kept",
+     "atLeast": 0,
+     "atMost": 0
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#2a2a1d",
+    "effect": "hearts"
+   },
+   "intro": "On a road you do not remember choosing, someone is waiting with their team in the open. \"You said you would come. I did not believe you.\"",
+   "choices": [
+    {
+     "label": "Keep the promise (risky)",
+     "success": {
+      "text": "\"No holding back.\"",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "The Rematch",
+       "rival": true,
+       "size": 4,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1500
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "levels",
+         "amount": 2,
+         "who": "party"
+        },
+        {
+         "kind": "flag",
+         "key": "rival-friend",
+         "amount": 2
+        },
+        {
+         "kind": "flag",
+         "key": "rival-promise-kept",
+         "amount": 1
+        },
+        {
+         "kind": "moment",
+         "text": "You kept your promise to your rival.",
+         "importance": 90
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Say you only came to say hello",
+     "success": {
+      "text": "They laugh. \"Next time, then.\"",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "flag",
+        "key": "rival-promise-kept",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival-nickname",
+   "name": "What They Call You",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "rivalMet",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#242030",
+    "effect": "sparkle"
+   },
+   "intro": "Your rival calls out a new name for you across the road. It has been a while since you answered to anything else. They look pleased and a little embarrassed.",
+   "choices": [
+    {
+     "label": "Answer to it (safe)",
+     "success": {
+      "text": "The name sticks. They will use it in every letter now, and it grows with your record.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Your rival gave you a nickname that has stuck.",
+        "importance": 70
+       }
+      ]
+     }
+    },
+    {
+     "label": "Make them a nickname back",
+     "success": {
+      "text": "You both laugh. They wear yours with more pride than you wear theirs.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "rival-friend",
+        "amount": 1
+       },
+       {
+        "kind": "friendship",
+        "amount": 2,
+        "who": "party"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "cameo-veteran-lucario",
+   "name": "A Familiar Trainer",
+   "group": "Rival Interactions",
+   "rarity": "uncommon",
+   "minStage": 2,
+   "requires": [
+    {
+     "kind": "pastTeams",
+     "atLeast": 1
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#202838",
+    "effect": "sparkle"
+   },
+   "intro": "A trainer you somehow remember from another road, another run, steps onto the path. They do not say how they know you, only: \"Need a hand? My partner is itching for a fight.\"",
+   "choices": [
+    {
+     "label": "Fight beside them",
+     "success": {
+      "text": "The two teams move like one.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Rough Pair",
+       "ally": "lucario",
+       "size": 2,
+       "types": [],
+       "levelBonus": 0,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 700
+        },
+        {
+         "kind": "research",
+         "amount": 30
+        },
+        {
+         "kind": "friendship",
+         "amount": 2,
+         "who": "party"
+        },
+        {
+         "kind": "moment",
+         "text": "A trainer from a past run fought beside you.",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Wave them off",
+     "success": {
+      "text": "They nod and fade into the crowd.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "cameo-veteran-garchomp",
+   "name": "A Veteran Returns",
+   "group": "Rival Interactions",
+   "rarity": "rare",
+   "minStage": 3,
+   "requires": [
+    {
+     "kind": "pastTeams",
+     "atLeast": 2
+    }
+   ],
+   "scene": {
+    "cast": [],
+    "tint": "#202838",
+    "effect": "sparkle"
+   },
+   "intro": "A hardened veteran with a battered cap and a familiar stride falls in beside you. \"Heard you were in trouble. We've walked this road before.\"",
+   "choices": [
+    {
+     "label": "Fight beside them",
+     "success": {
+      "text": "Their Pokémon moves before you can ask.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "name": "Ambush Raider",
+       "ally": "garchomp",
+       "size": 2,
+       "types": [],
+       "levelBonus": 2,
+       "win": [
+        {
+         "kind": "money",
+         "amount": 1000
+        },
+        {
+         "kind": "itemFrom",
+         "ids": [
+          "nugget",
+          "big-pearl",
+          "pearl",
+          "star-piece",
+          "stardust",
+          "comet-shard",
+          "relic-gold",
+          "rare-bone",
+          "big-mushroom"
+         ]
+        },
+        {
+         "kind": "research",
+         "amount": 40
+        },
+        {
+         "kind": "moment",
+         "text": "A veteran from a past run fought beside you.",
+         "importance": 75
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Thank them and go alone",
+     "success": {
+      "text": "You leave it be and walk on.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "legacy-ranch",
+   "name": "The Ranch Keeper",
+   "group": "Rival Interactions",
+   "rarity": "common",
+   "minStage": 1,
+   "requires": [
+    {
+     "kind": "legacyEgg"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "tint": "#283018",
+    "effect": "hearts"
+   },
+   "intro": "A rancher waves from the fence with a warm blanket bundle in her arms. \"Somebody left this with me a long time ago. It was meant for whoever came after them. I think that is you.\"",
+   "choices": [
+    {
+     "label": "Take the egg",
+     "success": {
+      "text": "The shell is warm. You can feel the family in it.",
+      "effects": [
+       {
+        "kind": "legacyEgg"
+       },
+       {
+        "kind": "moment",
+        "text": "A Legacy Egg was handed over at the ranch.",
+        "importance": 75
+       }
+      ]
+     }
+    },
+    {
+     "label": "Not yet",
+     "success": {
+      "text": "\"It will keep. Come back when you can look after it.\"",
+      "effects": []
      }
     }
    ]

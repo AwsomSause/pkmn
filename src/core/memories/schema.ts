@@ -58,6 +58,8 @@ export const PastDigestSchema = z.object({
   friends: z.array(z.object({ id: z.string(), name: z.string(), speciesId: z.string().nullable(), line: z.string() })).default([]),
   /** Ids used this run (ghosts laid to rest, keepsakes recovered, cameos met): written to the profile when the run ends. */
   used: z.array(z.string()).default([]),
+  /** A Legacy Egg waiting for a Daycare or Ranch stop (F118): lays the egg only when the player reaches one. */
+  legacyEgg: z.object({ runId: z.string(), speciesId: z.string(), name: z.string(), kind: z.enum(['egg', 'move', 'trait']), moveId: z.string().optional(), nature: z.string().optional(), trait: z.string() }).nullable().optional(),
 });
 export type PastDigest = z.infer<typeof PastDigestSchema>;
 

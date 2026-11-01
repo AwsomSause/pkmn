@@ -39,6 +39,7 @@ import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showca
 import { LegacyRotationView } from '../ui/legacyRotation';
 import { legacyRotation } from '../core/legacyRuns';
 import { hubRivalNote } from '../core/rivals/living';
+import { headToHead, rivalMood, rivalNickname, scoreboardLine } from '../core/rivals/ledger';
 import { pokemonAssetIds } from '../assets/catalog';
 import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
@@ -279,7 +280,7 @@ export class HubScene extends Phaser.Scene {
     this.buildTiles(ready);
 
     // Living Rival: a letter or a visit from a rival of a finished run; every Hub visit changes which.
-    const rivalNote = hubRivalNote(p.rivalArchive, rotationVisits * 7 + p.stats.runsEnded, { achievements: earned, runsEnded: p.stats.runsEnded });
+    const rivalNote = hubRivalNote(p.rivalArchive, rotationVisits * 7 + p.stats.runsEnded, { achievements: earned, runsEnded: p.stats.runsEnded, nickname: rivalNickname(p.legacyRuns), expression: rivalMood(p.legacyRuns).expression, ...(headToHead(p.legacyRuns)[0] ? { board: scoreboardLine(headToHead(p.legacyRuns)[0]!) } : {}) });
     if (rivalNote) {
       const note = this.add
         .text(GAME_WIDTH / 2, data.notice ? 160 : 110, rivalNote.text, textStyle(16, rivalNote.tone === 'sharp' ? COLORS.gold : COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 160 } }))
