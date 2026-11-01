@@ -101,6 +101,16 @@
     ],
     "wake": [
       "blinks awake and stretches."
+    ],
+    "showoff": [
+      "strikes a heroic pose!",
+      "puffs up and flexes."
+    ],
+    "singalong": [
+      "belts out a tune, and the team sways along."
+    ],
+    "dance": [
+      "The whole team dances around the fire."
     ]
   },
   "accessories": {
@@ -147,5 +157,165 @@
     "groomBonusFriendship": 2,
     "wakeFatigue": 1,
     "wakeBonusFatigue": 1
+  },
+  "showoff": {
+    "hyperReadiness": 8
+  },
+  "stars": {
+    "usesForStar": 20
+  },
+  "cuddleEvolve": [
+    "pichu",
+    "eevee",
+    "togepi",
+    "munchlax",
+    "riolu",
+    "budew",
+    "chingling",
+    "azurill",
+    "cleffa",
+    "igglybuff",
+    "happiny",
+    "mime-jr",
+    "woobat",
+    "swadloon",
+    "snom"
+  ],
+  "formSwaps": [
+    {
+      "family": [
+        "castform",
+        "castform-sunny",
+        "castform-rainy",
+        "castform-snowy"
+      ],
+      "bySeason": {
+        "Spring": "castform-rainy",
+        "Summer": "castform-sunny",
+        "Autumn": "castform",
+        "Winter": "castform-snowy"
+      }
+    },
+    {
+      "family": [
+        "oricorio",
+        "oricorio-pom-pom",
+        "oricorio-pau",
+        "oricorio-sensu"
+      ],
+      "bySeason": {
+        "Spring": "oricorio-pom-pom",
+        "Summer": "oricorio",
+        "Autumn": "oricorio-sensu",
+        "Winter": "oricorio-pau"
+      }
+    },
+    {
+      "family": [
+        "wormadam",
+        "wormadam-sandy",
+        "wormadam-trash"
+      ],
+      "bySeason": {
+        "Spring": "wormadam",
+        "Summer": "wormadam-sandy",
+        "Autumn": "wormadam-trash",
+        "Winter": "wormadam"
+      }
+    },
+    {
+      "family": [
+        "rotom",
+        "rotom-heat",
+        "rotom-wash",
+        "rotom-frost",
+        "rotom-fan",
+        "rotom-mow"
+      ],
+      "bySeason": {
+        "Spring": "rotom-mow",
+        "Summer": "rotom-heat",
+        "Autumn": "rotom-fan",
+        "Winter": "rotom-frost"
+      }
+    }
+  ],
+  "cuddleBonus": 15,
+  "whistle": {
+    "minTrust": 40,
+    "commands": {
+      "focus": {
+        "stat": "crit",
+        "stages": 1,
+        "turns": 4,
+        "line": "narrows its eyes."
+      },
+      "steady": {
+        "stat": "acc",
+        "stages": 1,
+        "turns": 4,
+        "line": "settles its aim."
+      },
+      "rush": {
+        "stat": "spe",
+        "stages": 1,
+        "turns": 4,
+        "line": "crouches, ready to dash."
+      }
+    }
+  },
+  "singalong": {
+    "species": [
+      "jigglypuff",
+      "wigglytuff",
+      "igglybuff",
+      "loudred",
+      "exploud",
+      "whismur",
+      "chatot",
+      "kricketune",
+      "primarina",
+      "popplio",
+      "brionne"
+    ],
+    "friendship": 2
+  },
+  "team": {
+    "dance": {
+      "mood": 1,
+      "goodMood": 1,
+      "friendship": 1
+    },
+    "race": {
+      "winnerMood": 1,
+      "othersFriendship": 1
+    },
+    "healCircle": {
+      "moves": [
+        "softboiled",
+        "recover",
+        "heal-pulse",
+        "moonlight",
+        "synthesis",
+        "morning-sun",
+        "milk-drink",
+        "wish",
+        "aromatherapy",
+        "life-dew",
+        "floral-healing",
+        "heal-order",
+        "slack-off",
+        "roost",
+        "shore-up",
+        "strength-sap",
+        "rest"
+      ],
+      "minHealers": 3,
+      "healShare": 0.4
+    },
+    "spar": {
+      "fights": 3,
+      "statPercent": 6
+    }
   }
 }

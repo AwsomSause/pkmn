@@ -45,7 +45,7 @@ export function applicableBranches(content: Content, mon: PokemonInstance, branc
  * Rockruff, ...) one is picked from the Pokémon's id, so it is always the same.
  */
 export function evolutionTarget(content: Content, mon: PokemonInstance, regionId?: string, levelOffset = 0, bondReady = false): string | null {
-  if (mon.hp <= 0) return null;
+  if (mon.hp <= 0 || mon.care?.holdEvolve) return null;
   const species = getSpecies(content, mon.speciesId);
   // A devoted bond (Bond Engine) can stand in for the last part of the friendship climb.
   const byFriendship = friendshipReady(content, mon) || bondReady;

@@ -1,9 +1,11 @@
 // Care & party life (W2): care actions, per-stop limits, mood/fatigue/talent/training stat nudges, saves.
 
 import { describe, expect, it } from 'vitest';
-import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
+import { careAction, careFaint, careMultiplier, careProblem, careVictory, careOf, careRest, teamworkOnSwitch, careMoves, swapForms, careAceFell, evolutionPreview, healFirst, tapsOf, releaseGift, berryFlavor, favoriteFlavor, hatedFlavor, CARE } from '../../src/core/care';
 import { tradeCandidates } from '../../src/core/events';
-import { calcStats } from '../../src/core/pokemon';
+import { bondOf } from '../../src/core/bond';
+import { evolutionTarget } from '../../src/core/evolution';
+import { createPokemon, calcStats } from '../../src/core/pokemon';
 import { chooseStarter, createRun } from '../../src/core/run';
 import { RunStateSchema, type RunState } from '../../src/core/state';
 import { content } from './helpers';
@@ -232,5 +234,117 @@ describe('favourite, ace, previews', () => {
     expect(healFirst(content, run)).toBeNull();
     mon.hp = 1;
     expect(healFirst(content, run)?.uid).toBe(mon.uid);
+  });
+});
+
+describe('show off and hold evolution', () => {
+  it('show-off raises hyper readiness once per stop', () => {
+    const run = setup();
+    const before = bondOf(run, run.party[0]!.uid).hyperReadiness;
+    const out = careAction(content, run, 0, 'showoff').run;
+    expect(bondOf(out, out.party[0]!.uid).hyperReadiness).toBe(before + CARE.showoff.hyperReadiness);
+    expect(careProblem(content, out, 0, 'showoff')).toMatch(/Already/);
+  });
+
+  it('a held evolution does not happen until a healing stop', () => {
+    let run = setup();
+    const mon = run.party[0]!;
+    mon.level = 100;
+    mon.friendship = 255;
+    const before = evolutionTarget(content, mon);
+    run = careAction(content, run, 0, 'hold').run;
+    expect(evolutionTarget(content, run.party[0]!)).toBeNull();
+    expect(careRest(run)).toEqual([run.party[0]!.uid]);
+    expect(evolutionTarget(content, run.party[0]!)).toBe(before);
+  });
+});
+
+describe('teamwork, stars, whistle, forms', () => {
+  it('whistle gives a next-fight boost, once per stop, only when trusted', () => {
+    const run = setup();
+    bondOf(run, run.party[0]!.uid).trust = 10;
+    expect(careProblem(content, run, 0, 'whistle', 'focus')).toMatch(/trust/);
+    bondOf(run, run.party[0]!.uid).trust = 80;
+    expect(careProblem(content, run, 0, 'whistle', 'bogus')).toMatch(/Pick/);
+    const out = careAction(content, run, 0, 'whistle', 'focus').run;
+    expect(out.party[0]!.boosts).toContainEqual({ kind: 'stage', stat: 'crit', stages: 1, turns: 4 });
+    expect(careProblem(content, out, 0, 'whistle', 'rush')).toMatch(/Already/);
+  });
+
+  it('teamwork boosts a pair member sent in beside its partner, once per battle', () => {
+    const run = setup();
+    run.party[0]!.speciesId = 'plusle';
+    run.party.push({ ...structuredClone(run.party[0]!), uid: 'minun', speciesId: 'minun' });
+    run.party.push({ ...structuredClone(run.party[0]!), uid: 'p3', speciesId: 'plusle' });
+    run.battle = { drama: { combos: [] }, playerStages: { atk: 0, def: 0, spa: 0, spd: 0, spe: 0, acc: 0, eva: 0, crit: 0 } } as never;
+    const first = teamworkOnSwitch(run, 'minun');
+    expect(first?.name).toBe('Double Spark');
+    expect((run.battle as unknown as { playerStages: { spa: number } }).playerStages.spa).toBe(1);
+    expect(teamworkOnSwitch(run, 'minun')).toBeNull();
+  });
+
+  it('a move earns a mastery star after enough uses', () => {
+    const run = setup();
+    const mon = run.party[0]!;
+    run.battle = { doubles: false, activeIndex: 0 } as never;
+    const ev = Array.from({ length: CARE.stars.usesForStar }, () => ({ type: 'move', side: 'player', moveId: mon.moves[0]!.id }));
+    expect(careMoves(run, ev)).toEqual([mon.moves[0]!.id]);
+    expect(mon.moves[0]!.star).toBe(true);
+  });
+
+  it('Castform takes the season form at a healing stop', () => {
+    const run = setup();
+    run.party[0]!.speciesId = 'castform';
+    run.clock.day = 1 + content.balance.clock.seasonLength; // Summer
+    expect(swapForms(content, run)).toBe(1);
+    expect(run.party[0]!.speciesId).toBe('castform-sunny');
+  });
+});
+
+it('sing-along is for singers and a good one protects the team from sleep', () => {
+  const run = setup();
+  expect(careProblem(content, run, 0, 'singalong')).toMatch(/singers/);
+  run.party[0]!.speciesId = 'jigglypuff';
+  const out = careAction(content, run, 0, 'singalong', `tap:${CARE.tap.goal}`).run;
+  expect(out.party[0]!.boosts).toContainEqual({ kind: 'immune', status: 'slp' });
+});
+
+describe('whole-team activities and more forms', () => {
+  function team(): RunState {
+    const run = setup();
+    for (const [id, uid] of [['pidgey', 'b2'], ['rattata', 'b3'], ['caterpie', 'b4']] as const) run.party.push(createPokemon(content, id, 10, uid));
+    return run;
+  }
+  it('team dance lifts everyone, more with good tapping; needs two Pokémon', () => {
+    expect(careProblem(content, setup(), 0, 'teamdance')).toMatch(/two/);
+    const run = team();
+    const out = careAction(content, run, 0, 'teamdance', `tap:${CARE.tap.goal}`).run;
+    expect(out.party.every((m) => m.care!.mood === CARE.team.dance.mood + CARE.team.dance.goodMood)).toBe(true);
+  });
+  it('camp race crowns the same winner every time', () => {
+    const a = careAction(content, team(), 0, 'race').message;
+    const b = careAction(content, team(), 0, 'race').message;
+    expect(a).toBe(b);
+    expect(a).toMatch(/wins/);
+  });
+  it('healing circle needs three healers', () => {
+    const run = team();
+    expect(careProblem(content, run, 0, 'healcircle')).toMatch(/needs/);
+    for (const m of run.party.slice(0, 3)) m.moves = [{ id: 'recover', pp: 5 }];
+    run.party.forEach((m) => (m.hp = 1));
+    const out = careAction(content, run, 0, 'healcircle').run;
+    expect(out.party[0]!.hp).toBeGreaterThan(1);
+  });
+  it('sparring trains both partners', () => {
+    const out = careAction(content, team(), 0, 'spar', 'atk').run;
+    expect(out.party[0]!.care!.train).toMatchObject({ stat: 'atk', left: CARE.team.spar.fights });
+    expect(out.party[1]!.care!.train).toMatchObject({ stat: 'atk', left: CARE.team.spar.fights });
+  });
+  it('Oricorio takes a season style', () => {
+    const run = setup();
+    run.party[0]!.speciesId = 'oricorio';
+    run.clock.day = 1;
+    expect(swapForms(content, run)).toBe(1);
+    expect(run.party[0]!.speciesId).toBe('oricorio-pom-pom');
   });
 });

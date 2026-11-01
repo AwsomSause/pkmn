@@ -30,6 +30,14 @@ const CareDataSchema = z.object({
   fetch: z.object({ chance: z.number().min(0).max(1), friendship: z.number().int() }),
   story: z.object({ friendship: z.number().int(), mood: z.number().int(), minFriendship: z.number().int() }),
   tap: z.object({ goal: z.number().int(), windowMs: z.number().int(), cheerBonusMood: z.number().int(), groomBonusFriendship: z.number().int(), wakeFatigue: z.number().int(), wakeBonusFatigue: z.number().int() }),
+  showoff: z.object({ hyperReadiness: z.number().int() }),
+  stars: z.object({ usesForStar: z.number().int().min(1) }),
+  cuddleEvolve: z.array(z.string()),
+  cuddleBonus: z.number().int(),
+  formSwaps: z.array(z.object({ family: z.array(z.string()), bySeason: z.record(z.string(), z.string()) })),
+  whistle: z.object({ minTrust: z.number().int(), commands: z.record(z.string(), z.object({ stat: z.enum(['atk', 'def', 'spa', 'spd', 'spe', 'acc', 'crit']), stages: z.number().int(), turns: z.number().int().positive(), line: z.string() })) }),
+  singalong: z.object({ species: z.array(z.string()), friendship: z.number().int() }),
+  team: z.object({ dance: z.object({ mood: z.number().int(), goodMood: z.number().int(), friendship: z.number().int() }), race: z.object({ winnerMood: z.number().int(), othersFriendship: z.number().int() }), healCircle: z.object({ moves: z.array(z.string()), minHealers: z.number().int(), healShare: z.number() }), spar: z.object({ fights: z.number().int(), statPercent: z.number() }) }),
   sing: z.object({ eggSteps: z.number().int().min(1) }),
   releaseGift: z.object({ candiesPerLevels: z.number().int().min(1) }),
   quips: z.record(z.string(), z.array(z.string()).min(1)),
@@ -53,7 +61,11 @@ export const CareSchema = z.object({
   done: z.record(z.string(), z.number().int()).default({}),
   /** Refuses food until this stop clock value (a hated flavor). */
   sulkUntil: z.number().int().default(-1),
+  /** Hugs given this run (some friendship evolutions need one). */
+  hugs: z.number().int().min(0).optional(),
   favourite: z.boolean().optional(),
+  /** Evolution on hold (B-cancel): it stays as it is until the next healing stop, then may evolve (F46, I51). */
+  holdEvolve: z.boolean().optional(),
   ace: z.boolean().optional(),
   sparkle: z.boolean().optional(),
   /** Heard its bedtime story this run. */
@@ -78,3 +90,11 @@ export function careMultiplier(care: Care | undefined, stat: string): number {
   if (acc && acc.stat === stat) pct += acc.percent;
   return Math.max(0.5, 1 + pct / 100);
 }
+
+import teamworkJson from '../../data/teamwork.json';
+const TeamworkSchema = z.object({
+  note: z.string(),
+  pairs: z.array(z.object({ id: z.string(), name: z.string(), a: z.string(), b: z.string(), stats: z.array(z.enum(['atk', 'def', 'spa', 'spd', 'spe'])).min(1).max(2) })),
+});
+/** Teamwork pairs (data/teamwork.json). */
+export const TEAMWORK = TeamworkSchema.parse(teamworkJson);

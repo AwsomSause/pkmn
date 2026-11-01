@@ -1,0 +1,126 @@
+{
+  "note": "Teamwork (ledger M52): when a pair member is sent in and its partner is also in the party (alive), the newcomer gets +1 in both stats, once per pair per battle. Plusle + Minun and friends.",
+  "minSynchronization": 0,
+  "pairs": [
+    {
+      "id": "double-spark",
+      "name": "Double Spark",
+      "a": "plusle",
+      "b": "minun",
+      "stats": [
+        "spa",
+        "spe"
+      ]
+    },
+    {
+      "id": "tag-spin",
+      "name": "Tag Spin",
+      "a": "volbeat",
+      "b": "illumise",
+      "stats": [
+        "spe",
+        "spd"
+      ]
+    },
+    {
+      "id": "twin-flame",
+      "name": "Twin Flame",
+      "a": "torkoal",
+      "b": "heatmor",
+      "stats": [
+        "atk",
+        "spa"
+      ]
+    },
+    {
+      "id": "sun-moon",
+      "name": "Sun and Moon",
+      "a": "solrock",
+      "b": "lunatone",
+      "stats": [
+        "spa",
+        "spd"
+      ]
+    },
+    {
+      "id": "guardian-duo",
+      "name": "Rock Solid",
+      "a": "geodude",
+      "b": "onix",
+      "stats": [
+        "def",
+        "spd"
+      ]
+    },
+    {
+      "id": "pika-pichu",
+      "name": "Spark Siblings",
+      "a": "pikachu",
+      "b": "pichu",
+      "stats": [
+        "spe",
+        "atk"
+      ]
+    },
+    {
+      "id": "eevee-pika",
+      "name": "Partner Power",
+      "a": "pikachu",
+      "b": "eevee",
+      "stats": [
+        "atk",
+        "spe"
+      ]
+    },
+    {
+      "id": "ice-fire",
+      "name": "Hot and Cold",
+      "a": "vulpix",
+      "b": "vulpix-alola",
+      "stats": [
+        "spa",
+        "spe"
+      ]
+    },
+    {
+      "id": "cat-duo",
+      "name": "Cat Combo",
+      "a": "meowth",
+      "b": "persian",
+      "stats": [
+        "atk",
+        "spe"
+      ]
+    },
+    {
+      "id": "ghost-duo",
+      "name": "Haunting Pair",
+      "a": "gastly",
+      "b": "haunter",
+      "stats": [
+        "spa",
+        "spe"
+      ]
+    },
+    {
+      "id": "tyrunt-tyrantrum",
+      "name": "Fossil Pals",
+      "a": "tyrunt",
+      "b": "amaura",
+      "stats": [
+        "atk",
+        "def"
+      ]
+    },
+    {
+      "id": "cleffa-jiggly",
+      "name": "Lullaby Chorus",
+      "a": "jigglypuff",
+      "b": "clefairy",
+      "stats": [
+        "spd",
+        "def"
+      ]
+    }
+  ]
+}

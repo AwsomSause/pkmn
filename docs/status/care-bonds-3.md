@@ -1,0 +1,1 @@
+- Care follow-up 2 (W2): teamwork pairs, mastery stars (`MoveSlot.uses/star`, optional fields, no save bump), seasonal Castform forms, whistle, sing-along, show off, hold evolution, cuddle hug bonus. All gated by `balance.careEffects` where they could change old seeds. Tests `tests/unit/care.test.ts`. See `docs/plans/w2-coverage.md`.

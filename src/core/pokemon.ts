@@ -55,7 +55,7 @@ export const MAX_PP_UPS = 3;
 /** A move slot's max PP, counting PP Ups. */
 export function maxPp(content: Content, slot: MoveSlot): number {
   const base = content.moves.get(slot.id)!.pp;
-  return base + Math.floor(base * PP_UP_SHARE * (slot.ppUps ?? 0));
+  return base + Math.floor(base * PP_UP_SHARE * (slot.ppUps ?? 0)) + (slot.star ? 1 : 0);
 }
 
 export function maxHp(content: Content, mon: PokemonInstance): number {
