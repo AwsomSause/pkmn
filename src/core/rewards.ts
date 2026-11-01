@@ -19,6 +19,7 @@ import { noRevives } from './rules';
 import { fortuneBias } from './bank';
 import { moneyMultiplier, runArchetype } from './archetypes';
 import { evolutionLevelOffset, rareItemWeightPerk } from './trainerPerks';
+import { adjustTierWeights, rewardRelevance } from './itemDistribution';
 import { addItemAttribute, attributeText, runAttributeEffects } from './attributes';
 import type { Archetype, Content, Rarity, Reward } from './contentSchema';
 import { RARITIES } from './contentSchema';
@@ -117,7 +118,13 @@ export function generateDraft(
   const size = opts.size ?? content.balance.draftSize;
   const forced = [...new Set(opts.forced ?? [])].filter((id) => content.rewards.has(id) && isRewardEligible(content, run, content.rewards.get(id)!)).slice(0, size);
   const skip = new Set([...forced, ...(opts.exclude ?? [])]);
-  const eligible = [...content.rewards.values()].filter((r) => !skip.has(r.id) && isRewardEligible(content, run, r));
+  const allEligible = [...content.rewards.values()].filter((r) => !skip.has(r.id) && isRewardEligible(content, run, r));
+  // Situation weights (itemDistribution.ts): species items nobody can use leave the pool unless that would make it too small.
+  const relevance = new Map(allEligible.map((r) => [r.id, rewardRelevance(content, run, r)]));
+  const relevant = allEligible.filter((r) => relevance.get(r.id)! > 0);
+  const eligible = relevant.length + forced.length >= size ? relevant : allEligible;
+  const rel = (r: Reward) => relevance.get(r.id)! || 1e-6;
+  weights = adjustTierWeights(content, run, weights);
   if (eligible.length + forced.length < size) {
     throw new RewardConfigError(`Only ${eligible.length + forced.length} eligible rewards; a draft needs ${size} distinct rewards`);
   }
@@ -136,9 +143,16 @@ export function generateDraft(
     const tierFamilies = [...new Set(pool.map(rewardFamily))];
     const anyFresh = tierFamilies.some((f) => !families.has(f));
     // A tier holding only families already shown still fills the slot.
-    const family = rng.weighted(tierFamilies.map((f) => ({ item: f, weight: (anyFresh && families.has(f) ? repeatWeight : 1) * biasWeight(bias, pool.filter((r) => rewardFamily(r) === f)) })));
+    // A family's weight is the average relevance of its members, so a family nobody in the party can use well shows less.
+    const family = rng.weighted(
+      tierFamilies.map((f) => {
+        const fm = pool.filter((r) => rewardFamily(r) === f);
+        const avg = fm.reduce((n, r) => n + rel(r), 0) / fm.length;
+        return { item: f, weight: (anyFresh && families.has(f) ? repeatWeight : 1) * biasWeight(bias, fm) * avg };
+      }),
+    );
     const members = pool.filter((r) => rewardFamily(r) === family);
-    const reward = members[rng.int(0, members.length - 1)]!;
+    const reward = rng.weighted(members.map((r) => ({ item: r, weight: rel(r) })));
     pool.splice(pool.indexOf(reward), 1);
     // At most one attribute item per draft: once one is in, the rest leave every tier.
     if (reward.category === 'attribute') for (const p of byTier.values()) for (let i = p.length - 1; i >= 0; i--) if (p[i]!.category === 'attribute') p.splice(i, 1);

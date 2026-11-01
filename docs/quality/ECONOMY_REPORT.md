@@ -6,16 +6,16 @@ The bot is crude (no item use beyond Poké Balls, no switching tactics), so it l
 
 | Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Story | off | x0.8 | 17.0 | 0.2 | 1114.7 | 33% |
-| Story | on | x0.72 | 17.0 | 0.2 | 1114.7 | 33% |
-| Standard | off | x1 | 12.3 | 0.0 | 884.0 | 33% |
-| Standard | on | x0.9 | 12.3 | 0.0 | 884.0 | 33% |
-| Veteran | off | x1.2 | 11.3 | 0.0 | 1098.7 | 33% |
-| Veteran | on | x1.08 | 11.3 | 0.0 | 1098.7 | 33% |
-| Champion | off | x1.4 | 7.5 | 0.0 | 750.3 | 67% |
-| Champion | on | x1.26 | 7.5 | 0.0 | 750.3 | 67% |
-| Nightmare | off | x1.7 | 3.7 | 0.0 | 549.0 | 83% |
-| Nightmare | on | x1.53 | 3.7 | 0.0 | 549.0 | 83% |
+| Story | off | x0.8 | 22.2 | 0.7 | 2177.0 | 17% |
+| Story | on | x0.72 | 22.2 | 0.7 | 2177.0 | 17% |
+| Standard | off | x1 | 19.0 | 0.2 | 1859.7 | 0% |
+| Standard | on | x0.9 | 19.0 | 0.2 | 1859.7 | 0% |
+| Veteran | off | x1.2 | 13.2 | 0.0 | 1355.0 | 50% |
+| Veteran | on | x1.08 | 13.2 | 0.0 | 1355.0 | 50% |
+| Champion | off | x1.4 | 7.5 | 0.0 | 746.0 | 83% |
+| Champion | on | x1.26 | 7.5 | 0.0 | 746.0 | 83% |
+| Nightmare | off | x1.7 | 8.3 | 0.0 | 1092.0 | 67% |
+| Nightmare | on | x1.53 | 8.3 | 0.0 | 1092.0 | 67% |
 
 ## Smarter bot
 
@@ -23,31 +23,31 @@ Picks the best move by power, STAB and type effectiveness, drinks potions when l
 
 | Difficulty | Death-Block | Reward x | Avg encounters | Avg badges | Avg money earned | Lost before encounter 10 |
 | --- | --- | --- | --- | --- | --- | --- |
-| Story | off | x0.8 | 24.7 | 0.7 | 2656.3 | 33% |
-| Story | on | x0.72 | 24.7 | 0.7 | 2656.3 | 33% |
-| Standard | off | x1 | 41.0 | 1.5 | 6594.5 | 17% |
-| Standard | on | x0.9 | 41.0 | 1.5 | 6594.5 | 17% |
-| Veteran | off | x1.2 | 25.2 | 0.7 | 3819.3 | 17% |
-| Veteran | on | x1.08 | 25.2 | 0.7 | 3819.3 | 17% |
-| Champion | off | x1.4 | 23.2 | 0.5 | 3970.7 | 33% |
-| Champion | on | x1.26 | 23.2 | 0.5 | 3970.7 | 33% |
-| Nightmare | off | x1.7 | 14.2 | 0.3 | 2697.7 | 33% |
-| Nightmare | on | x1.53 | 14.2 | 0.3 | 2697.7 | 33% |
+| Story | off | x0.8 | 51.8 | 2.0 | 8864.3 | 0% |
+| Story | on | x0.72 | 51.8 | 2.0 | 8864.3 | 0% |
+| Standard | off | x1 | 29.3 | 0.7 | 3939.3 | 0% |
+| Standard | on | x0.9 | 29.3 | 0.7 | 3939.3 | 0% |
+| Veteran | off | x1.2 | 24.7 | 0.5 | 3496.0 | 0% |
+| Veteran | on | x1.08 | 24.7 | 0.5 | 3496.0 | 0% |
+| Champion | off | x1.4 | 14.2 | 0.5 | 2128.0 | 50% |
+| Champion | on | x1.26 | 14.2 | 0.5 | 2128.0 | 50% |
+| Nightmare | off | x1.7 | 10.2 | 0.0 | 1406.0 | 67% |
+| Nightmare | on | x1.53 | 10.2 | 0.0 | 1406.0 | 67% |
 
 ## Item rarity in generated drafts
 
 5-item drafts, 300 per row, ordinary run state. Each source uses its own weights from balance.json; better routes and bosses must show more rare and epic items.
 
-Reward pool size by rarity: common 177, uncommon 251, rare 301, epic 48. Eligibility (what a fresh run can use) and distinct-item rules mean the shown odds can differ from the weights in balance.json;.
+Reward pool size by rarity: common 188, uncommon 280, rare 352, epic 45. Eligibility (what a fresh run can use) and distinct-item rules mean the shown odds can differ from the weights in balance.json;.
 
 | Reward source | Common | Uncommon | Rare | Epic |
 | --- | --- | --- | --- | --- |
-| Ordinary stop | 60% | 31% | 8% | 1% |
-| Harder route | 41% | 39% | 18% | 2% |
-| Gym, Elite Four or Champion | 20% | 46% | 30% | 4% |
+| Ordinary stop | 65% | 28% | 7% | 1% |
+| Harder route | 52% | 30% | 16% | 2% |
+| Gym, Elite Four or Champion | 39% | 32% | 23% | 6% |
 
 ## Attribute growth pace
 
-One smart-bot run (Standard, no Death-Block) would add about 10.8 permanent attribute points by the balance.attributeGrowth table (26, 4, -11, 2, 13, 31 across the 6 seeds). The sum can be negative: meters (like Good/Evil) move both ways. Compare this with the maximum of 100 per attribute: a number that is large after one run means growth is too frequent (Untitled doc §6.3).
+One smart-bot run (Standard, no Death-Block) would add about 2.3 permanent attribute points by the balance.attributeGrowth table (-1, 3, 2, 7, 2, 1 across the 6 seeds). The sum can be negative: meters (like Good/Evil) move both ways. Compare this with the maximum of 100 per attribute: a number that is large after one run means growth is too frequent (Untitled doc §6.3).
 
-(39 s)
+(52 s)
