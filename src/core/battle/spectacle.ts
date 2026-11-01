@@ -9,7 +9,7 @@ import type { BattleState, PokemonInstance } from '../state';
 import type { Content } from '../contentSchema';
 import type { SpectacleConfig } from './spectacleConfig';
 
-export const SpectacleKindSchema = z.enum(['lastStand', 'rally', 'momentumFull', 'revenge', 'signature']);
+export const SpectacleKindSchema = z.enum(['lastStand', 'rally', 'momentumFull', 'revenge', 'signature', 'bleed', 'curseTag', 'benchShout', 'hazardBurst']);
 export type SpectacleKind = z.infer<typeof SpectacleKindSchema>;
 
 export const SpectacleBattleSchema = z.object({

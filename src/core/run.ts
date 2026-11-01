@@ -70,6 +70,8 @@ import { count, countShiny, discover } from './progress';
 import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
+import { wildLuck } from './wildLuck';
+import { underdogXpMultiplier } from './battle/w1Rules';
 import { expShareUnlocked, FIRST_RIVAL_FLAG } from './firstRival';
 import { canonPlan, characterOf, majorNote, withAceProgress } from './rivals/major';
 import { beginMonRivalBattle, carriedMonRival, dueMonRival, monRivalMember, rivalCatchesMonRival } from './rivals/monRivals';
@@ -1376,6 +1378,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
   if (activeIndex < 0) throw new Error('No healthy Pokémon to battle with');
   const activeUid = run.party[activeIndex]!.uid;
 
+  let alphaFoe = false;
   if (node.kind === 'wild') {
     // Map items (Flutes, Incense, Mail, Poké Radar...) change the wild Pokémon; their own rolls use a generator of their own.
     const mods = activeMods(content, run);
@@ -1408,10 +1411,21 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
       : newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : content.balance.difficulty.maxLevel);
     if (back) enemy.moves = back.member.moves!.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
     if (mrBack) enemy.moves = mrBack.moves.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
-    enemy.shiny = back || mrBack ? false : plan.shiny;
-    if (plan.shiny) countShiny(run, speciesId);
+    const luck = back || mrBack || legendary ? null : wildLuck(content, run, enemy.speciesId, node.id, plan.shiny, content.balance.shinyChance);
+    enemy.shiny = back || mrBack ? false : plan.shiny || !!luck?.shiny;
+    if (enemy.shiny) countShiny(run, speciesId);
+    if (luck?.alpha) {
+      enemy.level = Math.min(content.balance.difficulty.maxLevel, enemy.level + content.balance.w1.luck.alphaLevels);
+      enemy.hp = maxHp(content, enemy);
+      alphaFoe = true;
+    }
     outbreakShadow(content, run, enemy, node.id);
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
+    if (alphaFoe) {
+      run.battle.alpha = true;
+      run.battle.enemyStages.atk = 1;
+      run.battle.enemyStages.def = 1;
+    }
     run.battle.levelInfo = [plan.levelInfo];
     if (nemesis && back) beginNemesisBattle(content, run, nemesis, back.change, null);
     if (monRival && mrBack) run.battle.rivalNote = beginMonRivalBattle(content, run, monRival, enemy);
@@ -2173,6 +2187,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
   const bossBattle = isBossClass(battle.trainer?.classId);
   // White Flute: more EXP from wild battles.
   const multiplier = xpMultiplier(runArchetype(content, run)) * content.balance.difficulty.xpScale * (getMode(run.rules.modeId)?.xpScale ?? 1) * (battle.doubles ? 1 : singleBattleXpPerk(runArchetype(content, run).modifiers)) * effects.exp * (battle.autoUsed ? content.balance.difficulty.autoBattleXp : 1) * mutatorXp(run) * (battle.kind === 'wild' ? wildExpMultiplier(content, run) : 1);
+  const underdog = underdogXpMultiplier(content, run.party, battle.enemyTeam);
   const out: RunEvent[] = [];
   for (const e of events) {
     out.push(e);
@@ -2199,7 +2214,7 @@ function awardExperience(content: Content, run: RunState, events: BattleEvent[])
       // Macho Brace: more EXP for its holder.
       const monSpecies = getSpecies(content, mon.speciesId);
       const perkXp = xpPerk(archetype.modifiers, { types: monSpecies.types, baseSpeed: monSpecies.baseStats.spe, isStarter: run.log.starterUid === mon.uid, isBossBattle: bossBattle, ultraBeast: isUltraBeast(mon.speciesId), isHatched: mon.hatched === true, isDoubles: battle.doubles !== undefined });
-      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * perkXp * (1 + catchUp / 100) * expMultiplier(content, mon));
+      const full = xpForDefeat(baseExp, defeated.level, mon.level, multiplier * underdog * perkXp * (1 + catchUp / 100) * expMultiplier(content, mon));
       const squirt = mon === run.party[0] && (run.itemCounters?.['squirt-exp'] ?? 0) > 0 ? 1 + (perksOf(activePerks(content, run), 'squirt')[0]?.perk.percent ?? 5) / 100 : 1;
       const amount = Math.floor((participants.includes(uid) ? full : Math.floor((full * Math.min(100, share)) / 100)) * squirt);
       if (amount <= 0) continue;
@@ -2261,6 +2276,7 @@ function finishBattle(content: Content, run: RunState): BattleEndResult {
   if (battle.outcome === 'caught') moneyGained = Math.floor(moneyGained * catchMoneyPerk(perks));
   moneyGained = Math.floor(moneyGained * battleMoneyScale(run.rules) * mutatorMoney(run) * (battle.autoUsed ? content.balance.difficulty.autoBattleXp : 1));
   if (battle.kind === 'trainer') moneyGained += quickWinBonus(run.rules, battle.turn - 1);
+  if (battle.alpha) moneyGained = Math.floor(moneyGained * content.balance.w1.luck.alphaMoney);
   run.money += moneyGained;
   count(run, 'moneyEarned', moneyGained);
   // Powder Jar and Gooey Mulch: every Berry your side ate this battle.

@@ -268,6 +268,10 @@ export const VolatileSchema = z.object({
   throat: z.number().int().min(0).default(0),
   /** Types lost (Burn Up, Double Shock). */
   lostTypes: z.array(z.string()).default([]),
+  /** Bleed stacks (slicing moves); cleared on switch (ideas W1). */
+  bleed: z.number().int().min(0).default(0),
+  /** Curse tag from a Ghost move: Ghost/Dark follow-ups hit harder (ideas W1). */
+  curseTag: z.boolean().default(false),
 });
 export type Volatile = z.infer<typeof VolatileSchema>;
 export const freshVolatile = (): Volatile => ({
@@ -344,6 +348,8 @@ export const freshVolatile = (): Volatile => ({
   illusion: null,
   roost: false,
   throat: 0,
+  bleed: 0,
+  curseTag: false,
   lostTypes: [],
 });
 
@@ -690,6 +696,12 @@ export const BattleStateSchema = z.object({
   spectacle: SpectacleBattleSchema.optional(),
   /** Auto-Battle (spec §32): the Pokémon chose at least one action this battle by themselves, so its EXP is reduced (core/run.ts awardExperience). Never cleared mid-battle. */
   autoUsed: z.boolean().optional(),
+  /** The wild Pokémon is an Alpha: oversized, stronger, better prize (ideas W1). */
+  alpha: z.boolean().optional(),
+  /** A benched Pokémon already cheered this battle (ideas W1). */
+  benchShout: z.boolean().optional(),
+  /** Critical hits in a row per Pokémon (uid); the Streak Lens reads it (ideas W1). */
+  critStreak: z.record(z.string(), z.number().int().min(0)).optional(),
   /** Nuzlocke: this wild Pokémon is not the area's first encounter, so it can't be caught (core/nuzlocke.ts). */
   nuzlockeNoCatch: z.boolean().optional(),
   /** A fight on an expedition route: afterwards the run goes back to the expedition, not the map or a draft. */

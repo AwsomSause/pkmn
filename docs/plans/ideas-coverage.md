@@ -23,30 +23,30 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I102 | Environment interact: smash a cliff, drop rocks or flood tiles in some arenas |  | TODO |  |
 | I103 | Split-second decision: some events give a countdown choice instead of free time |  | TODO |  |
 | I106 | Pokémon remembers a past grudge vs a foe species and gets a rage buff with a line |  | TODO |  |
-| M4 | **Guard break**: a shield bar on bosses; empty it with multi-hit moves to stagger them for a turn. | Y but only Champions or non gym/elite four bosses | DONE | src/core/battle/spectacle.ts Guard Break (guard points, stagger); BattleScene.ts:947; docs/status/battle-drama-spectacle.md |
-| M17 | **Type resonance**: a party of 3+ sharing a type gives that type +5% damage. |  | TODO |  |
-| M29 | **Hazard layers 2.0**: hazards stack by type and trigger synergy (Spikes + Toxic Spikes = poison burst). |  | TODO |  |
+| M4 | **Guard break**: a shield bar on bosses; empty it with multi-hit moves to stagger them for a turn. | Y but only Champions or non gym/elite four bosses | DROPPED | Kice removed all Guard and Brace features (W13 PR #498) |
+| M17 | **Type resonance**: a party of 3+ sharing a type gives that type +5% damage. |  | DONE | src/core/battle/w1Rules.ts resonanceMultiplier; engine.ts damage; tests/unit/w1Rules.test.ts |
+| M29 | **Hazard layers 2.0**: hazards stack by type and trigger synergy (Spikes + Toxic Spikes = poison burst). |  | DONE | engine.ts applyHazards hazard burst (Spikes + Toxic Spikes); tests/unit/w1Rules.test.ts |
 | M32 | **Environment hazards**: arena events (lava flow, falling rocks) hit both sides on a fixed schedule. |  | TODO |  |
-| M43 | **Bleed**: slicing moves cause bleed that stacks with each hit and clears on switch. | Y (Make it only few moves and some steel type moves) | TODO |  |
-| M44 | **Curse tags**: Ghost moves tag a foe; tagged foes take extra from any Ghost/Dark follow-up. |  | TODO |  |
-| M76 | **Weakened capture bonus**: stacking chip damage and a status raises catch odds with clear numbers shown. |  | PART | src/core/capture.ts:25 HP+status raise catch odds; engine.ts:1194; no numbers shown to player |
+| M43 | **Bleed**: slicing moves cause bleed that stacks with each hit and clears on switch. | Y (Make it only few moves and some steel type moves) | DONE | w1Rules.ts bleed (15 slicing/Steel moves), engine.ts hit + applyResidual, conditions panel; tests/unit/w1Rules.test.ts |
+| M44 | **Curse tags**: Ghost moves tag a foe; tagged foes take extra from any Ghost/Dark follow-up. |  | DONE | engine.ts curse tag on Ghost hit, curseMultiplier; tests/unit/w1Rules.test.ts |
+| M76 | **Weakened capture bonus**: stacking chip damage and a status raises catch odds with clear numbers shown. |  | DONE | src/core/battle/conditions.ts catch odds now / at full health in the wild battle panel |
 | M77 | **Lure and bait**: set lure items at map stops to bias the next encounter's type. |  | PART | src/core/mapItems.ts + contentSchema.ts:1288 Incense/Flute 'types' encounter mod biases type; not placed lures |
-| M78 | **Alpha encounters**: rare oversized wilds with higher stats and better drops. |  | TODO |  |
-| M79 | **Shiny charm progress**: a visible shiny meter rises with encounters; all rolls remain seeded. |  | TODO |  |
-| M80 | **Encounter chains**: hitting the same species repeatedly raises its shiny and perfect-stat odds. |  | TODO |  |
+| M78 | **Alpha encounters**: rare oversized wilds with higher stats and better drops. |  | DONE | src/core/wildLuck.ts Alpha (4%, +3 levels, +1 Atk/Def, x3 prize); run.ts startEncounter; tests/unit/w1Rules.test.ts |
+| M79 | **Shiny charm progress**: a visible shiny meter rises with encounters; all rolls remain seeded. |  | DONE | src/core/wildLuck.ts shiny meter (itemCounters), shown in battle panel (conditions.ts); tests/unit/w1Rules.test.ts |
+| M80 | **Encounter chains**: hitting the same species repeatedly raises its shiny and perfect-stat odds. |  | PART | wildLuck.ts same-species chain raises shiny odds; perfect-stat odds not built (no IV stat in game) |
 | M82 | **Habitat reading**: scouting a route reveals a short list of likely species. |  | TODO |  |
 | M100 | **Elite gauntlet**: Elite Four fights back-to-back with a small heal between, no full restore. | Y ( Yes full restore) | DONE | src/core/run.ts:2430 Elite Four heal party after each battle |
-| F3 | Battle log filter tabs: damage, status, weather, ability. | Y (Battle Log in Battle) | TODO |  |
-| F6 | Critical-hit streak meter that grants a tiny crit-rate bonus. | Y (But a rare item) | TODO |  |
+| F3 | Battle log filter tabs: damage, status, weather, ability. | Y (Battle Log in Battle) | DONE | src/ui/logFilter.ts + BattleScene.toggleHistory tabs (H, keys 1-5); tests/unit/logFilter.test.ts |
+| F6 | Critical-hit streak meter that grants a tiny crit-rate bonus. | Y (But a rare item) | DONE | item streak-lens (itemCatalog.json), held.ts critStageBonus, engine.ts critStreak; no save version change |
 | F7 | Combo moves: two allies using matching moves in doubles fire a bonus joint attack. |  | TODO |  |
 | F11 | Field hazards visual layer (rocks, spikes, webs drawn on the arena floor). |  | TODO |  |
 | F14 | Auto-battle toggle with speed 1x/2x/4x for grinding easy fights. | Y (Put as setting that decreases rewards by 65%) | DONE | src/core/settingsRegistry.ts:91 autoBattle (EXP halved), battleSpeed:93; src/core/battle/autoBattle.ts; docs/status/battle-pages-auto-battle.md |
 | F15 | Smart-target suggestion arrow in doubles. |  | TODO |  |
-| F19 | Bench support: a benched Pokémon shouts a buff once per battle. | Y (But must have high enough friendship) | TODO |  |
+| F19 | Bench support: a benched Pokémon shouts a buff once per battle. | Y (But must have high enough friendship) | DONE | w1Rules.ts benchSupporter (friendship >= 200), engine.ts resolveTurn once per battle; tests/unit/w1Rules.test.ts |
 | F20 | Item hotbar: pin 4 favourite bag items for one-tap use. |  | TODO |  |
 | F21 | Adaptive music layers that intensify as HP drops. |  | TODO |  |
 | F22 | Boss intro cinematic skip with remembered preference per boss. | ASK: (Make a genuine boss cinematic) | TODO |  |
-| F25 | "Underdog" bonus XP when facing a team with a higher average level. | Y (Must be 4-5 levels higher) | TODO |  |
+| F25 | "Underdog" bonus XP when facing a team with a higher average level. | Y (Must be 4-5 levels higher) | DONE | w1Rules.ts underdogXpMultiplier (foe avg 4+ levels higher, x1.25); run.ts awardExperience; tests/unit/w1Rules.test.ts |
 | F26 | Switch-in ability pop-ups with short flavour text. | N, but: N (Already in game) | DONE | src/ui/battleFx/abilityFx.ts ability banners; src/core/presentation/abilityAnims.ts |
 
 ## W2 Bonds, care & party life (132)

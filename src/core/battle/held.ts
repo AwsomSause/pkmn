@@ -241,7 +241,8 @@ export function heldStatMultiplier(ctx: Pick<HeldContext, 'content' | 'teamItems
 }
 
 export function critStageBonus(ctx: HeldContext, holder: Holder): number {
-  const fromItems = hooks(hooksOf(ctx, holder.mon, holder.side), 'crit').reduce((sum, h) => sum + h.hook.stages, 0);
+  const streak = Math.min(3, ctx.battle.critStreak?.[holder.mon.uid] ?? 0);
+  const fromItems = hooks(hooksOf(ctx, holder.mon, holder.side), 'crit').reduce((sum, h) => sum + h.hook.stages + streak * (h.hook.streakStages ?? 0), 0);
   return fromItems + (stateOf(ctx.battle).crit[holder.mon.uid] ?? 0);
 }
 

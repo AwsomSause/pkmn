@@ -521,6 +521,15 @@
    "amount": 1
   }
  ],
+ "w1": {
+  "resonance": { "minParty": 3, "bonus": 1.05 },
+  "bleed": { "maxStacks": 5, "perStack": 0.03, "moves": ["slash", "night-slash", "cut", "fury-cutter", "cross-poison", "x-scissor", "leaf-blade", "sacred-sword", "psycho-cut", "razor-shell", "air-cutter", "metal-claw", "steel-wing", "iron-tail", "smart-strike"] },
+  "curse": { "bonus": 1.25, "followUpTypes": ["ghost", "dark"] },
+  "hazardBurst": { "fraction": 0.0625 },
+  "luck": { "meterBonus": 0.05, "meterCap": 50, "chainBonus": 0.25, "chainCap": 10, "alphaChance": 0.04, "alphaLevels": 3, "alphaMoney": 3 },
+  "bench": { "minFriendship": 200 },
+  "underdog": { "levels": 4, "xpBonus": 1.25 }
+ },
  "spectacle": {
   "enabled": true,
   "momentum": { "max": 100, "superEffective": 12, "streak": 8, "knockout": 25, "faintKeeps": 0.5, "ralliesPerBattle": 2, "rallyDamage": 1.5 },

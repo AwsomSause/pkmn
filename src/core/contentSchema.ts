@@ -5,6 +5,7 @@
 import { NATURE_IDS } from './natures';
 import { z } from 'zod';
 import { SpectacleConfigSchema } from './battle/spectacleConfig';
+import { W1ConfigSchema } from './battle/w1Rules';
 import type { StoryConfig } from './story/schema';
 import type { RaidFile } from './raid/schema';
 import type { TotemFile } from './totem/schema';
@@ -1151,7 +1152,7 @@ export const HeldHookSchema = z.discriminatedUnion('hook', [
   /** Locked into the first move it uses until it switches out (Choice items). */
   z.object({ hook: z.literal('choiceLock') }),
   /** More critical-hit stages; `critDamage` replaces the 1.5x of a critical hit. */
-  z.object({ hook: z.literal('crit'), stages: z.number().int().min(0), critDamage: z.number().positive().optional(), species: Species }),
+  z.object({ hook: z.literal('crit'), stages: z.number().int().min(0), critDamage: z.number().positive().optional(), /** Extra stages per critical hit in a row (up to 3): the Streak Lens (ideas W1). */ streakStages: z.number().int().min(0).optional(), species: Species }),
   /** The holder's moves are more accurate (only when it moves after the target, for the Zoom Lens). */
   z.object({ hook: z.literal('accuracy'), percent: z.number().positive(), whenMovingLast: z.boolean().optional() }),
   /** Moves aimed at the holder are less accurate (Bright Powder). */
@@ -1903,6 +1904,8 @@ export const BalanceSchema = z.object({
   sos: z.object({ enabled: z.boolean() }).default({ enabled: true }),
   /** Battle Drama spectacle (APPROVED §7): Last Stand, Perfect Counter, Momentum, Guard Break, Revenge Moment, boss phases, Boss Revenge Rematch (core/battle/spectacle.ts). */
   spectacle: SpectacleConfigSchema,
+  /** Ideas W1 rules: Type Resonance, Bleed, Curse Tags, Hazard burst, Underdog XP (core/battle/w1Rules.ts). */
+  w1: W1ConfigSchema,
   /** The shop puts one item on sale: it changes every this many stages, and takes this share off the price. */
   shopSale: z.object({ everyStages: z.number().int().positive(), discount: z.number().min(0).max(1) }).default({ everyStages: 3, discount: 0.2 }),
   /** Repeat attribute boosts from items diminish: after this many full-size boosts to one attribute in a run, each is scaled by `factor` (at least 1 point). */
