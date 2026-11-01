@@ -4215,7 +4215,9 @@
       },
       "effect": {
         "kind": "intercept",
-        "takeShare": 0.6
+        "takeShare": 0.6,
+        "guardTurns": 3,
+        "guardReduction": 0.25
       },
       "memoryRecord": {
         "importance": 80,
