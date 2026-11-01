@@ -3,6 +3,7 @@
 //   - a Pokémon was caught: add it, replace a party member, or release it
 // Replacing, releasing and forgetting can't be undone, so each asks to confirm.
 
+import { getMutator } from '../core/mutators';
 import { fixedDamageLabel } from '../ui/battleText';
 import Phaser from 'phaser';
 import { EGG_TIERS, eggTier } from '../core/eggs';
@@ -98,6 +99,7 @@ export class DecisionScene extends Phaser.Scene {
     else if (decision.kind === 'reunion') this.buildCaught(decision.mon, decision.hallOfFame);
     else if (decision.kind === 'teachMove') this.buildTeachMove(decision.uid, decision.itemName, decision.moveIds);
     else if (decision.kind === 'signature') this.buildSignature(decision.title, decision.options);
+    else if (decision.kind === 'mutator') this.buildMutator(decision.choices);
     else if (decision.kind === 'mentorship') this.buildMentorship(decision.mentorUid, decision.proteUid, decision.path);
     else if (decision.kind === 'askLead') this.buildAskLead(decision.uid, decision.reason);
     else this.buildPpUp(decision.uid, decision.itemName, decision.ups);
@@ -218,6 +220,14 @@ export class DecisionScene extends Phaser.Scene {
       fontSize: 26,
       onSelect: (i) => this.resolve({ kind: 'signature', optionIndex: i }),
     });
+  }
+
+  /** Modifier Run: pick 1 of 3 blessings/curses. */
+  private buildMutator(ids: string[]): void {
+    const options = ids.flatMap((id) => getMutator(id) ?? []).map((m) => ({ label: `${m.kind === 'blessing' ? '✦' : '☠'} ${m.name}`, description: m.blurb }));
+    this.buildSignature('Pick a modifier for the rest of the run', options);
+    const picked = (services().session.run?.mutators ?? []).flatMap((id) => getMutator(id)?.name ?? []);
+    if (picked.length > 0) this.add.text(GAME_WIDTH / 2, 470, `Active: ${picked.join(', ')}`, textStyle(18, '#d8d0e0', { align: 'center', wordWrap: { width: 800 } })).setOrigin(0.5, 0);
   }
 
   // ---------- a TM or HM from the reward draft ----------

@@ -202,7 +202,10 @@
       "status": "supported",
       "bonus": 0.1,
       "blurb": "Opt-in. Win a trainer battle in 6 turns or fewer for an extra ₽150. There is no timer and no penalty for taking longer.",
-      "quickWin": { "turns": 6, "money": 150 },
+      "quickWin": {
+        "turns": 6,
+        "money": 150
+      },
       "group": "speed-clear"
     },
     {
@@ -290,7 +293,9 @@
       "progressionEligible": false,
       "checkpoints": false,
       "blurb": "A place to experiment: the starter set and draft rule are random every run. No permanent rewards.",
-      "bundles": ["random-draft"]
+      "bundles": [
+        "random-draft"
+      ]
     },
     {
       "id": "regional-circuit",
@@ -310,11 +315,62 @@
       "checkpoints": false,
       "blurb": "Event-heavy routes with fewer ordinary battles and scarce supplies (half the starting money and items).",
       "campaignId": "expedition-route",
-      "bundles": ["variant-hunt", "scarce-supplies"],
+      "bundles": [
+        "variant-hunt",
+        "scarce-supplies"
+      ],
       "rewardScale": 0.75
+    },
+    {
+      "id": "nuzlocke",
+      "name": "Nuzlocke",
+      "status": "supported",
+      "progressionEligible": true,
+      "checkpoints": false,
+      "nuzlocke": "standard",
+      "rewardBonus": 0.25,
+      "bundles": [
+        "no-revives"
+      ],
+      "blurb": "One catch per area (the first wild Pokémon you meet). A Pokémon that faints is lost for good and joins the memorial. A wipe ends the run. Rewards +25%."
+    },
+    {
+      "id": "hardcore-nuzlocke",
+      "name": "Hardcore Nuzlocke",
+      "status": "supported",
+      "progressionEligible": true,
+      "checkpoints": false,
+      "nuzlocke": "hardcore",
+      "rewardBonus": 0.6,
+      "bundles": [
+        "no-revives",
+        "no-battle-items"
+      ],
+      "blurb": "Nuzlocke, plus: the party can't pass the stage's level cap margin, only Poké Balls in battle, and Set style (no switching in trainer battles). Rewards +60%."
+    },
+    {
+      "id": "modifier-run",
+      "name": "Modifier Run",
+      "status": "supported",
+      "progressionEligible": true,
+      "checkpoints": false,
+      "mutatorEvery": 5,
+      "rewardBonus": 0.1,
+      "blurb": "Every 5 battles you pick 1 of 3 blessings or curses. They stack all run long. Curses raise your end rewards."
+    },
+    {
+      "id": "weekly",
+      "name": "Weekly Gauntlet",
+      "status": "supported",
+      "progressionEligible": true,
+      "checkpoints": false,
+      "weeklySeed": true,
+      "blurb": "The week decides the seed, the three starters and one themed ruleset (Nuzlocke, Monotype, Empty Bag...). Same for everyone; your best score is kept on this device. Account rewards pay once a week."
     }
   ],
-  "duplicateCompensation": { "researchPoints": 8 },
+  "duplicateCompensation": {
+    "researchPoints": 8
+  },
   "modeRewards": [
     {
       "modeId": "daily",

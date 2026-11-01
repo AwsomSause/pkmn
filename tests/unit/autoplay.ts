@@ -5,6 +5,7 @@ import { doublesSwitchProblem } from '../../src/core/battle/doubles';
 import type { Content } from '../../src/core/contentSchema';
 import { typeEffectiveness } from '../../src/core/battle/damage';
 import { forcedMoveIndex, itemProblem } from '../../src/core/battle/engine';
+import { nuzlockeCatchProblem } from '../../src/core/nuzlocke';
 import type { RulesChoice } from '../../src/core/rules';
 import { createPokemon, maxHp } from '../../src/core/pokemon';
 import { buyItem, chooseReward, chooseStarter, createRun, debugHealParty, leaveShop, partyCapacity, resolveDecision, takeTurn, type TurnResult } from '../../src/core/run';
@@ -73,7 +74,7 @@ export function step(content: Content, run: RunState, smart = false): { run: Run
       const midMove = forcedMoveIndex(battle, run.party) !== null;
       const ownShare = run.party[battle.activeIndex]!.hp / maxHp(content, run.party[battle.activeIndex]!);
       // The smart player stops throwing balls once its own Pokémon is in trouble (it used to faint to a level 2 wild while throwing).
-      if (!midMove && !(smart && ownShare < 0.4) && battle.kind === 'wild' && run.party.length < partyCapacity(content, run) && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2 && itemProblem({ content, battle, party: run.party, inventory: run.inventory }, 'poke-ball') === null) {
+      if (!midMove && !(smart && ownShare < 0.4) && battle.kind === 'wild' && run.party.length < partyCapacity(content, run) && (run.inventory['poke-ball'] ?? 0) > 0 && enemy.hp <= maxHp(content, enemy) / 2 && itemProblem({ content, battle, party: run.party, inventory: run.inventory, catchBlocked: nuzlockeCatchProblem(battle) }, 'poke-ball') === null) {
         const turn = takeTurn(content, run, { kind: 'item', itemId: 'poke-ball' });
         return { run: turn.run, turn };
       }
@@ -96,6 +97,7 @@ export function step(content: Content, run: RunState, smart = false): { run: Run
       const d = run.pending[0]!;
       if (d.kind === 'learnMove') return { run: resolveDecision(content, run, { kind: 'forgetMove', moveIndex: 0 }).run, turn: null };
       if (d.kind === 'signature') return { run: resolveDecision(content, run, { kind: 'signature', optionIndex: 0 }).run, turn: null };
+      if (d.kind === 'mutator') return { run: resolveDecision(content, run, { kind: 'mutator', optionIndex: 0 }).run, turn: null };
       if (d.kind === 'mentorship') return { run: resolveDecision(content, run, { kind: 'mentor', accept: false }).run, turn: null };
       if (d.kind === 'askLead') return { run: resolveDecision(content, run, { kind: 'askLead', accept: false }).run, turn: null };
       if (d.kind !== 'caught') return { run: resolveDecision(content, run, { kind: 'skipMove' }).run, turn: null };

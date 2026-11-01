@@ -21,9 +21,12 @@ export function dailyModifierId(isoDate: string): string {
 }
 
 /** The day's three starters: curated from the region and type sets whether or not the player owns them, so everyone gets the same ones. */
-export function dailyStarters(content: Content, isoDate: string): string[] {
+export const dailyStarters = (content: Content, isoDate: string): string[] => starterSet(content, dailySeed(isoDate));
+
+/** Three starters drawn from the shared Classic/region/type pools by a seed alone (Daily and Weekly use it). */
+export function starterSet(content: Content, seed: string): string[] {
   const ids = [...new Set([...content.starterPools.values()].filter((p) => ['classic', 'region', 'type'].includes(p.category) && !p.mastered && !p.specimens).flatMap((p) => eligibleSpecies(content, p)))].sort();
-  return new Rng(hashSeed(`${dailySeed(isoDate)}::starters`)).shuffle(ids).slice(0, content.balance.starterChoices);
+  return new Rng(hashSeed(`${seed}::starters`)).shuffle(ids).slice(0, content.balance.starterChoices);
 }
 
 export interface DailySetup {

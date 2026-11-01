@@ -5,6 +5,7 @@
 
 import type { Boss, BossRole, Campaign, Content, Region, TypeName } from './contentSchema';
 import type { Rng } from './rng';
+import { isHardcore } from './nuzlocke';
 import type { RunState } from './state';
 
 export function getCampaign(content: Content, id: string): Campaign {
@@ -46,10 +47,12 @@ export function levelCap(content: Content, regionIndex: number): number {
 }
 
 /** The level cap for the region the run is in now. */
-export function runLevelCap(content: Content, run: Pick<RunState, 'regionIndex'> & Partial<Pick<RunState, 'stage' | 'campaignId'>>): number {
+export function runLevelCap(content: Content, run: Pick<RunState, 'regionIndex'> & Partial<Pick<RunState, 'stage' | 'campaignId' | 'rules'>>): number {
   const region = levelCap(content, run.regionIndex);
   if (!run.stage || run.stage.kind !== 'stage' || !run.campaignId) return region;
-  return Math.min(region, stageLevelCap(content, getCampaign(content, run.campaignId), run.regionIndex, run.stage.index));
+  // Hardcore Nuzlocke: no margin over the stage's last enemy.
+  const margin = run.rules && isHardcore(run.rules) ? content.balance.difficulty.stageCapMargin : 0;
+  return Math.min(region, stageLevelCap(content, getCampaign(content, run.campaignId), run.regionIndex, run.stage.index) - margin);
 }
 
 /** What the party may reach in a stage: the level of that stage's last wild enemy plus balance.difficulty.stageCapMargin. */

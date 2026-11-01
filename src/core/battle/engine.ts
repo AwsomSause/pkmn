@@ -265,6 +265,10 @@ export interface BattleContext {
   perks?: Perks;
   /** The Empty Bag Challenge Contract: only Poké Balls can be used. */
   noBattleItems?: boolean;
+  /** Hardcore Nuzlocke, Set style: no voluntary switching in trainer battles. */
+  setStyle?: boolean;
+  /** Why Poké Balls can't be used (Nuzlocke area already used), or absent. */
+  catchBlocked?: string | null;
   /** The run's starter (starter perks). */
   starterUid?: string | null;
   /** The player's attributes (damage, Speed, damage taken). */
@@ -536,10 +540,11 @@ function choiceLock(battle: BattleState, mon: PokemonInstance | undefined): stri
 }
 
 /** Why the player can't switch to this party slot, or null if they can. */
-export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'> & Partial<Pick<BattleContext, 'content' | 'teamItems'>>, partyIndex: number): string | null {
+export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'> & Partial<Pick<BattleContext, 'content' | 'teamItems' | 'setStyle'>>, partyIndex: number): string | null {
   const mon = ctx.party[partyIndex];
   if (!mon) return 'There is no Pokémon in that slot.';
   if (partyIndex === ctx.battle.activeIndex && !ctx.battle.needsSwitch) return 'That Pokémon is already in battle.';
+  if (ctx.setStyle && ctx.battle.kind === 'trainer' && !ctx.battle.needsSwitch) return 'Set style: no switching in trainer battles.';
   if (mon.hp <= 0) return 'That Pokémon has fainted.';
   const active = ctx.party[ctx.battle.activeIndex];
   const shedShell = active && 'content' in ctx ? Held.canAlwaysSwitch(ctx as Pick<BattleContext, 'content' | 'teamItems'>, active, 'player') : false;
@@ -1102,7 +1107,7 @@ function useCheer(ctx: BattleContext, cheer: Cheer, events: BattleEvent[]): void
 }
 
 /** Why this item can't be used right now, or null if it can. */
-export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'party' | 'inventory' | 'noBattleItems'>, itemId: string, targetIndex?: number): string | null {
+export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'party' | 'inventory' | 'noBattleItems'> & Partial<Pick<BattleContext, 'catchBlocked'>>, itemId: string, targetIndex?: number): string | null {
   const item = ctx.content.items.get(itemId);
   if (!item) return `Unknown item "${itemId}".`;
   if (ctx.noBattleItems && item.category !== 'ball') return 'Your Empty Bag contract allows only Poké Balls in battle.';
@@ -1114,6 +1119,7 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
     const special = ballRuleProblem(ctx, item.effect.rule);
     if (special !== undefined) return special;
     if (ctx.battle.kind !== 'wild') return "You can't catch another trainer's Pokémon!";
+    if (ctx.catchBlocked) return ctx.catchBlocked;
     if (ctx.battle.totem) return "A Totem can't be caught mid-fight. Beat it and something rare may follow!";
     if (ctx.battle.raid) return "A raid boss can't be caught mid-fight. Beat it and it may join you!";
     if (ctx.battle.monRival) return "It won't be caught! It only wants to settle things with its rival.";

@@ -1,5 +1,6 @@
 // The permanent player profile (survives between runs).
 
+import { recordBoardRun } from './boards';
 import { archiveRivals } from './rivals/legacy';
 import type { Content } from './contentSchema';
 import { applyRunToProfile, type RunEndSummary } from './progress';
@@ -96,6 +97,7 @@ export function finalizeRun(
   archiveRivals(next, run);
   addRunToCodex(next, run);
   const legacyRecord = recordLegacyRun(content, next, run, now, genesis);
+  next.legacy = recordBoardRun(next, run, now).legacy;
   recordHeirloom(content, next, legacyRecord);
   claimPast(next, run);
   next.finalizedRunIds = [...next.finalizedRunIds, run.runId].slice(-FINALIZED_HISTORY);
