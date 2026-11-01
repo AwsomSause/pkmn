@@ -7,6 +7,7 @@
 // pillar with a bigger token, and the champion stands in turning gold rays
 // (Visual Bible: "a deliberate escalation from normal stages").
 
+import { clockLabel, periodOf, PERIOD_LOOK } from '../core/clock';
 import { modeObjectives, objectivesLine } from '../core/modeObjectives';
 import { fieldHintId, licenseName, licenseNote } from '../core/license';
 import { SERVICES } from '../core/services/schema';
@@ -235,8 +236,11 @@ export class MapScene extends Phaser.Scene {
       .text(GAME_WIDTH - 24, 14, `${region.name}  ·  ${league ? 'Battle' : 'Level'} ${column}/${stage.map.columns}`, textStyle(24, COLORS.textLight))
       .setOrigin(1, 0);
     this.add
-      .text(GAME_WIDTH - 24, 44, `₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}${wipeStatus(run) ? `  ·  Wipes ${wipeStatus(run)!.wipes}${wipeStatus(run)!.max ? `/${wipeStatus(run)!.max}` : ''}` : ''}`, textStyle(16, '#d8d0e0'))
+      .text(GAME_WIDTH - 24, 44, `${clockLabel(run)}  ·  ₽${run.money}  ·  Badges ${run.badges.length}  ·  Level cap ${cap}${wipeStatus(run) ? `  ·  Wipes ${wipeStatus(run)!.wipes}${wipeStatus(run)!.max ? `/${wipeStatus(run)!.max}` : ''}` : ''}`, textStyle(16, '#d8d0e0'))
       .setOrigin(1, 0);
+    // Time of day: a light wash over the map (presentation only).
+    const look = PERIOD_LOOK[periodOf(run)];
+    if (look.alpha > 0) this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, look.tint, look.alpha * 0.5).setOrigin(0).setDepth(900).setName('time-wash');
     // Weather forecast: a front ahead, or the one you are in, and fog.
     const fc = league ? null : forecast(content, run);
     if (fc) {

@@ -50,6 +50,7 @@ import { applyReward, rewardTargetProblem } from './rewards';
 import { focusIs, MYSTERY_EXTRA_STOPS, regionFocus } from './campaign/focus';
 import { emit } from './story/record';
 import { recordBattleStarted } from './story/hooks';
+import { celebrateToday, milestoneToday, periodOf, PERIOD_LABEL, restUntilMorning } from './clock';
 import { getTheme, typesPool } from './themes';
 import { anyRoaming, endRoamer, healConvoy, startConvoy, partyHasAbility, placeCamp, scoutAhead, CAMP_EVENT_ID } from './world';
 
@@ -78,6 +79,10 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return run.party.some((m) => emotionOf(content, run, m.uid)?.id === c.id);
     case 'partyType':
       return run.party.some((m) => content.species.get(m.speciesId)?.types.includes(c.type));
+    case 'period':
+      return c.in.includes(periodOf(run));
+    case 'milestone':
+      return milestoneToday(content, run);
     case 'partySpecies':
       return run.party.some((m) => m.speciesId === c.species);
     case 'starter': {
@@ -195,6 +200,10 @@ export function conditionText(content: Content, c: EventCondition): string {
     }
     case 'item':
       return `Needs a ${content.catalog.get(c.id)?.name ?? content.items.get(c.id)?.name ?? c.id}`;
+    case 'period':
+      return `Only in the ${c.in.map((x) => PERIOD_LABEL[x].toLowerCase()).join(' or ')}`;
+    case 'milestone':
+      return 'Needs a milestone day';
     case 'partyType':
       return `Needs a ${c.type.charAt(0).toUpperCase()}${c.type.slice(1)}-type in your party`;
     case 'partySpecies':
@@ -581,6 +590,10 @@ export function effectWords(content: Content, e: EventEffect): string {
       return `trade away ${e.want.label}`;
     case 'heal':
       return e.share >= 1 ? 'full heal' : `heal ${Math.round(e.share * 100)}%`;
+    case 'rest':
+      return 'sleep until morning';
+    case 'celebrate':
+      return 'the day is celebrated';
     case 'damage':
       return `party loses ${Math.round(e.share * 100)}% HP`;
     case 'cure':
@@ -895,6 +908,12 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
     }
     case 'scout':
       scoutAhead(content, run, e.columns);
+      return effectWords(content, e);
+    case 'rest':
+      restUntilMorning(run);
+      return effectWords(content, e);
+    case 'celebrate':
+      celebrateToday(run);
       return effectWords(content, e);
     case 'addEvent': {
       const here = run.stage!.map.nodes.find((n) => n.id === run.stage!.current)!;

@@ -38776,8 +38776,8 @@
   },
   {
    "id": "camp-checkpoint",
-   "name": "Checkpoint Camp",
-   "group": "Checkpoint Camps",
+   "name": "Camp",
+   "group": "Camp",
    "stop": "camp",
    "rarity": "common",
    "minStage": 1,
@@ -38786,12 +38786,12 @@
     "tint": "#1c2a1c",
     "effect": "sparkle"
    },
-   "intro": "A tidy camp with a firepit and a tent. Other travelers have left it clean. There is time for one thing before you move on.",
+   "intro": "A tidy camp with a firepit and a tent, set up for travelers. There is time for one thing before you move on. What you can do depends on the hour, and on who is with you.",
    "choices": [
     {
-     "label": "Make camp (full rest)",
+     "label": "Make camp (full rest until morning)",
      "success": {
-      "text": "Everyone sleeps, and anyone in your care too. In the morning, all of you are whole again.",
+      "text": "Everyone sleeps, and anyone in your care too. A new day begins, and all of you are whole again.",
       "effects": [
        {
         "kind": "heal",
@@ -38808,51 +38808,33 @@
         "kind": "friendship",
         "amount": 3,
         "who": "party"
+       },
+       {
+        "kind": "rest"
        }
       ]
      }
     },
     {
-     "label": "Plan the route",
+     "label": "Spend time with the party",
      "success": {
-      "text": "You spread a map and study the road ahead.",
+      "text": "The party gathers round. Who wants to do what?",
       "effects": [
        {
-        "kind": "scout",
-        "columns": 6
-       },
-       {
-        "kind": "gymPreview"
-       },
-       {
-        "kind": "research",
-        "amount": 15
+        "kind": "addEvent",
+        "eventId": "camp-party"
        }
       ]
      }
     },
     {
-     "label": "Sit by the fire",
+     "label": "Prepare for the road",
      "success": {
-      "text": "Stories, a song, and someone's joke you will remember. Everyone feels closer.",
+      "text": "You lay out the map and your gear.",
       "effects": [
        {
-        "kind": "heal",
-        "share": 0.3
-       },
-       {
-        "kind": "friendship",
-        "amount": 9,
-        "who": "party"
-       },
-       {
-        "kind": "research",
-        "amount": 30
-       },
-       {
-        "kind": "attribute",
-        "key": "goodEvil",
-        "amount": 1
+        "kind": "addEvent",
+        "eventId": "camp-prepare"
        }
       ]
      }
@@ -38889,6 +38871,282 @@
      }
     }
    ]
+  },
+  {
+   "id": "camp-party",
+   "name": "Around the Fire",
+   "group": "Camp",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#2a1c1c",
+    "effect": "sparkle"
+   },
+   "intro": "The Pokémon drift toward each other: some play, some argue, some just want company. The hour decides what feels right.",
+   "choices": [
+    {
+     "label": "Morning play (morning)",
+     "requires": [
+      {
+       "kind": "period",
+       "in": [
+        "morning"
+       ]
+      }
+     ],
+     "success": {
+      "text": "Rolling, racing and wrestling in the dew. A few scraped knees, a lot of laughter.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 6,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Sunny-afternoon contest (afternoon)",
+     "requires": [
+      {
+       "kind": "period",
+       "in": [
+        "afternoon"
+       ]
+      }
+     ],
+     "success": {
+      "text": "A friendly contest in the warm light. Winners crow, losers promise a rematch. Everyone is closer for it.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 5,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 0.15
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stories by the fire (evening or night)",
+     "requires": [
+      {
+       "kind": "period",
+       "in": [
+        "evening",
+        "night"
+       ]
+      }
+     ],
+     "success": {
+      "text": "Stories, a song, and someone's joke you will remember. Everyone feels closer.",
+      "effects": [
+       {
+        "kind": "heal",
+        "share": 0.3
+       },
+       {
+        "kind": "friendship",
+        "amount": 9,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 30
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    },
+    {
+     "label": "Talk with your partner",
+     "success": {
+      "text": "You sit with your lead for a while. Not much is said. It is enough.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 8,
+        "who": "lead"
+       },
+       {
+        "kind": "research",
+        "amount": 10
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
+  },
+  {
+   "id": "camp-prepare",
+   "name": "Before You Go",
+   "group": "Camp",
+   "rarity": "common",
+   "minStage": 1,
+   "scene": {
+    "cast": [],
+    "tint": "#1c242a",
+    "effect": "sparkle"
+   },
+   "intro": "The road ahead is quiet, and what you can do with it changes as the day wears on.",
+   "choices": [
+    {
+     "label": "Plan the route",
+     "success": {
+      "text": "You spread a map and study the road ahead.",
+      "effects": [
+       {
+        "kind": "scout",
+        "columns": 6
+       },
+       {
+        "kind": "gymPreview"
+       },
+       {
+        "kind": "research",
+        "amount": 15
+       }
+      ]
+     }
+    },
+    {
+     "label": "Morning drills (morning)",
+     "requires": [
+      {
+       "kind": "period",
+       "in": [
+        "morning",
+        "afternoon"
+       ]
+      }
+     ],
+     "success": {
+      "text": "Moves practised until they are second nature.",
+      "effects": [
+       {
+        "kind": "levels",
+        "amount": 1,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 20
+       }
+      ]
+     }
+    },
+    {
+     "label": "Stargaze (night)",
+     "requires": [
+      {
+       "kind": "period",
+       "in": [
+        "night"
+       ]
+      }
+     ],
+     "success": {
+      "text": "Under a wide sky nobody says much. Your party feels calm and sure.",
+      "effects": [
+       {
+        "kind": "friendship",
+        "amount": 4,
+        "who": "party"
+       },
+       {
+        "kind": "research",
+        "amount": 40
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       },
+       {
+        "kind": "heal",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Celebrate the milestone",
+     "requires": [
+      {
+       "kind": "milestone"
+      }
+     ],
+     "success": {
+      "text": "A day to remember. The whole party feasts, and a stranger leaves a small gift by the fire.",
+      "effects": [
+       {
+        "kind": "celebrate"
+       },
+       {
+        "kind": "friendship",
+        "amount": 10,
+        "who": "party"
+       },
+       {
+        "kind": "heal",
+        "share": 1
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "nugget",
+         "big-pearl",
+         "pearl",
+         "star-piece",
+         "stardust",
+         "comet-shard",
+         "relic-gold",
+         "rare-bone",
+         "big-mushroom"
+        ]
+       },
+       {
+        "kind": "itemFrom",
+        "ids": [
+         "protein",
+         "calcium",
+         "carbos",
+         "hp-up",
+         "iron",
+         "zinc"
+        ]
+       },
+       {
+        "kind": "research",
+        "amount": 60
+       },
+       {
+        "kind": "attribute",
+        "key": "goodEvil",
+        "amount": 1
+       }
+      ]
+     }
+    }
+   ],
+   "room": true
   },
   {
    "id": "lookout-tower",
