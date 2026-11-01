@@ -21,6 +21,13 @@ async function prepRow(page: Page, row: number) {
   expect(await prepFocus(page)).toBe(row);
 }
 
+/** Opens a Preparation Desk page (0 Run Setup, 1 Trainer, 2 Starters, 3 Modifiers, 4 Overview) and waits for it. */
+async function prepPage(page: Page, n: number) {
+  await page.evaluate((i) => (window as any).__pkr.game.scene.getScene('RunPrep').goPage(i), n);
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('RunPrep').page), { timeout: 5_000 }).toBe(n);
+  await page.waitForTimeout(400);
+}
+
 /** The row whose label starts with `text` (rows move when a new one is added). */
 const prepRowOf = (page: Page, text: string) =>
   page.evaluate((t) => (window as any).__pkr.game.scene.getScene('RunPrep').menu.config.options.findIndex((o: any) => o.label.startsWith(t)) as number, text);
@@ -91,10 +98,11 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');
   await waitForScene(page, 'RunPrep');
-  await prepRow(page, 3);
+  await prepPage(page, 2); // Starters
+  await prepRow(page, 0);
   await page.keyboard.press('ArrowRight'); // Classic → Johto
   await waitForScene(page, 'RunPrep');
-  await prepRow(page, 4);
+  await prepRow(page, 1);
   for (let i = 0; i < 3; i++) {
     await page.keyboard.press('ArrowRight'); // Standard → Balanced → Blind → Type Focus
     await page.waitForTimeout(250);
@@ -106,6 +114,7 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   await page.screenshot({ path: 'test-results/m55-prep.png' });
 
   // Save it in preset slot 1.
+  await prepPage(page, 4); // Overview
   await prepRow(page, await prepRowOf(page, 'Save as preset'));
   await page.keyboard.press('Enter');
   await page.waitForTimeout(300);
@@ -144,11 +153,13 @@ test('the Blind Draft hides the starters until one is chosen', async ({ page }) 
   page.on('pageerror', (e) => errors.push(e.message));
   await toPrepDesk(page, '/?seed=e2e-blind&debug=1');
   await page.screenshot({ path: 'test-results/m55-prep-default.png' });
-  await prepRow(page, 4);
+  await prepPage(page, 2); // Starters
+  await prepRow(page, 1);
   await page.keyboard.press('ArrowRight');
   await waitForScene(page, 'RunPrep');
   await page.keyboard.press('ArrowRight'); // Standard → Balanced → Blind
   await waitForScene(page, 'RunPrep');
+  await prepPage(page, 4); // Overview
   await prepRow(page, 0);
   await page.keyboard.press('Enter');
   await waitForScene(page, 'StarterSelect');

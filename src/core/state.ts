@@ -872,6 +872,8 @@ export const RunRulesSchema = z.object({
   deathBlock: z.boolean(),
   /** True once Death-Block has saved the run (it works once). */
   deathBlockUsed: z.boolean(),
+  /** Weeks: whether weekly and holiday event editions were allowed to apply when the run started. Fixed for the run. */
+  weeks: z.boolean().default(true),
   /** False means no account-level rewards of any kind (Adventure). */
   progressionEligible: z.boolean(),
   /** The published reward multiplier, fixed at the start. */

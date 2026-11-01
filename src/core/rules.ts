@@ -78,6 +78,8 @@ export interface RulesChoice {
   regionId?: string | null;
   /** Set when the account rewards were already paid (a second Daily Run on the same day). */
   noRewards?: boolean;
+  /** Weeks: false turns off the weekly and holiday event editions for this run (missing means on). */
+  weeks?: boolean;
 }
 export const STANDARD_CHOICE: RulesChoice = { modeId: 'standard', difficultyId: 'standard', modifierIds: [], deathBlock: false };
 
@@ -132,6 +134,7 @@ export function makeRules(choice: RulesChoice): RunRules {
     modifierIds: modeModifiers(choice),
     deathBlock: choice.deathBlock,
     deathBlockUsed: false,
+    weeks: choice.weeks !== false,
     progressionEligible: getMode(choice.modeId)!.progressionEligible && !choice.noRewards,
     rewardMultiplier: rewardMultiplier(choice),
     enemyLevelBonus: getDifficulty(choice.difficultyId)!.enemyLevelBonus + choice.modifierIds.reduce((n, id) => n + (getModifier(id)?.enemyLevel ?? 0), 0),
@@ -172,6 +175,7 @@ export function rulesLines(choice: RulesChoice): string[] {
   const lines = [`Mode: ${mode?.name ?? choice.modeId} - ${mode?.blurb ?? ''}`, `Difficulty: ${difficulty?.name ?? choice.difficultyId} - ${difficulty?.blurb ?? ''}`];
   for (const id of getMode(choice.modeId)?.bundles ?? []) lines.push(`Mode rule: ${getModifier(id)?.name ?? id} - ${getModifier(id)?.blurb ?? ''}`);
   for (const id of choice.modifierIds) lines.push(`Modifier: ${getModifier(id)?.name ?? id} - ${getModifier(id)?.blurb ?? ''}`);
+  lines.push(choice.weeks === false ? 'Weeks off: no weekly or holiday event rules, roamers or stops this run.' : 'Weeks on: this week\'s and any holiday event can apply to this run.');
   if (choice.deathBlock) lines.push(`Death-Block on: ${RUN_RULES.deathBlock.rule}`);
   lines.push(mode?.progressionEligible ? `Reward multiplier: x${rewardMultiplier(choice).toFixed(2)}` : 'No Bank Credits, Research Points, candies, unlocks or achievements in this mode.');
   return lines;
