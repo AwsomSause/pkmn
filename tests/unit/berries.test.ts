@@ -183,3 +183,18 @@ describe('Soil quality and camp warming', () => {
     expect(warmEggs(run, 1)).toBe(0);
   });
 });
+
+describe('New berries', () => {
+  it('Roseli, Hyper Roseli, Kee and Maranga are supported catalog berries that can be planted', () => {
+    for (const id of ['roseli-berry', 'hyper-roseli-berry', 'kee-berry', 'maranga-berry']) {
+      const e = content.catalog.get(id)!;
+      expect(e.status).toBe('supported');
+      expect(e.family.startsWith('Berries')).toBe(true);
+    }
+    expect(content.catalog.get('hyper-roseli-berry')!.rarity).toBe('rare');
+    expect(BERRIES.crossPool.every((id) => content.catalog.has(id))).toBe(true);
+    const run = newRun();
+    holdBerry(run, 'kee-berry', 1);
+    expect(plantableBerries(content, run.party[0]!)).toContain('kee-berry');
+  });
+});

@@ -519,7 +519,8 @@ export function afterHit(
   for (const { itemId, hook } of hooks(targetHooks, 'berryRetaliate')) {
     if (hook.category !== move.category || user.mon.hp <= 0) continue;
     eatBerry(ctx, target, itemId);
-    hurt(user, hook.fraction, itemId, 'hurt');
+    if (hook.fraction) hurt(user, hook.fraction, itemId, 'hurt');
+    if (hook.stat && target.mon.hp > 0) raiseStage(target, hook.stat, hook.stages, itemId, events);
     break;
   }
   if (target.mon.hp > 0) {
