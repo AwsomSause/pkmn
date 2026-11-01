@@ -6,6 +6,7 @@ import { NATURE_IDS } from './natures';
 import { CareSchema } from './care/mods';
 import { DramaBattleSchema, freshDrama } from './drama/schema';
 import { z } from 'zod';
+import { CampProfileSchema, CampStateSchema } from './camp/schema';
 import { ArchetypeModifierSchema, ATTRIBUTE_KEYS, BattleBoostSchema, BoostStatSchema, SemiSchema, StatNameSchema, StatusIdSchema, TerrainSchema, TransformKindSchema, TypeNameSchema, WeatherSchema } from './contentSchema';
 import { LineageSchema, BattleReplaySchema, MemoriesSchema, PastDigestSchema, WorldMemorySchema } from './memories/schema';
 import { STREAM_NAMES, type StreamName } from './rng';
@@ -1070,6 +1071,8 @@ export const RunStateSchema = z.object({
   passives: z.record(z.string(), z.number().int().min(1)).optional(),
   /** Held items taken off a Pokémon, waiting in the Bag to be given to another (catalog id → copies; Major Update §4). Optional: older saves load without it. */
   looseHeld: z.record(z.string(), z.number().int().min(1)).optional(),
+  /** Camp, gadgets and crafting (core/camp, W3): gadget wear, stuff, relics, luck, market buys. Optional: older saves load without it. */
+  camp: CampStateSchema.optional(),
   /** Running totals some items need across a run (a Scarf's knockout bonus so far). */
   itemCounters: z.record(z.string(), z.number().int().min(0)).optional(),
   /** A bike chosen from the map's Items menu for the next move (see core/mapItems.ts). */
@@ -1445,6 +1448,8 @@ export const ProfileSchema = z.object({
   bankTier: z.number().int().min(1).max(5).default(1),
   /** Items kept in the Collector's Vault (Bank tier 5). */
   vault: z.array(z.string()).default([]),
+  /** Camp (core/camp, W3): cookbook, photo album, item journal and the time capsule. Optional: older profiles load without it. */
+  camp: CampProfileSchema.optional(),
   /** Candy Shop perks bought with candies (balance.candyShop): they add to every run's starting Bag. */
   candyPerks: z.array(z.string()).default([]),
   runHistory: z.array(RunRecordSchema),

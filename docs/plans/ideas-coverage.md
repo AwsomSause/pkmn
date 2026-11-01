@@ -190,67 +190,67 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 
 | # | Idea | Note | Status | Evidence |
 |---|---|---|---|---|
-| I189 | Drag-combine items to craft (berry + pot = tea) |  | TODO |  |
-| I190 | Item hands: hold item up and the Pokémon sniffs, hinting at its effect |  | TODO |  |
-| I191 | Item wear: tools degrade with use and can be repaired at a forge |  | TODO |  |
-| I192 | Rummage: poke through trash cans for odd items, with a risk of rats | ASK: T | TODO |  |
-| I193 | Shake bags to find hidden pockets |  | TODO |  |
-| I194 | Gift wrap items for NPCs, wrapping style affects gratitude |  | TODO |  |
-| I195 | Throw items to distract wild Pokémon |  | TODO |  |
-| I196 | Use compass item to point toward the nearest rare node |  | TODO |  |
-| I197 | Binoculars item: zoom the map ahead and spot events |  | TODO |  |
-| I198 | Lantern item: reveals trap nodes, runs out of oil |  | TODO |  |
-| I199 | Map scrap pieces assembled in a jigsaw for a treasure node |  | TODO |  |
-| I200 | Bottle messages found at sea, open to read and reply |  | TODO |  |
-| I201 | Keys and locks: lockpick minigame vs key hunt |  | TODO |  |
-| I202 | Curse items you can't discard, only cleansed via interaction at shrines |  | TODO |  |
-| I203 | Trade relic stacks at an altar, weighing up synergies |  | TODO |  |
-| I204 | Bag organization drag-and-drop with a satisfying thunk |  | TODO |  |
-| I205 | Label printer: rename items for run-specific notes |  | TODO |  |
-| I206 | Vending machine events: shake it for a free item with a chance of jam |  | TODO |  |
-| I207 | Time capsule: bury an item to dig up in a later run |  | TODO |  |
-| I208 | Sell mode: haggle by displaying items in a window to NPC customers |  | TODO |  |
-| I209 | Item recipes discovered by experiments and recorded in the cookbook |  | TODO |  |
-| I210 | Smell test: sniff mystery berries, wrong guess poisons slightly |  | TODO |  |
-| I212 | Dowsing rod: follow vibrations to buried treasure |  | TODO |  |
-| I213 | Cursed mirror: reveals a Pokémon's hidden trait but costs luck |  | TODO |  |
-| I214 | Gacha capsule machine at the Hub for cosmetics, tap-wiggle to open |  | TODO |  |
-| I215 | Holding item swap by drag from party to party with a cute pass animation |  | TODO |  |
+| I189 | Drag-combine items to craft (berry + pot = tea) |  | DONE | src/core/camp/index.ts combine (pick two, any order; no drag), src/ui/campMenu.ts |
+| I190 | Item hands: hold item up and the Pokémon sniffs, hinting at its effect |  | DONE | src/core/camp/index.ts sniffItem: the lead sniffs an item and hints its kind |
+| I191 | Item wear: tools degrade with use and can be repaired at a forge |  | DONE | src/core/camp/index.ts wear()/forge: every gadget has uses, mended at the forge |
+| I192 | Rummage: poke through trash cans for odd items, with a risk of rats | ASK: T | TODO | ASK unresolved in the ledger ("T") |
+| I193 | Shake bags to find hidden pockets |  | DONE | src/core/camp/index.ts shake (once per stage, seeded) |
+| I194 | Gift wrap items for NPCs, wrapping style affects gratitude |  | DONE | src/core/camp/index.ts parcelAction wrap:<style> (paper style raises the payout) |
+| I195 | Throw items to distract wild Pokémon |  | DONE | src/core/camp/index.ts distract: thrown Bag item = one softer wild battle |
+| I196 | Use compass item to point toward the nearest rare node |  | DONE | src/core/camp/index.ts compass |
+| I197 | Binoculars item: zoom the map ahead and spot events |  | DONE | src/core/camp/index.ts binoculars (scoutAhead + names stops) |
+| I198 | Lantern item: reveals trap nodes, runs out of oil |  | DONE | src/core/camp/index.ts lantern (uses oil, reveals hidden stops) |
+| I199 | Map scrap pieces assembled in a jigsaw for a treasure node |  | DONE | src/core/camp/index.ts scraps (4 map scraps = treasure; assembled by button, no jigsaw drag) |
+| I200 | Bottle messages found at sea, open to read and reply |  | DONE | src/core/camp/index.ts bottle (read and reply kind/funny/ignore) |
+| I201 | Keys and locks: lockpick minigame vs key hunt |  | DONE | src/core/camp/index.ts chest (key, or lockpick timing prompt throw-ring) |
+| I202 | Curse items you can't discard, only cleansed via interaction at shrines |  | DONE | src/core/camp/index.ts grantRelic cursed + cleanseRelic; shrine option in services/flow.ts; camp rite purify |
+| I203 | Trade relic stacks at an altar, weighing up synergies |  | DONE | src/core/camp/index.ts altar (two clean relics for one a tier up, listed synergies) |
+| I204 | Bag organization drag-and-drop with a satisfying thunk |  | PART | src/core/camp/index.ts tidy sorts the Bag with a thunk line; no drag-and-drop |
+| I205 | Label printer: rename items for run-specific notes |  | DONE | src/core/camp/index.ts label + src/core/bag.ts shows the label |
+| I206 | Vending machine events: shake it for a free item with a chance of jam |  | DONE | src/core/camp/index.ts vending (jam and thief odds) |
+| I207 | Time capsule: bury an item to dig up in a later run |  | DONE | src/core/camp/index.ts capsule (profile.camp.capsule, dug up in a later run) |
+| I208 | Sell mode: haggle by displaying items in a window to NPC customers |  | DONE | src/core/camp/index.ts stall (customer offers, haggle, hat bonus) |
+| I209 | Item recipes discovered by experiments and recorded in the cookbook |  | DONE | src/core/camp/index.ts combine discovers recipes into profile.camp.cookbook |
+| I210 | Smell test: sniff mystery berries, wrong guess poisons slightly |  | DONE | src/core/camp/index.ts sniff (three berries, wrong pick poisons slightly) |
+| I212 | Dowsing rod: follow vibrations to buried treasure |  | DONE | src/core/camp/index.ts dowse |
+| I213 | Cursed mirror: reveals a Pokémon's hidden trait but costs luck |  | DONE | src/core/camp/index.ts mirror (reveals talent and flavors, -1 luck) |
+| I214 | Gacha capsule machine at the Hub for cosmetics, tap-wiggle to open |  | TODO | Hub cosmetic, belongs with the W7 hub buildings |
+| I215 | Holding item swap by drag from party to party with a cute pass animation |  | PART | src/core/bag.ts giveHeld/takeOffHeld swap held items; no pass animation |
 | I216 | Item compare overlay when hovering over upgrade options |  | DONE | src/core/rewardCompare.ts, used in src/scenes/RewardScene.ts:8 (now vs after on draft cards) |
-| I217 | Wishing well: toss coins and speak a wish, outcomes seeded |  | TODO |  |
+| I217 | Wishing well: toss coins and speak a wish, outcomes seeded |  | DONE | src/core/camp/index.ts well (seeded, luck shifts the odds) |
 | I218 | Fishing rod minigame: cast, wait, set the hook for item or Pokémon |  | PART | src/data/minigames.json fishing-challenge, src/core/minigame/games.ts:415 (tension reel, not cast/set-hook) |
 | I219 | Shovel dig events with a grid-based hot-and-cold guide |  | PART | src/core/minigame/games.ts:589 tracking (warm/cold search), :360 excavation |
-| I220 | Net: catch bug types gently without damaging them |  | TODO |  |
-| I221 | Tent item: pitch camp in a minigame, quality determines rest bonus |  | TODO |  |
-| I223 | Item journal records the first use of each item and narrates it |  | TODO |  |
-| I224 | Mix potions: guess ratios, a bad mix bubbles and explodes harmlessly |  | TODO |  |
-| I225 | Poké Ball customization: sticker them with seals and effects |  | TODO |  |
-| I226 | Ball launcher timing: skill shot for catch rate |  | TODO |  |
-| I228 | Fireworks item: light them at camp to raise team morale |  | TODO |  |
-| I229 | Telescope: stargaze at night nodes to read a forecast |  | TODO |  |
-| I230 | Musical instrument items: play a tune to calm or provoke wild Pokémon |  | TODO |  |
-| I231 | Radio item: tune to stations with different buffs and news |  | TODO |  |
-| I232 | Camera item: photograph rare Pokémon for a Pokédex photo album |  | TODO |  |
-| I233 | Trash-to-treasure: recycling junk items into small parts |  | TODO |  |
-| I234 | Hat tip: wearable hats change NPC reactions |  | TODO |  |
-| I235 | Fake item: bluff NPCs with a prop for a Charm check |  | TODO |  |
-| I236 | Parcel deliveries: carry an NPC's parcel without opening it |  | TODO |  |
-| I237 | Wallet theft insurance interactions via alarm tags |  | TODO |  |
-| I238 | Glow stick signals: wave to allies in dark caves |  | TODO |  |
-| I239 | Sealed letters you may open or deliver unopened for moral points |  | TODO |  |
-| F131 | Item descriptions with example scenarios. |  | TODO |  |
-| F132 | Bag sorting by type, rarity, recently used. |  | PART | src/core/bag.ts pocket tabs + rarity shown (docs/status/unified-bag-major-4-7.md); no rarity/recent sort |
+| I220 | Net: catch bug types gently without damaging them |  | DONE | src/core/camp/index.ts net |
+| I221 | Tent item: pitch camp in a minigame, quality determines rest bonus |  | DONE | src/core/camp/index.ts tent (timing prompt sets the rest) |
+| I223 | Item journal records the first use of each item and narrates it |  | DONE | src/core/camp/index.ts recordFirstUse + GameSession.useItem journal line |
+| I224 | Mix potions: guess ratios, a bad mix bubbles and explodes harmlessly |  | DONE | src/core/camp/index.ts mix (guess the ratio) |
+| I225 | Poké Ball customization: sticker them with seals and effects |  | DONE | src/core/camp/index.ts seal (capture/friendship/healing/xp buffs for wild battles) |
+| I226 | Ball launcher timing: skill shot for catch rate |  | DONE | src/scenes/BattleScene.ts skillThrow + engine skill factor (Ball Launcher gadget) |
+| I228 | Fireworks item: light them at camp to raise team morale |  | DONE | src/core/camp/index.ts fireworks |
+| I229 | Telescope: stargaze at night nodes to read a forecast |  | DONE | src/core/camp/index.ts telescope |
+| I230 | Musical instrument items: play a tune to calm or provoke wild Pokémon |  | DONE | src/core/camp/index.ts flute (calm / provoke) |
+| I231 | Radio item: tune to stations with different buffs and news |  | DONE | src/core/camp/index.ts radio (4 stations) |
+| I232 | Camera item: photograph rare Pokémon for a Pokédex photo album |  | DONE | src/core/camp/index.ts photo + profile.camp.album |
+| I233 | Trash-to-treasure: recycling junk items into small parts |  | DONE | src/core/camp/index.ts recycle |
+| I234 | Hat tip: wearable hats change NPC reactions |  | DONE | src/core/camp/index.ts hat (stall customers react) |
+| I235 | Fake item: bluff NPCs with a prop for a Charm check |  | DONE | src/core/camp/index.ts stall bluff with the Prop Item |
+| I236 | Parcel deliveries: carry an NPC's parcel without opening it |  | DONE | src/core/camp/index.ts parcelAction (carry, deliver sealed) |
+| I237 | Wallet theft insurance interactions via alarm tags |  | DONE | src/core/camp/index.ts alarm-tag stops the stall and vending thieves |
+| I238 | Glow stick signals: wave to allies in dark caves |  | DONE | src/core/camp/index.ts glow |
+| I239 | Sealed letters you may open or deliver unopened for moral points |  | DONE | src/core/camp/index.ts parcelAction letter (open or deliver sealed, morality) |
+| F131 | Item descriptions with example scenarios. |  | DONE | src/core/camp/index.ts itemScenario, shown in the Bag description |
+| F132 | Bag sorting by type, rarity, recently used. |  | DONE | src/core/camp/index.ts tidy + src/core/bag.ts sort by type, rarity, recent, name |
 | F136 | Rarity glow around items by tier. |  | DONE | src/scenes/RewardScene.ts:74-80 rarity glow on cards; fieldMenus.ts:333 rarity pill |
-| F137 | Crafting bench combining 2 berries into a buff item. | ASK: (Pause because berry reward) | TODO |  |
-| F138 | Recipe book unlocked by finds. |  | TODO |  |
-| F139 | Cooking pot at camp for team-wide meal buffs. |  | TODO |  |
-| F140 | Lucky charm that reroll one shop slot. |  | TODO |  |
-| F142 | Mystery box purchase with odds listed. |  | TODO |  |
-| F145 | Cursed items with a trade-off and a purify option. |  | TODO |  |
-| F150 | Black market stops with risky stock. |  | PART | src/core/services/flow.ts:290 Black Market service (locked stock at markup) |
-| F152 | Item fusion for TMs. | Y (Has to relate to type, IE Plates or Silvally Memories) | TODO |  |
-| F153 | TM/HM shelf with a preview of the move animation. |  | TODO |  |
-| F155 | Event-only currency sinks with limited stock. |  | TODO |  |
+| F137 | Crafting bench combining 2 berries into a buff item. | ASK: (Pause because berry reward) | TODO | PAUSED (ledger: pause because of the berry reward) |
+| F138 | Recipe book unlocked by finds. |  | DONE | src/core/camp/index.ts page: recipe pages unlock locked recipes and gadgets |
+| F139 | Cooking pot at camp for team-wide meal buffs. |  | DONE | src/core/camp/index.ts pot |
+| F140 | Lucky charm that reroll one shop slot. |  | DONE | src/core/camp/index.ts marketBuy reroll (Lucky Charm) |
+| F142 | Mystery box purchase with odds listed. |  | DONE | src/core/camp/index.ts market mystery box with listed odds |
+| F145 | Cursed items with a trade-off and a purify option. |  | DONE | src/core/camp/index.ts relics with curse + purify |
+| F150 | Black market stops with risky stock. |  | DONE | src/core/services/flow.ts Black Market + camp market risky back-alley relic |
+| F152 | Item fusion for TMs. | Y (Has to relate to type, IE Plates or Silvally Memories) | DONE | src/core/camp/index.ts fuse (Plate/Memory + TM = TM of that type) |
+| F153 | TM/HM shelf with a preview of the move animation. |  | PART | src/core/camp/index.ts shelf + src/ui/campMenu.ts: preview card with type, power, accuracy; no animation |
+| F155 | Event-only currency sinks with limited stock. |  | DONE | src/core/camp/index.ts market tokenGoods (Camp Tokens, limited stock) |
 
 ## W4 Map, world & run structure (66)
 

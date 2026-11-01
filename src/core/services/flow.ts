@@ -2,6 +2,7 @@
 // Every option shows its price and why it cannot be picked. Choices come from the run seed and the stop, never from UI events,
 // so a reload shows the same offers. Paying and applying happen together, once.
 
+import { cleanseRelic, cursedRelics } from '../camp';
 import { bossInfo } from '../regions';
 import { count, discover } from '../progress';
 import { baseStatTotal, wildEligibleSpecies } from '../themes';
@@ -309,6 +310,8 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
       for (const m of run.party) for (const a of abilityAlternatives(content, m)) add(`ability:${m.uid}:${a.slot}`, `${monName(content, m)}: ${content.abilities.get(a.id)?.name ?? a.id}`, `${content.abilities.get(a.id)?.description ?? 'Switch ability.'}${a.slot === -1 ? ' (hidden ability)' : ''}`, price(run, a.slot === -1 ? C.abilityHidden : C.abilitySwap), side.used ? 'The researcher has finished for today.' : null);
       break;
     case 'relic':
+      // W3: the Shrine also lifts a cursed relic's curse, free (the camp rite does it for a price).
+      for (const r of cursedRelics(run)) add(`cleanse:${r.index}`, `Cleanse ${r.name}`, 'The shrine lifts the curse from this relic.', 0, side.used ? 'The shrine has already answered you.' : null);
       for (const [gain, lose] of relicPairs(run, sideId)) add(`relic:${gain}:${lose}`, `${gain} +${C.relicGain}, ${lose} -${C.relicLoss}`, `For the rest of this run: ${gain} rises by ${C.relicGain} and ${lose} falls by ${C.relicLoss}.`, 0, side.used ? 'The shrine has already answered you.' : null);
       break;
     case 'auction':
@@ -523,6 +526,10 @@ export function useService(content: Content, current: RunState, sideId: string, 
     case 'egg': {
       applyCatalog(content, run, getCatalogEntry(content, 'mystery-egg'), undefined, { moneyMultiplier: 1, rng: new Rng(hashSeed(`${run.seed}::nursery::${sideId}`)) });
       message = 'You take the egg home. It hatches in 3 stages.';
+      break;
+    }
+    case 'cleanse': {
+      message = cleanseRelic(run, Number(uid));
       break;
     }
     case 'relic': {

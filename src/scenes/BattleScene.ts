@@ -39,6 +39,9 @@ import { addContactShadows, addParallax, addVignette, ArenaLight, dressArena, ty
 import { pickUieArena } from '../core/arenaStyle';
 import { uieArenaId } from '../assets/catalog';
 import { services } from '../game/services';
+import { launcherReady } from '../core/camp';
+import { promptById } from '../core/interaction/prompt';
+import { runInteractionPrompt } from '../ui/interactionPrompt';
 import { moveBlockReason } from '../core/battle/moveBlock';
 import { cheerProblem, raidDef } from '../core/raid/raid';
 import { playCry, playMusic, playSfx, playSfxLazy } from '../ui/audio';
@@ -1932,6 +1935,7 @@ export class BattleScene extends Phaser.Scene {
         const id = ids[i]!;
         const item = content.items.get(id)!;
         if (item.target === 'party' || item.target === 'fainted') this.openItemTarget(id);
+        else if (item.category === 'ball' && !this.duo && launcherReady(services().session.run!)) void this.skillThrow(id);
         else this.submit({ kind: 'item', itemId: id });
       },
       onBack: () => this.showRootMenu(),
@@ -1994,6 +1998,15 @@ export class BattleScene extends Phaser.Scene {
   }
 
   // ---------- taking a turn ----------
+
+  /** The Ball Launcher (camp gadget): a timing ring decides how well the ball is thrown; the grade scales the catch rate. */
+  private async skillThrow(itemId: string): Promise<void> {
+    const { session } = services();
+    this.clearMenus();
+    const result = await runInteractionPrompt(this, promptById('throw-ring'), { motion: session.settings.battleAnimations });
+    session.useLauncher();
+    this.submit({ kind: 'item', itemId, skill: result.grade });
+  }
 
   private async act(action: PlayerAction, auto = false): Promise<void> {
     if (this.busy) return;

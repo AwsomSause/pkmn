@@ -19,6 +19,7 @@
 import { shadowDamageMultiplier, shadowResists } from '../shadow';
 import { championsAuraStages, firstStrikeBonus } from '../trainerEvolution';
 import { freshDrama } from '../drama/schema';
+import { skillThrowFactor } from '../camp/schema';
 import type { Perks, TypeModifiers } from '../archetypes';
 import type { AttributeEffects } from '../attributes';
 import { TYPE_NAMES } from '../contentSchema';
@@ -216,7 +217,8 @@ export type PlayerAction =
   /** `transform`: Mega Evolve (etc.) before moving this turn. */
   | { kind: 'move'; index: number; transform?: TransformRequest; /** Spend a full Momentum Meter: this move is a Surge Strike. */ rally?: boolean }
   | { kind: 'switch'; partyIndex: number }
-  | { kind: 'item'; itemId: string; targetIndex?: number }
+  /** `skill`: the grade of a Ball Launcher skill throw (core/camp); it scales the catch rate. */
+  | { kind: 'item'; itemId: string; targetIndex?: number; skill?: 'miss' | 'ok' | 'good' | 'perfect' }
   /** A raid cheer (Raid Battles pack): uses the turn, costs one of three cheers. */
   | { kind: 'cheer'; cheer: Cheer }
   /** The Pokémon refused its command and does nothing this turn (only the Bond Engine sends this). */
@@ -650,7 +652,7 @@ export function resolveTurn(ctx: BattleContext, action: PlayerAction): BattleEve
     useCheer(ctx, action.cheer, events);
   } else if (action.kind === 'item') {
     const snaggedBefore = battle.snagged?.length ?? 0;
-    useItemInBattle(ctx, action.itemId, action.targetIndex, events);
+    useItemInBattle(ctx, action.itemId, action.targetIndex, events, action.skill);
     if (battle.outcome === 'caught') {
       battle.turn += 1;
       return events;
@@ -1183,7 +1185,7 @@ function urgeProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'party'>, w
   return Object.keys(held).some((id) => isBerryItem(ctx.content, id) || ctx.content.catalog.get(id)?.family.includes('Herb')) ? null : `${name} isn't holding a Berry or Herb.`;
 }
 
-function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number | undefined, events: BattleEvent[]): void {
+function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number | undefined, events: BattleEvent[], skill?: string): void {
   const { content, battle } = ctx;
   const item = getItem(content, itemId);
   consumeItem(ctx.inventory, itemId);
@@ -1206,7 +1208,7 @@ function useItemInBattle(ctx: BattleContext, itemId: string, targetIndex: number
       catchRate: species.catchRate,
       ballMultiplier: ballBonus(ctx, item.effect, enemy, species),
       statusMultiplier: enemy.status ? content.ruleset.catchStatusMultipliers[enemy.status.id] ?? 1 : 1,
-      finalMultiplier: ctx.catchMultiplier,
+      finalMultiplier: ctx.catchMultiplier * skillThrowFactor(skill),
     });
     const roll = resolveCatchRoll(probability, ctx.captureRng.float());
     events.push({ type: 'ball', itemId, shakes: roll.shakes, caught: roll.caught });
