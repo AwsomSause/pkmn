@@ -83,6 +83,7 @@ import { absorbHit, advanceRaid, chargedDamage, cheerProblem, type Cheer, CHEER_
 import type { RaidPhase } from '../raid/schema';
 import { allyDue, allyLevel, getTotem } from '../totem/totem';
 import { addMomentum, cfgOf as spectacleCfg, counterProblem, duePhases, guardDamage, isBossFight, rallyProblem, raiseGuard, rollLastStand, spectacleOf, spectacleRoll as spectacleRollExt, staggered, tickGuard, wearGuard, type SpectacleEvent } from './spectacle';
+import { sacrificeFor } from './sacrificeRule';
 import { freshHyperBattle, rollHyper, type EnemyRage, type HyperContext, type HyperEligibility } from './hyper';
 import { applyTransformations, battleMove, battleTypes, endDynamax, maxMoveExtras, maxMoveTerrain, maxMoveWeather, stabMultiplier, teraPower, tickDynamax, transformProblem, zMoveFor, type TransformEvent, type TransformRequest, type TransformStepEvent } from './transform';
 
@@ -184,6 +185,11 @@ export type BattleEvent =
     }
   /** `uid` and `participants` let the run award experience for this faint. */
   | { type: 'faint'; side: Side; uid: string; participants: string[] }
+  /**
+   * §29 rivalry sacrifice: the enemy Pokémon `uid` jumped in front of a knockout hit meant for its rival `saved` and is gone;
+   * `saved` is back to full HP (`hpAfter`), cured, and enraged for its next `moves` moves (+`priority`).
+   */
+  | { type: 'sacrifice'; side: Side; uid: string; guardSpecies: string; saved: string; hpAfter: number; moves: number; priority: number }
   | { type: 'switchOut'; side: Side; uid: string }
   /** A trainer's Pokémon evolved between turns (core/drama/evolution.ts). */
   /** Bond Engine (core/bond): a Pokémon acted on its own before the turn. */
@@ -408,6 +414,10 @@ function aaiView(brain: EnemyBrain, user: PokemonInstance, best: number): AaiVie
 export function chooseEnemyMove(enemy: PokemonInstance, rng: Rng, brain?: EnemyBrain): number {
   const usable = enemy.moves.map((m, i) => ({ m, i })).filter((x) => x.m.pp > 0);
   if (usable.length === 0) return -1;
+  // §10 a rival's counter move: it was trained for this one Pokémon of yours and is used on sight.
+  const rc = brain?.battle?.rivalCounter;
+  const counter = rc && rc.uid === enemy.uid && brain?.target?.uid === rc.target ? usable.find((x) => x.m.id === rc.moveId) : undefined;
+  if (counter) return counter.i;
   if (brain && brain.ai > 0 && rng.chance(brain.ai)) {
     const scored = usable.map((x) => ({ i: x.i, score: moveValue(brain, enemy, x.m.id) }));
     return scored.reduce((best, x) => (x.score > best.score ? x : best)).i;
@@ -1088,6 +1098,7 @@ export function itemProblem(ctx: Pick<BattleContext, 'content' | 'battle' | 'par
     if (ctx.battle.kind !== 'wild') return "You can't catch another trainer's Pokémon!";
     if (ctx.battle.totem) return "A Totem can't be caught mid-fight. Beat it and something rare may follow!";
     if (ctx.battle.raid) return "A raid boss can't be caught mid-fight. Beat it and it may join you!";
+    if (ctx.battle.monRival) return "It won't be caught! It only wants to settle things with its rival.";
     // Wild double battle: the ball has no clear target until only one wild Pokémon is left.
     const partner = ctx.battle.doubles ? ctx.battle.enemyTeam[ctx.battle.doubles.enemy.index] : undefined;
     if (partner && partner.hp > 0 && currentEnemy(ctx.battle).hp > 0) return "You can't aim a Poké Ball while two wild Pokémon are out!";
@@ -1785,6 +1796,12 @@ function speedOf(ctx: BattleContext, c: Combatant): number {
 
 /** Move priority with Prankster (status moves), Gale Wings (Flying moves at full HP) and Triage (healing moves). */
 function priorityOf(ctx: BattleContext, c: Combatant, move: Move): number {
+  // §29 enraged after a rival's sacrifice: its next moves go first.
+  const rage = ctx.battle.enraged;
+  return basePriority(ctx, c, move) + (rage && rage.left > 0 && c.side === 'player' && rage.uid === c.mon.uid ? rage.priority : 0);
+}
+
+function basePriority(ctx: BattleContext, c: Combatant, move: Move): number {
   const ability = abilityIn(ctx, c);
   if (ability === 'prankster' && move.category === 'status') return move.priority + 1;
   if (ability === 'gale-wings' && move.type === 'flying' && c.mon.hp >= calcStats(ctx.content, c.mon).hp) return move.priority + 1;
@@ -2046,6 +2063,17 @@ function takeHp(
     if (ctx.battle.raid.cheerDefense > 0) ctx.battle.raid.tank ??= c.mon.uid;
   }
   return { lost, lastStand, hyper: null, knockedDown: false, stand };
+}
+
+/** §29: the guard takes the hit and is gone; your Pokémon is healed, cured and enraged. */
+function rivalSacrifice(ctx: BattleContext, target: Combatant, guard: PokemonInstance, events: BattleEvent[]): void {
+  const s = ctx.battle.sacrifice!;
+  s.done = true;
+  guard.hp = 0;
+  target.mon.hp = calcStats(ctx.content, target.mon).hp;
+  target.mon.status = null;
+  ctx.battle.enraged = { uid: target.mon.uid, left: s.moves, priority: s.priority };
+  events.push({ type: 'sacrifice', side: 'player', uid: guard.uid, guardSpecies: guard.speciesId, saved: target.mon.uid, hpAfter: target.mon.hp, moves: s.moves, priority: s.priority });
 }
 
 type HyperEvent = Extract<BattleEvent, { type: 'hyper' }>;
@@ -2437,6 +2465,9 @@ function executeMove(
     pp.pp = Math.max(0, pp.pp - (abilityIn(ctx, target) === 'pressure' && move.target === 'enemy' ? 2 : 1) - (user.side === 'player' ? ppCostExtra(ctx.perks, move.type) : 0));
   }
   events.push({ type: 'move', side: user.side, moveId: move.id });
+  // §29 an enraged Pokémon spends one of its first-strike moves.
+  const rage = ctx.battle.enraged;
+  if (rage && rage.left > 0 && user.side === 'player' && rage.uid === user.mon.uid) rage.left -= 1;
   if (user.side === 'player' && !continuing) Held.countPlayerAttack(ctx.battle);
   if (!continuing && slot !== -1) {
     user.vol.prevMove = user.vol.lastMove;
@@ -3165,6 +3196,12 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
     if (target.vol.substitute > 0 && !move.flags.includes('sound') && user !== target) {
       target.vol.substitute = Math.max(0, target.vol.substitute - damage);
       events.push({ type: 'substituteHit', side: target.side, broke: target.vol.substitute <= 0 });
+      return;
+    }
+    // §29 the rival Pokémon jumps in front of a knockout hit meant for its rival (battle/sacrificeRule.ts).
+    const guard = user.side === 'enemy' && target.side === 'player' ? sacrificeFor(ctx.battle, user.mon, target.mon, damage) : null;
+    if (guard) {
+      rivalSacrifice(ctx, target, guard, events);
       return;
     }
     const { lost, lastStand, hyper, knockedDown, stand } = takeHp(ctx, target, damage, landed);

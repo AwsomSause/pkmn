@@ -8,6 +8,7 @@ import { bondLines, reputation, signature } from './bonds';
 import { RIVAL_CONFIG, RIVAL_WORLD } from './schema';
 import { rivalStatusLine, rivalWorldView } from './progression';
 import { aceName } from './signatureTeam';
+import { aceLines } from './major';
 import { everUltimateFlag, ultimateQuest, ultimateRival, type UltimateQuestStep } from './ultimate';
 
 export interface RivalLine {
@@ -50,7 +51,7 @@ export function rivalChronicle(content: Content, run: RunState): RivalLine[] {
       quest: run.story.flags[everUltimateFlag(r.id)] ? ultimateQuest(run, r) : [],
       memory: `Last battle: ${closeness}, ${last.turns} turns.${learned}`,
       signature: aceName(content, r),
-      bonds: [...(r.faction ? [`Faction: ${RIVAL_WORLD.factions.find((f) => f.id === r.faction)?.name ?? r.faction}`] : []), ...(r.sponsor ? [`Sponsored by ${RIVAL_WORLD.sponsors.find((x) => x.id === r.sponsor)?.name ?? r.sponsor}`] : []), ...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
+      bonds: [...aceLines(content, r), ...(r.faction ? [`Faction: ${RIVAL_WORLD.factions.find((f) => f.id === r.faction)?.name ?? r.faction}`] : []), ...(r.sponsor ? [`Sponsored by ${RIVAL_WORLD.sponsors.find((x) => x.id === r.sponsor)?.name ?? r.sponsor}`] : []), ...bondLines(content, r), ...(reputation(r) !== 'unknown' ? [`Other trainers call it ${reputation(r)}`] : []), ...(signature(content, r) ? [`Known for: ${signature(content, r)}`] : [])],
     };
   });
 }

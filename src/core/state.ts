@@ -685,6 +685,14 @@ export const BattleStateSchema = z.object({
   expedition: z.boolean().optional(),
   /** A double battle (core/battle/doubles.ts): the second Pokémon on each side. */
   doubles: DoublesSchema.optional(),
+  /** §11 Pokémon rival in this battle (story.monRivals id) and its enemy uid; it can't be caught. */
+  monRival: z.object({ id: z.string(), uid: z.string(), rivalOf: z.string() }).optional(),
+  /** §29 the rivalry sacrifice, armed for this battle by its own seeded roll (core/rivals/sacrifice.ts); `done` once it happened. */
+  sacrifice: z.object({ uid: z.string(), protects: z.string(), armed: z.boolean(), done: z.boolean().default(false), priority: z.number().int().min(1), moves: z.number().int().min(1) }).optional(),
+  /** §29 enraged: this Pokémon's next `left` moves get +priority. */
+  enraged: z.object({ uid: z.string(), left: z.number().int().min(0), priority: z.number().int() }).optional(),
+  /** §10 a rival's counter move: its Pokémon `uid` uses `moveId` whenever `target` is in front of it. */
+  rivalCounter: z.object({ uid: z.string(), target: z.string(), moveId: z.string() }).optional(),
 });
 export type BattleState = z.infer<typeof BattleStateSchema>;
 

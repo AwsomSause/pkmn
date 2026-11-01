@@ -56,7 +56,7 @@ import { bankShopEntries, runLicenses } from './bank';
 import { withTokenAttribute } from './runPrep';
 import { applyReward, generateDraft, rewardTargetProblem, type RewardResult } from './rewards';
 import { pickRunQuest } from './quests';
-import { masteredStarters, runMasteryPerks } from './mastery';
+import { familyId, masteredStarters, runMasteryPerks } from './mastery';
 import { gameEventModifiers } from './gameEvents';
 import { blackMarketMarkup, fieldResearchMoney, spookyEncounterChance, voiceAsksToJoin } from './trainerEvolution';
 import { growGarden } from './berries';
@@ -70,6 +70,9 @@ import { passivePercent } from './catalog';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
 import { expShareUnlocked, FIRST_RIVAL_FLAG } from './firstRival';
+import { canonPlan, characterOf, majorNote, withAceProgress } from './rivals/major';
+import { beginMonRivalBattle, carriedMonRival, dueMonRival, monRivalMember, rivalCatchesMonRival } from './rivals/monRivals';
+import { armSacrifice, sacrificeEcho } from './rivals/sacrifice';
 import {
   activeMods,
   addBridgeStops,
@@ -501,6 +504,7 @@ function enterStage(content: Content, run: RunState, index: number): void {
   startStageEffects(run);
   hatchEggs(content, run);
   simulateRivalWorld(content, run);
+  rivalCatchesMonRival(content, run);
   rivalRivalries(content, run);
   rivalSighting(content, run);
   noteProtagonistTitle(content, run);
@@ -1360,16 +1364,27 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     // A wild nemesis takes this encounter instead (built from the planned level, so no roll changes).
     const nemesis = legendary ? null : dueNemesis(content, run, 'wild');
     const back = nemesis ? nemesisMember(content, nemesis, opened.level) : null;
-    const enemy = back
+    // §11 a Pokémon rival takes the stage's first wild battle (built from the planned level, so no roll changes).
+    const monRival = legendary || nemesis ? null : dueMonRival(content, run);
+    const mrBack = monRival ? monRivalMember(content, monRival, opened.level) : null;
+    const enemy = mrBack
+      ? newMon(content, run, mrBack.speciesId, mrBack.level, 'e', content.balance.difficulty.maxLevel)
+      : back
       ? newMon(content, run, back.member.speciesId, back.member.level, 'e', content.balance.difficulty.maxLevel)
       : newMon(content, run, speciesId, opened.level, 'e', !legendary && run.encountersCompleted < content.balance.opening.encounters ? content.balance.opening.maxLevel : content.balance.difficulty.maxLevel);
     if (back) enemy.moves = back.member.moves!.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
-    enemy.shiny = back ? false : plan.shiny;
+    if (mrBack) enemy.moves = mrBack.moves.map((id) => ({ id, pp: content.moves.get(id)!.pp }));
+    enemy.shiny = back || mrBack ? false : plan.shiny;
     if (plan.shiny) countShiny(run, speciesId);
     outbreakShadow(content, run, enemy, node.id);
     run.battle = createBattle('wild', [enemy], activeIndex, activeUid);
     run.battle.levelInfo = [plan.levelInfo];
     if (nemesis && back) beginNemesisBattle(content, run, nemesis, back.change, null);
+    if (monRival && mrBack) run.battle.rivalNote = beginMonRivalBattle(content, run, monRival, enemy);
+    else {
+      const echo = sacrificeEcho(content, run, enemy.speciesId, activeUid);
+      if (echo) run.battle.rivalNote = echo;
+    }
     const setup = wildBattleSetup(content, run, mods);
     if (setup.drop) run.itemCounters = { ...run.itemCounters, 'pinap-drop': 1 };
     if (setup.freeTurns > 0) run.battle.mapItems = { freeTurns: setup.freeTurns, thrown: 0 };
@@ -1378,7 +1393,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     // Wild Pokémon sometimes come in pairs (a second, ordinary one from this stage's pool, rolled by its own generator).
     const doublesCfg = content.balance.doubles;
     const pairRng = new Rng(hashSeed(`${run.seed}::wild-doubles::${run.regionIndex}::${stage.index}::${node.id}::${run.encountersCompleted}`));
-    if (!legendary && !run.battle.mapItems && stageNumber >= doublesCfg.fromStage && run.party.filter((m) => m.hp > 0).length >= 2 && pairRng.chance(doublesCfg.wildChance)) {
+    if (!legendary && !mrBack && !run.battle.mapItems && stageNumber >= doublesCfg.fromStage && run.party.filter((m) => m.hp > 0).length >= 2 && pairRng.chance(doublesCfg.wildChance)) {
       const second = planWild(content, archetype, theme, scale, 0, pairRng, run.regionOrder[run.regionIndex], runAttributeEffects(content, run).shinyChance, (id) => periodWildWeight(content, run, id));
       const partner = newMon(content, run, lockSpecies(content, run, second.speciesId, `wild2:${node.id}`), Math.min(second.level, enemy.level + 2), 'e');
       partner.shiny = second.shiny;
@@ -1444,10 +1459,23 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     let rivalNote: string | null = null;
     let narrativeDef: ReturnType<typeof dueNarrativeDefeat> = null;
     let trainingIndex = -1;
+    let carried: ReturnType<typeof carriedMonRival> = null;
     if (rule && rivalBack) {
       ensureAce(content, rivalBack);
-      const ret = rivalReturn(content, run, rivalBack, plan, rule.effect);
-      ret.plan = withSignatureAce(content, rivalBack, ret.plan);
+      // §21 a major rival keeps its semi-canon team; §9/§10 its ace carries what it learned.
+      const ret = rivalReturn(content, run, rivalBack, canonPlan(content, rivalBack, plan), rule.effect);
+      ret.plan = withAceProgress(content, rivalBack, withSignatureAce(content, rivalBack, ret.plan));
+      // §11 a Pokémon rival it caught is always on its team, last in line (behind its ace).
+      carried = carriedMonRival(run, rivalBack);
+      if (carried) {
+        const top = Math.max(...ret.plan.members.map((m) => m.level));
+        const mr = monRivalMember(content, carried, top);
+        const keep = ret.plan.members.length >= 6 ? ret.plan.members.filter((_, i) => i !== ret.plan.members.findIndex((m) => familyId(content, m.speciesId) !== rivalBack.ace)) : ret.plan.members;
+        const members = [...keep, { speciesId: mr.speciesId, level: mr.level, moves: mr.moves }];
+        ret.plan = { ...ret.plan, members, levelInfo: members.map((_, i) => ret.plan.levelInfo[Math.min(i, ret.plan.levelInfo.length - 1)]!) };
+      }
+      const said = majorNote(content, rivalBack, ret.plan.members.find((m) => familyId(content, m.speciesId) === rivalBack.ace)?.speciesId ?? null);
+      if (said) ret.note = [said, ret.note].filter(Boolean).join(' ');
       const trained = withTrainingEvolution(content, ret.plan.members);
       plan = { ...ret.plan, members: trained.members };
       trainingIndex = trained.index;
@@ -1522,7 +1550,26 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (rematch) run.battle.rematch = true;
     if (back) run.battle.returning = back.id;
     if (isRival) run.battle.rival = true;
-    if (firstRival) run.battle.firstRival = true;
+    if (firstRival) {
+      run.battle.firstRival = true;
+      const who = characterOf(plan.name).data.home;
+      run.battle.rivalNote = `${plan.name} from ${who} picked ${content.species.get(plan.members[0]!.speciesId)?.name ?? 'a starter'} too, and wants to see who's better. This won't be the last time.`;
+    }
+    if (rivalBack && rule) {
+      const ace = rivalBack.ace ? team.find((m) => familyId(content, m.speciesId) === rivalBack.ace) : undefined;
+      // §10 studied moves are the ace's signature moves (they hit harder, like an awakened move).
+      const signature = (rivalBack.studied ?? []).map((st) => st.moveId).filter((id) => ace?.moves.some((m) => m.id === id));
+      if (ace && signature.length > 0) ace.awakened = signature;
+      const counter = (rivalBack.counters ?? []).find((c) => run.party.some((p) => p.uid === c.target && p.hp > 0) && ace?.moves.some((m) => m.id === c.moveId));
+      if (ace && counter) run.battle.rivalCounter = { uid: ace.uid, target: counter.target, moveId: counter.moveId };
+      if (carried) {
+        armSacrifice(run, rivalBack.id, team, content);
+        const mon = team[team.length - 1]!;
+        const line = `${content.species.get(mon.speciesId)?.name ?? 'Its Pokémon'} with ${carried.mark} is with ${rivalBack.name} now, and it is looking for your ${carried.rivalName}!`;
+        run.battle.rivalNote = [run.battle.rivalNote, line].filter(Boolean).join(' ');
+        carried.meetings += 1;
+      }
+    }
     if (takeover && takeoverRule) {
       run.battle.rivalId = takeover.id;
       run.battle.rivalNote = frontRunnerIntro(content, takeover) ?? takeoverNote(content, takeover);
@@ -1551,7 +1598,7 @@ export function startEncounter(content: Content, run: RunState, node: MapNode, r
     if (trainingIndex >= 0) run.battle.drama.evolvable.push(team[trainingIndex]!.uid);
     if (rivalBack) {
       run.battle.rivalId = rivalBack.id;
-      if (rivalNote) run.battle.rivalNote = rivalNote;
+      if (rivalNote) run.battle.rivalNote = [rivalNote, run.battle.rivalNote].filter(Boolean).join(' ');
       if (narrativeDef) run.battle.narrative = { id: narrativeDef.id, maxTurns: narrativeDef.maxTurns };
     }
     const role = node.kind === 'gym' || node.kind === 'elite' || node.kind === 'champion' ? node.kind : null;

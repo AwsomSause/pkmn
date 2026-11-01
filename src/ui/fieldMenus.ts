@@ -7,6 +7,7 @@ import { attributeText } from '../core/attributes';
 import type { AttributeKey } from '../core/contentSchema';
 import { itemUseProblem } from '../core/items';
 import { rivalChronicle } from '../core/rivals/chronicle';
+import { monRivalLines } from '../core/rivals/monRivals';
 import { playerFame, protagonistTitle, worldBoards } from '../core/rivals/recognition';
 import { pastUltimateRivals } from '../core/rivals/legacy';
 import { ULTIMATE_EMBLEM } from '../core/rivals/ultimate';
@@ -92,6 +93,16 @@ export function openStoryMenu(host: FieldMenuHost): void {
       },
     };
   });
+  // §11 Pokémon rivals: individual wild Pokémon with a grudge against one of yours (and any that gave themselves up).
+  for (const m of monRivalLines(content, run)) {
+    rivalRows.push({
+      problem: null,
+      hint: m.hint,
+      draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number) => {
+        box.add(scene.add.text(14, 8, m.title, textStyle(20, '#ff9a7a', { fixedWidth: w - 28 })));
+      },
+    });
+  }
   // Previous Ultimate Rivals: the rivals that defined earlier runs, from the account archive.
   for (const past of pastUltimateRivals(session.profile)) {
     const cls = content.trainers.get(past.classId)?.name ?? 'Trainer';

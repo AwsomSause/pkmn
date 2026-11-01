@@ -218,6 +218,34 @@ export const NemesisSchema = z.object({
 });
 export type Nemesis = z.infer<typeof NemesisSchema>;
 
+/** §11 a persistent Pokémon rival: one wild individual with a grudge against one of your Pokémon (core/rivals/monRivals.ts). */
+export const MonRivalSchema = z.object({
+  id: z.string(),
+  /** Its species when the rivalry began (it evolves with its level when it comes back). */
+  speciesId: z.string(),
+  level: z.number().int().min(1),
+  /** What makes it recognizable: "a torn ear". */
+  mark: z.string(),
+  /** Your Pokémon (uid) it is a rival of, and that Pokémon's species name then. */
+  rivalOf: z.string(),
+  rivalName: z.string(),
+  formedAt: WhereSchema,
+  /** The stage it was last met in (region × 100 + stage). */
+  lastMet: z.number().int().nullable(),
+  meetings: z.number().int().min(0),
+  /** Times it knocked out its rival, and times it was beaten. */
+  wins: z.number().int().min(0),
+  losses: z.number().int().min(0),
+  /** The trainer rival (rival id) that caught it, and their bond (0–100). */
+  owner: z.string().nullable(),
+  bond: z.number().min(0).max(100),
+  /** §29 it gave itself up for its rival: gone for the rest of the run. */
+  sacrificed: z.boolean(),
+  /** Newest last (a few lines for the Story screen). */
+  history: z.array(z.string()),
+});
+export type MonRival = z.infer<typeof MonRivalSchema>;
+
 /** The story layer's part of a saved run. */
 // ---------- rivals (src/core/rivals) ----------
 
@@ -298,6 +326,19 @@ export const RivalSchema = z.object({
   rank: z.enum(['gymLeader', 'finalist', 'champion']).optional(),
   /** What it has learned about you, one telegraphed change per return. */
   adaptations: z.array(z.string()).default([]),
+  /** §21 the run's guaranteed major rival (the first rival, made a recurring character) and its semi-canon character (majorRivals.json). */
+  major: z.boolean().optional(),
+  canon: z.string().optional(),
+  /** §9 its ace as it was at the end of the last battle: form, level, moves, held item, record and what changed. */
+  aceLog: z.object({
+    speciesId: z.string(), level: z.number().int().min(1), moves: z.array(z.string()), held: z.string().nullable(),
+    battles: z.number().int().min(0), wins: z.number().int().min(0), losses: z.number().int().min(0), mods: z.array(z.string()),
+  }).optional(),
+  /** §10 moves it studied from you (taught to its ace as signature moves), and counters it trained for one of your Pokémon. */
+  studied: z.array(z.object({ moveId: z.string(), from: z.string(), at: z.string() })).optional(),
+  counters: z.array(z.object({ target: z.string(), targetName: z.string(), moveId: z.string(), at: z.string() })).optional(),
+  /** §11 the Pokémon rival (story.monRivals id) it caught: always on its team from then on. */
+  monRival: z.string().optional(),
   /** What it remembers of its last battle with you. */
   memory: z.object({
     lastBattle: z.object({
@@ -376,6 +417,8 @@ export const StoryStateSchema = z.object({
   majorCuesThisBattle: z.number().int().min(0),
   /** Nemeses made this run (run v25). */
   nemeses: z.array(NemesisSchema).default([]),
+  /** §11 Pokémon rivals of this run (optional: older saves have none). */
+  monRivals: z.array(MonRivalSchema).optional(),
   /** Battle Replay: the big battles of this run (core/memories/replay.ts). */
   replays: z.array(BattleReplaySchema).default([]),
   /** The world's memory: skipped branches, delayed consequences, villain operations (core/memories/world.ts). */
