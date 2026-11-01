@@ -13,6 +13,8 @@
 // next region, or wins the run after the last one.
 
 import { markAssisted } from './tools/assisted';
+import { crossObstacle, placeLandmark, placeObstacles, placeWeekStops, tremorStep } from './traversal';
+import { wandererStageStart, wandererStep } from './wanderer';
 import { makeShadow, rollShadowHeart, soothePartyAfterBattle } from './shadow';
 import { advanceShadowWorld, addFlag, gangNotes, gangRaidWon, liberatedHpDiscount, outbreakShadow, placeGangDen } from './shadowWorld/world';
 import { blissfulAfterBattle, blissfulAtRest } from './shadowWorld/blissful';
@@ -544,6 +546,10 @@ function enterStage(content: Content, run: RunState, index: number): void {
   addItemStops(content, run);
   addEventStops(content, run);
   spawnRoamers(content, run);
+  placeObstacles(content, run);
+  placeLandmark(content, run);
+  placeWeekStops(content, run);
+  wandererStageStart(run);
   placeRaidDens(content, run);
   placeGangDen(content, run);
   placeTotem(content, run);
@@ -676,6 +682,17 @@ export function requireStage(run: RunState): StageState {
 
 /** Moves to a node on the map and starts its encounter. */
 export function chooseNode(content: Content, current: RunState, nodeId: string): RunState {
+  return chooseNodeWithNotes(content, current, nodeId).run;
+}
+
+/** `chooseNode`, plus what happened on the way (an obstacle crossed or gone round, ideas W4), for the map. */
+export function chooseNodeWithNotes(content: Content, current: RunState, nodeId: string): { run: RunState; crossing: string | null } {
+  const out = { run: current, crossing: null as string | null };
+  out.run = moveToNode(content, current, nodeId, (words) => (out.crossing = words));
+  return out;
+}
+
+function moveToNode(content: Content, current: RunState, nodeId: string, onCross: (words: string) => void): RunState {
   assertPhase(current, 'map');
   const choices = mapChoices(content, current);
   if (!choices.some((n) => n.id === nodeId)) throw new Error(`Node "${nodeId}" is not one of the next choices`);
@@ -686,7 +703,9 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   const node = findNode(stage.map, nodeId);
   // The Bicycle rides through a node of the skipped column without stopping.
   if (mode === 'bicycle') stage.visited.push(nextChoices(stage).find((n) => n.next.includes(nodeId))!.id);
-  if (mode && (mode !== 'machBike' || node.kind === 'wild')) markUsedThisStage(run, perkItem(content, run, mode)!);
+  // An event's express ride (ideas W4) sets the bicycle mode without an item: nothing to use up then.
+  const modeItem = mode ? perkItem(content, run, mode) : null;
+  if (mode && modeItem && (mode !== 'machBike' || node.kind === 'wild')) markUsedThisStage(run, modeItem);
   stage.current = nodeId;
   stage.visited.push(nodeId);
   stepClock(content, run);
@@ -698,6 +717,14 @@ export function chooseNode(content: Content, current: RunState, nodeId: string):
   convoyStep(content, run, node);
   recordRouteChosen(content, run, nodeId, node.harder, node.kind);
   bumpEventCounters(runPerks(content, run), run, 'nodeEnter');
+  // An obstacle on the node (ideas W4): a fitting Pokémon crosses it, or the party goes the long way round.
+  const crossed = crossObstacle(content, run, node);
+  // Earthquake tremors (a live-event rule) shift the stops ahead.
+  const tremor = tremorStep(content, run);
+  const notes = [crossed, tremor].filter(Boolean).join(' ');
+  if (notes) onCross(notes);
+  // A trainer tailing you steps out after a few nodes (ideas W4, wandering trainer).
+  wandererStep(content, run);
   // The Mach Bike rides past a wild Pokémon: no battle, but the reward draft still comes.
   if (mode === 'machBike' && node.kind === 'wild') {
     run.afterDecisions = 'reward';
@@ -742,7 +769,7 @@ export function mapChoices(content: Content, run: RunState): MapNode[] {
   return plain;
 }
 
-export type MapActionKind = 'escapeRope' | 'bicycle' | 'acroBike' | 'machBike' | 'rematch' | 'transceiver' | 'pail' | 'sprayduck' | 'squirt';
+export type MapActionKind = 'treasureMap' | 'escapeRope' | 'bicycle' | 'acroBike' | 'machBike' | 'rematch' | 'transceiver' | 'pail' | 'sprayduck' | 'squirt';
 
 export interface MapAction {
   kind: MapActionKind;
@@ -759,6 +786,19 @@ export interface MapAction {
 function lastFork(stage: StageState): number | null {
   for (let i = stage.visited.length - 2; i >= 0; i--) if (findNode(stage.map, stage.visited[i]!).next.length > 1) return i;
   return stage.visited.length > 0 && stage.map.nodes.filter((n) => n.column === 1).length > 1 ? -1 : null;
+}
+
+/** Ideas W4 treasure map: the dig-site event and where it goes (a node 2-4 columns ahead, off your path first). */
+export const TREASURE_DIG_EVENT = 'w4-treasure-dig';
+function treasureSite(stage: StageState, rng?: Rng): MapNode | null {
+  if (stage.kind !== 'stage') return null;
+  const col = currentColumn(stage);
+  const ahead = stage.map.nodes.filter((n) => n.kind === 'wild' && n.column >= col + 2 && n.column <= Math.min(col + 4, stage.map.columns - 1) && !n.sides.some((s) => s.eventId === TREASURE_DIG_EVENT));
+  if (ahead.length === 0) return null;
+  if (!rng) return ahead[0]!;
+  const reach = new Set(nextChoices(stage).flatMap((n) => n.next));
+  const off = ahead.filter((n) => !reach.has(n.id));
+  return rng.pick(off.length > 0 ? off : ahead);
 }
 
 /** The trainer a VS Seeker calls back: the last one beaten on this stage. */
@@ -784,6 +824,16 @@ export function mapActions(content: Content, run: RunState): MapAction[] {
       itemId: rope,
       text: `Go back to the last fork and choose again (${usesLeft(run, rope)} left)`,
       problem: league ?? (fork === null ? 'No fork behind you on this stage.' : null),
+      on: false,
+    });
+  }
+  const map = perkItem(content, run, 'treasureMap');
+  if (map) {
+    out.push({
+      kind: 'treasureMap',
+      itemId: map,
+      text: `Follow the map: a dig site opens beside a node a few columns ahead (${usesLeft(run, map)} left)`,
+      problem: league ?? (treasureSite(stage) ? null : 'Too close to the gym to follow the map.'),
       on: false,
     });
   }
@@ -843,6 +893,14 @@ export function useMapAction(content: Content, current: RunState, kind: MapActio
       stage.current = fork < 0 ? null : stage.visited[fork]!;
       delete run.moveMode;
       return { run, message: `You used the ${name} and went back to the last fork.` };
+    }
+    case 'treasureMap': {
+      // The X is off your path when it can be: a node two to four columns ahead, picked from the map's own hash.
+      const site = treasureSite(stage, new Rng(hashSeed(`${run.seed}::treasure-map::${stageKey(run)}::${stage.visited.length}`)))!;
+      spendUse(run, action.itemId);
+      site.sides.push({ id: `treasure-${site.id}-${site.sides.length + 1}`, kind: 'event', used: false, eventId: TREASURE_DIG_EVENT });
+      if (run.itemCounters) delete run.itemCounters[`event-seen:${TREASURE_DIG_EVENT}`];
+      return { run, message: `You followed the ${name}: the X marks a spot beside level ${site.column}. A detour, but something is buried there.` };
     }
     case 'transceiver': {
       markUsedThisStage(run, action.itemId);
@@ -916,8 +974,10 @@ export function mapPreviews(content: Content, run: RunState): Record<string, Nod
   // An item's preview wins over the trainer's (it names the item); either shows the same battle.
   const source = (what: 'wild' | 'trainers' | 'gymTeam', itemId: string | null): { itemId: string | null; source: string } | null =>
     itemId ? { itemId, source: content.catalog.get(itemId)?.name ?? itemId } : trainerPreviews(archetype, what) ? { itemId: null, source: archetype.name } : null;
-  const wildFrom = source('wild', perks('wild'));
-  const trainerFrom = source('trainers', perks('trainers'));
+  // A time rift (ideas W4) shows the battles ahead for the rest of the stage.
+  const rift = (run.itemCounters?.[`rift-preview:${stageKey(run)}`] ?? 0) > 0 ? { itemId: null, source: 'The time rift' } : null;
+  const wildFrom = source('wild', perks('wild')) ?? rift;
+  const trainerFrom = source('trainers', perks('trainers')) ?? rift;
   for (const node of mapChoices(content, run)) {
     const from = node.kind === 'wild' ? wildFrom : node.kind === 'trainer' ? trainerFrom : null;
     if (!from) continue;

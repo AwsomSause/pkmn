@@ -800,6 +800,16 @@ export const ArchetypeModifierSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('zMoveDelay'), turns: z.number().int().positive() }),
   /** Damage dealt by multi-target (spread: true) or single-target (false) moves. */
   z.object({ kind: z.literal('spreadMoveDamageMultiplier'), spread: z.boolean(), value: z.number().positive() }),
+  /** Ideas W4 traversal: obstacles of this kind (src/data/traversal.json id) are placed `value` times as often on the map. */
+  z.object({ kind: z.literal('traversalWeight'), obstacle: z.string(), value: z.number().positive() }),
+  /** Ideas W4 traversal: this many more obstacles on every stage map. */
+  z.object({ kind: z.literal('traversalExtra'), count: z.number().int().positive() }),
+  /** Ideas W4 (E170 Earthquake): every `every` nodes you walk, the side stops of two nodes ahead swap places. */
+  z.object({ kind: z.literal('stopShuffle'), every: z.number().int().min(1) }),
+  /** Ideas W4 (E182 Sky Tower): the stage map climbs upward column by column, with a healing checkpoint every `checkpointEvery` columns. */
+  z.object({ kind: z.literal('towerClimb'), checkpointEvery: z.number().int().min(2) }),
+  /** Ideas W4: this event (events.json id) gets a stop on every stage, near the middle (E183 Magical Forest Maze). */
+  z.object({ kind: z.literal('placeEvent'), eventId: z.string() }),
   /** Event toolkit (ideas W0). A named run counter (stored in run.itemCounters as `ev:<id>`): +amount each time `on` happens, capped at `max`; with `cycle` it wraps around (a tide that rises and falls). */
   z.object({ kind: z.literal('eventCounter'), id: z.string().regex(/^[a-z0-9-]+$/), on: z.enum(['battleWin', 'nodeEnter']), amount: z.number().int().positive().default(1), max: z.number().int().positive(), cycle: z.boolean().default(false) }),
   /** Event toolkit: while counter `counter` is at least `atLeast`, your Pokémon (of `type`, if given) deal `base + perPoint × count` times damage (count = the counter, capped at its max). */
@@ -1363,6 +1373,8 @@ export const PerkSchema = z.discriminatedUnion('perk', [
   // ---------- getting around the map (slice 3b-2) ----------
   /** From the Items menu: go back to the last fork and choose again (Escape Rope). */
   z.object({ perk: z.literal('escapeRope') }),
+  /** Ideas W4: from the Items menu, a dig site opens beside a node a few columns ahead, a detour off your path (Treasure Map). */
+  z.object({ perk: z.literal('treasureMap') }),
   /** Once per stage, from the Items menu: ride two columns ahead, skipping one (Bicycle). */
   z.object({ perk: z.literal('bicycle') }),
   /** Once per stage, from the Items menu: jump to any node in the next column, even without a path (Acro Bike). */
@@ -1853,6 +1865,8 @@ export type EventRarity = (typeof EVENT_RARITIES)[number];
 
 /** Exploration numbers (core/world.ts). */
 export const WorldBalanceSchema = z.object({
+  /** Ideas W4 traversal obstacles on stage maps (src/data/traversal.json); off = no obstacles are placed. */
+  traversal: z.boolean().default(true),
   /** Fog of war: columns ahead of you the map shows, +1 per `fogIntelligencePerSight` Intelligence, +1 if a party Pokémon has a scouting ability or a Flying type. */
   fogSight: z.number().int().min(1),
   fogIntelligencePerSight: z.number().int().min(1),
@@ -2373,6 +2387,10 @@ export const EventConditionSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('meter'), key: z.enum(['ragePeace', 'goodEvil']), side: z.enum(['positive', 'negative']), atLeast: z.number().int().min(0) }),
   z.object({ kind: z.literal('item'), id: z.string() }),
   z.object({ kind: z.literal('partyType'), type: TypeNameSchema }),
+  /** Ideas W4: the run calendar's season (core/clock.ts seasonOf) is one of these. */
+  z.object({ kind: z.literal('season'), in: z.array(z.enum(['Spring', 'Summer', 'Autumn', 'Winter'])).min(1) }),
+  /** Ideas W4 landmarks: the run is in one of these regions (regions.json ids). */
+  z.object({ kind: z.literal('region'), ids: z.array(z.string()).min(1) }),
   /** The run clock (core/clock.ts): it is one of these times of day. */
   z.object({ kind: z.literal('period'), in: z.array(z.enum(['morning', 'afternoon', 'evening', 'night'])).min(1) }),
   /** The run clock: today is a milestone day whose celebration has not been held yet. */
@@ -2512,6 +2530,14 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('addStop'), stop: z.enum(['heal', 'shop', 'fish']) }),
   /** A ferry: jump to a node next to the gym (SS Ticket). */
   z.object({ kind: z.literal('skipAhead') }),
+  /** Ideas W4: a trainer starts tailing you and steps out to challenge you after this many nodes (core/wanderer.ts). */
+  z.object({ kind: z.literal('wanderer'), nodes: z.number().int().min(1).max(20) }),
+  /** Ideas W4: a travelling companion catches up with you once on each of the next `stages` stages. */
+  z.object({ kind: z.literal('wandererFriend'), stages: z.number().int().min(1).max(9) }),
+  /** Ideas W4: the next move rides two columns ahead, skipping one (an express train, a zip-line, a warp). */
+  z.object({ kind: z.literal('express') }),
+  /** Ideas W4 time rift: the map shows the battle waiting at each next node for the rest of the stage. */
+  z.object({ kind: z.literal('riftPreview') }),
   z.object({ kind: z.literal('heal'), share: z.number().min(0).max(1) }),
   /** Camp: time together. Every pair of party Pokémon gains chemistry and loses tension; optionally old grudges are let go. */
   z.object({ kind: z.literal('campBond'), chemistry: z.number().int().min(0).max(30), calm: z.number().int().min(0).max(30), settle: z.boolean().default(false) }),

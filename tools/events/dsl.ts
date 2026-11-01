@@ -20,6 +20,8 @@ export interface EventOpts {
   callback?: boolean;
   /** A secret path: shows as "?" until one of these holds. */
   secret?: Json[];
+  /** Never drawn on its own: code or another event places it (a room, a landmark, a wanderer's stop). */
+  room?: boolean;
 }
 
 export function ev(id: string, name: string, group: string, o: EventOpts, intro: string, choices: Json[]): Json {
@@ -28,8 +30,8 @@ export function ev(id: string, name: string, group: string, o: EventOpts, intro:
 }
 
 /** A choice. `fail` is required with a check or chance. */
-export function ch(label: string, success: Json, o: { requires?: Json[]; check?: string; chance?: number; fail?: Json } = {}): Json {
-  return { label, ...(o.requires ? { requires: o.requires } : {}), ...(o.check ? { check: o.check } : {}), ...(o.chance !== undefined ? { chance: o.chance } : {}), success, ...(o.fail ? { failure: o.fail } : {}) };
+export function ch(label: string, success: Json, o: { requires?: Json[]; check?: string; chance?: number; prompt?: { id: string; needs: 'ok' | 'good' | 'perfect' }; fail?: Json } = {}): Json {
+  return { label, ...(o.requires ? { requires: o.requires } : {}), ...(o.check ? { check: o.check } : {}), ...(o.chance !== undefined ? { chance: o.chance } : {}), ...(o.prompt ? { prompt: o.prompt } : {}), success, ...(o.fail ? { failure: o.fail } : {}) };
 }
 
 export const out = (text: string, ...effects: Json[]): Json => ({ text, effects });
@@ -91,6 +93,20 @@ export const convoy = (name: string, hp = 4): Json => ({ kind: 'convoy', name, h
 export const convoyHeal = (amount: number): Json => ({ kind: 'convoyHeal', amount });
 /** An escort is (or is not) under your care. */
 export const escorting = (active = true): Json => ({ kind: 'convoy', active });
+/** Ideas W4: a trainer tails you and challenges you after `nodes` nodes. */
+export const tail = (nodes: number): Json => ({ kind: 'wanderer', nodes });
+/** Ideas W4: a travelling companion for the next `stages` stages. */
+export const companion = (stages: number): Json => ({ kind: 'wandererFriend', stages });
+/** Ideas W4: the next move rides two columns ahead (express, zip-line, warp). */
+export const express = (): Json => ({ kind: 'express' });
+/** Ideas W4: the map shows the battles ahead for the rest of the stage. */
+export const rift = (): Json => ({ kind: 'riftPreview' });
+/** Ideas W4: the run calendar's season. */
+export const season = (...seasons: string[]): Json => ({ kind: 'season', in: seasons });
+/** Ideas W4: the run is in one of these regions. */
+export const inRegion = (...ids: string[]): Json => ({ kind: 'region', ids });
+/** A lasting effect for the rest of the run (once per id). */
+export const relic = (id: string, name: string, effects: Json[]): Json => ({ kind: 'relic', id, name, effects });
 /** A story flag condition: at least / at most. */
 export const flagIs = (key: string, atLeast = 1, atMost = 99): Json => ({ kind: 'flag', key, atLeast, atMost });
 /** A party Pokémon with one of these abilities. */

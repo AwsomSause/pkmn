@@ -9944,7 +9944,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Prize money is 15% higher. The listed map events turn up more often.",
+   "ruleText": "Prize money is 15% higher. The listed map events turn up more often. The chart seller is about with Treasure Maps.",
    "modifiers": [
     {
      "kind": "moneyMultiplier",
@@ -9956,7 +9956,9 @@
     "old-sea-map-island",
     "strangers-map",
     "traveler-map",
-    "ancient-tablet"
+    "ancient-tablet",
+    "w4-old-chart",
+    "w4-sundial"
    ],
    "objectives": [
     {
@@ -10022,7 +10024,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Everything in shops costs 10% less. The listed map events turn up more often.",
+   "ruleText": "Everything in shops costs 10% less. The listed map events turn up more often. Travelling trainers tag along.",
    "modifiers": [
     {
      "kind": "priceMultiplier",
@@ -10035,7 +10037,8 @@
     "convoy-lost-researcher",
     "convoy-shelter",
     "travelling-collector",
-    "berry-merchant"
+    "berry-merchant",
+    "w4-wandering-trainer"
    ],
    "objectives": [
     {
@@ -10179,7 +10182,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Rock and Ground-types appear 50% more often. The listed map events turn up more often.",
+   "ruleText": "Rock and Ground-types appear 50% more often. The listed map events turn up more often. Dark caves and boulders block more paths.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
@@ -10190,6 +10193,20 @@
      "kind": "typeEncounterWeight",
      "type": "ground",
      "value": 1.5
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "dark-cave",
+     "value": 4
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "boulder",
+     "value": 4
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 1
     }
    ],
    "mapEvents": [
@@ -10197,7 +10214,8 @@
     "cave-in",
     "glowing-mushrooms",
     "roark-mine",
-    "fossil-dig"
+    "fossil-dig",
+    "w4-cave-echo"
    ],
    "objectives": [
     {
@@ -10263,12 +10281,21 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Water-types appear 50% more often. The listed map events turn up more often.",
+   "ruleText": "Water-types appear 50% more often. The listed map events turn up more often. Lakes cut the islands apart: bring a surfer.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
      "type": "water",
      "value": 1.5
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "lake",
+     "value": 6
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 1
     }
    ],
    "mapEvents": [
@@ -10276,7 +10303,9 @@
     "tri-pass-ferry",
     "rainbow-pass-ferry",
     "mirage-island",
-    "lost-at-sea"
+    "lost-at-sea",
+    "w4-raft",
+    "w4-dive"
    ],
    "objectives": [
     {
@@ -10342,7 +10371,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Fire and Rock-types appear 50% more often and Fire moves deal 10% more damage. The listed map events turn up more often.",
+   "ruleText": "Fire and Rock-types appear 50% more often and Fire moves deal 10% more damage. The listed map events turn up more often. Lava rivers and wildfires cross the map.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
@@ -10358,6 +10387,20 @@
      "kind": "typeDamageMultiplier",
      "type": "fire",
      "value": 1.1
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "lava-river",
+     "value": 6
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "wildfire",
+     "value": 4
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 2
     }
    ],
    "mapEvents": [
@@ -10431,12 +10474,30 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Ground-types appear 50% more often. The listed map events turn up more often.",
+   "ruleText": "Ground-types appear 50% more often. The listed map events turn up more often. Fresh rockslides and cracked walls block the roads, and every 3 nodes a tremor swaps two stops ahead.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
      "type": "ground",
      "value": 1.5
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "rockslide",
+     "value": 8
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "cracked-wall",
+     "value": 4
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 2
+    },
+    {
+     "kind": "stopShuffle",
+     "every": 3
     }
    ],
    "mapEvents": [
@@ -10444,7 +10505,8 @@
     "mudslide-rescue",
     "power-plant-fault",
     "ruined-bridge",
-    "quarry-entrance"
+    "quarry-entrance",
+    "w4-cave-echo"
    ],
    "objectives": [
     {
@@ -10510,12 +10572,26 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Water-types appear twice as often. The listed map events turn up more often.",
+   "ruleText": "Water-types appear twice as often. The listed map events turn up more often. Flooded lakes and rivers cut the land routes.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
      "type": "water",
      "value": 2
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "lake",
+     "value": 4
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "river",
+     "value": 4
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 2
     }
    ],
    "mapEvents": [
@@ -10523,7 +10599,8 @@
     "crisis-report-flood",
     "stormy-sea",
     "surf-rescue",
-    "tide-pools"
+    "tide-pools",
+    "w4-raft"
    ],
    "objectives": [
     {
@@ -10589,7 +10666,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Ice-types appear 50% more often and your hail lasts 2 turns longer. The listed map events turn up more often.",
+   "ruleText": "Ice-types appear 50% more often and your hail lasts 2 turns longer. The listed map events turn up more often. Snowdrifts lock some stops until a Fire or Ground-type clears them.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
@@ -10599,6 +10676,20 @@
     {
      "kind": "weatherTurnsBonus",
      "turns": 2
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "snowdrift",
+     "value": 30
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "river",
+     "value": 4
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 2
     }
    ],
    "mapEvents": [
@@ -10606,7 +10697,8 @@
     "frozen-lake",
     "ice-training",
     "candice-snowball",
-    "cherry-blossom"
+    "cherry-blossom",
+    "w4-avalanche"
    ],
    "objectives": [
     {
@@ -10672,7 +10764,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Fire moves deal 15% more damage and Fire-types appear 50% more often. The listed map events turn up more often.",
+   "ruleText": "Fire moves deal 15% more damage and Fire-types appear 50% more often. The listed map events turn up more often. Wildfires break out on the road.",
    "modifiers": [
     {
      "kind": "typeDamageMultiplier",
@@ -10683,6 +10775,15 @@
      "kind": "typeEncounterWeight",
      "type": "fire",
      "value": 1.5
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "wildfire",
+     "value": 6
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 1
     }
    ],
    "mapEvents": [
@@ -10839,18 +10940,28 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Poké Balls work 30% better. The listed map events turn up more often.",
+   "ruleText": "Poké Balls work 30% better. The listed map events turn up more often. Follow the tracks through the long grass.",
    "modifiers": [
     {
      "kind": "captureMultiplier",
      "value": 1.3
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "thicket",
+     "value": 4
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 1
     }
    ],
    "mapEvents": [
     "safari-zone",
     "wandering-breeder",
     "ranger-rescue",
-    "kind-ranger"
+    "kind-ranger",
+    "w4-tracks"
    ],
    "objectives": [
     {
@@ -11076,7 +11187,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Prize money is 10% higher and rare rewards turn up 30% more often. The listed map events turn up more often.",
+   "ruleText": "Prize money is 10% higher and rare rewards turn up 30% more often. The listed map events turn up more often. Earthen walls hide tunnels for a Ground-type to dig.",
    "modifiers": [
     {
      "kind": "moneyMultiplier",
@@ -11085,6 +11196,15 @@
     {
      "kind": "rareItemWeight",
      "value": 1.3
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "soft-wall",
+     "value": 8
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 1
     }
    ],
    "mapEvents": [
@@ -11092,7 +11212,8 @@
     "ruins-dig",
     "aqua-dig",
     "junkyard",
-    "trash-to-treasure"
+    "trash-to-treasure",
+    "w4-old-chart"
    ],
    "objectives": [
     {
@@ -11158,11 +11279,20 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Research pays 25% more. The listed map events turn up more often.",
+   "ruleText": "Research pays 25% more. The listed map events turn up more often. Puzzle rooms and silent statues fill the ruins.",
    "modifiers": [
     {
      "kind": "researchMultiplier",
      "value": 1.25
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "statues",
+     "value": 6
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 1
     }
    ],
    "mapEvents": [
@@ -11170,7 +11300,10 @@
     "unown-wall",
     "ancient-tablet",
     "ruins-dig",
-    "z-sigil-ruin"
+    "z-sigil-ruin",
+    "w4-pressure-plates",
+    "w4-sundial",
+    "w4-portal-switches"
    ],
    "objectives": [
     {
@@ -11236,7 +11369,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Water and Ghost-types appear 50% more often. The listed map events turn up more often.",
+   "ruleText": "Water and Ghost-types appear 50% more often. The listed map events turn up more often. Dive spots with an oxygen meter lead down to the wreck.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
@@ -11247,13 +11380,19 @@
      "kind": "typeEncounterWeight",
      "type": "ghost",
      "value": 1.5
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "lake",
+     "value": 3
     }
    ],
    "mapEvents": [
     "ghost-ship",
     "lost-at-sea",
     "tide-pools",
-    "misty-swim"
+    "misty-swim",
+    "w4-dive"
    ],
    "objectives": [
     {
@@ -11319,19 +11458,44 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Flying-types appear twice as often. The listed map events turn up more often.",
+   "ruleText": "Flying-types appear twice as often. The listed map events turn up more often. The map climbs like a tower, with a healing checkpoint every 5 levels; cliffs and cloud gaps need a flyer.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
      "type": "flying",
      "value": 2
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "cliff",
+     "value": 5
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "cloud-gap",
+     "value": 5
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "rock-face",
+     "value": 4
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 2
+    },
+    {
+     "kind": "towerClimb",
+     "checkpointEvery": 5
     }
    ],
    "mapEvents": [
     "sky-race",
     "rainbow-wing-tower",
     "windswept-spire-entrance",
-    "migrating-flock"
+    "migrating-flock",
+    "w4-zip-line",
+    "w4-balloon"
    ],
    "objectives": [
     {
@@ -11397,7 +11561,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Grass and Fairy-types appear 50% more often. The listed map events turn up more often.",
+   "ruleText": "Grass and Fairy-types appear 50% more often. The listed map events turn up more often. Every stage has a looping forest clearing to find the way out of; fairy rings lead to hidden groves.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
@@ -11408,6 +11572,24 @@
      "kind": "typeEncounterWeight",
      "type": "fairy",
      "value": 1.5
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "fairy-ring",
+     "value": 6
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "thicket",
+     "value": 4
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 1
+    },
+    {
+     "kind": "placeEvent",
+     "eventId": "w4-forest-maze"
     }
    ],
    "mapEvents": [
@@ -11415,7 +11597,8 @@
     "whispering-grove-entrance",
     "sleeping-hollow",
     "dream-mist",
-    "flower-garden"
+    "flower-garden",
+    "w4-mirror-maze"
    ],
    "objectives": [
     {
@@ -11481,18 +11664,29 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Ghost-types appear twice as often. The listed map events turn up more often.",
+   "ruleText": "Ghost-types appear twice as often. The listed map events turn up more often. Spectral doors only Ghost-types can open.",
    "modifiers": [
     {
      "kind": "typeEncounterWeight",
      "type": "ghost",
      "value": 2
+    },
+    {
+     "kind": "traversalWeight",
+     "obstacle": "spirit-door",
+     "value": 8
+    },
+    {
+     "kind": "traversalExtra",
+     "count": 1
     }
    ],
    "mapEvents": [
     "ghost-town-gate",
     "haunted-house",
-    "graveyard-vigil"
+    "graveyard-vigil",
+    "w4-haunted-manor",
+    "w4-night-watch"
    ],
    "objectives": [
     {
@@ -11558,7 +11752,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Prize money is 10% higher. The listed map events turn up more often.",
+   "ruleText": "Prize money is 10% higher. The listed map events turn up more often. Arcade cabinets hide behind the stalls.",
    "modifiers": [
     {
      "kind": "moneyMultiplier",
@@ -11571,7 +11765,9 @@
     "prize-wheel",
     "ball-toss",
     "snack-stand",
-    "lottery-booth"
+    "lottery-booth",
+    "w4-arcade-cabinet",
+    "w4-balloon"
    ],
    "objectives": [
     {
@@ -11637,7 +11833,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "The map shows the wild Pokémon waiting at each node. The listed map events turn up more often.",
+   "ruleText": "The map shows the wild Pokémon waiting at each node. The listed map events turn up more often. Beacon fires light the road ahead.",
    "modifiers": [
     {
      "kind": "preview",
@@ -11647,7 +11843,8 @@
    "mapEvents": [
     "lighthouse-entrance",
     "lighthouse",
-    "weather-vane"
+    "weather-vane",
+    "w4-beacon-fire"
    ],
    "objectives": [
     {
@@ -11713,7 +11910,7 @@
     "minRunsFinished": 0
    },
    "mode": "any",
-   "ruleText": "Rivals are 1 level higher. The listed map events turn up more often.",
+   "ruleText": "Rivals are 1 level higher. The listed map events turn up more often. Somebody is following you.",
    "modifiers": [
     {
      "kind": "rivalLevelOffset",
@@ -11725,7 +11922,8 @@
     "camp-rival-trail",
     "rival-views",
     "old-rival-old-friend",
-    "rival-feud"
+    "rival-feud",
+    "w4-wandering-trainer"
    ],
    "objectives": [
     {
@@ -11768,6 +11966,160 @@
    "visualTheme": {
     "color": "#e06040",
     "icon": "item.leaders_crest"
+   },
+   "contentTags": [
+    "w9",
+    "exploration"
+   ]
+  },
+  {
+   "id": "map-mutator-week",
+   "version": 1,
+   "name": "Map Mutator Week",
+   "kind": "holiday",
+   "description": "Every stage is full of obstacles and odd places.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "07-12",
+    "end": "07-18"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Three more traversal obstacles on every stage, of every kind. The listed map events turn up more often.",
+   "modifiers": [
+    {
+     "kind": "traversalExtra",
+     "count": 3
+    }
+   ],
+   "mapEvents": [
+    "w4-time-rift",
+    "w4-gravity-well",
+    "w4-portal-switches",
+    "w4-riddle-signpost"
+   ],
+   "objectives": [
+    {
+     "id": "events",
+     "text": "Finish 6 map events",
+     "counter": "eventsCompleted",
+     "atLeast": 6,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "wins",
+     "text": "Win 20 battles",
+     "counter": "battlesWon",
+     "atLeast": 20,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "catches",
+     "text": "Catch 6 Pokémon",
+     "counter": "pokemonCaught",
+     "atLeast": 6,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Map Mutant"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#a060e0",
+    "icon": "item.map"
+   },
+   "contentTags": [
+    "w9",
+    "exploration"
+   ]
+  },
+  {
+   "id": "train-ride-special",
+   "version": 1,
+   "name": "Train Ride Special",
+   "kind": "holiday",
+   "description": "Express trains run on every route.",
+   "schedule": {
+    "kind": "yearly",
+    "start": "10-20",
+    "end": "10-26"
+   },
+   "seedRule": "year",
+   "progressionEligibility": true,
+   "eligibility": {
+    "minRunsFinished": 0
+   },
+   "mode": "any",
+   "ruleText": "Shops cost 5% less. The listed map events turn up more often.",
+   "modifiers": [
+    {
+     "kind": "priceMultiplier",
+     "group": "all",
+     "value": 0.95
+    }
+   ],
+   "mapEvents": [
+    "w4-express-train",
+    "w4-zip-line",
+    "w4-riddle-signpost"
+   ],
+   "objectives": [
+    {
+     "id": "events",
+     "text": "Finish 5 map events",
+     "counter": "eventsCompleted",
+     "atLeast": 5,
+     "reward": {
+      "researchPoints": 60
+     }
+    },
+    {
+     "id": "wins",
+     "text": "Win 20 battles",
+     "counter": "battlesWon",
+     "atLeast": 20,
+     "reward": {
+      "researchPoints": 50
+     }
+    },
+    {
+     "id": "trainers",
+     "text": "Beat 10 trainers",
+     "counter": "trainersDefeated",
+     "atLeast": 10,
+     "reward": {
+      "researchPoints": 60
+     }
+    }
+   ],
+   "reward": {
+    "researchPoints": 300,
+    "title": "Conductor"
+   },
+   "repeatPolicy": "oncePerEvent",
+   "fallbackReward": {
+    "researchPoints": 200,
+    "candies": 15
+   },
+   "visualTheme": {
+    "color": "#c06040",
+    "icon": "item.pair_of_tickets"
    },
    "contentTags": [
     "w9",

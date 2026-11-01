@@ -152,6 +152,13 @@ export const PROMPTS: readonly PromptDef[] = [
   { id: 'shout-tap', kind: 'tap', label: 'Shout!', hint: 'Press the moment the mark appears.', windowsMs: W(220, 380, 650), expireMs: 1200 },
   { id: 'brace-hold', kind: 'hold', label: 'Hold steady', hint: 'Hold, then let go when the ring is full.', targetMs: 1200, windowsMs: W(90, 180, 320) },
   { id: 'echo-rhythm', kind: 'rhythm', label: 'Echo the beat', hint: 'Press on each beat.', beatsMs: [600, 1100, 1600, 2300], windowsMs: W(80, 160, 280) },
+  // Ideas W4 set pieces (map events with a `prompt` choice).
+  { id: 'zip-line', kind: 'timing', label: 'Let go!', hint: 'Press as the ring closes: let go of the zip-line at the platform.', landMs: 1300, windowsMs: W(80, 160, 300) },
+  { id: 'climb-rhythm', kind: 'rhythm', label: 'Climb!', hint: 'Press on each beat to reach for the next hold.', beatsMs: [500, 1000, 1500, 2000, 2500], windowsMs: W(90, 170, 300) },
+  { id: 'dodge-tap', kind: 'tap', label: 'Dodge!', hint: 'Press the moment the mark appears to dodge the snow.', windowsMs: W(200, 340, 560), expireMs: 1100 },
+  { id: 'balloon-drag', kind: 'drag', label: 'Steer the balloon', hint: 'Drag the balloon along the wind to the landing mark.', from: [20, 70], to: [75, 35], windowsPx: W(7, 14, 24), maxMs: 4500 },
+  { id: 'dive-hold', kind: 'hold', label: 'Hold your breath', hint: 'Hold, and let go when the ring is full to surface in time.', targetMs: 1500, windowsMs: W(100, 200, 360) },
+  { id: 'pull-hold', kind: 'hold', label: 'Pull together', hint: 'Hold, and let go as the ring fills to pull them free.', targetMs: 1100, windowsMs: W(90, 180, 320) },
 ];
 
 export const promptById = (id: string): PromptDef => {

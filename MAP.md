@@ -40,6 +40,7 @@ Update this file when you add, move or delete a folder or a key file.
 | `src/core/story/` | Story layer (M8.9): `schema`, `record` (domain events), `effects` + `ledger` (never apply twice), `queue`, `hooks` (run → story), `hyper` (Hyper moment eligibility). Guide: `docs/story-foundation.md`. |
 | `src/core/raid/` | Raids: `schema` (raids.json shape), `raid.ts` (shields, phases, telegraph, timer, den placement; the engine calls its hooks). |
 | `src/core/events.ts` | Map events ("!"/"?" stops): placement, choices, checks, effects, event battles. Data: `src/data/events.json`, built from `tools/events/*.ts` by `npm run data:events`. Screen: `src/scenes/EventScene.ts`. |
+| `src/core/traversal.ts`, `src/core/wanderer.ts` | Ideas W4: map traversal obstacles (data `src/data/traversal.json`) and regional landmarks; the wandering trainer and travelling companion. Set-piece events: `tools/events/w4.ts` (`npm run data:w4-events`). |
 | `src/core/mastery.ts` | Species Mastery: per-species counters and ranks (Seen → Master), family view, unlocks applied to joining Pokémon (`run.mastery`), the Mastered starter set. |
 | `src/core/gameEvents.ts` | Weekly/holiday game events: ISO-week rotation, yearly windows, the Event Archive, holiday calendar, edition keys, themed rules for runs, objectives and once-only rewards (`gameEvents.json`, `npm run data:game-events`). |
 | `src/core/directive.ts` | Research Directive: the studied type's progress and bonus (`balance.directive`). |

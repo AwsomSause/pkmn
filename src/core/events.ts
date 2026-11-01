@@ -9,6 +9,7 @@
 // one seeded by the stop. No existing stream is touched, so adding events
 // changes no other roll, and choosing again after a reload gives the same result.
 
+import { befriendWanderer, startWanderer } from './wanderer';
 import { emotionOf } from './story/emotions';
 import { featuredMapEvents, runGameEventIds } from './gameEvents';
 import { eventChanceScale } from './rules';
@@ -18,7 +19,7 @@ import { createBattle } from './battle/engine';
 import type { Content, EventBattle, EventChoice, EventCondition, EventDef, EventEffect, EventOutcome, TradeWant, TypeName } from './contentSchema';
 import { curveLevel, enemyLevel, evolvedFormAt, levelScale, rollShiny, withPartyStrength } from './encounters';
 import { changeFriendship } from './friendship';
-import { atLeast, type Grade, type PromptResult } from './interaction/prompt';
+import { atLeast, promptById, type Grade, type PromptResult } from './interaction/prompt';
 import { applyCatalog, catalogTargetProblem, isFreeReroll } from './catalog';
 import { addItem } from './items';
 import { makeDoubles } from './battle/doubles';
@@ -47,7 +48,7 @@ import { makeShadow, rollShadowHeart } from './shadow';
 import { addFlag } from './shadowWorld/world';
 import { grantBlessing, makeBlissful } from './shadowWorld/blissful';
 import { eggMoveOptions, familyId, teachEggMove } from './mastery';
-import { getCampaign, levelCap, runLevelCap } from './regions';
+import { currentRegion, getCampaign, levelCap, runLevelCap } from './regions';
 import { auditEncounter, auditSpecies, directSpecies, type EncounterSource } from './encounterDirector';
 import { hashSeed, Rng } from './rng';
 import { continueAfterDecisions, healParty, newMon } from './run';
@@ -57,7 +58,7 @@ import { focusIs, MYSTERY_EXTRA_STOPS, regionFocus } from './campaign/focus';
 import { emit } from './story/record';
 import { recordBattleStarted } from './story/hooks';
 import { partyLifeBond } from './partyLife';
-import { celebrateToday, milestoneToday, periodOf, PERIOD_LABEL, restUntilMorning } from './clock';
+import { celebrateToday, milestoneToday, periodOf, PERIOD_LABEL, restUntilMorning, seasonOf } from './clock';
 import { BERRIES } from './berries';
 import { getTheme, typesPool } from './themes';
 import { anyRoaming, endRoamer, healConvoy, startConvoy, partyHasAbility, placeCamp, scoutAhead, CAMP_EVENT_ID } from './world';
@@ -89,6 +90,10 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return run.party.some((m) => content.species.get(m.speciesId)?.types.includes(c.type));
     case 'period':
       return c.in.includes(periodOf(run));
+    case 'season':
+      return c.in.includes(seasonOf(content, run));
+    case 'region':
+      return c.ids.includes(currentRegion(content, run).id);
     case 'milestone':
       return milestoneToday(content, run);
     case 'partySpecies':
@@ -222,6 +227,10 @@ export function conditionText(content: Content, c: EventCondition): string {
       return `Needs a ${content.catalog.get(c.id)?.name ?? content.items.get(c.id)?.name ?? c.id}`;
     case 'period':
       return `Only in the ${c.in.map((x) => PERIOD_LABEL[x].toLowerCase()).join(' or ')}`;
+    case 'season':
+      return `Only in ${c.in.join(' or ')}`;
+    case 'region':
+      return `Only in ${c.ids.map((id) => content.regions.get(id)?.name ?? id).join(' or ')}`;
     case 'milestone':
       return 'Needs a milestone day';
     case 'partyType':
@@ -470,6 +479,7 @@ function findSide(run: RunState, sideId: string): { node: MapNode; side: SideSto
 }
 
 export function choiceChance(content: Content, run: RunState, choice: EventChoice): number | null {
+  if (choice.prompt) return null;
   if (choice.check) {
     const cfg = content.balance.events;
     const pct = Math.min(cfg.checkMax, Math.max(cfg.checkMin, cfg.checkBase + effectiveAttributes(content, run)[choice.check]));
@@ -498,6 +508,10 @@ export function choiceRisk(content: Content, choice: EventChoice): { cost: strin
   const same = (a: EventEffect, b: EventEffect) => JSON.stringify(a) === JSON.stringify(b);
   const sure = choice.success.effects.filter((e) => harmful(e) && (!choice.failure || choice.failure.effects.some((f) => same(f, e))));
   const cost = sure.length ? sure.map((e) => effectWords(content, e)).join(', ') : null;
+  if (choice.prompt) {
+    const fail = choice.failure!;
+    return { cost, risk: `Skill: ${promptById(choice.prompt.id).label} (${choice.prompt.needs} or better) · ${fail.battle ? 'a fight if you miss' : fail.effects.some((e) => harmful(e)) ? 'a setback if you miss' : 'nothing lost if you miss'}` };
+  }
   const uncertain = choice.check !== undefined || choice.chance !== undefined;
   if (!uncertain) return { cost, risk: choice.success.battle ? 'Certain · leads to a battle' : 'Certain outcome' };
   const why = choice.check ? `Depends on your ${ATTRIBUTE_LABELS[choice.check]}` : 'Luck of the draw';
@@ -560,7 +574,7 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   const success = choice.prompt ? atLeast({ grade: promptGrade ?? 'miss' } as PromptResult, choice.prompt.needs) : chance === null || rng.float() < chance;
   const outcome = success ? choice.success : choice.failure!;
   // The Event Director remembers important choices (and whether you took a risk).
-  const risky = chance !== null;
+  const risky = chance !== null || choice.prompt !== undefined;
   run.story.flags[risky ? 'choices:risky' : 'choices:safe'] = Number(run.story.flags[risky ? 'choices:risky' : 'choices:safe'] ?? 0) + 1;
   emit(content, run, 'storyMoment', { actors: [], data: { def: 'event-choice', suppressed: false }, importance: risky ? 55 : 40, text: `${event.name}: ${choice.label}${risky ? (success ? ' (the gamble paid off)' : ' (the gamble failed)') : ''}` });
   emit(content, run, 'eventChoice', { data: { event: event.id, choice: choiceIndex, risky, success } });
@@ -667,6 +681,14 @@ export function effectWords(content: Content, e: EventEffect): string {
       return e.stop === 'heal' ? 'a healing spot opens here' : e.stop === 'shop' ? 'a shop opens here' : 'a fishing spot opens here';
     case 'skipAhead':
       return 'skip ahead to the gym';
+    case 'wanderer':
+      return 'a trainer starts following you';
+    case 'wandererFriend':
+      return `a travelling companion for ${e.stages} stage${e.stages === 1 ? '' : 's'}`;
+    case 'express':
+      return 'your next move skips a column';
+    case 'riftPreview':
+      return 'see the battles ahead on this stage';
     case 'scout':
       return `the map shows ${e.columns} more column${e.columns === 1 ? '' : 's'} ahead`;
     case 'addEvent':
@@ -1009,6 +1031,18 @@ export function applyEffect(content: Content, run: RunState, e: EventEffect, rng
       return applyEvilEffect(content, run, e);
     case 'choice':
       return recordChoice(content, run, e);
+    case 'wanderer':
+      startWanderer(run, e.nodes);
+      return effectWords(content, e);
+    case 'wandererFriend':
+      befriendWanderer(run, e.stages);
+      return effectWords(content, e);
+    case 'express':
+      if (run.stage?.kind === 'stage') run.moveMode = 'bicycle';
+      return effectWords(content, e);
+    case 'riftPreview':
+      run.itemCounters = { ...run.itemCounters, [`rift-preview:${stageKey(run)}`]: 1 };
+      return effectWords(content, e);
     case 'skipAhead': {
       // The ferry lands beside the gym: one of the nodes leading into it counts as reached.
       const stage = run.stage!;

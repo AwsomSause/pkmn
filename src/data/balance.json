@@ -639,6 +639,7 @@
   }
  },
  "world": {
+  "traversal": true,
   "fogSight": 3,
   "fogIntelligencePerSight": 15,
   "fogAbilities": [

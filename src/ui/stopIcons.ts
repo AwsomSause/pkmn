@@ -18,6 +18,8 @@ export const STOP_STYLES: Record<string, StopStyle> = {
   rest: { color: 0xf08098, glyph: '♥', label: 'Rest spot' },
   shop: { color: 0x4878d0, glyph: '$', label: 'Shop' },
   heal: { color: 0xe06890, glyph: '+', label: 'Heal' },
+  // Ideas W4: a region's landmark (a lasting effect for the run).
+  landmark: { color: 0x40c0a0, glyph: '♜', label: 'Landmark' },
 };
 
 export const stopStyle = (stop: string | undefined): StopStyle => (stop ? STOP_STYLES[stop] : undefined) ?? DEFAULT_EVENT_STOP;

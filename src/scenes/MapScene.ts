@@ -9,6 +9,8 @@
 
 import { nookOf, renameNode } from '../core/hubNook';
 import { habitatList } from '../core/habitat';
+import { crossingHint, obstacleAt, towerClimb, TRAVERSAL } from '../core/traversal';
+import { realSeason, SEASON_SKIN } from '../ui/seasonSkin';
 import { clockLabel, periodOf, PERIOD_LOOK } from '../core/clock';
 import { modeObjectives, objectivesLine } from '../core/modeObjectives';
 import { fieldHintId, licenseName, licenseNote } from '../core/license';
@@ -46,7 +48,7 @@ import { openCampMenu } from '../ui/campMenu';
 import { openBagMenu, openBoxMenu, openSaveMenu, openStoryMenu, type FieldMenuHost } from '../ui/fieldMenus';
 import { onInputAction } from '../ui/input';
 import { Picker, speciesRow, type PickerLike } from '../ui/partyPanel';
-import { stopStyle } from '../ui/stopIcons';
+import { STOP_STYLES, stopStyle } from '../ui/stopIcons';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { showAchievementToasts } from '../ui/achievementToast';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, TYPE_COLORS, mixColor, textStyle } from '../ui/theme';
@@ -71,6 +73,7 @@ const IDLE_NAP_MS = 20000;
 const NODE_RADIUS = 24;
 /** How far the League's last battle sits above its first. */
 const LEAGUE_RISE = 120;
+const TOWER_RISE = 80;
 
 const KIND_STYLE: Record<MapNode['kind'], { color: number; glyph: string; label: string }> = {
   wild: { color: 0x48a860, glyph: 'W', label: 'Wild Pokémon' },
@@ -181,6 +184,7 @@ export class MapScene extends Phaser.Scene {
 
   create(data: { notice?: string; focus?: number } = {}): void {
     this.endArmed = false;
+    this.legend = null;
     const { session } = services();
     const run = session.run!;
     // W10 (I496/I507/I497): C hears a cry, H holds the lead's paw, N names the node. Keys and touch buttons share one handler each.
@@ -309,6 +313,11 @@ export class MapScene extends Phaser.Scene {
     // Time of day: a light wash over the map (presentation only).
     const look = PERIOD_LOOK[periodOf(run)];
     if (look.alpha > 0) this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, look.tint, look.alpha * 0.5).setOrigin(0).setDepth(900).setName('time-wash');
+    // Seasonal map skin from the real-world date (ideas W4, presentation only): a tint and drifting petals, sun motes,
+    // leaves or snow behind the map.
+    const skin = SEASON_SKIN[realSeason(new Date())];
+    this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, skin.tint, 0.08).setOrigin(0).setDepth(-48).setName(`season-${skin.name}`);
+    if (!league) addAmbience(this, this.add.container(0, 0).setDepth(-47), 0, [skin.ambience], this.motion);
     // Weather forecast: a front ahead, or the one you are in, and fog.
     const fc = league ? null : forecast(content, run);
     if (fc) {
@@ -351,10 +360,12 @@ export class MapScene extends Phaser.Scene {
 
     const widthOf = (col: number) => stage.map.nodes.filter((n) => n.column === col).length;
     // In the League each battle sits a step higher than the last.
-    const rise = league ? LEAGUE_RISE / Math.max(1, stage.map.columns - 1) : 0;
+    // In a Sky Tower week the whole map climbs upward too, a little less steeply.
+    const totalRise = league ? LEAGUE_RISE : towerClimb(content, run) ? TOWER_RISE : 0;
+    const rise = totalRise / Math.max(1, stage.map.columns - 1);
     const pos = (n: MapNode) => ({
       x: MAP_LEFT + (n.column - 1) * colSpacing,
-      y: MAP_MID_Y + (n.row - (widthOf(n.column) - 1) / 2) * ROW_SPACING + (league ? LEAGUE_RISE / 2 - (n.column - 1) * rise : 0),
+      y: MAP_MID_Y + (n.row - (widthOf(n.column) - 1) / 2) * ROW_SPACING + (totalRise ? totalRise / 2 - (n.column - 1) * rise : 0),
     });
 
     const lines = this.add.graphics();
@@ -479,6 +490,16 @@ export class MapScene extends Phaser.Scene {
         mapLayer.add(fb);
         mapLayer.add(this.add.text(x - r + 17, y + r + 2, FRONT_LABEL[front.weather] ?? front.weather, textStyle(10, '#101820')).setOrigin(0.5));
       }
+      // A traversal obstacle (ideas W4): a round badge with its icon at the node's top-left.
+      const obstacle = fog ? null : obstacleAt(stage, n.id);
+      if (obstacle) {
+        const col = Phaser.Display.Color.HexStringToColor(obstacle.color).color;
+        const ob = this.add.graphics().setName('obstacle');
+        ob.fillStyle(0x181818, 1).fillCircle(x - r + 2, y - r + 2, 13);
+        ob.fillStyle(col, alpha).fillCircle(x - r + 2, y - r + 2, 11);
+        mapLayer.add(ob);
+        mapLayer.add(this.add.text(x - r + 2, y - r + 2, obstacle.icon, textStyle(14, '#101018', { stroke: '#ffffff', strokeThickness: 2 })).setOrigin(0.5).setAlpha(alpha));
+      }
       if (n.row === 0) mapLayer.add(this.add.text(x, 84, String(n.column), textStyle(14, '#a69cb4')).setOrigin(0.5, 0));
       if (league && boss) mapLayer.add(this.add.text(x, y + r + 12, n.kind === 'champion' ? `★ ${boss.name} ★` : boss.name, textStyle(n.kind === 'champion' ? 17 : 15, n.kind === 'champion' ? '#ffe080' : COLORS.textLight)).setOrigin(0.5, 0));
       n.sides.forEach((side, i) => {
@@ -564,6 +585,10 @@ export class MapScene extends Phaser.Scene {
     showAchievementToasts(this, session.takeAchievementToasts(), this.motion);
 
     onInputAction(this, (action) => {
+      if (this.legend) {
+        if (action === 'back' || action === 'confirm') this.toggleLegend();
+        return;
+      }
       if (this.picker) {
         this.picker.handle(action);
         return;
@@ -584,7 +609,19 @@ export class MapScene extends Phaser.Scene {
       });
     }
 
-    if (stage.current === null && !data.notice) {
+    // Ideas W4: Legend (L) explains every icon on the map.
+    this.input.keyboard?.on('keydown-L', () => this.toggleLegend());
+    const legendTag = this.add.text(GAME_WIDTH - 24, 402, 'L: map legend', textStyle(12, '#a69cb4')).setOrigin(1, 0).setInteractive({ useHandCursor: true }).setName('legend-tag');
+    legendTag.on('pointerdown', () => this.toggleLegend());
+    // A run continued from a save (ideas W4): a gentle welcome back, and the map glides to where you stand.
+    if (session.takeResumed() && !data.notice) {
+      const target = mapLayer.x;
+      if (this.motion === 'full' && target < 0) {
+        mapLayer.x = 0;
+        this.tweens.add({ targets: mapLayer, x: target, duration: 900, delay: 200, ease: 'Cubic.easeInOut' });
+      }
+      this.showBanner('Welcome back', league ? `${region.name} League` : `Stage ${stage.index + 1}`, `Resumed at ${league ? 'battle' : 'level'} ${Math.max(1, column)} of ${stage.map.columns}  ·  Day ${run.clock.day}  ·  Your run was saved here`);
+    } else if (stage.current === null && !data.notice) {
       const regions = run.regionOrder.length;
       if (league) {
         const size = getCampaign(content, run.campaignId).eliteFourSize;
@@ -724,6 +761,8 @@ export class MapScene extends Phaser.Scene {
         if (isFogged(content, runNow, n)) return `Level ${n.column}: lost in fog. You see ${sightRange(content, runNow)} columns ahead; Intelligence, a keen-eyed or Flying Pokémon and scouting see further.`;
         const frontHere = frontAt(content, runNow, n);
         const frontNote = frontHere ? `${FRONT_LABEL[frontHere.weather] ?? frontHere.weather} front: battles here start in ${frontHere.weather}.\n` : '';
+        const crossing = crossingHint(content, runNow, n);
+        const crossNote = crossing ? `Obstacle: ${crossing}\n` : '';
         const boss = this.bossFor(n);
         const types = boss && boss.types.length > 0 && n.kind !== 'gym' ? ` (${boss.types.join('/')})` : '';
         const named = n.name ? `"${n.name}"  ·  ` : '';
@@ -733,7 +772,7 @@ export class MapScene extends Phaser.Scene {
         const seen = this.previewText(n) || (n.kind === 'wild' ? `Habitat: likely ${habitatList(services().session.content, services().session.run!).join(', ')}` : '');
         const route = routeKind(services().session.run!, n);
         const anomaly = stageAnomaly(services().session.content, services().session.run!);
-        return `${named}${frontNote}${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
+        return `${named}${frontNote}${crossNote}${anomaly ? `${anomalyLine(anomaly)}\n` : ''}${route ? `[${ROUTE_LABELS[route]}]\n` : ''}${n.kind === 'elite' || n.kind === 'champion' ? 'Battle' : 'Level'} ${n.column}: ${kind}${risk}${sides.length ? `  ·  Has a ${sides.join(' and ')}` : ''}${seen ? `\n${seen}` : ''}`;
       }
       case 'side':
         if (option.side.kind === 'plaza') return 'Trainer Plaza: the middle of the stage. Stalls, traders, a Battle Club, errands and gossip. Rest, shop and plan before you go on.';
@@ -814,7 +853,13 @@ export class MapScene extends Phaser.Scene {
           this.scene.restart({ notice: 'The Repel kept wild Pokémon away!', focus: 0 });
           break;
         }
-        const delay = this.travel(option.node);
+        let delay = this.travel(option.node);
+        // An obstacle crossed (or gone round) on the way: say what happened before the battle (ideas W4).
+        if (session.lastCrossing) {
+          if (this.notice) fitBlock(this.notice, 300, 48, session.lastCrossing);
+          if (this.info) fitBlock(this.info, 580, 52, session.lastCrossing);
+          delay += 1400;
+        }
         this.time.delayedCall(delay, () => this.cameras.main.fadeOut(250));
         this.time.delayedCall(delay + 260, () => this.scene.start(sceneForRun(run)));
         break;
@@ -1235,6 +1280,52 @@ export class MapScene extends Phaser.Scene {
       return;
     }
     this.scene.restart({ notice, focus: 0 });
+  }
+
+  private legend: Phaser.GameObjects.Container | null = null;
+
+  /** The map legend (ideas W4, key L): what every node, stop, badge and obstacle icon means. Esc or L closes it. */
+  private toggleLegend(): void {
+    if (this.legend) {
+      this.legend.destroy();
+      this.legend = null;
+      this.busy = false;
+      return;
+    }
+    if (this.busy || this.picker) return;
+    const layer = this.add.container(0, 0).setDepth(85).setName('map-legend');
+    layer.add(this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive().on('pointerdown', () => this.toggleLegend()));
+    layer.add(drawGlass(this, 40, 40, GAME_WIDTH - 80, GAME_HEIGHT - 80, { tint: AERO.glassLow, rim: AERO.rim, radius: 18, alpha: 0.97 }));
+    layer.add(this.add.text(GAME_WIDTH / 2, 56, 'Map legend  (L or click to close)', textStyle(22, COLORS.gold)).setOrigin(0.5, 0));
+    const rows: { glyph: string; color: number; text: string }[] = [
+      ...Object.values(KIND_STYLE).map((k) => ({ glyph: k.glyph, color: k.color, text: k.label })),
+      { glyph: '!', color: HARDER_COLOR, text: 'Harder route: stronger foes, better rewards' },
+      { glyph: '?', color: FOG_STYLE.color, text: 'In the fog: not seen yet' },
+      { glyph: '✓', color: 0x48a860, text: 'Visited' },
+      { glyph: '✦', color: 0xf8e070, text: 'Itemfinder: an item hides here' },
+      { glyph: '☂', color: FRONT_COLOR.rain!, text: 'Weather front: battles start in that weather' },
+      ...(Object.keys(SIDE_STYLE) as SideStop['kind'][]).map((k) => ({ glyph: SIDE_STYLE[k].glyph, color: SIDE_STYLE[k].color, text: `${SIDE_LABEL[k]} stop` })),
+      ...Object.values(STOP_STYLES).map((st) => ({ glyph: st.glyph, color: st.color, text: st.label })),
+      { glyph: ROAMER_STYLE.glyph, color: ROAMER_STYLE.color, text: 'Roaming Legendary or Legendary event' },
+      { glyph: CAMP_STYLE.glyph, color: CAMP_STYLE.color, text: 'Checkpoint camp' },
+    ];
+    const obstacles = TRAVERSAL.obstacles.map((o) => ({ glyph: o.icon, color: Phaser.Display.Color.HexStringToColor(o.color).color, text: `${o.name}: ${o.types.map((t) => t[0]!.toUpperCase() + t.slice(1)).join('/')}` }));
+    const all = [...rows, ...obstacles];
+    const perCol = Math.ceil(all.length / 3);
+    const colW = (GAME_WIDTH - 120) / 3;
+    const rowH = Math.min(18, Math.floor((GAME_HEIGHT - 170) / perCol));
+    all.forEach((row, i) => {
+      const cx = 64 + Math.floor(i / perCol) * colW;
+      const cy = 96 + (i % perCol) * rowH;
+      const dot = this.add.graphics();
+      dot.fillStyle(0x181818, 1).fillCircle(cx + 7, cy + 7, 8);
+      dot.fillStyle(row.color, 1).fillCircle(cx + 7, cy + 7, 7);
+      layer.add(dot);
+      layer.add(this.add.text(cx + 7, cy + 7, row.glyph, textStyle(10, '#101018', { stroke: '#ffffff', strokeThickness: 2 })).setOrigin(0.5));
+      layer.add(fitLine(this.add.text(cx + 20, cy, row.text, textStyle(12, COLORS.textLight)), colW - 26));
+    });
+    this.legend = layer;
+    this.busy = true;
   }
 
   private showBanner(top: string, title: string, sub: string): void {

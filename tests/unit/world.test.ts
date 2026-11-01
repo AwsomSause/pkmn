@@ -1,6 +1,9 @@
 // Exploration (APPROVED.md §5-6): fog of war, weather fronts, roaming Legendaries, camps, secret
 // paths, callbacks, landmark rooms and the stops of the limited-time events.
 
+import { LANDMARK_STOP, TRAVERSAL } from '../../src/core/traversal';
+import { WANDERER_CHALLENGE, WANDERER_VISIT } from '../../src/core/wanderer';
+import { TREASURE_DIG_EVENT } from '../../src/core/run';
 import { describe, expect, it } from 'vitest';
 import type { Content } from '../../src/core/contentSchema';
 import { addEventStops, chooseEvent, eligibleEvents, stopIsHidden } from '../../src/core/events';
@@ -280,6 +283,10 @@ describe('landmarks and dungeons', () => {
         }
       }
     }
+    // Ideas W4: rooms opened by a traversal obstacle, and stops the code places (wanderer, treasure map, landmarks).
+    for (const o of TRAVERSAL.obstacles) for (const ef of o.pass) if (ef.kind === 'addEvent') opened.add(ef.eventId);
+    for (const id of [WANDERER_CHALLENGE, WANDERER_VISIT, TREASURE_DIG_EVENT]) opened.add(id);
+    for (const e of content.events.values()) if (e.stop === LANDMARK_STOP) opened.add(e.id);
     for (const id of opened) expect(content.events.get(id)?.room, id).toBe(true);
     for (const e of content.events.values()) if (e.room) expect(opened.has(e.id), e.id).toBe(true);
   });
