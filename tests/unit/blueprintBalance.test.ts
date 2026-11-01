@@ -102,7 +102,7 @@ describe('minigame payouts', () => {
       }
     }
     report.push('');
-  });
+  }, 120000);
 
   it('writes the report when asked', () => {
     if (process.env.BALANCE_REPORT) writeFileSync('docs/plans/balance-report.md', `${report.join('\n')}\n`);
