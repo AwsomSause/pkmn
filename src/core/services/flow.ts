@@ -8,6 +8,7 @@ import { baseStatTotal, wildEligibleSpecies } from '../themes';
 import { hashSeed, Rng } from '../rng';
 import { healParty, newMon, partyCapacity, requireStage } from '../run';
 import { runLevelCap } from '../regions';
+import { BERRIES, growTime, harvestPlot, plantBerry, plantableBerries, plantProblem, plotLabel } from '../berries';
 import { layEgg } from '../eggs';
 import { familyId } from '../mastery';
 import { evolveFully } from '../evolution';
@@ -294,8 +295,11 @@ export function serviceView(content: Content, run: RunState, sideId: string): Se
     }
     case 'garden': {
       const berry = gardenBerry(content, run, sideId);
-      if (!berry) break;
-      for (const m of run.party) add(`berry:${m.uid}`, `Give ${berry.name} to ${monName(content, m)}`, `${berry.description}.`, price(run, C.gardenPrice), side.used ? 'The garden has been picked.' : catalogTargetProblem(content, run, berry, m));
+      const picked = (run.itemCounters?.[`garden-picked:${sideId}`] ?? 0) > 0;
+      if (berry) for (const m of run.party) add(`berry:${m.uid}`, `Give ${berry.name} to ${monName(content, m)}`, `${berry.description}.`, price(run, C.gardenPrice), picked ? 'The garden has been picked.' : catalogTargetProblem(content, run, berry, m));
+      // Cultivation: plant a held berry, harvest ripe plots (plots grow one step each stage).
+      for (const plot of run.garden) add(`harvest:${plot.uid}`, `Harvest: ${plotLabel(content, plot)}`, plot.left > 0 ? 'Still growing. It ripens as stages pass.' : 'Pick the ripe berries; a mutated plot gives more, and a different ripe berry beside it may cross-pollinate.', 0, plot.left > 0 ? 'Not ripe yet.' : null);
+      for (const m of run.party) for (const id of plantableBerries(content, m)) add(`plant:${m.uid}:${id}`, `Plant ${content.catalog.get(id)?.name ?? id} from ${monName(content, m)}`, `Uses one held berry; ripe in ${growTime(content, run, id)} stage${growTime(content, run, id) === 1 ? '' : 's'}. Harvest gives ${BERRIES.harvestBase} or more.`, 0, plantProblem(run));
       break;
     }
     case 'safari':
@@ -427,7 +431,18 @@ export function useService(content: Content, current: RunState, sideId: string, 
       message = `You slip the dealer your money and take the ${content.items.get(uid!)?.name ?? uid}.`;
       break;
     }
+    case 'harvest': {
+      const got = harvestPlot(content, run, uid!);
+      message = `You harvest ${got.join(', ')}.`;
+      break;
+    }
+    case 'plant': {
+      const plot = plantBerry(content, run, mon!, arg!);
+      message = `${monName(content, mon!)}'s ${content.catalog.get(arg!)?.name ?? arg} is planted${plot.mutated ? ' and the soil glows: it looks mutated!' : '.'} It ripens in ${plot.left} stage${plot.left === 1 ? '' : 's'}.`;
+      break;
+    }
     case 'berry': {
+      run.itemCounters = { ...run.itemCounters, [`garden-picked:${sideId}`]: 1 };
       const berry = gardenBerry(content, run, sideId)!;
       applyCatalog(content, run, berry, mon!, { moneyMultiplier: 1, rng: new Rng(hashSeed(`${run.seed}::garden-use::${sideId}`)) });
       message = `${monName(content, mon!)} now holds the ${berry.name}.`;
@@ -501,7 +516,7 @@ export function useService(content: Content, current: RunState, sideId: string, 
       const species = rng.pick(formEggSpecies(content, uid!));
       const levels = run.party.map((m) => m.level);
       const level = Math.max(1, Math.min(runLevelCap(content, run), Math.floor(levels.reduce((a, b) => a + b, 0) / Math.max(1, levels.length)) - 5));
-      layEgg(content, run, species, { level, left: 3, unit: 'stage', source: `${FORM_FAMILY_FLAGS[uid!]!.name} Egg` }, rng);
+      layEgg(content, run, species, { level, left: 3, unit: 'stage', source: `${FORM_FAMILY_FLAGS[uid!]!.name} Egg`, origin: 'Form Egg' }, rng);
       message = `You take the egg home. It hatches in 3 stages into a ${FORM_FAMILY_FLAGS[uid!]!.name} form.`;
       break;
     }

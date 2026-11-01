@@ -483,6 +483,8 @@ export const PlainAttributeSchema = z.enum(PLAIN_ATTRIBUTES);
 
 /** Things the game counts during a run; each run's counts are added to the profile when it ends. */
 export const BASE_COUNTER_NAMES = [
+  'eggsHatched',
+  'berriesHarvested',
   'battlesWon',
   'wildDefeated',
   'trainersDefeated',
@@ -2455,7 +2457,9 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('research'), amount: z.number().int().positive() }),
   z.object({ kind: z.literal('levels'), amount: z.number().int().positive(), who: z.enum(['lead', 'party']).default('lead') }),
   /** A Pokémon joins (or goes to storage when the party is full): a listed species, or one of the types, or the stage's theme. */
-  z.object({ kind: z.literal('join'), species: z.array(z.string()).default([]), types: z.array(TypeNameSchema).default([]), levelBonus: z.number().int().default(0), shinyMultiplier: z.number().min(1).default(1), shadow: z.boolean().default(false), blissful: z.boolean().default(false) }),
+  z.object({ kind: z.literal('join'), species: z.array(z.string()).default([]), types: z.array(TypeNameSchema).default([]), levelBonus: z.number().int().default(0), shinyMultiplier: z.number().min(1).default(1), shadow: z.boolean().default(false), blissful: z.boolean().default(false), hiddenAbility: z.boolean().default(false) }),
+  /** A seedling grows in the Berry Garden (core/berries.ts): a held-berry plot, optionally mutated; the garden must have room. */
+  z.object({ kind: z.literal('seedling'), berry: z.string().min(1), mutated: z.boolean().default(false) }),
   /** A sanctuary's blessing (shadowWorld.json): a few battles of a small, narrow boost. */
   z.object({ kind: z.literal('blessing'), id: z.string().min(1) }),
   /** A Blissful awakening: the healthiest, fondest party Pokémon that is not Shadow becomes Blissful for good (needs friendship 150). */
@@ -2469,6 +2473,9 @@ export const EventEffectSchema = z.discriminatedUnion('kind', [
     shinyMultiplier: z.number().min(1).default(1),
     left: z.number().int().min(1).default(3),
     unit: z.enum(['battle', 'stage']).default('battle'),
+    /** Which row of data/eggs.json decides its tier odds (default "Event"); `tier` forces one. */
+    origin: z.string().optional(),
+    tier: z.string().optional(),
   }),
   /** The lead learns one of its family's egg moves it doesn't know yet. */
   z.object({ kind: z.literal('eggMove') }),

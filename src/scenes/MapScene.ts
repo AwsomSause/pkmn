@@ -50,7 +50,7 @@ import { AERO, drawGlass, floatIdle, glassPanel as drawPanel, typeLabel, type Mo
 import { addAmbience } from '../ui/battleFx/ambience';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
-import { eggStatus } from '../core/eggs';
+import { eggLabel, eggRevealed, eggTier } from '../core/eggs';
 import { protagonistTitle, topHeadline } from '../core/rivals/recognition';
 
 const COL_SPACING = 104;
@@ -449,6 +449,7 @@ export class MapScene extends Phaser.Scene {
       const x = 40 + (run.party.length + i) * 52;
       if (this.textures.exists('pack.ebdx.egg')) {
         const icon = this.add.image(x, 452, 'pack.ebdx.egg').setScale(1.2).setOrigin(0.5, 0.8);
+        if (eggRevealed(egg) && egg.tier !== 'ordinary') icon.setTint(Phaser.Display.Color.HexStringToColor(eggTier(egg.tier).color).color);
         this.tweens.add({ targets: icon, angle: { from: -4 - (egg.left <= 1 ? 8 : 0), to: 4 + (egg.left <= 1 ? 8 : 0) }, duration: egg.left <= 1 ? 260 : 900, yoyo: true, repeat: -1, ease: 'Sine.easeInOut', delay: i * 120 });
       }
       this.add.text(x, 470, `${egg.left}${egg.unit === 'battle' ? 'B' : 'S'}`, textStyle(13, '#fff2b0')).setOrigin(0.5, 0);
@@ -628,7 +629,7 @@ export class MapScene extends Phaser.Scene {
         }
         return option.side.kind === 'heal' ? 'Healing spot: fully heals your party and restores PP (once).' : 'Shop: buy Poké Balls and medicine with your money.';
       case 'party':
-        return ['Choose which Pokémon leads the next battle.', ...services().session.run!.eggs.map((e) => `Egg (${e.source}): ${eggStatus(e)}.`)].join(' ');
+        return ['Choose which Pokémon leads the next battle.', ...services().session.run!.eggs.map((e) => `${eggLabel(e)}.`)].join(' ');
       case 'bag':
         return 'Use medicine or evolution items on your Pokémon.';
       case 'items':
