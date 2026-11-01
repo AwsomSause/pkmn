@@ -18,6 +18,7 @@ import { recordTraded } from '../story/hooks';
 import { TYPE_NAMES, type Content, type EventBattle, type EventEffect, type TypeName } from '../contentSchema';
 import type { MapNode, RunState, SideStop } from '../state';
 import { PLAZA, type PlazaData, type PlazaNeed } from './schema';
+import { PLAZA_LIFE } from './life';
 
 const B = PLAZA.balance;
 type ClubFormat = PlazaData['club'][number] & { trainerName?: string; classId?: string };
@@ -154,6 +155,14 @@ function foeHere(run: RunState): { name: string; classId: string } | null {
   if (foes.length === 0 || !rngFor(run, 'foe').chance(B.foeChance)) return null;
   const f = rngFor(run, 'foe-pick').pick(foes);
   return { name: f.name, classId: f.classId };
+}
+
+/** A rare visitor now and then (more often with more badges): the same one for the whole stage. */
+export function rareVisitorHere(run: RunState): (typeof PLAZA_LIFE.rare)[number] | null {
+  const eligible = PLAZA_LIFE.rare.filter((r) => r.minBadges <= run.badges.length);
+  if (eligible.length === 0) return null;
+  const rng = rngFor(run, 'rare-visitor');
+  return rng.chance(Math.min(0.5, 0.15 + run.badges.length * 0.05)) ? rng.pick(eligible) : null;
 }
 
 function caravanHere(run: RunState): PlazaData['caravans'][number] | null {
@@ -607,6 +616,11 @@ export function sectionView(content: Content, run: RunState, sideId: string, sec
     case 'people': {
       notes.push(atmosphereOf(content, run), ...reactionNotes(content, run));
       if (ev.gift.length > 0) add('gift', `The ${ev.name}: ${ev.giftText}`, ev.text, 0, usedN(run, 'gift') > 0 ? 'Already collected.' : null);
+      // Mini-events: a rare visitor, the fountain, the street performer.
+      const rareV = rareVisitorHere(run);
+      if (rareV) add(`rare:${rareV.id}`, `Talk to the ${rareV.name}`, `${rareV.line}`, 0, usedN(run, `rare:${rareV.id}`) > 0 ? 'Already talked.' : null);
+      add('fountain', 'Make a wish at the fountain', PLAZA_LIFE.fountain.text, PLAZA_LIFE.fountain.cost, usedN(run, 'fountain') > 0 ? 'Your wish is made.' : null);
+      add('show', 'Watch the street performer', PLAZA_LIFE.performance.text, PLAZA_LIFE.performance.cost, usedN(run, 'show') > 0 ? 'The show is over.' : null);
       for (const flag of run.plaza.flags.filter((f) => f.startsWith('caravan:'))) {
         const c = PLAZA.caravans.find((x) => x.id === flag.slice(8));
         if (c) add(`parcel:${c.id}`, `A parcel from the ${c.name}`, 'They sent a thank-you.', 0);
@@ -814,6 +828,29 @@ export function usePlaza(content: Content, current: RunState, sideId: string, se
       effects(ev.gift);
       markUsed(run, 'gift');
       words.unshift(ev.giftText);
+      break;
+    }
+    case 'rare': {
+      const v = PLAZA_LIFE.rare.find((r) => r.id === a);
+      if (v) effects(v.gift);
+      markUsed(run, `rare:${a}`);
+      addRep(run, 1);
+      if (v) words.unshift(v.giftText);
+      break;
+    }
+    case 'fountain': {
+      // One wish a stage; what it brings is fixed by the seed, so a reload cannot reroll it.
+      const wish = rngFor(run, 'fountain').weighted(PLAZA_LIFE.fountain.wishes.map((w) => ({ item: w, weight: w.weight })));
+      effects(wish.effects);
+      markUsed(run, 'fountain');
+      words.unshift(wish.text);
+      break;
+    }
+    case 'show': {
+      effects(PLAZA_LIFE.performance.effects);
+      markUsed(run, 'show');
+      addRep(run, PLAZA_LIFE.performance.rep);
+      words.unshift(PLAZA_LIFE.performance.rewardText);
       break;
     }
     case 'parcel': {
