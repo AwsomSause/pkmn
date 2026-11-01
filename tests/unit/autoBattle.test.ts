@@ -7,7 +7,8 @@ import { bondOf } from '../../src/core/bond';
 import { createBattle } from '../../src/core/battle/engine';
 import { calcStats, createPokemon } from '../../src/core/pokemon';
 import { chooseStarter, createRun, takeTurn } from '../../src/core/run';
-import { CURRENT_VERSIONS, MIGRATIONS } from '../../src/save/saveManager';
+import { CURRENT_VERSIONS, MIGRATIONS, SaveManager } from '../../src/save/saveManager';
+import { MemoryStorageProvider } from '../../src/save/storage';
 import type { RunState } from '../../src/core/state';
 import { openHistory } from '../../src/core/story/record';
 import { content } from './helpers';
@@ -159,5 +160,50 @@ describe('move descriptions', () => {
     expect(moveDescription(content.moves.get('flamethrower')!)).toMatch(/burn/);
     expect(moveEffectClauses(content.moves.get('recover')!).join(' ')).toMatch(/restores/);
     expect(moveDescription(content.moves.get('tackle')!).length).toBeGreaterThan(5);
+  });
+});
+
+describe('Auto-Battle and Bag items', () => {
+  const hurt = (stance: 'cautious' | 'aggressive') => {
+    const base = fight('rattata', 12);
+    setMoves(base, ['tackle']);
+    base.inventory = { potion: 2 };
+    base.party[0]!.hp = Math.max(1, Math.floor(calcStats(content, base.party[0]!).hp * 0.2));
+    return setStance(base, base.party[0]!.uid, stance);
+  };
+  it('a hurt cautious Pokémon uses a potion on itself', () => {
+    const pick = chooseAutoAction(content, hurt('cautious'))!;
+    expect(pick.action).toMatchObject({ kind: 'item', itemId: 'potion', targetIndex: 0 });
+    expect(pick.tags).toContain('item');
+  });
+  it('a healthy one never wastes the turn on an item', () => {
+    const run = fight('rattata', 12);
+    run.inventory = { potion: 2 };
+    expect(chooseAutoAction(content, run)!.action.kind).not.toBe('item');
+  });
+  it('goes for the knockout instead of healing', () => {
+    const run = hurt('cautious');
+    run.party[0]!.level = 30;
+    run.battle!.enemyTeam[0]!.hp = 1;
+    expect(chooseAutoAction(content, run)!.action.kind).toBe('move');
+  });
+});
+
+describe('older saves load with Auto-Battle', () => {
+  it('a version 28 run loads (its battle has no autoUsed)', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.run', JSON.stringify({ format: 'pkmn-roguelike', record: 'run', schemaVersion: 28, savedAt: '', data: fight() }));
+    const loaded = new SaveManager(storage, content).loadRun();
+    expect(loaded.status).toBe('ok');
+    if (loaded.status !== 'ok') return;
+    expect(loaded.migratedFrom).toBe(28);
+    expect(loaded.data.battle!.autoUsed).toBeUndefined();
+  });
+  it('version 9 settings load with Auto-Battle off and explanations on', () => {
+    const storage = new MemoryStorageProvider();
+    storage.set('pkr.settings', JSON.stringify({ format: 'pkmn-roguelike', record: 'settings', schemaVersion: 9, savedAt: '', data: { musicVolume: 0.3 } }));
+    const settings = new SaveManager(storage, content).loadSettings();
+    expect(settings.autoBattle).toBe(false);
+    expect(settings.autoExplain).toBe(true);
   });
 });
