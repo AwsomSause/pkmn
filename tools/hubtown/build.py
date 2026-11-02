@@ -30,6 +30,7 @@ OUT_IMG = os.path.join(ROOT, 'public/assets/images/overworld')
 os.makedirs(OUT_IMG, exist_ok=True)
 
 TS = {k: Image.open(EX.G + v).convert('RGBA') for k, v in TS_FILES.items()}
+TS_IMG = lambda ts: TS[ts]
 for k, v in TS.items(): cache[k] = v
 
 # ---------- stamps ----------
@@ -84,8 +85,27 @@ def rect_set(x, y, w, h): return {(xx, yy) for xx in range(x, x + w) for yy in r
 # door stubs: every building door meets a path
 path_mask = set()
 for r in L.paths: path_mask |= rect_set(*r)
-px_, py_, pw_, ph_ = L.plaza_ring
-path_mask |= rect_set(*L.plaza_ring)
+# The sand ring around the plaza is an organic blob, not a box, so the square melts into the meadow (Kice 2026-11-02).
+import random as _random
+_ring_rng = _random.Random(2026)
+rx, ry, rw, rh = L.plaza_ring
+ring = set()
+cx_, cy_ = rx + rw / 2 - 0.5, ry + rh / 2 - 0.5
+for yy in range(ry - 3, ry + rh + 3):
+    for xx in range(rx - 3, rx + rw + 3):
+        # a rounded rectangle (superellipse) with a little wobble along the edge
+        nx, ny = abs(xx - cx_) / (rw / 2 + 1.2), abs(yy - cy_) / (rh / 2 + 1.2)
+        if nx ** 4 + ny ** 4 <= 1 + _ring_rng.uniform(-0.18, 0.12): ring.add((xx, yy))
+# smooth: drop tiles with fewer than two neighbours, fill single holes (the edge tiles need both sides)
+for _ in range(3):
+    nb = lambda t: sum((t[0] + dx, t[1] + dy) in ring for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))
+    ring = {t for t in ring if nb(t) >= 2}
+    for yy in range(ry - 3, ry + rh + 3):
+        for xx in range(rx - 3, rx + rw + 3):
+            if (xx, yy) not in ring and nb((xx, yy)) >= 3: ring.add((xx, yy))
+# no one-tile-wide necks: a tile needs a neighbour on at least one side horizontally and vertically
+ring = {t for t in ring if ((t[0] - 1, t[1]) in ring or (t[0] + 1, t[1]) in ring) and ((t[0], t[1] - 1) in ring or (t[0], t[1] + 1) in ring)}
+path_mask |= ring
 
 places = []
 props = []      # (frame, px, py, depth)
@@ -174,6 +194,47 @@ blob(path_mask, 'vr', (0, 21), (3, 21))
 x0, y0, w0, h0 = L.plaza
 for yy in range(y0, y0 + h0):
     for xx in range(x0, x0 + w0): ground[yy][xx] = ('vr', 5 + (xx - x0) % 3, (yy - y0) % 3)
+# Soft plaza edge (Kice 2026-11-02): the stone square dissolves into the sand ring with a DS-style ordered dither,
+# pixel by pixel (in 2 px steps, the art's own pixel size), over about three tiles either side of the square's rim.
+SYNTH = {}
+BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]]
+_noise = _random.Random(11)
+_wob = {(i, j): _noise.uniform(-0.35, 0.35) for i in range(-8, W + 8) for j in range(-8, H + 8)}
+def _tile_img(key):
+    ts, c, r = key
+    return TS_IMG(ts).crop((c * T, r * T, c * T + T, r * T + T))
+def _stone_weight(X, Y):
+    # distance outside the plaza rect, in tiles (negative inside), with rounded corners and a slow wobble
+    dx = max(x0 - X, X - (x0 + w0), 0.0); dy = max(y0 - Y, Y - (y0 + h0), 0.0)
+    out = (dx * dx + dy * dy) ** 0.5
+    inside = min(X - x0, (x0 + w0) - X, Y - y0, (y0 + h0) - Y)
+    d = out if out > 0 else -max(inside, 0.0)
+    i, j = int(X // 1), int(Y // 1)
+    fx, fy = X - i, Y - j
+    wob = (_wob[(i, j)] * (1 - fx) * (1 - fy) + _wob[(i + 1, j)] * fx * (1 - fy) + _wob[(i, j + 1)] * (1 - fx) * fy + _wob[(i + 1, j + 1)] * fx * fy)
+    return max(0.0, min(1.0, 0.5 - (d + wob) / 3.2))
+interior = {t for t in ring if all((t[0] + ddx, t[1] + ddy) in ring for ddx in (-1, 0, 1) for ddy in (-1, 0, 1))}
+for yy in range(y0 - 4, y0 + h0 + 4):
+    for xx in range(x0 - 4, x0 + w0 + 4):
+        in_plaza = x0 <= xx < x0 + w0 and y0 <= yy < y0 + h0
+        if not in_plaza and (xx, yy) not in interior: continue
+        stone = ('vr', 5 + (xx - x0) % 3, (yy - y0) % 3)
+        sand = ('vr', 1, 22)
+        ws = [_stone_weight(xx + (px + 1) / T, yy + (py + 1) / T) for py in range(0, T, 2) for px in range(0, T, 2)]
+        if min(ws) >= 15 / 16: ground[yy][xx] = stone; continue
+        if max(ws) <= 0.5 / 16: ground[yy][xx] = sand; continue
+        a_img, b_img = _tile_img(sand), _tile_img(stone)
+        out = a_img.copy(); bp = b_img.load(); op = out.load()
+        k = 0
+        for py in range(0, T, 2):
+            for px in range(0, T, 2):
+                if ws[k] * 16 > BAYER[(py // 2) % 4][(px // 2) % 4] + 0.5:
+                    for sy in (0, 1):
+                        for sx in (0, 1): op[px + sx, py + sy] = bp[px + sx, py + sy]
+                k += 1
+        key = ('mix', xx, yy, 0)
+        SYNTH[key] = out
+        ground[yy][xx] = key
 water_tiles = set()
 for r in L.water: blob(rect_set(*r), 'g4', (0, 8)); water_tiles |= rect_set(*r)
 for r in L.beach:
@@ -205,7 +266,9 @@ o_layer = [tid(overlay[y][x]) for y in range(H) for x in range(W)]
 COLS = 16
 rows = (len(uniq) + COLS - 1) // COLS
 tiles_img = Image.new('RGBA', (COLS * T, rows * T))
-for i, (ts, c, r) in enumerate(uniq): tiles_img.alpha_composite(TS[ts].crop((c * T, r * T, c * T + T, r * T + T)), ((i % COLS) * T, (i // COLS) * T))
+for i, key in enumerate(uniq):
+    im = SYNTH[key] if key in SYNTH else TS_IMG(key[0]).crop((key[1] * T, key[2] * T, key[1] * T + T, key[2] * T + T))
+    tiles_img.alpha_composite(im, ((i % COLS) * T, (i // COLS) * T))
 tiles_img.save(os.path.join(OUT_IMG, 'hubtown_tiles.png'), optimize=True)
 
 used = sorted({p[0] for p in props})
