@@ -84,11 +84,12 @@ test('the Briefing shows the run’s attributes, and a shop Plate raises one whe
     (window as any).__pkr.session.visitSide('e2e-shop');
   });
   await page.evaluate(() => {
-    (window as any).__pkr.game.scene.getScene('Map').scene.start('Shop');
+    (window as any).__pkr.game.scene.getScene('Map').scene.start('Shop', { type: 'mart' });
   });
   await waitForScene(page, 'Shop');
-  for (let i = 0; i < Math.floor(index / 2); i++) await page.keyboard.press('ArrowDown');
-  if (index % 2 === 1) await page.keyboard.press('ArrowRight');
+  // The Poké Mart grid has 4 columns.
+  for (let i = 0; i < Math.floor(index / 4); i++) await page.keyboard.press('ArrowDown');
+  for (let i = 0; i < index % 4; i++) await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(200);
   await page.screenshot({ path: 'test-results/m7-shop.png' });
   const price = Math.round(1500 * 0.9); // Charisma 20, half a percent per point

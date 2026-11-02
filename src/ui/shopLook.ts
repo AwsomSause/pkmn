@@ -44,3 +44,80 @@ export function shopHint(content: Content, run: RunState, item: Item): string {
   const users = shopUsers(content, run, item);
   return [`${pocketOf(item).word}: ${item.description}`, users, owned > 0 ? `You have ${owned}` : null, `₽${run.money} to spend`].filter(Boolean).join('  ·  ');
 }
+
+/** One thing on the shelf, everything a shop style needs to draw it (no Phaser). */
+export interface ShopRow {
+  itemId: string;
+  name: string;
+  /** The name as the list shows it, with "(on sale!)", "(early)" or "(black market)". */
+  label: string;
+  iconAssetId: string;
+  price: number;
+  /** The price before the sale of the day, when it is on sale. */
+  wasPrice: number | null;
+  sale: boolean;
+  early: boolean;
+  black: boolean;
+  affordable: boolean;
+  /** How many you own (attribute items are used on the spot, so always 0). */
+  owned: number;
+  pocket: { frame: number; word: string };
+  category: Item['category'];
+  description: string;
+  /** Uids of party members who can use it (evolution and form items), else null. */
+  users: string[] | null;
+  hint: string;
+  problem: string | null;
+}
+
+export interface ShopView {
+  money: number;
+  rows: ShopRow[];
+  /** "New stock at N badges", when more stock is still locked. */
+  nextStock: string | null;
+  canSell: boolean;
+}
+
+/** The shop as data: one row per item in stock, in stock order. */
+export function shopView(content: Content, run: RunState, deps: {
+  stock: Content['shop'];
+  price: (e: Content['shop'][number]) => number;
+  basePrice: (e: Content['shop'][number]) => number;
+  badgesFor: (e: Content['shop'][number]) => number;
+  saleItem: string | null;
+  isBlack: (e: Content['shop'][number]) => boolean;
+  canSell: boolean;
+  working: string | null;
+}): ShopView {
+  const next = content.shop.filter((e) => !deps.stock.includes(e)).sort((a, b) => deps.badgesFor(a) - deps.badgesFor(b))[0];
+  const nextStock = next ? `New stock at ${deps.badgesFor(next)} badges` : null;
+  const regionId = run.regionOrder[run.regionIndex];
+  const rows = deps.stock.map((entry): ShopRow => {
+    const item = content.items.get(entry.item)!;
+    const price = deps.price(entry);
+    const sale = deps.saleItem === entry.item;
+    const early = run.badges.length < deps.badgesFor(entry);
+    const black = deps.isBlack(entry);
+    const users = item.category === 'evolution' || item.category === 'transformation' ? run.party.filter((m) => itemUseProblem(content, item, m, regionId) === null).map((m) => m.uid) : null;
+    return {
+      itemId: entry.item,
+      name: item.name,
+      label: black ? `${item.name} (black market)` : early ? `${item.name} (early)` : sale ? `${item.name} (on sale!)` : item.name,
+      iconAssetId: item.iconAssetId,
+      price,
+      wasPrice: sale ? deps.basePrice(entry) : null,
+      sale,
+      early,
+      black,
+      affordable: run.money >= price,
+      owned: item.effect.kind === 'attribute' ? 0 : itemCount(run.inventory, entry.item),
+      pocket: pocketOf(item),
+      category: item.category,
+      description: item.description,
+      users,
+      hint: `${shopHint(content, run, item)}.${nextStock ? `  ${nextStock}.` : ''}${deps.working ? `  ·  ${deps.working}` : ''}`,
+      problem: run.money < price ? `Not enough money for the ${item.name} (₽${price}, you have ₽${run.money}).` : null,
+    };
+  });
+  return { money: run.money, rows, nextStock, canSell: deps.canSell };
+}

@@ -179,7 +179,7 @@ test('shop items: a Coupon halves a price and the Member Card sells an item earl
     run.money = 5000;
     session.visitSide('e2e-shop');
     for (const s of game.scene.getScenes(true)) s.scene.stop();
-    game.scene.start('Shop');
+    game.scene.start('Shop', { type: 'mart' });
   });
   await waitForScene(page, 'Shop');
   // Every text on the shop screen, however deep in its containers.

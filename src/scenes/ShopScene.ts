@@ -1,25 +1,34 @@
-// The shop beside a map node: buy items with run money, then leave. Each row
-// carries its Essentials bag-pocket icon; the focus hint says what it does,
-// who can use it and what you own (ui/shopLook.ts); a row you can't afford
-// shows its price in red; the item you just bought gets a BOUGHT stamp.
+// The shop beside a map node: buy items with run money, then leave. Shops redesign (Kice 2026-11-02):
+// each shop stop is one of six kinds (core/presentation/shopTypes.ts) and draws with its style from
+// ui/shopStyles/ (Poké Mart = Shop Channel, Aero Boutique = Aero Carousel, the rest come in later
+// slices and draw as the Mart until then). This scene keeps the state, input and buying; a buy
+// refreshes the style in place (no screen restart). Selling still uses the list picker.
 
-import { clockLabel, shopHoursMultiplier } from '../core/clock';
+import { clockLabel, periodOf, shopHoursMultiplier } from '../core/clock';
 import Phaser from 'phaser';
 import { itemCount } from '../core/items';
 import { mapItemSummary } from '../core/mapItems';
+import { shopScreenType, SHOP_TYPE_LABELS, type ShopTypeId } from '../core/shopTypes';
+import { uiMotionLevel } from '../core/presentation/uiMotion';
 import { isBlackMarket, sellPrice, shopBadgesNeeded, shopPrice, shopSaleItem, shopStock } from '../core/run';
 import { services } from '../game/services';
-import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
+import { playSfx, playMusicLazy } from '../ui/audio';
 import { onInputAction } from '../ui/input';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { itemVisual } from '../ui/sprites';
-import { pocketOf, shopHint } from '../ui/shopLook';
+import { shopView, type ShopView } from '../ui/shopLook';
+import { shopLayout } from '../ui/shopStyles';
+import type { ShopHandles } from '../ui/shopStyles/types';
 import { textStyle } from '../ui/theme';
 import { sceneForRun } from './routing';
 import { partySpecies, preloadPokemon } from '../ui/lazyAssets';
 
 export class ShopScene extends Phaser.Scene {
   private picker: Picker | null = null;
+  private handles: ShopHandles | null = null;
+  private focusIndex = 0;
+  /** The kind of shop on screen (tests read it). */
+  shopType: ShopTypeId = 'mart';
 
   constructor() {
     super('Shop');
@@ -29,84 +38,111 @@ export class ShopScene extends Phaser.Scene {
     preloadPokemon(this, partySpecies(), { icon: true });
   }
 
-  create(data: { notice?: string; focus?: number; sell?: boolean } = {}): void {
+  /** The shop as data for the styles. */
+  private view(): ShopView {
     const { session } = services();
     const run = session.run!;
     const content = session.content;
-    const motion = session.settings.battleAnimations;
+    const sale = shopSaleItem(content, run);
+    const discount = content.balance.shopSale.discount;
+    return shopView(content, run, {
+      stock: shopStock(content, run),
+      price: (e) => shopPrice(content, run, e),
+      basePrice: (e) => Math.round(shopPrice(content, run, e) / (1 - discount)),
+      badgesFor: (e) => shopBadgesNeeded(content, run, e),
+      saleItem: sale,
+      isBlack: (e) => isBlackMarket(content, run, e),
+      canSell: Object.keys(run.inventory).some((id) => run.inventory[id]! > 0 && sellPrice(content, run, id) !== null),
+      working: mapItemSummary(content, run),
+    });
+  }
+
+  create(data: { notice?: string; focus?: number; sell?: boolean; type?: string } = {}): void {
+    const { session } = services();
+    const run = session.run!;
+    const content = session.content;
     playMusicLazy(this, 'bgm.shop');
+    this.picker = null;
+    this.handles = null;
 
     if (data.sell) {
       this.createSell(data.notice);
       return;
     }
-    // More stock unlocks with badges (shop.json minBadges).
-    const stock = shopStock(content, run);
-    const badgesFor = (e: (typeof content.shop)[number]) => shopBadgesNeeded(content, run, e);
-    const next = content.shop.filter((e) => !stock.includes(e)).sort((a, b) => badgesFor(a) - badgesFor(b))[0];
-    // Coupons and the Point Card show in the hint while they work.
-    const working = mapItemSummary(content, run);
-    const rows: PickerRow[] = stock.map((entry, index) => {
-      const item = content.items.get(entry.item)!;
-      const price = shopPrice(content, run, entry);
-      const sale = shopSaleItem(content, run) === entry.item;
-      // Member Card and Wepear Berry: sold before the badges would unlock it.
-      const early = run.badges.length < badgesFor(entry);
-      // Rocket Boss Giovanni's Black Market: locked stock, sold at a markup.
-      const black = isBlackMarket(content, run, entry);
-      return {
-        problem: run.money < price ? `Not enough money for the ${item.name} (₽${price}, you have ₽${run.money}).` : null,
-        hint: `${shopHint(content, run, item)}.${next ? `  New stock at ${badgesFor(next)} badges.` : ''}${working ? `  ·  ${working}` : ''}`,
-        draw: (scene, box, w, h) => {
-          if (scene.textures.exists('pack.ess.pockets')) box.add(scene.add.image(18, h / 2, 'pack.ess.pockets', pocketOf(item).frame).setScale(1.1).setAlpha(0.95).setName('shop-pocket'));
-          box.add(itemVisual(scene, item.iconAssetId, 54, h / 2, 2));
-          box.add(scene.add.text(84, h / 2, black ? `${item.name} (black market)` : early ? `${item.name} (early)` : sale ? `${item.name} (on sale!)` : item.name, textStyle(22, black ? '#d070f0' : early ? '#f0c060' : sale ? '#80e0a0' : undefined)).setOrigin(0, 0.5));
-          box.add(scene.add.text(w - 90, h / 2, price === 0 ? 'FREE' : `₽${price}`, textStyle(22, run.money < price ? '#f08080' : undefined)).setOrigin(1, 0.5));
-          // Attribute items are used when bought, so there's no count in the Bag to show.
-          if (item.effect.kind !== 'attribute') box.add(scene.add.text(w - 14, h / 2, `×${itemCount(run.inventory, entry.item)}`, textStyle(18, '#a69cb4')).setOrigin(1, 0.5));
-          if (data.notice && data.focus === index) this.stamp(scene, box, w, h, motion);
-        },
-      };
-    });
+    const node = run.stage?.current ?? null;
+    this.shopType = shopScreenType(
+      { seed: run.seed, regionIndex: run.regionIndex, stageIndex: run.stage?.index ?? 0, nodeId: node, period: periodOf(run), blackMarket: shopStock(content, run).some((e) => isBlackMarket(content, run, e)) },
+      data.type ?? (this.registry.get('shopTypeOverride') as string | undefined),
+    );
+    const hours = shopHoursMultiplier(content, run);
+    let view = this.view();
+    this.handles = shopLayout(this.shopType)(
+      {
+        scene: this,
+        content,
+        view,
+        type: this.shopType,
+        title: SHOP_TYPE_LABELS[this.shopType],
+        clock: `${clockLabel(run)}${hours === 1 ? '' : hours < 1 ? ' (midday sale)' : ' (after-hours prices)'}`,
+        party: run.party,
+        motion: uiMotionLevel(session.settings),
+        notice: data.notice,
+      },
+      { focus: (i) => this.setFocus(i), pick: (i) => this.pick(i) },
+    );
+    this.setFocus(Math.min(data.focus ?? 0, view.rows.length - (view.canSell ? 0 : 1)));
 
-    if (Object.keys(run.inventory).some((id) => run.inventory[id]! > 0 && sellPrice(content, run, id) !== null)) rows.push({
-      problem: null,
-      hint: 'Sell items from your Bag. The shop pays half the price (all of it with a Seal Bag).',
-      draw: (scene, box, w, h) => box.add(scene.add.text(16, h / 2, 'Sell items…', textStyle(22, '#f0c060')).setOrigin(0, 0.5)),
+    onInputAction(this, (action) => {
+      if (this.picker) return void this.picker.handle(action);
+      if (action === 'back') return this.leave();
+      if (action === 'confirm') return this.pick(this.focusIndex);
+      view = this.view();
+      const next = this.handles!.move(action, this.focusIndex);
+      if (next !== this.focusIndex) {
+        playSfx(this, 'ui.move', 0.4);
+        this.setFocus(next);
+      }
     });
-    this.picker = new Picker(this, {
-      glass: true,
-      title: `Shop  ·  ₽${run.money}  ·  ${clockLabel(run)}${shopHoursMultiplier(content, run) === 1 ? '' : shopHoursMultiplier(content, run) < 1 ? ' (midday sale)' : ' (after-hours prices)'}${data.notice ? `  ·  ${data.notice}` : ''}`,
-      columns: 2,
-      rowHeight: 52,
-      rows,
-      start: data.focus,
-      backLabel: 'leave',
-      onSelect: (i) => {
-        if (i >= stock.length) {
-          this.scene.restart({ sell: true });
-          return;
-        }
-        const message = session.buyItem(stock[i]!.item);
-        playSfx(this, 'ui.buy', 0.8);
-        this.scene.restart({ notice: message.replace(/^You bought /, 'Bought '), focus: i });
-      },
-      onBack: () => {
-        session.leaveShop();
-        this.scene.start(sceneForRun(session.run!), { notice: 'Thanks for shopping!' });
-      },
-    });
-    onInputAction(this, (action) => this.picker?.handle(action));
   }
 
-  /** A BOUGHT stamp slams onto the row you just bought from (the stock itself never runs out). */
-  private stamp(scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number, h: number, motion: string): void {
-    const stamp = scene.add.text(70, h / 2, 'BOUGHT', textStyle(18, '#ffffff', { backgroundColor: '#d04060', padding: { x: 8, y: 2 } })).setOrigin(0.5).setAngle(-8).setName('shop-bought');
-    box.add(stamp);
-    if (motion === 'off') return;
-    stamp.setScale(2.4).setAlpha(0);
-    scene.tweens.add({ targets: stamp, scale: 1, alpha: 0.95, duration: motion === 'full' ? 260 : 120, ease: 'Back.easeOut' });
-    if (motion === 'full') scene.tweens.add({ targets: stamp, alpha: 0, delay: 1600, duration: 500 });
+  private setFocus(i: number): void {
+    if (i < 0) return;
+    this.focusIndex = i;
+    this.handles?.focus(i);
+  }
+
+  private pick(i: number): void {
+    const { session } = services();
+    const view = this.view();
+    if (i >= view.rows.length) {
+      if (view.canSell) this.scene.restart({ sell: true });
+      return;
+    }
+    if (i !== this.focusIndex) this.setFocus(i);
+    const row = view.rows[i]!;
+    if (row.problem) {
+      playSfx(this, 'ui.error', 0.6);
+      this.handles?.refresh(view, null, row.problem);
+      return;
+    }
+    let message: string;
+    try {
+      message = session.buyItem(row.itemId);
+    } catch (e) {
+      playSfx(this, 'ui.error', 0.6);
+      this.handles?.refresh(view, null, (e as Error).message);
+      return;
+    }
+    playSfx(this, 'ui.buy', 0.8);
+    const after = this.view();
+    const index = after.rows.findIndex((r) => r.itemId === row.itemId);
+    this.handles?.refresh(after, index >= 0 ? index : null, message.replace(/^You bought /, 'Bought '));
+  }
+
+  private leave(): void {
+    const { session } = services();
+    session.leaveShop();
+    this.scene.start(sceneForRun(session.run!), { notice: 'Thanks for shopping!' });
   }
 
   /** The sell list: every Bag item the shop will buy, with what it pays. */
