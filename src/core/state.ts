@@ -3,6 +3,7 @@
 // so the game refuses to load a save that doesn't match.
 
 import { EVENT_STYLE_IDS } from './presentation/eventStyles';
+import { PLAZA_STYLE_IDS } from './presentation/plazaStyles';
 import { NATURE_IDS } from './natures';
 import { CareSchema } from './care/mods';
 import { DramaBattleSchema, freshDrama } from './drama/schema';
@@ -1675,6 +1676,8 @@ export const SettingsSchema = z.object({
   eventStyle: z.enum(EVENT_STYLE_IDS).default('diorama'),
   /** Screens redesign: per screen, 'random' (rotate built looks), 'original', or a pinned style id (core/presentation/screenStyles.ts). */
   screenStyles: z.record(z.string(), z.string()).default({}),
+  /** Plaza styles (Kice 2026-11-02): how the Trainer Plaza is drawn (core/presentation/plazaStyles.ts). */
+  plazaStyle: z.enum(PLAZA_STYLE_IDS).default('aero'),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
