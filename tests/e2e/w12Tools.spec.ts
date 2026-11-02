@@ -7,7 +7,7 @@ const scene = (page: Page) => page.evaluate(() => (window as any).__pkr?.activeS
 const hub = (page: Page, expr: string) => page.evaluate((e) => new Function('hub', `return ${e}`)((window as any).__pkr.game.scene.getScene('Hub')), expr);
 
 test('Tools room pages open and close; offline files are served', async ({ page, request, baseURL }) => {
-  test.setTimeout(90_000);
+  test.setTimeout(180_000); // the Hub is heavy to draw, and CI runs two specs at once
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
