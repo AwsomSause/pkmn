@@ -113,6 +113,10 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...['ball', 'outdoor', 'indoor', 'vs', 'vsBar', 'glow', 'shine2', ...['background', 'layer'].flatMap((k) => ['', 'Evil', 'Skull'].map((v) => `vs_${k}${v}`))].map(
     (name): AssetEntry => ({ id: `pack.ebdx.tr.${name}`, kind: 'image', category: 'ui', path: `images/packs/ebdx/transitions/${name}.png` }),
   ),
+  // Run events redesign: location backdrops for map events (Pokemon Memories battlebacks; core/presentation/eventStyles.ts eventBackdrop).
+  ...['field', 'field_eve', 'field_night', 'forest', 'forest_eve', 'forest_night', 'city', 'city_eve', 'city_night', 'rocky', 'rocky_eve', 'rocky_night', 'water', 'water_eve', 'water_night', 'sand', 'sand_night', 'snow_eve', 'snow_night', 'mountain', 'grotto', 'cave', 'ruins', 'indoor'].map(
+    (name): AssetEntry => ({ id: `pack.memories.eventbg.${name}`, kind: 'image', category: 'background', path: `images/packs/memories/eventbg/${name}.png`, lazy: true }),
+  ),
   ...['burst', 'shine', 'particle', 'pulse'].map(
     (name): AssetEntry => ({ id: `pack.dbk.${name}`, kind: 'image', category: 'ui', path: `images/packs/dbk/${name}.png` }),
   ),

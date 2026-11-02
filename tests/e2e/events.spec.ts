@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { EVENT_STYLES_READY } from '../../src/core/presentation/eventStyles';
 
 // Map events: an event stop opens the animated event scene; a choice shows its outcome and goes back to
 // the map with the stop used; a battle choice starts the battle; the scene fits several window sizes.
@@ -107,5 +108,57 @@ test('a battle choice at an event starts the battle', async ({ page }) => {
   expect(await page.evaluate(() => (window as any).__pkr.session.run.battle.event.eventId)).toBe('rm-2-key-cabin');
   await page.waitForTimeout(1500);
   await page.screenshot({ path: 'test-results/events-battle.png' });
+  expect(errors).toEqual([]);
+});
+
+// Run events redesign: every event style the player can pick draws the scene (frame, risk line,
+// money pill), shows the stage's location art, and takes a choice back to the map.
+test('every event style draws the event and takes a choice', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+  await page.goto('/?seed=event-styles-e2e');
+  await waitForScene(page, 'MainMenu');
+  await toMap(page);
+  for (const [i, style] of EVENT_STYLES_READY.entries()) {
+    await page.evaluate((s) => ((window as any).__pkr.session.settings.eventStyle = s), style);
+    await openEvent(page, 'rocket-ambush', `e2e-style-${i}`);
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: `test-results/event-style-${style}.png` });
+    const look = await page.evaluate(() => {
+      const scene = (window as any).__pkr.game.scene.getScene('Event');
+      const all: any[] = [];
+      const walk = (list: any[]) => list.forEach((o) => (all.push(o), o.list && walk(o.list)));
+      walk(scene.children.list);
+      return {
+        frame: all.some((o) => o.name === 'event-frame'),
+        risk: all.find((o) => o.name === 'event-risk')?.text ?? '',
+        money: all.find((o) => o.name === 'event-money')?.text,
+        art: all.some((o) => o.type === 'Image' && String(o.texture?.key).startsWith('pack.memories.eventbg.')),
+      };
+    });
+    expect(look.frame, style).toBe(true);
+    expect(look.risk, style).toMatch(/Certain|Depends on|Luck of the draw/);
+    expect(look.money, style).toMatch(/^₽\d+$/);
+    expect(look.art, style).toBe(true);
+    // The last choice ("Bluff" etc. may be locked): walk up from the bottom to the first open one and take it.
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(1500);
+    const phase = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Event').phase);
+    if (phase === 'outcome') {
+      await page.keyboard.press('Enter');
+      await expect.poll(() => scene(page), { timeout: 10_000 }).not.toBe('Event');
+    }
+    // Back on the map for the next style (a battle choice is fine too: return to the map either way).
+    await page.evaluate(() => {
+      const g = (window as any).__pkr.game.scene;
+      const s = g.getScenes(true)[0];
+      if (s.scene.key !== 'Map') s.scene.start('Map');
+    });
+    await waitForScene(page, 'Map');
+  }
   expect(errors).toEqual([]);
 });

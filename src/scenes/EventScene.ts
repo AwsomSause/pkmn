@@ -1,7 +1,6 @@
-// An event ("?" stop) as a small animated scene: the stage's arena tinted to
-// fit, the cast sliding in and bobbing, the event's signature effect, choice
-// cards that pop in and lift when focused, and an outcome panel whose gains
-// bounce in one by one. Everything that moves is presentation only: the
+// An event ("?" stop) as a small animated scene, drawn by the event style the
+// player picked (ui/eventStyles: Diorama, Storybook...), plus the event's
+// signature effect and an outcome panel whose gains bounce in one by one. Everything that moves is presentation only: the
 // outcome is decided by core/events.ts before any of it plays. Reduced or
 // off battle animations calm the motion down.
 //
@@ -11,10 +10,7 @@
 // (core choiceRisk), and an outcome that visibly lands: chips pop with a
 // burst and the money pill counts to the new total.
 
-import { fitBlock, fitLine } from '../ui/fitText';
 import Phaser from 'phaser';
-import { ATTRIBUTE_LABELS } from '../core/attributes';
-import type { AttributeKey } from '../core/contentSchema';
 import { clockLabel, periodOf, PERIOD_LOOK, seasonOf, specialDateToday } from '../core/clock';
 import { eventView, type ChoiceView, type EventResult } from '../core/events';
 import { promptById, type Grade } from '../core/interaction/prompt';
@@ -23,31 +19,21 @@ import { arenaFor, getTheme } from '../core/themes';
 import { services } from '../game/services';
 import { playMusic, playSfx, playMusicLazy, startAmbient } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
-import { loadAssets } from '../ui/lazyAssets';
-import { pokemonVisual, trainerVisual } from '../ui/sprites';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
 import { AERO, paintGlass } from '../ui/aero';
+import { eventBackdrop, eventStyleOf } from '../core/presentation/eventStyles';
+import { layoutFor } from '../ui/eventStyles';
+import type { ChoiceWidget, EventCtx, EventLayoutHandles, Rect } from '../ui/eventStyles/types';
 import { sceneForRun } from './routing';
 
-/** Each attribute's colour on the choice cards. */
-const ATTRIBUTE_COLOR: Record<string, number> = {
-  strength: 0xe05040,
-  intelligence: 0x5090f0,
-  speed: 0x50d0a0,
-  charisma: 0xf070c0,
-  luck: 0xf8d030,
-  love: 0xf08098,
-};
 
-const BOTTOM_Y = 356;
 const BOTTOM_H = 168;
-const DIALOGUE_W = 476;
-const OPTIONS_X = 516;
+const PICK_W = 420;
 
 interface Card {
   box: Phaser.GameObjects.Container;
   view: ChoiceView;
-  baseY: number;
+  widget: ChoiceWidget;
 }
 
 export class EventScene extends Phaser.Scene {
@@ -60,9 +46,7 @@ export class EventScene extends Phaser.Scene {
   private result: EventResult | null = null;
   private calm = false;
   private moneyText: Phaser.GameObjects.Text | null = null;
-  private detailOdds: Phaser.GameObjects.Text | null = null;
-  private detailRisk: Phaser.GameObjects.Text | null = null;
-  private detailCost: Phaser.GameObjects.Text | null = null;
+  private layout: EventLayoutHandles | null = null;
 
   constructor() {
     super('Event');
@@ -83,105 +67,47 @@ export class EventScene extends Phaser.Scene {
     const view = eventView(content, run, this.sideId);
     const scene = view.event.scene;
 
-    // Backdrop: the stage's arena, tinted for the event, breathing gently.
-    const arena = run.stage ? arenaFor(content, getTheme(content, run.stage.themeId)) : undefined;
-    if (arena && services().assets.has(arena) && this.textures.exists(arena)) this.add.image(0, 0, arena).setOrigin(0).setScale(PIXEL_SCALE);
-    else this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, COLORS.background).setOrigin(0);
+    // The chosen event style draws the scene (run events redesign); this scene keeps state, input and the outcome.
+    const theme = run.stage ? getTheme(content, run.stage.themeId) : undefined;
+    const backdrop = `pack.memories.eventbg.${eventBackdrop(theme?.types ?? [], view.event.group, periodOf(run))}`;
+    const arenaId = theme ? arenaFor(content, theme) : undefined;
+    const arena = services().assets.has(backdrop) ? backdrop : arenaId;
     const tint = Phaser.Display.Color.HexStringToColor(scene.tint ?? '#1d1a24').color;
-    const shade = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, tint, 0.45).setOrigin(0);
-    if (!this.calm) this.tweens.add({ targets: shade, alpha: 0.3, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    // Camp changes with the hour: a wash of the time of day and a small day label.
+    const layers = { back: this.add.container(0, 0).setDepth(0), fx: this.add.container(0, 0).setDepth(5), front: this.add.container(0, 0).setDepth(10) };
+    let area: Rect = { x: 0, y: 0, w: GAME_WIDTH, h: GAME_HEIGHT };
+    const ctx: EventCtx = {
+      scene: this,
+      view,
+      calm: this.calm,
+      rim: COLORS.rarity[view.event.rarity] ?? AERO.rim,
+      tint,
+      arena: arena && services().assets.has(arena) ? arena : undefined,
+      castIds: scene.cast.filter((id) => services().assets.has(id)),
+      species: scene.pokemon ? content.species.get(scene.pokemon) : undefined,
+      introSeen: session.settings.skipSeenDialogue && session.profile.npcMemory.seenEvents.includes(view.event.id),
+      layers,
+      dress: (r) => {
+        area = r;
+        const shade = this.add.rectangle(r.x, r.y, r.w, r.h, tint, 0.45).setOrigin(0);
+        layers.back.add(shade);
+        if (!this.calm) this.tweens.add({ targets: shade, alpha: 0.3, duration: 2200, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+        // Camp changes with the hour: a wash of the time of day.
+        if (view.event.group === 'Camp') {
+          const look = PERIOD_LOOK[periodOf(run)];
+          if (look.alpha > 0) layers.back.add(this.add.rectangle(r.x, r.y, r.w, r.h, look.tint, look.alpha).setOrigin(0).setName('time-wash'));
+        }
+      },
+    };
+    this.layout = layoutFor(eventStyleOf(session.settings.eventStyle))(ctx, { focus: (i) => this.focus(i), pick: (i) => this.confirm(i) });
     if (view.event.group === 'Camp') {
       const look = PERIOD_LOOK[periodOf(run)];
-      if (look.alpha > 0) this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, look.tint, look.alpha).setOrigin(0).setName('time-wash');
       startAmbient(this, periodOf(run));
-      this.add.text(GAME_WIDTH - 24, 14, `${clockLabel(run)}  ·  ${seasonOf(content, run)}${specialDateToday(content, run) ? `  ·  ${specialDateToday(content, run)!.label}` : ''}  ·  ${look.ambient}`, textStyle(16, '#f4ecd0', { stroke: '#101010', strokeThickness: 3 })).setOrigin(1, 0).setName('camp-clock');
+      this.add.text(GAME_WIDTH - 24, 56, `${clockLabel(run)}  ·  ${seasonOf(content, run)}${specialDateToday(content, run) ? `  ·  ${specialDateToday(content, run)!.label}` : ''}  ·  ${look.ambient}`, textStyle(16, '#f4ecd0', { stroke: '#101010', strokeThickness: 3 })).setOrigin(1, 0).setName('camp-clock').setDepth(30);
     }
-    const rim = COLORS.rarity[view.event.rarity] ?? AERO.rim;
-    this.illustrationFrame(view.event.group, view.event.rarity, rim, scene.cast.length === 0 && !scene.pokemon);
-    this.moneyPill(run.money);
-
-    // HUB-style header tab (glass, rimmed in the rarity colour) slides in from the left.
-    const title = this.add.container(-440, 14);
-    const band = this.add.graphics();
-    paintGlass(band, 0, 0, 420, 44, { rim, radius: 22 });
-    title.add(band);
-    title.add(fitLine(this.add.text(20, 22, view.event.name, textStyle(24, COLORS.textLight)).setOrigin(0, 0.5), 384));
-    this.tweens.add({ targets: title, x: 24, duration: this.calm ? 1 : 600, ease: 'Back.easeOut' });
-
-    // The cast slides in from the right, then bobs; a Pokémon hops in from the left.
-    const castIds = scene.cast.filter((id) => services().assets.has(id));
-    const showCast = () => {
-      castIds.forEach((id, i) => {
-        const x = GAME_WIDTH - 170 - i * 130;
-        const sprite = trainerVisual(this, id, '', GAME_WIDTH + 120, 230, 2) as unknown as Phaser.GameObjects.Components.Transform & Phaser.GameObjects.GameObject;
-        this.tweens.add({ targets: sprite, x, duration: this.calm ? 1 : 700, delay: i * 140, ease: 'Back.easeOut' });
-        if (!this.calm) this.tweens.add({ targets: sprite, y: 222, duration: 900 + i * 150, delay: 700 + i * 140, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-        if (scene.effect === 'rattle' || scene.effect === 'shake') this.shake(sprite, 2600 + i * 300);
-      });
-    };
-    void loadAssets(this, castIds).then(() => this.scene.isActive() && showCast());
-    const species = scene.pokemon ? content.species.get(scene.pokemon) : undefined;
-    if (species) {
-      const mon = pokemonVisual(this, species, 'front', -80, 250, PIXEL_SCALE) as unknown as Phaser.GameObjects.Components.Transform & Phaser.GameObjects.GameObject;
-      this.tweens.add({ targets: mon, x: 200, duration: this.calm ? 1 : 800, ease: 'Back.easeOut' });
-      if (!this.calm) this.tweens.add({ targets: mon, y: 236, duration: 420, delay: 800, yoyo: true, repeat: -1, repeatDelay: 900, ease: 'Quad.easeOut' });
-    }
-    if (!this.calm) this.ambient(scene.effect);
-
-    // PokeRogue-style bottom row: a dialogue box (the intro types itself out, the focused option's
-    // details sit underneath) on the left and a vertical option list on the right.
-    const panel = this.add.graphics();
-    paintGlass(panel, 24, BOTTOM_Y, DIALOGUE_W, BOTTOM_H, { tint: AERO.glassLow, glow: false, alpha: 0.95, radius: 18 });
-    const intro = this.add.text(42, BOTTOM_Y + 14, '', textStyle(16, COLORS.textLight, { wordWrap: { width: DIALOGUE_W - 36 }, lineSpacing: 4 })).setOrigin(0, 0);
-    // A long intro is cut with "..." to the four lines the box has room for, then typed out.
-    const introFit = fitBlock(intro, DIALOGUE_W - 36, 92, view.event.intro).text;
-    intro.setText('');
-    this.typeOut(intro, introFit, services().session.settings.skipSeenDialogue && services().session.profile.npcMemory.seenEvents.includes(view.event.id));
-    const rule = this.add.graphics();
-    rule.lineStyle(1, AERO.rim, 0.35).lineBetween(42, BOTTOM_Y + 100, 24 + DIALOGUE_W - 18, BOTTOM_Y + 100);
-    this.detailOdds = this.add.text(42, BOTTOM_Y + 106, '', textStyle(13, '#f8e8a0', { wordWrap: { width: DIALOGUE_W - 36 }, maxLines: 1 })).setOrigin(0, 0);
-    this.detailRisk = this.add.text(42, BOTTOM_Y + 124, '', textStyle(12, '#bfe9ff', { wordWrap: { width: DIALOGUE_W - 36 }, maxLines: 2 })).setOrigin(0, 0).setName('event-risk');
-    this.detailCost = this.add.text(42, BOTTOM_Y + 154, '', textStyle(12, '#ffb0a0', { wordWrap: { width: DIALOGUE_W - 36 }, maxLines: 1 })).setOrigin(0, 0).setName('event-cost');
-
-    const n = view.choices.length;
-    const rowH = Math.min(46, Math.floor((BOTTOM_H - 8) / Math.max(1, n)));
-    const w = GAME_WIDTH - 24 - OPTIONS_X;
-    const top = BOTTOM_Y + (BOTTOM_H - n * rowH) / 2;
-    view.choices.forEach((c, i) => {
-      const baseY = top + i * rowH + rowH / 2;
-      const box = this.add.container(OPTIONS_X + w / 2, baseY);
-      const g = this.add.graphics();
-      const color = c.attribute ? (ATTRIBUTE_COLOR[c.attribute] ?? AERO.rim) : AERO.rim;
-      paintGlass(g, -w / 2, -rowH / 2 + 2, w, rowH - 4, { tint: c.locked ? 0x2a2a36 : AERO.glass, rim: c.locked ? 0x5a5a6a : color, radius: 14, alpha: c.locked ? 0.75 : 0.92, glow: false });
-      box.add(g);
-      const tag = c.locked ? '🔒' : c.chance !== null ? `${c.attribute && c.attributeValue !== null ? `${ATTRIBUTE_LABELS[c.attribute as AttributeKey]} ${Math.abs(c.attributeValue)}: ` : ''}${Math.round(c.chance * 100)}%` : '';
-      if (c.attribute) {
-        const badge = this.add.circle(-w / 2 + 14, 0, 9, color, c.locked ? 0.4 : 1).setStrokeStyle(2, 0xffffff, 0.8);
-        box.add(badge);
-        box.add(this.add.text(-w / 2 + 14, 0, ATTRIBUTE_LABELS[c.attribute as AttributeKey]?.[0] ?? '?', textStyle(11, '#181818')).setOrigin(0.5));
-      }
-      box.add(fitBlock(this.add.text(-w / 2 + 34, 0, c.label, textStyle(15, c.locked ? COLORS.textMuted : COLORS.textLight, { wordWrap: { width: w - 112 } })).setOrigin(0, 0.5), w - 112, 38));
-      if (tag) box.add(this.add.text(w / 2 - 14, 0, tag, textStyle(14, c.locked ? COLORS.bad : '#f8e8a0')).setOrigin(1, 0.5));
-      const arrow = this.add.text(-w / 2 + 14, 0, '▶', textStyle(14, '#ffffff')).setOrigin(0.5).setVisible(false).setDepth(5);
-      box.add(arrow);
-      const frame = this.add.graphics().setVisible(false);
-      frame.lineStyle(6, AERO.neon, 0.25).strokeRoundedRect(-w / 2 - 3, -rowH / 2 - 1, w + 6, rowH + 2, 17);
-      frame.lineStyle(2, 0xffffff, 0.95).strokeRoundedRect(-w / 2, -rowH / 2 + 2, w, rowH - 4, 14);
-      box.add(frame);
-      box.setData('frame', frame);
-      box.setData('arrow', arrow);
-      box.setScale(this.calm ? 1 : 0);
-      this.tweens.add({ targets: box, scale: 1, duration: 380, delay: 400 + i * 100, ease: 'Back.easeOut' });
-      const zone = this.add.zone(0, 0, w, rowH).setInteractive({ useHandCursor: true });
-      zone.on('pointerover', () => this.focus(i));
-      zone.on('pointerdown', () => {
-        this.focus(i);
-        this.confirm();
-      });
-      box.add(zone);
-      this.cards.push({ box, view: c, baseY });
-    });
+    this.moneyPill(run.money, this.layout.moneyAt);
+    if (!this.calm) this.ambient(scene.effect, area, layers.fx);
+    if (area.w < GAME_WIDTH || area.h < GAME_HEIGHT) layers.fx.setMask(this.make.graphics({}, false).fillRect(area.x, area.y, area.w, area.h).createGeometryMask());
+    this.cards = this.layout.widgets.map((w, i) => ({ box: w.box, view: view.choices[i]!, widget: w }));
     this.focus(Math.max(0, view.choices.findIndex((c) => !c.locked)), false);
     onInputAction(this, (action) => this.handle(action));
     this.cameras.main.fadeIn(this.calm ? 1 : 300);
@@ -225,42 +151,18 @@ export class EventScene extends Phaser.Scene {
     else if (action === 'confirm') this.confirm();
   }
 
-  /** The focused card lifts and wiggles a little; the others settle back. */
+  /** The focused option lifts (each style draws its own focus); the details follow it. */
   private focus(i: number, sound = true): void {
     if (this.phase !== 'choose') return;
     if (sound && i !== this.index) playSfx(this, 'ui.select', 0.3);
     this.index = i;
-    this.cards.forEach((c, j) => {
-      const on = j === i;
-      (c.box.getData('frame') as Phaser.GameObjects.Graphics).setVisible(on);
-      (c.box.getData('arrow') as Phaser.GameObjects.Text).setVisible(on);
-      this.tweens.killTweensOf(c.box);
-      const x = OPTIONS_X + (GAME_WIDTH - 24 - OPTIONS_X) / 2 + (on ? -8 : 0);
-      if (this.calm) {
-        c.box.x = x;
-        c.box.setScale(1);
-        return;
-      }
-      this.tweens.add({ targets: c.box, x, scale: on ? 1.02 : 1, duration: 220, ease: 'Back.easeOut' });
-    });
-    this.showDetail(this.cards[i]?.view);
+    this.cards.forEach((c, j) => c.widget.focus(j === i));
+    this.layout?.detail(this.cards[i]?.view);
   }
 
-  /** The focused option's odds, risk and cost fill the lower half of the dialogue box. */
-  private showDetail(c: ChoiceView | undefined): void {
-    if (!c) return;
-    const odds = c.locked
-      ? `🔒 ${c.locked}`
-      : c.chance !== null
-        ? `${c.attribute ? `${ATTRIBUTE_LABELS[c.attribute as AttributeKey]}: ` : ''}${Math.round(c.chance * 100)}%`
-        : '';
-    if (this.detailOdds) fitBlock(this.detailOdds, DIALOGUE_W - 36, 18, odds).setColor(c.locked ? COLORS.bad : '#f8e8a0');
-    if (this.detailRisk) fitBlock(this.detailRisk, DIALOGUE_W - 36, 30, c.locked ? (c.preview ?? '') : c.preview ? `${c.risk}\n${c.preview}` : c.risk);
-    if (this.detailCost) fitBlock(this.detailCost, DIALOGUE_W - 36, 18, c.cost && !c.locked ? `Costs ${c.cost}` : '');
-  }
-
-  private confirm(): void {
-    if (this.phase !== 'choose') return;
+  private confirm(at?: number): void {
+    if (this.phase !== 'choose' || this.busy) return;
+    if (at !== undefined) this.index = at;
     const card = this.cards[this.index];
     if (!card) return;
     if (card.view.locked) {
@@ -278,9 +180,9 @@ export class EventScene extends Phaser.Scene {
   private openPicker(picks: { uid: string; label: string }[]): void {
     this.phase = 'pick';
     playSfx(this, 'ui.select', 0.5);
-    const w = GAME_WIDTH - 24 - OPTIONS_X;
+    const w = PICK_W;
     const rowH = Math.min(26, Math.floor((BOTTOM_H - 40) / picks.length));
-    const box = this.add.container(OPTIONS_X + w / 2, BOTTOM_Y + BOTTOM_H / 2).setDepth(20);
+    const box = this.add.container(GAME_WIDTH / 2, GAME_HEIGHT / 2).setDepth(40);
     const bg = this.add.graphics();
     paintGlass(bg, -w / 2, -BOTTOM_H / 2, w, BOTTOM_H, { tint: AERO.glassLow, glow: false, alpha: 0.98, radius: 14 });
     box.add(bg);
@@ -337,23 +239,15 @@ export class EventScene extends Phaser.Scene {
     this.result = session.chooseEvent(this.sideId, this.index, tradeUid, grade);
     this.phase = 'outcome';
     playSfx(this, 'ui.select', 0.6);
-    // The picked card squashes and flies up; the rest drop away.
-    this.cards.forEach((c, j) => {
-      this.tweens.killTweensOf(c.box);
-      if (j === this.index) this.tweens.add({ targets: c.box, x: c.box.x + 40, scaleX: 1.1, scaleY: 0.85, alpha: 0, duration: this.calm ? 1 : 420, ease: 'Back.easeIn' });
-      else this.tweens.add({ targets: c.box, x: c.box.x + 240, alpha: 0, duration: this.calm ? 1 : 360, delay: j * 40, ease: 'Quad.easeIn' });
-    });
-    [this.detailOdds, this.detailRisk, this.detailCost].forEach((t) => {
-      if (t) this.tweens.add({ targets: t, alpha: 0, duration: this.calm ? 1 : 240 });
-    });
-    this.time.delayedCall(this.calm ? 10 : 380, () => this.showOutcome());
+    const wait = this.layout?.picked(this.index) ?? 10;
+    this.time.delayedCall(wait, () => this.showOutcome());
   }
 
   /** The outcome panel rises; each change pops in with a bounce. */
   private showOutcome(): void {
     const r = this.result!;
     playSfx(this, r.success ? 'se.level_up' : 'ui.error', 0.5);
-    const box = this.add.container(GAME_WIDTH / 2, GAME_HEIGHT + 120);
+    const box = this.add.container(GAME_WIDTH / 2, GAME_HEIGHT + 120).setDepth(30);
     const g = this.add.graphics();
     paintGlass(g, -380, -82, 760, 164, { rim: r.success ? 0x60d070 : 0xf07070, radius: 20 });
     box.add(g);
@@ -386,46 +280,14 @@ export class EventScene extends Phaser.Scene {
     // The money pill counts to the new total once the chips have landed.
     const money = r.run.money;
     this.time.delayedCall(this.calm ? 0 : 600 + chips.length * 160, () => this.countMoney(money));
-    const next = this.add.text(GAME_WIDTH - 52, GAME_HEIGHT - 20, r.battle ? 'Enter: battle!' : 'Enter: continue', textStyle(15, COLORS.textMuted)).setOrigin(1, 1);
+    const next = this.add.text(GAME_WIDTH - 52, GAME_HEIGHT - 20, r.battle ? 'Enter: battle!' : 'Enter: continue', textStyle(15, COLORS.textMuted, { stroke: '#101010', strokeThickness: 3 })).setOrigin(1, 1).setDepth(30);
     if (!this.calm) this.tweens.add({ targets: next, alpha: 0.4, duration: 600, yoyo: true, repeat: -1 });
   }
 
-  /** The reusable illustration frame: a pale glass window over the arena, rimmed in the rarity colour, with the event's group as its motif pill. */
-  private illustrationFrame(group: string, rarity: string, rim: number, empty: boolean): void {
-    const g = this.add.graphics().setName('event-frame');
-    paintGlass(g, 36, 76, GAME_WIDTH - 72, 216, { tint: AERO.sky, rim, alpha: 0.22, radius: 22 });
-    // A scene with nobody in it gets a glossy emblem bubble so the frame never sits empty.
-    if (empty) {
-      const orb = this.add.container(GAME_WIDTH / 2, 186);
-      const b = this.add.graphics();
-      b.fillStyle(rim, 0.18).fillCircle(0, 0, 62);
-      b.fillStyle(AERO.glass, 0.75).fillCircle(0, 0, 52);
-      b.fillStyle(0xffffff, 0.35).fillEllipse(0, -24, 70, 34);
-      b.lineStyle(3, rim, 0.95).strokeCircle(0, 0, 52);
-      orb.add(b);
-      orb.add(this.add.text(0, 4, '!', textStyle(54, '#ffffff')).setOrigin(0.5));
-      if (!this.calm) this.tweens.add({ targets: orb, y: 176, duration: 1400, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    }
-    const pill = this.add.text(56, 86, `${group}  ·  ${rarity.toUpperCase()}`, textStyle(12, '#ffffff', { backgroundColor: '#0c2a44', padding: { x: 10, y: 3 } })).setAlpha(0.9);
-    if (this.calm) return;
-    pill.setX(20).setAlpha(0);
-    this.tweens.add({ targets: pill, x: 56, alpha: 0.9, duration: 500, delay: 350, ease: 'Back.easeOut' });
-    // Corner glints twinkle in turn, like light catching glass.
-    [
-      [52, 92],
-      [GAME_WIDTH - 52, 92],
-      [52, 276],
-      [GAME_WIDTH - 52, 276],
-    ].forEach(([x, y], i) => {
-      const star = this.add.star(x!, y!, 4, 2, 8, 0xffffff, 0.9).setScale(0);
-      this.tweens.add({ targets: star, scale: 1, angle: 90, duration: 500, yoyo: true, repeat: -1, repeatDelay: 1800, delay: 400 + i * 450, ease: 'Sine.easeInOut' });
-    });
-  }
-
-  private moneyPill(money: number): void {
-    const g = this.add.graphics();
-    paintGlass(g, GAME_WIDTH - 172, 14, 148, 34, { radius: 17, glow: false });
-    this.moneyText = this.add.text(GAME_WIDTH - 98, 31, `₽${money}`, textStyle(17)).setOrigin(0.5).setName('event-money');
+  private moneyPill(money: number, at = { x: GAME_WIDTH - 172, y: 14 }): void {
+    const g = this.add.graphics().setDepth(30);
+    paintGlass(g, at.x, at.y, 148, 34, { radius: 17, glow: false });
+    this.moneyText = this.add.text(at.x + 74, at.y + 17, `₽${money}`, textStyle(17)).setOrigin(0.5).setName('event-money').setDepth(30);
   }
 
   /** The money pill rolls to the new total and pulses (green up, red down). */
@@ -475,31 +337,19 @@ export class EventScene extends Phaser.Scene {
     this.time.delayedCall(this.calm ? 10 : 270, () => this.scene.start(sceneForRun(run)));
   }
 
-  private typeOut(text: Phaser.GameObjects.Text, full: string, seen = false): void {
-    if (this.calm || seen) {
-      text.setText(full);
-      return;
-    }
-    let shown = 0;
-    this.time.addEvent({
-      delay: 14,
-      repeat: full.length - 1,
-      callback: () => text.setText(full.slice(0, ++shown)),
-    });
-  }
-
   private shake(target: Phaser.GameObjects.GameObject, every: number): void {
     this.tweens.add({ targets: target, angle: { from: -6, to: 6 }, duration: 70, yoyo: true, repeat: 3, repeatDelay: 0, loop: -1, loopDelay: every });
   }
 
   /** The event's signature effect, drawn from simple shapes so it needs no art. */
-  private ambient(effect: string): void {
+  private ambient(effect: string, r: Rect, fx: Phaser.GameObjects.Container): void {
     const spawn = (make: () => Phaser.GameObjects.GameObject & Phaser.GameObjects.Components.Transform & Phaser.GameObjects.Components.AlphaSingle, fall: number, drift: number, life: number, every: number) => {
       this.time.addEvent({
         delay: every,
         loop: true,
         callback: () => {
           const o = make();
+          fx.add(o);
           this.tweens.add({ targets: o, y: o.y + fall, x: o.x + Phaser.Math.Between(-drift, drift), alpha: 0, angle: Phaser.Math.Between(-90, 90), duration: life, ease: 'Sine.easeIn', onComplete: () => o.destroy() });
         },
       });
@@ -507,33 +357,36 @@ export class EventScene extends Phaser.Scene {
     const rnd = (a: number, b: number) => Phaser.Math.Between(a, b);
     switch (effect) {
       case 'rain':
-        return spawn(() => this.add.rectangle(rnd(0, GAME_WIDTH), rnd(-40, 0), 2, 14, 0x9cc8f8, 0.7), 340, 30, 700, 30);
+        return spawn(() => this.add.rectangle(rnd(r.x, r.x + r.w), rnd(r.y - 40, r.y), 2, 14, 0x9cc8f8, 0.7), 340, 30, 700, 30);
       case 'snow':
-        return spawn(() => this.add.circle(rnd(0, GAME_WIDTH), rnd(-20, 0), rnd(2, 4), 0xffffff, 0.9), 320, 60, 2600, 90);
+        return spawn(() => this.add.circle(rnd(r.x, r.x + r.w), rnd(r.y - 20, r.y), rnd(2, 4), 0xffffff, 0.9), 320, 60, 2600, 90);
       case 'fire':
-        return spawn(() => this.add.circle(rnd(80, GAME_WIDTH - 80), rnd(280, 300), rnd(3, 6), Phaser.Math.RND.pick([0xf8a030, 0xf86030, 0xf8d050]), 0.9), -220, 40, 1400, 70);
+        return spawn(() => this.add.circle(rnd(r.x + r.w * 0.08, r.x + r.w * 0.92), rnd(r.y + r.h * 0.52, r.y + r.h * 0.56), rnd(3, 6), Phaser.Math.RND.pick([0xf8a030, 0xf86030, 0xf8d050]), 0.9), -220, 40, 1400, 70);
       case 'hearts':
-        return spawn(() => this.add.text(rnd(120, GAME_WIDTH - 120), rnd(240, 290), '♥', textStyle(rnd(16, 26), "#f87898")), -200, 40, 1800, 260);
+        return spawn(() => this.add.text(rnd(r.x + r.w * 0.12, r.x + r.w * 0.88), rnd(r.y + r.h * 0.44, r.y + r.h * 0.54), '♥', textStyle(rnd(16, 26), "#f87898")), -200, 40, 1800, 260);
       case 'sparkle':
       case 'glint':
-        return spawn(() => this.add.star(rnd(100, GAME_WIDTH - 100), rnd(90, 280), 4, 2, rnd(5, 9), 0xfff4a0, 1), -20, 10, 900, effect === 'glint' ? 240 : 120);
+        return spawn(() => this.add.star(rnd(r.x + r.w * 0.1, r.x + r.w * 0.9), rnd(r.y + r.h * 0.17, r.y + r.h * 0.52), 4, 2, rnd(5, 9), 0xfff4a0, 1), -20, 10, 900, effect === 'glint' ? 240 : 120);
       case 'fog':
-        return spawn(() => this.add.ellipse(rnd(-60, GAME_WIDTH), rnd(160, 300), rnd(120, 220), rnd(30, 50), 0xd8d8e8, 0.18), 0, 160, 4000, 500);
+        return spawn(() => this.add.ellipse(rnd(r.x - 60, r.x + r.w), rnd(r.y + r.h * 0.3, r.y + r.h * 0.56), rnd(120, 220), rnd(30, 50), 0xd8d8e8, 0.18), 0, 160, 4000, 500);
       case 'float':
-        return spawn(() => this.add.circle(rnd(100, GAME_WIDTH - 100), rnd(250, 300), rnd(2, 5), 0xc8a0f8, 0.8), -180, 20, 2400, 180);
+        return spawn(() => this.add.circle(rnd(r.x + r.w * 0.1, r.x + r.w * 0.9), rnd(r.y + r.h * 0.46, r.y + r.h * 0.56), rnd(2, 5), 0xc8a0f8, 0.8), -180, 20, 2400, 180);
       case 'flicker': {
-        const dark = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0).setOrigin(0);
+        const dark = this.add.rectangle(r.x, r.y, r.w, r.h, 0x000000, 0).setOrigin(0);
+        fx.add(dark);
         this.time.addEvent({ delay: 1600, loop: true, callback: () => this.tweens.add({ targets: dark, alpha: { from: 0.55, to: 0 }, duration: 90, yoyo: true, repeat: 2 }) });
         return;
       }
       case 'spin': {
-        const wheel = this.add.star(GAME_WIDTH / 2, 190, 8, 30, 70, 0xf8d030, 0.85);
+        const wheel = this.add.star(r.x + r.w / 2, r.y + r.h * 0.35, 8, 30, 70, 0xf8d030, 0.85);
+        fx.add(wheel);
         this.tweens.add({ targets: wheel, angle: 360, duration: 1400, repeat: -1 });
         return;
       }
       case 'net': {
-        const net = this.add.grid(GAME_WIDTH - 300, -160, 300, 160, 20, 20, undefined, 0, 0xd8d8d8, 0.8);
-        this.tweens.add({ targets: net, y: 200, duration: 700, delay: 600, ease: 'Bounce.easeOut' });
+        const net = this.add.grid(r.x + r.w - 300, r.y - 160, 300, 160, 20, 20, undefined, 0, 0xd8d8d8, 0.8);
+        fx.add(net);
+        this.tweens.add({ targets: net, y: r.y + r.h * 0.37, duration: 700, delay: 600, ease: 'Bounce.easeOut' });
         return;
       }
       default:
