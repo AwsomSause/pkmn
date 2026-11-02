@@ -26,7 +26,8 @@ test('the Bag menu shows the UIE bag picture', async ({ page }) => {
     });
   await open();
   await page.waitForTimeout(1500);
-  const tiles = await page.evaluate(() => {
+  // The badge art loads lazily; on a busy runner it can take longer than a fixed wait, so poll for it.
+  const countTiles = () => page.evaluate(() => {
     let n = 0;
     const walk = (o: any) => {
       if (o.name === 'picker-badge' || o.name === 'picker-backdrop') n++;
@@ -35,7 +36,7 @@ test('the Bag menu shows the UIE bag picture', async ({ page }) => {
     for (const s of (window as any).__pkr.game.scene.getScenes(true)) for (const o of s.children.list) walk(o);
     return n;
   });
-  expect(tiles).toBeGreaterThan(1);
+  await expect.poll(countTiles, { timeout: 20_000 }).toBeGreaterThan(1);
   await page.screenshot({ path: 'test-results/bag-badge.png' });
   expect(errors).toEqual([]);
 });

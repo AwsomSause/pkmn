@@ -66,7 +66,7 @@ test('Toughened It Out shows as a story moment, the Story Log shows it, and the 
   }
   await waitForScene(page, 'GameOver');
   const texts = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('GameOver').children.list.filter((o: any) => o.type === 'Text').map((o: any) => o.text).join('\n'));
-  expect(texts).toContain('Moments of this run');
+  expect(texts).toContain('Run timeline');
   expect(texts).toContain('Toughened it out against Machamp');
   await page.screenshot({ path: 'test-results/m89-run-end.png' });
   expect(errors).toEqual([]);
