@@ -1,0 +1,24 @@
+{
+  "note": "Hub Town's Strange Merchant (Hub Town spec 2026-11-01 §5): odd items for the next run, a new stock each local day, one of each per day. Prices are Bank Credits. Checked by core/hubTown/merchant.ts and tests/unit/hubTown.test.ts.",
+  "stockSize": 4,
+  "pool": [
+    { "item": "dream-ball", "price": 160, "line": "Dreams of a catch. Works best on a sleeping Pokémon." },
+    { "item": "beast-ball", "price": 220, "line": "Made for creatures from somewhere else. Ordinary ones slip out." },
+    { "item": "gigaton-ball", "price": 140, "line": "Heavy as a boulder. Throw it from close up." },
+    { "item": "cracked-pot", "price": 260, "line": "Smells faintly of tea. Something old lives in it." },
+    { "item": "unremarkable-teacup", "price": 260, "line": "Unremarkable, the label insists." },
+    { "item": "whipped-dream", "price": 200, "line": "Sweet enough to change someone." },
+    { "item": "syrupy-apple", "price": 220, "line": "Sticky. Very sticky." },
+    { "item": "galarica-wreath", "price": 240, "line": "Woven from a far-off forest's twigs." },
+    { "item": "scroll-of-waters", "price": 400, "line": "A dojo scroll. The water style." },
+    { "item": "scroll-of-darkness", "price": 400, "line": "A dojo scroll. The dark style." },
+    { "item": "black-augurite", "price": 280, "line": "A glassy black stone that splits clean." },
+    { "item": "peat-block", "price": 280, "line": "Dug up from under a full moon." },
+    { "item": "linking-cord", "price": 300, "line": "Two ends, one bond." },
+    { "item": "oval-stone", "price": 150, "line": "Round as an egg. Smooth as one too." },
+    { "item": "lucky-egg", "price": 350, "line": "Warm to the touch. Lessons come quicker." },
+    { "item": "ability-urge", "price": 320, "line": "A nudge for a hidden talent." },
+    { "item": "item-urge", "price": 180, "line": "Makes a Pokémon drop what it holds." },
+    { "item": "strawberry-sweet", "price": 240, "line": "A sweet with a strawberry on top." }
+  ]
+}

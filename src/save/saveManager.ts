@@ -36,7 +36,7 @@ export const ACTIVE_SLOT_KEY = `${KEY_PREFIX}.slot`;
 export type RecordName = 'profile' | 'run' | 'settings' | 'meta' | 'timeline';
 
 /** Current schema version of each record. Bump when a record's shape changes and add a migration. */
-export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 16, run: 34, settings: 15, meta: 1, timeline: 1 };
+export const CURRENT_VERSIONS: Record<RecordName, number> = { profile: 17, run: 34, settings: 15, meta: 1, timeline: 1 };
 
 /** Migrations upgrade a record from version N to N+1. */
 type Migration = (data: unknown) => unknown;
@@ -122,6 +122,8 @@ export const MIGRATIONS: Record<RecordName, Record<number, Migration>> = {
     14: (data) => ({ ...(data as Json), mentorBonds: {} }),
     // v16 (ideas W5): older profiles remember no NPCs, lore, epilogues or newspaper issues yet.
     15: (data) => ({ ...(data as Json), npcMemory: { npcs: {}, lore: [], epilogues: [], news: [], ngPlus: 0, hintsSeen: [], seenEvents: [] } }),
+    // v17 (Hub Town): you walk the town as your most-used Pokémon until you choose one; the merchant has sold nothing yet.
+    16: (data) => ({ ...(data as Json), hubTown: { pokemon: null, merchantDay: '', bought: [] } }),
   },
   run: {
     // v2 (Milestone 2): Bag, candies, pending decisions, and battles against

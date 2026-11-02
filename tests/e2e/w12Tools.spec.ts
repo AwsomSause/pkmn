@@ -13,7 +13,7 @@ test('Tools room pages open and close; offline files are served', async ({ page,
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
   await page.goto('/?debug=1');
   await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('MainMenu');
-  await page.evaluate(() => (window as any).__pkr.game.scene.getScenes(true)[0].scene.start('Hub'));
+  await page.evaluate(() => void (window as any).__pkr.game.scene.getScenes(true)[0].scene.start('Hub'));
   await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('Hub');
   await page.waitForTimeout(400);
 

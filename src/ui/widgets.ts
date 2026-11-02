@@ -98,6 +98,8 @@ export function focusFrame(scene: Phaser.Scene, x: number, y: number, w: number,
   }
   // A slow pulse so the focus stands out even next to gold-trimmed cards.
   scene.tweens.add({ targets: g, alpha: 0.55, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
+  // The pulse never ends on its own: stop it with the frame, or closed menus leave tweens running.
+  g.once(Phaser.GameObjects.Events.DESTROY, () => scene.tweens.killTweensOf(g));
   // Wii-style snap (spec §24): each time the frame is shown it springs out a little and settles,
   // so moving the selection feels like a cursor landing on the card.
   const show = g.setVisible.bind(g);

@@ -107,12 +107,12 @@ async function glidePath(page: Page, sceneKey: string, name: string, press: () =
   return { start, end: path[path.length - 1]!, path };
 }
 
-test('the Hub tiles and Trainer Select grid share the gliding cursor', async ({ page }) => {
+test('your Pokémon glides between Hub Town tiles, and the Trainer Select cursor glides', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
   await openSettings(page, {});
-  for (const [key, name, keyName] of [['Hub', 'hub-cursor', 'ArrowRight'], ['TrainerSelect', 'trainer-cursor', 'ArrowRight']] as const) {
+  for (const [key, name, keyName] of [['Hub', 'hubtown-player', 'ArrowRight'], ['TrainerSelect', 'trainer-cursor', 'ArrowRight']] as const) {
     await page.evaluate((k) => void (window as any).__pkr.game.scene.getScenes(true)[0].scene.start(k), key);
     await expect.poll(() => scene(page), { timeout: 20_000 }).toBe(key);
     await page.waitForTimeout(1500);

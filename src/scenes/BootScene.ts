@@ -3,6 +3,7 @@
 // ui/lazyAssets.ts), with a progress bar. Assets that are missing or fail to
 // load are recorded and replaced by placeholders.
 
+import { OVERWORLD } from '../core/hubTown/schema';
 import { PreloadTracker } from '../core/tools/preload';
 import Phaser from 'phaser';
 import { buildCatalog, type AssetManifest } from '../assets/catalog';
@@ -37,6 +38,7 @@ export class BootScene extends Phaser.Scene {
       backgroundAssetIds: Object.values(content.arenas).filter((id): id is string => Boolean(id)),
       battleAnims: animCatalogInputs(moveAnims()),
       ebdxAnims: scriptAssets(ebdxAnims()),
+      overworld: OVERWORLD,
     });
     const assets = new AssetRegistry(manifest, catalog);
     setServices({ session, assets });

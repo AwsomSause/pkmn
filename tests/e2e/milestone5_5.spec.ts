@@ -63,12 +63,10 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   });
   await waitForScene(page, 'Hub');
 
-  // Unlocks tile → Bank → licenses: the first license is the Type Specialist License.
-  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowRight');
-  await page.keyboard.press('Enter'); // Achievement Hall, Bank, Starter Laboratory, Attributes
-  await page.waitForTimeout(200);
-  await page.keyboard.press('ArrowRight'); // Bank (the Unlocks page has two columns)
-  await page.keyboard.press('Enter');
+  // The Pokémon Bank → licenses: the first license is the Type Specialist License.
+  await page.waitForTimeout(400); // the town's art loads first
+  await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').visit('bank'));
+  await page.waitForTimeout(250);
   await page.waitForTimeout(300);
   await page.screenshot({ path: 'test-results/m55-licenses.png' });
   // The Bank list starts with its services (tier, 2 exchange rows, 5 Candy Shop perks); the licenses follow.
@@ -77,9 +75,11 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   await expect.poll(async () => (await profile(page)).licenses).toEqual(['type-specialist']);
   await waitForScene(page, 'Hub');
 
-  // Starter Laboratory: Regions (the second category), then unlock Johto (its first set). The Hub reopens on the Bank in the Unlocks page.
-  await page.keyboard.press('ArrowRight'); // Starter Laboratory
-  await page.keyboard.press('Enter');
+  // Starter Laboratory (in the Starter Sanctuary): Regions (the second category), then unlock Johto (its first set).
+  await page.waitForTimeout(400); // the town's art loads first
+  await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').visit('sanctuary'));
+  await page.waitForTimeout(250);
+  await page.keyboard.press('Enter'); // Starter Laboratory
   await page.waitForTimeout(300);
   await page.screenshot({ path: 'test-results/m55-lab-categories.png' });
   await page.keyboard.press('ArrowRight');
@@ -92,9 +92,10 @@ test('buy a license, unlock a pool, prepare a Type Focus run, save a preset, and
   expect((await profile(page)).researchPoints).toBe(350);
 
   // Preparation Desk: Johto pool, Type Focus.
-  await page.keyboard.press('Escape'); // close the Unlocks page the Hub reopened on
-  for (let i = 0; i < 2; i++) await page.keyboard.press('ArrowLeft'); // Unlocks → Events → New Run
-  await page.keyboard.press('Enter'); // Start a run
+  await page.waitForTimeout(400);
+  await page.keyboard.press('Escape'); // close the Sanctuary page the Hub reopened on
+  await page.waitForTimeout(200);
+  await page.keyboard.press('Enter'); // you still face the Run Prep Center: start a run
   await waitForScene(page, 'TrainerSelect');
   await page.keyboard.press('Enter');
   await waitForScene(page, 'RunPrep');
