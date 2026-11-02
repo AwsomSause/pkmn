@@ -2,6 +2,7 @@
 // screen from this, so they can never drift apart. Pure data and functions; no Phaser.
 // Settings live in their own save record (`settings`), never in run data, so every run and timeline shares them.
 
+import { nextScreenChoice, SCREEN_IDS, SCREEN_STYLES, SCREEN_STYLES_READY, screenChoice, screenChoiceLabel } from './presentation/screenStyles';
 import { EVENT_STYLE_LABELS, eventStyleOf, nextEventStyle } from './presentation/eventStyles';
 import { applyProfile, nextProfile, PROFILE_INFO } from './accessibility';
 import type { Settings } from './state';
@@ -84,6 +85,16 @@ export const SETTINGS: SettingDef[] = [
   { id: 'uiScale', label: 'Screen size', description: 'How much of the window the game fills.', category: 'display', applies: 'now', ...choice('uiScale', { full: '100%', medium: '90%', small: '80%' }, ['full', 'medium', 'small']) },
   { id: 'highContrast', label: 'High contrast', description: 'Stronger contrast for the whole screen.', category: 'display', also: ['accessibility'], applies: 'now', ...toggle('highContrast') },
   { id: 'eventStyle', label: 'Event screen style', description: 'How map events are shown: Diorama, Storybook and more.', category: 'display', applies: 'now', show: (s) => EVENT_STYLE_LABELS[eventStyleOf(s.eventStyle)], next: (s) => ({ ...s, eventStyle: nextEventStyle(eventStyleOf(s.eventStyle)) }) },
+  // Screens redesign: one entry per screen that has built looks (Random, each look, Original).
+  ...SCREEN_IDS.filter((screen) => SCREEN_STYLES_READY[screen].length > 0).map((screen): SettingDef => ({
+    id: `screenStyle.${screen}`,
+    label: `${SCREEN_STYLES[screen].label} style`,
+    description: 'Random rotates the new looks; or pin one, or keep the original.',
+    category: 'display',
+    applies: 'now',
+    show: (s) => screenChoiceLabel(screen, screenChoice(screen, s.screenStyles)),
+    next: (s) => ({ ...s, screenStyles: { ...s.screenStyles, [screen]: nextScreenChoice(screen, s.screenStyles) } }),
+  })),
   { id: 'battleUi', label: 'Battle UI style', description: 'Aero Glass, Essentials Kit, or Kit with a long foe box.', category: 'display', applies: 'nextBattle', show: (s) => ({ aero: 'Aero Glass', kit: 'Essentials Kit', kitLong: 'Essentials Kit (long foe)' })[s.battleUi], next: (s) => ({ ...s, battleUi: ({ aero: 'kit', kit: 'kitLong', kitLong: 'aero' } as const)[s.battleUi] }) },
   { id: 'spriteAnimations', label: 'Sprite animations', description: 'Off keeps menu icons and idle Pokémon still.', category: 'display', applies: 'now', ...toggle('spriteAnimations') },
   { id: 'damageNumbers', label: 'Damage numbers', description: 'Floating numbers over the Pokémon that was hit.', category: 'display', applies: 'now', ...toggle('damageNumbers') },

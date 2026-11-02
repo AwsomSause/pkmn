@@ -1673,6 +1673,8 @@ export const SettingsSchema = z.object({
   skipSeenDialogue: z.boolean().default(false),
   /** Run events redesign: how map-event screens are drawn (core/presentation/eventStyles.ts). */
   eventStyle: z.enum(EVENT_STYLE_IDS).default('diorama'),
+  /** Screens redesign: per screen, 'random' (rotate built looks), 'original', or a pinned style id (core/presentation/screenStyles.ts). */
+  screenStyles: z.record(z.string(), z.string()).default({}),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
