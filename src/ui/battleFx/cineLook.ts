@@ -9,7 +9,7 @@ export const CINE_ASSETS = [
   'cine.raid.max.bg', 'cine.raid.max.icon', 'cine.raid.max.spiral', 'cine.raid.max.spiral2',
   'cine.raid.ultra.bg', 'cine.raid.ultra.icon', 'cine.raid.tera.bg', 'cine.raid.tera.icon', 'cine.raid.tera.spiral',
   'cine.raid.transitions.black_bars', 'cine.raid.transitions.impact', 'cine.raid.transitions.shine',
-  'cine.dbk.mega.orb_1', 'cine.dbk.mega.shine', 'cine.dbk.primal.icon_groudon', 'cine.dbk.primal.icon_kyogre',
+  'cine.dbk.mega.orb_1', 'cine.dbk.mega.shine', 'cine.dbk.primal.icon_groudon', 'cine.dbk.primal.icon_kyogre', 'cine.dbk.zpower.particle',
 ];
 /** Essentials animation sounds the cinematics use (already imported with the pack animations). */
 export const CINE_SOUNDS = ['ess-harden', 'ess-twine', 'ess-refresh', 'ess-shell-smash', 'ess-explosion', 'ess-flash2'];
