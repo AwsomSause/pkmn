@@ -506,6 +506,21 @@ const HANDLERS: Record<string, Handler> = {
     addStuff(c.camp, stuff, 1);
     return `A hidden pocket! You find ${stuff === 'scrap-piece' ? 'a map scrap' : stuff === 'oil' ? 'a flask of oil' : `a ${stuff}`}.`;
   },
+  rummage: (c) => {
+    const rng = rngOf(c.run, 'rummage', stageKey(c.run));
+    const r = CAMP.rummage;
+    if (rng.chance(r.rats - c.camp.luck * 0.02)) {
+      const lead = c.run.party.find((m) => m.hp > 0);
+      if (lead) lead.hp = Math.max(1, lead.hp - Math.max(1, Math.round(maxHp(c.content, lead) * r.bite)));
+      return `Rats! They swarm out of the bin${lead ? ` and nip ${nameOf(c.content, lead)}` : ''}.`;
+    }
+    if (rng.chance(r.nothing)) return 'Banana peels and old newspaper. Nothing useful.';
+    const f = rng.weighted(r.finds.map((x) => ({ item: x, weight: x.weight })));
+    if (f.kind === 'mat') addMat(c.run, f.id, f.amount);
+    else if (f.kind === 'item') addItem(c.run.inventory, f.id, f.amount);
+    else addStuff(c.camp, f.id, f.amount);
+    return `Under the junk: ${f.amount} ${f.kind === 'item' ? itemName(c.content, f.id) : f.id}.`;
+  },
   well: (c) => {
     if (c.run.money < CAMP.well.coin) fail(`A coin costs ₽${CAMP.well.coin}.`);
     const wish = c.args.choice ?? '';

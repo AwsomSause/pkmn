@@ -193,7 +193,7 @@ Source: the approved-ideas ledger (852 approved rows, project files) and plan id
 | I189 | Drag-combine items to craft (berry + pot = tea) |  | DONE | src/core/camp/index.ts combine (pick two, any order; no drag), src/ui/campMenu.ts |
 | I190 | Item hands: hold item up and the Pokémon sniffs, hinting at its effect |  | DONE | src/core/camp/index.ts sniffItem: the lead sniffs an item and hints its kind |
 | I191 | Item wear: tools degrade with use and can be repaired at a forge |  | DONE | src/core/camp/index.ts wear()/forge: every gadget has uses, mended at the forge |
-| I192 | Rummage: poke through trash cans for odd items, with a risk of rats | ASK: T | TODO | ASK unresolved in the ledger ("T") |
+| I192 | Rummage: poke through trash cans for odd items, with a risk of rats | ASK: T | DONE | src/core/camp/index.ts rummage (once per stage, seeded; rats bite the lead, luck helps) |
 | I193 | Shake bags to find hidden pockets |  | DONE | src/core/camp/index.ts shake (once per stage, seeded) |
 | I194 | Gift wrap items for NPCs, wrapping style affects gratitude |  | DONE | src/core/camp/index.ts parcelAction wrap:<style> (paper style raises the payout) |
 | I195 | Throw items to distract wild Pokémon |  | DONE | src/core/camp/index.ts distract: thrown Bag item = one softer wild battle |

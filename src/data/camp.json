@@ -631,6 +631,14 @@
       "desc": "Hold an item up: your lead sniffs and hints at its effect.",
       "limit": "none",
       "args": "item"
+    },
+    {
+      "id": "rummage",
+      "group": "camp",
+      "name": "Rummage",
+      "desc": "Poke through the trash cans for odd items. Rats may bite.",
+      "limit": "stage",
+      "args": "none"
     }
   ],
   "combos": [
@@ -1492,5 +1500,48 @@
     "TMs": "smells like old paper: a lesson inside",
     "Evolution": "smells like a storm about to break",
     "default": "smells faintly of dust; hard to say"
+  },
+  "rummage": {
+    "rats": 0.25,
+    "bite": 0.1,
+    "nothing": 0.15,
+    "finds": [
+      {
+        "kind": "mat",
+        "id": "scrap",
+        "amount": 2,
+        "weight": 5
+      },
+      {
+        "kind": "mat",
+        "id": "fiber",
+        "amount": 2,
+        "weight": 4
+      },
+      {
+        "kind": "item",
+        "id": "potion",
+        "amount": 1,
+        "weight": 3
+      },
+      {
+        "kind": "stuff",
+        "id": "bottle",
+        "amount": 1,
+        "weight": 2
+      },
+      {
+        "kind": "stuff",
+        "id": "scrap-piece",
+        "amount": 1,
+        "weight": 2
+      },
+      {
+        "kind": "stuff",
+        "id": "recipe-page",
+        "amount": 1,
+        "weight": 1
+      }
+    ]
   }
 }
