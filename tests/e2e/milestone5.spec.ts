@@ -24,19 +24,22 @@ test('the Hub shows the Bank, the Trainer Archive and the Achievement Hall', asy
   await page.keyboard.press('Enter'); // Enter the Hub
   await waitForScene(page, 'Hub');
 
-  // The Hub is a row of tiles: Settings, Trainers, New Run (focused), Events (and Past Runs), Unlocks.
-  await page.keyboard.press('ArrowLeft'); // Trainers
-  await page.keyboard.press('Enter'); // open the Trainers menu
+  // The Hub is a town: the Competitive Arena opens the Trainer Archive, the Achievement Hall its trophies, the Bank its page.
+  const visit = (id: string) => page.evaluate((i) => (window as any).__pkr.game.scene.getScene('Hub').visit(i), id);
+  await page.waitForTimeout(400); // the town's art loads first
+  await visit('arena'); // Trainer Archive and League intel
+  await page.waitForTimeout(250);
   await page.keyboard.press('Enter'); // Trainer Archive
   await page.waitForTimeout(300);
   expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').picker !== null)).toBe(true);
   await page.screenshot({ path: 'test-results/m5-archive.png' });
   await page.keyboard.press('Escape');
   await page.waitForTimeout(200);
-
-  for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowRight'); // Unlocks
-  await page.keyboard.press('Enter'); // opens Achievement Hall, Bank, Starter Laboratory, Attributes
+  await page.keyboard.press('Escape');
   await page.waitForTimeout(200);
+
+  await visit('achievements'); // Achievement Hall, Item Museum, Moment Codex
+  await page.waitForTimeout(250);
   await page.keyboard.press('Enter'); // Achievement Hall
   await page.waitForTimeout(300);
   for (let i = 0; i < 12; i++) await page.keyboard.press('ArrowDown'); // scrolls the list
@@ -44,9 +47,12 @@ test('the Hub shows the Bank, the Trainer Archive and the Achievement Hall', asy
   await page.screenshot({ path: 'test-results/m5-achievements.png' });
   await page.keyboard.press('Escape');
   await page.waitForTimeout(200);
-
-  await page.keyboard.press('ArrowDown'); // Bank, in the Unlocks menu
+  await page.keyboard.press('Escape');
   await page.waitForTimeout(200);
+
+  await visit('bank'); // the Bank opens its own page
+  await page.waitForTimeout(300);
+  expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').picker !== null)).toBe(true);
   await page.screenshot({ path: 'test-results/m5-bank.png' });
   expect(errors).toEqual([]);
 });
@@ -111,8 +117,9 @@ test('a lost run pays Bank Credits and earns achievements; a claimed trainer can
     (window as any).__pkr.game.scene.getScene('Hub').scene.restart();
   });
   await waitForScene(page, 'Hub');
-  await page.keyboard.press('ArrowLeft'); // Trainers
-  await page.keyboard.press('Enter'); // open the Trainers menu
+  await page.waitForTimeout(300);
+  await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').visit('arena')); // the Competitive Arena
+  await page.waitForTimeout(250);
   await page.keyboard.press('Enter'); // Trainer Archive
   await page.waitForTimeout(300);
   for (let i = 0; i < 3; i++) await page.keyboard.press('ArrowRight'); // Red, Blue, Green, Brock
@@ -121,10 +128,9 @@ test('a lost run pays Bank Credits and earns achievements; a claimed trainer can
   await waitForScene(page, 'Hub');
   await page.screenshot({ path: 'test-results/m5-claimed.png' });
 
-  // The claim leaves the Trainers page open: Esc back to the tiles, then from Trainers to New Run.
+  // The claim leaves the Arena page open: Esc back to town, where you still face the Run Prep Center.
   await page.keyboard.press('Escape');
   await page.waitForTimeout(400);
-  await page.keyboard.press('ArrowRight');
   await page.keyboard.press('Enter'); // Start a run
   await waitForScene(page, 'TrainerSelect');
   // Brock's slot depends on where Trainer Evolutions sit, so look it up instead of counting.

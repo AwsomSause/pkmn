@@ -1,6 +1,6 @@
 import { expect, test, type Page } from '@playwright/test';
 
-// Hub tiles with several rooms open their own full page (Picker with a Back button), and Esc returns to the Hub.
+// Hub Town places with several rooms open their own full page (Picker with a Back button), and Esc returns to the Hub.
 // The Preparation Desk keeps its menu and summary inside their panels. Screenshots go to test-results/.
 
 const scene = (page: Page) => page.evaluate(() => (window as any).__pkr?.activeScene() ?? null);
@@ -21,11 +21,9 @@ for (const size of [{ w: 1280, h: 720 }, { w: 1024, h: 600 }, { w: 390, h: 844 }
     await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('Hub');
     await page.waitForTimeout(400);
 
-    for (const tile of [0, 1, 3, 4]) {
-      await page.evaluate((i) => {
-        const h = (window as any).__pkr.game.scene.getScene('Hub');
-        h.focusTile(i, false);
-        h.confirmTile();
+    for (const tile of ['arena', 'memories', 'achievements', 'hq', 'center', 'sanctuary']) {
+      await page.evaluate((id) => {
+        (window as any).__pkr.game.scene.getScene('Hub').visit(id);
       }, tile);
       await page.waitForTimeout(250);
       expect(await hub(page, '!!hub.section'), `tile ${tile} opens a page`).toBe(true);
@@ -38,8 +36,7 @@ for (const size of [{ w: 1280, h: 720 }, { w: 1024, h: 600 }, { w: 390, h: 844 }
     // A room opens on top of its page; Esc goes back to the page, then to the Hub.
     await page.evaluate(() => {
       const h = (window as any).__pkr.game.scene.getScene('Hub');
-      h.focusTile(4, false);
-      h.confirmTile();
+      h.visit('achievements');
       h.enter('achievements');
     });
     await page.waitForTimeout(250);

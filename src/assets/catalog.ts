@@ -49,6 +49,8 @@ export interface CatalogInputs {
   battleAnims?: { names: string[]; sheets: string[]; backgrounds: string[]; sounds: string[] };
   /** Scripted EBDX move animations (src/data/ebdxAnims.json): the pictures and sounds they use. */
   ebdxAnims?: { images: string[]; sounds: string[] };
+  /** Hub Town overworld sheets (src/data/overworld.json): trainer walk sheets and Pokémon followers (name → frame size). */
+  overworld?: { trainers: string[]; followers: Record<string, number> };
 }
 
 const atlas = (id: string, category: AssetCategory, base: string): AssetEntry => ({
@@ -320,6 +322,23 @@ export function ebdxAnimEntries(input: NonNullable<CatalogInputs['ebdxAnims']>):
   ];
 }
 
+export const overworldAssetIds = {
+  tiles: 'ow.tiles',
+  props: 'ow.props',
+  trainer: (name: string) => `ow.trainer.${name}`,
+  follower: (key: string) => `ow.mon.${key}`,
+};
+
+/** Hub Town: the ground tiles and props cut from the Pokémon-Memories tilesets, trainer walk sheets and Pokémon followers (all lazy). */
+export function overworldEntries(input: NonNullable<CatalogInputs['overworld']>): AssetEntry[] {
+  return [
+    { id: overworldAssetIds.tiles, kind: 'image', category: 'background', path: 'images/overworld/hubtown_tiles.png', lazy: true },
+    { ...atlas(overworldAssetIds.props, 'background', 'images/overworld/hubtown_props'), lazy: true },
+    ...input.trainers.map((t): AssetEntry => ({ id: overworldAssetIds.trainer(t), kind: 'spritesheet', category: 'trainer', path: `images/overworld/trainers/${t}.png`, frameSize: 64, lazy: true })),
+    ...Object.entries(input.followers).map(([k, size]): AssetEntry => ({ id: overworldAssetIds.follower(k), kind: 'spritesheet', category: 'pokemon', path: `images/overworld/followers/${k}.png`, frameSize: size, lazy: true })),
+  ];
+}
+
 /** Every asset the current game data could ask for. */
 export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
   const entries = [
@@ -331,6 +350,7 @@ export function buildCatalog(inputs: CatalogInputs): AssetEntry[] {
     ...inputs.backgroundAssetIds.flatMap(arenaBaseEntries),
     ...(inputs.battleAnims ? battleAnimEntries(inputs.battleAnims) : []),
     ...(inputs.ebdxAnims ? ebdxAnimEntries(inputs.ebdxAnims) : []),
+    ...(inputs.overworld ? overworldEntries(inputs.overworld) : []),
   ];
   const seen = new Set<string>();
   return entries.filter((e) => (seen.has(e.id) ? false : (seen.add(e.id), true)));

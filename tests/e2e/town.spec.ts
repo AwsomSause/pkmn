@@ -16,8 +16,11 @@ for (const size of [{ w: 1280, h: 720 }, { w: 390, h: 844 }]) {
     await page.evaluate(() => { (window as any).__pkr.game.scene.getScenes(true)[0].scene.start('Hub'); });
     await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('Hub');
     await page.waitForTimeout(300);
-    // Town is the last tile.
-    await page.evaluate(() => { const h = (window as any).__pkr.game.scene.getScene('Hub'); h.focusTile(5, false); h.confirmTile(); });
+    // Pocket Town is through the gate at the top of Hub Town: the gate asks first ("Not yet" is focused).
+    await page.evaluate(() => { (window as any).__pkr.game.scene.getScene('Hub').visit('pocket'); });
+    await page.waitForTimeout(250);
+    await page.keyboard.press('ArrowUp');
+    await page.keyboard.press('Enter');
     await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('Town');
     await page.waitForTimeout(500);
     await page.screenshot({ path: `test-results/town-${size.w}.png` });

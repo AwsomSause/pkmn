@@ -31,28 +31,32 @@ import type { Profile, RunRecord } from '../core/state';
 import { services } from '../game/services';
 import { playMusic, playSfx, playMusicLazy } from '../ui/audio';
 import { onInputAction, type InputAction } from '../ui/input';
-import { drawHubProps } from '../ui/hubProps';
 import { Picker, type PickerRow } from '../ui/partyPanel';
 import { DexInfo } from '../ui/dexInfo';
 import { dexState } from '../core/presentation/dexInfo';
 import { itemVisual, pokemonIcon, trainerVisual } from '../ui/sprites';
 import { loadAssets, preloadPokemon, queueAssets } from '../ui/lazyAssets';
-import { ArenaBackdrop, currencyChip, drawLogo, ShowcaseMon } from '../ui/showcase';
-import { LegacyRotationView } from '../ui/legacyRotation';
-import { legacyRotation } from '../core/legacyRuns';
+import { currencyChip, drawLogo } from '../ui/showcase';
+import { legacyRotation, type RotationEntry } from '../core/legacyRuns';
+import { HUB_TOWN, type HubPlace } from '../core/hubTown/schema';
+import { chooseHubPokemon, hubPokemon, hubPokemonChoices, placeById } from '../core/hubTown/world';
+import { boughtToday, buyFromMerchant, merchantProblem, merchantStock } from '../core/hubTown/merchant';
+import { localDay } from '../core/town';
+import { HubTownView } from '../ui/hubTown/townView';
+import { LegacyDisplay, displayAssets, displayLines } from '../ui/hubTown/legacyDisplay';
+import { drawTownGrowth } from '../ui/hubTown/townGrowth';
+import { overworldAssetIds } from '../assets/catalog';
 import { hubRivalNote } from '../core/rivals/living';
 import { headToHead, MOOD_FACE, rivalMood, rivalNickname, scoreboardLine } from '../core/rivals/ledger';
-import { pokemonAssetIds } from '../assets/catalog';
-import { COLORS, GAME_WIDTH, PIXEL_SCALE, textStyle } from '../ui/theme';
+import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { Menu, paintWindow } from '../ui/widgets';
 import { codexEntries, codexTotals } from '../core/story/codex';
 import { downloadText, pickTextFile } from '../ui/files';
 import { sortTrainers, TRAINER_SORT_KEYS, TRAINER_SORT_LABELS } from '../core/trainerSort';
-import { WiiCursor } from '../ui/wiiMotion';
 import { hubArrivalNotice, openTools } from './hubTools';
 import { device } from '../game/deviceTools';
 
-type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'nook' | 'options' | 'save' | 'tools' | 'town' | 'back';
+type Room = 'run' | 'archive' | 'achievements' | 'bank' | 'lab' | 'attributes' | 'history' | 'quests' | 'mastery' | 'research' | 'codex' | 'wardrobe' | 'card' | 'events' | 'fame' | 'legacy' | 'memories' | 'mentors' | 'tales' | 'tree' | 'prestige' | 'network' | 'museum' | 'intel' | 'moves' | 'seeds' | 'nook' | 'merchant' | 'hubmon' | 'options' | 'save' | 'tools' | 'town' | 'back';
 
 const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'run', label: 'Start a run', blurb: 'Choose a trainer and a starter, then set off.' },
@@ -87,6 +91,8 @@ const ROOMS: { room: Room; label: string; blurb: string }[] = [
   { room: 'tools', label: 'Tools & Community', blurb: "What's new, content status, your stats, the seed board, mod packs, bug report and backup." },
   { room: 'town', label: 'Pocket Town', blurb: 'Gardens, a dojo, a library, a shrine, a capsule machine and 40 more buildings (Enter).' },
   { room: 'back', label: 'Back to title', blurb: '' },
+  { room: 'merchant', label: 'Strange Merchant', blurb: 'Odd wares for your next run, a new stock each day, one of each (Bank Credits).' },
+  { room: 'hubmon', label: 'Walking Pokémon', blurb: 'Choose the Pokémon you walk Hub Town as. Your party and runs never change.' },
 ];
 
 const RANK_COLOR: Record<MasteryRank, string> = {
@@ -150,19 +156,6 @@ const CATEGORY_LABEL: Record<(typeof ACHIEVEMENT_CATEGORIES)[number], string> = 
   endgame: 'Endgame',
 };
 
-/** The five tiles along the bottom of the Hub; a tile with several rooms opens a small menu. */
-/** The hint line sits between the Pokémon's ground patch and the raised tile. */
-const BLURB_Y = 382;
-
-const TILES: { id: string; label: string; icon: string; rooms: Room[]; blurb: string }[] = [
-  { id: 'settings', label: 'Settings', icon: 'item.scanner', rooms: ['options', 'save', 'tools', 'back'], blurb: 'Game settings, save data, and the way back to the title screen.' },
-  { id: 'trainers', label: 'Trainers', icon: 'item.leaders_crest', rooms: ['archive', 'quests'], blurb: 'Every trainer, how to unlock them, and their quest lines.' },
-  { id: 'run', label: 'New Run', icon: 'ball.pb', rooms: ['run'], blurb: ROOMS[0]!.blurb },
-  { id: 'history', label: 'Events', icon: 'item.calendar', rooms: ['events', 'history', 'fame', 'legacy', 'memories', 'codex', 'tales', 'intel', 'museum', 'seeds', 'mentors', 'nook'], blurb: "This week's event, past runs, the Hall of Fame, the Moment Codex, the Intelligence Board, the Item Museum and the Seed Shelf." },
-  { id: 'unlocks', label: 'Unlocks', icon: 'item.golden_mystic_ticket', rooms: ['achievements', 'bank', 'lab', 'attributes', 'mastery', 'research', 'tree', 'prestige', 'network', 'moves', 'wardrobe', 'card'], blurb: 'Achievements, the Bank, the Starter Laboratory, Attributes, Species Mastery, the Research Room and the Wardrobe.' },
-  { id: 'town', label: 'Town', icon: 'item.map', rooms: ['town'], blurb: 'Pocket Town: gardens, shrine, library, capsule machine and more.' },
-];
-
 const ROOM_ICON: Partial<Record<Room, string>> = {
   achievements: 'item.master_ribbon',
   bank: 'item.coin_case',
@@ -183,43 +176,40 @@ const ROOM_ICON: Partial<Record<Room, string>> = {
   legacy: 'item.master_ribbon',
   save: 'item.map',
   back: 'item.pair_of_tickets',
+  merchant: 'item.golden_mystic_ticket',
+  hubmon: 'ball.pb',
+  options: 'item.scanner',
+  tools: 'item.scanner',
 };
 
-const TILE_Y = 470;
-/** Hub visits this session, and the past runs the last rotation showed (they cool down next time). */
+/** The pause menu (Esc in town): the old Settings tile's rooms plus the Pokémon you walk as. */
+const PAUSE_ROOMS: Room[] = ['options', 'hubmon', 'save', 'tools', 'back'];
+
+/** What the keepers say before they open their place (Hub Town spec §5). */
+const KEEPERS: Record<string, { name: string; line: (p: Profile) => string }> = {
+  merchant: { name: 'Strange Merchant', line: () => 'Heh. New wares every day, one of each. Have a look...' },
+  gatekeeper: { name: 'Gatekeeper Sonia', line: (p) => (p.stats.runsEnded ? `${p.stats.runsEnded} runs have set off through this gate. Step into the arch when you're ready.` : "The Departure Gate is right behind me. Step into the arch when you're ready.") },
+  sanctuary_keeper: { name: 'Sanctuary Keeper', line: () => 'The starters here are waiting for a partner. Come and see the sets.' },
+  orchard_keeper: { name: 'Orchard Keeper', line: () => 'Every Trainer who passes through leaves a story. I remember them all.' },
+};
+
+/** Hub visits this session, and the past runs the last Legacy Display showed (they cool down next time). */
 let rotationVisits = 0;
 let lastRotation: string[] = [];
-const TILE_H = 104;
-/** How far a focused tile rises. */
-const TILE_RISE = 16;
-
-interface Tile {
-  root: Phaser.GameObjects.Container;
-  idle: Phaser.GameObjects.Graphics;
-  lit: Phaser.GameObjects.Graphics;
-  icon: Phaser.GameObjects.GameObject & { y: number };
-  label: Phaser.GameObjects.Text;
-  x: number;
-  w: number;
-}
 
 export class HubScene extends Phaser.Scene {
   private picker: Picker | null = null;
   private dexInfo: DexInfo | null = null;
   private dexTab: 'all' | 'seen' | 'owned' | 'mastered' = 'all';
-  private tiles: Tile[] = [];
-  private tileIndex = 2;
-  /** The Wii-style glowing cursor that glides between the bottom tiles (spec §24). */
-  private tileCursor: WiiCursor | null = null;
-  /** The page of a tile with several rooms, while it is open; room pages open on top of it. */
+  /** The page of a place with several rooms, while it is open; room pages open on top of it. */
   private section: Picker | null = null;
-  private blurb!: Phaser.GameObjects.Text;
-  private blurbPill!: Phaser.GameObjects.Graphics;
-  private showcase!: ShowcaseMon;
-  /** The Legacy Rotation (past Trainers and their Aces) on the stage instead of the tile Pokémon, once there are past runs. */
-  private rotation: LegacyRotationView | null = null;
-  /** One Pokémon per tile, shown behind the menu when that tile is focused. */
-  private tileMons: Species[] = [];
+  /** The place whose page is open (its rooms, in order). */
+  private place: { name: string; rooms: Room[] } | null = null;
+  /** The walkable Hub Town (spec 2026-11-01). */
+  private town: HubTownView | null = null;
+  /** The Legacy Display (past Trainers and their Aces on the plaza pedestals); `current` is the first pedestal. */
+  private rotation: LegacyDisplay | null = null;
+  private entries: RotationEntry[] = [];
 
   constructor() {
     super('Hub');
@@ -227,10 +217,13 @@ export class HubScene extends Phaser.Scene {
 
   preload(): void {
     const { session } = services();
-    // Five random Pokémon from the game (not the custom forms) to show behind the tiles.
-    const all = [...session.content.species.values()].filter((sp) => !sp.id.includes('-') && services().assets.has(pokemonAssetIds(sp.assets).front));
-    this.tileMons = Phaser.Utils.Array.Shuffle(all).slice(0, TILES.length);
-    preloadPokemon(this, this.tileMons, { front: true });
+    const p = session.profile;
+    // The Legacy Display (M9): the saved run first, then past Trainers by Legacy Score; last visit's picks cool down.
+    const current = session.savedRun.status === 'ok' ? session.savedRun.data : null;
+    this.entries = legacyRotation(session.content, p.legacyRuns, { seed: `${p.stats.runsEnded}:${rotationVisits++}`, current, cooldown: lastRotation });
+    lastRotation = this.entries.filter((e) => !e.current).map((e) => e.runId);
+    const keeperArt = HUB_TOWN.keepers.map((k) => overworldAssetIds.trainer(k.sprite));
+    queueAssets(this, [overworldAssetIds.tiles, overworldAssetIds.props, overworldAssetIds.follower(hubPokemon(p).follower), ...keeperArt, ...displayAssets(session.content, this.entries)]);
     queueAssets(this, ['ui.trainercard', 'ui.dex.seen', 'ui.dex.caught', 'ui.save.bg']);
   }
 
@@ -263,31 +256,31 @@ export class HubScene extends Phaser.Scene {
     });
     this.picker = null;
     this.section = null;
-    this.tiles = [];
-    this.tileCursor = null;
+    this.place = null;
     playMusicLazy(this, 'bgm.hub');
     const p = session.profile;
+    const motion = session.settings.battleAnimations;
 
-    new ArenaBackdrop(this, { platformAt: { x: GAME_WIDTH / 2, y: 350 } });
-    // Darken the top (logo, counters) and the bottom (tiles) so text stays readable.
-    const shade = this.add.graphics().setDepth(-20);
-    for (let i = 0; i < 12; i++) {
-      shade.fillStyle(0x0e0b12, 0.5 * (1 - i / 12));
-      shade.fillRect(0, i * 8, GAME_WIDTH, 8);
-      shade.fillStyle(0x0e0b12, 0.75 * (i / 12));
-      shade.fillRect(0, 380 + i * 14, GAME_WIDTH, 14);
+    // Hub Town: walk as your Pokémon; buildings open the Hub's rooms.
+    this.town = new HubTownView(
+      this,
+      { onPlace: (pl) => this.openPlace(pl), onGate: (g) => this.askGate(g), busy: () => Boolean(this.picker || this.section || this.dexInfo) },
+      { follower: hubPokemon(p).follower, motion },
+    );
+    for (const k of HUB_TOWN.keepers) {
+      const art = overworldAssetIds.trainer(k.sprite);
+      if (!this.textures.exists(art)) continue;
+      this.town.addPerson(k.id, art, k, k.facing, { bob: true });
+      const keeper = KEEPERS[k.id];
+      this.town.addTalker({ id: k.id, name: keeper?.name ?? k.id, verb: 'Talk', tiles: [k], onTalk: () => this.talkTo(k.id, k.location) });
     }
-    drawHubProps(this, p, session.settings.battleAnimations);
-    this.showcase = new ShowcaseMon(this, GAME_WIDTH / 2, 356, PIXEL_SCALE, 250);
-    // The Legacy Rotation (M9): the saved run first, then past Trainers by Legacy Score; last visit's picks cool down.
-    const current = session.savedRun.status === 'ok' ? session.savedRun.data : null;
-    const entries = legacyRotation(session.content, p.legacyRuns, { seed: `${p.stats.runsEnded}:${rotationVisits++}`, current, cooldown: lastRotation });
-    lastRotation = entries.filter((e) => !e.current).map((e) => e.runId);
-    this.rotation = entries.length > 0
-      ? new LegacyRotationView(this, session.content, entries, { x: GAME_WIDTH / 2, y: 356, motion: session.settings.battleAnimations, records: new Map(p.legacyRuns.map((r) => [r.runId, r])), currentSpecies: current?.party.map((m) => m.speciesId) ?? [], seed: `${p.profileId}:${rotationVisits}` })
-      : null;
+    this.rotation = new LegacyDisplay(this.town, this, session.content, this.entries, { motion, onInspect: (e) => this.inspectLegacy(e) });
+    drawTownGrowth(this.town, this, p, motion);
 
-    drawLogo(this, 20, 8, 34, 0, session.settings.battleAnimations);
+    // The screen layer: logo, currencies and the card line stay put over the town.
+    const top = this.add.graphics();
+    for (let i = 0; i < 12; i++) top.fillStyle(0x0e0b12, 0.45 * (1 - i / 12)).fillRect(0, i * 8, GAME_WIDTH, 8);
+    drawLogo(this, 20, 8, 34, 0, motion);
     let right = GAME_WIDTH - 16;
     right -= currencyChip(this, right, 32, 'item.candy', p.candies, 'Candies') + 8;
     right -= currencyChip(this, right, 32, 'item.dna_splicers', p.researchPoints, 'Research Points') + 8;
@@ -297,18 +290,17 @@ export class HubScene extends Phaser.Scene {
       .text(GAME_WIDTH - 16, 62, `${p.activeTitle ? `${p.activeTitle}  ·  ` : ''}Achievements ${earned}/${session.content.achievements.size}  ·  Runs ${p.stats.runsEnded}`, textStyle(16, COLORS.textMuted))
       .setOrigin(1, 0);
     this.drawCardFrame(card, getFrame(p.cardFrame));
-
-    this.blurbPill = this.add.graphics();
-    this.blurb = this.add.text(GAME_WIDTH / 2, BLURB_Y, '', textStyle(16, COLORS.textLight, { align: 'center' })).setOrigin(0.5, 0.5);
-
     const ready = [...session.content.archetypes.values()].filter((a) => trainerStatus(p, a) === 'claimable').length;
-    this.buildTiles(ready);
+    this.add
+      .text(16, GAME_HEIGHT - 12, `Arrows walk · Shift runs · Z talks and enters · Esc menu${ready ? `  ·  ${ready} trainer${ready === 1 ? '' : 's'} ready at the Arena` : ''}`, textStyle(14, COLORS.textLight, { stroke: '#10203a', strokeThickness: 4 }))
+      .setOrigin(0, 1)
+      .setName('hubtown-help');
 
     // Living Rival: a letter or a visit from a rival of a finished run; every Hub visit changes which.
     const rivalNote = hubRivalNote(p.rivalArchive, rotationVisits * 7 + p.stats.runsEnded, { achievements: earned, runsEnded: p.stats.runsEnded, nickname: rivalNickname(p.legacyRuns), expression: rivalMood(p.legacyRuns).expression, ...(headToHead(p.legacyRuns)[0] ? { board: scoreboardLine(headToHead(p.legacyRuns)[0]!) } : {}) });
     if (rivalNote) {
       const note = this.add
-        .text(GAME_WIDTH / 2, data.notice ? 160 : 110, rivalNote.text, textStyle(16, rivalNote.tone === 'sharp' ? COLORS.gold : COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 160 } }))
+        .text(GAME_WIDTH / 2, data.notice ? 160 : 110, rivalNote.text, textStyle(16, rivalNote.tone === 'sharp' ? COLORS.gold : COLORS.textLight, { align: 'center', wordWrap: { width: GAME_WIDTH - 160 }, stroke: '#10203a', strokeThickness: 4 }))
         .setOrigin(0.5, 0);
       // I176: the rival's portrait expression follows your run streak.
       const mood = rivalMood(p.legacyRuns).mood;
@@ -318,103 +310,104 @@ export class HubScene extends Phaser.Scene {
     }
     if (data.notice) {
       const notice = this.add
-        .text(GAME_WIDTH / 2, 110, data.notice, textStyle(20, COLORS.gold, { align: 'center', wordWrap: { width: GAME_WIDTH - 120 } }))
+        .text(GAME_WIDTH / 2, 110, data.notice, textStyle(20, COLORS.gold, { align: 'center', wordWrap: { width: GAME_WIDTH - 120 }, stroke: '#10203a', strokeThickness: 4 }))
         .setOrigin(0.5, 0);
       this.tweens.add({ targets: notice, alpha: 0, delay: 5000, duration: 800 });
     }
 
-    // Start on New Run, or on the room the screen was reopened for.
-    const room = data.focus !== undefined ? ROOMS[Math.min(data.focus, ROOMS.length - 1)]!.room : 'run';
-    const tile = Math.max(0, TILES.findIndex((t) => t.rooms.includes(room)));
-    this.focusTile(tile, false);
-    if (data.focus !== undefined && TILES[tile]!.rooms.length > 1) this.openSection(TILES[tile]!.rooms.indexOf(room));
+    // Reopened for a room (after buying or changing something): open that room's place page again.
+    if (data.focus !== undefined) {
+      const room = ROOMS[Math.min(data.focus, ROOMS.length - 1)]!.room;
+      if (PAUSE_ROOMS.includes(room)) this.openPause(PAUSE_ROOMS.indexOf(room));
+      else {
+        const pl = HUB_TOWN.places.find((x) => x.rooms.includes(room));
+        if (pl && pl.rooms.length > 1) this.openSection({ name: pl.name, rooms: pl.rooms as Room[] }, pl.rooms.indexOf(room));
+      }
+    }
 
     onInputAction(this, (a) => this.handle(a));
   }
 
-  private buildTiles(ready: number): void {
-    const widths = [140, 150, 200, 140, 140, 110];
-    const gap = (GAME_WIDTH - 32 - widths.reduce((a, b) => a + b, 0)) / (widths.length - 1);
-    let x = 16;
-    TILES.forEach((t, i) => {
-      const w = widths[i]!;
-      const big = t.id === 'run';
-      const h = big ? TILE_H + 12 : TILE_H;
-      const top = TILE_Y - h / 2;
-      const root = this.add.container(x, top);
-      const idle = paintWindow(this.add.graphics(), 0, 0, w, h, { fill: 0x2a2431, border: big ? COLORS.border : COLORS.borderMuted, alpha: 0.94 });
-      const lit = paintWindow(this.add.graphics(), 0, 0, w, h, { fill: 0x3a3048, border: COLORS.accent }).setVisible(false);
-      const icon = itemVisual(this, t.icon, w / 2, big ? 42 : 38, big ? 3 : 2) as Tile['icon'];
-      const text = t.id === 'trainers' && ready > 0 ? `${t.label} (${ready}!)` : t.label;
-      const label = fitLine(this.add.text(w / 2, h - (big ? 34 : 30), text, textStyle(big ? 28 : 24)).setOrigin(0.5, 0.5), w - 24);
-      root.add([idle, lit, icon, label]);
-      const zone = this.add.zone(0, 0, w, h).setOrigin(0).setInteractive({ useHandCursor: true });
-      zone.on('pointerover', () => {
-        if (!this.picker && !this.section) this.focusTile(i);
-      });
-      zone.on('pointerdown', () => {
-        if (this.picker || this.section) return;
-        this.focusTile(i, false);
-        this.confirmTile();
-      });
-      root.add(zone);
-      this.tiles.push({ root, idle, lit, icon, label, x, w });
-      x += w + gap;
-    });
+  /** Open a place by id as if you walked up to it (touch shortcuts and tests). */
+  visit(id: string): boolean {
+    const pl = placeById(id);
+    if (!pl) return false;
+    if (pl.kind === 'gate') this.askGate(pl);
+    else this.openPlace(pl);
+    return true;
   }
 
-  private focusTile(i: number, sound = true): void {
-    if (sound && i !== this.tileIndex) playSfx(this, 'ui.cursor', 0.5);
-    this.tileIndex = i;
-    this.tiles.forEach((tile, n) => {
-      const on = n === i;
-      tile.idle.setVisible(!on);
-      tile.lit.setVisible(on);
-      tile.label.setColor(on ? COLORS.gold : COLORS.textLight);
-      const h = TILES[n]!.id === 'run' ? TILE_H + 12 : TILE_H;
-      this.tweens.killTweensOf(tile.root);
-      this.tweens.add({ targets: tile.root, y: TILE_Y - h / 2 - (on ? TILE_RISE : 0), duration: 180, ease: 'Cubic.easeOut' });
-      this.tweens.killTweensOf(tile.icon);
-      const iconY = TILES[n]!.id === 'run' ? 42 : 38;
-      tile.icon.y = iconY;
-      if (on) this.tweens.add({ targets: tile.icon, y: iconY - 5, duration: 520, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    });
-    const tile = this.tiles[i];
-    if (tile) {
-      const h = TILES[i]!.id === 'run' ? TILE_H + 12 : TILE_H;
-      const box: [number, number, number, number] = [tile.x - 6, TILE_Y - h / 2 - TILE_RISE - 6, tile.w + 12, h + 12];
-      if (!this.tileCursor) {
-        this.tileCursor = new WiiCursor(this, null, ...box, 18);
-        this.tileCursor.g.setDepth(5).setName('hub-cursor');
-      } else this.tileCursor.moveTo(...box);
-    }
-    const t = TILES[i]!;
-    this.setBlurb(t.blurb);
-    const mon = this.tileMons[i];
-    if (mon && !this.rotation) this.showcase.show(mon);
-  }
-
-  /** The one-line description above the tiles, on a dark pill. */
-  private setBlurb(text: string): void {
-    this.blurb.setText(text);
-    const w = this.blurb.width + 32;
-    this.blurbPill.clear();
-    this.blurbPill.fillStyle(0x0e0b12, 0.78);
-    this.blurbPill.fillRoundedRect(GAME_WIDTH / 2 - w / 2, BLURB_Y - 14, w, 28, 14);
-  }
-
-  private confirmTile(): void {
-    const t = TILES[this.tileIndex]!;
+  /** You faced a door or sign and pressed Z (or walked into the door). */
+  private openPlace(pl: HubPlace): void {
+    if (this.picker || this.section || this.dexInfo) return;
     playSfx(this, 'ui.select');
-    if (t.rooms.length === 1) this.enter(t.rooms[0]!);
-    else this.openSection(0);
+    const rooms = pl.rooms as Room[];
+    if (rooms.length === 1) this.enter(rooms[0]!);
+    else this.openSection({ name: pl.name, rooms }, 0);
   }
 
-  /** A tile with several rooms opens its own full page: one card per room, with a Back button. */
-  private openSection(focus: number): void {
-    const t = TILES[this.tileIndex]!;
+  /** A gateway asks first (spec §7: departure needs a deliberate yes); "not yet" steps you back into town. */
+  private askGate(g: HubPlace): void {
+    if (this.picker || this.section) return;
+    const go = g.rooms[0] === 'depart' ? 'Set off on a new run' : `Go to ${g.name.replace(' Gate', '')}`;
+    const rows: PickerRow[] = [go, 'Not yet'].map((label, i) => ({
+      problem: null,
+      hint: i === 0 ? g.blurb : 'Stay in Hub Town.',
+      draw: (scene, box, _w, h) => {
+        box.add(scene.add.text(20, h / 2, label, textStyle(24, i === 0 ? COLORS.gold : COLORS.textLight)).setOrigin(0, 0.5));
+      },
+    }));
+    const stay = () => {
+      this.closePicker();
+      this.town?.stepBack();
+    };
+    this.openPicker({
+      title: g.name,
+      rows,
+      columns: 1,
+      rowHeight: 64,
+      start: 1,
+      onSelect: (n) => {
+        if (n === 1) return stay();
+        this.closePicker();
+        this.town?.stepBack();
+        this.enter(g.rooms[0] === 'depart' ? 'run' : 'town');
+      },
+      onBack: stay,
+      backLabel: 'stay in town',
+    });
+  }
+
+  private talkTo(id: string, location: string): void {
+    const keeper = KEEPERS[id];
+    if (keeper) notify(`${keeper.name}: ${keeper.line(services().session.profile)}`);
+    const pl = placeById(location);
+    if (pl && pl.kind !== 'gate') this.openPlace(pl);
+  }
+
+  /** Face a pedestal: the Trainer's record, read only. */
+  private inspectLegacy(e: RotationEntry): void {
+    const { session } = services();
+    const lines = displayLines(session.content, e);
+    const text = [lines.ace, lines.story, lines.feats].filter(Boolean);
+    const rows: PickerRow[] = [
+      ...text.map((t) => ({ problem: null, hint: e.current ? 'The run you have going now.' : 'A Trainer of yours from an earlier run.', draw: (scene: Phaser.Scene, box: Phaser.GameObjects.Container, w: number, h: number) => void box.add(scene.add.text(20, h / 2, t, textStyle(20, COLORS.textLight, { wordWrap: { width: w - 40 } })).setOrigin(0, 0.5)) })),
+      { problem: null, hint: 'Every past Trainer, their team, Ace, rivals and ending.', draw: (scene, box, _w, h) => void box.add(scene.add.text(20, h / 2, 'Open the Legacy Gallery', textStyle(22, COLORS.gold)).setOrigin(0, 0.5)) },
+    ];
+    this.openPicker({ title: lines.name, rows, columns: 1, rowHeight: 60, start: rows.length - 1, onSelect: (n) => n === rows.length - 1 && this.enter('legacy'), onBack: () => this.closePicker(), backLabel: 'back to town' });
+  }
+
+  /** Esc in town: settings, the Pokémon you walk as, save data, tools, and the way back to the title screen. */
+  private openPause(focus = 0): void {
+    this.place = { name: 'Menu', rooms: PAUSE_ROOMS };
+    this.openSection(this.place, focus);
+  }
+
+  /** A place with several rooms opens its own full page: one card per room, with a Back button. */
+  private openSection(place: { name: string; rooms: Room[] }, focus: number): void {
     this.section?.close();
-    const rows: PickerRow[] = t.rooms.map((room) => {
+    this.place = place;
+    const rows: PickerRow[] = place.rooms.map((room) => {
       const info = ROOMS.find((r) => r.room === room)!;
       const summary = this.roomSummary(room);
       return {
@@ -429,22 +422,23 @@ export class HubScene extends Phaser.Scene {
       };
     });
     this.section = new Picker(this, {
-      title: t.label,
+      title: place.name,
       rows,
       columns: 2,
       rowHeight: 68,
       start: Phaser.Math.Clamp(focus, 0, rows.length - 1),
-      onSelect: (n) => this.enter(t.rooms[n]!),
+      onSelect: (n) => this.enter(place.rooms[n]!),
       onBack: () => this.closeSection(),
-      backLabel: 'back to the Hub',
+      backLabel: 'back to town',
     });
   }
 
   private closeSection(): void {
     this.section?.close();
     this.section = null;
+    this.place = null;
+    this.town?.lockUntilRelease();
   }
-
 
   private handle(a: InputAction): void {
     if (this.dexInfo) {
@@ -459,11 +453,84 @@ export class HubScene extends Phaser.Scene {
       this.section.handle(a);
       return;
     }
-    if (a === 'left') this.focusTile((this.tileIndex + TILES.length - 1) % TILES.length);
-    else if (a === 'right') this.focusTile((this.tileIndex + 1) % TILES.length);
-    else if (a === 'confirm' || a === 'up') {
-      if (a === 'confirm' || TILES[this.tileIndex]!.rooms.length > 1) this.confirmTile();
-    } else if (a === 'back') this.scene.start('MainMenu');
+    // Held keys walk on their own (the town reads them every frame); a tap still takes one step or turns.
+    if (a === 'up' || a === 'down' || a === 'left' || a === 'right') this.town?.step(a);
+    else if (a === 'confirm') this.town?.interact();
+    else if (a === 'back') {
+      playSfx(this, 'ui.select', 0.6);
+      this.openPause();
+    }
+  }
+
+  // ---------- Hub Town rooms: the Strange Merchant and the Pokémon you walk as ----------
+
+  private openMerchant(focus = 0): void {
+    const { session } = services();
+    const p = session.profile;
+    const day = localDay(new Date());
+    const stock = merchantStock(day);
+    const sold = boughtToday(p, day);
+    const rows: PickerRow[] = stock.map((ware) => {
+      const item = session.content.items.get(ware.item);
+      return {
+        problem: merchantProblem(p, ware, day),
+        hint: `${ware.line} Waits in your pack for the next run.`,
+        draw: (scene, box, w, h) => {
+          box.add(itemVisual(scene, item?.iconAssetId ?? `item.${ware.item.replace(/-/g, '_')}`, 34, h / 2, 1));
+          box.add(scene.add.text(66, 8, item?.name ?? ware.item, textStyle(22, COLORS.textLight)));
+          box.add(scene.add.text(66, 38, sold.includes(ware.item) ? 'Sold out today' : `${ware.price} Bank Credits`, textStyle(16, sold.includes(ware.item) ? COLORS.textMuted : COLORS.gold, { wordWrap: { width: w - 80 } })));
+        },
+      };
+    });
+    this.openPicker({
+      title: `Strange Merchant · ${p.bankCredits} credits`,
+      rows,
+      columns: 2,
+      rowHeight: 68,
+      start: focus,
+      onSelect: (n) => {
+        const ware = stock[n]!;
+        session.changeProfile((prof) => buyFromMerchant(prof, ware.item, day));
+        playSfx(this, 'ui.buy');
+        this.closePicker();
+        this.openMerchant(n);
+        notify(`${session.content.items.get(ware.item)?.name ?? ware.item} will be in your pack next run.`);
+      },
+      onBack: () => this.closePicker(),
+      backLabel: 'back to town',
+    });
+  }
+
+  private openHubMon(): void {
+    const { session } = services();
+    const p = session.profile;
+    const choices = hubPokemonChoices(p);
+    const ids: (string | null)[] = [null, ...choices];
+    const rows: PickerRow[] = ids.map((id) => {
+      const species = id ? session.content.species.get(id) : undefined;
+      const chosen = (p.hubTown.pokemon ?? null) === id;
+      return {
+        problem: null,
+        hint: id ? 'Walk Hub Town as this Pokémon. Your party and runs never change.' : 'Walk as the Pokémon you used most (Pikachu until you have one).',
+        draw: (scene, box, w, h) => {
+          if (species) box.add(pokemonIcon(scene, species, 34, h / 2));
+          box.add(scene.add.text(66, h / 2, `${id ? species?.name ?? id : 'Most used'}${chosen ? '  ✓' : ''}`, textStyle(22, chosen ? COLORS.gold : COLORS.textLight, { wordWrap: { width: w - 80 } })).setOrigin(0, 0.5));
+        },
+      };
+    });
+    this.openPicker({
+      title: 'Walking Pokémon',
+      rows,
+      columns: 3,
+      rowHeight: 56,
+      start: Math.max(0, ids.indexOf(p.hubTown.pokemon ?? null)),
+      onSelect: (n) => {
+        session.changeProfile((prof) => chooseHubPokemon(prof, ids[n]!));
+        this.restart(`You walk as ${hubPokemon(session.profile).speciesId ? session.content.species.get(hubPokemon(session.profile).speciesId!)?.name ?? 'your Pokémon' : 'Pikachu'} now.`, 'hubmon');
+      },
+      onBack: () => this.closePicker(),
+      backLabel: 'back to town',
+    });
   }
 
   private focusIndex(room: Room): number {
@@ -627,6 +694,12 @@ export class HubScene extends Phaser.Scene {
         break;
       case 'back':
         this.scene.start('MainMenu');
+        break;
+      case 'merchant':
+        this.openMerchant();
+        break;
+      case 'hubmon':
+        this.openHubMon();
         break;
     }
   }

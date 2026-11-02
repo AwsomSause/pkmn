@@ -23,8 +23,9 @@ test('Trainer Archive shows each locked trainer\'s own challenge', async ({ page
   expect(data.tier).toBeGreaterThan(0);
   expect(data.text).toContain('all-Bug party');
 
-  await page.keyboard.press('ArrowLeft'); // Trainers
-  await page.keyboard.press('Enter');
+  await page.waitForTimeout(400); // the town's art loads first
+  await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').visit('arena'));
+  await page.waitForTimeout(250);
   await page.keyboard.press('Enter'); // Trainer Archive
   await page.waitForTimeout(700); // progress bars spring open
   expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').picker !== null)).toBe(true);

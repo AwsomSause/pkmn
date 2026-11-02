@@ -28,5 +28,6 @@ export function readCatalogInputs(): CatalogInputs {
     backgroundAssetIds: Object.values(themes.arenas),
     battleAnims: animCatalogInputs(parseMoveAnims(readJson('moveAnims.json'))),
     ebdxAnims: scriptAssets(parseEbdxAnims(readJson('ebdxAnims.json'))),
+    overworld: readJson('overworld.json') as { trainers: string[]; followers: Record<string, number> },
   };
 }

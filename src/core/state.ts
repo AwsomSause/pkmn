@@ -1345,6 +1345,16 @@ export const LegacyMonSchema = z.object({
 });
 export type LegacyMon = z.infer<typeof LegacyMonSchema>;
 
+/** Hub Town (core/hubTown): your walking Pokémon and the Strange Merchant's stock you bought today (profile v17). */
+export const HubTownProfileSchema = z.object({
+  pokemon: z.string().nullable().default(null),
+  /** The day (YYYY-MM-DD) the bought list belongs to; a new day restocks the merchant. */
+  merchantDay: z.string().default(''),
+  /** Ware ids bought on merchantDay (each ware once a day). */
+  bought: z.array(z.string()).default([]),
+});
+export type HubTownProfile = z.infer<typeof HubTownProfileSchema>;
+
 /**
  * A finished run, written once when it ends and never changed afterwards (profile v14, core/legacyRuns.ts).
  * It keeps enough to rebuild the run's start (seed, trainer, campaign, prep, rules, starter, region order) and the
@@ -1567,6 +1577,8 @@ export const ProfileSchema = z.object({
   memories: MemoriesSchema.default({ heirlooms: [], claimed: [], cameos: [] }),
   /** Ideas W5: what NPCs remember about you, lore fragments found, epilogues seen, newspaper issues, wins that unlock New Game+ (core/npcMemory.ts; profile v16). */
   npcMemory: NpcMemorySchema.default({ npcs: {}, lore: [], epilogues: [], news: [], ngPlus: 0, hintsSeen: [], seenEvents: [] }),
+  /** Hub Town (profile v17): the Pokémon you walk the town as (null: your most-used one) and the Strange Merchant's day and sales. */
+  hubTown: HubTownProfileSchema.default({ pokemon: null, merchantDay: '', bought: [] }),
 });
 export type Profile = z.infer<typeof ProfileSchema>;
 
