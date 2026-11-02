@@ -9,6 +9,7 @@
 // one seeded by the stop. No existing stream is touched, so adding events
 // changes no other roll, and choosing again after a reload gives the same result.
 
+import type { ChoiceKind } from './presentation/eventStyles';
 import { befriendWanderer, startWanderer } from './wanderer';
 import { emotionOf } from './story/emotions';
 import { featuredMapEvents, runGameEventIds } from './gameEvents';
@@ -462,6 +463,8 @@ export interface ChoiceView {
   risk: string;
   /** For a trade: the party Pokémon the partner would take (the player picks one), else null. */
   tradePicks: { uid: string; label: string }[] | null;
+  /** Battle, trade, chance, cost or safe: the tag and colour every event style shows. */
+  kind: ChoiceKind;
 }
 
 export interface EventView {
@@ -520,6 +523,15 @@ export function choiceRisk(content: Content, choice: EventChoice): { cost: strin
   return { cost, risk: `${why} · ${ifFails}` };
 }
 
+/** The choice's kind: a sure battle, a trade, a roll, a sure cost, or nothing at stake. */
+export function choiceKind(choice: EventChoice, chance: number | null): ChoiceKind {
+  if (choice.success.battle && chance === null && !choice.prompt) return 'battle';
+  if (choice.success.effects.some((e) => e.kind === 'tradeAway')) return 'trade';
+  if (chance !== null || choice.prompt || choice.check !== undefined || choice.chance !== undefined) return 'chance';
+  if (choice.success.effects.some((e) => harmful(e))) return 'cost';
+  return 'safe';
+}
+
 export function eventView(content: Content, run: RunState, sideId: string): EventView {
   const { side } = findSide(run, sideId);
   const event = content.events.get(side.eventId!)!;
@@ -529,7 +541,7 @@ export function eventView(content: Content, run: RunState, sideId: string): Even
     const missing = unmet ? conditionText(content, unmet) : tradeMissing(content, run, c);
     const chance = choiceChance(content, run, c);
     const preview = insight ? `${outcomeWords(content, c.success)}${c.failure ? ` · if it fails: ${outcomeWords(content, c.failure)}` : ''}` : null;
-    return { label: c.label, locked: missing, tradePicks: tradePicksOf(content, run, c), chance, attribute: c.check ?? null, attributeValue: c.check ? effectiveAttributes(content, run)[c.check] : null, preview, ...choiceRisk(content, c) };
+    return { label: c.label, locked: missing, kind: choiceKind(c, chance), tradePicks: tradePicksOf(content, run, c), chance, attribute: c.check ?? null, attributeValue: c.check ? effectiveAttributes(content, run)[c.check] : null, preview, ...choiceRisk(content, c) };
   });
   return { event, choices };
 }

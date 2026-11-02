@@ -2,6 +2,7 @@
 // and the permanent profile. These schemas double as save-file validators,
 // so the game refuses to load a save that doesn't match.
 
+import { EVENT_STYLE_IDS } from './presentation/eventStyles';
 import { NATURE_IDS } from './natures';
 import { CareSchema } from './care/mods';
 import { DramaBattleSchema, freshDrama } from './drama/schema';
@@ -1658,6 +1659,8 @@ export const SettingsSchema = z.object({
   victoryJingle: z.enum(['badge', 'item_get', 'pkmn_get', 'evo_success', 'tm_get']).default('badge'),
   /** Ideas W5 (F180): map-event text you have read in an earlier run shows at once instead of typing out. */
   skipSeenDialogue: z.boolean().default(false),
+  /** Run events redesign: how map-event screens are drawn (core/presentation/eventStyles.ts). */
+  eventStyle: z.enum(EVENT_STYLE_IDS).default('diorama'),
 });
 export type Settings = z.infer<typeof SettingsSchema>;
 
