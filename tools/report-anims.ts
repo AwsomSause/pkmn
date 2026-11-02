@@ -58,7 +58,7 @@ Each move tries, in order: the director's Essentials pack animation (\`ess-*\`, 
 
 ## Known limits
 
-- **Z-Moves and Max/G-Max Moves** borrow a same-type animation: none of the packs (Essentials 21.1 UIE, EBDX, Deluxe Battle Kit, Enhanced Battle UI, Raid Battles) has attack animations for them. They add the signature family burst on top, and their transformation moments have their own cinematics (\`src/ui/battleFx/cinematics.ts\`).
+- **Max/G-Max Moves and 10,000,000 Volt Thunderbolt** borrow a same-type animation: none of the packs has attack animations for them. They add the signature family burst on top. The other Z-Moves play the Pokémon Memories repo's Essentials animations (same format, imported with \`npm run data:pack-anims -- … --missing-only\`), and every transformation has its own cinematic (\`src/ui/battleFx/cinematics.ts\`).
 - **EBDX's 442 scripted move animations** are Ruby code, not frame data, so they are not played; their graphics are reused for effects.
 - Essentials' per-sprite colour overlay isn't carried over (darkening tones are).
 

@@ -11,7 +11,7 @@
 // numbers; every spread is a fixed pattern.
 
 import Phaser from 'phaser';
-import { animAssetIds } from '../../assets/catalog';
+import { animAssetIds, zTitleAssetId } from '../../assets/catalog';
 import { services } from '../../game/services';
 import type { MotionLevel } from '../aero';
 import { loadAssets } from '../lazyAssets';
@@ -36,6 +36,8 @@ export interface CineOptions {
   crystal?: 'mega' | 'alpha' | 'omega';
   /** Big words for the moment (the Z-Move's name). */
   title?: string;
+  /** The Z-Move's id: its Deluxe Battle Kit title card is shown in place of `title` when it loads in time. */
+  titleId?: string;
   motion: MotionLevel;
   /** 1 normal, 2 fast, 3 quick. */
   speed: number;
@@ -286,6 +288,9 @@ export function cinematic(scene: Phaser.Scene, o: CineOptions): Beat {
   }
 
   function zPower(): void {
+    // Its title card is small: start loading it now, it shows at 550 ms if it made it.
+    const titleKey = o.titleId ? zTitleAssetId(o.titleId) : '';
+    if (titleKey && !has(titleKey) && services().assets.has(titleKey)) void loadAssets(scene, [titleKey]).catch(() => undefined);
     bars();
     if (has('cine.raid.ultra.bg')) cover('cine.raid.ultra.bg', 0.85);
     if (has('cine.raid.transitions.impact')) {
@@ -303,11 +308,28 @@ export function cinematic(scene: Phaser.Scene, o: CineOptions): Beat {
       tw({ targets: z, scale: 0.6, alpha: 1, duration: 420, delay: 250, ease: 'Back.easeOut' });
       tw({ targets: z, y: z.y - 8, duration: 500, delay: 700, yoyo: true, ease: 'Sine.easeInOut' });
     }
-    if (o.title) {
-      const color = `#${o.tint.toString(16).padStart(6, '0')}`;
-      const t = add(scene.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 70, o.title.toUpperCase(), textStyle(40, '#ffffff', { stroke: color, strokeThickness: 8 })).setOrigin(0.5).setDepth(depth + 6).setScale(0.4).setAlpha(0));
-      tw({ targets: t, scale: 1, alpha: 1, duration: 360, delay: 550, ease: 'Back.easeOut' });
+    // Z-Power particles stream in to the Pokémon from a fixed ring (Deluxe Battle Kit's Z-Move scene).
+    if (has('cine.dbk.zpower.particle')) {
+      for (let i = 0; i < 12; i++) {
+        const a = (i / 12) * Math.PI * 2;
+        const p = add(scene.add.image(o.x + Math.cos(a) * 260, o.y + Math.sin(a) * 170, 'cine.dbk.zpower.particle').setTint(o.tint).setBlendMode('ADD').setDepth(depth + 3).setScale(1.2).setAlpha(0));
+        tw({ targets: p, x: o.x, y: o.y, scale: 0.3, alpha: { from: 1, to: 0.2 }, duration: 520, delay: 80 + (i % 4) * 90, ease: 'Cubic.easeIn' });
+      }
     }
+    // The title: the pack's card when it has loaded, otherwise the name in type-coloured letters.
+    at(550, () => {
+      if (over) return;
+      const key = o.titleId ? zTitleAssetId(o.titleId) : '';
+      if (key && has(key)) {
+        const card = add(scene.add.image(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 70, key).setDepth(depth + 6).setScale(2.4).setAlpha(0));
+        tw({ targets: card, scale: 1.2, alpha: 1, duration: 300, ease: 'Back.easeOut' });
+        if ((o.shake ?? 1) > 0) tw({ targets: card, x: card.x + 4 * (o.shake ?? 1), duration: 50, delay: 320, yoyo: true, repeat: 3 });
+      } else if (o.title) {
+        const color = `#${o.tint.toString(16).padStart(6, '0')}`;
+        const t = add(scene.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2 + 70, o.title.toUpperCase(), textStyle(40, '#ffffff', { stroke: color, strokeThickness: 8 })).setOrigin(0.5).setDepth(depth + 6).setScale(0.4).setAlpha(0));
+        tw({ targets: t, scale: 1, alpha: 1, duration: 360, ease: 'Back.easeOut' });
+      }
+    });
     sound('ess-refresh', 0.9);
     at(600, () => sound('ess-flash2', 0.8));
     at(SWAP_AT.zmove - 1, swap);

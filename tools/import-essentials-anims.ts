@@ -5,7 +5,14 @@
 // the stand-by when a pack file can't load.
 //
 //   ruby tools/essentials/dump-animations.rb <Data/PkmnAnimations.rxdata> <anims.json>
-//   npm run data:pack-anims -- <anims.json> <Graphics/Animations folder> <Audio/SE/Anim folder>
+//   npm run data:pack-anims -- <anims.json> <Graphics/Animations folder> <Audio/SE/Anim folder> [--missing-only "<source note>"]
+//
+// --missing-only tops up from a second pack (the Pokémon Memories repo has the
+// Z-Move animations the UIE pack lacks): only moves that still borrow another
+// move's animation (source "type", no pack file) are imported; sheets that
+// already exist and the status slots are left alone, and the note is added to
+// `packSource`. Each imported move keeps its "type" source (its PokeRogue stand-by
+// is still borrowed, and it keeps the signature family) but gets a big attack's hit feel.
 //
 // Essentials draws animations on a 512×384 screen with 192-pixel sheet cells
 // and the user at (128, 224), the target at (384, 96). PokeRogue's files (the
@@ -25,7 +32,12 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { join } from 'node:path';
 import { animSlug, type CompactAnim, type CompactEvent, type CompactFrame, type CompactVariant } from '../src/core/presentation/animFormat.ts';
 
-const [dumpFile, graphicsDir, soundDir] = process.argv.slice(2);
+const [dumpFile, graphicsDir, soundDir, flag, note] = process.argv.slice(2);
+const missingOnly = flag === '--missing-only';
+if (missingOnly && !note) {
+  console.error('--missing-only needs a source note, e.g. "Z-Moves from AwsomSause/Pokemon-Memories"');
+  process.exit(1);
+}
 if (!dumpFile || !existsSync(dumpFile) || !graphicsDir || !existsSync(graphicsDir) || !soundDir || !existsSync(soundDir)) {
   console.error('Usage: npm run data:pack-anims -- <anims.json> <Graphics/Animations folder> <Audio/SE/Anim folder>');
   process.exit(1);
@@ -69,9 +81,12 @@ const COMMON: Record<string, string> = {
 
 const num = (v: number | boolean | null | undefined, d = 0) => (typeof v === 'number' ? v : v === true ? 1 : d);
 
+/** Some packs name files with their extension ("PRAS- ZPower.png", "PRSFX- ZPower1.wav"), some without. */
+const bare = (name: string) => name.replace(/\.(png|wav|ogg|mp3)$/i, '');
+
 function sheetName(a: EssAnim): string | null {
   if (!a.graphic) return null;
-  return `ess-${animSlug(a.graphic)}${a.hue ? `-h${a.hue}` : ''}`;
+  return `ess-${animSlug(bare(a.graphic))}${a.hue ? `-h${a.hue}` : ''}`;
 }
 
 function convertFrames(a: EssAnim): CompactFrame[][] {
@@ -111,15 +126,15 @@ const sheets = new Map<string, { file: string; hue: number }>();
 
 function convert(a: EssAnim): { variant: CompactVariant; info: { graphics: string[]; backgrounds: string[]; sounds: string[] } } {
   const g = sheetName(a);
-  const file = a.graphic ? graphicFiles.get(a.graphic.toLowerCase()) : undefined;
+  const file = a.graphic ? graphicFiles.get(bare(a.graphic).toLowerCase()) : undefined;
   if (g && file) sheets.set(g, { file, hue: a.hue });
   const events: CompactEvent[] = [];
   const used: string[] = [];
   for (const t of a.timing) {
     if (t.timingType !== 0 || !t.name) continue;
-    const src = soundFiles.get(t.name.toLowerCase());
+    const src = soundFiles.get(bare(t.name).toLowerCase());
     if (!src) continue;
-    const slug = `ess-${animSlug(t.name)}`;
+    const slug = `ess-${animSlug(bare(t.name))}`;
     sounds.set(slug, src);
     if (!used.includes(slug)) used.push(slug);
     events.push({ f: t.frame, k: 'sound', r: slug, v: t.volume ?? 100, p: t.pitch ?? 100 });
@@ -137,6 +152,14 @@ const dump: EssAnim[] = JSON.parse(readFileSync(dumpFile, 'utf8'));
 const byName = new Map(dump.map((a) => [a.name, a]));
 const moveIds: string[] = (JSON.parse(readFileSync(movesFile, 'utf8')) as { id: string }[]).map((m) => m.id);
 const essKey = (id: string) => id.replace(/[^a-z0-9]/g, '').toUpperCase();
+// Type flash colours (the same table as core/presentation/cues.ts).
+const typeColor: Record<string, string> = {
+  normal: '#a8a878', fire: '#f08030', water: '#6890f0', electric: '#f8d030', grass: '#78c850',
+  ice: '#98d8d8', fighting: '#c03028', poison: '#a040a0', ground: '#e0c068', flying: '#a890f0',
+  psychic: '#f85888', bug: '#a8b820', rock: '#b8a038', ghost: '#705898', dragon: '#7038f8',
+  dark: '#705848', steel: '#b8b8d0', fairy: '#ee99ac',
+};
+const moveType = new Map((JSON.parse(readFileSync(movesFile, 'utf8')) as { id: string; type: string }[]).map((m) => [m.id, m.type]));
 const data = JSON.parse(readFileSync(animsFile, 'utf8'));
 for (const d of [outAnim, outImage, outAudio]) mkdirSync(d, { recursive: true });
 
@@ -158,14 +181,19 @@ let moves = 0;
 for (const id of moveIds) {
   const main = byName.get(`Move:${essKey(id)}`);
   if (!main || !data.moves[id]) continue;
+  if (missingOnly && (data.moves[id].pack || data.moves[id].source !== 'type')) continue;
   const name = `ess-${id}`;
   write(name, main, byName.get(`OppMove:${essKey(id)}`));
   data.moves[id].pack = name;
+  if (missingOnly) {
+    // Its pack file is a real attack: give it a big attack's weight (as Catastropika has).
+    Object.assign(data.moves[id], { shake: 3, flash: typeColor[moveType.get(id) ?? ''] ?? null, hitStopMs: 110, telegraph: 'strong' });
+  }
   moves++;
 }
 let common = 0;
-data.commonPack = {};
-for (const [slot, essName] of Object.entries(COMMON)) {
+if (!missingOnly) data.commonPack = {};
+for (const [slot, essName] of Object.entries(missingOnly ? {} : COMMON)) {
   const a = byName.get(essName);
   if (!a) continue;
   const name = `ess-${animSlug(essName.replace('Common:', 'common-'))}`;
@@ -173,14 +201,17 @@ for (const [slot, essName] of Object.entries(COMMON)) {
   data.commonPack[slot] = name;
   common++;
 }
-data.packSource = 'Pokémon Essentials 21.1 animations (Data/PkmnAnimations.rxdata, Graphics/Animations, Audio/SE/Anim) from the director\'s "Pokemon Essentials 21.1 UIE.rar"; the same file ships in "Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip"';
+if (missingOnly) data.packSource = `${data.packSource}; ${note}`;
+else data.packSource = 'Pokémon Essentials 21.1 animations (Data/PkmnAnimations.rxdata, Graphics/Animations, Audio/SE/Anim) from the director\'s "Pokemon Essentials 21.1 UIE.rar"; the same file ships in "Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip"';
 writeFileSync(animsFile, `${JSON.stringify(data, null, 2)}\n`);
 
 for (const [slug, { file, hue }] of sheets) {
+  if (missingOnly && existsSync(join(outImage, `${slug}.png`))) continue;
   const filter = `scale=iw/2:ih/2:flags=neighbor${hue ? `,hue=h=${hue}` : ''}`;
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(graphicsDir, file), '-vf', filter, join(outImage, `${slug}.png`)]);
 }
 for (const [slug, file] of sounds) {
+  if (missingOnly && existsSync(join(outAudio, `${slug}.m4a`))) continue;
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-i', join(soundDir, file), '-ac', '1', '-c:a', 'aac', '-b:a', '64k', join(outAudio, `${slug}.m4a`)]);
 }
 console.log(`${moves} moves and ${common} status animations; ${sheets.size} sheets, ${sounds.size} sounds.`);

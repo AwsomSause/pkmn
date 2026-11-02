@@ -5,7 +5,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { animAssetIds } from '../../src/assets/catalog';
+import { animAssetIds, Z_TITLE_MOVES, zTitleAssetId } from '../../src/assets/catalog';
 import { CINE_ASSETS, CINE_MS, CINE_SOUNDS, SWAP_AT } from '../../src/ui/battleFx/cineLook';
 import shards from '../../src/ui/battleFx/primegaShards.json';
 
@@ -41,6 +41,40 @@ describe('transformation cinematics', () => {
     for (const kind of Object.keys(CINE_MS) as (keyof typeof CINE_MS)[]) {
       expect(SWAP_AT[kind], kind).toBeGreaterThan(0);
       expect(SWAP_AT[kind], kind).toBeLessThanOrEqual(CINE_MS[kind]);
+    }
+  });
+});
+
+describe('Z-Moves from the Pokémon Memories pack', () => {
+  const moveAnims = JSON.parse(readFileSync(join(import.meta.dirname, '..', '..', 'src', 'data', 'moveAnims.json'), 'utf8')) as {
+    moves: Record<string, { source: string; pack?: string; shake: number; telegraph: string }>;
+    anims: Record<string, { graphics: string[]; sounds: string[] }>;
+  };
+  const zMoves = JSON.parse(readFileSync(join(import.meta.dirname, '..', '..', 'src', 'data', 'zMoves.json'), 'utf8')) as { byType: Record<string, string> };
+
+  it('every type Z-Move plays its own animation, whose sheet and sounds ship', () => {
+    for (const id of Object.values(zMoves.byType)) {
+      const look = moveAnims.moves[id]!;
+      expect(look.pack, id).toBe(`ess-${id}`);
+      expect(look.telegraph, id).toBe('strong');
+      expect(existsSync(join(assets, 'battle-anims', `${look.pack}.json`)), id).toBe(true);
+      const files = moveAnims.anims[look.pack!]!;
+      expect(files.graphics.length, id).toBe(1);
+      for (const g of files.graphics) expect(existsSync(join(assets, 'images', 'battle_anims', `${g}.png`)), g).toBe(true);
+      for (const s of files.sounds) expect(existsSync(join(assets, 'audio', 'battle_anims', `${s}.m4a`)), s).toBe(true);
+    }
+  });
+
+  it('each Z-Move title card is a real move, in the manifest, loaded on demand, and on disk', () => {
+    const moves = new Set((JSON.parse(readFileSync(join(import.meta.dirname, '..', '..', 'src', 'data', 'moves.json'), 'utf8')) as { id: string }[]).map((m) => m.id));
+    expect(Z_TITLE_MOVES.length).toBe(35);
+    for (const id of Object.values(zMoves.byType)) expect(Z_TITLE_MOVES as readonly string[], id).toContain(id);
+    for (const id of Z_TITLE_MOVES) {
+      expect(moves.has(id), id).toBe(true);
+      const entry = byId.get(zTitleAssetId(id));
+      expect(entry, id).toBeDefined();
+      expect(entry!.lazy, id).toBe(true);
+      expect(existsSync(join(assets, entry!.path)), entry!.path).toBe(true);
     }
   });
 });

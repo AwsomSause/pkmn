@@ -2575,6 +2575,7 @@ export class BattleScene extends Phaser.Scene {
                 tint: glowColor,
                 crystal: e.kind === 'primal' ? (e.to.includes('kyogre') ? 'alpha' : 'omega') : 'mega',
                 title: zMove?.name,
+                titleId: zMove?.id,
                 motion: this.motion,
                 // The scene's clock already runs at the battle speed.
                 speed: 1,

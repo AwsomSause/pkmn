@@ -10825,6 +10825,380 @@
       ],
       "backgrounds": [],
       "sounds": []
+    },
+    "ess-snowscape": {
+      "graphics": [
+        "ess-pras-ice"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-hailmove"
+      ]
+    },
+    "ess-acid-downpour": {
+      "graphics": [
+        "ess-pras-acid-downpour"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-acid-downpour3",
+        "ess-prsfx-acid-downpour2",
+        "ess-prsfx-acid-downpour5",
+        "ess-prsfx-acid-downpour1",
+        "ess-prsfx-acid-downpour4",
+        "ess-prsfx-acid-downpour6",
+        "ess-prsfx-acid-downpour7"
+      ]
+    },
+    "ess-all-out-pummeling": {
+      "graphics": [
+        "ess-pras-all-out-pummeling"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-all-out-pummeling1",
+        "ess-prsfx-all-out-pummeling2",
+        "ess-prsfx-all-out-pummeling3"
+      ]
+    },
+    "ess-black-hole-eclipse": {
+      "graphics": [
+        "ess-pras-black-hole-eclipse"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-black-hole-eclipse1",
+        "ess-prsfx-black-hole-eclipse2",
+        "ess-prsfx-black-hole-eclipse3",
+        "ess-prsfx-black-hole-eclipse4"
+      ]
+    },
+    "ess-bloom-doom": {
+      "graphics": [
+        "ess-pras-bloom-doom"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-bloom-doom2",
+        "ess-prsfx-bloom-doom1",
+        "ess-prsfx-bloom-doom3"
+      ]
+    },
+    "ess-breakneck-blitz": {
+      "graphics": [
+        "ess-pras-breakneck-blitz"
+      ],
+      "backgrounds": [],
+      "sounds": []
+    },
+    "ess-clangorous-soulblaze": {
+      "graphics": [
+        "ess-pras-clanging-scales"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-clangorous-soulblaze1",
+        "ess-prsfx-clangorous-soulblaze2"
+      ]
+    },
+    "ess-continental-crush": {
+      "graphics": [
+        "ess-pras-rock"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-continental-crush3",
+        "ess-prsfx-continental-crush2",
+        "ess-prsfx-continental-crush1",
+        "ess-prsfx-continental-crush5"
+      ]
+    },
+    "ess-corkscrew-crash": {
+      "graphics": [
+        "ess-pras-corkscrew-crash"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-corkscrew-crash1",
+        "ess-prsfx-corkscrew-crash2",
+        "ess-prsfx-corkscrew-crash3",
+        "ess-prsfx-corkscrew-crash4",
+        "ess-prsfx-corkscrew-crash6",
+        "ess-prsfx-corkscrew-crash7",
+        "ess-prsfx-corkscrew-crash8",
+        "ess-prsfx-corkscrew-crash9",
+        "ess-prsfx-corkscrew-crash5"
+      ]
+    },
+    "ess-devastating-drake": {
+      "graphics": [
+        "ess-pras-devastating-drake"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-devastating-drake2",
+        "ess-prsfx-devastating-drake1",
+        "ess-prsfx-devastating-drake3"
+      ]
+    },
+    "ess-genesis-supernova": {
+      "graphics": [
+        "ess-pras-genesis-supernova"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-genesis-supernova1",
+        "ess-prsfx-genesis-supernova2",
+        "ess-prsfx-genesis-supernova3",
+        "ess-prsfx-genesis-supernova4",
+        "ess-prsfx-genesis-supernova5",
+        "ess-prsfx-genesis-supernova6",
+        "ess-prsfx-genesis-supernova12",
+        "ess-prsfx-genesis-supernova7",
+        "ess-prsfx-genesis-supernova8",
+        "ess-prsfx-genesis-supernova9",
+        "ess-prsfx-genesis-supernova10",
+        "ess-prsfx-genesis-supernova11"
+      ]
+    },
+    "ess-gigavolt-havoc": {
+      "graphics": [
+        "ess-pras-electric"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-gigavolt-havoc1",
+        "ess-prsfx-gigavolt-havoc3",
+        "ess-prsfx-gigavolt-havoc2"
+      ]
+    },
+    "ess-guardian-of-alola": {
+      "graphics": [
+        "ess-pras-goa"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-gaurdian-of-alola1",
+        "ess-prsfx-gaurdian-of-alola2"
+      ]
+    },
+    "ess-hydro-vortex": {
+      "graphics": [
+        "ess-pras-water"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-hydro-vortex2",
+        "ess-prsfx-hydro-vortex1",
+        "ess-prsfx-hydro-vortex3"
+      ]
+    },
+    "ess-inferno-overdrive": {
+      "graphics": [
+        "ess-pras-fire"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-inferno-overdrive2",
+        "ess-prsfx-inferno-overdrive3",
+        "ess-prsfx-inferno-overdrive5",
+        "ess-prsfx-inferno-overdrive1",
+        "ess-prsfx-inferno-overdrive4"
+      ]
+    },
+    "ess-lets-snuggle-forever": {
+      "graphics": [
+        "ess-pras-lets-snuggle-forever"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-let-s-snuggle-forever1",
+        "ess-prsfx-let-s-snuggle-forever2",
+        "ess-prsfx-let-s-snuggle-forever3",
+        "ess-prsfx-let-s-snuggle-forever4",
+        "ess-prsfx-let-s-snuggle-forever5",
+        "ess-prsfx-let-s-snuggle-forever6",
+        "ess-prsfx-let-s-snuggle-forever8",
+        "ess-prsfx-let-s-snuggle-forever9",
+        "ess-prsfx-let-s-snuggle-forever7",
+        "ess-prsfx-let-s-snuggle-forever10",
+        "ess-prsfx-let-s-snuggle-forever11",
+        "ess-prsfx-let-s-snuggle-forever12"
+      ]
+    },
+    "ess-malicious-moonsault": {
+      "graphics": [
+        "ess-pras-fire"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-malicious-moonsault3",
+        "ess-prsfx-malicious-moonsault2",
+        "ess-prsfx-malicious-moonsault1",
+        "ess-prsfx-malicious-moonsault4",
+        "ess-prsfx-malicious-moonsault6",
+        "ess-prsfx-malicious-moonsault5"
+      ]
+    },
+    "ess-menacing-moonraze-maelstrom": {
+      "graphics": [
+        "ess-pras-sunmoonz"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-sss1",
+        "ess-prsfx-mmm1",
+        "ess-prsfx-mmm3",
+        "ess-prsfx-mmm4"
+      ]
+    },
+    "ess-never-ending-nightmare": {
+      "graphics": [
+        "ess-pras-neverendingnightmare"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-neverendingnightmare1",
+        "ess-prsfx-neverendingnightmare5",
+        "ess-prsfx-neverendingnightmare3",
+        "ess-prsfx-neverendingnightmare2",
+        "ess-prsfx-neverendingnightmare4",
+        "ess-prsfx-neverendingnightmare6"
+      ]
+    },
+    "ess-savage-spin-out": {
+      "graphics": [
+        "ess-pras-savage-spin-out"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-sso1",
+        "ess-prsfx-sso2",
+        "ess-prsfx-sso3",
+        "ess-prsfx-sso7",
+        "ess-prsfx-sso8",
+        "ess-prsfx-sso9",
+        "ess-prsfx-sso11",
+        "ess-prsfx-sso4",
+        "ess-prsfx-sso10",
+        "ess-prsfx-sso5",
+        "ess-prsfx-sso6",
+        "ess-prsfx-sso12",
+        "ess-prsfx-sso13"
+      ]
+    },
+    "ess-searing-sunraze-smash": {
+      "graphics": [
+        "ess-pras-sunmoonz"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-sss1",
+        "ess-prsfx-searing-sunraze-smash1",
+        "ess-prsfx-searing-sunraze-smash2",
+        "ess-prsfx-searing-sunraze-smash3"
+      ]
+    },
+    "ess-shattered-psyche": {
+      "graphics": [
+        "ess-pras-shattered-psyche"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-shattered-psyche2",
+        "ess-prsfx-shattered-psyche1",
+        "ess-prsfx-shattered-psyche3"
+      ]
+    },
+    "ess-soul-stealing-7-star-strike": {
+      "graphics": [
+        "ess-pras-soul-stealing-7-star-strike"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-s-s7-ss1",
+        "ess-prsfx-s-s7-ss2",
+        "ess-prsfx-s-s7-ss3",
+        "ess-prsfx-s-s7-ss4",
+        "ess-prsfx-s-s7-ss5",
+        "ess-prsfx-s-s7-ss6",
+        "ess-prsfx-s-s7-ss7"
+      ]
+    },
+    "ess-splintered-stormshards": {
+      "graphics": [
+        "ess-pras-splintered-stormshards"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-splintered-stormshards4",
+        "ess-prsfx-splintered-stormshards3",
+        "ess-prsfx-splintered-stormshards2",
+        "ess-prsfx-splintered-stormshards1"
+      ]
+    },
+    "ess-stoked-sparksurfer": {
+      "graphics": [
+        "ess-pras-electric"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-stoked-sparksurfer1",
+        "ess-prsfx-stoked-sparksurfer2",
+        "ess-prsfx-stoked-sparksurfer3",
+        "ess-prsfx-stoked-sparksurfer4",
+        "ess-prsfx-stoked-sparksurfer7",
+        "ess-prsfx-stoked-sparksurfer5",
+        "ess-prsfx-stoked-sparksurfer6"
+      ]
+    },
+    "ess-subzero-slammer": {
+      "graphics": [
+        "ess-pras-ice"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-subzero-slammer1",
+        "ess-prsfx-subzero-slammer2",
+        "ess-prsfx-subzero-slammer3",
+        "ess-prsfx-subzero-slammer4"
+      ]
+    },
+    "ess-supersonic-skystrike": {
+      "graphics": [
+        "ess-pras-brave-bird"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-brave-bird1",
+        "ess-prsfx-brave-bird2",
+        "ess-explosion"
+      ]
+    },
+    "ess-tectonic-rage": {
+      "graphics": [
+        "ess-pras-tectonic-rage"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-tectonic-rage2",
+        "ess-prsfx-tectonic-rage4",
+        "ess-prsfx-tectonic-rage3",
+        "ess-prsfx-tectonic-rage1",
+        "ess-prsfx-tectonic-rage6",
+        "ess-prsfx-tectonic-rage5"
+      ]
+    },
+    "ess-twinkle-tackle": {
+      "graphics": [
+        "ess-pras-twinkle-tackle"
+      ],
+      "backgrounds": [],
+      "sounds": [
+        "ess-prsfx-twinkle-tackle1",
+        "ess-prsfx-twinkle-tackle2",
+        "ess-prsfx-twinkle-tackle3"
+      ]
     }
   },
   "moves": {
@@ -14530,10 +14904,11 @@
     "acid-downpour": {
       "anim": "toxic",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#a040a0",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-acid-downpour"
     },
     "acrobatics": {
       "anim": "acrobatics",
@@ -14567,10 +14942,11 @@
     "all-out-pummeling": {
       "anim": "bulk-up",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#c03028",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-all-out-pummeling"
     },
     "ally-switch": {
       "anim": "ally-switch",
@@ -14801,10 +15177,11 @@
     "black-hole-eclipse": {
       "anim": "nasty-plot",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#705848",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-black-hole-eclipse"
     },
     "blazing-torque": {
       "anim": "blazing-torque",
@@ -14844,10 +15221,11 @@
     "bloom-doom": {
       "anim": "leech-seed",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#78c850",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-bloom-doom"
     },
     "body-press": {
       "anim": "body-press",
@@ -14886,10 +15264,11 @@
     "breakneck-blitz": {
       "anim": "growl",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#a8a878",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-breakneck-blitz"
     },
     "brutal-swing": {
       "anim": "brutal-swing",
@@ -15002,8 +15381,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#7038f8",
-      "hitStopMs": 102,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-clangorous-soulblaze"
     },
     "clear-smog": {
       "anim": "clear-smog",
@@ -15059,10 +15439,11 @@
     "continental-crush": {
       "anim": "harden",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#b8a038",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-continental-crush"
     },
     "conversion": {
       "anim": "conversion",
@@ -15100,10 +15481,11 @@
     "corkscrew-crash": {
       "anim": "iron-defense",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#b8b8d0",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-corkscrew-crash"
     },
     "corrosive-gas": {
       "anim": "corrosive-gas",
@@ -15196,10 +15578,11 @@
     "devastating-drake": {
       "anim": "dragon-dance",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#7038f8",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-devastating-drake"
     },
     "dig": {
       "anim": "dig",
@@ -16077,8 +16460,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#f85888",
-      "hitStopMs": 102,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-genesis-supernova"
     },
     "geomancy": {
       "anim": "geomancy",
@@ -16100,10 +16484,11 @@
     "gigavolt-havoc": {
       "anim": "thunder-wave",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#f8d030",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-gigavolt-havoc"
     },
     "glacial-lance": {
       "anim": "glacial-lance",
@@ -16208,10 +16593,11 @@
     "guardian-of-alola": {
       "anim": "fairy-wind",
       "source": "type",
-      "shake": 1,
-      "flash": null,
-      "hitStopMs": 50,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#ee99ac",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-guardian-of-alola"
     },
     "gyro-ball": {
       "anim": "gyro-ball",
@@ -16391,10 +16777,11 @@
     "hydro-vortex": {
       "anim": "withdraw",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#6890f0",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-hydro-vortex"
     },
     "ice-ball": {
       "anim": "ice-ball",
@@ -16459,10 +16846,11 @@
     "inferno-overdrive": {
       "anim": "will-o-wisp",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#f08030",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-inferno-overdrive"
     },
     "ingrain": {
       "anim": "ingrain",
@@ -16596,8 +16984,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#ee99ac",
-      "hitStopMs": 103,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-lets-snuggle-forever"
     },
     "life-dew": {
       "anim": "life-dew",
@@ -16761,8 +17150,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#705848",
-      "hitStopMs": 100,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-malicious-moonsault"
     },
     "malignant-chain": {
       "anim": "malignant-chain",
@@ -16973,8 +17363,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#705898",
-      "hitStopMs": 107,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-menacing-moonraze-maelstrom"
     },
     "metal-burst": {
       "anim": "metal-burst",
@@ -17142,10 +17533,11 @@
     "never-ending-nightmare": {
       "anim": "confuse-ray",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#705898",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-never-ending-nightmare"
     },
     "nightmare": {
       "anim": "nightmare",
@@ -17825,10 +18217,11 @@
     "savage-spin-out": {
       "anim": "string-shot",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#a8b820",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-savage-spin-out"
     },
     "scale-shot": {
       "anim": "scale-shot",
@@ -17852,8 +18245,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#b8b8d0",
-      "hitStopMs": 107,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-searing-sunraze-smash"
     },
     "secret-power": {
       "anim": "secret-power",
@@ -17876,10 +18270,11 @@
     "shattered-psyche": {
       "anim": "calm-mind",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#f85888",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-shattered-psyche"
     },
     "shed-tail": {
       "anim": "shed-tail",
@@ -18096,10 +18491,11 @@
     "snowscape": {
       "anim": "haze",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#98d8d8",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-snowscape"
     },
     "soak": {
       "anim": "soak",
@@ -18144,8 +18540,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#705898",
-      "hitStopMs": 105,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-soul-stealing-7-star-strike"
     },
     "sparkling-aria": {
       "anim": "sparkling-aria",
@@ -18265,8 +18662,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#b8a038",
-      "hitStopMs": 103,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-splintered-stormshards"
     },
     "spotlight": {
       "anim": "spotlight",
@@ -18334,8 +18732,9 @@
       "source": "type",
       "shake": 3,
       "flash": "#f8d030",
-      "hitStopMs": 98,
-      "telegraph": "strong"
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-stoked-sparksurfer"
     },
     "stomping-tantrum": {
       "anim": "stomping-tantrum",
@@ -18389,10 +18788,11 @@
     "subzero-slammer": {
       "anim": "haze",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#98d8d8",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-subzero-slammer"
     },
     "sucker-punch": {
       "anim": "sucker-punch",
@@ -18431,10 +18831,11 @@
     "supersonic-skystrike": {
       "anim": "feather-dance",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#a890f0",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-supersonic-skystrike"
     },
     "surging-strikes": {
       "anim": "surging-strikes",
@@ -18557,10 +18958,11 @@
     "tectonic-rage": {
       "anim": "sand-attack",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#e0c068",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-tectonic-rage"
     },
     "teeter-dance": {
       "anim": "teeter-dance",
@@ -18802,10 +19204,11 @@
     "twinkle-tackle": {
       "anim": "sweet-kiss",
       "source": "type",
-      "shake": 0,
-      "flash": null,
-      "hitStopMs": 0,
-      "telegraph": "normal"
+      "shake": 3,
+      "flash": "#ee99ac",
+      "hitStopMs": 110,
+      "telegraph": "strong",
+      "pack": "ess-twinkle-tackle"
     },
     "u-turn": {
       "anim": "u-turn",
@@ -19025,5 +19428,5 @@
     "weather.sand": "ess-common-sandstorm",
     "weather.hail": "ess-common-hail"
   },
-  "packSource": "Pokémon Essentials 21.1 animations (Data/PkmnAnimations.rxdata, Graphics/Animations, Audio/SE/Anim) from the director's \"Pokemon Essentials 21.1 UIE.rar\"; the same file ships in \"Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip\""
+  "packSource": "Pokémon Essentials 21.1 animations (Data/PkmnAnimations.rxdata, Graphics/Animations, Audio/SE/Anim) from the director's \"Pokemon Essentials 21.1 UIE.rar\"; the same file ships in \"Pokemon-Essentials-21-With-Unofficial-EBDX-main.zip\"; Z-Moves and Snowscape from the Pokémon Memories repo (AwsomSause/Pokemon-Memories, same Essentials format)"
 }

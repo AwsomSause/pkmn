@@ -74,6 +74,17 @@ export const UIE_ARENAS: readonly string[] = [
 export const uieArenaId = (name: string) => `bg.uie.${name}`;
 
 /** Fixed UI/audio assets used by the screens. */
+/** Z-Moves with a title card (images/packs/dbk/zpower/titles). */
+export const Z_TITLE_MOVES = [
+  '10-000-000-volt-thunderbolt', 'acid-downpour', 'all-out-pummeling', 'black-hole-eclipse', 'bloom-doom', 'breakneck-blitz', 'catastropika',
+  'clangorous-soulblaze', 'continental-crush', 'corkscrew-crash', 'devastating-drake', 'extreme-evoboost', 'genesis-supernova', 'gigavolt-havoc',
+  'guardian-of-alola', 'hydro-vortex', 'inferno-overdrive', 'lets-snuggle-forever', 'light-that-burns-the-sky', 'malicious-moonsault',
+  'menacing-moonraze-maelstrom', 'never-ending-nightmare', 'oceanic-operetta', 'pulverizing-pancake', 'savage-spin-out', 'searing-sunraze-smash',
+  'shattered-psyche', 'sinister-arrow-raid', 'soul-stealing-7-star-strike', 'splintered-stormshards', 'stoked-sparksurfer', 'subzero-slammer',
+  'supersonic-skystrike', 'tectonic-rage', 'twinkle-tackle',
+] as const;
+export const zTitleAssetId = (moveId: string): string => `cine.ztitle.${moveId}`;
+
 export const FIXED_ASSETS: AssetEntry[] = [
   { id: 'bg.battle', kind: 'image', category: 'background', path: 'images/arenas/grass_bg.png' },
   // Raid arenas from the Raid Battles pack (resized to the game's 320×180).
@@ -148,6 +159,10 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...['mega/orb_1', 'mega/shine', 'primal/icon_groudon', 'primal/icon_kyogre'].map(
     (name): AssetEntry => ({ id: `cine.dbk.${name.replace('/', '.')}`, kind: 'image', category: 'ui', path: `images/packs/dbk/${name}.png`, lazy: true }),
   ),
+  // Z-Move title cards and the Z-Power particle (Deluxe Battle Kit Z-Power, via the Pokémon Memories repo;
+  // tools/memories/import-z-art.ts). A title loads when its Z-Move's cinematic starts.
+  { id: 'cine.dbk.zpower.particle', kind: 'image', category: 'ui', path: 'images/packs/dbk/zpower/particle.png', lazy: true },
+  ...Z_TITLE_MOVES.map((id): AssetEntry => ({ id: zTitleAssetId(id), kind: 'image', category: 'ui', path: `images/packs/dbk/zpower/titles/${id}.png`, lazy: true })),
   // Item pictures used as menu icons (the Hub's tiles and currency counters).
   ...MENU_ICON_ITEMS.map((name) => itemEntry(`item.${name}`)),
   { id: 'bgm.menu', kind: 'audio', category: 'music', path: 'audio/bgm/menu.mp3' },
