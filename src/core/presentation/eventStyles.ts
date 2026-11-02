@@ -18,7 +18,7 @@ export const EVENT_STYLE_LABELS: Record<EventStyleId, string> = {
 };
 
 /** The styles that are built and can be picked in Settings, in cycle order. Others fall back to Diorama. */
-export const EVENT_STYLES_READY: readonly EventStyleId[] = ['diorama', 'storybook', 'novel', 'cards'];
+export const EVENT_STYLES_READY: readonly EventStyleId[] = EVENT_STYLE_IDS;
 
 /** The style an event screen draws with: the saved choice when it is built, else Diorama. */
 export function eventStyleOf(saved: string | undefined): EventStyleId {

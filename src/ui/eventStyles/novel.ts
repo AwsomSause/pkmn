@@ -29,6 +29,8 @@ function portrait(ctx: EventCtx, make: (x: number) => Phaser.GameObjects.GameObj
   scene.tweens.add({ targets: o, scaleY: o.scaleY * 1.015, duration: 1600, delay: 700, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
 }
 
+const flipped = (o: Phaser.GameObjects.GameObject) => ((o as Phaser.GameObjects.Sprite).setFlipX?.(true), o);
+
 export const novel: EventLayout = (ctx, hooks) => {
   const { scene, view, calm, layers } = ctx;
   const area = { x: 0, y: 0, w: GAME_WIDTH, h: GAME_HEIGHT };
@@ -42,7 +44,7 @@ export const novel: EventLayout = (ctx, hooks) => {
   void loadAssets(scene, ctx.castIds).then(() => {
     if (!layers.back.active) return;
     if (first) portrait(ctx, (x) => trainerVisual(scene, first, '', x, ground, 3), 150, -200);
-    if (second && !ctx.species) portrait(ctx, (x) => (trainerVisual(scene, second, '', x, ground, 3) as Phaser.GameObjects.Sprite).setFlipX(true), GAME_WIDTH - 150, GAME_WIDTH + 200);
+    if (second && !ctx.species) portrait(ctx, (x) => flipped(trainerVisual(scene, second, '', x, ground, 3)), GAME_WIDTH - 150, GAME_WIDTH + 200);
   });
   if (ctx.species) {
     const sp = ctx.species;

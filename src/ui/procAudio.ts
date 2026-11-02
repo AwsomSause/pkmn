@@ -206,3 +206,72 @@ export function stopProceduralAudio(): void {
   layerVoices = new Map();
   stopAmbience();
 }
+
+/**
+ * Run events redesign (Wii Channel style): an original, synthesised "disc goes in" sound in the
+ * spirit of a Wii console: a soft click, a rising drive whirr, then a bright two-note chime.
+ */
+export function playDiscInsert(scene: Phaser.Scene): void {
+  try {
+    const c = context(scene);
+    const { settings } = services().session;
+    if (!c || settings.muted || settings.sfxVolume <= 0) return;
+    const vol = settings.sfxVolume * 0.25;
+    const t0 = c.currentTime + 0.01;
+    // Click: a very short burst of filtered noise.
+    const len = Math.floor(c.sampleRate * 0.03);
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) data[i] = (((i * 7919) % 200) / 100 - 1) * (1 - i / len);
+    const click = c.createBufferSource();
+    click.buffer = buf;
+    const hp = c.createBiquadFilter();
+    hp.type = 'highpass';
+    hp.frequency.value = 2400;
+    const cg = c.createGain();
+    cg.gain.value = vol * 0.8;
+    click.connect(hp).connect(cg).connect(c.destination);
+    click.start(t0);
+    // Whirr: a sawtooth rising through a closing low-pass.
+    const whirr = c.createOscillator();
+    whirr.type = 'sawtooth';
+    whirr.frequency.setValueAtTime(110, t0 + 0.05);
+    whirr.frequency.exponentialRampToValueAtTime(520, t0 + 0.5);
+    const lp = c.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(400, t0 + 0.05);
+    lp.frequency.exponentialRampToValueAtTime(1600, t0 + 0.5);
+    const wg = c.createGain();
+    wg.gain.setValueAtTime(0, t0 + 0.05);
+    wg.gain.linearRampToValueAtTime(vol * 0.35, t0 + 0.2);
+    wg.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.6);
+    whirr.connect(lp).connect(wg).connect(c.destination);
+    whirr.start(t0 + 0.05);
+    whirr.stop(t0 + 0.65);
+    // Chime: two soft bell notes (E6, then B6) with a detuned shimmer.
+    [
+      [1318.5, 0.62],
+      [1975.5, 0.78],
+    ].forEach(([f, at]) => {
+      for (const [type, detune, level] of [
+        ['sine', 0, 1],
+        ['triangle', 7, 0.35],
+      ] as const) {
+        const o = c.createOscillator();
+        const g = c.createGain();
+        o.type = type;
+        o.frequency.value = f!;
+        o.detune.value = detune;
+        const t = t0 + at!;
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(vol * level, t + 0.012);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 0.7);
+        o.connect(g).connect(c.destination);
+        o.start(t);
+        o.stop(t + 0.75);
+      }
+    });
+  } catch {
+    /* audio is never critical */
+  }
+}
