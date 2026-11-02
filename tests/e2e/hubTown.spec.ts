@@ -35,14 +35,17 @@ test('walk Hub Town, use the gate, inspect the Legacy Display and buy from the S
   await page.waitForTimeout(800);
   await page.screenshot({ path: 'test-results/hubtown-spawn.png' });
 
-  // Walking: hold Right and the Pokémon moves along the road; the prompt names the door in front of you.
-  await hub(page, "hub.town.moveTo({ x: 45, y: 63, facing: 'right' })");
-  const x0 = await hub(page, 'hub.town.tile().x');
-  await page.keyboard.down('ArrowRight');
+  // Walking: hold Down on the north road (outside every crowd zone, so nobody is in the way) and the Pokémon moves.
+  await hub(page, "hub.town.moveTo({ x: 56, y: 26, facing: 'down' })");
+  const y0 = await hub(page, 'hub.town.tile().y');
+  await page.keyboard.down('ArrowDown');
   await page.waitForTimeout(700);
-  await page.keyboard.up('ArrowRight');
+  await page.keyboard.up('ArrowDown');
   await page.waitForTimeout(400);
-  expect(await hub(page, 'hub.town.tile().x')).toBeGreaterThan(x0);
+  expect(await hub(page, 'hub.town.tile().y')).toBeGreaterThan(y0);
+
+  // The crowd: trainers and Pokémon are out and about.
+  expect(await hub(page, 'hub.crowd.walkers.length')).toBeGreaterThan(10);
 
   // The Departure Gate asks first; "not yet" (Esc) steps you back into town.
   const gate = await hub(page, "(() => { const g = hub.town.grid.map.places.find((p) => p.id === 'gate'); return g.door; })()");

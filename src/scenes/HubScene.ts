@@ -45,6 +45,9 @@ import { localDay } from '../core/town';
 import { HubTownView } from '../ui/hubTown/townView';
 import { LegacyDisplay, displayAssets, displayLines } from '../ui/hubTown/legacyDisplay';
 import { drawTownGrowth } from '../ui/hubTown/townGrowth';
+import { HubCrowd, crowdAssets } from '../ui/hubTown/crowd';
+import { drawAmbience } from '../ui/hubTown/ambience';
+import { crowdWindow, hubCrowd, type Wanderer } from '../core/hubTown/roster';
 import { overworldAssetIds } from '../assets/catalog';
 import { hubRivalNote } from '../core/rivals/living';
 import { headToHead, MOOD_FACE, rivalMood, rivalNickname, scoreboardLine } from '../core/rivals/ledger';
@@ -210,6 +213,10 @@ export class HubScene extends Phaser.Scene {
   /** The Legacy Display (past Trainers and their Aces on the plaza pedestals); `current` is the first pedestal. */
   private rotation: LegacyDisplay | null = null;
   private entries: RotationEntry[] = [];
+  /** Who is out in town this half hour (core/hubTown/roster.ts), and them walking about. */
+  private crowdList: Wanderer[] = [];
+  private crowdWindow = '';
+  private crowd: HubCrowd | null = null;
 
   constructor() {
     super('Hub');
@@ -223,7 +230,10 @@ export class HubScene extends Phaser.Scene {
     this.entries = legacyRotation(session.content, p.legacyRuns, { seed: `${p.stats.runsEnded}:${rotationVisits++}`, current, cooldown: lastRotation });
     lastRotation = this.entries.filter((e) => !e.current).map((e) => e.runId);
     const keeperArt = HUB_TOWN.keepers.map((k) => overworldAssetIds.trainer(k.sprite));
-    queueAssets(this, [overworldAssetIds.tiles, overworldAssetIds.props, overworldAssetIds.follower(hubPokemon(p).follower), ...keeperArt, ...displayAssets(session.content, this.entries)]);
+    // Date.now (not new Date()) so tests that pin the clock get the same crowd.
+    this.crowdWindow = crowdWindow(new Date(Date.now()));
+    this.crowdList = hubCrowd(p, this.crowdWindow);
+    queueAssets(this, [overworldAssetIds.tiles, overworldAssetIds.props, overworldAssetIds.follower(hubPokemon(p).follower), ...keeperArt, ...displayAssets(session.content, this.entries), ...crowdAssets(this.crowdList)]);
     queueAssets(this, ['ui.trainercard', 'ui.dex.seen', 'ui.dex.caught', 'ui.save.bg']);
   }
 
@@ -276,6 +286,8 @@ export class HubScene extends Phaser.Scene {
     }
     this.rotation = new LegacyDisplay(this.town, this, session.content, this.entries, { motion, onInspect: (e) => this.inspectLegacy(e) });
     drawTownGrowth(this.town, this, p, motion);
+    drawAmbience(this.town, this, motion);
+    this.crowd = new HubCrowd(this.town, this, session.content, p, this.crowdList, { motion, window: this.crowdWindow, say: (line) => notify(line) });
 
     // The screen layer: logo, currencies and the card line stay put over the town.
     const top = this.add.graphics();
