@@ -4,6 +4,7 @@
 
 import { nextScreenChoice, SCREEN_IDS, SCREEN_STYLES, SCREEN_STYLES_READY, screenChoice, screenChoiceLabel } from './presentation/screenStyles';
 import { EVENT_STYLE_LABELS, eventStyleOf, nextEventStyle } from './presentation/eventStyles';
+import { PLAZA_STYLE_LABELS, nextPlazaStyle, plazaStyleOf } from './presentation/plazaStyles';
 import { applyProfile, nextProfile, PROFILE_INFO } from './accessibility';
 import type { Settings } from './state';
 import { applyPerfPreset, nextPerfPreset, PERF_INFO } from './tools/perfPreset';
@@ -95,6 +96,7 @@ export const SETTINGS: SettingDef[] = [
     show: (s) => screenChoiceLabel(screen, screenChoice(screen, s.screenStyles)),
     next: (s) => ({ ...s, screenStyles: { ...s.screenStyles, [screen]: nextScreenChoice(screen, s.screenStyles) } }),
   })),
+  { id: 'plazaStyle', label: 'Plaza style', description: 'How the Trainer Plaza looks: Aero Bubbles, Regional Looks, Diorama Island or Social Square.', category: 'display', applies: 'now', show: (s) => PLAZA_STYLE_LABELS[plazaStyleOf(s.plazaStyle)], next: (s) => ({ ...s, plazaStyle: nextPlazaStyle(plazaStyleOf(s.plazaStyle)) }) },
   { id: 'battleUi', label: 'Battle UI style', description: 'Aero Glass, Essentials Kit, or Kit with a long foe box.', category: 'display', applies: 'nextBattle', show: (s) => ({ aero: 'Aero Glass', kit: 'Essentials Kit', kitLong: 'Essentials Kit (long foe)' })[s.battleUi], next: (s) => ({ ...s, battleUi: ({ aero: 'kit', kit: 'kitLong', kitLong: 'aero' } as const)[s.battleUi] }) },
   { id: 'spriteAnimations', label: 'Sprite animations', description: 'Off keeps menu icons and idle Pokémon still.', category: 'display', applies: 'now', ...toggle('spriteAnimations') },
   { id: 'damageNumbers', label: 'Damage numbers', description: 'Floating numbers over the Pokémon that was hit.', category: 'display', applies: 'now', ...toggle('damageNumbers') },

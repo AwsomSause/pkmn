@@ -44,6 +44,7 @@ test('the plaza opens from its map stop, lists its areas, and sells an item', as
 
   await page.evaluate((id) => (window as any).__pkr.game.scene.getScene('Map').openPlaza(id), sideId);
   await waitForScene(page, 'Plaza');
+  await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Plaza').ready), { timeout: 15_000 }).toBe(true);
   await page.waitForTimeout(500);
   expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Plaza').layout.districts.length)).toBe(6);
   await page.screenshot({ path: 'test-results/plaza-square.png' });
@@ -70,5 +71,23 @@ test('the plaza opens from its map stop, lists its areas, and sells an item', as
     return raw ? JSON.parse(raw[1] as string).data.plaza.rep : null;
   });
   expect(saved).toBeGreaterThan(0);
+
+  // Plaza styles (Settings > Display > Plaza style): each one draws, moves focus and opens a district.
+  for (const style of ['aero', 'seasons', 'diorama', 'social']) {
+    await page.evaluate(([id, st]) => {
+      (window as any).__pkr.session.settings.plazaStyle = st;
+      (window as any).__pkr.game.scene.getScene('Plaza').scene.restart({ sideId: id, focus: 0 });
+    }, [sideId, style]);
+    await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Plaza').ready), { timeout: 15_000 }).toBe(true);
+    expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Plaza').style)).toBe(style);
+    await page.keyboard.press('ArrowRight');
+    await page.waitForTimeout(700);
+    await page.screenshot({ path: `test-results/plaza-style-${style}.png` });
+    await page.keyboard.press('Enter');
+    await page.waitForTimeout(300);
+    expect(await page.evaluate(() => Boolean((window as any).__pkr.game.scene.getScene('Plaza').picker))).toBe(true);
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(300);
+  }
   expect(errors).toEqual([]);
 });
