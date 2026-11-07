@@ -2273,6 +2273,8 @@ function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[], move
     if (turns > 0) {
       // Early Bird wakes up twice as fast.
       status.turns = Math.max(0, turns - (ability === 'early-bird' ? 2 : 1));
+      // Decades rule: Drowsy lets a sleeper act about half the time instead of never.
+      if (content.ruleset.drowsy && !move?.effects.asleepOnly && rng.chance(0.5)) return true;
       if (!move?.effects.asleepOnly) {
         events.push({ type: 'cant', side: user.side, reason: 'slp' });
         return false;
@@ -2282,7 +2284,7 @@ function canAct(ctx: BattleContext, user: Combatant, events: BattleEvent[], move
     user.mon.status = null;
     events.push({ type: 'wake', side: user.side });
   }
-  if (user.mon.status?.id === 'frz') {
+  if (user.mon.status?.id === 'frz' && !content.ruleset.frostbite) {
     if (rng.chance(content.ruleset.freezeThawChance)) {
       user.mon.status = null;
       events.push({ type: 'thaw', side: user.side });
@@ -3465,6 +3467,8 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
   // Ion Deluge, Plasma Fists and Electrify turn Normal moves Electric.
   if (baseType === 'normal' && !move.flags.includes('typeless') && (ctx.battle.extra.ionDeluge || user.vol.electrified)) baseType = 'electric';
   user.vol.electrified = false;
+  // Decades rule: Normal-type moves take the user's own first type (a Normal-type user is unchanged).
+  if (content.ruleset.normalFollowsUser && baseType === 'normal' && !move.flags.includes('typeless')) baseType = battleTypes(content, ctx.battle, user.mon)[0] ?? 'normal';
   const typeChange = userAbility ? TYPE_CHANGE[userAbility] : undefined;
   const liquid = userAbility === 'liquid-voice' && move.flags.includes('sound') && !move.flags.includes('typeless');
   const normalized = userAbility === 'normalize' && baseType !== 'normal' && !move.flags.includes('typeless');
@@ -3716,6 +3720,7 @@ function runMoveInner(ctx: BattleContext, user: Combatant, target: Combatant, mo
         randomFactor,
         // Guts ignores the burn's Attack cut.
         burned: userStatus === 'brn' && userAbility !== 'guts',
+        frostbitten: !!ruleset.frostbite && userStatus === 'frz',
         physical,
         weather: Held.hasHook(ctx, user.mon, user.side, 'utilityUmbrella') || Held.hasHook(ctx, target.mon, target.side, 'utilityUmbrella') ? 1 : weatherMultiplier(userAbility === 'mega-sol' ? 'sun' : weather, moveType),
         final,
@@ -5813,7 +5818,7 @@ function applyResidual(ctx: BattleContext, c: Combatant, other: Combatant, event
   };
   const status = ability === 'poison-heal' && c.mon.status?.id === 'psn' ? undefined : c.mon.status?.id;
   const burn = content.ruleset.burnResidualFraction / (ability === 'heatproof' ? 2 : 1);
-  let fraction = status === 'brn' ? burn * (c.side === 'enemy' ? burnDamagePerk(ctx.perks) : burnDamageTakenPerk(ctx.perks)) : status === 'psn' ? content.ruleset.poisonResidualFraction : 0;
+  let fraction = status === 'frz' && content.ruleset.frostbite ? content.ruleset.burnResidualFraction : status === 'brn' ? burn * (c.side === 'enemy' ? burnDamagePerk(ctx.perks) : burnDamageTakenPerk(ctx.perks)) : status === 'psn' ? content.ruleset.poisonResidualFraction : 0;
   if (status === 'psn' && c.mon.status?.bad) {
     // Toxic: 1/16 more of max HP each turn, up to 15/16.
     c.mon.status.turns = Math.min(15, (c.mon.status.turns ?? 0) + 1);

@@ -2,6 +2,7 @@
 // this file only picks arguments (which item, which Pokémon, which choice) and shows the answer. The menu stays open between actions.
 
 import type Phaser from 'phaser';
+import { freeAbilities } from '../core/rules';
 import { benchList, bagBerryChoices, campOf, campProblem, CAMP, comboList, cursedRelics, gadgetUses, getAction, hasGadget, marketLeft, marketSlots, mysteryOdds, shelfMoves, shelfTypes, slotChoices, usedHere, type CampArgs } from '../core/camp';
 import { campers, campProblem as boxCampProblem, CAMP_RULES } from '../core/trainingCamp';
 import { mentorLessons } from '../core/mentorLesson';
@@ -142,7 +143,7 @@ function runAction(host: FieldMenuHost, id: string, group: number, back: Back): 
     const nm = (id2: string) => content.species.get(id2)?.name ?? id2;
     const rows: Choice[] = [
       ...questViews(run).map((q) => ({ label: q.name, desc: q.done ? 'Done: capsule earned' : `Win battles with a ${q.type[0]!.toUpperCase()}${q.type.slice(1)} Pokémon fighting: ${q.progress}/${q.need}` })),
-      ...(have > 0 ? run.party.flatMap((m) => capsuleSlots(content, m).map((a) => ({ label: `${nm(m.speciesId)}: ${content.abilities.get(a.name)?.name ?? a.name}`, desc: `Use a capsule (${have} left)`, uid: m.uid, slot: a.slot }))) : []),
+      ...(have > 0 || freeAbilities(run.rules) ? run.party.flatMap((m) => capsuleSlots(content, m).map((a) => ({ label: `${nm(m.speciesId)}: ${content.abilities.get(a.name)?.name ?? a.name}`, desc: freeAbilities(run.rules) ? 'Free with Ability Pick' : `Use a capsule (${have} left)`, uid: m.uid, slot: a.slot }))) : []),
     ];
     return choose(host, `Ability capsule (${have})`, rows, (i) => { const r = rows[i] as Choice & { uid?: string; slot?: number }; if (r.uid !== undefined) back(session.abilityCapsule(r.uid, r.slot!)); else again(); }, again);
   }

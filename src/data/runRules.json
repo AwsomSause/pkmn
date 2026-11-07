@@ -274,6 +274,42 @@
       "group": "party"
     },
     {
+      "id": "own-type-normal",
+      "name": "Own-Type Normal",
+      "status": "supported",
+      "bonus": 0.05,
+      "blurb": "Normal-type moves take the user's own type, for both sides. A Normal-type user is unchanged.",
+      "group": "normal-moves",
+      "rulesetFlags": { "normalFollowsUser": true }
+    },
+    {
+      "id": "frostbite",
+      "name": "Frostbite",
+      "status": "supported",
+      "bonus": 0.05,
+      "blurb": "Freezing causes Frostbite instead: no lost turns, but special attacks are halved and 1/16 HP is lost each turn.",
+      "group": "freeze-rule",
+      "rulesetFlags": { "frostbite": true }
+    },
+    {
+      "id": "drowsy",
+      "name": "Drowsy",
+      "status": "supported",
+      "bonus": 0.05,
+      "blurb": "Sleeping Pokémon are Drowsy instead: about half the time they can still act.",
+      "group": "sleep-rule",
+      "rulesetFlags": { "drowsy": true }
+    },
+    {
+      "id": "ability-pick",
+      "name": "Ability Pick",
+      "status": "supported",
+      "bonus": 0,
+      "blurb": "Camp's Ability Capsule is free and unlimited: every Pokémon can pick any of its own abilities, hidden one included.",
+      "group": "ability-pick",
+      "freeAbilities": true
+    },
+    {
       "id": "inverse-battle",
       "name": "Inverse Battle",
       "status": "supported",

@@ -67,6 +67,8 @@ export interface DamageInput {
   /** Damage roll from ruleset.randomFactorMin to 100 (inclusive). */
   randomFactor: number;
   burned: boolean;
+  /** Decades Frostbite: a frozen attacker's special hits are cut like a burn cuts physical ones. */
+  frostbitten?: boolean;
   physical: boolean;
   /** Rain or sun: 1.5 or 0.5 for Water and Fire moves (default 1). */
   weather?: number;
@@ -108,6 +110,7 @@ export function calcDamage(ruleset: Ruleset, input: DamageInput): number {
   if (input.stab) damage = pokeRound(damage, input.stabMultiplier ?? ruleset.stabMultiplier);
   damage = Math.floor(damage * input.effectiveness);
   if (input.burned && input.physical) damage = pokeRound(damage, ruleset.burnAttackMultiplier);
+  if (input.frostbitten && !input.physical) damage = pokeRound(damage, ruleset.burnAttackMultiplier);
   if (input.final !== undefined && input.final !== 1) damage = pokeRound(damage, input.final);
   return Math.max(1, damage);
 }

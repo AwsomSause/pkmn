@@ -4,6 +4,7 @@
 
 import type { Content, TypeName } from './contentSchema';
 import { abilityOf, getSpecies } from './pokemon';
+import { freeAbilities } from './rules';
 import type { PokemonInstance, RunState } from './state';
 
 export const CAPSULE_QUESTS: { type: TypeName; name: string; need: number }[] = [
@@ -56,10 +57,11 @@ export function capsuleSlots(content: Content, mon: PokemonInstance): { slot: nu
 export function useCapsule(content: Content, run: RunState, uid: string, slot: number): string {
   const mon = run.party.find((m) => m.uid === uid);
   if (!mon) throw new Error('Choose a Pokémon');
-  if (capsuleCount(run) <= 0) throw new Error('You have no Ability Capsule.');
+  const free = freeAbilities(run.rules);
+  if (!free && capsuleCount(run) <= 0) throw new Error('You have no Ability Capsule.');
   const choice = capsuleSlots(content, mon).find((a) => a.slot === slot);
   if (!choice) throw new Error('It cannot take that ability.');
   mon.abilitySlot = slot;
-  run.itemCounters = { ...run.itemCounters, capsules: capsuleCount(run) - 1 };
+  if (!free) run.itemCounters = { ...run.itemCounters, capsules: capsuleCount(run) - 1 };
   return `${getSpecies(content, mon.speciesId).name} now has ${content.abilities.get(choice.name)?.name ?? choice.name}!`;
 }

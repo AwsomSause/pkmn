@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { capsuleCount, capsuleSlots, CAPSULE_QUESTS, questViews, recordCapsuleProgress, useCapsule } from '../../src/core/capsuleQuests';
 import { createPokemon } from '../../src/core/pokemon';
 import { chooseStarter, createRun } from '../../src/core/run';
+import { makeRules, STANDARD_CHOICE } from '../../src/core/rules';
 import { content } from './helpers';
 
 function team() {
@@ -33,5 +34,20 @@ describe('Ability Capsule Quests (S55)', () => {
     useCapsule(content, run, 'two', slots[0]!.slot);
     expect(run.party[2]!.abilitySlot).toBe(slots[0]!.slot);
     expect(capsuleCount(run)).toBe(0);
+  });
+});
+
+describe('Ability Pick modifier', () => {
+  it('makes the capsule free and unlimited', () => {
+    const run = team();
+    run.rules = makeRules({ ...STANDARD_CHOICE, modifierIds: ['ability-pick'] });
+    const two = createPokemon(content, [...content.species.values()].find((s) => s.evolutionStage === 1 && s.abilities.normal.length > 1 && !s.form)!.id, 10, 'two');
+    run.party.push(two);
+    expect(capsuleCount(run)).toBe(0);
+    const slot = capsuleSlots(content, two)[0]!.slot;
+    useCapsule(content, run, 'two', slot);
+    expect(two.abilitySlot).toBe(slot);
+    expect(capsuleCount(run)).toBe(0);
+    expect(() => useCapsule(content, team(), 'f1', 0)).toThrow('no Ability Capsule');
   });
 });

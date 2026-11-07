@@ -1891,6 +1891,10 @@ export const RulesetSchema = z.object({
   paralysisSpeedMultiplier: z.number(),
   fullParalysisChance: z.number().min(0).max(1),
   freezeThawChance: z.number().min(0).max(1),
+  /** Decades rule options (set per run by a modifier, never in ruleset.json): Frostbite replaces Freeze, Drowsy replaces Sleep, Normal moves take the user's type. */
+  frostbite: z.boolean().optional(),
+  drowsy: z.boolean().optional(),
+  normalFollowsUser: z.boolean().optional(),
   sleepTurnsMin: z.number().int().min(1),
   sleepTurnsMax: z.number().int().min(1),
   struggleMoveId: z.string(),
