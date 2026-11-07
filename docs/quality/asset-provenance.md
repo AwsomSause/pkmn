@@ -153,3 +153,7 @@ Dataset: `src/data/moveTargets.json` (which moves hit both foes, everyone, the p
 | Path | Source | Original | Notes |
 |---|---|---|---|
 | `images/packs/vance/{surprised,nudge,explain,tilt,adjust,confident}.png` | the director's own PixelLab animations of Professor Vance (uploaded 2026-11-07 as `Professor.zip`) | six 800x640 sheets, 17 frames each of 160x160, 5 per row; copied unchanged and renamed | Used by the prologue (Beats 3, 4, 10). The zip's static `New Professer.png` portrait is not imported yet. |
+`images/packs/vance/{surprised,nudge,explain,tilt,adjust,confident}.png`: the director's own PixelLab animations of Professor Vance, uploaded 2026-11-07 as `Professor.zip` (six 800x640 sheets, 17 frames each of 160x160, 5 per row; copied unchanged and renamed). Used by the prologue (Beats 3, 4, 10). The zip's static `New Professer.png` portrait is not imported yet.
+
+## Learnset pass (2026-11-07)
+`tools/drive/gen9-family-pools.json` is the Gen 9 Learnsets Fusion Compendium 1.0.5 (`All Gen 9 Learnsets Compendium.txt`, Drive pack "Gen 9 Learnsets Fusion Compendium") as family -> move list. `tools/drive/learnset-pass.mjs` adds missing moves to `src/data/learnables.json` (`other`).

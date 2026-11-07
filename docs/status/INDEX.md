@@ -377,3 +377,4 @@ region-identities.md: Torren/Frontier/Trial/Grand + Hisui/Kitakami taglines and 
 - `story-starter-arcs.md`: Starter arcs for all lines (Signature II hook), Vulpix and Psyduck lines, and the Story Run now binds its Heartbond partner.
 - early-deaths-difficulties.md: flatter early curve, second-wind healing, Casual/Brutal/Mythic difficulties, +1 HP per level.
 - `story-quest-unlocks.md`: 13 quest arcs unlock the 14 Rare and Exceptional starter lines that had no route.
+- `drive-learnset-pass.md`: 110 final-stage species got 695 missing moves from the Gen 9 Learnsets Compendium.
