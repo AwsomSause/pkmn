@@ -82,6 +82,8 @@ export const UIE_ARENAS: readonly string[] = [
   'cave1', 'cave2', 'cave3', 'champion1', 'champion2', 'city', 'city_eve', 'city_night', 'distortion', 'elite1', 'elite2', 'elite3', 'elite4', 'elite5', 'elite6', 'elite7', 'elite8', 'field', 'field_eve', 'field_night', 'forest', 'forest_eve', 'forest_night', 'indoor1', 'indoor2', 'indoor3', 'rocky', 'rocky_eve', 'rocky_night', 'snow', 'snow_eve', 'snow_night', 'underwater', 'water', 'water_eve', 'water_night',
   // Pokemon Decades pack extras (tools/import-battlebacks.py): themed halls and day/eve/night variants.
   'beach', 'beach_eve', 'beach_night', 'bigtop', 'burning', 'cave4', 'clouds', 'clouds2', 'corrosivemist', 'darkcrystalcavern', 'deepforest', 'desert', 'desert_eve', 'desert_night', 'dimensional', 'dragonsden', 'electric', 'factory', 'fairytale', 'flowergarden', 'forest2', 'forest2_eve', 'forest2_night', 'haunted', 'newworld', 'psychic', 'starlight', 'whitecrystalcavern',
+  // Second batch (fan Graphics pack and Decades; bg-only ones borrow ground patches from a matching arena).
+  'arena', 'autumn', 'autumn_eve', 'autumn_night', 'battleparadise', 'battleparadise_eve', 'battleparadise_night', 'beachice', 'cave', 'cityruins', 'courtyard', 'dive', 'dragonden', 'forest3', 'forest4', 'gemstone', 'graveyard', 'grotto', 'indoorb', 'indoordark', 'industrial', 'inverse', 'lab', 'lake', 'lake_eve', 'lake_night', 'lava', 'marsh', 'meadow', 'meadow_eve', 'meadow_night', 'mine1', 'mine2', 'mountain', 'mountain2', 'route', 'safari', 'sand', 'sand_night', 'sewer', 'swamp', 'volcano', 'waterfall', 'waterfall2', 'woodland', 'woodland_eve', 'woodland_night',
 ];
 export const uieArenaId = (name: string) => `bg.uie.${name}`;
 

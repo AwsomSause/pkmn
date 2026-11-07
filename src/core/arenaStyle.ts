@@ -12,10 +12,13 @@ const FAMILY: Partial<Record<TypeName, string>> = {
 
 /** Type → themed halls from the Decades pack (half of a type's fights, picked by seed); day/eve/night versions where the pack has them. */
 const THEMED: Partial<Record<TypeName, readonly string[]>> = {
-  fire: ['burning'], electric: ['electric', 'factory'], psychic: ['psychic', 'whitecrystalcavern'], ghost: ['haunted', 'dimensional'],
-  dragon: ['dragonsden'], poison: ['corrosivemist'], fairy: ['fairytale', 'starlight'], steel: ['factory'], dark: ['darkcrystalcavern', 'dimensional'],
-  fighting: ['bigtop'], flying: ['clouds', 'clouds2'], ground: ['desert'], grass: ['flowergarden', 'deepforest'], bug: ['forest2', 'deepforest'],
-  water: ['beach'], rock: ['cave4'], normal: ['newworld'], ice: ['whitecrystalcavern'],
+  fire: ['burning', 'lava', 'volcano'], electric: ['electric', 'factory', 'industrial', 'lab'], psychic: ['psychic', 'whitecrystalcavern', 'lab'],
+  ghost: ['haunted', 'dimensional', 'graveyard', 'cityruins'], dragon: ['dragonsden', 'dragonden'], poison: ['corrosivemist', 'sewer', 'swamp', 'marsh'],
+  fairy: ['fairytale', 'starlight', 'gemstone', 'meadow'], steel: ['factory', 'industrial', 'mine2'], dark: ['darkcrystalcavern', 'dimensional', 'indoordark', 'grotto'],
+  fighting: ['bigtop', 'arena', 'battleparadise'], flying: ['clouds', 'clouds2', 'mountain2'], ground: ['desert', 'sand', 'mine1', 'cave'],
+  grass: ['flowergarden', 'deepforest', 'meadow', 'autumn', 'woodland'], bug: ['forest2', 'deepforest', 'forest3', 'forest4', 'woodland'],
+  water: ['beach', 'lake', 'waterfall', 'waterfall2', 'dive'], rock: ['cave4', 'mountain', 'mountain2', 'mine1', 'mine2'],
+  normal: ['newworld', 'route', 'courtyard', 'safari', 'woodland'], ice: ['whitecrystalcavern', 'beachice'],
 };
 
 export type TimeOfDay = 'day' | 'eve' | 'night';
