@@ -4,13 +4,13 @@ Written by `tests/unit/encounterDirector.test.ts` (part of `npm run check`): 100
 
 | Stage | Source | Intended levels | Levels seen | Samples | Species | Threat avg / max | Draws rejected | Fallbacks | Invalid | Locked picks | One-hit KO |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | wild | 4–6 | 4, 5, 6 | 10000 | 102 | 52.771 / 86 (budget 88.003) | 3.5% | 0 | 0 | 0 | 0.00% |
-| 1 | trainer | 4–6 | 5, 6, 7 | 2000 | 108 | 53.263 / 102 (budget 105.56) | 1.3% | 0 | 0 | 0 | 0.00% |
-| 2 | wild | 9–11 | 9, 10, 11 | 10000 | 263 | 56.371 / 91 (budget 95.989) | 0.3% | 0 | 0 | 0 | 0.00% |
-| 2 | trainer | 9–11 | 10, 11, 12 | 4000 | 265 | 57.745 / 112 (budget 118.567) | 0.5% | 0 | 0 | 0 | 0.00% |
-| 3 | wild | 14–16 | 14, 15, 16 | 10000 | 330 | 61.681 / 104 (budget 103.994) | 0.7% | 0 | 0 | 0 | 0.00% |
-| 3 | trainer | 14–16 | 15, 16, 17 | 6000 | 342 | 65.394 / 134 (budget 131.602) | 1.1% | 0 | 0 | 0 | 0.00% |
-| 4 | wild | 19–21 | 19, 20, 21 | 10000 | 354 | 66.004 / 113 (budget 111.993) | 1.2% | 0 | 0 | 0 | 0.00% |
-| 4 | trainer | 19–21 | 20, 21, 22 | 6000 | 363 | 75.163 / 140 (budget 144.588) | 1.0% | 0 | 0 | 0 | 0.00% |
+| 1 | wild | 4–5 | 4, 5 | 10000 | 85 | 53.253 / 79 (budget 86.937) | 5.5% | 0 | 0 | 0 | 0.00% |
+| 1 | trainer | 4–5 | 4, 5, 6 | 2000 | 87 | 54.846 / 108 (budget 102.96) | 22.1% | 47 | 0 | 0 | 0.00% |
+| 2 | wild | 6–8 | 6, 7, 8 | 10000 | 141 | 54.684 / 90 (budget 91.189) | 2.0% | 0 | 0 | 0 | 0.00% |
+| 2 | trainer | 6–8 | 7, 8, 9 | 4000 | 145 | 56 / 106 (budget 110.767) | 0.5% | 0 | 0 | 0 | 0.00% |
+| 3 | wild | 10–12 | 10, 11, 12 | 10000 | 294 | 58.801 / 99 (budget 97.594) | 0.4% | 0 | 0 | 0 | 0.00% |
+| 3 | trainer | 10–12 | 11, 12, 13 | 6000 | 295 | 60.244 / 114 (budget 121.197) | 0.4% | 0 | 0 | 0 | 0.00% |
+| 4 | wild | 14–16 | 14, 15, 16 | 10000 | 330 | 62.801 / 104 (budget 103.993) | 0.9% | 0 | 0 | 0 | 0.00% |
+| 4 | trainer | 14–16 | 15, 16, 17 | 6000 | 343 | 67.027 / 134 (budget 131.58) | 0.9% | 0 | 0 | 0 | 0.00% |
 
 One-hit KO = the foe's best attack at a max roll, neutral type, no crit, beats an all-70 Pokémon of the same level. Party loss and win rates are measured by the playtest bot (`node tools/playtest.ts`, `docs/quality/playtest/`), not here.

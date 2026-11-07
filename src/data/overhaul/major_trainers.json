@@ -8,7 +8,7 @@
    "name": "Red",
    "role": "protagonist",
    "region": "Kanto",
-   "type": "Normal",
+   "type": "Electric",
    "ace": "Pikachu",
    "voice": "gruff",
    "traits": [
@@ -25,7 +25,7 @@
    "role": "champion",
    "region": "Kanto",
    "type": "Normal",
-   "ace": "Blastoise",
+   "ace": "Pidgeot",
    "voice": "boastful",
    "traits": [
     "taunting rivals",
@@ -33,7 +33,7 @@
    ],
    "motto": "Smell ya later, loser.",
    "bossId": "blue",
-   "aceId": "blastoise"
+   "aceId": "pidgeot"
   },
   {
    "id": "brock",
@@ -232,8 +232,8 @@
    "name": "Professor Oak",
    "role": "mentor",
    "region": "Kanto",
-   "type": "Normal",
-   "ace": "Nidoking",
+   "type": "Dragon",
+   "ace": "Dragonite",
    "voice": "formal",
    "traits": [
     "field research",
@@ -241,7 +241,7 @@
    ],
    "motto": "The world of Pokémon is vast.",
    "bossId": "professor-oak",
-   "aceId": "nidoking"
+   "aceId": "dragonite"
   },
   {
    "id": "falkner",
@@ -345,7 +345,7 @@
    "role": "gym",
    "region": "Johto",
    "type": "Ice",
-   "ace": "Piloswine",
+   "ace": "Mamoswine",
    "voice": "gruff",
    "traits": [
     "decades of experience",
@@ -353,7 +353,7 @@
    ],
    "motto": "Experience is the real strength.",
    "bossId": "pryce",
-   "aceId": "piloswine"
+   "aceId": "mamoswine"
   },
   {
    "id": "clair",
@@ -408,7 +408,7 @@
    "name": "Silver",
    "role": "rival",
    "region": "Johto",
-   "type": "Dark",
+   "type": "Water",
    "ace": "Feraligatr",
    "voice": "menacing",
    "traits": [
@@ -440,7 +440,7 @@
    "name": "Lyra",
    "role": "protagonist",
    "region": "Johto",
-   "type": "Normal",
+   "type": "Water",
    "ace": "Marill",
    "voice": "cheerful",
    "traits": [
@@ -1320,7 +1320,7 @@
    "name": "Bianca",
    "role": "rival",
    "region": "Unova",
-   "type": "Normal",
+   "type": "Psychic",
    "ace": "Musharna",
    "voice": "nervous",
    "traits": [
@@ -1336,7 +1336,7 @@
    "name": "N",
    "role": "villain",
    "region": "Unova",
-   "type": "Dragon",
+   "type": "Dark",
    "ace": "Zoroark",
    "voice": "poetic",
    "traits": [
@@ -1368,8 +1368,8 @@
    "name": "Hilbert",
    "role": "protagonist",
    "region": "Unova",
-   "type": "Fire",
-   "ace": "Emboar",
+   "type": "Water",
+   "ace": "Samurott",
    "voice": "cheerful",
    "traits": [
     "new places",
@@ -1377,15 +1377,15 @@
    ],
    "motto": "I'll do my best!",
    "bossId": "hilbert",
-   "aceId": "emboar"
+   "aceId": "samurott"
   },
   {
    "id": "hilda",
    "name": "Hilda",
    "role": "protagonist",
    "region": "Unova",
-   "type": "Water",
-   "ace": "Samurott",
+   "type": "Grass",
+   "ace": "Serperior",
    "voice": "cheerful",
    "traits": [
     "new cities",
@@ -1393,7 +1393,7 @@
    ],
    "motto": "Let's go together!",
    "bossId": "hilda",
-   "aceId": "samurott"
+   "aceId": "serperior"
   },
   {
    "id": "viola",
@@ -1608,7 +1608,7 @@
    "name": "Lysandre",
    "role": "villain",
    "region": "Kalos",
-   "type": "Fire",
+   "type": "Water",
    "ace": "Gyarados",
    "voice": "menacing",
    "traits": [
@@ -1624,7 +1624,7 @@
    "name": "Serena",
    "role": "protagonist",
    "region": "Kalos",
-   "type": "Fairy",
+   "type": "Fire",
    "ace": "Braixen",
    "voice": "cheerful",
    "traits": [
@@ -1816,7 +1816,7 @@
    "name": "Lusamine",
    "role": "villain",
    "region": "Alola",
-   "type": "Poison",
+   "type": "Fairy",
    "ace": "Clefable",
    "voice": "menacing",
    "traits": [
@@ -2120,8 +2120,8 @@
    "name": "Victor",
    "role": "protagonist",
    "region": "Galar",
-   "type": "Fire",
-   "ace": "Cinderace",
+   "type": "Ground",
+   "ace": "Ursaluna",
    "voice": "cheerful",
    "traits": [
     "big dreams",
@@ -2129,7 +2129,7 @@
    ],
    "motto": "Let's do this!",
    "bossId": "victor",
-   "aceId": "cinderace"
+   "aceId": "ursaluna"
   },
   {
    "id": "katy",
@@ -2312,7 +2312,7 @@
    "name": "Geeta",
    "role": "champion",
    "region": "Paldea",
-   "type": "Normal",
+   "type": "Rock",
    "ace": "Glimmora",
    "voice": "formal",
    "traits": [
@@ -2344,7 +2344,7 @@
    "name": "Arven",
    "role": "ally",
    "region": "Paldea",
-   "type": "Normal",
+   "type": "Dark",
    "ace": "Mabosstiff",
    "voice": "gruff",
    "traits": [
@@ -2360,7 +2360,7 @@
    "name": "Penny",
    "role": "ally",
    "region": "Paldea",
-   "type": "Normal",
+   "type": "Dark",
    "ace": "Umbreon",
    "voice": "nervous",
    "traits": [
@@ -2376,7 +2376,7 @@
    "name": "Clavell",
    "role": "mentor",
    "region": "Paldea",
-   "type": "Normal",
+   "type": "Water",
    "ace": "Quaquaval",
    "voice": "formal",
    "traits": [
@@ -2408,8 +2408,8 @@
    "name": "Carmine",
    "role": "rival",
    "region": "Paldea",
-   "type": "Poison",
-   "ace": "Ogerpon",
+   "type": "Grass",
+   "ace": "Sinistcha",
    "voice": "nervous",
    "traits": [
     "a loud sibling",
@@ -2417,15 +2417,15 @@
    ],
    "motto": "I'll do better.",
    "bossId": "carmine",
-   "aceId": "ogerpon"
+   "aceId": "sinistcha"
   },
   {
    "id": "kieran",
    "name": "Kieran",
    "role": "rival",
    "region": "Paldea",
-   "type": "Dark",
-   "ace": "Poliwrath",
+   "type": "Grass",
+   "ace": "Ogerpon",
    "voice": "nervous",
    "traits": [
     "late-night training",
@@ -2433,7 +2433,7 @@
    ],
    "motto": "I'm going to be strong.",
    "bossId": "kieran",
-   "aceId": "poliwrath"
+   "aceId": "ogerpon"
   },
   {
    "id": "giacomo",
@@ -2441,7 +2441,7 @@
    "role": "admin",
    "region": "Paldea",
    "type": "Dark",
-   "ace": "Revavroom",
+   "ace": "Greninja",
    "voice": "boastful",
    "traits": [
     "mixing music",
@@ -2449,7 +2449,7 @@
    ],
    "motto": "Let's crank it up!",
    "bossId": "giacomo",
-   "aceId": "revavroom"
+   "aceId": "greninja"
   },
   {
    "id": "mela",
@@ -2489,7 +2489,7 @@
    "role": "admin",
    "region": "Paldea",
    "type": "Fairy",
-   "ace": "Revavroom",
+   "ace": "Wigglytuff",
    "voice": "cheerful",
    "traits": [
     "sweet words",
@@ -2497,7 +2497,7 @@
    ],
    "motto": "Let's play nice.",
    "bossId": "ortega",
-   "aceId": "revavroom"
+   "aceId": "wigglytuff"
   },
   {
    "id": "eri",
@@ -2505,7 +2505,7 @@
    "role": "admin",
    "region": "Paldea",
    "type": "Fighting",
-   "ace": "Revavroom",
+   "ace": "Annihilape",
    "voice": "gruff",
    "traits": [
     "rude greetings",
@@ -2513,15 +2513,15 @@
    ],
    "motto": "Out of my way.",
    "bossId": "eri",
-   "aceId": "revavroom"
+   "aceId": "annihilape"
   },
   {
    "id": "cassiopeia",
    "name": "Cassiopeia",
    "role": "admin",
    "region": "Paldea",
-   "type": "Dark",
-   "ace": "Revavroom",
+   "type": "Fairy",
+   "ace": "Sylveon",
    "voice": "formal",
    "traits": [
     "quiet orders",
@@ -2529,14 +2529,14 @@
    ],
    "motto": "I'll follow my orders.",
    "bossId": null,
-   "aceId": "revavroom"
+   "aceId": "sylveon"
   },
   {
    "id": "cyrano",
    "name": "Cyrano",
    "role": "mentor",
    "region": "Paldea",
-   "type": "Normal",
+   "type": "Electric",
    "ace": "Pawmot",
    "voice": "formal",
    "traits": [
@@ -2552,7 +2552,7 @@
    "name": "Sada",
    "role": "villain",
    "region": "Paldea",
-   "type": "Psychic",
+   "type": "Dragon",
    "ace": "Koraidon",
    "voice": "formal",
    "traits": [
@@ -2568,7 +2568,7 @@
    "name": "Turo",
    "role": "villain",
    "region": "Paldea",
-   "type": "Psychic",
+   "type": "Dragon",
    "ace": "Miraidon",
    "voice": "formal",
    "traits": [
@@ -2664,7 +2664,7 @@
    "name": "Mars",
    "role": "admin",
    "region": "Sinnoh",
-   "type": "Dark",
+   "type": "Normal",
    "ace": "Purugly",
    "voice": "menacing",
    "traits": [
@@ -2696,7 +2696,7 @@
    "name": "Saturn",
    "role": "admin",
    "region": "Sinnoh",
-   "type": "Dark",
+   "type": "Poison",
    "ace": "Toxicroak",
    "voice": "menacing",
    "traits": [
@@ -2792,8 +2792,8 @@
    "name": "Courtney",
    "role": "admin",
    "region": "Hoenn",
-   "type": "Fire",
-   "ace": "Camerupt",
+   "type": "Poison",
+   "ace": "Weezing",
    "voice": "menacing",
    "traits": [
     "muttered chants",
@@ -2801,7 +2801,7 @@
    ],
    "motto": "...Magma.",
    "bossId": "courtney",
-   "aceId": "camerupt"
+   "aceId": "weezing"
   },
   {
    "id": "wally",
@@ -2824,8 +2824,8 @@
    "name": "Lillie",
    "role": "ally",
    "region": "Alola",
-   "type": "Ice",
-   "ace": "Vulpix-Alola",
+   "type": "Fairy",
+   "ace": "Clefable",
    "voice": "nervous",
    "traits": [
     "reading",
@@ -2833,7 +2833,7 @@
    ],
    "motto": "I'll stay with you.",
    "bossId": "lillie",
-   "aceId": "vulpix-alola"
+   "aceId": "clefable"
   },
   {
    "id": "selene",
@@ -2904,8 +2904,8 @@
    "name": "Looker",
    "role": "ally",
    "region": "Sinnoh",
-   "type": "Normal",
-   "ace": "Mr. Mime",
+   "type": "Dragon",
+   "ace": "Kommo-o",
    "voice": "eccentric",
    "traits": [
     "disguises",
@@ -2913,14 +2913,14 @@
    ],
    "motto": "The truth is out there.",
    "bossId": "looker",
-   "aceId": "mr-mime"
+   "aceId": "kommo-o"
   },
   {
    "id": "elm",
    "name": "Elm",
    "role": "mentor",
    "region": "Johto",
-   "type": "Normal",
+   "type": "Water",
    "ace": "Totodile",
    "voice": "nervous",
    "traits": [
@@ -2936,8 +2936,8 @@
    "name": "Birch",
    "role": "mentor",
    "region": "Hoenn",
-   "type": "Normal",
-   "ace": "Zigzagoon",
+   "type": "Grass",
+   "ace": "Breloom",
    "voice": "cheerful",
    "traits": [
     "field research",
@@ -2945,7 +2945,7 @@
    ],
    "motto": "Hurry, hurry!",
    "bossId": "birch",
-   "aceId": "zigzagoon"
+   "aceId": "breloom"
   },
   {
    "id": "rowan",
@@ -2984,7 +2984,7 @@
    "name": "Sycamore",
    "role": "mentor",
    "region": "Kalos",
-   "type": "Normal",
+   "type": "Fire",
    "ace": "Charizard",
    "voice": "formal",
    "traits": [
@@ -3016,7 +3016,7 @@
    "name": "Sonia",
    "role": "ally",
    "region": "Galar",
-   "type": "Fairy",
+   "type": "Electric",
    "ace": "Yamper",
    "voice": "cheerful",
    "traits": [
@@ -3032,7 +3032,7 @@
    "name": "Burnet",
    "role": "mentor",
    "region": "Alola",
-   "type": "Normal",
+   "type": "Rock",
    "ace": "Rockruff",
    "voice": "cheerful",
    "traits": [
@@ -3048,8 +3048,8 @@
    "name": "Palmer",
    "role": "frontier",
    "region": "Hoenn",
-   "type": "Normal",
-   "ace": "Snorlax",
+   "type": "Psychic",
+   "ace": "Cresselia",
    "voice": "gruff",
    "traits": [
     "tough rooms",
@@ -3057,7 +3057,7 @@
    ],
    "motto": "Prove yourself.",
    "bossId": "palmer",
-   "aceId": "snorlax"
+   "aceId": "cresselia"
   },
   {
    "id": "brandon",
@@ -3145,7 +3145,7 @@
    "role": "frontier",
    "region": "Hoenn",
    "type": "Bug",
-   "ace": "Heracross",
+   "ace": "Pinsir",
    "voice": "cheerful",
    "traits": [
     "simple joys",
@@ -3153,14 +3153,14 @@
    ],
    "motto": "Let's get started!",
    "bossId": "noland",
-   "aceId": "heracross"
+   "aceId": "pinsir"
   },
   {
    "id": "lucy",
    "name": "Lucy",
    "role": "frontier",
    "region": "Hoenn",
-   "type": "Normal",
+   "type": "Poison",
    "ace": "Seviper",
    "voice": "formal",
    "traits": [
@@ -3176,8 +3176,8 @@
    "name": "Darach",
    "role": "frontier",
    "region": "Kalos",
-   "type": "Dragon",
-   "ace": "Kyurem",
+   "type": "Fire",
+   "ace": "Entei",
    "voice": "formal",
    "traits": [
     "a perfect bow",
@@ -3185,7 +3185,7 @@
    ],
    "motto": "Pleased to meet you.",
    "bossId": "darach",
-   "aceId": "kyurem"
+   "aceId": "entei"
   },
   {
    "id": "argenta",
@@ -3193,7 +3193,7 @@
    "role": "frontier",
    "region": "Kalos",
    "type": "Steel",
-   "ace": "Escavalier",
+   "ace": "Skarmory",
    "voice": "formal",
    "traits": [
     "quiet focus",
@@ -3201,7 +3201,7 @@
    ],
    "motto": "I fight with honor.",
    "bossId": "argenta",
-   "aceId": "escavalier"
+   "aceId": "skarmory"
   },
   {
    "id": "thorton",
@@ -3224,8 +3224,8 @@
    "name": "Dahlia",
    "role": "frontier",
    "region": "Sinnoh",
-   "type": "Poison",
-   "ace": "Roserade",
+   "type": "Electric",
+   "ace": "Zapdos",
    "voice": "formal",
    "traits": [
     "hidden poison",
@@ -3233,14 +3233,14 @@
    ],
    "motto": "Bloom.",
    "bossId": "dahlia",
-   "aceId": "roserade"
+   "aceId": "zapdos"
   },
   {
    "id": "cheryl",
    "name": "Cheryl",
    "role": "ally",
    "region": "Sinnoh",
-   "type": "Grass",
+   "type": "Normal",
    "ace": "Chansey",
    "voice": "nervous",
    "traits": [
@@ -3272,8 +3272,8 @@
    "name": "Buck",
    "role": "ally",
    "region": "Sinnoh",
-   "type": "Fire",
-   "ace": "Infernape",
+   "type": "Water",
+   "ace": "Suicune",
    "voice": "gruff",
    "traits": [
     "training",
@@ -3281,7 +3281,7 @@
    ],
    "motto": "Keep at it.",
    "bossId": "buck",
-   "aceId": "infernape"
+   "aceId": "suicune"
   },
   {
    "id": "zinnia",
@@ -3304,7 +3304,7 @@
    "name": "Lisia",
    "role": "ally",
    "region": "Hoenn",
-   "type": "Water",
+   "type": "Dragon",
    "ace": "Altaria",
    "voice": "cheerful",
    "traits": [
@@ -3336,8 +3336,8 @@
    "name": "Rosa",
    "role": "protagonist",
    "region": "Unova",
-   "type": "Water",
-   "ace": "Samurott",
+   "type": "Grass",
+   "ace": "Serperior",
    "voice": "cheerful",
    "traits": [
     "new towns",
@@ -3345,14 +3345,14 @@
    ],
    "motto": "Let's go!",
    "bossId": "rosa",
-   "aceId": "samurott"
+   "aceId": "serperior"
   },
   {
    "id": "kris",
    "name": "Kris",
    "role": "ally",
    "region": "Johto",
-   "type": "Normal",
+   "type": "Grass",
    "ace": "Meganium",
    "voice": "cheerful",
    "traits": [
@@ -3416,7 +3416,7 @@
    "name": "Green",
    "role": "rival",
    "region": "Kanto",
-   "type": "Normal",
+   "type": "Water",
    "ace": "Blastoise",
    "voice": "boastful",
    "traits": [

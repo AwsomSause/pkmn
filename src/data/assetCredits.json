@@ -1,0 +1,38 @@
+{
+ "note": "Design v2 Part AF: one row per source, grouped into the credits page sections (in order). Read by the end credits and Settings > Asset credits. Per-file rows stay in docs/quality/asset-provenance.md.",
+ "sections": [
+  { "id": "direction", "title": "Direction", "entries": [
+   { "name": "Kice", "role": "Director and art direction" }
+  ] },
+  { "id": "art", "title": "Art made for this game", "entries": [
+   { "name": "PixelLab Pro Flash", "role": "Generated icons and story art, art directed by Kice", "licence": "PixelLab terms (confirm before any public build)", "generated": true },
+   { "name": "Kice", "role": "Original pixel art" },
+   { "name": "Project tools", "role": "Recoloured stand-in sprites for the story species, chiptune battle music" }
+  ] },
+  { "id": "packs", "title": "Sprites, music and packs", "entries": [
+   { "name": "PokeRogue and its asset packs", "role": "Pokémon sprites, arenas, UI, music", "licence": "AGPL-3.0 code; Nintendo/Game Freak material" },
+   { "name": "Pokémon Essentials (Maruno and contributors)", "role": "Engine kit graphics, item icons, trainer sprites, music" },
+   { "name": "Elite Battle: DX (Luka S.J. and contributors)", "role": "Battle UI, transitions, egg hatching" },
+   { "name": "Lucidious89", "role": "Deluxe Battle Kit, Enhanced Battle UI, Z-Power, Dynamax, Terastallization and animated Pokémon add-ons, Raid Battles" },
+   { "name": "Pokémon Memories fan game", "role": "Battle backgrounds, battle UI, Town Map" },
+   { "name": "Akizakura16, PixelMister, DiegoWT", "role": "Overworld tiles and Gen 5 overworld characters" },
+   { "name": "Following Pokémon EX contributors", "role": "Overworld Pokémon sprites" },
+   { "name": "PRAS / PRSFX", "role": "Move animations and sound effects" },
+   { "name": "wrigty12 and Luka S.J.", "role": "Event Indicators" },
+   { "name": "Trainer sprite rippers and the Google Drive packs", "role": "Trainer, boss and placeholder story sprites", "placeholder": true }
+  ] },
+  { "id": "fonts", "title": "Fonts", "entries": [
+   { "name": "Pokémon Emerald Pro and pkmnems fonts", "role": "Game text" }
+  ] },
+  { "id": "code", "title": "Code libraries", "entries": [
+   { "name": "Phaser", "role": "Game engine", "licence": "MIT" },
+   { "name": "Vite", "role": "Build", "licence": "MIT" },
+   { "name": "Zod", "role": "Data and save checks", "licence": "MIT" },
+   { "name": "Vitest and Playwright", "role": "Tests", "licence": "MIT / Apache-2.0" }
+  ] },
+  { "id": "thanks", "title": "Special thanks", "entries": [
+   { "name": "Claude", "role": "Built with Claude" },
+   { "name": "Nintendo, Game Freak and Creatures Inc.", "role": "Pokémon and its characters belong to them" }
+  ] }
+ ]
+}

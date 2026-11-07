@@ -55,6 +55,11 @@ export const DOMAIN_EVENT_TYPES = [
   /** Rival world progression (core/rivals/progression.ts): a rival won or lost off-screen, took a badge or rank, or fought you or another rival. data.rival, data.kind. */
   'rivalProgress',
   'runEnded',
+  /** Story Bus (Design v2 Part XII, core/story/bus.ts): a Story Run scene was played (data.event, data.choice), an arc moved (data.arc, data.state), a Lore entry was learned (data.lore, data.state), the Director replanned (data.reason). */
+  'storyChoice',
+  'arcState',
+  'loreUnlocked',
+  'directorReplan',
 ] as const;
 export const DomainEventTypeSchema = z.enum(DOMAIN_EVENT_TYPES);
 export type DomainEventType = z.infer<typeof DomainEventTypeSchema>;

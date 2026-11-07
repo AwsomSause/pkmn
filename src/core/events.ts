@@ -157,6 +157,8 @@ export function conditionMet(content: Content, run: RunState, c: EventCondition)
       return run.party.some((m) => m.blissful);
     case 'partyShadow':
       return run.party.some((m) => m.shadow);
+    case 'storyRun':
+      return !!run.story.v2;
     case 'oldFoe':
       return oldFoe(run) !== null;
     case 'feud':
@@ -299,6 +301,8 @@ export function conditionText(content: Content, c: EventCondition): string {
       return 'Needs a Blissful Pokémon in your party';
     case 'partyShadow':
       return 'Needs a Shadow Pokémon in your party';
+    case 'storyRun':
+      return 'Only in a Story Run';
     case 'oldFoe':
       return 'Needs a wild Pokémon that once beat you';
     case 'feud':

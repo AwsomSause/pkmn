@@ -53,7 +53,8 @@
        "outcome": "a healing item",
        "sets": [
         "jam_bought"
-       ]
+       ],
+       "needs": "stand_patron"
       },
       {
        "id": "roadside-stand-s2-o2",
@@ -247,7 +248,8 @@
        "outcome": "a short wild water battle",
        "sets": [
         "fisher_joined"
-       ]
+       ],
+       "needs": "bait_gift"
       }
      ]
     }
@@ -744,7 +746,8 @@
        "outcome": "a slightly larger boost",
        "sets": [
         "gadget_v2"
-       ]
+       ],
+       "needs": "gadget_tested"
       },
       {
        "id": "tinkering-kid-s2-o2",
@@ -1887,7 +1890,8 @@
        "outcome": "a reward and a thank-you",
        "sets": [
         "pack_returned"
-       ]
+       ],
+       "needs": "pack_read"
       },
       {
        "id": "abandoned-backpack-s2-o2",
@@ -1895,7 +1899,8 @@
        "outcome": "a smaller reward",
        "sets": [
         "pack_apologized"
-       ]
+       ],
+       "needs": "pack_taken"
       },
       {
        "id": "abandoned-backpack-s2-o3",
@@ -2158,7 +2163,8 @@
        "outcome": "an item",
        "sets": [
         "rival_note_battle"
-       ]
+       ],
+       "needs": "rival_note_read"
       },
       {
        "id": "rival-note-s2-o2",
@@ -2858,7 +2864,8 @@
        "outcome": "a hint for the next biome",
        "sets": [
         "inn_map"
-       ]
+       ],
+       "needs": "inn_stay"
       },
       {
        "id": "snowed-in-inn-s2-o2",
@@ -3950,7 +3957,8 @@
        "outcome": "stage two",
        "sets": [
         "tt_rematch"
-       ]
+       ],
+       "needs": "tt_battle"
       },
       {
        "id": "traveling-trainer-s2-o2",
@@ -4109,7 +4117,8 @@
        "outcome": "a double battle",
        "sets": [
         "duelist_double"
-       ]
+       ],
+       "needs": "duelist_accept"
       },
       {
        "id": "crossroads-duelist-s2-o2",
@@ -4281,7 +4290,8 @@
        "outcome": "a flag about the secret",
        "sets": [
         "letter_kept"
-       ]
+       ],
+       "needs": "letter_read"
       }
      ]
     },
@@ -4518,7 +4528,8 @@
        "outcome": "a rescue battle",
        "sets": [
         "expedition_rescue"
-       ]
+       ],
+       "needs": "expedition_supplies"
       },
       {
        "id": "lost-expedition-s2-o2",
@@ -4753,7 +4764,8 @@
        "outcome": "harder mirror match",
        "sets": [
         "mirror_hard"
-       ]
+       ],
+       "needs": "mirror_battle"
       },
       {
        "id": "mirror-trainer-s2-o2",
@@ -6017,7 +6029,8 @@
        "outcome": "a stamina test",
        "sets": [
         "marathon_push"
-       ]
+       ],
+       "needs": "marathon_join"
       },
       {
        "id": "marathon-of-three-s2-o2",
@@ -6110,7 +6123,8 @@
        "outcome": "a compromise",
        "sets": [
         "feud_compromise"
-       ]
+       ],
+       "needs": "feud_mediate"
       }
      ]
     },
@@ -8572,7 +8586,8 @@
        "outcome": "a harder duel",
        "sets": [
         "nn_hard"
-       ]
+       ],
+       "needs": "nn_battle"
       },
       {
        "id": "the-trainer-with-no-name-s2-o2",
@@ -8726,7 +8741,8 @@
        "outcome": "a strange coin",
        "sets": [
         "bb_coin"
-       ]
+       ],
+       "needs": "bb_lend"
       },
       {
        "id": "the-borrowed-badge-s2-o2",
@@ -9184,7 +9200,8 @@
        "outcome": "a catchable companion",
        "sets": [
         "fm_befriend"
-       ]
+       ],
+       "needs": "fm_berry"
       },
       {
        "id": "the-friend-you-didnt-make-s2-o2",

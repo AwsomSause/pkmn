@@ -1474,6 +1474,751 @@
      "text": "Team Star has camped out in ruins where something ancient roars."
     }
    ]
+  },
+  {
+   "id": "marauders",
+   "name": "The Mythic Marauders",
+   "color": "#5a4a2a",
+   "style": "secret",
+   "front": "Halvard Heritage Trust",
+   "philosophy": "Legends hold the next step for humanity. People and Pokémon must not just live together; they must combine.",
+   "motivation": "Evander Ashgrove lost his partner to a Legend's rampage and swore people would one day stand beside Legends as equals.",
+   "goal": "awaken Equinar and bind its resonance to a human with the Resonance Engine",
+   "ranks": {
+    "grunt": {
+     "name": "Marauder Hound",
+     "sprite": "trainer.pr/macro_grunt_m",
+     "species": [
+      "zubat",
+      "houndour",
+      "sneasel",
+      "golbat",
+      "houndoom",
+      "crobat"
+     ],
+     "lines": {
+      "first": "\"The Hounds don't ask twice. Hand over anything with old blood in it.\"",
+      "beaten": "\"You again. Voss docked my pay because of you.\"",
+      "winning": "\"Last time you ran. Run again.\"",
+      "respect": "\"Fine. Ascension can wait one more day.\""
+     }
+    },
+    "specialist": {
+     "name": "Dr. Lysandra Quill",
+     "sprite": "trainer.pr/scientist_f",
+     "species": [
+      "ralts",
+      "gothita",
+      "kirlia",
+      "gothorita",
+      "gardevoir",
+      "gothitelle"
+     ],
+     "lines": {
+      "first": "\"Your partner's resonance is remarkable. Hold still.\"",
+      "beaten": "\"My readings were wrong about you. That has not happened in years.\"",
+      "winning": "\"The numbers favoured me. They usually do.\"",
+      "respect": "\"Vance's student, then. He always did pick well.\""
+     }
+    },
+    "executive": {
+     "name": "Marek Voss",
+     "sprite": "trainer.drayton",
+     "species": [
+      "sneasel",
+      "houndour",
+      "murkrow",
+      "weavile",
+      "houndoom",
+      "honchkrow"
+     ],
+     "lines": {
+      "first": "\"I track Legends for a living. You are not hard to find.\"",
+      "beaten": "\"You cost me a catch. I keep a list of those.\"",
+      "winning": "\"Same as before. The hunted never learn.\"",
+      "respect": "\"You run like prey and fight like a hunter. Annoying.\""
+     }
+    },
+    "leader": {
+     "name": "Evander Ashgrove",
+     "sprite": "boss.volo",
+     "species": [
+      "absol",
+      "gengar",
+      "honchkrow",
+      "spiritomb",
+      "metagross",
+      "tyranitar"
+     ],
+     "lines": {
+      "first": "\"I am not asking you to like me. I am asking you to understand.\"",
+      "beaten": "\"You stopped me once. The Equation does not care.\"",
+      "winning": "\"You were not ready. Few are.\"",
+      "respect": "\"Perhaps the Key was never meant to be taken. Perhaps it says yes.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "shadow",
+    "text": "The Hounds bring their captives: the first Pokémon of a Marauder team is a Shadow Pokémon you can snag."
+   },
+   "spoils": [
+    "binding-band",
+    "grip-claw",
+    "shed-shell",
+    "big-root"
+   ],
+   "legendary": [
+    "equinar"
+   ],
+   "ops": [
+    {
+     "id": "lineage-raids",
+     "kind": "steal",
+     "name": "Lineage Raids",
+     "text": "The Hounds are taking Pokémon of Legendary lineage: Dratini, Larvitar, Beldum."
+    },
+    {
+     "id": "choir-sermons",
+     "kind": "recruit",
+     "name": "Choir Sermons",
+     "text": "Cass Verrin's Choir hands out pamphlets about Ascension in the square."
+    },
+    {
+     "id": "ferry-runs",
+     "kind": "trade",
+     "name": "Ferry Runs",
+     "text": "Rennick's Ferrymen move sealed crates through the port at night."
+    },
+    {
+     "id": "engine-works",
+     "kind": "facility",
+     "name": "The Resonance Engine",
+     "text": "Chalk researchers are assembling something huge inside an old observatory."
+    }
+   ],
+   "storyOnly": true
+  },
+  {
+   "id": "choir",
+   "name": "The Hollow Choir",
+   "color": "#6b6b7a",
+   "style": "secret",
+   "front": "Hallow Marrow Bell Society",
+   "philosophy": "The world has grown too loud to hear what matters. Quiet, and the lost will be led home.",
+   "motivation": "The Cantor believes the Long Night was a prophecy, and that a second one would be a mercy.",
+   "goal": "wake the Hollow Shepherd and bring a second Long Night",
+   "ranks": {
+    "grunt": {
+     "name": "Choir Acolyte",
+     "sprite": "trainer.hex_maniac",
+     "species": [
+      "duskull",
+      "gastly",
+      "misdreavus",
+      "dusclops",
+      "haunter",
+      "mismagius"
+     ],
+     "lines": {
+      "first": "\"Hush. You are very loud.\"",
+      "beaten": "\"You again. The bells were quiet all night after you left.\"",
+      "winning": "\"You fell silent last time. It suited you.\"",
+      "respect": "\"Your Pokémon sing well. I will not tell the Cantor I said so.\""
+     }
+    },
+    "specialist": {
+     "name": "Sister Pennant",
+     "sprite": "trainer.shauntal",
+     "species": [
+      "drifloon",
+      "shuppet",
+      "litwick",
+      "drifblim",
+      "banette",
+      "chandelure"
+     ],
+     "lines": {
+      "first": "\"I nursed people once. Now I help them sleep.\"",
+      "beaten": "\"You fight like someone who has never lost anyone. Lucky.\"",
+      "winning": "\"Rest. You have earned it.\"",
+      "respect": "\"Maybe the silence costs more than they told me.\""
+     }
+    },
+    "executive": {
+     "name": "Brother Cull",
+     "sprite": "trainer.psychic_m",
+     "species": [
+      "dreepy",
+      "deino",
+      "drakloak",
+      "zweilous",
+      "dragapult",
+      "hydreigon"
+     ],
+     "lines": {
+      "first": "\"The Cantor sent me to quiet you.\"",
+      "beaten": "\"You broke my vow of silence. Twice.\"",
+      "winning": "\"Silence again. Good.\"",
+      "respect": "\"I will not stop you. I will only watch.\""
+     }
+    },
+    "leader": {
+     "name": "The Cantor, Maelis Ravenscar",
+     "sprite": "boss.phoebe-gen6",
+     "species": [
+      "banette",
+      "dusknoir",
+      "mismagius",
+      "chandelure",
+      "gengar",
+      "dragapult"
+     ],
+     "lines": {
+      "first": "\"Listen. Can you hear it? No. You never could.\"",
+      "beaten": "\"One voice against the choir. It is not enough.\"",
+      "winning": "\"You heard the bells. Now you know.\"",
+      "respect": "\"Your voice is the only one I cannot quiet. Strange.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "elite",
+    "text": "The Choir fights in fog and sleep: one less Pokémon, two levels higher."
+   },
+   "spoils": [
+    "spell-tag",
+    "cleanse-tag",
+    "reaper-cloth",
+    "dusk-stone"
+   ],
+   "legendary": [
+    "hollow-shepherd"
+   ],
+   "ops": [
+    {
+     "id": "tolling-bells",
+     "kind": "control",
+     "name": "The Tolling",
+     "text": "The Choir rings the town bells at all hours. Nobody can sleep but their own."
+    },
+    {
+     "id": "counting-stones",
+     "kind": "legendary",
+     "name": "The Counting Stones",
+     "text": "Hooded figures chant at the Counting Stones every night."
+    },
+    {
+     "id": "quiet-recruits",
+     "kind": "recruit",
+     "name": "Quiet Recruits",
+     "text": "Tired townsfolk are being invited to a chapel under the well."
+    },
+    {
+     "id": "shepherd-rites",
+     "kind": "research",
+     "name": "Shepherd Rites",
+     "text": "Acolytes are copying old prophecies from the archive by candlelight."
+    }
+   ],
+   "storyOnly": true
+  },
+  {
+   "id": "ironvein",
+   "name": "The Ironvein Combine",
+   "color": "#e07020",
+   "style": "front",
+   "front": "Ironvein Energy Combine",
+   "philosophy": "Progress is extraction. Growth saves lives, and compassion is a cost like any other.",
+   "motivation": "Chairwoman Strand truly believes cheap power for everyone is worth any price paid by Pokémon.",
+   "goal": "tap Veinheart fully and own all the power in the region",
+   "ranks": {
+    "grunt": {
+     "name": "Combine Worker",
+     "sprite": "trainer.pr/worker_f",
+     "species": [
+      "magnemite",
+      "geodude",
+      "voltorb",
+      "magneton",
+      "graveler",
+      "electrode"
+     ],
+     "lines": {
+      "first": "\"Site's closed. Company property. Move along.\"",
+      "beaten": "\"You again? My shift lead blamed me for the last delay.\"",
+      "winning": "\"Back for more overtime? We bill by the hour.\"",
+      "respect": "\"Okay, you're good. Don't tell my manager.\""
+     }
+    },
+    "specialist": {
+     "name": "Director Alaric Pym",
+     "sprite": "trainer.pr/clerk_m",
+     "species": [
+      "klink",
+      "bronzor",
+      "elekid",
+      "klang",
+      "bronzong",
+      "electabuzz"
+     ],
+     "lines": {
+      "first": "\"You are a schedule risk. I manage schedule risks.\"",
+      "beaten": "\"You cost the quarter. I will remember the number.\"",
+      "winning": "\"On time and under budget. As expected.\"",
+      "respect": "\"Your team runs cleaner than my plant. Irritating.\""
+     }
+    },
+    "executive": {
+     "name": "Site Manager Brook Ealing",
+     "sprite": "trainer.roughneck",
+     "species": [
+      "roggenrola",
+      "onix",
+      "boldore",
+      "steelix",
+      "gigalith",
+      "magnezone"
+     ],
+     "lines": {
+      "first": "\"The forest is coming down. Nothing personal.\"",
+      "beaten": "\"You stopped the cutters. People will be cold this winter.\"",
+      "winning": "\"The machines don't stop for kids.\"",
+      "respect": "\"Maybe the forest is worth more standing. Maybe.\""
+     }
+    },
+    "leader": {
+     "name": "Chairwoman Leocadia Strand",
+     "sprite": "boss.olympia",
+     "species": [
+      "magnezone",
+      "aggron",
+      "rhyperior",
+      "electivire",
+      "excadrill",
+      "metagross"
+     ],
+     "lines": {
+      "first": "\"Every light in this region runs on my decisions.\"",
+      "beaten": "\"One setback. Markets recover.\"",
+      "winning": "\"You lost. The lights stayed on. Think about that.\"",
+      "respect": "\"You have cost me more than any rival firm. I respect that.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "swarm",
+    "text": "The Combine never runs short of machines: one more Pokémon in every battle."
+   },
+   "spoils": [
+    "magnet",
+    "metal-coat",
+    "electirizer",
+    "hard-stone"
+   ],
+   "legendary": [
+    "veinheart"
+   ],
+   "ops": [
+    {
+     "id": "veinheart-drill",
+     "kind": "facility",
+     "name": "The Deep Drill",
+     "text": "A huge drill is boring toward the Veinheart seam under the hills."
+    },
+    {
+     "id": "power-buyout",
+     "kind": "control",
+     "name": "Power Buyout",
+     "text": "The Combine is buying every generator in town and doubling the price."
+    },
+    {
+     "id": "greenwall-cutting",
+     "kind": "habitat",
+     "name": "Greenwall Cutting",
+     "text": "Logging crews are clearing the forest where wild Pokémon nest."
+    },
+    {
+     "id": "seam-survey",
+     "kind": "research",
+     "name": "Seam Survey",
+     "text": "Engineers are measuring strange readings deep in the mine."
+    }
+   ],
+   "storyOnly": true
+  },
+  {
+   "id": "cartographers",
+   "name": "The Pale Cartographers",
+   "color": "#b8ae86",
+   "style": "front",
+   "front": "Unfound Survey Society",
+   "philosophy": "The world's secrets belong to whoever can chart them. History is inventory.",
+   "motivation": "Anselm Rook collects what others only remember, and sees no difference between preserving and owning.",
+   "goal": "chart and claim the Hollow Shepherd and Brinecrown",
+   "ranks": {
+    "grunt": {
+     "name": "Cartographer Scout",
+     "sprite": "trainer.pr/backpacker_m",
+     "species": [
+      "roggenrola",
+      "sandile",
+      "nosepass",
+      "boldore",
+      "krokorok",
+      "probopass"
+     ],
+     "lines": {
+      "first": "\"This dig is charted. That makes it ours.\"",
+      "beaten": "\"You again. You left footprints all over my map.\"",
+      "winning": "\"Lost again? Should have bought a map.\"",
+      "respect": "\"You read the land better than I do. Don't tell Rook.\""
+     }
+    },
+    "specialist": {
+     "name": "Bettina Quay",
+     "sprite": "trainer.pr/ruin_maniac",
+     "species": [
+      "baltoy",
+      "yamask",
+      "golett",
+      "claydol",
+      "cofagrigus",
+      "golurk"
+     ],
+     "lines": {
+      "first": "\"I don't steal relics. I rescue them from people like you.\"",
+      "beaten": "\"You got between me and a relic. Nobody does that.\"",
+      "winning": "\"The ruins remember who wins.\"",
+      "respect": "\"You returned the idol the old way. Where did you learn that?\""
+     }
+    },
+    "executive": {
+     "name": "Corwin Tace",
+     "sprite": "trainer.fisherman",
+     "species": [
+      "wingull",
+      "tentacool",
+      "carvanha",
+      "pelipper",
+      "tentacruel",
+      "sharpedo"
+     ],
+     "lines": {
+      "first": "\"I know every current between here and the Unfound.\"",
+      "beaten": "\"You charted a course I didn't. Clever.\"",
+      "winning": "\"The tide always turns my way.\"",
+      "respect": "\"If you ever want a navigator, find me. Not now. Later.\""
+     }
+    },
+    "leader": {
+     "name": "The Surveyor, Anselm Rook",
+     "sprite": "boss.ginter",
+     "species": [
+      "sableye",
+      "aerodactyl",
+      "cofagrigus",
+      "golurk",
+      "runerigus",
+      "gholdengo"
+     ],
+     "lines": {
+      "first": "\"Everything has a place in my collection. Even you.\"",
+      "beaten": "\"A blank spot on my map. How rare.\"",
+      "winning": "\"Catalogued and filed. Next.\"",
+      "respect": "\"You are the one thing I cannot chart. I find I don't mind.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "elite",
+    "text": "The Cartographers bring prize relics: one less Pokémon, two levels higher."
+   },
+   "spoils": [
+    "relic-gold",
+    "odd-keystone",
+    "old-amber",
+    "helix-fossil"
+   ],
+   "legendary": [
+    "hollow-shepherd",
+    "brinecrown"
+   ],
+   "ops": [
+    {
+     "id": "relic-dig",
+     "kind": "research",
+     "name": "Relic Dig",
+     "text": "A survey team has fenced off an old ruin and is digging day and night."
+    },
+    {
+     "id": "map-theft",
+     "kind": "steal",
+     "name": "Map Theft",
+     "text": "Old family maps are vanishing from homes all over town."
+    },
+    {
+     "id": "deep-charting",
+     "kind": "legendary",
+     "name": "Deep Charting",
+     "text": "A pale ship circles the deep water where Brinecrown is said to sleep."
+    },
+    {
+     "id": "local-guides",
+     "kind": "recruit",
+     "name": "Paid Guides",
+     "text": "The Society pays locals well to show them the old paths."
+    }
+   ],
+   "storyOnly": true
+  },
+  {
+   "id": "wildfire",
+   "name": "The Wildfire Accord",
+   "color": "#3a7a30",
+   "style": "open",
+   "front": "Accord of the Green Flame",
+   "philosophy": "Infrastructure is a cage. Pull down the grid and the Pokémon go free.",
+   "motivation": "Thessaly Greaves wrote a manifesto against the mines and pylons, and her followers took it literally.",
+   "goal": "destroy the Veinheart mine and the regional power grid",
+   "ranks": {
+    "grunt": {
+     "name": "Accord Saboteur",
+     "sprite": "trainer.pr/camper_m",
+     "species": [
+      "venipede",
+      "sewaddle",
+      "slugma",
+      "whirlipede",
+      "swadloon",
+      "magcargo"
+     ],
+     "lines": {
+      "first": "\"That pylon is coming down. Stand clear.\"",
+      "beaten": "\"You again! The pylon is still standing because of you!\"",
+      "winning": "\"Last time you got burned. Literally.\"",
+      "respect": "\"You care about Pokémon too. Why are you on their side?\""
+     }
+    },
+    "specialist": {
+     "name": "Joss Marden",
+     "sprite": "trainer.firebreather",
+     "species": [
+      "ponyta",
+      "growlithe",
+      "numel",
+      "rapidash",
+      "arcanine",
+      "camerupt"
+     ],
+     "lines": {
+      "first": "\"A little fire never hurt anyone. Well. A little.\"",
+      "beaten": "\"You put out my best work.\"",
+      "winning": "\"You smell like smoke. My fault.\"",
+      "respect": "\"Okay. Maybe fires aren't the answer. Maybe.\""
+     }
+    },
+    "executive": {
+     "name": "Pilar Okafor",
+     "sprite": "trainer.pr/nursery_aide",
+     "species": [
+      "cherubi",
+      "petilil",
+      "combee",
+      "cherrim",
+      "lilligant",
+      "vespiquen"
+     ],
+     "lines": {
+      "first": "\"I patch up our people. Today I'm stopping you.\"",
+      "beaten": "\"You fight fair. That's rarer than you'd think.\"",
+      "winning": "\"Sit down. I'll check your Pokémon after.\"",
+      "respect": "\"Someone got hurt last night. That isn't what I signed up for.\""
+     }
+    },
+    "leader": {
+     "name": "Thessaly Greaves",
+     "sprite": "boss.zinnia",
+     "species": [
+      "scolipede",
+      "leavanny",
+      "ninetales",
+      "sceptile",
+      "arcanine",
+      "volcarona"
+     ],
+     "lines": {
+      "first": "\"Ask who benefits when the cage is called a home.\"",
+      "beaten": "\"You defended the cage. Remember that.\"",
+      "winning": "\"The grid fell, and the sky is full of stars. You're welcome.\"",
+      "respect": "\"You want the same thing I do. You just want it slower.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "swarm",
+    "text": "The Accord strikes from every side: one more Pokémon in every battle."
+   },
+   "spoils": [
+    "heat-rock",
+    "charcoal",
+    "miracle-seed",
+    "quick-claw"
+   ],
+   "legendary": [
+    "verdelis"
+   ],
+   "ops": [
+    {
+     "id": "pylon-strike",
+     "kind": "interfere",
+     "name": "Pylon Strike",
+     "text": "Saboteurs are cutting the lines between town and the mine."
+    },
+    {
+     "id": "pipeline-sabotage",
+     "kind": "facility",
+     "name": "Pipeline Sabotage",
+     "text": "Someone keeps setting small fires along the pipeline."
+    },
+    {
+     "id": "wild-release",
+     "kind": "habitat",
+     "name": "Wild Release",
+     "text": "The Accord is breaking open ranches and releasing every Pokémon."
+    },
+    {
+     "id": "manifesto-drive",
+     "kind": "recruit",
+     "name": "The Manifesto",
+     "text": "Copies of a green-and-black manifesto are pasted on every wall."
+    }
+   ],
+   "storyOnly": true
+  },
+  {
+   "id": "gilt",
+   "name": "The Gilt Circle",
+   "color": "#c8a028",
+   "style": "front",
+   "front": "Meridian Laurel Club",
+   "philosophy": "The League needs strength to be believed. Honest results are a luxury.",
+   "motivation": "Cornelius Ashdown was Champion for twelve years before Gideon Hartwell, and his name has been scrubbed from the League lobby.",
+   "goal": "fix the Championship and write Ashdown's name back into history",
+   "ranks": {
+    "grunt": {
+     "name": "Circle Steward",
+     "sprite": "trainer.pr/clerk_f",
+     "species": [
+      "meowth",
+      "skitty",
+      "glameow",
+      "persian",
+      "delcatty",
+      "purugly"
+     ],
+     "lines": {
+      "first": "\"Members only. Are you a member? I thought not.\"",
+      "beaten": "\"You again. The Club has a list. You're on it.\"",
+      "winning": "\"Lost again? The odds were very good on that.\"",
+      "respect": "\"You can't be bought. That's... rare here.\""
+     }
+    },
+    "specialist": {
+     "name": "Lucia Ferrante",
+     "sprite": "trainer.pr/rich_f",
+     "species": [
+      "munna",
+      "espurr",
+      "minccino",
+      "musharna",
+      "meowstic",
+      "cinccino"
+     ],
+     "lines": {
+      "first": "\"Everything is a negotiation. Even this.\"",
+      "beaten": "\"You ruined a very good book of bets.\"",
+      "winning": "\"I had money on you losing. Thank you.\"",
+      "respect": "\"Long odds, every time. I should bet on you.\""
+     }
+    },
+    "executive": {
+     "name": "Piers Dunne",
+     "sprite": "trainer.pr/rich_m",
+     "species": [
+      "machop",
+      "riolu",
+      "scraggy",
+      "machoke",
+      "lucario",
+      "scrafty"
+     ],
+     "lines": {
+      "first": "\"I referee the matches that matter. This one too.\"",
+      "beaten": "\"You won a fight I had already called. Twice.\"",
+      "winning": "\"The ruling stands. You lost.\"",
+      "respect": "\"Maybe the whistle should be honest for once.\""
+     }
+    },
+    "leader": {
+     "name": "Cornelius Ashdown",
+     "sprite": "boss.alder",
+     "species": [
+      "snorlax",
+      "gyarados",
+      "togekiss",
+      "lucario",
+      "metagross",
+      "garchomp"
+     ],
+     "lines": {
+      "first": "\"I was your idea of greatness once.\"",
+      "beaten": "\"They will write your name in the lobby. Then they will scrub it.\"",
+      "winning": "\"You see? Strength is all they remember.\"",
+      "respect": "\"Twelve years I held the crown. You remind me why I wanted it.\""
+     }
+    }
+   },
+   "rule": {
+    "kind": "elite",
+    "text": "The Circle fields League-standard aces: one less Pokémon, two levels higher."
+   },
+   "spoils": [
+    "amulet-coin",
+    "big-nugget",
+    "choice-scarf",
+    "expert-belt"
+   ],
+   "legendary": [
+    "lumeria"
+   ],
+   "ops": [
+    {
+     "id": "match-fixing",
+     "kind": "control",
+     "name": "Match Fixing",
+     "text": "Gym results this week match the betting slips a little too well."
+    },
+    {
+     "id": "betting-ring",
+     "kind": "trade",
+     "name": "The Back Room",
+     "text": "A private room behind the arena takes bets on every gym battle."
+    },
+    {
+     "id": "referee-bribes",
+     "kind": "interfere",
+     "name": "Bought Whistles",
+     "text": "Referees are calling close battles for the Circle's favourites."
+    },
+    {
+     "id": "laurel-donations",
+     "kind": "recruit",
+     "name": "Laurel Donations",
+     "text": "The Club is paying young trainers' entry fees, with strings attached."
+    }
+   ],
+   "storyOnly": true
   }
  ],
  "templates": [

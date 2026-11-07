@@ -24,5 +24,8 @@ import { withStarterArcs } from './starterArcs';
 import questArcs from './questArcs.json';
 import questArcsText from './text/questArcs.en.json';
 import { withQuestArcs } from './questArcs';
+import worldScenes from './worldScenes.json';
+import worldScenesText from './text/worldScenes.en.json';
+import { withWorldScenes } from './worldScenes';
 
-export const RAW_STORY: Record<string, unknown> = withQuestArcs(withStarterArcs({ characters, events, arcs, themes, remembrances, moveMoments, dialogue, lore, news, interactables, backstories, quiz, blueprintRules, rivals, rivalThemes, starterArcs, questArcs, text: { ...text, ...questArcsText, ...rivalsText, ...starterArcsText, ...textThemes }, hash: hash.hash }));
+export const RAW_STORY: Record<string, unknown> = withWorldScenes(withQuestArcs(withStarterArcs({ characters, events, arcs, themes, remembrances, moveMoments, dialogue, lore, news, interactables, backstories, quiz, blueprintRules, rivals, rivalThemes, starterArcs, questArcs, worldScenes, text: { ...text, ...questArcsText, ...worldScenesText, ...rivalsText, ...starterArcsText, ...textThemes }, hash: hash.hash })));

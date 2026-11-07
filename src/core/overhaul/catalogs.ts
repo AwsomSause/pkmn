@@ -103,6 +103,11 @@ export function crossCheckCatalogs(c: OverhaulCatalogs): string[] {
     if ((ch.rarity === 'legendary') !== (ch.archetype !== undefined)) problems.push(`event_chains: "${ch.id}" archetype must be set exactly for legendary chains`);
     if ((ch.rarity === 'legendary') !== (ch.weight === null)) problems.push(`event_chains: "${ch.id}" weight must be null exactly for legendary chains`);
     for (const s of ch.stages) if (s.minNodesAfterPrevious > s.maxNodesAfterPrevious) problems.push(`event_chains: "${s.id}" min nodes after max`);
+    ch.stages.forEach((s, si) => {
+      const earlier = new Set(ch.stages.slice(0, si).flatMap((x) => x.options.flatMap((o) => o.sets)));
+      for (const o of s.options) if (o.needs !== undefined && !earlier.has(o.needs)) problems.push(`event_chains: "${o.id}" needs "${o.needs}", which no earlier stage sets`);
+      if (s.options.every((o) => o.needs !== undefined)) problems.push(`event_chains: "${s.id}" has no option open to everyone`);
+    });
   }
 
   for (const a of c.trainer_archetypes.entries) if (a.tierMin > a.tierMax) problems.push(`trainer_archetypes: "${a.id}" tierMin > tierMax`);

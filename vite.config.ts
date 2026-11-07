@@ -24,7 +24,8 @@ export default defineConfig(({ command }) => ({
     rolldownOptions: {
       checks: { pluginTimings: false },
       // Phaser in its own file: it never changes between deploys, so browsers keep it cached while the game code and data update.
-      output: { codeSplitting: { groups: [{ name: 'phaser', test: /node_modules[\\/]phaser/ }] } },
+      // Story data (Design v2 Part XII lazy story loader, first step) in its own file too: it changes on its own schedule, so a code-only deploy keeps it cached.
+      output: { codeSplitting: { groups: [{ name: 'phaser', test: /node_modules[\\/]phaser/ }, { name: 'story', test: /src[\\/]data[\\/]story[\\/].*\.json$/ }] } },
     },
   },
   test: {

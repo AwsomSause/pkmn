@@ -93,6 +93,7 @@ import { closeWinScene, countedScene, finisherScene, partyNarration } from './ov
 import { timeOfDay } from './arenaStyle';
 import { recordAftermath } from './overhaul/aftermath';
 import { assignGrowthPaths, noteMapGrowth } from './overhaul/growth';
+import { tickChainTimers } from './overhaul/chains';
 import { endHyperMoves, grantHyperMoves } from './battle/hyperMove';
 import { defaultPrep, draftStarters, startingResources, withSignatureStarter } from './runPrep';
 import { currentRegion, generateRegionOrder, getCampaign, pickLeague, runLevelCap } from './regions';
@@ -844,6 +845,7 @@ function moveToNode(content: Content, current: RunState, nodeId: string, onCross
   else if (mode && modeItem && (mode !== 'machBike' || node.kind === 'wild')) markUsedThisStage(run, modeItem);
   stage.current = nodeId;
   stage.visited.push(nodeId);
+  tickChainTimers(run.story.flags);
   stepClock(content, run);
   // Bridge Mail adds a stop beside the node the player reaches.
   addBridgeStops(content, run, nodeId);

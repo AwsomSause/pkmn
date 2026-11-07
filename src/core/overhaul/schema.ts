@@ -185,7 +185,8 @@ export const SignatureMomentSchema = z.object({
   disabled,
 });
 
-export const ChainOptionSchema = z.object({ id, label: text, outcome: text, sets: z.array(id) });
+/** `needs`: one flag an earlier stage of the same chain sets; the option only shows after that choice. */
+export const ChainOptionSchema = z.object({ id, label: text, outcome: text, sets: z.array(id), needs: id.optional() });
 export const ChainStageSchema = z.object({
   id,
   minNodesAfterPrevious: z.number().int().min(0),

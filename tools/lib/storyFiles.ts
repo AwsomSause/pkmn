@@ -4,7 +4,7 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { root } from './gameModules.ts';
 
-export const STORY_FILES = ['characters', 'events', 'arcs', 'themes', 'remembrances', 'moveMoments', 'dialogue', 'lore', 'news', 'interactables', 'backstories', 'quiz', 'blueprintRules', 'rivals', 'rivalThemes', 'starterArcs', 'questArcs'];
+export const STORY_FILES = ['characters', 'events', 'arcs', 'themes', 'remembrances', 'moveMoments', 'dialogue', 'lore', 'news', 'interactables', 'backstories', 'quiz', 'blueprintRules', 'rivals', 'rivalThemes', 'starterArcs', 'questArcs', 'worldScenes'];
 export const storyDir = join(root, 'src', 'data', 'story');
 
 export function readStory(): { raw: Record<string, unknown>; text: unknown; hash: string; sizes: Record<string, number> } {

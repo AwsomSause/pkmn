@@ -1,0 +1,273 @@
+{
+ "events": [
+  {
+   "id": "story-tour-registration",
+   "name": "Exhibition Bracket: Registration",
+   "group": "Story: Tournament",
+   "stop": "event",
+   "rarity": "uncommon",
+   "tags": [
+    "Trainer",
+    "Rival",
+    "Story"
+   ],
+   "minStage": 9,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.pr/clerk_f"
+    ],
+    "tint": "#c8a028",
+    "effect": "sparkle"
+   },
+   "intro": "Banners over the arena: the Exhibition Bracket, eight trainers, single elimination. The desk clerk smiles. \"Entering, watching, or just passing through?\" A loss here only ends your bracket, never your journey.",
+   "choices": [
+    {
+     "label": "Enter the bracket",
+     "success": {
+      "text": "You sign the sheet. Your name goes up on the board between two strangers.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "story-tour-entered"
+       },
+       {
+        "kind": "addEvent",
+        "eventId": "story-tour-opening"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Watch from the stands",
+     "success": {
+      "text": "You watch every round. Your rival makes the final, and you learn a lot about how they fight.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "story-tour-spectated"
+       },
+       {
+        "kind": "research",
+        "amount": 3
+       },
+       {
+        "kind": "moment",
+        "text": "Watched the Exhibition Bracket",
+        "importance": 40
+       }
+      ]
+     }
+    },
+    {
+     "label": "Keep walking",
+     "success": {
+      "text": "The cheers fade behind you.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-tour-opening",
+   "name": "Exhibition Bracket: Round of Eight",
+   "group": "Story: Tournament",
+   "stop": "event",
+   "room": true,
+   "tags": [
+    "Trainer",
+    "Story"
+   ],
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.pr/rich_m"
+    ],
+    "tint": "#c8a028",
+    "effect": "glint"
+   },
+   "intro": "The announcer calls the parade of entrants. Your first opponent bows. \"Round of eight. Make it a good one.\"",
+   "choices": [
+    {
+     "label": "Battle",
+     "success": {
+      "text": "The crowd roars as the match begins.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "ace-trainer",
+       "name": "Bracket Hopeful",
+       "size": 3,
+       "levelBonus": 1,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "story-tour-round"
+        },
+        {
+         "kind": "addEvent",
+         "eventId": "story-tour-semi"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Withdraw",
+     "success": {
+      "text": "You hand back your number. Maybe next time.",
+      "effects": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-tour-semi",
+   "name": "Exhibition Bracket: Semifinal",
+   "group": "Story: Tournament",
+   "stop": "event",
+   "room": true,
+   "tags": [
+    "Trainer",
+    "Story",
+    "Mystery"
+   ],
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.pr/ace_trainer_f"
+    ],
+    "tint": "#303040",
+    "effect": "flicker"
+   },
+   "intro": "Mid-way through the semifinal the arena lights die. Gasps in the dark. Your opponent's voice: \"Do we keep going?\"",
+   "choices": [
+    {
+     "label": "Fight on in the dark",
+     "success": {
+      "text": "You call your moves by sound alone.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "ace-trainer",
+       "name": "Semifinalist",
+       "size": 3,
+       "levelBonus": 2,
+       "pseudo": true,
+       "rule": {
+        "hiddenFoe": true
+       },
+       "win": [
+        {
+         "kind": "flag",
+         "key": "story-tour-round"
+        },
+        {
+         "kind": "addEvent",
+         "eventId": "story-tour-final"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Help get the crowd out",
+     "success": {
+      "text": "You guide people to the exits. Someone cut the power on purpose; you find a torn uniform patch by the fuse box. The bracket is called off.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "story-tour-evacuated"
+       },
+       {
+        "kind": "attribute",
+        "key": "charisma",
+        "amount": 1
+       },
+       {
+        "kind": "moment",
+        "text": "Led the evacuation at the Exhibition Bracket",
+        "importance": 60
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-tour-final",
+   "name": "Exhibition Bracket: Final",
+   "group": "Story: Tournament",
+   "stop": "event",
+   "room": true,
+   "tags": [
+    "Trainer",
+    "Rival",
+    "Story"
+   ],
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.pr/rich_m"
+    ],
+    "tint": "#e0b030",
+    "effect": "sparkle"
+   },
+   "intro": "The lights are back. One name left on the board across from yours, and you know it well. \"Of course it's you,\" your rival says.",
+   "choices": [
+    {
+     "label": "Battle for the trophy",
+     "success": {
+      "text": "The whole stadium stands.",
+      "effects": [],
+      "battle": {
+       "kind": "trainer",
+       "classId": "ace-trainer",
+       "name": "Finalist",
+       "size": 4,
+       "levelBonus": 3,
+       "pseudo": true,
+       "rival": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "story-tour-won"
+        },
+        {
+         "kind": "money",
+         "amount": 1500
+        },
+        {
+         "kind": "item",
+         "id": "star-piece"
+        },
+        {
+         "kind": "moment",
+         "text": "Won the Exhibition Bracket",
+         "importance": 85
+        }
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

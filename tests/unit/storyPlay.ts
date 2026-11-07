@@ -44,8 +44,8 @@ export function playModule(run: RunState, pick: Pick, finale?: 'won' | 'lost'): 
       played.push(s.eventId);
       const ev = content.storyData.events.find((e) => e.id === s.eventId)!;
       const choices = s.choices.map((c) => ({ id: c.id, effects: ((ev.choices ?? []).find((x) => x.id === c.id)?.effects ?? []) as Eff[] }));
-      // Strategies alternate by the backstory's own scenes: the partner's Starter arc scenes (any line) do not shift that count.
-      const at = played.filter((id) => !content.storyData.events.find((e) => e.id === id)?.tags.includes('starter_arc')).length;
+      // Strategies alternate by the backstory's own scenes: the partner's Starter arc scenes (any line) and world scenes do not shift that count.
+      const at = played.filter((id) => !content.storyData.events.find((e) => e.id === id)?.tags.some((t) => t === 'starter_arc' || t === 'world')).length;
       finishScene(content, run, choices.length > 0 ? choices[pick(choices, at)]!.id : undefined);
     }
   };

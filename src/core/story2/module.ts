@@ -4,6 +4,7 @@
 // its own seeded stream, and nothing here touches battle rules or gameplay RNG. Outcomes never depend on the screen that shows a scene.
 
 import { gainCharge } from './feats';
+import { emit } from '../story/record';
 import type { Content } from '../contentSchema';
 import { hashSeed, Rng } from '../rng';
 import type { Profile, RunState } from '../state';
@@ -12,6 +13,7 @@ import { resolveVariant, scoreCond, type ResolveContext, type ResolveCond } from
 import { foldKeepsakes } from './keepsakes';
 import { dueRivalScene, epilogueRivalScene } from './rivalPlan';
 import { renderTemplate } from './templates';
+import { evolveCrossroads, worldPick } from './worldScenes';
 import type { StoryData, StoryEvent, StoryV2 } from './schema';
 
 type Eff = { id?: string; kind: string; [k: string]: unknown };
@@ -112,9 +114,10 @@ export function applyEffects(content: Content, run: RunState, effects: readonly 
       }
       case 'add_relationship': addRelationship(run, String(e.character), String(e.attr), Number(e.amount ?? 0)); break;
       case 'unlock': v2.facts[`unlock.${String(e.target)}`] = true; break;
-      case 'unlock_lore': v2.facts[`lore.${String(e.lore)}`] = String(e.state ?? 'known'); break;
+      case 'unlock_lore': v2.facts[`lore.${String(e.lore)}`] = String(e.state ?? 'known'); emit(content, run, 'loreUnlocked', { data: { lore: String(e.lore), state: String(e.state ?? 'known') } }); break;
       case 'give_item': v2.facts[`item.${String(e.item)}`] = true; break; // the item itself is named, not built (limit in the status note)
       case 'add_memory': v2.facts[`mem.${String(e.memory)}`] = true; break;
+      case 'evolve_eevee': evolveCrossroads(content, run, String(e.form)); break;
       case 'chronicle': if (v2.module && !v2.module.chronicle.includes(String(e.entry))) v2.module.chronicle.push(String(e.entry)); break;
       default: break; // an unknown kind is ignored here; the content gate lists the kinds the loader knows
     }
@@ -201,7 +204,7 @@ export function queueStopScene(content: Content, run: RunState, stopId: string):
   if (m.lastSceneStop > 0 && index - m.lastSceneStop <= content.balance.story.module.gapStops) {
     // A rival Stop's scene comes first, whatever the gap; else the Starter arc, else a quest arc that unlocks a Rare or
     // Exceptional line, may use the quiet Stop (neither moves the gap).
-    const own = rivalDue ?? ownPick()?.id ?? questPick(content, run, stop.act, ctx)?.id;
+    const own = rivalDue ?? ownPick()?.id ?? questPick(content, run, stop.act, ctx)?.id ?? worldPick(content, run, stop, stop.act, m.played, m.queue);
     if (own) {
       m.active = own;
       m.activeStop = stopId;
@@ -224,7 +227,7 @@ export function queueStopScene(content: Content, run: RunState, stopId: string):
   if (!pick) {
     // Nothing from the module: a Secondary or Friendly rival scene that is due may take the Stop, else the Starter arc's
     // next scene, else a quest arc scene.
-    const due = rivalDue ?? dueRivalScene(content, run, stop.act, false, m.played, m.queue) ?? ownPick()?.id ?? questPick(content, run, stop.act, ctx)?.id;
+    const due = rivalDue ?? dueRivalScene(content, run, stop.act, false, m.played, m.queue) ?? ownPick()?.id ?? questPick(content, run, stop.act, ctx)?.id ?? worldPick(content, run, stop, stop.act, m.played, m.queue);
     if (due) { m.active = due; m.activeStop = stopId; }
     return;
   }
@@ -277,6 +280,8 @@ export function activeScene(content: Content, run: RunState): StoryScene | null 
   const data = content.storyData;
   const ctx = resolveCtx(content, run);
   const values: Record<string, string> = { player: v2.protagonist?.name || 'you', starter: v2.starter?.lineId.replace(/^rm_/, '') ?? 'your partner' };
+  // World scenes (worldScenes.ts) name the Pokémon and place they are about: `tok.<name>` facts.
+  for (const [k, v] of Object.entries(v2.facts)) if (k.startsWith('tok.') && typeof v === 'string') values[k.slice(4)] = v;
   const lines: StoryLine[] = [];
   for (const b of e.beats) {
     const b2 = b as { line?: string; textKey?: string };
@@ -296,7 +301,7 @@ export function activeScene(content: Content, run: RunState): StoryScene | null 
   }
   return {
     eventId: e.id,
-    kicker: e.tags.includes('ending') ? 'The Ending' : e.tags.includes('rv_story') ? 'A Rival' : e.tags.includes('echo') ? 'An Echo' : e.tags.includes('intro') ? 'Your Story Begins' : `Act ${ctx.act ?? 1}`,
+    kicker: e.tags.includes('ending') ? 'The Ending' : e.tags.includes('rv_story') ? 'A Rival' : e.tags.includes('echo') ? 'An Echo' : e.tags.includes('intro') ? 'Your Story Begins' : e.tags.includes('camp') ? 'At Camp' : e.tags.includes('eevee') ? 'Crossroads' : `Act ${ctx.act ?? 1}`,
     lines: lines.filter((l) => l.text.length > 0),
     choices: e.choices.map((c) => ({ id: c.id, text: textOf(data, c.textKey, values) })),
     ending: e.tags.includes('ending'),
@@ -312,6 +317,7 @@ function commit(content: Content, run: RunState, e: StoryEvent, choice: StoryEve
   applyEffects(content, run, e.outputs as Eff[]);
   m.played.push(e.id);
   v2.scenesDone.push(e.id);
+  emit(content, run, 'storyChoice', { data: { event: e.id, choice: choice?.id ?? null } });
   if (e.tags.includes('echo')) m.echoes += 1;
   if (choice?.goto && eventOf(content.storyData, choice.goto) && !m.played.includes(choice.goto)) m.queue.push(choice.goto);
   const arc = arcOf(content.storyData, e.id);
@@ -319,6 +325,7 @@ function commit(content: Content, run: RunState, e: StoryEvent, choice: StoryEve
     const i = arc.steps.findIndex((s) => s.event === e.id);
     const done = i === arc.steps.length - 1;
     v2.arcs[arc.id] = { state: done ? 'done' : 'active', step: i + 1, nodeCost: arc.nodeCost };
+    emit(content, run, 'arcState', { data: { arc: arc.id, state: done ? 'done' : 'active', step: i + 1 } });
     // S7: a beat of the partner's own Starter arc (`arc_<line>`) adds Resolve Charge, once per beat.
     if (v2.starter && arc.id === `arc_${v2.starter.lineId}`) gainCharge(content, run, 'arc_beat', `${arc.id}:${i}`);
     if (done) {
@@ -333,7 +340,7 @@ function commit(content: Content, run: RunState, e: StoryEvent, choice: StoryEve
     m.snapshots = [...m.snapshots, { event: e.id, stop: m.activeStop, act: resolveCtx(content, run).act ?? 0, text, choice: choice?.id ?? null }].slice(-content.balance.story.module.maxSnapshots);
   }
   // A Starter arc scene does not count toward the backstory's gap between scenes.
-  if (!e.tags.includes('starter_arc') && !e.tags.includes('quest_arc')) m.lastSceneStop = v2.stops.index;
+  if (!e.tags.includes('starter_arc') && !e.tags.includes('quest_arc') && !e.tags.includes('world')) m.lastSceneStop = v2.stops.index;
 }
 
 /** Finishes the scene on screen: commits it (an ending was committed when reached) and clears the screen state. A choice scene needs a valid choice. */

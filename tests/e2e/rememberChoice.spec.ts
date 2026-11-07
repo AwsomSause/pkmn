@@ -22,7 +22,19 @@ async function startBattle(page: Page, seed: string) {
   await expect.poll(() => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Map').busy), { timeout: 10_000 }).toBe(false);
   await page.keyboard.press('Enter');
   await waitForScene(page, 'Battle');
+  await toCommands(page);
+}
+// The command menu (Fight / Bag / Pokémon), not the move list: confirmToMenu's last Enter can land just as the command menu opens and
+// open the move list, so step back to the commands before pressing Fight.
+const onCommands = (page: Page) => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').menu?.labels?.[0]?.text === 'Fight');
+async function toCommands(page: Page) {
   await confirmToMenu(page);
+  await expect.poll(async () => {
+    if (await onCommands(page)) return true;
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(200);
+    return false;
+  }, { timeout: 10_000 }).toBe(true);
 }
 const menuIndex = (page: Page) => page.evaluate(() => (window as any).__pkr.game.scene.getScene('Battle').menu?.index ?? -1);
 
@@ -35,7 +47,7 @@ test('the move menu returns to the move you used last, and still lets you pick a
   await page.keyboard.press('ArrowRight');
   await expect.poll(() => menuIndex(page)).toBe(1);
   await page.keyboard.press('Enter'); // use move 2
-  await confirmToMenu(page);
+  await toCommands(page);
   await page.keyboard.press('Enter'); // Fight again
   await expect.poll(() => menuIndex(page)).toBe(1);
   await page.keyboard.press('ArrowLeft'); // free to choose differently

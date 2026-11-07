@@ -1,0 +1,9 @@
+# Story design content 3: Story Bus, story data chunk, asset credits page
+
+Status: supported, with the limits below.
+
+- **Story Bus** (Design v2 Part XII, "Story Bus mapped onto what exists"): `core/story/bus.ts` holds a fixed, ordered subscriber list that `emit` (core/story/record.ts) calls for every DomainEvent. New message types `storyChoice` (a Story Run scene played, with its choice), `arcState` (an arc step or finish), `loreUnlocked`, `directorReplan`; Story Stops already publish as `storyMoment` with `data.storyStop`. Subscribers: tallies (`bus.<type>`, `bus.stops` in the run's facts) and the module Chronicle (`arc:<id>`, `lore:<id>` once each). Importance 0, so no memory or chronicle spam. Classic runs only see the new types if a producer emits one (none do outside Story Runs).
+- **Story data in its own file** (first step of the lazy story loader): the build puts `src/data/story/*.json` in a `story-*.js` chunk (~620 kB, 121 kB gzip) next to `phaser-*.js`, so a code-only deploy keeps it cached.
+- **Asset credits page** (Part AF): `src/data/assetCredits.json` (validated by `AssetCreditsSchema`, `content.assetCredits`) lists each source once in the planned sections: Direction, Art made for this game (PixelLab marked `generated`), Sprites/music/packs (placeholder trainer sprites marked), Fonts, Code libraries, Special thanks. The end credits now read it (`assetCreditLines`), and Settings (the data page) > **Asset credits** shows it on its own (Back returns to Settings).
+- Tests: `tests/unit/storyBus.test.ts`.
+- Limits: the story data still loads at start (in its own file); truly loading it only when a Story Run starts needs content to load asynchronously, which is a bigger change. Per-file provenance stays in `docs/quality/asset-provenance.md`; the credits file is a hand-kept summary of it.

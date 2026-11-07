@@ -48,10 +48,14 @@ export function runningOp(run: RunState): EvilState['ops'][number] | null {
 /** The team this run's world gets (a hash of the seed, no stream rolled). The Narrative Director reads it as the antagonist before it shows up. */
 export function plannedEvilTeamId(content: Content, run: Pick<RunState, 'seed' | 'perkEffects' | 'story'>): string | null {
   if (run.story.evil?.teamId) return run.story.evil.teamId;
-  if (content.evilTeams.teams.length === 0) return null;
+  // Story Runs draw from the six original teams (Design v2 Part IV); Classic never sees them, so its draw is unchanged.
+  const story = !!run.story.v2;
+  const own = content.evilTeams.teams.filter((t) => t.storyOnly === story);
+  const pool = own.length > 0 ? own : content.evilTeams.teams;
+  if (pool.length === 0) return null;
   const focus = (run.perkEffects ?? []).flatMap((m) => (m.kind === 'evilTeamFocus' ? m.teams : []));
-  const focused = content.evilTeams.teams.filter((t) => focus.includes(t.id));
-  const teams = focused.length > 0 ? focused : content.evilTeams.teams;
+  const focused = pool.filter((t) => focus.includes(t.id));
+  const teams = focused.length > 0 ? focused : pool;
   return teams[new Rng(hashSeed(`${run.seed}::evil-team`)).int(0, teams.length - 1)]!.id;
 }
 

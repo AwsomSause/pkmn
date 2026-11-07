@@ -5,7 +5,7 @@
 // looping underneath.
 
 import Phaser from 'phaser';
-import { buildCredits } from '../core/credits';
+import { assetCreditLines, buildCredits } from '../core/credits';
 import { services } from '../game/services';
 import { onInputAction } from '../ui/input';
 import { AERO, drawGlass, type MotionLevel } from '../ui/aero';
@@ -15,8 +15,15 @@ import { pokemonIcon } from '../ui/sprites';
 import { GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 
 export class CreditsScene extends Phaser.Scene {
+  /** Settings > Asset credits: only the credits page (assetCredits.json), and leaving goes back to Settings. */
+  private assets: { from: string } | null = null;
+
   constructor() {
     super('Credits');
+  }
+
+  init(data?: { assets?: boolean; from?: string }): void {
+    this.assets = data?.assets ? { from: data.from ?? 'MainMenu' } : null;
   }
 
   preload(): void {
@@ -29,10 +36,10 @@ export class CreditsScene extends Phaser.Scene {
     const motion = session.settings.battleAnimations as MotionLevel;
     playMusic(this, 'bgm.credits');
     drawGlass(this, 60, -20, GAME_WIDTH - 120, GAME_HEIGHT + 40, { tint: AERO.glassLow, alpha: 0.22, glow: false, radius: 30 });
-    this.parade(motion);
+    if (!this.assets) this.parade(motion);
     if (motion === 'full') this.motes();
-    const lines = run ? buildCredits(session.content, run) : [];
-    const roll = session.settings.battleAnimations === 'full';
+    const lines = this.assets ? [{ kind: 'title' as const, text: 'Asset credits' }, ...assetCreditLines(session.content)] : run ? buildCredits(session.content, run) : [];
+    const roll = !this.assets && session.settings.battleAnimations === 'full';
     const style: Record<string, [number, string]> = { title: [40, '#f0d060'], heading: [26, '#7ff3ff'], text: [20, '#ffffff'], gap: [20, '#ffffff'] };
     let y = roll ? GAME_HEIGHT + 20 : 24;
     const step = roll ? 34 : 17;
@@ -93,6 +100,10 @@ export class CreditsScene extends Phaser.Scene {
   }
 
   private leave(): void {
+    if (this.assets) {
+      this.scene.start('Settings', { from: this.assets.from });
+      return;
+    }
     this.scene.start('GameOver', { afterCredits: true });
   }
 }

@@ -33,19 +33,21 @@ export function buildCredits(content: Content, run: RunState): CreditsLine[] {
     ...recap.rivals.map((r): CreditsLine => ({ kind: 'text', text: r })),
     ...defeatedLines(content, run),
     { kind: 'gap', text: '' },
-    { kind: 'heading', text: 'Made by' },
-    { kind: 'text', text: 'Kice, director' },
-    { kind: 'text', text: 'Built with Claude' },
-    { kind: 'gap', text: '' },
-    { kind: 'heading', text: 'Thanks' },
-    { kind: 'text', text: 'PokeRogue and its asset packs (AGPL-3.0)' },
-    { kind: 'text', text: 'Pokémon Essentials, Enhanced Battle UI and Deluxe Battle Kit' },
-    { kind: 'text', text: 'Pokémon belongs to Nintendo, Game Freak and Creatures Inc.' },
+    ...assetCreditLines(content),
     { kind: 'gap', text: '' },
     { kind: 'text', text: `Seed ${run.seed}` },
     { kind: 'title', text: 'Thanks for playing' },
   ];
   return lines;
+}
+
+/** Design v2 Part AF: the credits page, section by section from assetCredits.json (Direction, Art, packs, Fonts, Code, Thanks). */
+export function assetCreditLines(content: Pick<Content, 'assetCredits'>): CreditsLine[] {
+  return content.assetCredits.sections.flatMap((sec, i): CreditsLine[] => [
+    ...(i > 0 ? [{ kind: 'gap', text: '' } as CreditsLine] : []),
+    { kind: 'heading', text: sec.title },
+    ...sec.entries.map((e): CreditsLine => ({ kind: 'text', text: `${e.name}: ${e.role}${e.licence ? ` (${e.licence})` : ''}${e.placeholder ? ' [placeholder]' : ''}` })),
+  ]);
 }
 
 /** Ideas W5 (F178): everyone you beat, with their teams' sprites in rows (at most MAX_FOES trainers, newest first). */

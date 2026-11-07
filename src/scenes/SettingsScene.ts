@@ -154,6 +154,7 @@ export class SettingsScene extends Phaser.Scene {
         { option: { label: 'Save a framed screenshot' }, hint: 'Saves the game screen as a PNG with a frame. Also F9 anywhere.', action: () => framedScreenshot(this.game) },
         { option: { label: 'Save a run share card' }, hint: 'Saves a PNG card with your current run’s trainer and team. Also F10.', action: () => { this.notice = runShareCard(session) ? 'Share card saved.' : 'Start a run first.'; this.render(this.menu?.index ?? 0); } },
         { option: { label: 'Replay the tutorial' }, hint: 'Nine professors explain the game, one area each. Skip any time.', action: () => this.scene.start('Tutorial', { returnTo: 'Settings', from: this.from }) },
+        { option: { label: 'Asset credits' }, hint: 'Who made the art, music, packs and code in this game.', action: () => this.scene.start('Credits', { assets: true, from: this.from }) },
         { option: { label: 'Read the update log' }, hint: 'The patch notes for this version.', action: () => this.scene.start('Welcome', { phase: 'log', returnTo: 'Settings', from: this.from, replay: true }) },
         { option: { label: 'Reset settings to defaults' }, hint: 'Asks first. Run and profile data are not touched.', action: () => this.go('confirmReset') },
         back,

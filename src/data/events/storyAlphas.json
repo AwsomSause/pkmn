@@ -1,0 +1,1444 @@
+{
+ "events": [
+  {
+   "id": "story-alpha-quarry-king",
+   "name": "Alpha: The Quarry King",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 4,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "pokemon": "rhydon",
+    "tint": "#8a7050",
+    "effect": "shake"
+   },
+   "intro": "Fresh rockfall blocks the quarry road. Something huge has been pacing the cut, and a local Gym Leader has roped it off to keep poachers away. It is an Alpha: The Quarry King.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Quarry King roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "rhydon"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-quarry-king-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "hard-stone"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Quarry King",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "strength",
+     "success": {
+      "text": "The Quarry King lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-quarry-king-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "rhydon"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Quarry King",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Quarry King rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-quarry-king-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Quarry King away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-quarry-king-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Quarry King",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Quarry King will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-quarry-king-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Quarry King watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-quarry-king-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-weeping-lantern",
+   "name": "Alpha: The Weeping Lantern",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 6,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "pokemon": "dusknoir",
+    "tint": "#40405a",
+    "effect": "fog"
+   },
+   "intro": "The graveyard path is silent. Every lantern is lit, and one of them is floating. A tall shape guards the gate. It is an Alpha: The Weeping Lantern.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Weeping Lantern roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "dusknoir"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-weeping-lantern-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "spell-tag"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Weeping Lantern",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "love",
+     "success": {
+      "text": "The Weeping Lantern lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-weeping-lantern-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "dusknoir"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Weeping Lantern",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Weeping Lantern rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-weeping-lantern-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Weeping Lantern away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-weeping-lantern-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Weeping Lantern",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Weeping Lantern will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-weeping-lantern-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Weeping Lantern watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-weeping-lantern-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-frostbound",
+   "name": "Alpha: The Frostbound",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 10,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.snow_worker_m"
+    ],
+    "pokemon": "baxcalibur",
+    "tint": "#a0c8e0",
+    "effect": "snow"
+   },
+   "intro": "The snow pass is shut. Ice spikes jut from the road, and a dragon of frost sleeps across it. It is an Alpha: The Frostbound.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Frostbound roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "baxcalibur"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-frostbound-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "nevermeltice"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Frostbound",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "strength",
+     "success": {
+      "text": "The Frostbound lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-frostbound-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "baxcalibur"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Frostbound",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Frostbound rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-frostbound-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Frostbound away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-frostbound-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Frostbound",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Frostbound will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-frostbound-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Frostbound watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-frostbound-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-static-choir",
+   "name": "Alpha: The Static Choir",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 8,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.worker_m"
+    ],
+    "pokemon": "electivire",
+    "tint": "#d0c040",
+    "effect": "flicker"
+   },
+   "intro": "The substation hums far too loud. Wires sing, and a crackling giant stalks the fence line. Someone built this. It is an Alpha: The Static Choir.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Static Choir roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "electivire"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-static-choir-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "magnet"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Static Choir",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "intelligence",
+     "success": {
+      "text": "The Static Choir lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-static-choir-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "electivire"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Static Choir",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Static Choir rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-static-choir-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Static Choir away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-static-choir-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Static Choir",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Static Choir will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-static-choir-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Static Choir watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-static-choir-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-hushed-one",
+   "name": "Alpha: The Hushed One",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 6,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.psychic_m"
+    ],
+    "pokemon": "oracowl",
+    "tint": "#504870",
+    "effect": "fog"
+   },
+   "intro": "At dusk the moor goes quiet: no wind, no Pokémon. A great owl watches from a dead tree, and your own voice sounds thin. It is an Alpha: The Hushed One.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Hushed One roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "oracowl"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-hushed-one-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "wise-glasses"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Hushed One",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "intelligence",
+     "success": {
+      "text": "The Hushed One lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-hushed-one-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "oracowl"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Hushed One",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Hushed One rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-hushed-one-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Hushed One away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-hushed-one-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Hushed One",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Hushed One will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-hushed-one-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Hushed One watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-hushed-one-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-black-tide",
+   "name": "Alpha: The Black Tide",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 12,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.fisherman"
+    ],
+    "pokemon": "gyarados",
+    "tint": "#203858",
+    "effect": "rain"
+   },
+   "intro": "Storm water churns near the drowned lighthouse. A shadow longer than the ferry coils under the waves. It is an Alpha: The Black Tide.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Black Tide roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "gyarados"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-black-tide-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "mystic-water"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Black Tide",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "strength",
+     "success": {
+      "text": "The Black Tide lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-black-tide-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "gyarados"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Black Tide",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Black Tide rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-black-tide-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Black Tide away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-black-tide-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Black Tide",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Black Tide will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-black-tide-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Black Tide watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-black-tide-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-orchard-warden",
+   "name": "Alpha: The Orchard Warden",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 8,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.aroma_lady"
+    ],
+    "pokemon": "venusaur",
+    "tint": "#407838",
+    "effect": "sparkle"
+   },
+   "intro": "The orchard town is empty. Vines cover the doors, and an old giant rests among the trees, guarding the fruit. It is an Alpha: The Orchard Warden.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Orchard Warden roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "venusaur"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-orchard-warden-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "miracle-seed"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Orchard Warden",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "love",
+     "success": {
+      "text": "The Orchard Warden lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-orchard-warden-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "venusaur"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Orchard Warden",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Orchard Warden rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-orchard-warden-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Orchard Warden away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-orchard-warden-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Orchard Warden",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Orchard Warden will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-orchard-warden-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Orchard Warden watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-orchard-warden-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-unwelcome-guest",
+   "name": "Alpha: The Unwelcome Guest",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 10,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hex_maniac"
+    ],
+    "pokemon": "gengar",
+    "tint": "#503060",
+    "effect": "float"
+   },
+   "intro": "A haunted hall in the city has a new host. Three grins float in the dark, and only one of them is real. It is an Alpha: The Unwelcome Guest.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Unwelcome Guest roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "gengar"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-unwelcome-guest-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "spell-tag"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Unwelcome Guest",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "luck",
+     "success": {
+      "text": "The Unwelcome Guest lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-unwelcome-guest-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "gengar"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Unwelcome Guest",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Unwelcome Guest rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-unwelcome-guest-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Unwelcome Guest away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-unwelcome-guest-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Unwelcome Guest",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Unwelcome Guest will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-unwelcome-guest-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Unwelcome Guest watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-unwelcome-guest-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-sleeper",
+   "name": "Alpha: The Sleeper",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 5,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.hiker"
+    ],
+    "pokemon": "snorlax",
+    "tint": "#406070",
+    "effect": "none"
+   },
+   "intro": "A bridge is blocked by a mountain that snores. Townsfolk have tried flutes, shouting and berries. It rolls over. It is an Alpha: The Sleeper.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Sleeper roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "snorlax"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-sleeper-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "leftovers"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Sleeper",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "charisma",
+     "success": {
+      "text": "The Sleeper lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-sleeper-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "snorlax"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Sleeper",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Sleeper rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-sleeper-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Sleeper away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-sleeper-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Sleeper",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Sleeper will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-sleeper-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Sleeper watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-sleeper-left"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "id": "story-alpha-rooftop-watcher",
+   "name": "Alpha: The Rooftop Watcher",
+   "group": "Story: Alphas",
+   "stop": "event",
+   "rarity": "rare",
+   "tags": [
+    "Combat",
+    "Pokémon",
+    "Story"
+   ],
+   "minStage": 14,
+   "requires": [
+    {
+     "kind": "storyRun"
+    }
+   ],
+   "scene": {
+    "cast": [
+     "trainer.ruin_maniac"
+    ],
+    "pokemon": "corviknight",
+    "tint": "#3a4058",
+    "effect": "float"
+   },
+   "intro": "Black feathers drift down from the ruined observatory. On the dome, something armoured spreads its wings against the sky. It is an Alpha: The Rooftop Watcher.",
+   "choices": [
+    {
+     "label": "Fight to subdue it",
+     "success": {
+      "text": "You stand your ground. The Rooftop Watcher roars.",
+      "effects": [],
+      "battle": {
+       "kind": "wild",
+       "species": [
+        "corviknight"
+       ],
+       "levelBonus": 6,
+       "pseudo": true,
+       "win": [
+        {
+         "kind": "flag",
+         "key": "alpha-rooftop-watcher-subdued"
+        },
+        {
+         "kind": "item",
+         "id": "sharp-beak"
+        },
+        {
+         "kind": "research",
+         "amount": 2
+        },
+        {
+         "kind": "moment",
+         "text": "Subdued the Alpha The Rooftop Watcher",
+         "importance": 70
+        }
+       ]
+      }
+     }
+    },
+    {
+     "label": "Approach it calmly",
+     "check": "speed",
+     "success": {
+      "text": "The Rooftop Watcher lowers its head and follows you. It has chosen you.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-rooftop-watcher-befriended"
+       },
+       {
+        "kind": "join",
+        "species": [
+         "corviknight"
+        ],
+        "levelBonus": -2
+       },
+       {
+        "kind": "moment",
+        "text": "Befriended the Alpha The Rooftop Watcher",
+        "importance": 75
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Rooftop Watcher rears up and drives you back.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-rooftop-watcher-driven-back"
+       },
+       {
+        "kind": "damage",
+        "share": 0.2
+       }
+      ]
+     }
+    },
+    {
+     "label": "Lead it somewhere safer",
+     "chance": 0.6,
+     "success": {
+      "text": "Step by step, you lead The Rooftop Watcher away from the road. People can pass again.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-rooftop-watcher-relocated"
+       },
+       {
+        "kind": "money",
+        "amount": 800
+       },
+       {
+        "kind": "moment",
+        "text": "Relocated the Alpha The Rooftop Watcher",
+        "importance": 60
+       }
+      ]
+     },
+     "failure": {
+      "text": "The Rooftop Watcher will not be led. You back away before it gets angry.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-rooftop-watcher-left"
+       }
+      ]
+     }
+    },
+    {
+     "label": "Leave it alone",
+     "success": {
+      "text": "You take the long way round. The Rooftop Watcher watches you go.",
+      "effects": [
+       {
+        "kind": "flag",
+        "key": "alpha-rooftop-watcher-left"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

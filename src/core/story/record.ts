@@ -6,6 +6,7 @@
 // Size limits come from src/data/story.json, so a long run never makes the
 // save grow without bound.
 
+import { publish } from './bus';
 import type { Content } from '../contentSchema';
 import { findNode } from '../map';
 import { freshWorld } from '../memories/schema';
@@ -99,6 +100,7 @@ export function emit(content: Content, run: RunState, type: DomainEventType, opt
     }
     if (importance >= cfg.chronicleMinImportance) addChronicle(story, { ...memory, actors: event.actors }, cfg.limits.chronicleEntries);
   }
+  publish(content, run, event);
   return event;
 }
 

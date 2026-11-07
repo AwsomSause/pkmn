@@ -139,7 +139,9 @@ export function chainEvents(items: readonly PoolItem[], config: ChainsConfig = D
       const last = si === chain.stages.length - 1;
       const prev = si > 0 ? chain.stages[si - 1]! : null;
       const requires: Effect[] = [];
-      if (prev) requires.push({ kind: 'flag', key: `ovc-${prev.id}` });
+      // A later stage waits its window: `ovt-<previous stage>` counts the map nodes since that stage (tickChainTimers), and the stage only
+      // shows between its min and max nodes; past the max the chain lapses.
+      if (prev) requires.push({ kind: 'flag', key: `ovc-${prev.id}` }, { kind: 'flag', key: `ovt-${prev.id}`, atLeast: stage.minNodesAfterPrevious, atMost: stage.maxNodesAfterPrevious });
       else if (legendary) requires.push({ kind: 'flag', key: 'ovc-legend', atMost: 0 });
       const choices = stage.options.map((o) => {
         stats.options++;
@@ -148,9 +150,9 @@ export function chainEvents(items: readonly PoolItem[], config: ChainsConfig = D
         const effects: Effect[] = [...mapped.effects];
         const continues = !last && o.sets.length > 0 && !END_LABEL.test(o.label.trim());
         for (const f of o.sets) effects.push({ kind: 'flag', key: `ovp-${flagKey(f)}`, amount: 1 });
-        if (continues) effects.push({ kind: 'flag', key: `ovc-${stage.id}`, amount: 1 });
+        if (continues) effects.push({ kind: 'flag', key: `ovc-${stage.id}`, amount: 1 }, { kind: 'flag', key: `ovt-${stage.id}`, amount: 0 });
         if (legendary && si === 0 && continues) effects.push({ kind: 'flag', key: 'ovc-legend', amount: 1 });
-        return { label: o.label, requires: [], success: { text: sentence(o.outcome), effects, ...(mapped.battle ? { battle: mapped.battle } : {}) } };
+        return { label: o.label, requires: o.needs ? [{ kind: 'flag', key: `ovp-${flagKey(o.needs)}` }] : [], success: { text: sentence(o.outcome), effects, ...(mapped.battle ? { battle: mapped.battle } : {}) } };
       });
       events.push({
         id: `ovc-${stage.id}`,
@@ -168,4 +170,18 @@ export function chainEvents(items: readonly PoolItem[], config: ChainsConfig = D
     });
   }
   return { events, stats };
+}
+
+/** Highest node count a chain timer keeps (beyond every stage window). */
+const TIMER_CAP = 99;
+
+/**
+ * One map node passed: every running chain timer (`ev:ovt-*`, started at 0 by the stage before) counts up. A save from before timers
+ * existed has `ev:ovc-*` without its timer: that one starts now, so its next stage still comes.
+ */
+export function tickChainTimers(flags: Record<string, unknown>): void {
+  for (const key of Object.keys(flags)) {
+    if (key.startsWith('ev:ovc-') && key !== 'ev:ovc-legend' && Number(flags[key] ?? 0) > 0 && flags[`ev:ovt-${key.slice(7)}`] === undefined) flags[`ev:ovt-${key.slice(7)}`] = 0;
+  }
+  for (const key of Object.keys(flags)) if (key.startsWith('ev:ovt-')) flags[key] = Math.min(TIMER_CAP, Number(flags[key] ?? 0) + 1);
 }

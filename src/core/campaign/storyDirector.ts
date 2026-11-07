@@ -366,6 +366,7 @@ export function replanStops(content: Content, run: RunState, at: number): void {
   if (!changed) return;
   bp.replans.push({ at, reason: 'event_missing' });
   bp.checksum = checksumOf(bp);
+  emit(content, run, 'directorReplan', { data: { at, reason: 'event_missing' } });
 }
 
 /** Plays one Stop once: marks it done, replans ahead, and tells it (a chronicle moment and a line for the map). */

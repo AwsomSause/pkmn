@@ -63,6 +63,8 @@ export const EvilTeamSchema = z.object({
   legendary: z.array(z.string()).min(1),
   /** The operations they run, one per region (in order, wrapping). */
   ops: z.array(z.object({ id: z.string().regex(/^[a-z][a-z0-9-]*$/), kind: EvilOpKindSchema, name: z.string().min(1), text: z.string().min(1) })).min(3),
+  /** Story Overhaul Part IV: one of the six original teams. Only Story Runs draw it, and Story Runs draw only these (Classic rolls never move). */
+  storyOnly: z.boolean().default(false),
 });
 export type EvilTeam = z.infer<typeof EvilTeamSchema>;
 

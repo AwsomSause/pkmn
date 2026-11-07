@@ -36,6 +36,7 @@ import {
   type Content,
   type Requirement,
   type Reward,
+  AssetCreditsSchema,
 } from '../core/contentSchema';
 import { withStages } from '../core/itemStages';
 import abilitiesJson from './abilities.json';
@@ -45,6 +46,7 @@ import { STORY_TRIGGERS, StoryConfigSchema } from '../core/story/schema';
 import achievementsJson from './achievements.json';
 import trainerQuestsJson from './trainerQuests.json';
 import { RAW_STORY } from './story/raw';
+import assetCredits from './assetCredits.json';
 import { StoryDataSchema } from '../core/story2/schema';
 import gameEventsJson from './gameEvents.json';
 import runPrepJson from './runPrep.json';
@@ -153,6 +155,7 @@ export interface RawContent {
   story: unknown;
   /** Story Overhaul v2 data (src/data/story/*.json); optional so test content can omit it. */
   storyData?: unknown;
+  assetCredits?: unknown;
   raids: unknown;
   events: unknown;
   totems: unknown;
@@ -284,6 +287,7 @@ export const RAW_CONTENT: RawContent = {
   balance: balanceJson,
   story: storyJson,
   storyData: RAW_STORY,
+  assetCredits,
   raids: raidsJson,
   events: eventsJson,
   totems: totemsJson,
@@ -438,6 +442,7 @@ export function buildContent(raw: RawContent = RAW_CONTENT): Content {
     balance,
     story,
     storyData: parse(StoryDataSchema, raw.storyData ?? RAW_STORY, 'story/*.json', problems) ?? StoryDataSchema.parse(emptyStory()),
+    assetCredits: parse(AssetCreditsSchema, raw.assetCredits ?? assetCredits, 'assetCredits.json', problems) ?? { sections: [] },
     raids,
     events: toMap(eventsFile.events, 'events.json', problems),
     totems,
