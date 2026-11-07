@@ -10,6 +10,14 @@ const FAMILY: Partial<Record<TypeName, string>> = {
   normal: 'field', grass: 'field', bug: 'forest', water: 'water', rock: 'rocky', ground: 'rocky', ice: 'snow', flying: 'field',
 };
 
+/** Type → themed halls from the Decades pack (half of a type's fights, picked by seed); day/eve/night versions where the pack has them. */
+const THEMED: Partial<Record<TypeName, readonly string[]>> = {
+  fire: ['burning'], electric: ['electric', 'factory'], psychic: ['psychic', 'whitecrystalcavern'], ghost: ['haunted', 'dimensional'],
+  dragon: ['dragonsden'], poison: ['corrosivemist'], fairy: ['fairytale', 'starlight'], steel: ['factory'], dark: ['darkcrystalcavern', 'dimensional'],
+  fighting: ['bigtop'], flying: ['clouds', 'clouds2'], ground: ['desert'], grass: ['flowergarden', 'deepforest'], bug: ['forest2', 'deepforest'],
+  water: ['beach'], rock: ['cave4'], normal: ['newworld'], ice: ['whitecrystalcavern'],
+};
+
 export type TimeOfDay = 'day' | 'eve' | 'night';
 
 function hash(text: string): number {
@@ -41,6 +49,13 @@ export function pickUieArena(q: ArenaQuery): string | null {
   if (q.shadowFoe) return 'distortion';
   const family = FAMILY[q.type];
   const tod = timeOfDay(q.seed, q.stageIndex);
+  const themed = THEMED[q.type];
+  const pick = hash(`${q.seed}:theme:${q.stageIndex}`);
+  if (themed && (pick >>> 7) % 2 === 0) {
+    const name = themed[(pick >>> 9) % themed.length]!;
+    const timed = `${name}_${tod}`;
+    return tod !== 'day' && UIE_ARENAS.includes(timed) ? timed : name;
+  }
   if (!family || tod === 'day') return null;
   const name = `${family}_${tod}`;
   return UIE_ARENAS.includes(name) ? name : null;

@@ -80,6 +80,8 @@ export const MENU_ICON_ITEMS = [
 /** UIE battleback names (tools/import-battlebacks.py). */
 export const UIE_ARENAS: readonly string[] = [
   'cave1', 'cave2', 'cave3', 'champion1', 'champion2', 'city', 'city_eve', 'city_night', 'distortion', 'elite1', 'elite2', 'elite3', 'elite4', 'elite5', 'elite6', 'elite7', 'elite8', 'field', 'field_eve', 'field_night', 'forest', 'forest_eve', 'forest_night', 'indoor1', 'indoor2', 'indoor3', 'rocky', 'rocky_eve', 'rocky_night', 'snow', 'snow_eve', 'snow_night', 'underwater', 'water', 'water_eve', 'water_night',
+  // Pokemon Decades pack extras (tools/import-battlebacks.py): themed halls and day/eve/night variants.
+  'beach', 'beach_eve', 'beach_night', 'bigtop', 'burning', 'cave4', 'clouds', 'clouds2', 'corrosivemist', 'darkcrystalcavern', 'deepforest', 'desert', 'desert_eve', 'desert_night', 'dimensional', 'dragonsden', 'electric', 'factory', 'fairytale', 'flowergarden', 'forest2', 'forest2_eve', 'forest2_night', 'haunted', 'newworld', 'psychic', 'starlight', 'whitecrystalcavern',
 ];
 export const uieArenaId = (name: string) => `bg.uie.${name}`;
 
@@ -322,6 +324,8 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ),
   { id: 'bgm.battle_trainer', kind: 'audio', category: 'music', path: 'audio/bgm/battle_trainer.mp3' },
   // GB Sounds stand-in: an original Game Boy style loop rendered by tools/make-gb-battle.py (the packs have no Gen 1 music).
+  { id: 'bgm.battle_lowhp', kind: 'audio', category: 'music', path: 'audio/bgm/battle_lowhp.mp3', lazy: true },
+  { id: 'ui.footprints', kind: 'image', category: 'ui', path: 'images/ui/footprints.png', lazy: true },
   { id: 'bgm.battle_gb', kind: 'audio', category: 'music', path: 'audio/bgm/battle_gb.mp3', lazy: true },
   // Victory fanfares from the Essentials EBDX kit ("Battle victory wild/trainer/leader"), loaded when a battle starts.
   ...['wild', 'trainer', 'leader'].map((n): AssetEntry => ({ id: `bgm.victory_${n}`, kind: 'audio', category: 'music', path: `audio/bgm/victory_${n}.mp3`, lazy: true })),

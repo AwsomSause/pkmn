@@ -55,7 +55,7 @@ import { services } from '../game/services';
 import { launcherReady } from '../core/camp';
 import { moveBlockReason } from '../core/battle/moveBlock';
 import { cheerProblem, coopOwner, exposedWeakSpot, puzzlePattern, raidBot, raidDef, raidRole } from '../core/raid/raid';
-import { playCry, playMusic, playSfx, playSfxLazy, setMusicIntensity } from '../ui/audio';
+import { playCry, playMusic, playMusicLazy, playSfx, playSfxLazy, setMusicIntensity } from '../ui/audio';
 import { setAmbience, setMusicState, setRegionKey, playMotif, stopProceduralAudio } from '../ui/procAudio';
 import { regionIdentity } from '../core/presentation/regionIdentity';
 import { ambienceFor, musicState } from '../core/presentation/musicLayers';
@@ -92,7 +92,7 @@ import { partySpecies, preloadPokemon, queueAssets } from '../ui/lazyAssets';
 import { pickWipe, wipeAssetId } from '../ui/battleFx/ruleWipe';
 import { sosEntry } from '../core/battle/sos';
 import { WEATHER_ASSET_IDS, WeatherLayer } from '../ui/battleFx/weather';
-import { battleTrack, raidMusic, victoryTrack, type BattleRole } from '../core/presentation/battleMusic';
+import { battleTrack, lowHpTrack, raidMusic, victoryTrack, type BattleRole } from '../core/presentation/battleMusic';
 import { itemCount } from '../core/items';
 import { planCues } from '../core/presentation/cues';
 import { applyCueHooks } from '../core/presentation/hooks';
@@ -361,15 +361,14 @@ export class BattleScene extends Phaser.Scene {
     // The same battle always gets the same look (salted by the run and how far it has come), so a reload never changes it.
     this.skinId = screenStyleOf('battle', session.settings.screenStyles, `${run.seed}:${run.log.battlesWon}:${run.log.rewardsTaken.length}`);
     this.skin = battleSkinFor(this.skinId);
-    playMusic(
-      this,
-      battleTrack({
-        raidTrack: this.raidTrack(battle),
-        trainer: battle.kind === 'trainer',
-        role: this.role,
-        gbSounds: itemCount(run.inventory, 'gb-sounds') > 0,
-      }),
-    );
+    this.baseTrack = battleTrack({
+      raidTrack: this.raidTrack(battle),
+      trainer: battle.kind === 'trainer',
+      role: this.role,
+      gbSounds: itemCount(run.inventory, 'gb-sounds') > 0,
+    });
+    this.playingTrack = this.baseTrack;
+    playMusic(this, this.baseTrack);
     this.startProceduralAudio(battle);
     // S256: emote stickers (Settings > Sticker reactions).
     if (services().session.settings.stickers) addStickerRow(this, () => PLAYER_POS, this.motion);
@@ -812,6 +811,9 @@ export class BattleScene extends Phaser.Scene {
 
   /** Set in `create`: the battle can be cleared from the run before the win song plays. */
   private role: BattleRole | undefined;
+  /** The battle's normal song, and the one playing now (the low-HP song swaps in while the lead is in danger). */
+  private baseTrack = '';
+  private playingTrack = '';
 
   /** Rival, gym leader, Elite Four, champion or final boss (null for wild and ordinary trainer fights). Music only. */
   private battleRole(): BattleRole | undefined {
@@ -1703,6 +1705,11 @@ export class BattleScene extends Phaser.Scene {
     const mon = this.run.party[this.run.battle?.activeIndex ?? 0];
     if (!settings.adaptiveMusic || !mon) return setMusicIntensity(1);
     const share = mon.hp / Math.max(1, maxHp(services().session.content, mon));
+    const track = this.baseTrack ? lowHpTrack(this.baseTrack, share) : '';
+    if (track && track !== this.playingTrack) {
+      this.playingTrack = track;
+      playMusicLazy(this, track, this.baseTrack);
+    }
     setMusicIntensity(share < 0.25 ? 1.1 : share < 0.5 ? 1.05 : 1);
   }
 
