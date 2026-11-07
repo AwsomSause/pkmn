@@ -4,12 +4,14 @@
 import type Phaser from 'phaser';
 import type { Content } from '../core/contentSchema';
 import { dexPage } from '../core/presentation/dexInfo';
+import { FOOTPRINT_COLS, FOOTPRINT_SIZE, footprintCell } from '../core/presentation/footprints';
 import type { Profile } from '../core/state';
 import { loadAssets } from './lazyAssets';
 import { pokemonVisual } from './sprites';
 import { GAME_HEIGHT, GAME_WIDTH, textStyle } from './theme';
 
 export const DEX_INFO_ASSET = 'ui.dex.bg_info';
+const FOOTPRINT_ASSET = 'ui.footprints';
 const S = 1.2; // the art is 800×480; the screen is 960×540 (the art is stretched to fit)
 
 export class DexInfo {
@@ -27,12 +29,19 @@ export class DexInfo {
       this.root.add(scene.add.text(514 * S, 123 * S, page.types, textStyle(20, '#304050')).setOrigin(0.5));
       const sp = content.species.get(speciesId)!;
       if (page.state !== 'unknown') this.root.add(pokemonVisual(scene, sp, 'front', 160 * S, 168 * S, 2, false));
+      const cell = page.state !== 'unknown' ? footprintCell(speciesId) : null;
+      if (cell !== null && scene.textures.exists(FOOTPRINT_ASSET)) {
+        const tex = scene.textures.get(FOOTPRINT_ASSET);
+        const frame = `fp${cell}`;
+        if (!tex.has(frame)) tex.add(frame, 0, (cell % FOOTPRINT_COLS) * FOOTPRINT_SIZE, Math.floor(cell / FOOTPRINT_COLS) * FOOTPRINT_SIZE, FOOTPRINT_SIZE, FOOTPRINT_SIZE);
+        this.root.add(scene.add.image(262 * S, 123 * S, FOOTPRINT_ASSET, frame).setScale(1.5).setTintFill(0x503820).setName('dex-footprint'));
+      }
       this.root.add(scene.add.text(535 * S, 172 * S, page.research ? `${page.note}\n\n${page.research}` : page.note, textStyle(16, '#304050', { wordWrap: { width: 205 * S } })));
       page.stats.forEach((line, i) => this.root.add(scene.add.text(40 * S + (i % 4) * 170 * S, 350 * S + Math.floor(i / 4) * 34 * S, line, textStyle(22, '#503820'))));
       this.root.add(scene.add.text(GAME_WIDTH - 16, GAME_HEIGHT - 14, 'Enter or Esc: back', textStyle(14, '#d8d8d8')).setOrigin(1, 1));
     };
-    if (scene.textures.exists(DEX_INFO_ASSET)) draw();
-    else void loadAssets(scene, [DEX_INFO_ASSET]).then(draw);
+    if (scene.textures.exists(DEX_INFO_ASSET) && scene.textures.exists(FOOTPRINT_ASSET)) draw();
+    else void loadAssets(scene, [DEX_INFO_ASSET, FOOTPRINT_ASSET]).then(draw);
   }
 
   close(): void {

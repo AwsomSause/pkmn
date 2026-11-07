@@ -31,6 +31,17 @@ export function battleTrack(i: BattleMusicInput): string {
   return i.trainer ? 'bgm.battle_trainer' : 'bgm.battle';
 }
 
+/** The Deluxe Battle Kit's low-HP song. */
+export const LOW_HP_TRACK = 'bgm.battle_lowhp';
+
+/**
+ * Ordinary wild and trainer fights swap to the low-HP song while your lead is in danger (under a fifth of its HP).
+ * Boss, rival, raid and GB Sounds songs stay. Presentation only: it never touches the battle.
+ */
+export function lowHpTrack(base: string, hpShare: number): string {
+  return hpShare < 0.2 && (base === 'bgm.battle' || base === 'bgm.battle_trainer') ? LOW_HP_TRACK : base;
+}
+
 /** The victory fanfare: the big one for bosses (gym leaders, Elite Four, champions), then trainers, then wild. */
 export function victoryTrack(i: { trainer: boolean; boss: boolean; role?: BattleRole }): string {
   if (i.role === 'elite') return 'bgm.victory_elite';
