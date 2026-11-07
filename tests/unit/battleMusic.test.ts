@@ -1,7 +1,33 @@
+import { existsSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import { battleTrack, lowHpTrack, LOW_HP_TRACK, MAP_TRACKS, mapTrack, ROLE_TRACK_IDS, VICTORY_TRACKS, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
+import { BATTLE_VARIANT_IDS, TRAINER_TRACKS, WILD_TRACKS, battleTrack, lowHpTrack, LOW_HP_TRACK, MAP_TRACKS, mapTrack, ROLE_TRACK_IDS, VICTORY_TRACKS, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
 import { FIXED_ASSETS } from '../../src/assets/catalog';
 import { buildContent } from '../../src/data';
+
+describe('battle music variants', () => {
+  it('no key keeps the default songs; a key picks a stable song per kind of fight', () => {
+    expect(battleTrack({ raidTrack: null, trainer: false, gbSounds: false })).toBe('bgm.battle');
+    expect(battleTrack({ raidTrack: null, trainer: true, gbSounds: false })).toBe('bgm.battle_trainer');
+    const wild = new Set(Array.from({ length: 80 }, (_, i) => battleTrack({ raidTrack: null, trainer: false, gbSounds: false, variantKey: `seed:${i}` })));
+    expect(wild).toEqual(new Set(WILD_TRACKS));
+    const trainer = new Set(Array.from({ length: 80 }, (_, i) => battleTrack({ raidTrack: null, trainer: true, gbSounds: false, variantKey: `seed:${i}` })));
+    expect(trainer).toEqual(new Set(TRAINER_TRACKS));
+    const k = { raidTrack: null, trainer: true, gbSounds: false, variantKey: 'x:3' } as const;
+    expect(battleTrack({ ...k, role: 'gym' })).toBe(battleTrack({ ...k, role: 'gym' }));
+    expect(battleTrack({ ...k, role: 'rival' })).toBe('bgm.battle_rival');
+    expect(battleTrack({ ...k, raidTrack: 'bgm.raid.max' })).toBe('bgm.raid.max');
+    expect(battleTrack({ ...k, gbSounds: true })).toBe('bgm.battle_gb');
+  });
+  it('every variant song is in the catalog and its file ships; the low-HP swap covers them', () => {
+    const files = new Map(FIXED_ASSETS.map((a) => [a.id, a.path]));
+    for (const id of BATTLE_VARIANT_IDS) {
+      expect(files.has(id), id).toBe(true);
+      expect(existsSync(`public/assets/${files.get(id)}`), id).toBe(true);
+    }
+    expect(lowHpTrack('bgm.battle_wild_oras', 0.1)).toBe(LOW_HP_TRACK);
+    expect(lowHpTrack('bgm.battle_gym_oras', 0.1)).toBe('bgm.battle_gym_oras');
+  });
+});
 
 describe('battle music', () => {
   it('ordinary fights swap to the low-HP song under a fifth of HP; bosses, raids and GB Sounds keep theirs', () => {
@@ -85,10 +111,10 @@ describe('form sprites from the Essentials kit', () => {
 });
 
 describe('map music', () => {
-  it('a region keeps its song, all three songs get used, all are in the catalog', () => {
+  it('a region keeps its song, every song gets used, all are in the catalog', () => {
     expect(mapTrack('kanto')).toBe(mapTrack('kanto'));
-    const seen = new Set(['kanto', 'johto', 'hoenn', 'sinnoh', 'unova', 'kalos', 'alola', 'galar', 'paldea', 'grand'].map(mapTrack));
-    expect(seen.size).toBeGreaterThan(1);
+    const seen = new Set(Array.from({ length: 200 }, (_, i) => mapTrack(`region-${i}`)));
+    expect(seen).toEqual(new Set(MAP_TRACKS));
     const ids = new Set(FIXED_ASSETS.map((a) => a.id));
     for (const id of MAP_TRACKS) expect(ids.has(id), id).toBe(true);
   });
