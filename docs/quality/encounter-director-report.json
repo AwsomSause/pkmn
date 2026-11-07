@@ -6,63 +6,64 @@
    "stage": 0,
    "intendedLevels": [
     4,
-    5
+    6
    ],
-   "curveLevel": 4,
+   "curveLevel": 5,
    "wild": {
     "samples": 10000,
     "levels": {
-     "4": 6644,
-     "5": 3356
+     "4": 3338,
+     "5": 3306,
+     "6": 3356
     },
-    "species": 85,
+    "species": 102,
     "topSpecies": [
      [
-      "slugma",
-      287
-     ],
-     [
-      "impidimp",
-      285
-     ],
-     [
-      "snom",
-      284
-     ],
-     [
-      "wooper",
+      "bramblin",
       279
      ],
      [
+      "litwick",
+      266
+     ],
+     [
+      "snom",
+      257
+     ],
+     [
+      "impidimp",
+      236
+     ],
+     [
       "applin",
-      273
+      231
+     ],
+     [
+      "wooper",
+      228
      ],
      [
       "swinub",
-      247
+      223
      ],
      [
-      "budew",
-      242
-     ],
-     [
-      "rolycoly",
-      217
+      "slugma",
+      202
      ]
     ],
     "rarity": {
-     "common": 8500,
-     "uncommon": 761,
-     "rare": 621,
-     "veryRare": 118
+     "common": 8706,
+     "uncommon": 667,
+     "rare": 490,
+     "veryRare": 137
     },
     "evolutionStage": {
      "1": 10000
     },
-    "threatAvg": 53.253,
-    "threatMax": 79,
-    "budgetAvg": 86.937,
-    "rejectionRate": 0.055,
+    "threatAvg": 52.771,
+    "threatMax": 86,
+    "budgetAvg": 88.003,
+    "rejectionRate": 0.035,
     "fallbacks": 0,
     "invalid": 0,
     "lockedPicks": 0,
@@ -71,59 +72,60 @@
    "trainer": {
     "samples": 2000,
     "levels": {
-     "4": 686,
-     "5": 659,
-     "6": 655
+     "5": 686,
+     "6": 659,
+     "7": 655
     },
-    "species": 87,
+    "species": 108,
     "topSpecies": [
      [
-      "slugma",
-      73
-     ],
-     [
       "applin",
-      71
-     ],
-     [
-      "shedinja",
-      67
+      68
      ],
      [
       "makuhita",
       67
      ],
      [
+      "litwick",
+      60
+     ],
+     [
       "impidimp",
-      64
+      57
      ],
      [
-      "noibat",
-      56
+      "slugma",
+      53
      ],
      [
-      "budew",
+      "wooper",
       49
      ],
      [
       "bonsly",
       48
+     ],
+     [
+      "snom",
+      47
      ]
     ],
     "rarity": {
-     "common": 1617,
-     "uncommon": 149,
-     "rare": 141,
-     "veryRare": 93
+     "common": 1683,
+     "uncommon": 142,
+     "rare": 123,
+     "veryRare": 52
     },
     "evolutionStage": {
-     "1": 2000
+     "1": 1984,
+     "2": 16
     },
-    "threatAvg": 54.846,
-    "threatMax": 108,
-    "budgetAvg": 102.96,
-    "rejectionRate": 0.221,
-    "fallbacks": 47,
+    "threatAvg": 53.263,
+    "threatMax": 102,
+    "budgetAvg": 105.56,
+    "rejectionRate": 0.013,
+    "fallbacks": 0,
     "invalid": 0,
     "lockedPicks": 0,
     "oneHitKoRate": 0
@@ -132,65 +134,65 @@
   {
    "stage": 1,
    "intendedLevels": [
-    6,
-    8
+    9,
+    11
    ],
-   "curveLevel": 7,
+   "curveLevel": 10,
    "wild": {
     "samples": 10000,
     "levels": {
-     "6": 3388,
-     "7": 3294,
-     "8": 3318
+     "9": 3388,
+     "10": 3294,
+     "11": 3318
     },
-    "species": 141,
+    "species": 263,
     "topSpecies": [
      [
+      "numel",
+      95
+     ],
+     [
       "spheal",
-      185
+      94
      ],
      [
-      "applin",
-      159
+      "dwebble",
+      93
      ],
      [
-      "litwick",
-      157
-     ],
-     [
-      "sandile",
-      154
-     ],
-     [
-      "snom",
-      152
-     ],
-     [
-      "bramblin",
-      144
-     ],
-     [
-      "barboach",
-      140
+      "natu",
+      93
      ],
      [
       "impidimp",
-      137
+      90
+     ],
+     [
+      "snom",
+      89
+     ],
+     [
+      "applin",
+      86
+     ],
+     [
+      "geodude",
+      85
      ]
     ],
     "rarity": {
-     "common": 9035,
-     "rare": 325,
-     "veryRare": 121,
-     "uncommon": 519
+     "common": 8448,
+     "rare": 198,
+     "veryRare": 526,
+     "uncommon": 828
     },
     "evolutionStage": {
      "1": 10000
     },
-    "threatAvg": 54.684,
-    "threatMax": 90,
-    "budgetAvg": 91.189,
-    "rejectionRate": 0.02,
+    "threatAvg": 56.371,
+    "threatMax": 91,
+    "budgetAvg": 95.989,
+    "rejectionRate": 0.003,
     "fallbacks": 0,
     "invalid": 0,
     "lockedPicks": 0,
@@ -199,58 +201,59 @@
    "trainer": {
     "samples": 4000,
     "levels": {
-     "7": 1336,
-     "8": 1379,
-     "9": 1285
+     "10": 1333,
+     "11": 1385,
+     "12": 1282
     },
-    "species": 145,
+    "species": 265,
     "topSpecies": [
      [
-      "tinkatink",
-      246
-     ],
-     [
       "applin",
-      115
+      66
      ],
      [
-      "makuhita",
-      111
+      "carvanha",
+      57
      ],
      [
-      "sandile",
-      89
+      "stunky",
+      57
+     ],
+     [
+      "honedge",
+      49
      ],
      [
       "noibat",
-      86
+      47
      ],
      [
-      "meditite",
-      82
+      "tinkatink",
+      47
      ],
      [
-      "spheal",
-      78
+      "croagunk",
+      47
      ],
      [
-      "vulpix",
-      75
+      "snom",
+      45
      ]
     ],
     "rarity": {
-     "common": 3549,
-     "veryRare": 85,
-     "uncommon": 216,
-     "rare": 150
+     "common": 3312,
+     "veryRare": 273,
+     "rare": 86,
+     "uncommon": 329
     },
     "evolutionStage": {
-     "1": 3943,
-     "2": 57
+     "1": 3979,
+     "2": 11,
+     "3": 10
     },
-    "threatAvg": 56,
-    "threatMax": 106,
-    "budgetAvg": 110.767,
+    "threatAvg": 57.745,
+    "threatMax": 112,
+    "budgetAvg": 118.567,
     "rejectionRate": 0.005,
     "fallbacks": 0,
     "invalid": 0,
@@ -261,65 +264,65 @@
   {
    "stage": 2,
    "intendedLevels": [
-    10,
-    12
+    14,
+    16
    ],
-   "curveLevel": 11,
+   "curveLevel": 15,
    "wild": {
     "samples": 10000,
     "levels": {
-     "10": 3339,
-     "11": 3357,
-     "12": 3304
+     "14": 3339,
+     "15": 3357,
+     "16": 3304
     },
-    "species": 294,
+    "species": 330,
     "topSpecies": [
      [
-      "geodude",
-      87
-     ],
-     [
-      "natu",
-      80
-     ],
-     [
-      "nincada",
-      80
+      "scraggy",
+      82
      ],
      [
       "numel",
-      79
-     ],
-     [
-      "snom",
-      73
-     ],
-     [
-      "sizzlipede",
-      72
+      77
      ],
      [
       "aron",
-      71
+      76
      ],
      [
-      "sandile",
+      "snom",
+      74
+     ],
+     [
+      "vullaby",
+      73
+     ],
+     [
+      "geodude",
       70
+     ],
+     [
+      "doduo",
+      65
+     ],
+     [
+      "ledyba",
+      65
      ]
     ],
     "rarity": {
-     "common": 8026,
-     "uncommon": 1230,
-     "rare": 189,
-     "veryRare": 555
+     "common": 7833,
+     "uncommon": 1282,
+     "rare": 215,
+     "veryRare": 670
     },
     "evolutionStage": {
      "1": 10000
     },
-    "threatAvg": 58.801,
-    "threatMax": 99,
-    "budgetAvg": 97.594,
-    "rejectionRate": 0.004,
+    "threatAvg": 61.681,
+    "threatMax": 104,
+    "budgetAvg": 103.994,
+    "rejectionRate": 0.007,
     "fallbacks": 0,
     "invalid": 0,
     "lockedPicks": 0,
@@ -328,60 +331,60 @@
    "trainer": {
     "samples": 6000,
     "levels": {
-     "11": 1993,
-     "12": 2020,
-     "13": 1987
+     "15": 1987,
+     "16": 2021,
+     "17": 1992
     },
-    "species": 295,
+    "species": 342,
     "topSpecies": [
      [
-      "aron",
-      96
-     ],
-     [
       "applin",
-      88
+      86
      ],
      [
-      "impidimp",
-      66
+      "aron",
+      80
      ],
      [
-      "ferroseed",
+      "jigglypuff",
+      71
+     ],
+     [
+      "scraggy",
+      71
+     ],
+     [
+      "marill",
       63
      ],
      [
+      "vullaby",
+      57
+     ],
+     [
+      "ferroseed",
+      55
+     ],
+     [
       "bronzor",
-      58
-     ],
-     [
-      "stunky",
-      57
-     ],
-     [
-      "carvanha",
-      57
-     ],
-     [
-      "sandile",
-      57
+      53
      ]
     ],
     "rarity": {
-     "common": 4757,
-     "veryRare": 404,
-     "uncommon": 689,
-     "rare": 150
+     "common": 4438,
+     "uncommon": 909,
+     "veryRare": 508,
+     "rare": 145
     },
     "evolutionStage": {
-     "1": 5947,
-     "2": 23,
-     "3": 30
+     "1": 5695,
+     "2": 257,
+     "3": 48
     },
-    "threatAvg": 60.244,
-    "threatMax": 114,
-    "budgetAvg": 121.197,
-    "rejectionRate": 0.004,
+    "threatAvg": 65.394,
+    "threatMax": 134,
+    "budgetAvg": 131.602,
+    "rejectionRate": 0.011,
     "fallbacks": 0,
     "invalid": 0,
     "lockedPicks": 0,
@@ -391,65 +394,65 @@
   {
    "stage": 3,
    "intendedLevels": [
-    14,
-    16
+    19,
+    21
    ],
-   "curveLevel": 15,
+   "curveLevel": 20,
    "wild": {
     "samples": 10000,
     "levels": {
-     "14": 3357,
-     "15": 3330,
-     "16": 3313
+     "19": 3357,
+     "20": 3330,
+     "21": 3313
     },
-    "species": 330,
+    "species": 354,
     "topSpecies": [
      [
+      "stunky",
+      76
+     ],
+     [
       "aron",
-      83
+      75
      ],
      [
-      "scraggy",
-      82
+      "applin",
+      74
      ],
      [
-      "vullaby",
-      71
+      "nincada",
+      70
      ],
      [
       "spheal",
       70
      ],
      [
-      "dwebble",
-      70
-     ],
-     [
-      "applin",
-      69
-     ],
-     [
-      "nincada",
+      "scraggy",
       68
      ],
      [
       "litleo",
       68
+     ],
+     [
+      "cutiefly",
+      67
      ]
     ],
     "rarity": {
-     "common": 7861,
-     "uncommon": 1286,
-     "veryRare": 656,
-     "rare": 197
+     "common": 7710,
+     "uncommon": 1250,
+     "veryRare": 744,
+     "rare": 296
     },
     "evolutionStage": {
      "1": 10000
     },
-    "threatAvg": 62.801,
-    "threatMax": 104,
-    "budgetAvg": 103.993,
-    "rejectionRate": 0.009,
+    "threatAvg": 66.004,
+    "threatMax": 113,
+    "budgetAvg": 111.993,
+    "rejectionRate": 0.012,
     "fallbacks": 0,
     "invalid": 0,
     "lockedPicks": 0,
@@ -458,60 +461,60 @@
    "trainer": {
     "samples": 6000,
     "levels": {
-     "15": 2012,
-     "16": 2021,
-     "17": 1967
+     "20": 2003,
+     "21": 2022,
+     "22": 1975
     },
-    "species": 343,
+    "species": 363,
     "topSpecies": [
      [
       "applin",
-      90
-     ],
-     [
-      "jigglypuff",
-      72
+      91
      ],
      [
       "aron",
-      70
+      68
      ],
      [
-      "scraggy",
-      62
-     ],
-     [
-      "varoom",
-      60
-     ],
-     [
-      "spheal",
-      56
-     ],
-     [
-      "noibat",
-      55
+      "jigglypuff",
+      67
      ],
      [
       "bronzor",
-      53
+      62
+     ],
+     [
+      "scraggy",
+      60
+     ],
+     [
+      "varoom",
+      59
+     ],
+     [
+      "spheal",
+      58
+     ],
+     [
+      "numel",
+      55
      ]
     ],
     "rarity": {
-     "common": 4349,
-     "veryRare": 556,
-     "uncommon": 948,
-     "rare": 147
+     "rare": 431,
+     "uncommon": 1238,
+     "common": 3630,
+     "veryRare": 701
     },
     "evolutionStage": {
-     "1": 5635,
-     "2": 311,
-     "3": 54
+     "1": 4962,
+     "2": 988,
+     "3": 50
     },
-    "threatAvg": 67.027,
-    "threatMax": 134,
-    "budgetAvg": 131.58,
-    "rejectionRate": 0.009,
+    "threatAvg": 75.163,
+    "threatMax": 140,
+    "budgetAvg": 144.588,
+    "rejectionRate": 0.01,
     "fallbacks": 0,
     "invalid": 0,
     "lockedPicks": 0,
