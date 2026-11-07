@@ -556,6 +556,7 @@ export class HubScene extends Phaser.Scene {
   private handle(a: InputAction): void {
     if (this.dexInfo) {
       if (a === 'confirm' || a === 'back') this.dexInfo.close();
+      else if (a === 'left' || a === 'right') this.dexInfo.flip();
       return;
     }
     if (this.picker) {
