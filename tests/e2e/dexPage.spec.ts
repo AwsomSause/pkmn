@@ -31,6 +31,9 @@ test('Pokédex list and species page', async ({ page }) => {
   const open = await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').children.list.some((o: any) => o.name === 'dex-info'));
   expect(open).toBe(true);
   await page.screenshot({ path: 'test-results/dex-page.png' });
+  await page.keyboard.press('ArrowRight'); // the data page: abilities, breeding, evolutions, moves
+  await page.waitForTimeout(300);
+  await page.screenshot({ path: 'test-results/dex-data-page.png' });
   await page.keyboard.press('Escape');
   await page.waitForTimeout(300);
   expect(await page.evaluate(() => (window as any).__pkr.game.scene.getScene('Hub').children.list.some((o: any) => o.name === 'dex-info'))).toBe(false);

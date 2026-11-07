@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dexPage, dexState } from '../../src/core/presentation/dexInfo';
+import { dexDataPage, dexPage, dexState } from '../../src/core/presentation/dexInfo';
 import { content } from './helpers';
 
 const profile = { speciesSeen: ['pikachu', 'bulbasaur'], speciesCaught: ['bulbasaur'] };
@@ -22,5 +22,15 @@ describe('Pokédex species page', () => {
   });
   it('rejects an unknown species id', () => {
     expect(() => dexPage(content, profile, 'nope')).toThrow(/Unknown species/);
+  });
+  it('the data page hides unmet species and the hidden ability until caught', () => {
+    expect(dexDataPage(content, profile, 'charmander')).toMatchObject({ facts: [], moves: [] });
+    const seen = dexDataPage(content, profile, 'pikachu');
+    expect(seen.facts.find((f) => f.startsWith('Hidden ability'))).toBe('Hidden ability: ???');
+    const caught = dexDataPage(content, profile, 'bulbasaur');
+    expect(caught.facts.find((f) => f.startsWith('Hidden ability'))).not.toContain('???');
+    expect(caught.evolutions[0]).toContain('Ivysaur');
+    expect(caught.moves[0]).toContain('Tackle');
+    expect(caught.moves.length).toBeGreaterThan(5);
   });
 });
