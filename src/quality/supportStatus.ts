@@ -12,7 +12,7 @@
 // Nothing here changes how the game plays.
 
 import type { Ability, Content, Evolution, Item, Move, Species } from '../core/contentSchema';
-import { abilityStatus } from '../core/battle/abilities';
+import { ABILITY_FORMS, abilityStatus } from '../core/battle/abilities';
 import { isUsableMove, usableLearnset } from '../core/pokemon';
 import { isWildEligible } from '../core/themes';
 import { eligibleSpecies } from '../core/runPrep';
@@ -104,6 +104,12 @@ function stoneTargets(content: Content): Set<string> {
   return out;
 }
 
+function heldFormTargets(content: Content): Set<string> {
+  const out = new Set<string>();
+  for (const entry of content.catalog.values()) if (entry.effect?.kind === 'held') for (const h of entry.effect.hooks) if (h.hook === 'formHeld') out.add(h.to);
+  return out;
+}
+
 export function isTransformation(s: Species): boolean {
   return Boolean(s.form && TRANSFORMATION_KINDS.has(s.form.kind));
 }
@@ -151,7 +157,9 @@ export function speciesStatus(content: Content, s: Species, inputs: StatusInputs
   if (cryOwner && cryOwner !== s.id && (custom || lineOf(content, cryOwner) !== lineOf(content, s.id))) notes.push({ status: 'limited', note: `uses the cry of "${cryOwner}"` });
   if (isTransformation(s)) {
     if (s.form!.kind === 'gigantamax') notes.push({ status: 'limited', note: 'Gigantamax form: taken in every battle while you own the Dynamax Band (M8.5); some G-Max side effects are not built' });
-    else if (stoneTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: reached in battle with its stone or orb (M8.5); abilities aren't modelled yet` });
+    else if (stoneTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: reached in battle with its stone or orb (M8.5); it uses this form's ability` });
+    else if (ABILITY_FORMS.has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: its ability changes it in battle` });
+    else if (heldFormTargets(content).has(s.id)) notes.push({ status: 'limited', note: `${s.form!.kind} form: taken in battle while holding its item` });
     else notes.push({ status: 'disabled', note: `${s.form!.kind} form: appears only through Advanced Mechanics not built yet (M8.5)` });
   }
   const usable = new Set(usableLearnset(content, s).map((e) => e.move));

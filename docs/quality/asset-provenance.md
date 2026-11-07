@@ -150,4 +150,8 @@ Dataset: `src/data/moveTargets.json` (which moves hit both foes, everyone, the p
 107 icons generated for the director with PixelLab Pro Flash (32x32; the champion trophy is 48x48), supplied as `Pokemon_Roguelike_Asset_Pack/02_PixelLab_Generated_Sprites` (style anchor: the game's coin case icon). Imported by `tools/import-story-icons.mjs` to `public/assets/images/packs/story/`: 30 emote bubbles, 4 choice tones, 12 snacks, 10 bond hearts, 4 elite tokens + trophy, 18 gym badges (one per type), 20 keepsake accessories, 8 ball-exit effects. Generation prompts and costs are in the pack's `03_Records_and_Tools`. Flagged for redo by the pack: Snot Bubble, Nervous Sweat, Double Note, Charm Necklace, Steel badge, hearts 5-7.
 
 ## Professor Vance animations (2026-11-07)
-`images/packs/vance/{surprised,nudge,explain,tilt,adjust,confident}.png`: the director's own PixelLab animations of Professor Vance, uploaded 2026-11-07 as `Professor.zip` (six 800x640 sheets, 17 frames each of 160x160, 5 per row; copied unchanged and renamed). Used by the prologue (Beats 3, 4, 10). The zip's static `New Professer.png` portrait is not imported yet.
+| Path | Source | Original | Licence |
+|---|---|---|---|
+| `images/packs/vance/{surprised,nudge,explain,tilt,adjust,confident}.png` | the director's own PixelLab art (`Professor.zip`, 2026-11-07) | six 800x640 sheets, copied unchanged and renamed | the director's own |
+
+The director's own PixelLab animations of Professor Vance, uploaded 2026-11-07 as `Professor.zip` (six 800x640 sheets, 17 frames each of 160x160, 5 per row; copied unchanged and renamed). Used by the prologue (Beats 3, 4, 10). The zip's static `New Professer.png` portrait is not imported yet.

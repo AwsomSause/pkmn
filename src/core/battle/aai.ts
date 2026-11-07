@@ -62,7 +62,7 @@ const sideOf = (v: AaiView, who: 'user' | 'target') => {
 };
 const holds = (mon: PokemonInstance, id: string) => (mon.held?.[id] ?? 0) > 0;
 const pct = (hp: number, max: number) => hp / Math.max(1, max);
-const grounded = (types: readonly TypeName[], ability: string | null) => !types.includes('flying') && ability !== 'levitate';
+const grounded = (types: readonly TypeName[], ability: string | null) => !types.includes('flying') && ability !== 'levitate' && ability !== 'eelevate';
 
 /** Moves the user has seen the target use this battle (Move Memory), or all its moves when there is no battle. */
 export function knownMoves(v: AaiView): Move[] {

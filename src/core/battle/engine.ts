@@ -79,6 +79,8 @@ import {
   TRAPPERS,
   INTIMIDATE_GUARD,
   KO_BOOST,
+  FORM_PAIRS,
+  FORECAST_FORMS,
   MOLD_BREAKERS,
   PINCH,
   STATUS_IMMUNE,
@@ -608,7 +610,7 @@ export function switchProblem(ctx: Pick<BattleContext, 'battle' | 'party'> & Par
     const foeMon = currentEnemy(ctx.battle);
     const trapper = foeMon.hp > 0 ? (ctx.battle.enemyVolatile.abilityOverride ?? abilityOf(ctx.content, foeMon)) : null;
     const types = getSpecies(ctx.content, active.speciesId).types;
-    const grounded = !types.includes('flying') && abilityOf(ctx.content, active) !== 'levitate';
+    const grounded = !types.includes('flying') && !['levitate', 'eelevate'].includes(abilityOf(ctx.content, active) ?? '');
     const caught = trapper === 'shadow-tag' ? abilityOf(ctx.content, active) !== 'shadow-tag' : trapper === 'arena-trap' ? grounded : trapper === 'magnet-pull' ? types.includes('steel') : false;
     if (trapper && TRAPPERS.has(trapper) && caught && !types.includes('ghost')) return `The foe's ${trapper.replace(/-/g, ' ')} keeps you from switching out!`;
   }
@@ -1924,16 +1926,6 @@ function swapForm(ctx: BattleContext, c: Combatant, to: string, events: BattleEv
   events.push({ type: 'transform', side: c.side, uid: c.mon.uid, kind: 'ability', from, to, itemId: null } as BattleEvent);
 }
 
-/** Forms that follow HP, weather or a toggle: [base, alternate] pairs per ability. */
-const FORM_PAIRS: Record<string, [string, string][]> = {
-  'zen-mode': [['darmanitan', 'darmanitan-zen'], ['darmanitan-galar', 'darmanitan-galar-zen']],
-  schooling: [['wishiwashi', 'wishiwashi-school']],
-  'power-construct': [['zygarde', 'zygarde-complete']],
-  'hunger-switch': [['morpeko', 'morpeko-hangry']],
-  'tera-shift': [['terapagos', 'terapagos-terastal']],
-  'shields-down': [['minior', 'minior-core']],
-};
-const FORECAST_FORMS: Partial<Record<Weather, string>> = { sun: 'castform-sunny', rain: 'castform-rainy', snow: 'castform-snowy', hail: 'castform-snowy' };
 
 /** Moves a Pokémon into or out of the form its ability asks for. `endOfTurn` lets Hunger Switch flip. */
 function syncForms(ctx: BattleContext, c: Combatant, events: BattleEvent[], endOfTurn: boolean): void {
@@ -2110,12 +2102,18 @@ function statusCureAbility(ctx: BattleContext, c: Combatant, events: BattleEvent
  * and friends (take the move and heal or get stronger), Wonder Guard (only
  * super-effective hits), Soundproof. Returns true if the move was stopped.
  */
+/** Levitate and Eelevate dodge Ground moves unless Gravity or Smack Down has grounded it; Thousand Arrows (smackDown) still hits. */
+function floatsOver(ctx: BattleContext, target: Combatant, ability: string | null, move: Move, moveType: TypeName): boolean {
+  if (ability !== 'levitate' && ability !== 'eelevate') return false;
+  return moveType === 'ground' && !move.effects.smackDown && ctx.battle.field.gravity <= 0 && !target.vol.smackedDown;
+}
+
 /** S7: the target's ability that would block this damaging move (absorbs, Levitate, Wonder Guard, Soundproof, Bulletproof), or null. No side effects. */
 function abilityWouldBlock(ctx: BattleContext, user: Combatant, target: Combatant, move: Move, moveType: TypeName, effectiveness: number): string | null {
   const ability = targetAbility(ctx, user, target);
   if (!ability) return null;
   if (ABSORB[ability]?.type === moveType) return ability;
-  if ((ability === 'levitate' || ability === 'eelevate') && moveType === 'ground' && !move.effects.hitsSemi) return ability;
+  if (floatsOver(ctx, target, ability, move, moveType)) return ability;
   if (ability === 'wonder-guard' && effectiveness <= 1 && !move.flags.includes('typeless')) return ability;
   if ((ability === 'soundproof' && move.flags.includes('sound')) || (ability === 'bulletproof' && move.flags.includes('bullet'))) return ability;
   return null;
@@ -2149,8 +2147,8 @@ function abilityBlocksMove(ctx: BattleContext, user: Combatant, target: Combatan
     }
     return true;
   }
-  if (damaging && (ability === 'levitate' || ability === 'eelevate') && moveType === 'ground' && !move.effects.hitsSemi) blocked = true;
-  if (damaging && ctx.battle.eventRule?.sky && moveType === 'ground' && !move.effects.hitsSemi) blocked = true;
+  if (damaging && floatsOver(ctx, target, ability, move, moveType)) blocked = true;
+  if (damaging && ctx.battle.eventRule?.sky && moveType === 'ground' && !move.effects.smackDown) blocked = true;
   if (damaging && ability === 'wonder-guard' && effectiveness <= 1 && !move.flags.includes('typeless')) blocked = true;
   if (ability === 'soundproof' && move.flags.includes('sound')) blocked = true;
   if (ability === 'good-as-gold' && !damaging) blocked = true;
@@ -4157,7 +4155,7 @@ function afterHitAbilities(ctx: BattleContext, user: Combatant, target: Combatan
   if (koBoost && target.mon.hp <= 0 && user.mon.hp > 0) {
     let stat: BoostStat;
     if (koBoost === 'best') {
-      // Beast Boost raises its highest stat.
+      // Beast Boost and Eelevate raise the highest stat.
       const stats = calcStats(ctx.content, user.mon);
       stat = (['atk', 'def', 'spa', 'spd', 'spe'] as const).reduce((best, s) => (stats[s] > stats[best] ? s : best));
     } else stat = koBoost;

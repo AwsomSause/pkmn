@@ -179,7 +179,10 @@ export function rollAbilitySlot(content: Content, species: Species, key: string)
  * new species (wrapping round), or its hidden one.
  */
 export function abilityOf(content: Content, mon: PokemonInstance): string | null {
-  const { normal, hidden } = getSpecies(content, mon.speciesId).abilities;
+  const species = getSpecies(content, mon.speciesId);
+  const { normal, hidden } = species.abilities;
+  // A Mega or Primal form has one ability, whatever slot the base form used.
+  if ((species.form?.kind === 'mega' || species.form?.kind === 'primal') && normal.length > 0) return normal[0]!;
   if (mon.abilitySlot === -1 && hidden) return hidden;
   if (normal.length === 0) return hidden;
   return normal[Math.max(0, mon.abilitySlot) % normal.length]!;

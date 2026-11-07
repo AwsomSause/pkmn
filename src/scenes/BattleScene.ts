@@ -652,7 +652,7 @@ export class BattleScene extends Phaser.Scene {
     const floats = (mon: PokemonInstance | null | undefined) => {
       if (!mon) return false;
       const sp = content.species.get(mon.speciesId);
-      return Boolean(sp?.types.includes('flying') || abilityOf(content, mon) === 'levitate');
+      return Boolean(sp?.types.includes('flying') || ['levitate', 'eelevate'].includes(abilityOf(content, mon) ?? ''));
     };
     const list: ShadowTarget[] = [];
     for (const side of ['player', 'enemy'] as const) {
