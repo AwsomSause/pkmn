@@ -366,9 +366,12 @@ export class BattleScene extends Phaser.Scene {
       trainer: battle.kind === 'trainer',
       role: this.role,
       gbSounds: itemCount(run.inventory, 'gb-sounds') > 0,
+      variantKey: `${run.seed}:${run.log.battlesWon}`,
     });
     this.playingTrack = this.baseTrack;
-    playMusic(this, this.baseTrack);
+    // Extra songs load on demand; the default song plays until they arrive.
+    const fallback = battleTrack({ raidTrack: null, trainer: battle.kind === 'trainer', role: this.role, gbSounds: false });
+    playMusicLazy(this, this.baseTrack, fallback);
     this.startProceduralAudio(battle);
     // S256: emote stickers (Settings > Sticker reactions).
     if (services().session.settings.stickers) addStickerRow(this, () => PLAYER_POS, this.motion);
