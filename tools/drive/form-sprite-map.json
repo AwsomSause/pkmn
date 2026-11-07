@@ -1,0 +1,577 @@
+{
+ "venusaur-gmax": {
+  "strip": "VENUSAUR_2.png",
+  "sprite": "3-gigantamax",
+  "form": "Gigantamax"
+ },
+ "charizard-gmax": {
+  "strip": "CHARIZARD_3.png",
+  "sprite": "6-gigantamax",
+  "form": "Gigantamax"
+ },
+ "blastoise-gmax": {
+  "strip": "BLASTOISE_2.png",
+  "sprite": "9-gigantamax",
+  "form": "Gigantamax"
+ },
+ "butterfree-gmax": {
+  "strip": "BUTTERFREE_1.png",
+  "sprite": "12-gigantamax",
+  "form": "Gigantamax"
+ },
+ "pikachu-gmax": {
+  "strip": "PIKACHU_17.png",
+  "sprite": "25-gigantamax",
+  "form": "Gigantamax"
+ },
+ "raichu-mega-x": {
+  "strip": "RAICHU_2.png",
+  "sprite": "26-mega-x",
+  "form": "Mega Raichu X"
+ },
+ "raichu-mega-y": {
+  "strip": "RAICHU_3.png",
+  "sprite": "26-mega-y",
+  "form": "Mega Raichu Y"
+ },
+ "clefable-mega": {
+  "strip": "CLEFABLE_1.png",
+  "sprite": "36-mega",
+  "form": "Mega Clefable"
+ },
+ "meowth-gmax": {
+  "strip": "MEOWTH_3.png",
+  "sprite": "52-gigantamax",
+  "form": "Gigantamax"
+ },
+ "growlithe-hisui": {
+  "strip": "GROWLITHE_1.png",
+  "sprite": "6058",
+  "form": "Hisuian"
+ },
+ "arcanine-hisui": {
+  "strip": "ARCANINE_1.png",
+  "sprite": "6059",
+  "form": "Hisuian"
+ },
+ "machamp-gmax": {
+  "strip": "MACHAMP_1.png",
+  "sprite": "68-gigantamax",
+  "form": "Gigantamax"
+ },
+ "victreebel-mega": {
+  "strip": "VICTREEBEL_1.png",
+  "sprite": "71-mega",
+  "form": "Mega Victreebel"
+ },
+ "gengar-gmax": {
+  "strip": "GENGAR_2.png",
+  "sprite": "94-gigantamax",
+  "form": "Gigantamax"
+ },
+ "kingler-gmax": {
+  "strip": "KINGLER_1.png",
+  "sprite": "99-gigantamax",
+  "form": "Gigantamax"
+ },
+ "voltorb-hisui": {
+  "strip": "VOLTORB_1.png",
+  "sprite": "6100",
+  "form": "Hisuian"
+ },
+ "electrode-hisui": {
+  "strip": "ELECTRODE_1.png",
+  "sprite": "6101",
+  "form": "Hisuian"
+ },
+ "starmie-mega": {
+  "strip": "STARMIE_1.png",
+  "sprite": "121-mega",
+  "form": "Mega Starmie"
+ },
+ "tauros-paldea-combat-breed": {
+  "strip": "TAUROS_1.png",
+  "sprite": "8128",
+  "form": "Paldean (Combat Breed)"
+ },
+ "tauros-paldea-blaze-breed": {
+  "strip": "TAUROS_2.png",
+  "sprite": "8128-blaze",
+  "form": "Paldean (Blaze Breed)"
+ },
+ "tauros-paldea-aqua-breed": {
+  "strip": "TAUROS_3.png",
+  "sprite": "8128-aqua",
+  "form": "Paldean (Aqua Breed)"
+ },
+ "lapras-gmax": {
+  "strip": "LAPRAS_1.png",
+  "sprite": "131-gigantamax",
+  "form": "Gigantamax"
+ },
+ "eevee-gmax": {
+  "strip": "EEVEE_2.png",
+  "sprite": "133-gigantamax",
+  "form": "Gigantamax"
+ },
+ "snorlax-gmax": {
+  "strip": "SNORLAX_1.png",
+  "sprite": "143-gigantamax",
+  "form": "Gigantamax"
+ },
+ "dragonite-mega": {
+  "strip": "DRAGONITE_1.png",
+  "sprite": "149-mega",
+  "form": "Mega Dragonite"
+ },
+ "meganium-mega": {
+  "strip": "MEGANIUM_1.png",
+  "sprite": "154-mega",
+  "form": "Mega Meganium"
+ },
+ "typhlosion-hisui": {
+  "strip": "TYPHLOSION_1.png",
+  "sprite": "6157",
+  "form": "Hisuian"
+ },
+ "feraligatr-mega": {
+  "strip": "FERALIGATR_1.png",
+  "sprite": "160-mega",
+  "form": "Mega Feraligatr"
+ },
+ "wooper-paldea": {
+  "strip": "WOOPER_1.png",
+  "sprite": "8194",
+  "form": "Paldean"
+ },
+ "qwilfish-hisui": {
+  "strip": "QWILFISH_1.png",
+  "sprite": "6211",
+  "form": "Hisuian"
+ },
+ "sneasel-hisui": {
+  "strip": "SNEASEL_1.png",
+  "sprite": "6215",
+  "form": "Hisuian"
+ },
+ "skarmory-mega": {
+  "strip": "SKARMORY_1.png",
+  "sprite": "227-mega",
+  "form": "Mega Skarmory"
+ },
+ "chimecho-mega": {
+  "strip": "CHIMECHO_1.png",
+  "sprite": "358-mega",
+  "form": "Mega Chimecho"
+ },
+ "absol-mega-z": {
+  "strip": "ABSOL_2.png",
+  "sprite": "359-mega-z",
+  "form": "Mega Absol Z"
+ },
+ "staraptor-mega": {
+  "strip": "STARAPTOR_1.png",
+  "sprite": "398-mega",
+  "form": "Mega Staraptor"
+ },
+ "garchomp-mega-z": {
+  "strip": "GARCHOMP_2.png",
+  "sprite": "445-mega-z",
+  "form": "Mega Garchomp Z"
+ },
+ "lucario-mega-z": {
+  "strip": "LUCARIO_2.png",
+  "sprite": "448-mega-z",
+  "form": "Mega Lucario Z"
+ },
+ "froslass-mega": {
+  "strip": "FROSLASS_1.png",
+  "sprite": "478-mega",
+  "form": "Mega Froslass"
+ },
+ "dialga-origin": {
+  "strip": "DIALGA_1.png",
+  "sprite": "483-origin",
+  "form": "Origin Forme"
+ },
+ "palkia-origin": {
+  "strip": "PALKIA_1.png",
+  "sprite": "484-origin",
+  "form": "Origin Forme"
+ },
+ "heatran-mega": {
+  "strip": "HEATRAN_1.png",
+  "sprite": "485-mega",
+  "form": "Mega Heatran"
+ },
+ "darkrai-mega": {
+  "strip": "DARKRAI_1.png",
+  "sprite": "491-mega",
+  "form": "Mega Darkrai"
+ },
+ "emboar-mega": {
+  "strip": "EMBOAR_1.png",
+  "sprite": "500-mega",
+  "form": "Mega Emboar"
+ },
+ "samurott-hisui": {
+  "strip": "SAMUROTT_1.png",
+  "sprite": "6503",
+  "form": "Hisuian"
+ },
+ "excadrill-mega": {
+  "strip": "EXCADRILL_1.png",
+  "sprite": "530-mega",
+  "form": "Mega Excadrill"
+ },
+ "scolipede-mega": {
+  "strip": "SCOLIPEDE_1.png",
+  "sprite": "545-mega",
+  "form": "Mega Scolipede"
+ },
+ "lilligant-hisui": {
+  "strip": "LILLIGANT_1.png",
+  "sprite": "6549",
+  "form": "Hisuian"
+ },
+ "darmanitan-galar-standard": {
+  "strip": "DARMANITAN_2.png",
+  "sprite": "4555",
+  "form": "Galarian Standard Mode"
+ },
+ "darmanitan-galar-zen": {
+  "strip": "DARMANITAN_3.png",
+  "sprite": "4555-zen",
+  "form": "Galarian Zen Mode"
+ },
+ "scrafty-mega": {
+  "strip": "SCRAFTY_1.png",
+  "sprite": "560-mega",
+  "form": "Mega Scrafty"
+ },
+ "zorua-hisui": {
+  "strip": "ZORUA_1.png",
+  "sprite": "6570",
+  "form": "Hisuian"
+ },
+ "zoroark-hisui": {
+  "strip": "ZOROARK_1.png",
+  "sprite": "6571",
+  "form": "Hisuian"
+ },
+ "eelektross-mega": {
+  "strip": "EELEKTROSS_1.png",
+  "sprite": "604-mega",
+  "form": "Mega Eelektross"
+ },
+ "chandelure-mega": {
+  "strip": "CHANDELURE_1.png",
+  "sprite": "609-mega",
+  "form": "Mega Chandelure"
+ },
+ "golurk-mega": {
+  "strip": "GOLURK_1.png",
+  "sprite": "623-mega",
+  "form": "Mega Golurk"
+ },
+ "braviary-hisui": {
+  "strip": "BRAVIARY_1.png",
+  "sprite": "6628",
+  "form": "Hisuian"
+ },
+ "chesnaught-mega": {
+  "strip": "CHESNAUGHT_1.png",
+  "sprite": "652-mega",
+  "form": "Mega Chesnaught"
+ },
+ "delphox-mega": {
+  "strip": "DELPHOX_1.png",
+  "sprite": "655-mega",
+  "form": "Mega Delphox"
+ },
+ "greninja-mega": {
+  "strip": "GRENINJA_3.png",
+  "sprite": "658-mega",
+  "form": "Mega Greninja"
+ },
+ "pyroar-mega": {
+  "strip": "PYROAR_1.png",
+  "sprite": "668-mega",
+  "form": "Mega Pyroar"
+ },
+ "floette-eternal": {
+  "strip": "FLOETTE_5.png",
+  "sprite": "2670",
+  "form": "Eternal Flower"
+ },
+ "aegislash-blade": {
+  "strip": "AEGISLASH_1.png",
+  "sprite": "681-blade",
+  "form": "Blade Forme"
+ },
+ "malamar-mega": {
+  "strip": "MALAMAR_1.png",
+  "sprite": "687-mega",
+  "form": "Mega Malamar"
+ },
+ "barbaracle-mega": {
+  "strip": "BARBARACLE_1.png",
+  "sprite": "689-mega",
+  "form": "Mega Barbaracle"
+ },
+ "dragalge-mega": {
+  "strip": "DRAGALGE_1.png",
+  "sprite": "691-mega",
+  "form": "Mega Dragalge"
+ },
+ "hawlucha-mega": {
+  "strip": "HAWLUCHA_1.png",
+  "sprite": "701-mega",
+  "form": "Mega Hawlucha"
+ },
+ "sliggoo-hisui": {
+  "strip": "SLIGGOO_1.png",
+  "sprite": "6705",
+  "form": "Hisuian"
+ },
+ "goodra-hisui": {
+  "strip": "GOODRA_1.png",
+  "sprite": "6706",
+  "form": "Hisuian"
+ },
+ "pumpkaboo-small": {
+  "strip": "PUMPKABOO.png",
+  "sprite": "710-small",
+  "form": "manual"
+ },
+ "gourgeist-small": {
+  "strip": "GOURGEIST.png",
+  "sprite": "711-small",
+  "form": "manual"
+ },
+ "avalugg-hisui": {
+  "strip": "AVALUGG_1.png",
+  "sprite": "6713",
+  "form": "Hisuian"
+ },
+ "zygarde-complete": {
+  "strip": "ZYGARDE_2.png",
+  "sprite": "718-complete",
+  "form": "Complete Forme"
+ },
+ "zygarde-mega": {
+  "strip": "ZYGARDE_4.png",
+  "sprite": "718-mega",
+  "form": "Mega Zygarde"
+ },
+ "decidueye-hisui": {
+  "strip": "DECIDUEYE_1.png",
+  "sprite": "6724",
+  "form": "Hisuian"
+ },
+ "crabominable-mega": {
+  "strip": "CRABOMINABLE_1.png",
+  "sprite": "740-mega",
+  "form": "Mega Crabominable"
+ },
+ "oricorio-pom-pom": {
+  "strip": "ORICORIO_1.png",
+  "sprite": "741-pompom",
+  "form": "manual"
+ },
+ "oricorio-pau": {
+  "strip": "ORICORIO_2.png",
+  "sprite": "741-pau",
+  "form": "manual"
+ },
+ "oricorio-sensu": {
+  "strip": "ORICORIO_3.png",
+  "sprite": "741-sensu",
+  "form": "Sensu Style"
+ },
+ "golisopod-mega": {
+  "strip": "GOLISOPOD_1.png",
+  "sprite": "768-mega",
+  "form": "Mega Golisopod"
+ },
+ "drampa-mega": {
+  "strip": "DRAMPA_1.png",
+  "sprite": "780-mega",
+  "form": "Mega Drampa"
+ },
+ "necrozma-dusk": {
+  "strip": "NECROZMA_1.png",
+  "sprite": "800-dusk-mane",
+  "form": "Dusk Mane"
+ },
+ "necrozma-dawn": {
+  "strip": "NECROZMA_2.png",
+  "sprite": "800-dawn-wings",
+  "form": "Dawn Wings"
+ },
+ "magearna-mega": {
+  "strip": "MAGEARNA_2.png",
+  "sprite": "801-mega",
+  "form": "Mega Magearna"
+ },
+ "zeraora-mega": {
+  "strip": "ZERAORA_1.png",
+  "sprite": "807-mega",
+  "form": "Mega Zeraora"
+ },
+ "melmetal-gmax": {
+  "strip": "MELMETAL_1.png",
+  "sprite": "809-gigantamax",
+  "form": "Gigantamax"
+ },
+ "rillaboom-gmax": {
+  "strip": "RILLABOOM_1.png",
+  "sprite": "812-gigantamax",
+  "form": "Gigantamax"
+ },
+ "inteleon-gmax": {
+  "strip": "INTELEON_1.png",
+  "sprite": "818-gigantamax",
+  "form": "Gigantamax"
+ },
+ "corviknight-gmax": {
+  "strip": "CORVIKNIGHT_1.png",
+  "sprite": "823-gigantamax",
+  "form": "Gigantamax"
+ },
+ "orbeetle-gmax": {
+  "strip": "ORBEETLE_1.png",
+  "sprite": "826-gigantamax",
+  "form": "Gigantamax"
+ },
+ "drednaw-gmax": {
+  "strip": "DREDNAW_1.png",
+  "sprite": "834-gigantamax",
+  "form": "Gigantamax"
+ },
+ "flapple-gmax": {
+  "strip": "FLAPPLE_1.png",
+  "sprite": "841-gigantamax",
+  "form": "Gigantamax"
+ },
+ "appletun-gmax": {
+  "strip": "APPLETUN_1.png",
+  "sprite": "842-gigantamax",
+  "form": "Gigantamax"
+ },
+ "sandaconda-gmax": {
+  "strip": "SANDACONDA_1.png",
+  "sprite": "844-gigantamax",
+  "form": "Gigantamax"
+ },
+ "centiskorch-gmax": {
+  "strip": "CENTISKORCH_1.png",
+  "sprite": "851-gigantamax",
+  "form": "Gigantamax"
+ },
+ "hatterene-gmax": {
+  "strip": "HATTERENE_1.png",
+  "sprite": "858-gigantamax",
+  "form": "Gigantamax"
+ },
+ "grimmsnarl-gmax": {
+  "strip": "GRIMMSNARL_1.png",
+  "sprite": "861-gigantamax",
+  "form": "Gigantamax"
+ },
+ "alcremie-gmax": {
+  "strip": "ALCREMIE_63.png",
+  "sprite": "869-gigantamax",
+  "form": "Gigantamax"
+ },
+ "falinks-mega": {
+  "strip": "FALINKS_1.png",
+  "sprite": "870-mega",
+  "form": "Mega Falinks"
+ },
+ "morpeko-hangry": {
+  "strip": "MORPEKO_1.png",
+  "sprite": "877-hangry",
+  "form": "Hangry Mode"
+ },
+ "copperajah-gmax": {
+  "strip": "COPPERAJAH_1.png",
+  "sprite": "879-gigantamax",
+  "form": "Gigantamax"
+ },
+ "duraludon-gmax": {
+  "strip": "DURALUDON_1.png",
+  "sprite": "884-gigantamax",
+  "form": "Gigantamax"
+ },
+ "zacian-crowned": {
+  "strip": "ZACIAN_1.png",
+  "sprite": "888-crowned",
+  "form": "Crowned Sword"
+ },
+ "zamazenta-crowned": {
+  "strip": "ZAMAZENTA_1.png",
+  "sprite": "889-crowned",
+  "form": "Crowned Shield"
+ },
+ "calyrex-ice": {
+  "strip": "CALYREX_1.png",
+  "sprite": "898-ice",
+  "form": "Ice Rider"
+ },
+ "calyrex-shadow": {
+  "strip": "CALYREX_2.png",
+  "sprite": "898-shadow",
+  "form": "Shadow Rider"
+ },
+ "ursaluna-bloodmoon": {
+  "strip": "URSALUNA_1.png",
+  "sprite": "8901",
+  "form": "Bloodmoon Ursaluna"
+ },
+ "enamorus-therian": {
+  "strip": "ENAMORUS_1.png",
+  "sprite": "905-therian",
+  "form": "Therian Form"
+ },
+ "oinkologne-female": {
+  "strip": "OINKOLOGNE_1.png",
+  "sprite": "916-female",
+  "form": "Female"
+ },
+ "scovillain-mega": {
+  "strip": "SCOVILLAIN_1.png",
+  "sprite": "952-mega",
+  "form": "Mega Scovillain"
+ },
+ "palafin-hero": {
+  "strip": "PALAFIN_1.png",
+  "sprite": "964-hero",
+  "form": "Hero Form"
+ },
+ "glimmora-mega": {
+  "strip": "GLIMMORA_1.png",
+  "sprite": "970-mega",
+  "form": "Mega Glimmora"
+ },
+ "baxcalibur-mega": {
+  "strip": "BAXCALIBUR_1.png",
+  "sprite": "998-mega",
+  "form": "Mega Baxcalibur"
+ },
+ "gimmighoul-roaming": {
+  "strip": "GIMMIGHOUL_1.png",
+  "sprite": "999-roaming",
+  "form": "Roaming Form"
+ },
+ "terapagos-terastal": {
+  "strip": "TERAPAGOS_1.png",
+  "sprite": "1024-terastal",
+  "form": "Terastal Form"
+ },
+ "terapagos-stellar": {
+  "strip": "TERAPAGOS_2.png",
+  "sprite": "1024-stellar",
+  "form": "Stellar Form"
+ }
+}
