@@ -80,8 +80,8 @@ describe('S2 prologue shell', () => {
     expect(beatsFor('quick')).not.toContain('cold_open');
     expect(requiredObjects('quick')).toBe(2);
     expect(requiredObjects('full')).toBe(5);
-    expect(builtBeatsFor('full')).toEqual(['look', 'cold_open', 'station', 'professor', 'identity', 'briefing']);
-    expect(builtBeatsFor('skipped')).toEqual(['look', 'identity', 'briefing']);
+    expect(builtBeatsFor('full')).toEqual(['look', 'cold_open', 'station', 'professor', 'identity', 'quiz', 'reveal', 'backstory', 'starter', 'briefing']);
+    expect(builtBeatsFor('skipped')).toEqual(['look', 'identity', 'backstory', 'starter', 'briefing']);
   });
   it('Skip is hidden on the first save, Quick Start only before the mode is chosen', () => {
     expect(canSkipPrologue(1)).toBe(false);

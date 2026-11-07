@@ -27,6 +27,7 @@ import { explainMoment, explanationText, FAMILY_NAMES, unseenKeys } from '../cor
 import { bondScoreOf, momentumMax, rallyProblem } from '../core/battle/spectacle';
 import { armFeat, featCharged } from '../core/story2/feats';
 import { signatureDisplay } from '../core/story2/signature';
+import { introForBattle, introText, trainerIntro } from '../core/story2/cutscene';
 import { forcedMoveId, forcedMoveIndex, itemProblem, switchProblem, telegraphedAttack, type PlayerAction, type Side, type SlotCommand } from '../core/battle/engine';
 import { ALLY_AIMED, doublesSwitchProblem, indexAt, monAt, needsTarget, primarySpot, volAt, type Spot } from '../core/battle/doubles';
 import { canDynamax, maxMoveOptions, megaOption, ownedZCrystal, permanentForm, stoneForms, teraOption, zMoveFor, zMoveOptions, type TransformRequest } from '../core/battle/transform';
@@ -1816,6 +1817,7 @@ export class BattleScene extends Phaser.Scene {
         await this.say(isUltimateBattle(this.run) ? `${title}, your Ultimate Rival, blocks the way!` : battle.rivalId ? `${title} is back to beat you!` : battle.returning ? `${title} is back for a rematch!` : battle.nemesis ? `${title} is back, and so is your nemesis!` : battle.hunted ? `${title} came hunting for you!` : battle.rival ? `${title} challenges you to a rival battle!` : `${title} would like to battle!`);
         const classLine = !battle.rival && !battle.rivalId && !battle.returning && !battle.nemesis && !battle.hunted ? services().session.content.trainers.get(battle.trainer?.classId ?? '')?.lines?.intro : undefined;
         if (classLine) await this.speak(battle.trainer?.name ?? title, classLine);
+        await this.storyIntro();
         await tween(this, { targets: trainerSprite, x: GAME_WIDTH + 120, duration: 350 });
         trainerSprite.destroy();
         if (this.duo) {
@@ -1907,6 +1909,25 @@ export class BattleScene extends Phaser.Scene {
     }
     this.busy = false;
     this.nextPrompt();
+  }
+
+  /** S16 Trainer Introductions in a Story Run: a rival, Gym Leader, Elite Four or Champion says the intro lines (presentation only). */
+  private async storyIntro(): Promise<void> {
+    const v2 = this.run.story.v2;
+    const battle = this.run.battle!;
+    const pick = v2 ? introForBattle(battle) : null;
+    const intro = pick ? trainerIntro(pick.id) : undefined;
+    if (!pick || !intro || !battle.trainer) return;
+    const { content } = services().session;
+    const lead = this.run.party.find((m) => m.hp > 0) ?? this.run.party[0];
+    const values = { speaker: battle.trainer.name, title: pick.title, player: v2?.protagonist?.name || 'Trainer', pokemon: lead ? this.speciesName(lead) : 'your partner', team: '', region: '', town: '' };
+    const out = introText(intro, (k) => content.storyData.text[k], values);
+    if (out.title) await this.say(out.title);
+    for (const line of out.lines) {
+      // Narration (no quotes) goes in the message bar; quoted speech is the trainer's line.
+      if (line.startsWith('"')) await this.speak(battle.trainer.name, line.replace(/^"|"$/g, ''));
+      else await this.say(line);
+    }
   }
 
   /** The opening wipe or VS screen (EBDX transitions); any key skips it. */

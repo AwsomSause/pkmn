@@ -55,11 +55,24 @@ test('Prologue: Look B is locked, Quick Start saves name, pronouns and Tone', as
   await press(page, 'ArrowDown', 4);
   await press(page, 'Enter'); // Confirm
   await press(page, 'Enter'); // first use of the name
+  // Beats 5-8: the quick quiz (6 questions), the reveal, a backstory and the first partner.
+  expect(await texts(page)).toContain('Beat 5: The quiz (1 of 6)');
+  await press(page, 'Enter', 6);
+  expect(await texts(page)).toContain('Beat 6: The reveal');
+  await press(page, 'Enter'); // Continue
+  expect(await texts(page)).toContain('Beat 7: Backstory');
+  await press(page, 'Enter');
+  expect(await texts(page)).toContain('Beat 8: First partner');
+  await press(page, 'Enter');
   expect(await texts(page)).toContain('Beat 10: Departure');
   await press(page, 'Enter'); // Finish
   await expect.poll(() => scene(page)).toBe('MainMenu');
   const story = () => page.evaluate(() => (window as any).__pkr.session.profile.story);
   expect(await story()).toMatchObject({ protagonist: { name: 'Kay', pronouns: 'she', nameSet: true, look: 'look_a' }, prologue: { done: true, mode: 'quick', vanceTone: 'formal' } });
+  const st = await story();
+  expect(st.quiz.lastResult.picks).toHaveLength(3);
+  expect(st.nextRun.line).toBe(st.quiz.lastResult.picks[0]);
+  expect(st.nextRun.backstory).toMatch(/^bs_/);
   await page.reload();
   await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('MainMenu');
   expect(await story()).toMatchObject({ protagonist: { name: 'Kay' }, prologue: { done: true, vanceTone: 'formal' } });
@@ -88,7 +101,15 @@ test('Story Run: the title entry plays the prologue, then trainer choice and the
   await page.waitForTimeout(400);
   expect(await texts(page)).toContain('Begin the Story Run');
   await press(page, 'Enter');
+  expect(await texts(page)).toContain('Beat 7: Backstory');
+  await press(page, 'ArrowDown');
+  await press(page, 'Enter');
+  expect(await texts(page)).toContain('Take the Intake Interview');
+  await press(page, 'Enter'); // a line from the neutral draft (no quiz on this save yet)
   await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('TrainerSelect');
+  const next = await page.evaluate(() => (window as any).__pkr.session.profile.story.nextRun);
+  expect(next.line).toMatch(/^rm_/);
+  expect(next.backstory).toMatch(/^bs_/);
   await page.waitForTimeout(400);
   await press(page, 'Enter');
   await expect.poll(() => scene(page), { timeout: 20_000 }).toBe('RunPrep');

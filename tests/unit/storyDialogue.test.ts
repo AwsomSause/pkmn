@@ -9,7 +9,7 @@ import { content } from './helpers';
 const rival = { id: 'rv', name: 'Dara', archetype: 'golden-retriever', voice: undefined, traits: { ambition: 50, pride: 50, empathy: 50, adaptability: 50, vindictiveness: 50, resilience: 50 } };
 const storyRun = (seed = 'w3') => {
   const r = structuredClone(chooseStarter(content, createRun(content, { runId: 'w3', seed, archetypeId: 'red' }), 0));
-  r.story.v2 = { mode: 'story_run', contentHash: '', heartbondOverrides: 0, autonomy: 'full', heartbond: { latched: [], pending: [], keystoneReady: false, ledger: [] }, dramatic: 'full', feats: { charge: 0, banked: 0, used: [], gains: [], armed: false, first: null }, sigMoves: [], sigNames: {}, cast: {}, arcs: {}, facts: {}, stops: { index: 0, planned: 0, done: [] }, replans: [], rel: {}, queue: [], scenesDone: [], fired: [] };
+  r.story.v2 = { mode: 'story_run', contentHash: '', heartbondOverrides: 0, autonomy: 'full', heartbond: { latched: [], pending: [], keystoneReady: false, ledger: [] }, dramatic: 'full', feats: { charge: 0, banked: 0, used: [], gains: [], armed: false, first: null }, sigMoves: [], sigNames: {}, cast: {}, arcs: {}, facts: {}, stops: { index: 0, planned: 0, done: [] }, replans: [], rel: {}, queue: [], scenesDone: [], rivalScene: null, notes: [], fired: [] };
   return r;
 };
 

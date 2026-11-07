@@ -4,6 +4,8 @@
 export const TEMPLATE_TOKENS = [
   'player', 'rival', 'leader', 'town', 'region', 'team', 'legend', 'professor',
   'theme', 'ending', 'starter', 'seed', 'character', 'stage', 'node', 'event', 'choice', 'quest', 'outcome', 'speaker', 'pokemon', 'title', 'memory',
+  // The player's pronouns (story2/identity.ts pronounForms), lower and capitalised; Story Run scenes fill them.
+  'they', 'them', 'their', 'theirs', 'themself', 'they_are', 'they_were', 'They', 'Them', 'Their', 'Theirs', 'Themself', 'They_are', 'They_were',
 ] as const;
 export type TemplateToken = (typeof TEMPLATE_TOKENS)[number];
 

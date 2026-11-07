@@ -92,3 +92,20 @@ export const TRAINER_INTROS: readonly TrainerIntro[] = [
 ];
 
 export const trainerIntro = (id: string): TrainerIntro | undefined => TRAINER_INTROS.find((t) => t.id === id);
+
+/** Which Trainer Introduction a Story Run battle gets: rivals, Gym Leaders and the Elite Four, the Champion. Null for the rest. */
+export function introForBattle(b: { trainer: { classId: string } | null; rivalId?: string | null | undefined; rival?: unknown }): { id: string; title: string } | null {
+  if (!b.trainer) return null;
+  if (b.rivalId || b.rival) return { id: 'rival_challenge', title: 'Rival' };
+  if (b.trainer.classId === 'gym-leader') return { id: 'leader_pose', title: 'Gym Leader' };
+  if (b.trainer.classId === 'elite-four') return { id: 'leader_pose', title: 'Elite Four' };
+  if (b.trainer.classId === 'champion') return { id: 'champion_entry', title: 'Champion' };
+  return null;
+}
+
+/** The intro's title card (if any) and lines with their tokens filled. Lines whose text is missing are left out. */
+export function introText(intro: TrainerIntro, text: (key: string) => string | undefined, values: Record<string, string>): { title: string | null; lines: string[] } {
+  const fill = (s: string): string => s.replace(/\{(\w+)\}/g, (whole, k: string) => values[k] ?? whole);
+  const title = intro.titleKey ? text(intro.titleKey) : undefined;
+  return { title: title ? fill(title) : null, lines: intro.lineKeys.map(text).filter((s): s is string => !!s).map(fill) };
+}

@@ -56,3 +56,20 @@ export const BRIEFING = [
   'VANCE: This is the Field Notebook. Write in it. Draw in it. Do not lose it. If you lose it, tell me, and I will tell you how disappointed I am.',
   'VANCE: The Circuit Charter is short. Eight gym towns in each of three regions, and six badges in each region will do. Then the League. How you get them is your business.',
 ];
+
+/** Beat 7: one line per backstory (the design doc's pitch for each). */
+export const BACKSTORY_PITCH: Record<string, string> = {
+  bs_ex_criminal: 'You used to work for the Mythic Marauders, and you left. Was that redemption or escape?',
+  bs_champion_heir: 'Your father was Champion, and everyone has already decided who you are.',
+  bs_viridian: 'You grew up by the Viridian forest and understood Pokémon before you learned to command them.',
+  bs_aether: 'You were made in a laboratory to be the perfect Trainer, and then something went wrong.',
+  bs_hisui: 'You come from Hisui, centuries ago, pulled into a world that has moved on.',
+};
+
+export const QUIZ_INTRO = 'VANCE: A few questions. No right answers, no timer. Answer like nobody is grading you, because nobody is.';
+export const QUICK_QUIZ_INTRO = 'VANCE: Six quick questions. Answer from the gut.';
+export const REVEAL_INTRO = 'VANCE: Marginalia has made her sketches. Three Pokémon who might suit you. Look them over.';
+export const REVEAL_LABELS = ['The match', 'The complement', 'The surprise'] as const;
+export const BACKSTORY_PROMPT = 'VANCE: Before we go on. Where are you coming from? Not where you were born. What you carry.';
+export const STARTER_PROMPT = 'VANCE: Choose your first partner. This one is for keeps, at least for this run.';
+export const INTAKE_STARTER_PROMPT = 'VANCE: Who walks out with you this time? Take one you know, or let me ask a few questions.';

@@ -10,10 +10,12 @@ import { onInputAction } from '../ui/input';
 import { COLORS, GAME_HEIGHT, GAME_WIDTH, textStyle } from '../ui/theme';
 import { Menu, type MenuOption } from '../ui/widgets';
 import { drawBackdrop } from '../ui/widgets';
-import type { ProfileStory } from '../core/story2/schema';
+import type { ProfileStory, StoryData } from '../core/story2/schema';
+import { chooseNextBackstory, chooseNextLine, intakeChoices, quizQuestions, revealPicks, saveQuizResult } from '../core/story2/intake';
+import { enabledBackstories } from '../core/story2/module';
 import { LOOKS, lookReady, previewSentence, renderTokens, vanceTone, type PronounSet, type Tone } from '../core/story2/identity';
 import { BEATS, beatsFor, canSkipPrologue, chooseMode, finishPrologue, markBeat, quickStartOffered, requiredObjects, setIdentity, setLook, setTone, shortIntake, type BeatId, type PrologueMode } from '../core/story2/prologue';
-import { BRIEFING, FIRST_NAME_USE, MONTAGE, OBJECTS, PRONOUN_PROMPT, QUICK_OBJECTS, VANCE_CLOSING, VANCE_NAME_PROMPT, VANCE_OPENING, VANCE_QUESTIONS } from '../core/story2/prologueText';
+import { BACKSTORY_PITCH, BACKSTORY_PROMPT, INTAKE_STARTER_PROMPT, QUICK_QUIZ_INTRO, QUIZ_INTRO, REVEAL_INTRO, REVEAL_LABELS, STARTER_PROMPT, BRIEFING, FIRST_NAME_USE, MONTAGE, OBJECTS, PRONOUN_PROMPT, QUICK_OBJECTS, VANCE_CLOSING, VANCE_NAME_PROMPT, VANCE_OPENING, VANCE_QUESTIONS } from '../core/story2/prologueText';
 
 const VANCE_ANIM_IDS = VANCE_ANIMS.map((n) => `story.vance.${n}`);
 const VANCE_SIDE = 400;
@@ -166,6 +168,10 @@ export class PrologueScene extends Phaser.Scene {
       case 'station': return this.stepStation();
       case 'professor': this.tones = []; this.gettingToIt = false; return this.stepProfessor(0);
       case 'identity': return this.stepName();
+      case 'quiz': this.answers = {}; return this.stepQuiz(0);
+      case 'reveal': return this.stepReveal();
+      case 'backstory': return this.stepBackstory();
+      case 'starter': return this.stepStarter();
       case 'briefing': return this.stepBriefing();
       default: return this.advance(step); // beats other slices own
     }
@@ -191,7 +197,7 @@ export class PrologueScene extends Phaser.Scene {
     const opts = [...(this.thenRun ? [{ label: 'Begin the Story Run' }] : []), { label: 'Replay the prologue' }, { label: 'Back to the title' }];
     this.choose(opts, (i) => {
       const pick = opts[i]!.label;
-      if (pick === 'Begin the Story Run') return this.leave(true);
+      if (pick === 'Begin the Story Run') { this.intake = true; return this.go('backstory'); }
       if (pick === 'Replay the prologue') return this.go('look');
       this.leave(false);
     }, y, () => this.leave(false));
@@ -282,6 +288,100 @@ export class PrologueScene extends Phaser.Scene {
     }, y);
   }
   private gettingToIt = false;
+
+  // ---------- Beats 5 to 8: quiz, reveal, backstory, first partner (core/story2/intake.ts) ----------
+
+  /** Quiz answers (question id to answer id), the drafted picks, and whether this is the Short Intake (Begin the Story Run). */
+  private answers: Record<string, string> = {};
+  private picks: StoryData['remembrances'] = [];
+  private intake = false;
+  /** The Intake Interview: the Short Intake's quick quiz; after the reveal it goes back to the partner pick. */
+  private interview = false;
+
+  private get quickQuiz(): boolean {
+    return this.mode === 'quick' || this.interview;
+  }
+
+  private stepQuiz(i: number): void {
+    this.clear();
+    const data = services().session.content.storyData;
+    const qs = quizQuestions(data, this.quickQuiz);
+    if (i >= qs.length) return this.interview ? this.go('reveal') : this.advance('quiz');
+    const q = qs[i]!;
+    this.title(`Beat 5: The quiz (${i + 1} of ${qs.length})`);
+    this.vance(i % 3 === 0 ? 'tilt' : i % 3 === 1 ? 'explain' : 'nudge');
+    // Answers show in a fixed order per question that is not the data order, so a screen position never maps to one trait.
+    const turn = [...q.id].reduce((n, c) => n + c.charCodeAt(0), 0) % q.answers.length;
+    const shown = [...q.answers.slice(turn), ...q.answers.slice(0, turn)];
+    const y = this.body([...(i === 0 ? [this.quickQuiz ? QUICK_QUIZ_INTRO : QUIZ_INTRO] : []), `VANCE: ${data.text[q.textKey] ?? q.id}`], 80);
+    this.choose(shown.map((a) => ({ label: data.text[a.textKey] ?? a.id })), (k) => {
+      this.answers[q.id] = shown[k]!.id;
+      this.stepQuiz(i + 1);
+    }, y, i > 0 ? () => this.stepQuiz(i - 1) : undefined);
+  }
+
+  private stepReveal(): void {
+    const { content } = services().session;
+    const r = revealPicks(content.storyData, this.story, this.answers, this.quickQuiz);
+    this.picks = r.picks;
+    this.edit((s) => saveQuizResult(s, r.traitVector, r.picks));
+    this.title('Beat 6: The reveal');
+    this.vance('surprised');
+    const lines = r.picks.map((p, i) => `${REVEAL_LABELS[i] ?? 'Also'}: ${this.lineLabel(p)}`);
+    const y = this.body([REVEAL_INTRO, ...lines], 80);
+    this.choose([{ label: 'Continue' }, { label: 'Retake the quiz' }], (i) => {
+      if (i === 1) { this.answers = {}; return this.stepQuiz(0); }
+      if (this.interview) { this.interview = false; return this.stepStarter(); }
+      this.advance('reveal');
+    }, y);
+  }
+
+  /** "Charmander (Fire), Brave": the line's first stage, its types and its Temperament. */
+  private lineLabel(r: StoryData['remembrances'][number]): string {
+    const { content } = services().session;
+    const sp = content.species.get(r.line[0]!);
+    const types = r.types.map((t) => t[0]!.toUpperCase() + t.slice(1)).join('/');
+    return `${sp?.name ?? r.line[0]} (${types}), ${r.temperament.replace(/^tm_/, '').replace(/^./, (c) => c.toUpperCase())}`;
+  }
+
+  private stepBackstory(): void {
+    const { content } = services().session;
+    const ids = enabledBackstories(content);
+    const nameOf = (id: string): string => {
+      const b = content.storyData.backstories.find((x) => x.id === id);
+      return (b && content.storyData.text[b.nameKey]) || id;
+    };
+    this.title('Beat 7: Backstory');
+    let y = this.body([BACKSTORY_PROMPT], 70);
+    const list = this.add.text(60, y - 6, ids.map((id) => `${nameOf(id)}: ${BACKSTORY_PITCH[id] ?? ''}`).join('\n'), textStyle(15, '#c9bfd6', { wordWrap: { width: GAME_WIDTH - 120 }, lineSpacing: 4 }));
+    y += list.height + 4;
+    this.choose(ids.map((id) => ({ label: nameOf(id) })), (i) => {
+      this.edit((s) => chooseNextBackstory(s, ids[i]!));
+      if (this.intake) return this.go('starter');
+      this.advance('backstory');
+    }, y, this.intake ? () => this.go('intake') : undefined);
+  }
+
+  private stepStarter(): void {
+    this.clear();
+    const { content } = services().session;
+    const data = content.storyData;
+    // Without a quiz this time (Skip Prologue, the Short Intake): the last quiz's picks and Archive lines, else a neutral draft.
+    let choices = this.picks.length > 0 ? this.picks : intakeChoices(data, this.story);
+    if (choices.length === 0) choices = revealPicks(data, this.story, {}, false).picks;
+    this.title('Beat 8: First partner');
+    this.vance('confident');
+    const y = this.body([this.intake ? INTAKE_STARTER_PROMPT : STARTER_PROMPT], 80);
+    const shown = choices.slice(0, 6);
+    const opts = [...shown.map((r) => ({ label: this.lineLabel(r) })), ...(this.intake ? [{ label: 'Take the Intake Interview (6 questions)' }] : [])];
+    this.choose(opts, (i) => {
+      if (i >= shown.length) { this.interview = true; this.answers = {}; return this.stepQuiz(0); }
+      this.edit((s) => chooseNextLine(s, shown[i]!.id));
+      this.picks = [];
+      if (this.intake) return this.leave(true);
+      this.advance('starter');
+    }, y, this.intake ? () => this.go('backstory') : undefined);
+  }
 
   private stepName(error = '', keep = ''): void {
     this.clear();

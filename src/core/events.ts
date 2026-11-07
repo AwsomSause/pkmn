@@ -39,6 +39,7 @@ import { addHuntClue, finishHunt, huntClues, huntDone } from './story/grandEnemy
 import { gauntletLeft, startGauntlet } from './story/gauntlet';
 import { pastGauntletLeft, startPastGauntlet } from './memories/encounters';
 import { nextKeepsake, recoverKeepsake } from './memories/keepsakes';
+import { keepsakeEvent } from './story2/keepsakes';
 import { deliverLegacyEgg, legacyEggWaiting } from './memories/heirloom';
 import { noteChoice } from './memories/world';
 import { applyEvilEffect, evilBattle, evilBattleWon, evilConditionMet, evilConditionText, evilTeam } from './evil/teams';
@@ -631,6 +632,7 @@ export function chooseEvent(content: Content, current: RunState, sideId: string,
   if (runSide.roamer) endRoamer(run, runSide.roamer);
   run.itemCounters = { ...run.itemCounters, [`event-seen:${event.id}`]: 1, ...(event.rarity === 'epic' ? { [`epic-seen:${run.regionIndex}`]: (run.itemCounters?.[`epic-seen:${run.regionIndex}`] ?? 0) + 1 } : {}), ...(event.pseudo ? { [`pseudo-seen:${run.regionIndex}`]: (run.itemCounters?.[`pseudo-seen:${run.regionIndex}`] ?? 0) + 1 } : {}) };
   if (event.keyItem) useUpKeyItem(run, event.keyItem);
+  keepsakeEvent(run, event);
   const found = noteDungeonEntered(run, event.id);
   if (found) emit(content, run, 'storyMoment', { actors: [], data: { def: 'rival-living', suppressed: false }, importance: 40, text: found });
   const insight = perkItem(content, run, 'eventInsight');

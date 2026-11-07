@@ -7,17 +7,17 @@ import { type LookId, setLook, validateName, validateCustomPronouns, type Pronou
 export type PrologueMode = 'full' | 'quick' | 'skipped';
 export type BeatId = 'look' | 'cold_open' | 'station' | 'professor' | 'identity' | 'quiz' | 'reveal' | 'backstory' | 'starter' | 'field_trial' | 'briefing';
 
-/** `built` is false for beats other slices own (the quiz screens, backstory, Field Trial); the shell skips them and says so. */
+/** `built` is false for beats not built yet (the Field Trial); the shell skips them. */
 export const BEATS: { id: BeatId; label: string; built: boolean; owner: string }[] = [
   { id: 'look', label: 'Look and mode', built: true, owner: 'S2' },
   { id: 'cold_open', label: 'Beat 1: Cold open', built: true, owner: 'S2' },
   { id: 'station', label: 'Beat 2: The station', built: true, owner: 'S2' },
   { id: 'professor', label: 'Beat 3: Professor Vance', built: true, owner: 'S2' },
   { id: 'identity', label: 'Beat 4: Identity', built: true, owner: 'S2' },
-  { id: 'quiz', label: 'Beat 5: The quiz', built: false, owner: 'quiz screens' },
-  { id: 'reveal', label: 'Beat 6: The reveal', built: false, owner: 'quiz screens' },
-  { id: 'backstory', label: 'Beat 7: Backstory', built: false, owner: 'backstory slice' },
-  { id: 'starter', label: 'Beat 8: First partner', built: false, owner: 'starter slice' },
+  { id: 'quiz', label: 'Beat 5: The quiz', built: true, owner: 'quiz screens' },
+  { id: 'reveal', label: 'Beat 6: The reveal', built: true, owner: 'quiz screens' },
+  { id: 'backstory', label: 'Beat 7: Backstory', built: true, owner: 'backstory slice' },
+  { id: 'starter', label: 'Beat 8: First partner', built: true, owner: 'starter slice' },
   { id: 'field_trial', label: 'Beat 9: Field Trial', built: false, owner: 'S9' },
   { id: 'briefing', label: 'Beat 10: Departure', built: true, owner: 'S2' },
 ];

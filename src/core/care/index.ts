@@ -5,6 +5,7 @@
 
 import { adjustBond, bondOf } from '../bond';
 import { embraceUnlocked, heartbondCare } from '../story2/heartbond';
+import { markKeepsake } from '../story2/keepsakes';
 import type { Content } from '../contentSchema';
 import { seasonOf } from '../clock';
 import { warmEggs } from '../eggs';
@@ -194,6 +195,7 @@ export function careAction(content: Content, current: RunState, partyIndex: numb
       const berry = bagBerries(content, run, mon)[0]!;
       const reaction = berryReaction(mon, berry);
       snack = reaction;
+      if (reaction === 'liked') markKeepsake(run, 'snack_loved');
       run.looseHeld![berry] = (run.looseHeld![berry] ?? 1) - 1;
       if (run.looseHeld![berry]! <= 0) delete run.looseHeld![berry];
       const r = CARE.feed[reaction];

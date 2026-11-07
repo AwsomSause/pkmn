@@ -236,6 +236,8 @@ const ProfileStoryObject = z.object({
     vanceTone: z.enum(['warm', 'formal', 'playful']).optional(), vanceGettingToIt: z.boolean().default(false), modeChosen: z.boolean().default(false),
   }).default({ done: false, mode: 'full', beatsSeen: [], vanceGettingToIt: false, modeChosen: false }),
   quiz: z.object({ lastResult: z.object({ traitVector: z.record(z.string(), z.number()), picks: z.array(z.string()).max(3) }).nullable().default(null) }).default({ lastResult: null }),
+  /** Prologue Beats 7-8 / Short Intake: the backstory and Starter line chosen for the next Story Run (used once, then cleared). */
+  nextRun: z.object({ backstory: z.string().optional(), line: z.string().optional() }).default({}),
   remembrance: z.record(z.string(), z.object({ state: z.enum(['locked', 'seen', 'unlocked']), firstSeenRun: z.number().int().nullable().default(null), runs: z.number().int().default(0), mastery: z.number().default(0) })).default({}),
   lore: z.record(z.string(), z.object({ state: z.enum(['rumor', 'known', 'verified', 'contested']), sources: z.array(z.string()).max(4).default([]) })).default({}),
   cast: z.record(z.string(), z.object({ tellings: z.array(z.string()).max(6).default([]), wins: z.number().int().default(0), losses: z.number().int().default(0), runs: z.array(z.string()).default([]) })).default({}),
@@ -324,6 +326,9 @@ export const StoryV2Schema = z.object({
   /** W3: hidden consequences waiting to surface (due is a linear stage number), the scenes already played and the consequences already fired. */
   queue: z.array(z.object({ id: z.string(), hidden: z.string(), rival: z.string(), due: z.number().int().min(0) })).default([]),
   scenesDone: z.array(z.string()).default([]),
+  /** W3 wiring: the rival choice scene on offer (core/story2/rivalStory.ts), and lines waiting to be shown (a choice's reply, a surfaced consequence). */
+  rivalScene: z.object({ scene: z.string(), rival: z.string() }).nullable().default(null),
+  notes: z.array(z.object({ kicker: z.string(), lines: z.array(z.object({ speaker: z.string().nullable(), text: z.string() })) })).max(20).default([]),
   fired: z.array(z.string()).default([]),
   /** S5: the backstory module loader's state (what is queued, playing and played, the echo count, the ending, scene snapshots for the Journal and Archive). */
   module: z.object({

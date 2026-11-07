@@ -190,6 +190,7 @@ import { rivalBond } from './drama/bond';
 import { recapLines } from './drama/recap';
 import { isBossFight } from './battle/spectacle';
 import { clutchSurvived, heartbondTurn, heartbondVictory, recoveryScenes, takeBeat } from './story2/heartbond';
+import { atTypeDisadvantage, keepsakeVictory, noteKeepsakeFaint } from './story2/keepsakes';
 import { renderTemplate } from './story2/templates';
 import { checkSignatures, endSignatureMoves, learnedLine } from './story2/signature';
 import { featGate, featLines, gainCharge, memoryPhrase, keystoneFeat, recordFeat, significantBattle, sparkShared } from './story2/feats';
@@ -243,6 +244,8 @@ import { noteReplayTurn, sealReplay } from './memories/replay';
 import { noteSkips, worldStageStart } from './memories/world';
 import { evilStageStart } from './evil/teams';
 import { isStoryCampaign, leagueAfterRegion } from './campaign/circuit';
+import { StoryV2Schema } from './story2/schema';
+import type { PronounSet } from './story2/identity';
 import { castAuthoredLeague, circuitLeader, guestMatch, noteGymWin } from './campaign/circuitCast';
 import { applyCircuitChoice, forkDecision, nextGymIndex, rematchDecision } from './campaign/circuitGate';
 import { ensureStoryRun, placeStoryStops, playFinaleStops, playNodeStops, playStageEndStops } from './campaign/storyDirector';
@@ -294,6 +297,8 @@ export interface NewRunOptions {
   npcMemory?: Profile['npcMemory'];
   /** Treasure Hunt Season (S150): the map pieces already found; they seed the run's `th-piece-*` flags. */
   treasureHunt?: Profile['treasureHunt'];
+  /** Story Run: the player's name, pronouns and Look from the prologue (profile.story.protagonist). */
+  protagonist?: { look: string; name: string; pronouns: string | PronounSet; backstory?: string };
 }
 
 export function createRun(content: Content, opts: NewRunOptions): RunState {
@@ -391,6 +396,11 @@ export function createRun(content: Content, opts: NewRunOptions): RunState {
   if (run.mentor) applyLessons(content, run, false);
   const reunion = planReunion(content, opts.seed, opts.pastPokemon ?? []);
   if (reunion) run.reunion = reunion;
+  // Story Run: the prologue's name, pronouns and Look ride into the run (story text fills {player} and the pronoun tokens).
+  if (opts.protagonist && isStoryCampaign(content, run.campaignId)) {
+    run.story.v2 ??= StoryV2Schema.parse({ mode: 'story_run' });
+    run.story.v2.protagonist = { ...run.story.v2.protagonist, look: opts.protagonist.look, name: opts.protagonist.name, pronouns: opts.protagonist.pronouns, ...(opts.protagonist.backstory ? { backstory: opts.protagonist.backstory } : {}) };
+  }
   recordRunStarted(content, run);
   return run;
 }
@@ -2607,6 +2617,7 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   for (const e of engineEvents) {
     const fainted = e.type === 'faint' && e.side === 'player' ? run.party.find((p) => p.uid === e.uid) : undefined;
     if (fainted) {
+      noteKeepsakeFaint(run);
       changeFriendship(content, fainted, content.balance.friendship.perFaint);
       careFaint(fainted);
       if (fainted.care?.ace) careAceFell(run, fainted.uid);
@@ -2631,6 +2642,15 @@ export function takeTurn(content: Content, current: RunState, action: PlayerActi
   events.push(...trackFeelings(content, current, run, events as BattleEvent[]));
   if (battle.outcome === 'win') bondVictory(run, Object.values(run.story.histories).filter((h) => h.lastBattle === run.encountersCompleted && run.party.some((m) => m.uid === h.uid)).map((h) => h.uid));
   if (battle.outcome === 'win') heartbondVictory(run, `b${run.encountersCompleted}`, isBossFight(battle) || Boolean(battle.rivalId), underdogXpMultiplier(content, run.party, battle.enemyTeam) > 1);
+  // S6 Keepsakes: Gym, rival, League and type-disadvantage wins leave marks (Story Runs only).
+  if (battle.outcome === 'win' && run.story.v2) {
+    keepsakeVictory(run, {
+      trainerClass: battle.trainer?.classId,
+      partnerFought: Boolean(partnerUid) && run.story.histories[partnerUid!]?.lastBattle === run.encountersCompleted,
+      finalRival: Boolean(battle.rivalId) && ultimateRival(run)?.id === battle.rivalId && run.regionIndex >= run.regionOrder.length - 1,
+      disadvantage: atTypeDisadvantage(content, run.party[battle.activeIndex], currentEnemy(battle)),
+    });
+  }
   if (battle.outcome === 'win' && partnerUid && run.story.histories[partnerUid]?.lastBattle === run.encountersCompleted && significantBattle(battle)) gainCharge(content, run, 'win_significant');
   // S7d: Signature I after a won boss, Gym, Elite, Champion or rival fight the partner fought in; Keystone when ready.
   if (battle.outcome === 'win' && partnerMon && run.story.histories[partnerMon.uid]?.lastBattle === run.encountersCompleted) for (const u of checkSignatures(content, run, 'victory', isBossFight(battle) || Boolean(battle.rivalId))) events.push({ type: 'spectacle', kind: 'arena', side: 'player', text: learnedLine(content, run, displayName(content, partnerMon), u), uid: partnerMon.uid });

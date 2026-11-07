@@ -7,6 +7,7 @@ import { chooseStarter, createRun } from '../../src/core/run';
 import type { RunState } from '../../src/core/state';
 import { activeScene, chooseBackstory, finishScene, foldModuleIntoProfile, queueStopScene } from '../../src/core/story2/module';
 import { content } from './helpers';
+import { keepsakeMark } from '../../src/core/story2/keepsakes';
 
 const storyRun = (seed: string, backstory: string): RunState => {
   const run = chooseStarter(content, createRun(content, { runId: seed, seed, archetypeId: 'red', campaignId: 'orrery-circuit' }), 0);
@@ -57,6 +58,7 @@ describe('Rare and Exceptional unlock quests', () => {
 
   it('plays quest arcs whole and in order at free Stops in every backstory, one per Act at most, and unlocks the line', () => {
     let finished = 0;
+    let gifts = 0;
     for (const bs of content.balance.story.module.enabledBackstories) {
       for (const seed of ['q1', 'q2']) {
         const run = storyRun(`${seed}-${bs}`, bs);
@@ -69,6 +71,9 @@ describe('Rare and Exceptional unlock quests', () => {
           const idx = a.steps.map((s) => played.indexOf(s.event)).filter((i) => i >= 0);
           expect(idx, a.id).toEqual([...idx].sort((x, y) => x - y));
         }
+        // S6 Keepsakes: a questline ending on its good exit plays The Gift once (Satchel mark).
+        const goodEnd = started.some((a) => v2.arcs[a.id]!.state === 'done' && v2.facts[`arc.${a.id}`] === a.exits[0]);
+        if (goodEnd && v2.heartbond.partner) { gifts += 1; expect(keepsakeMark(run, 'gift'), bs).toBe(1); }
         for (const a of started.filter((x) => v2.arcs[x.id]!.state === 'done')) {
           finished += 1;
           const last = content.storyData.events.find((e) => e.id === a.steps[a.steps.length - 1]!.event)!;
@@ -79,6 +84,7 @@ describe('Rare and Exceptional unlock quests', () => {
       }
     }
     expect(finished).toBeGreaterThan(0);
+    expect(gifts).toBeGreaterThan(0);
   });
 
   it('the same seed plays the same quest scenes', () => {

@@ -12,6 +12,8 @@ import { getCampaign } from '../regions';
 import { hashSeed, Rng } from '../rng';
 import type { MapNode, RunState } from '../state';
 import { emit } from '../story/record';
+import { markKeepsake } from '../story2/keepsakes';
+import { offerRivalScene, offersRivalScene, surfaceRivalConsequences } from '../story2/rivalStory';
 import { queueStopScene, startBackstory } from '../story2/module';
 import { StoryBlueprintSchema, StoryV2Schema, type StopContract, type StoryBlueprint } from '../story2/schema';
 import { evilConfig, HIDEOUT_AT_LEAGUE, isStoryCampaign } from './circuit';
@@ -376,8 +378,13 @@ function playStop(content: Content, run: RunState, id: string, say?: (text: stri
   if (!v2 || !bp || !stop || v2.stops.done.includes(id)) return;
   v2.stops.done.push(id);
   v2.stops.index = Math.max(v2.stops.index, bp.stops.indexOf(stop) + 1);
+  // S6 Keepsakes (Glasses): a Discovery Stop that needs a clue, reached with an Intelligent Starter.
+  if (stop.category === 'discovery' && stop.slotTags.includes('clue') && v2.starter?.temperament === 'tm_intelligent') markKeepsake(run, 'clue_smart');
   replanStops(content, run, v2.stops.index);
   queueStopScene(content, run, id);
+  // W3 rival choice scenes: a relationship or rest Stop offers one; consequences due by now surface as a note.
+  surfaceRivalConsequences(run);
+  if (offersRivalScene(stop)) offerRivalScene(run, id);
   const tag = stop.slotTags.find((t) => TAG_LINES[t]);
   const text = tag ? TAG_LINES[tag]! : STOP_LINES[stop.category];
   emit(content, run, 'storyMoment', { data: { storyStop: id, category: stop.category, act: stop.act }, importance: 30 + stop.intensity * 10, text });

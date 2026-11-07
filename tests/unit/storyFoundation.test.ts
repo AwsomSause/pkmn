@@ -82,7 +82,7 @@ describe('run v39 -> v40', () => {
   });
   it('run_v40_story_roundtrip: a Story Run with v2 state saves and loads identically', () => {
     const r = run();
-    r.story.v2 = { mode: 'story_run', contentHash: 'abc', heartbondOverrides: 1, autonomy: 'full', heartbond: { latched: [], pending: [], keystoneReady: false, ledger: [] }, dramatic: 'full', feats: { charge: 0, banked: 0, used: [], gains: [], armed: false, first: null }, sigMoves: [], sigNames: {}, cast: { dara: { stage: 'friend', attrs: { trust: 3 }, memories: ['m1'], flags: {}, gates: [], mem: [], scenes: 0, pending: null, last: null } }, arcs: {}, facts: { met_dara: true }, stops: { index: 2, planned: 44, done: ['s1', 's2'] }, replans: [], rel: {}, queue: [], scenesDone: [], fired: [] };
+    r.story.v2 = { mode: 'story_run', contentHash: 'abc', heartbondOverrides: 1, autonomy: 'full', heartbond: { latched: [], pending: [], keystoneReady: false, ledger: [] }, dramatic: 'full', feats: { charge: 0, banked: 0, used: [], gains: [], armed: false, first: null }, sigMoves: [], sigNames: {}, cast: { dara: { stage: 'friend', attrs: { trust: 3 }, memories: ['m1'], flags: {}, gates: [], mem: [], scenes: 0, pending: null, last: null } }, arcs: {}, facts: { met_dara: true }, stops: { index: 2, planned: 44, done: ['s1', 's2'] }, replans: [], rel: {}, queue: [], scenesDone: [], rivalScene: null, notes: [], fired: [] };
     const sm = new SaveManager(new MemoryStorageProvider(), content);
     sm.saveRun(r);
     const again = sm.loadRun();

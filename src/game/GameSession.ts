@@ -22,6 +22,7 @@ import { interactionLog } from '../core/presentation/uiPrefs';
 import type { Achievement, Content } from '../core/contentSchema';
 import { finalizeRun, recordRunStarted } from '../core/profile';
 import { activeScene, finishScene, type StoryScene } from '../core/story2/module';
+import { finishRivalScene, rivalStoryScene } from '../core/story2/rivalStory';
 import { awardLiveAchievements, claimTrainer, setActiveTitle, type RunEndSummary } from '../core/progress';
 import { setCardFrame, setCryTheme, setMenuArena } from '../core/wardrobe';
 import { buyNote } from '../core/researchNotes';
@@ -58,7 +59,9 @@ type PartyScene = PartyLife.Scene;
 import * as Svc from '../core/services/flow';
 import * as Plz from '../core/plaza/flow';
 import { availableMentors } from '../core/mentors';
-import type { RulesChoice } from '../core/rules';
+import { rulesCampaign, type RulesChoice } from '../core/rules';
+import { isStoryCampaign } from '../core/campaign/circuit';
+import { clearNextRun, nextRunStart } from '../core/story2/intake';
 import type { LoadoutPreset, Profile, RunPrep, RunState, Settings } from '../core/state';
 import { SaveManager, SLOTS, readActiveSlot, writeActiveSlot, type LoadResult, type SlotNumber, type SlotPeek } from '../save/saveManager';
 import type { StorageProvider } from '../save/storage';
@@ -250,8 +253,14 @@ export class GameSession {
   newRun(archetypeId: string, seed: string = makeRandomSeed(), campaignId?: string, prep?: RunPrep, rules?: RulesChoice, starterOverride?: string[]): RunState {
     // A saved preset can name a loan or Vault item the profile no longer has.
     if (prep) prep = { ...prep, loan: prep.loan && !loanProblem(this.content, this.profile), vaultItem: prep.vaultItem && this.profile.vault.includes(prep.vaultItem) ? prep.vaultItem : null, mentorId: availableMentors(this.profile).some((m) => m.id === prep!.mentorId) ? prep.mentorId : null };
-    const opts = { seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, mastery: this.profile.mastery, gameEvents: rules?.weeks === false ? [] : activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile), candyPerks: this.profile.candyPerks, ownedTrainers: this.profile.unlockedArchetypes, dexCaught: dexCaughtCount(this.profile), mentorBonds: this.profile.mentorBonds, npcMemory: this.profile.npcMemory, treasureHunt: this.profile.treasureHunt };
-    this.run = Run.createRun(this.content, { ...opts, runId: randomId('run'), pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory });
+    // Story Run: the prologue's identity, and the backstory and Starter line picked in Beats 7-8 or the Short Intake (used once).
+    const story = isStoryCampaign(this.content, (rules ? rulesCampaign(rules) : null) ?? prep?.campaignId ?? campaignId ?? 'full');
+    const me = this.profile.story.protagonist;
+    const next = story ? nextRunStart(this.content.storyData, this.profile.story) : {};
+    if (story && next.starter && !starterOverride?.length) starterOverride = [next.starter];
+    if (story && (next.starter || next.backstory)) this.profile = { ...this.profile, story: clearNextRun(this.profile.story) };
+    const opts = { seed, archetypeId, campaignId, prep, rules, attributes: this.profile.attributes, mastery: this.profile.mastery, gameEvents: rules?.weeks === false ? [] : activeGameEvents(this.content, new Date()).map((a) => a.edition), raidTierUnlocked: this.profile.best.raidBestTier ?? 0, licenses: runBankFlags(this.profile), candyPerks: this.profile.candyPerks, ownedTrainers: this.profile.unlockedArchetypes, dexCaught: dexCaughtCount(this.profile), mentorBonds: this.profile.mentorBonds, npcMemory: this.profile.npcMemory, treasureHunt: this.profile.treasureHunt, ...(story ? { protagonist: { look: me.look, name: me.nameSet ? me.name : '', pronouns: me.pronouns, ...(next.backstory ? { backstory: next.backstory } : {}) } } : {}) };
+    this.run = Run.createRun(this.content, { ...opts, ...(story && starterOverride?.length ? { starterOverride } : {}), runId: randomId('run'), pastPokemon: this.profile.pastPokemon, rivalArchive: this.profile.rivalArchive, runHistory: this.profile.runHistory });
     const grants = startGrants(this.content, this.profile, archetypeId);
     applyStartGrants(this.content, this.run, this.profile);
     // Memories: what earlier runs left behind (ghosts, keepsakes, old friends, the chosen heirloom). Picked from the profile, not rolled.
@@ -444,12 +453,14 @@ export class GameSession {
 
   /** S5: the backstory scene waiting to be shown, if any (reads state only). */
   storyScene(): StoryScene | null {
-    return this.run ? activeScene(this.content, this.run) : null;
+    return this.run ? activeScene(this.content, this.run) ?? rivalStoryScene(this.run) : null;
   }
 
   /** S5: finishes the scene on screen with the player's choice (if it has choices) and saves. False when the choice is not valid. */
   finishStoryScene(choiceId?: string): boolean {
-    const ok = finishScene(this.content, this.requireRun(), choiceId);
+    const run = this.requireRun();
+    // A backstory scene first; otherwise a rival scene or note (W3).
+    const ok = activeScene(this.content, run) ? finishScene(this.content, run, choiceId) : finishRivalScene(run, choiceId);
     if (ok && this.run && this.run.phase !== 'over') this.persistRun(); // a finished run's save is already cleared
     return ok;
   }
