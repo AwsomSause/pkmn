@@ -153,3 +153,7 @@ Dataset: `src/data/moveTargets.json` (which moves hit both foes, everyone, the p
 | Path | Source | Original | Notes |
 |---|---|---|---|
 | `images/packs/vance/{surprised,nudge,explain,tilt,adjust,confident}.png` | the director's own PixelLab animations of Professor Vance (uploaded 2026-11-07 as `Professor.zip`) | six 800x640 sheets, 17 frames each of 160x160, 5 per row; copied unchanged and renamed | Used by the prologue (Beats 3, 4, 10). The zip's static `New Professer.png` portrait is not imported yet. |
+`images/packs/vance/{surprised,nudge,explain,tilt,adjust,confident}.png`: the director's own PixelLab animations of Professor Vance, uploaded 2026-11-07 as `Professor.zip` (six 800x640 sheets, 17 frames each of 160x160, 5 per row; copied unchanged and renamed). Used by the prologue (Beats 3, 4, 10). The zip's static `New Professer.png` portrait is not imported yet.
+
+## Animated form sprites (2026-11-07)
+115 species forms that were still pictures (Megas, Gigantamax, Hisuian/Paldean/Galarian and other forms) now play the Drive's animated strips: front, back and shiny front, written over the existing `images/pokemon/{,back/,shiny/}<sprite>.{png,json}` atlases. Source: Animated Pokemon Sprites pack, `Graphics/Pokemon/{Front,Back,Front shiny}/<NAME>_<form>.png`. Mapping in `tools/drive/form-sprite-map.json` (made by `map-form-sprites.py` from the Essentials `pokemon_forms*.txt`), conversion by `tools/drive/import-form-anims.py` (cropped to a shared box, matched to the old sprite's size, 256-colour PNG).
