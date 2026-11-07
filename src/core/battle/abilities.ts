@@ -111,7 +111,7 @@ export const CONTACT_HURT = new Set(['rough-skin', 'iron-barbs']);
 export const MOLD_BREAKERS = new Set(['mold-breaker', 'teravolt', 'turboblaze']);
 
 /** Raise a stat when its move knocks the target out. */
-export const KO_BOOST: Record<string, BoostStat | 'best'> = { moxie: 'atk', 'chilling-neigh': 'atk', 'grim-neigh': 'spa', 'as-one-glastrier': 'atk', 'as-one-spectrier': 'spa', 'beast-boost': 'best' };
+export const KO_BOOST: Record<string, BoostStat | 'best'> = { moxie: 'atk', 'chilling-neigh': 'atk', 'grim-neigh': 'spa', 'as-one-glastrier': 'atk', 'as-one-spectrier': 'spa', 'beast-boost': 'best', eelevate: 'best' };
 
 /** After being hit by a damaging move (and surviving): raise its stats. */
 export const HIT_BOOST: Record<string, { types?: TypeName[]; physical?: true; changes: { stat: BoostStat; stages: number }[] }> = {
@@ -151,6 +151,24 @@ export const TRAPPERS = new Set(['shadow-tag', 'arena-trap', 'magnet-pull']);
 /** After a damaging hit that drops it under half HP, it raises this stat once. */
 export const HALF_HP_BOOST: Record<string, { stat: BoostStat; stages: number }> = { berserk: { stat: 'spa', stages: 1 }, 'anger-shell': { stat: 'atk', stages: 1 } };
 
+/** Forms that follow HP, weather or a toggle: [base, alternate] pairs per ability. */
+export const FORM_PAIRS: Record<string, [string, string][]> = {
+  'zen-mode': [['darmanitan', 'darmanitan-zen'], ['darmanitan-galar', 'darmanitan-galar-zen']],
+  schooling: [['wishiwashi', 'wishiwashi-school']],
+  'power-construct': [['zygarde', 'zygarde-complete']],
+  'hunger-switch': [['morpeko', 'morpeko-hangry']],
+  'tera-shift': [['terapagos', 'terapagos-terastal']],
+  'shields-down': [['minior', 'minior-core']],
+};
+export const FORECAST_FORMS: Partial<Record<Weather, string>> = { sun: 'castform-sunny', rain: 'castform-rainy', snow: 'castform-snowy', hail: 'castform-snowy' };
+
+/** Every form an ability can turn a Pokémon into in battle (the support report counts these as reachable). */
+export const ABILITY_FORMS = new Set<string>([
+  ...Object.values(FORM_PAIRS).flatMap((pairs) => pairs.map(([, alt]) => alt)),
+  ...Object.values(FORECAST_FORMS),
+  'aegislash-blade', 'cramorant-gulping', 'cramorant-gorging', 'greninja-ash', 'mimikyu-busted', 'eiscue-noice', 'palafin-hero',
+]);
+
 /** Abilities the battle engine runs. */
 const SUPPORTED = new Set<string>([
   'cute-charm', 'rivalry', 'wise-eye', 'eye-of-the-gale', 'grid-surfer',
@@ -179,7 +197,7 @@ const SUPPORTED = new Set<string>([
   ...Object.keys(RUINS),
   ...TRAPPERS,
   ...Object.keys(HALF_HP_BOOST),
-  'neutralizing-gas', 'eelevate', 'guard-dog', 'color-change', 'cursed-body', 'perish-body', 'cotton-down', 'toxic-debris',
+  'neutralizing-gas', 'guard-dog', 'color-change', 'cursed-body', 'perish-body', 'cotton-down', 'toxic-debris',
   'piercing-drill', 'unseen-fist',
   'bulletproof', 'sharpness', 'wind-rider', 'wind-power', 'electromorphosis', 'desolate-land', 'primordial-sea', 'forecast', 'flower-gift',
   'mimicry', 'zen-mode', 'schooling', 'stance-change', 'power-construct', 'hunger-switch', 'battle-bond', 'disguise',

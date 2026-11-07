@@ -121,7 +121,8 @@ function signature(t: FxTools): void {
   const sprite = t.visual as unknown as Phaser.GameObjects.Components.Transform & { y: number };
   const dir = t.side === 'enemy' ? -1 : 1;
   switch (t.ability) {
-    case 'levitate': {
+    case 'levitate':
+    case 'eelevate': {
       const y0 = sprite.y;
       t.scene.tweens.add({ targets: t.visual, y: y0 - 18, duration: 350, yoyo: true, ease: 'Sine.easeInOut', hold: 300 });
       break;
