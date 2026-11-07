@@ -153,3 +153,7 @@ Dataset: `src/data/moveTargets.json` (which moves hit both foes, everyone, the p
 | Path | Source | Original | Notes |
 |---|---|---|---|
 | `images/packs/vance/{surprised,nudge,explain,tilt,adjust,confident}.png` | the director's own PixelLab animations of Professor Vance (uploaded 2026-11-07 as `Professor.zip`) | six 800x640 sheets, 17 frames each of 160x160, 5 per row; copied unchanged and renamed | Used by the prologue (Beats 3, 4, 10). The zip's static `New Professer.png` portrait is not imported yet. |
+`images/packs/vance/{surprised,nudge,explain,tilt,adjust,confident}.png`: the director's own PixelLab animations of Professor Vance, uploaded 2026-11-07 as `Professor.zip` (six 800x640 sheets, 17 frames each of 160x160, 5 per row; copied unchanged and renamed). Used by the prologue (Beats 3, 4, 10). The zip's static `New Professer.png` portrait is not imported yet.
+
+## Overworld class NPC sprites (Drive plan item 6, 2026-11-07)
+43 generic class sheets (`NPC_B2W2_*`: Ace Trainer, Artist, Baker, Beauty, Biker, Cyclist, Doctor, Nurse, Officer, Pilot, Psychic, Ranger, Scientist, Veteran and similar) copied unchanged from the Pokémon Decades pack (`Graphics/Characters`, 256x256, 4x4 frames of 64px, the same layout as the existing sheets) into `images/overworld/trainers/`. Named characters, gym leaders and villain teams were left out. Registered in `src/data/overworld.json`.
