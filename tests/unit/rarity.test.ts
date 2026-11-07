@@ -69,3 +69,30 @@ describe('rarity overhaul', () => {
     expect(pickEggSpecies(content, list, new Rng(hashSeed('same'))).id).toBe(pickEggSpecies(content, list, new Rng(hashSeed('same'))).id);
   });
 });
+
+describe('rarity caps and off-region rarity', () => {
+  it('a regional form sits one tier rarer outside its home region, and not at home', async () => {
+    const { rarityIn, rarityOf } = await import('../../src/core/rarity');
+    const id = 'rattata-alola';
+    const home = content.species.get(id)!.form!.region!;
+    expect(rarityIn(content, id, home)).toBe(rarityOf(content, id));
+    expect(rarityIn(content, id)).toBe(rarityOf(content, id));
+    const other = [...content.regions.keys()].find((r) => r !== home)!;
+    const away = rarityIn(content, id, other);
+    expect(['common', 'uncommon', 'rare', 'veryRare', 'epic'].indexOf(away)).toBeGreaterThanOrEqual(['common', 'uncommon', 'rare', 'veryRare', 'epic'].indexOf(rarityOf(content, id)));
+  });
+
+  it('caps: no legendary trades, no epic shop stock or early epic rewards', async () => {
+    const { tradeAllowed, shopTierAllowed, rewardTierAllowed, rewardTierCap } = await import('../../src/core/rarity');
+    expect(tradeAllowed(content, 'mewtwo')).toBe(false);
+    expect(tradeAllowed(content, 'pidgey')).toBe(true);
+    expect(shopTierAllowed(content, 'rare')).toBe(true);
+    expect(shopTierAllowed(content, 'epic')).toBe(false);
+    expect(rewardTierCap(content, 0)).toBe('rare');
+    expect(rewardTierCap(content, 1)).toBe('rare');
+    expect(rewardTierCap(content, 2)).toBe('epic');
+    expect(rewardTierAllowed(content, 'epic', 1)).toBe(false);
+    expect(rewardTierAllowed(content, 'epic', 2)).toBe(true);
+    expect(rewardTierAllowed(content, 'common', 0)).toBe(true);
+  });
+});

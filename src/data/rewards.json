@@ -1956,5 +1956,277 @@
   "scope": "run",
   "moneyMultiplierApplies": false,
   "iconAssetId": "item.revive"
+ },
+ {
+  "id": "aloraichium-z",
+  "name": "Aloraichium Z",
+  "description": "Z-Crystal: Lets Raichu Alola turn Thunderbolt into Stoked Sparksurfer (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "aloraichium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/aloraichiumz"
+ },
+ {
+  "id": "decidium-z",
+  "name": "Decidium Z",
+  "description": "Z-Crystal: Lets Decidueye turn Spirit Shackle into Sinister Arrow Raid (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "decidium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/decidiumz"
+ },
+ {
+  "id": "eevium-z",
+  "name": "Eevium Z",
+  "description": "Z-Crystal: Lets Eevee turn Last Resort into Extreme Evoboost (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "eevium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/eeviumz"
+ },
+ {
+  "id": "incinium-z",
+  "name": "Incinium Z",
+  "description": "Z-Crystal: Lets Incineroar turn Darkest Lariat into Malicious Moonsault (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "incinium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/inciniumz"
+ },
+ {
+  "id": "kommonium-z",
+  "name": "Kommonium Z",
+  "description": "Z-Crystal: Lets Kommo O turn Clanging Scales into Clangorous Soulblaze (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "kommonium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/kommoniumz"
+ },
+ {
+  "id": "lunalium-z",
+  "name": "Lunalium Z",
+  "description": "Z-Crystal: Lets Lunala turn Moongeist Beam into Menacing Moonraze Maelstrom (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "lunalium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/lunaliumz"
+ },
+ {
+  "id": "lycanium-z",
+  "name": "Lycanium Z",
+  "description": "Z-Crystal: Lets Lycanroc/Lycanroc Midnight/Lycanroc Dusk turn Stone Edge into Splintered Stormshards (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "lycanium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/lycaniumz"
+ },
+ {
+  "id": "marshadium-z",
+  "name": "Marshadium Z",
+  "description": "Z-Crystal: Lets Marshadow turn Spectral Thief into Soul-Stealing 7-Star Strike (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "marshadium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/marshadiumz"
+ },
+ {
+  "id": "mewnium-z",
+  "name": "Mewnium Z",
+  "description": "Z-Crystal: Lets Mew turn Psychic into Genesis Supernova (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "mewnium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/mewniumz"
+ },
+ {
+  "id": "mimikium-z",
+  "name": "Mimikium Z",
+  "description": "Z-Crystal: Lets Mimikyu turn Play Rough into Let's Snuggle Forever (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "mimikium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/mimikiumz"
+ },
+ {
+  "id": "pikanium-z",
+  "name": "Pikanium Z",
+  "description": "Z-Crystal: Lets Pikachu turn Volt Tackle into Catastropika (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "pikanium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/pikaniumz"
+ },
+ {
+  "id": "pikashunium-z",
+  "name": "Pikashunium Z",
+  "description": "Z-Crystal: Lets Pikachu turn Thunderbolt into 10,000,000 Volt Thunderbolt (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "pikashunium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/pikashuniumz"
+ },
+ {
+  "id": "primarium-z",
+  "name": "Primarium Z",
+  "description": "Z-Crystal: Lets Primarina turn Sparkling Aria into Oceanic Operetta (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "primarium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/primariumz"
+ },
+ {
+  "id": "snorlium-z",
+  "name": "Snorlium Z",
+  "description": "Z-Crystal: Lets Snorlax turn Giga Impact into Pulverizing Pancake (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "snorlium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/snorliumz"
+ },
+ {
+  "id": "solganium-z",
+  "name": "Solganium Z",
+  "description": "Z-Crystal: Lets Solgaleo/Necrozma Dusk turn Sunsteel Strike into Searing Sunraze Smash (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "solganium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/solganiumz"
+ },
+ {
+  "id": "tapunium-z",
+  "name": "Tapunium Z",
+  "description": "Z-Crystal: Lets Tapu Koko/Tapu Lele/Tapu Bulu/Tapu Fini turn Nature's Madness into Guardian of Alola (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "tapunium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/tapuniumz"
+ },
+ {
+  "id": "ultranecrozium-z",
+  "name": "Ultranecrozium Z",
+  "description": "Z-Crystal: Lets Necrozma Ultra turn Photon Geyser into Light That Burns the Sky (needs the Z-Ring).",
+  "category": "transformation",
+  "rarity": "rare",
+  "effect": {
+   "kind": "addItem",
+   "item": "ultranecrozium-z",
+   "quantity": 1
+  },
+  "stacking": "instant",
+  "scope": "run",
+  "moneyMultiplierApplies": false,
+  "iconAssetId": "item.library/ultranecroziumz"
  }
 ]

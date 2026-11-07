@@ -8746,12 +8746,13 @@
   "accuracy": null,
   "pp": 1,
   "priority": 0,
-  "critStage": 0,
+  "critStage": 2,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "zmove"
+  ],
   "effects": {},
-  "supported": false,
-  "needs": "Pikachu-exclusive Z-Move. High critical hit ratio."
+  "supported": true
  },
  {
   "id": "acid-downpour",
@@ -9602,11 +9603,10 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "zmove"
   ],
   "effects": {},
-  "supported": false,
-  "needs": "Pikachu-exclusive Z-Move."
+  "supported": true
  },
  {
   "id": "ceaseless-edge",
@@ -9747,11 +9747,43 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "sound"
+   "zmove"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Kommo-o exclusive Z-Move."
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "def",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spa",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spd",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spe",
+     "stages": 1,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  },
+  "supported": true
  },
  {
   "id": "clear-smog",
@@ -10665,10 +10697,44 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Eevee-exclusive Z-Move. Sharply raises all stats."
+  "flags": [
+   "zmove"
+  ],
+  "effects": {
+   "statChanges": [
+    {
+     "stat": "atk",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "def",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spa",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spd",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    },
+    {
+     "stat": "spe",
+     "stages": 2,
+     "target": "self",
+     "chance": 100
+    }
+   ]
+  },
+  "supported": true
  },
  {
   "id": "facade",
@@ -11806,10 +11872,11 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "zmove"
+  ],
   "effects": {},
-  "supported": false,
-  "needs": "Mew-exclusive Z-Move."
+  "supported": true
  },
  {
   "id": "geomancy",
@@ -12092,10 +12159,13 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Tapu-exclusive Z-move. Cuts opponent's HP by 75%."
+  "flags": [
+   "zmove"
+  ],
+  "effects": {
+   "halveTarget": 0.75
+  },
+  "supported": true
  },
  {
   "id": "gyro-ball",
@@ -12829,11 +12899,10 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "zmove"
   ],
   "effects": {},
-  "supported": false,
-  "needs": "Mimikyu-exclusive Z-Move."
+  "supported": true
  },
  {
   "id": "life-dew",
@@ -12878,10 +12947,13 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Ultra Necrozma-exclusive Z-Move. Ignores target's ability; uses highest Attack stat."
+  "flags": [
+   "zmove"
+  ],
+  "effects": {
+   "ignoreAbility": true
+  },
+  "supported": true
  },
  {
   "id": "lock-on",
@@ -13180,11 +13252,10 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "zmove"
   ],
   "effects": {},
-  "supported": false,
-  "needs": "Incineroar-exclusive Z-Move."
+  "supported": true
  },
  {
   "id": "malignant-chain",
@@ -13604,10 +13675,13 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Lunala-exclusive Z-Move."
+  "flags": [
+   "zmove"
+  ],
+  "effects": {
+   "ignoreAbility": true
+  },
+  "supported": true
  },
  {
   "id": "metal-burst",
@@ -14070,10 +14144,11 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "zmove"
+  ],
   "effects": {},
-  "supported": false,
-  "needs": "Primarina-exclusive Z-Move."
+  "supported": true
  },
  {
   "id": "octolock",
@@ -14648,11 +14723,10 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "zmove"
   ],
   "effects": {},
-  "supported": false,
-  "needs": "Snorlax-exclusive Normal type Z-Move."
+  "supported": true
  },
  {
   "id": "punishment",
@@ -15300,11 +15374,12 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "zmove"
   ],
-  "effects": {},
-  "supported": false,
-  "needs": "Solgaleo-exclusive Z-Move."
+  "effects": {
+   "ignoreAbility": true
+  },
+  "supported": true
  },
  {
   "id": "secret-power",
@@ -15560,10 +15635,11 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "zmove"
+  ],
   "effects": {},
-  "supported": false,
-  "needs": "Decidueye-exclusive Z-Move."
+  "supported": true
  },
  {
   "id": "sketch",
@@ -15803,11 +15879,10 @@
   "critStage": 0,
   "target": "enemy",
   "flags": [
-   "contact"
+   "zmove"
   ],
   "effects": {},
-  "supported": false,
-  "needs": "Marshadow-exclusive Z-Move."
+  "supported": true
  },
  {
   "id": "sparkling-aria",
@@ -16059,10 +16134,11 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
+  "flags": [
+   "zmove"
+  ],
   "effects": {},
-  "supported": false,
-  "needs": "Lycanroc-exclusive Z-Move."
+  "supported": true
  },
  {
   "id": "spotlight",
@@ -16191,10 +16267,16 @@
   "priority": 0,
   "critStage": 0,
   "target": "enemy",
-  "flags": [],
-  "effects": {},
-  "supported": false,
-  "needs": "Alolan Raichu-exclusive Electric type Z-Move."
+  "flags": [
+   "zmove"
+  ],
+  "effects": {
+   "status": {
+    "id": "par",
+    "chance": 100
+   }
+  },
+  "supported": true
  },
  {
   "id": "stomping-tantrum",

@@ -96,3 +96,25 @@ describe('Legendary boss battles', () => {
     }
   });
 });
+
+describe('Legendary roles in battle', () => {
+  it('a Legendary gets one stage for its role when it comes onto the field, on either side; others get none', async () => {
+    const { createBattle, resolveTurn } = await import('../../src/core/battle/engine');
+    const { createPokemon } = await import('../../src/core/pokemon');
+    const { Rng, hashSeed } = await import('../../src/core/rng');
+    const run = (a: string, b: string) => {
+      const p = createPokemon(content, a, 50, 'p1'); p.moves = [{ id: 'splash', pp: 40 }];
+      const e = createPokemon(content, b, 50, 'e1'); e.moves = [{ id: 'splash', pp: 40 }];
+      const battle = createBattle('wild', [e], 0, p.uid, null);
+      const ctx = { content, battle, party: [p], inventory: {}, rng: new Rng(hashSeed('role')), captureRng: new Rng(hashSeed('role-c')), catchMultiplier: 1 };
+      resolveTurn(ctx, { kind: 'move', index: 0 });
+      return battle;
+    };
+    const wall = run('magikarp', 'cobalion'); // wall: +1 Defense
+    expect(wall.enemyStages.def).toBe(1);
+    expect(wall.playerStages.def).toBe(0);
+    const striker = run('azelf', 'magikarp'); // striker: +1 Speed
+    expect(striker.playerStages.spe).toBe(1);
+    expect(striker.enemyStages.spe).toBe(0);
+  });
+});

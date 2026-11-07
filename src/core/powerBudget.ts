@@ -52,14 +52,25 @@ export interface PowerScore {
   base: number;
   /** The best of its own rating and every battle form it can reach. */
   withForms: number;
+  /** `base` plus the Tera and Z spike (a species Z-Crystal counts more than the type Z-Move). */
+  withAccess: number;
   cap: number;
+}
+
+/** True when some species Z-Crystal is made for this species. */
+export function hasSpeciesZ(content: Content, speciesId: string): boolean {
+  for (const item of content.items.values()) if (item.effect.kind === 'speciesZCrystal' && item.effect.species.includes(speciesId)) return true;
+  return false;
 }
 
 export function powerScore(content: Content, s: Species): PowerScore {
   const base = basePower(content, s.id);
   const withForms = Math.max(base, ...reachableForms(content, s.id).map((id) => basePower(content, id)));
   const cls = powerClass(s);
-  return { speciesId: s.id, powerClass: cls, base, withForms, cap: content.balance.powerBudget.caps[cls] };
+  const a = content.balance.powerBudget.access;
+  const z = hasSpeciesZ(content, s.id) ? a.speciesZPercent : a.zPercent;
+  const withAccess = Math.round(base * (1 + (a.teraPercent + z) / 100));
+  return { speciesId: s.id, powerClass: cls, base, withForms, withAccess, cap: content.balance.powerBudget.caps[cls] };
 }
 
 /** A move's effective power: power × accuracy, times the most hits for multi-hit moves. Status moves and fixed-damage moves score 0. */
@@ -74,7 +85,9 @@ export function overBudget(content: Content): string[] {
   const out: string[] = [];
   for (const s of content.species.values()) {
     const p = powerScore(content, s);
-    if (p.base > p.cap && !content.balance.powerBudget.exempt[s.id]) out.push(`species ${s.id} (${p.powerClass}): ${p.base} > ${p.cap}`);
+    if (content.balance.powerBudget.exempt[s.id]) continue;
+    if (p.base > p.cap) out.push(`species ${s.id} (${p.powerClass}): ${p.base} > ${p.cap}`);
+    else if (p.withAccess > p.cap * content.balance.powerBudget.access.headroom) out.push(`species ${s.id} (${p.powerClass}) with Tera/Z access: ${p.withAccess} > ${Math.round(p.cap * content.balance.powerBudget.access.headroom)}`);
   }
   const learned = new Set<string>();
   for (const s of content.species.values()) for (const e of s.learnset) learned.add(e.move);

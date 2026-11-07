@@ -173,8 +173,11 @@ export function transformProblem(ctx: TransformContext, request: TransformReques
  * The move a move becomes as a Z-Move: a damaging move turns into its type's
  * Z-Move; a status move with a Z bonus stays itself. Null when it has no Z-Move.
  */
-export function zMoveFor(content: Content, move: Move): Move | null {
+export function zMoveFor(content: Content, move: Move, user?: ZUser): Move | null {
   if (move.flags.includes('zmove') || move.supported === false) return null;
+  // A species Z-Crystal in the Bag turns its one move into that species' own Z-Move.
+  const signature = user ? speciesZ(content, user.inventory, user.speciesId, move.id) : null;
+  if (signature) return signature.move;
   if (move.category === 'status') return content.zMoves.status[move.id] ? move : null;
   const power = content.zMoves.power[move.id];
   const zId = content.zMoves.byType[move.type];
@@ -196,6 +199,20 @@ export function zMoveFor(content: Content, move: Move): Move | null {
   };
 }
 
+/** Who is asking for a Z-Move: a species Z-Crystal only works for its own species and move. */
+export interface ZUser { speciesId: string; inventory: Record<string, number> }
+
+/** The species Z-Crystal in the Bag that turns this species' `moveId` into its own Z-Move, with that Z-Move, or null. */
+export function speciesZ(content: Content, inventory: Record<string, number>, speciesId: string, moveId: string): { itemId: string; move: Move } | null {
+  for (const item of content.items.values()) {
+    const fx = item.effect;
+    if (fx.kind !== 'speciesZCrystal' || fx.move !== moveId || !fx.species.includes(speciesId) || !owns(inventory, item.id)) continue;
+    const move = content.moves.get(fx.zMove);
+    if (move?.supported && move.flags.includes('zmove')) return { itemId: item.id, move };
+  }
+  return null;
+}
+
 /** The Z-Crystal in the Bag for this type, or null. */
 export function ownedZCrystal(content: Content, inventory: Record<string, number>, type: TypeName): string | null {
   for (const item of content.items.values()) {
@@ -208,7 +225,7 @@ export function ownedZCrystal(content: Content, inventory: Record<string, number
 export function zMoveOptions(ctx: TransformContext): (Move | null)[] {
   const mon = ctx.party[ctx.battle.activeIndex];
   if (!mon) return [];
-  return mon.moves.map((slot, index) => (zMoveProblem(ctx, mon, index) ? null : zMoveFor(ctx.content, ctx.content.moves.get(slot.id)!)));
+  return mon.moves.map((slot, index) => (zMoveProblem(ctx, mon, index) ? null : zMoveFor(ctx.content, ctx.content.moves.get(slot.id)!, { speciesId: mon.speciesId, inventory: ctx.inventory })));
 }
 
 function zMoveProblem(ctx: TransformContext, mon: PokemonInstance, moveIndex: number): string | null {
@@ -222,8 +239,8 @@ function zMoveProblem(ctx: TransformContext, mon: PokemonInstance, moveIndex: nu
   const move = slot ? content.moves.get(slot.id) : undefined;
   if (!slot || !move) return 'Choose a move for the Z-Move.';
   if (slot.pp <= 0) return 'That move has no PP left.';
-  if (!zMoveFor(content, move)) return `${move.name} can't become a Z-Move.`;
-  if (!ownedZCrystal(content, inventory, move.type)) return `You need the ${typeName(move.type)} Z-Crystal for ${move.name}.`;
+  if (!zMoveFor(content, move, { speciesId: mon.speciesId, inventory })) return `${move.name} can't become a Z-Move.`;
+  if (!speciesZ(content, inventory, mon.speciesId, move.id) && !ownedZCrystal(content, inventory, move.type)) return `You need the ${typeName(move.type)} Z-Crystal for ${move.name}.`;
   // S174: the Z-Power answers only a Pokémon that has trained with you long enough.
   const need = content.balance.zBond.minBond;
   if (ctx.bondScore && need > 0 && ctx.bondScore(mon.uid) < need) return `Not bonded enough for a Z-Move yet (bond ${ctx.bondScore(mon.uid)}/${need}). Battle together to grow it.`;
@@ -422,12 +439,13 @@ export function applyTransformations(ctx: TransformContext, request: TransformRe
   // ... or a Z-Move (the engine swaps in the Z-Move itself; see zMoveFor).
   if (request?.kind === 'zmove' && player.hp > 0 && !zMoveProblem(ctx, player, moveIndex)) {
     const move = content.moves.get(player.moves[moveIndex]!.id)!;
-    const z = zMoveFor(content, move)!;
+    const sig = speciesZ(content, ctx.inventory, player.speciesId, move.id);
+    const z = zMoveFor(content, move, { speciesId: player.speciesId, inventory: ctx.inventory })!;
     battle.transform.mechanics[player.uid] = 'zmove';
     battle.transform.used.player.push('zmove');
     events.push({
       type: 'transform', side: 'player', uid: player.uid, kind: 'zmove', from: player.speciesId, to: player.speciesId,
-      itemId: ownedZCrystal(content, ctx.inventory, move.type), moveId: move.id, zMoveId: z.id,
+      itemId: sig?.itemId ?? ownedZCrystal(content, ctx.inventory, move.type), moveId: move.id, zMoveId: z.id,
     });
     if (move.category === 'status') applyZBonus(ctx, 'player', player, move.id, events);
   }

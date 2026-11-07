@@ -12,6 +12,18 @@ describe('Power budget', () => {
     expect(overBudget(content)).toEqual([]);
   });
 
+  it('counts Tera and Z access: a species Z-Crystal counts more than the type Z-Move, and the gate uses the headroom', () => {
+    const a = content.balance.powerBudget.access;
+    const pika = powerScore(content, sp('pikachu'));
+    expect(pika.withAccess).toBe(Math.round(pika.base * (1 + (a.teraPercent + a.speciesZPercent) / 100)));
+    const bulba = powerScore(content, sp('bulbasaur'));
+    expect(bulba.withAccess).toBe(Math.round(bulba.base * (1 + (a.teraPercent + a.zPercent) / 100)));
+    expect(pika.withAccess).toBeGreaterThan(pika.base);
+    // Tightening the headroom to 1 makes the strongest species fail the access check.
+    const tight = { ...content, balance: { ...content.balance, powerBudget: { ...content.balance.powerBudget, access: { ...a, headroom: 1 } } } };
+    expect(overBudget(tight as typeof content).some((l) => l.includes('Tera/Z access'))).toBe(true);
+  });
+
   it('puts species in the right class', () => {
     expect(powerClass(sp('pichu'))).toBe('baby');
     expect(powerClass(sp('charmander'))).toBe('basic');

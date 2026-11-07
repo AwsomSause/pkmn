@@ -651,8 +651,10 @@
   "level": 50,
   "caps": { "baby": 145, "basic": 190, "middle": 195, "final": 270, "legendary": 330, "mythical": 280, "form": 360 },
   "moveCap": 250,
+  "access": { "teraPercent": 4, "zPercent": 4, "speciesZPercent": 10, "headroom": 1.12 },
   "exempt": { "eternatus-eternamax": "Boss-only form (Eternamax Eternatus is never owned)." }
  },
+ "rarityCaps": { "offRegionShift": 1, "trade": "epic", "shopItem": "rare", "rewardItem": [{ "badges": 0, "max": "rare" }, { "badges": 2, "max": "epic" }] },
  "variety": {
   "penalty": 0.35,
   "window": {

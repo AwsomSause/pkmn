@@ -2490,5 +2490,317 @@
     "percent": 5
    }
   }
+ },
+ {
+  "id": "aloraichium-z",
+  "name": "Aloraichium Z",
+  "description": "Lets Raichu Alola turn Thunderbolt into Stoked Sparksurfer (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/aloraichiumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "raichu-alola"
+   ],
+   "move": "thunderbolt",
+   "zMove": "stoked-sparksurfer"
+  }
+ },
+ {
+  "id": "decidium-z",
+  "name": "Decidium Z",
+  "description": "Lets Decidueye turn Spirit Shackle into Sinister Arrow Raid (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/decidiumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "decidueye"
+   ],
+   "move": "spirit-shackle",
+   "zMove": "sinister-arrow-raid"
+  }
+ },
+ {
+  "id": "eevium-z",
+  "name": "Eevium Z",
+  "description": "Lets Eevee turn Last Resort into Extreme Evoboost (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/eeviumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "eevee"
+   ],
+   "move": "last-resort",
+   "zMove": "extreme-evoboost"
+  }
+ },
+ {
+  "id": "incinium-z",
+  "name": "Incinium Z",
+  "description": "Lets Incineroar turn Darkest Lariat into Malicious Moonsault (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/inciniumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "incineroar"
+   ],
+   "move": "darkest-lariat",
+   "zMove": "malicious-moonsault"
+  }
+ },
+ {
+  "id": "kommonium-z",
+  "name": "Kommonium Z",
+  "description": "Lets Kommo O turn Clanging Scales into Clangorous Soulblaze (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/kommoniumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "kommo-o"
+   ],
+   "move": "clanging-scales",
+   "zMove": "clangorous-soulblaze"
+  }
+ },
+ {
+  "id": "lunalium-z",
+  "name": "Lunalium Z",
+  "description": "Lets Lunala turn Moongeist Beam into Menacing Moonraze Maelstrom (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/lunaliumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "lunala"
+   ],
+   "move": "moongeist-beam",
+   "zMove": "menacing-moonraze-maelstrom"
+  }
+ },
+ {
+  "id": "lycanium-z",
+  "name": "Lycanium Z",
+  "description": "Lets Lycanroc/Lycanroc Midnight/Lycanroc Dusk turn Stone Edge into Splintered Stormshards (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/lycaniumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "lycanroc",
+    "lycanroc-midnight",
+    "lycanroc-dusk"
+   ],
+   "move": "stone-edge",
+   "zMove": "splintered-stormshards"
+  }
+ },
+ {
+  "id": "marshadium-z",
+  "name": "Marshadium Z",
+  "description": "Lets Marshadow turn Spectral Thief into Soul-Stealing 7-Star Strike (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/marshadiumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "marshadow"
+   ],
+   "move": "spectral-thief",
+   "zMove": "soul-stealing-7-star-strike"
+  }
+ },
+ {
+  "id": "mewnium-z",
+  "name": "Mewnium Z",
+  "description": "Lets Mew turn Psychic into Genesis Supernova (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/mewniumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "mew"
+   ],
+   "move": "psychic",
+   "zMove": "genesis-supernova"
+  }
+ },
+ {
+  "id": "mimikium-z",
+  "name": "Mimikium Z",
+  "description": "Lets Mimikyu turn Play Rough into Let's Snuggle Forever (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/mimikiumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "mimikyu"
+   ],
+   "move": "play-rough",
+   "zMove": "lets-snuggle-forever"
+  }
+ },
+ {
+  "id": "pikanium-z",
+  "name": "Pikanium Z",
+  "description": "Lets Pikachu turn Volt Tackle into Catastropika (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/pikaniumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "pikachu"
+   ],
+   "move": "volt-tackle",
+   "zMove": "catastropika"
+  }
+ },
+ {
+  "id": "pikashunium-z",
+  "name": "Pikashunium Z",
+  "description": "Lets Pikachu turn Thunderbolt into 10,000,000 Volt Thunderbolt (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/pikashuniumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "pikachu"
+   ],
+   "move": "thunderbolt",
+   "zMove": "10-000-000-volt-thunderbolt"
+  }
+ },
+ {
+  "id": "primarium-z",
+  "name": "Primarium Z",
+  "description": "Lets Primarina turn Sparkling Aria into Oceanic Operetta (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/primariumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "primarina"
+   ],
+   "move": "sparkling-aria",
+   "zMove": "oceanic-operetta"
+  }
+ },
+ {
+  "id": "snorlium-z",
+  "name": "Snorlium Z",
+  "description": "Lets Snorlax turn Giga Impact into Pulverizing Pancake (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/snorliumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "snorlax"
+   ],
+   "move": "giga-impact",
+   "zMove": "pulverizing-pancake"
+  }
+ },
+ {
+  "id": "solganium-z",
+  "name": "Solganium Z",
+  "description": "Lets Solgaleo/Necrozma Dusk turn Sunsteel Strike into Searing Sunraze Smash (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/solganiumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "solgaleo",
+    "necrozma-dusk"
+   ],
+   "move": "sunsteel-strike",
+   "zMove": "searing-sunraze-smash"
+  }
+ },
+ {
+  "id": "tapunium-z",
+  "name": "Tapunium Z",
+  "description": "Lets Tapu Koko/Tapu Lele/Tapu Bulu/Tapu Fini turn Nature's Madness into Guardian of Alola (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/tapuniumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "tapu-koko",
+    "tapu-lele",
+    "tapu-bulu",
+    "tapu-fini"
+   ],
+   "move": "natures-madness",
+   "zMove": "guardian-of-alola"
+  }
+ },
+ {
+  "id": "ultranecrozium-z",
+  "name": "Ultranecrozium Z",
+  "description": "Lets Necrozma Ultra turn Photon Geyser into Light That Burns the Sky (needs the Z-Ring).",
+  "category": "transformation",
+  "iconAssetId": "item.library/ultranecroziumz",
+  "usableInBattle": false,
+  "usableOutside": false,
+  "target": "none",
+  "effect": {
+   "kind": "speciesZCrystal",
+   "species": [
+    "necrozma-ultra"
+   ],
+   "move": "photon-geyser",
+   "zMove": "light-that-burns-the-sky"
+  }
  }
 ]

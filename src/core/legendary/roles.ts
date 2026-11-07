@@ -3,7 +3,7 @@
 
 import { z } from 'zod';
 import rolesJson from '../../data/legendaryRoles.json';
-import type { Content } from '../contentSchema';
+import { BoostStatSchema, type BoostStat, type Content } from '../contentSchema';
 
 export const LEGEND_ROLES = ['striker', 'powerhouse', 'wall', 'support', 'controller'] as const;
 export type LegendRole = (typeof LEGEND_ROLES)[number];
@@ -14,6 +14,8 @@ export const LegendRolesFileSchema = z.object({
   source: z.string(),
   roles: z.record(RoleSchema, z.string().min(1)),
   species: z.record(z.string(), RoleSchema),
+  /** What each role does the first time its Pokémon comes onto the field (either side): one stat stage. `best-attack` = Attack or Sp. Atk, whichever base stat is higher. */
+  entry: z.record(RoleSchema, z.object({ stat: z.union([BoostStatSchema, z.literal('best-attack')]), stages: z.number().int().min(1).max(2) })),
 });
 export const LEGEND_ROLE_DATA = LegendRolesFileSchema.parse(rolesJson);
 
@@ -22,4 +24,14 @@ export function legendRoleOf(content: Content, speciesId: string): LegendRole | 
   const s = content.species.get(speciesId);
   if (!s || !(s.tags.includes('legendary') || s.tags.includes('mythical'))) return null;
   return LEGEND_ROLE_DATA.species[s.form?.base ?? s.id] ?? null;
+}
+
+/** The stat stage a Legendary or Mythical gets on entering the field for its role, or null (not a legend). */
+export function roleEntryBoost(content: Content, speciesId: string): { stat: BoostStat; stages: number } | null {
+  const role = legendRoleOf(content, speciesId);
+  const e = role ? LEGEND_ROLE_DATA.entry[role] : undefined;
+  if (!e) return null;
+  if (e.stat !== 'best-attack') return { stat: e.stat, stages: e.stages };
+  const base = content.species.get(speciesId)!.baseStats;
+  return { stat: base.spa > base.atk ? 'spa' : 'atk', stages: e.stages };
 }

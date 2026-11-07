@@ -1,0 +1,78 @@
+{
+ "status": "supported",
+ "note": "Quirk lines for camp at different hours and on festival days, by quirk category. Read by core/overhaul/quirkTimes.ts.",
+ "lines": {
+  "rest": {
+   "morning": "{Name} stretches slowly and wishes the morning were longer.",
+   "evening": "{Name} is already looking for the softest spot to settle.",
+   "night": "{Name} is out cold the moment the fire settles.",
+   "festival": "{Name} sleeps through the first half of the festival and wakes up for the cake."
+  },
+  "weather": {
+   "morning": "{Name} sniffs the sky to see what the day will bring.",
+   "evening": "{Name} watches the clouds go gold and approves.",
+   "night": "{Name} peeks out at the weather every few minutes, just to be sure.",
+   "festival": "{Name} insists the weather is festival weather, whatever it is."
+  },
+  "collection": {
+   "morning": "{Name} checks that every treasure is still where it was left.",
+   "evening": "{Name} lines up its finds in the firelight.",
+   "night": "{Name} sleeps with one paw on the best find of the day.",
+   "festival": "{Name} brings out the finest treasure to show at the festival."
+  },
+  "food": {
+   "morning": "{Name} is first in line for breakfast and stays there.",
+   "evening": "{Name} sniffs every pot twice, just to be fair.",
+   "night": "{Name} dreams of dinner and drools a little.",
+   "festival": "{Name} makes a beeline for the festival food stalls."
+  },
+  "battle": {
+   "morning": "{Name} runs a few quiet drills before the others wake up.",
+   "evening": "{Name} replays the day's fights in its head.",
+   "night": "{Name} keeps one eye open, ready for anything.",
+   "festival": "{Name} sets the fighting aside for the day, almost."
+  },
+  "social": {
+   "morning": "{Name} greets everyone one by one, as if it were their birthday.",
+   "evening": "{Name} shuffles in close, so no one is left out of the circle.",
+   "night": "{Name} settles down beside whoever seems lonely.",
+   "festival": "{Name} dances through the festival and drags everyone along."
+  },
+  "time": {
+   "morning": "{Name} has been up for hours, or hasn't gone to bed at all.",
+   "evening": "{Name} perks up exactly as the light fades.",
+   "night": "{Name} comes alive in the dark and keeps the watch happily.",
+   "festival": "{Name} loses all track of time and is perfectly happy about it."
+  },
+  "legendary": {
+   "morning": "{Name} stares at the horizon a little too long.",
+   "evening": "{Name} watches the sky as if something might answer.",
+   "night": "{Name} whispers to the stars and listens for the reply.",
+   "festival": "{Name} stands quietly at the edge of the lights, glad to be here."
+  },
+  "vanity": {
+   "morning": "{Name} spends the whole morning on its look, and it shows.",
+   "evening": "{Name} catches its reflection in the water and nods.",
+   "night": "{Name} fusses over its best angle by the firelight.",
+   "festival": "{Name} outdoes itself for the festival and expects applause."
+  },
+  "exploration": {
+   "morning": "{Name} is gone before breakfast and returns with dirt on its nose.",
+   "evening": "{Name} has found a new path and cannot wait to show you.",
+   "night": "{Name} sits at the edge of the light, wondering what is out there.",
+   "festival": "{Name} wanders the festival and finds the best corner first."
+  },
+  "luck": {
+   "morning": "{Name} finds something shiny in the dew and decides it is a good day.",
+   "evening": "{Name} flips a pebble for luck and it lands just right.",
+   "night": "{Name} tucks its lucky find under its head and sleeps well.",
+   "festival": "{Name} wins a festival game by pure accident and acts like it planned it."
+  },
+  "storytelling": {
+   "morning": "{Name} is already scribbling the first notes of today's story.",
+   "evening": "{Name} gathers everyone close and clears its throat for a tale.",
+   "night": "{Name} tells a story by the fire, and the fire seems to listen.",
+   "festival": "{Name} is the star of the festival, telling the tallest tale of all."
+  }
+ }
+}

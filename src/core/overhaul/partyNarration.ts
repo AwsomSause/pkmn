@@ -5,6 +5,7 @@
 // is a single quiet line, so it stays far below the one-cinematic-moment cap (Moment Director).
 
 import { loadOverhaulLines } from './catalogs';
+import extraMoments from '../../data/momentsExtra.json';
 import { personalityOfMon } from './personality';
 import type { PokemonInstance } from '../state';
 
@@ -56,6 +57,8 @@ export function ensureNarration(): Promise<void> {
     }
     const lore = new Map<string, string[]>();
     for (const e of s.entries) if (e.kind === 'lore' && /^(night )?rest node|^sun rest node/.test(e.trigger)) push(lore, e.speciesId, e.scene);
+    // Hand-written extras: the director's own Delta Pokémon and species the pack has no lore for.
+    for (const e of extraMoments.entries) push(lore, e.speciesId, e.scene);
     const finishers = new Map<string, string>();
     const tenth = new Map<string, string>();
     const misses = new Map<string, string>();

@@ -3434,11 +3434,11 @@ export class BattleScene extends Phaser.Scene {
           const cine: CineKind | null = e.kind === 'mega' || e.kind === 'primal' || e.kind === 'dynamax' || e.kind === 'gigantamax' || e.kind === 'dynamaxEnd' || e.kind === 'zmove' || e.kind === 'tera' ? e.kind : null;
           if (cine === 'zmove' && this.motion === 'full' && !services().session.settings.fastZMove && mon) {
             // The full reference scene (Fast Z-Move off): Pokémon turned to face you, trainer and Z-Ring, Z-Crystal, white-out, title.
-            const zMove = zBase ? zMoveFor(content, zBase) : null;
+            const zMove = e.zMoveId ? (content.moves.get(e.zMoveId) ?? null) : zBase ? zMoveFor(content, zBase) : null;
             const sp = content.species.get(mon.speciesId)!;
             const mine = e.side === 'player';
             const art = mine ? this.playerArt() : null;
-            const crystalId = zBase ? ownedZCrystal(content, this.run.inventory, zBase.type) : null;
+            const crystalId = e.itemId ?? (zBase ? ownedZCrystal(content, this.run.inventory, zBase.type) : null);
             const feel = this.cineFeel('zmove');
             await this.playBeat(
               zMoveScene(this, {
@@ -3509,7 +3509,7 @@ export class BattleScene extends Phaser.Scene {
               }),
             );
           } else if (cine) {
-            const zMove = zBase ? zMoveFor(content, zBase) : null;
+            const zMove = e.zMoveId ? (content.moves.get(e.zMoveId) ?? null) : zBase ? zMoveFor(content, zBase) : null;
             await this.playBeat(
               cinematic(this, {
                 kind: cine,

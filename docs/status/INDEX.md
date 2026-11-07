@@ -377,3 +377,4 @@ region-identities.md: Torren/Frontier/Trial/Grand + Hisui/Kitakami taglines and 
 - `story-starter-arcs.md`: Starter arcs for all lines (Signature II hook), Vulpix and Psyduck lines, and the Story Run now binds its Heartbond partner.
 - early-deaths-difficulties.md: flatter early curve, second-wind healing, Casual/Brutal/Mythic difficulties, +1 HP per level.
 - `story-quest-unlocks.md`: 13 quest arcs unlock the 14 Rare and Exceptional starter lines that had no route.
+- `item-rival-loose-ends.md`: Plans audit loose ends: 17 species Z-Crystals, rarity caps, Legendary role entry boosts, Tera/Z in the power check, extra moments and camp quirk lines; Bottle Caps still blocked (no IVs); rival early win rate 59%.

@@ -1,0 +1,636 @@
+{
+ "status": "supported",
+ "note": "Hand-written rest-stop scenes for the director's own Delta Pokémon (drive) and for species the pack has no lore for (lore). Read by core/overhaul/partyNarration.ts.",
+ "entries": [
+  {
+   "speciesId": "bulbasaur-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "The bulb hums faintly at night, and glowing spores drift up like tiny lanterns.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "charmander-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "Its tail flame burns a cold, pale colour, and it keeps checking that you can still feel the warmth.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "squirtle-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It taps its shell twice, a little signal, and waits for you to tap back.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "ralts-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It stands very still, listening to something far away, then smiles at you as if it heard your name.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "scyther-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It polishes its blades against a stone, slow and careful, like a swordsman before a promise.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "pidgey-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It circles the camp once, twice, then lands on your shoulder as though it had always belonged there.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "dratini-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It coils into a small, tight spiral and falls asleep, one eye always a little open for you.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "pikachu-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "Sparks crackle along its cheeks in colours no Pikachu should have, and it looks pleased about it.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "snorlax-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It sleeps through the whole rest stop, and somehow the camp feels safer for it.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "geodude-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It rolls a pebble over to you, then looks away, pretending it was nothing.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "growlithe-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It sits at the edge of the firelight, guarding the dark so everyone else can rest.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "cyndaquil-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It huffs a few shy embers, then curls up against your boot to keep them lit.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "treecko-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It watches the trees move in the wind and sways with them, perfectly in time.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "torchic-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It scratches a small circle in the dirt and stands in the middle of it, very proud.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "turtwig-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "A tiny seedling on its shell has bloomed overnight, and it will not stop showing you.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "snivy-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It stretches out on a sunny rock with an air of royalty and expects you to notice.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "froakie-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It skips stones across a puddle and counts the ripples under its breath.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "shinx-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "Its fur lifts with static whenever you come close, and it leans in to make it worse.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "noibat-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It hangs upside down from a branch and chirps at the moon until the moon, somehow, answers.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "phantump-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It hides among the stumps, then peeks out to see whether you were really looking.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "snorunt-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It breathes on the window glass and draws a tiny face in the frost.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "koffing-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It drifts a polite distance away so its smoke won't bother you, and then drifts back.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "grimer-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It leaves a trail of glittering ooze and looks back, worried you might be upset.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "wooper-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It splashes into the nearest puddle, utterly delighted, and invites everyone along.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "munchlax-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It guards the snack bag with a stare that says it will not be moved.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "misdreavus-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It giggles from behind a tree, vanishes, and giggles from behind another.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "ditto-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It tries to become you, gets the hair wrong, and looks heartbroken until you laugh.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "kabuto-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It lies still in the shallows, ancient and patient, and clicks once when you pass.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "hoothoot-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It stays awake for the whole night watch and nods very seriously at every sound.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "drifloon-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It bobs along above the party, tugging gently at the sleeve of whoever looks lonely.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "elekid-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It twirls its antennae until the air smells of rain, then waits for applause.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "magby-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It coughs a little smoke and warms your hands without being asked.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "lotad-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It floats on a leaf in the nearest stream and sails slowly in circles, content.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "pawniard-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It stands guard at the camp entrance, bladed and solemn, though it keeps glancing back at you.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "bergmite-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It cools the water bottles with a proud little shiver.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "sunkern-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It follows the sunlight around the camp, always a few steps behind and entirely happy.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "purrloin-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It returns the thing it borrowed from you, but only after a long, meaningful look.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "tentacool-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It glows softly in the dusk, a lantern in the shape of a jellyfish.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "diglett-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It pops up from the ground right at your feet, then ducks away giggling.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "doduo-delta",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "Its two heads argue about the best spot to sleep, then fall asleep mid-sentence.",
+   "group": "drive"
+  },
+  {
+   "speciesId": "pidgey",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It puffs up its chest on a fence post and keeps lookout like it has a very important job.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "rattata",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It nibbles a crumb with great ceremony and tucks the rest away for later.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "ekans",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It coils around a warm rock and tastes the air, learning everything about the night.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "sandshrew",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It curls into a ball and rolls down a little slope, over and over, for the pure joy of it.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "diglett",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "Only its head shows above the ground, and it seems to be listening to the earth.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "mankey",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It shadow-boxes a tree until it is out of breath, then looks around to see who watched.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "bellsprout",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It sways to a tune only it can hear and tries to get a leaf to dance along.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "tentacool",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It drifts in a rain puddle that is far too small for it and seems content anyway.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "shuckle",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It tucks itself into its shell and is not seen again until someone mentions berries.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "aipom",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It swings from a low branch by its tail, showing off until someone claps.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "lotad",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It floats in a puddle with its leaf-hat tilted, enjoying the rain on its back.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "seedot",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It hangs from a branch like an acorn and drops, now and then, to scare a friend.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "taillow",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It dives to catch a tossed berry, snaps it out of the air, and puffs up proudly.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "wingull",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It rides the breeze above the camp, sliding on the wind without a single flap.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "surskit",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It skates across a pond so lightly that the water barely ripples.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "shroomish",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It sits very still in the shade, convinced no one has seen it.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "slakoth",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It has not moved since the last stop, and it is somehow still tired.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "nincada",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It clings to a tree trunk and listens, as if the bark were whispering.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "whismur",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It takes a very deep breath, thinks better of it, and whispers instead.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "makuhita",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It practises its push-ups at dawn, sweating and cheerful, and counts out loud.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "azurill",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It bounces on its tail like a ball, giggling, and tumbles into your lap.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "meditite",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It sits cross-legged on a boulder, eyes closed, and the camp falls quiet around it.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "electrike",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It races a circle around the camp until its fur crackles, then flops down, grinning.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "numel",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It sits as still as a stone, then slowly warms until the stones around it steam.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "spoink",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It bounces in place, trying to keep its pearl balanced, and wobbles when you look.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "trapinch",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It digs a small pit and waits at the bottom, patient as sand.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "cacnea",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It keeps its distance but leaves a flower on your pack when it thinks you aren't looking.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "swablu",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It rests on your hat like a cloud and hums a tune you can't quite place.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "zangoose",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It sharpens its claws and glares into the dark, ready for an old rival that never comes.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "seviper",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It watches from the rocks, tail curled like a blade, waiting for a rival who never shows.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "barboach",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It wriggles in the mud and flicks it at your boots, then pretends it was the wind.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "corphish",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It clacks its claws in a rhythm, daring the world to keep time.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "baltoy",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It spins on one foot all through the night, humming an ancient tune.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "feebas",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It hides at the bottom of the pond, and for a moment you see a shimmer of something wonderful.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "duskull",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It floats at the edge of the firelight, staring at nothing, then glances at you kindly.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "spheal",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It rolls from one side of the camp to the other, clapping its flippers all the way.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "bagon",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It stares up at the sky, headbutts a rock, and dreams out loud about flying.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "beldum",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It hovers beside you, magnetic and silent, an ancient steel thought waiting to grow.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "starly",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It trills at dawn so loudly that the whole camp wakes, and it looks delighted with itself.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "bidoof",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It gnaws a log with great purpose and the log is gone by morning.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "kricketot",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It plays its little song for the dusk and waits for the crickets to answer.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "buizel",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It floats on its back in the stream, tail whirling, like a boat with no hurry.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "cherubi",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It drinks the morning dew and glows a little redder than before.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "gible",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It chews a branch in half, looks at the splinters, and looks very sorry.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "riolu",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It senses your mood from across the camp and quietly sits close.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "hippopotas",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It dozes in the sand, sprays a lazy fountain, and wakes up for nothing.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "croagunk",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It croaks a warning at the dark, then squints to see if the dark is impressed.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "snover",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It sits in a patch of snow it brought along and blinks, perfectly at home.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "rotom",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "It buzzes between the camp lantern and the radio, delighted by everything with a wire.",
+   "group": "lore"
+  },
+  {
+   "speciesId": "litwick",
+   "kind": "lore",
+   "trigger": "rest node",
+   "scene": "Its flame flickers in time with your thoughts, and it leans closer to hear them.",
+   "group": "lore"
+  }
+ ]
+}

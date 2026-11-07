@@ -97,3 +97,22 @@ describe('overhaul party narration', () => {
     expect(partyNarration([], 'rest_node', 'k', nameOf, typesOf)).toBeNull();
   });
 });
+
+describe('hand-written extra moments', () => {
+  it('every extra scene belongs to a real species, is one clean sentence, and the Drive Pokémon speak at rest stops', async () => {
+    const extra = (await import('../../src/data/momentsExtra.json')).default.entries;
+    expect(extra.filter((e) => e.group === 'drive').length).toBeGreaterThanOrEqual(40);
+    expect(extra.filter((e) => e.group === 'lore').length).toBeGreaterThanOrEqual(50);
+    for (const e of extra) {
+      expect(content.species.has(e.speciesId), e.speciesId).toBe(true);
+      expect(e.scene.length, e.speciesId).toBeLessThanOrEqual(140);
+      expect(e.scene, e.speciesId).not.toMatch(/[{}]/);
+    }
+    resetNarration();
+    await ensureNarration();
+    const solo = [{ uid: 'd0', nature: 'hardy' as const, speciesId: 'dratini-delta' }];
+    const none = (_m: unknown) => [] as string[];
+    const line = partyNarration(solo, 'rest_node', 'k1', nameOf, none);
+    expect(line).toMatch(/^Delta Dratini: /);
+  });
+});

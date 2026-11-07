@@ -108,7 +108,7 @@ export function typesPool(content: Content, types: readonly TypeName[], regionId
   if (pool.length < minThemePool) {
     for (const id of wildPool) if (!pool.some((p) => p.speciesId === id)) pool.push({ speciesId: id, weight: 1 });
   }
-  return level === undefined ? pool : gatePool(content, pool, level).pool;
+  return level === undefined ? pool : gatePool(content, pool, level, regionId).pool;
 }
 
 /** Picks a species from the theme, preferring ones that share a type with `prefer` (e.g. a trainer's speciality). */

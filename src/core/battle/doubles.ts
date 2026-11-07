@@ -421,7 +421,7 @@ export function resolveDoublesTurn(ctx: BattleContext, action: PlayerAction): Ba
     field.on(c, events);
     const index = cmd.action.index;
     const chosen = S.resolveMove(content, c.mon, index);
-    const move = battleMove(content, battle, c.mon, cmd.action.transform?.kind === 'zmove' ? (zMoveFor(content, chosen) ?? chosen) : chosen);
+    const move = battleMove(content, battle, c.mon, cmd.action.transform?.kind === 'zmove' ? (zMoveFor(content, chosen, { speciesId: c.mon.speciesId, inventory: ctx.inventory }) ?? chosen) : chosen);
     turn.queue.push(plan(c, move, index, cmd.target));
   }
   for (const foe of field.alive('enemy')) {

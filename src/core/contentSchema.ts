@@ -210,8 +210,8 @@ export const MoveSchema = z.object({
       recoilMaxHp: z.number().positive().max(1).optional(),
       /** Deals damage equal to the user's level, ignoring stats. */
       fixedDamage: z.union([z.literal('level'), z.literal('psywave'), z.number().int().positive()]).optional(),
-      /** Takes off half of the target's current HP (Super Fang). */
-      halveTarget: z.literal(true).optional(),
+      /** Takes off half of the target's current HP (Super Fang); a number takes off that fraction instead (Guardian of Alola: 0.75). */
+      halveTarget: z.union([z.literal(true), z.number().min(0.1).max(0.9)]).optional(),
       /** Brings the target's HP down to the user's (Endeavor); fails if it is already lower. */
       endeavor: z.literal(true).optional(),
       /** How the move's power is worked out from the battle (see powerFromRule in the engine). */
@@ -1115,6 +1115,8 @@ export const ItemEffectSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('teraShard'), type: TypeNameSchema }),
   /** A Z-Crystal: with the Z-Ring, turns one move of its type into that type's Z-Move once per battle. */
   z.object({ kind: z.literal('zCrystal'), type: TypeNameSchema }),
+  /** A species Z-Crystal: with the Z-Ring, lets these species turn `move` into its own `zMove` once per battle (replaces the type Z-Move). */
+  z.object({ kind: z.literal('speciesZCrystal'), species: z.array(z.string()).min(1), move: z.string(), zMove: z.string() }),
   /** Battle-only "urge" items on the Pokémon in battle: trigger its ability now, use its held Berry or Herb now, or reset its stat changes. */
   z.object({ kind: z.literal('urge'), what: z.enum(['ability', 'item', 'reset']) }),
   /** Makes the opposing Pokémon drop its held item for the rest of the battle (Item Drop). */
@@ -2029,7 +2031,14 @@ export const BalanceSchema = z.object({
     moveCap: z.number().positive(),
     /** Species allowed over their cap on purpose (a boss-only form), each with the reason. */
     exempt: z.record(z.string(), z.string().min(1)).default({}),
-  }).default({ level: 50, caps: { baby: 1e9, basic: 1e9, middle: 1e9, final: 1e9, legendary: 1e9, mythical: 1e9, form: 1e9 }, moveCap: 1e9, exempt: {} }),
+    /**
+     * Tera and Z access (one spike per battle): the rating counts `teraPercent` for Terastallization, `zPercent` for the
+     * type Z-Move, and `speciesZPercent` instead when the species has its own Z-Crystal. A species may reach `headroom` x its cap with access.
+     */
+    access: z.object({ teraPercent: z.number().min(0), zPercent: z.number().min(0), speciesZPercent: z.number().min(0), headroom: z.number().min(1) }).default({ teraPercent: 0, zPercent: 0, speciesZPercent: 0, headroom: 1e9 }),
+  }).default({ level: 50, caps: { baby: 1e9, basic: 1e9, middle: 1e9, final: 1e9, legendary: 1e9, mythical: 1e9, form: 1e9 }, moveCap: 1e9, exempt: {}, access: { teraPercent: 0, zPercent: 0, speciesZPercent: 0, headroom: 1e9 } }),
+  /** Rarity caps by source (core/rarity.ts): regional forms sit `offRegionShift` tiers rarer outside their home region; `trade` = rarest species tier a Trade Post offers; `shopItem` = rarest item tier shops sell (Black Market excepted); `rewardItem` = rarest item tier a reward draft offers by badges (last row at or below your badges). */
+  rarityCaps: z.object({ offRegionShift: z.number().int().min(0), trade: z.enum(['common', 'uncommon', 'rare', 'veryRare', 'epic', 'legendary', 'mythical', 'special']), shopItem: z.enum(['common', 'uncommon', 'rare', 'epic']), rewardItem: z.array(z.object({ badges: z.number().int().min(0), max: z.enum(['common', 'uncommon', 'rare', 'epic']) })).min(1) }).default({ offRegionShift: 0, trade: 'special', shopItem: 'epic', rewardItem: [{ badges: 0, max: 'epic' }] }),
   /** Overhaul slice 3 (core/variety.ts): picks within `window[pool]` of the same pool get weight × `penalty`. A pool with no window keeps no history. */
   variety: z.object({ penalty: z.number().gt(0).max(1), window: z.record(z.string(), z.number().int().min(0).max(50)) }).default({ penalty: 1, window: {} }),
   doubles: z

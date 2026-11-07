@@ -109,5 +109,12 @@
   "zekrom": "powerhouse",
   "zeraora": "striker",
   "zygarde": "wall"
+ },
+ "entry": {
+  "striker": { "stat": "spe", "stages": 1 },
+  "powerhouse": { "stat": "best-attack", "stages": 1 },
+  "wall": { "stat": "def", "stages": 1 },
+  "support": { "stat": "spd", "stages": 1 },
+  "controller": { "stat": "acc", "stages": 1 }
  }
 }

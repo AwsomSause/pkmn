@@ -9,6 +9,8 @@ import { availabilityOf } from './availability';
 import type { Content } from './contentSchema';
 import type { Rng } from './rng';
 
+export type ItemTier = 'common' | 'uncommon' | 'rare' | 'epic';
+const ITEM_TIERS: readonly ItemTier[] = ['common', 'uncommon', 'rare', 'epic'];
 export const RARITY_TIERS = ['common', 'uncommon', 'rare', 'veryRare', 'epic', 'legendary', 'mythical', 'special'] as const;
 export type RarityTier = (typeof RARITY_TIERS)[number];
 const TierSchema = z.enum(RARITY_TIERS);
@@ -64,9 +66,17 @@ export function rarityOf(content: Content, speciesId: string): RarityTier {
   return tier;
 }
 
-/** Odds multiplier for ordinary encounters (0 for tiers wild encounters never roll). */
-export function wildRarityWeight(content: Content, speciesId: string): number {
+/** A species' tier where it is met: a regional form outside its home region sits `offRegionShift` tiers rarer. */
+export function rarityIn(content: Content, speciesId: string, regionId?: string): RarityTier {
   const t = rarityOf(content, speciesId);
+  const form = content.species.get(speciesId)?.form;
+  if (regionId && form?.kind === 'regional' && form.region && form.region !== regionId) return shiftRarer(t, content.balance.rarityCaps.offRegionShift);
+  return t;
+}
+
+/** Odds multiplier for ordinary encounters (0 for tiers wild encounters never roll). */
+export function wildRarityWeight(content: Content, speciesId: string, regionId?: string): number {
+  const t = rarityIn(content, speciesId, regionId);
   return RARITY.wildBlocked.includes(t) ? 0 : content.balance.availability.rarityWeights[t];
 }
 
@@ -85,3 +95,22 @@ export function pickEggSpecies<T extends { id: string }>(content: Content, list:
   for (let i = 0; i < list.length; i++) { r -= w[i]!; if (r < 0) return list[i]!; }
   return list[list.length - 1]!;
 }
+
+/** True when a Trade Post offer of this species is within the trade rarity cap (balance.rarityCaps.trade). */
+export const tradeAllowed = (content: Content, speciesId: string): boolean => order(rarityOf(content, speciesId)) <= order(content.balance.rarityCaps.trade);
+
+const itemOrder = (tier: string | undefined): number => (tier ? ITEM_TIERS.indexOf(tier as ItemTier) : -1);
+
+/** True when a shop may sell an item of this tier. */
+export const shopTierAllowed = (content: Content, tier: string | undefined): boolean => itemOrder(tier) <= itemOrder(content.balance.rarityCaps.shopItem);
+
+/** The rarest item tier a reward draft may offer with this many badges. */
+export function rewardTierCap(content: Content, badges: number): ItemTier {
+  let cap: ItemTier = content.balance.rarityCaps.rewardItem[0]!.max;
+  let best = -1;
+  for (const row of content.balance.rarityCaps.rewardItem) if (row.badges <= badges && row.badges > best) { best = row.badges; cap = row.max; }
+  return cap;
+}
+
+/** True when a reward draft with this many badges may offer an item of this tier. */
+export const rewardTierAllowed = (content: Content, tier: string | undefined, badges: number): boolean => itemOrder(tier) <= itemOrder(rewardTierCap(content, badges));

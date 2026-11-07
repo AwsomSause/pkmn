@@ -104,7 +104,7 @@ export function moveEffectLines(move: Move): string[] {
   if (e?.recoil) lines.push(`The user takes ${Math.round(e.recoil * 100)}% of the damage back.`);
   if (e?.recoilMaxHp) lines.push(`The user loses ${Math.round(e.recoilMaxHp * 100)}% of its max HP.`);
   if (e?.fixedDamage) lines.push(e.fixedDamage === 'level' ? "Deals damage equal to the user's level." : e.fixedDamage === 'psywave' ? 'Deals random damage based on level.' : `Deals exactly ${e.fixedDamage} damage.`);
-  if (e?.halveTarget) lines.push("Takes off half of the target's HP.");
+  if (e?.halveTarget) lines.push(`Takes off ${e.halveTarget === true ? 'half' : `${Math.round(e.halveTarget * 100)}%`} of the target's HP.`);
   if (e?.noop) lines.push('Does nothing.');
   if (move.flags.includes('contact')) lines.push('Makes contact.');
   if (move.flags.includes('sound')) lines.push('A sound move.');

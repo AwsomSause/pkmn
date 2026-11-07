@@ -423,6 +423,18 @@ describe('Z-Moves in battle', () => {
     expect(p.moves[0]!.pp).toBe(content.moves.get('thunderbolt')!.pp - 1);
   });
 
+  it('a species Z-Crystal swaps in its own Z-Move and the foe takes real damage (Catastropika, Guardian of Alola)', () => {
+    const { ctx } = setup([mon('pikachu', 50, 'p1', 'volt-tackle')], [mon('snorlax', 70, 'e1', 'tackle')], { 'z-ring': 1, 'pikanium-z': 1 }, 'z-species');
+    const events = resolveTurn(ctx, Z);
+    expect(events.find((e) => e.type === 'move' && e.side === 'player')).toEqual({ type: 'move', side: 'player', moveId: 'catastropika' });
+    expect(transforms(events)[0]).toMatchObject({ itemId: 'pikanium-z', zMoveId: 'catastropika' });
+    expect(damageTo(events, 'enemy')).toBeGreaterThan(0);
+    const tapu = setup([mon('tapu-koko', 50, 'p1', 'natures-madness')], [mon('snorlax', 70, 'e1', 'tackle')], { 'z-ring': 1, 'tapunium-z': 1 }, 'z-tapu');
+    const hp = tapu.ctx.battle.enemyTeam[0]!.hp;
+    const ev = resolveTurn(tapu.ctx, Z);
+    expect(damageTo(ev, 'enemy')).toBeGreaterThanOrEqual(Math.floor(hp * 0.74));
+  });
+
   it('never miss, and a Z Quick Attack loses its priority', () => {
     for (const seed of ['a', 'b', 'c', 'd', 'e', 'f']) {
       const { ctx } = setup([mon('pikachu', 50, 'p1', 'zap-cannon')], [mon('snorlax', 70, 'e1', 'tackle')], Z_KIT, `z-acc-${seed}`);

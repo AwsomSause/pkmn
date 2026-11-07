@@ -39,7 +39,7 @@ const MAX_TURNS = 300;
 /** The Bag of a player with everything that unlocks a battle mechanic: key items, Mega Stones and orbs, Z-Crystals. */
 export function fullKit(content: Content): Record<string, number> {
   const bag: Record<string, number> = {};
-  for (const item of content.items.values()) if (['keyItem', 'megaStone', 'zCrystal'].includes(item.effect.kind)) bag[item.id] = 1;
+  for (const item of content.items.values()) if (['keyItem', 'megaStone', 'zCrystal', 'speciesZCrystal'].includes(item.effect.kind)) bag[item.id] = 1;
   return bag;
 }
 

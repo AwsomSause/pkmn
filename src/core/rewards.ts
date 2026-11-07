@@ -16,6 +16,7 @@
 // item already at its max is a free re-roll of the draft (director, answer 5).
 
 import { noRevives } from './rules';
+import { rewardTierAllowed } from './rarity';
 import { fortuneBias } from './bank';
 import { moneyMultiplier, runArchetype } from './archetypes';
 import { evolutionLevelOffset, rareItemWeightPerk } from './trainerPerks';
@@ -43,6 +44,8 @@ export class RewardConfigError extends Error {
 }
 
 export function isRewardEligible(content: Content, run: RunState, reward: Reward): boolean {
+  // Rarity cap by source: early drafts (before 2 badges) offer no epic rewards (rarity.json caps.rewardItem).
+  if (!rewardTierAllowed(content, reward.rarity, run.badges.length)) return false;
   if (reward.scope === 'pokemon' && run.party.length === 0) return false;
   if (reward.effect.kind === 'addItem' && noRevives(run.rules) && content.items.get(reward.effect.item)?.category === 'revive') return false;
   if (reward.effect.kind === 'catalog') {
@@ -65,6 +68,11 @@ export function isRewardEligible(content: Content, run: RunState, reward: Reward
   if (item?.effect.kind === 'zCrystal') {
     const type = item.effect.type;
     return itemCount(run.inventory, item.id) === 0 && hasKeyItem(content, run.inventory, 'zmove') && run.party.some((p) => p.moves.some((m) => content.moves.get(m.id)?.type === type));
+  }
+  // A species Z-Crystal is offered once you have the Z-Ring, and only when a party member of that species knows its move.
+  if (item?.effect.kind === 'speciesZCrystal') {
+    const { species, move } = item.effect;
+    return itemCount(run.inventory, item.id) === 0 && hasKeyItem(content, run.inventory, 'zmove') && run.party.some((p) => species.includes(p.speciesId) && p.moves.some((m) => m.id === move));
   }
   if (item?.effect.kind === 'megaStone') {
     const forms = item.effect.forms;

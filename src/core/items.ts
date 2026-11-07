@@ -71,6 +71,7 @@ export function itemUseProblem(content: Content, item: Item, mon: PokemonInstanc
     case 'keyItem':
     case 'megaStone':
     case 'zCrystal':
+    case 'speciesZCrystal':
       return `${item.name} works by itself in battle.`;
     case 'teraShard':
       if (teraTypeOf(content, mon) === item.effect.type) return `${name}'s Tera Type is already ${typeLabel(item.effect.type)}.`;

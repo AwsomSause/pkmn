@@ -16,7 +16,7 @@ import { familyId } from '../mastery';
 import { evolveFully } from '../evolution';
 import { abilityOf, addLevels, createPokemon, maxHp, maxPp, usableLearnset, getSpecies } from '../pokemon';
 import { specialFamily } from '../specialForms';
-import { rarityOf } from '../rarity';
+import { rarityOf, tradeAllowed } from '../rarity';
 import { rememberPick, varietyWeight } from '../variety';
 import { pickTrade, TRADES, type GeneratedTrade } from '../tradePools';
 import { applyCatalog, catalogTargetProblem, getCatalogEntry } from '../catalog';
@@ -121,13 +121,13 @@ export function generateTradeOffer(content: Content, run: RunState, sideId: stri
   const within = (lo: number, hi: number) => (s: { id: string; baseStats: typeof own.baseStats }) => !owned.has(s.id) && baseStatTotal(s as typeof own) >= lo && baseStatTotal(s as typeof own) <= hi;
   const fits = (spread: number) => within(bst * (1 - spread), bst * (1 + spread));
   const open = ['regional', ...openFormFamilies(run)];
-  const wild = wildEligibleSpecies(content);
+  const wild = wildEligibleSpecies(content).filter((s) => tradeAllowed(content, s.id));
   const normal = wild.filter(fits(C.tradeBstSpread));
   const ids = (list: { id: string }[]) => list.map((s) => s.id);
   const recent = varietyWeight(content, run, 'trade');
   return pickTrade(rng, {
     fair: ids(normal),
-    regional: ids([...content.species.values()].filter((s) => open.includes(specialFamily(s) ?? '') && fits(C.tradeBstSpread * 2)(s))),
+    regional: ids([...content.species.values()].filter((s) => open.includes(specialFamily(s) ?? '') && tradeAllowed(content, s.id) && fits(C.tradeBstSpread * 2)(s))),
     rare: ids(wild.filter(fits(C.tradeBstSpread * 1.5)).filter((s) => ['rare', 'veryRare', 'epic'].includes(rarityOf(content, s.id)))),
     themed: ids(normal.filter((s) => s.types.some((t) => own.types.includes(t)))),
     risky: ids(wild.filter(within(bst * (1 + C.tradeBstSpread), bst * (1 + TRADES.riskySpread)))),

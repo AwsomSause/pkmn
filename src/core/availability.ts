@@ -54,8 +54,8 @@ export function unlockLevel(content: Content, speciesId: string): number {
 export const isUnlockedAt = (content: Content, speciesId: string, level: number): boolean => unlockLevel(content, speciesId) <= level;
 
 /** Odds multiplier from the spreadsheet rarity (1 without a row). */
-export function availabilityWeight(content: Content, speciesId: string): number {
-  return availabilityOf(content, speciesId) ? wildRarityWeight(content, speciesId) : 1;
+export function availabilityWeight(content: Content, speciesId: string, regionId?: string): number {
+  return availabilityOf(content, speciesId) ? wildRarityWeight(content, speciesId, regionId) : 1;
 }
 
 /**
@@ -63,13 +63,13 @@ export function availabilityWeight(content: Content, speciesId: string): number 
  * balance.minThemePool are unlocked, the earliest-unlocking locked ones fill the gap (a bounded
  * fallback, so a theme is never empty); `fallbacks` names them.
  */
-export function gatePool(content: Content, pool: readonly PoolEntry[], level: number): { pool: PoolEntry[]; fallbacks: string[] } {
+export function gatePool(content: Content, pool: readonly PoolEntry[], level: number, regionId?: string): { pool: PoolEntry[]; fallbacks: string[] } {
   const open = pool.filter((p) => isUnlockedAt(content, p.speciesId, level));
   const need = Math.max(0, Math.min(pool.length, content.balance.minThemePool) - open.length);
   const extra = need === 0 ? [] : pool
     .filter((p) => !isUnlockedAt(content, p.speciesId, level))
     .sort((a, b) => unlockLevel(content, a.speciesId) - unlockLevel(content, b.speciesId) || a.speciesId.localeCompare(b.speciesId))
     .slice(0, need);
-  const scale = (p: PoolEntry): PoolEntry => ({ speciesId: p.speciesId, weight: p.weight * availabilityWeight(content, p.speciesId) });
+  const scale = (p: PoolEntry): PoolEntry => ({ speciesId: p.speciesId, weight: p.weight * availabilityWeight(content, p.speciesId, regionId) });
   return { pool: [...open, ...extra].map(scale), fallbacks: extra.map((p) => p.speciesId) };
 }
