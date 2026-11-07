@@ -26,7 +26,21 @@ describe('arena style', () => {
       const n = pickUieArena({ seed: 's', stageIndex: i, type: 'water' });
       if (n) expect(UIE_ARENAS).toContain(n);
     }
-    expect(pickUieArena({ seed: 's', stageIndex: 2, type: 'fire' })).toBeNull();
+    expect([null, 'burning']).toContain(pickUieArena({ seed: 's', stageIndex: 2, type: 'fire' }));
+  });
+  it('themed halls cover every themed type, keep time of day, and half the fights keep the plain arena', () => {
+    const seen = new Set<string>();
+    let plain = 0;
+    for (let i = 0; i < 800; i++) {
+      for (const type of ['fire', 'ground', 'water', 'ghost', 'fairy'] as const) {
+        const n = pickUieArena({ seed: 'themes', stageIndex: i, type });
+        if (!n) plain++;
+        else seen.add(n);
+      }
+    }
+    for (const n of ['burning', 'desert', 'desert_eve', 'desert_night', 'beach', 'haunted', 'dimensional', 'fairytale', 'starlight']) expect(seen, n).toContain(n);
+    expect(plain).toBeGreaterThan(1000);
+    expect(pickUieArena({ seed: 's', stageIndex: 1, type: 'fire', boss: { role: 'gym', eliteIndex: 0, final: false } })).toBeNull();
   });
 });
 
