@@ -28,6 +28,16 @@ describe('arena style', () => {
     }
     expect([null, 'burning']).toContain(pickUieArena({ seed: 's', stageIndex: 2, type: 'fire' }));
   });
+  it('every themed hall is a real arena, and time-of-day versions are used when they exist', () => {
+    for (const type of ['fire', 'electric', 'psychic', 'ghost', 'dragon', 'poison', 'fairy', 'steel', 'dark', 'fighting', 'flying', 'ground', 'grass', 'bug', 'water', 'rock', 'normal', 'ice'] as const) {
+      for (let i = 0; i < 300; i++) {
+        const n = pickUieArena({ seed: 'every', stageIndex: i, type });
+        if (n) expect(UIE_ARENAS, `${type}:${n}`).toContain(n);
+      }
+    }
+    const lake = new Set(Array.from({ length: 1500 }, (_, i) => pickUieArena({ seed: 'lakes', stageIndex: i, type: 'water' })));
+    expect(lake).toContain('lake_night');
+  });
   it('themed halls cover every themed type, keep time of day, and half the fights keep the plain arena', () => {
     const seen = new Set<string>();
     let plain = 0;
