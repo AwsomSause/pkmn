@@ -1,9 +1,18 @@
 import { describe, expect, it } from 'vitest';
-import { battleTrack, MAP_TRACKS, mapTrack, ROLE_TRACK_IDS, VICTORY_TRACKS, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
+import { battleTrack, lowHpTrack, LOW_HP_TRACK, MAP_TRACKS, mapTrack, ROLE_TRACK_IDS, VICTORY_TRACKS, EXPEDITION_TRACK_IDS, expeditionTrack, RAID_TRACK_IDS, raidMusic, victoryTrack } from '../../src/core/presentation/battleMusic';
 import { FIXED_ASSETS } from '../../src/assets/catalog';
 import { buildContent } from '../../src/data';
 
 describe('battle music', () => {
+  it('ordinary fights swap to the low-HP song under a fifth of HP; bosses, raids and GB Sounds keep theirs', () => {
+    expect(lowHpTrack('bgm.battle', 0.19)).toBe(LOW_HP_TRACK);
+    expect(lowHpTrack('bgm.battle_trainer', 0.1)).toBe(LOW_HP_TRACK);
+    expect(lowHpTrack('bgm.battle', 0.2)).toBe('bgm.battle');
+    expect(lowHpTrack('bgm.battle_leader', 0.05)).toBe('bgm.battle_leader');
+    expect(lowHpTrack('bgm.raid.max', 0.05)).toBe('bgm.raid.max');
+    expect(lowHpTrack('bgm.battle_gb', 0.05)).toBe('bgm.battle_gb');
+    expect(FIXED_ASSETS.some((a) => a.id === LOW_HP_TRACK)).toBe(true);
+  });
   it('raids keep their track; GB Sounds swaps the normal battle tracks for the Game Boy loop', () => {
     expect(battleTrack({ raidTrack: 'bgm.raid.max', trainer: false, gbSounds: true })).toBe('bgm.raid.max');
     expect(battleTrack({ raidTrack: null, trainer: true, gbSounds: true })).toBe('bgm.battle_gb');
