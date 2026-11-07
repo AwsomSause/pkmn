@@ -22,12 +22,35 @@ export interface BattleMusicInput {
   trainer: boolean;
   /** The GB Sounds item: battles play the Game Boy style stand-in loop. */
   gbSounds: boolean;
+  /** A stable string for this battle (run seed + battles won): ordinary fights then pick one of the extra songs by hash. Left off, the default song plays. */
+  variantKey?: string;
+}
+
+/** Extra songs from Pokemon Decades (ORAS, DPPT, HGSS, B2W2 battle themes), picked per battle by string hash (never the gameplay RNG). */
+export const WILD_TRACKS = ['bgm.battle', 'bgm.battle_wild_oras', 'bgm.battle_wild_dppt', 'bgm.battle_wild_hgss', 'bgm.battle_wild_bw2'] as const;
+export const TRAINER_TRACKS = ['bgm.battle_trainer', 'bgm.battle_trainer_oras', 'bgm.battle_trainer_dppt', 'bgm.battle_trainer_hgss', 'bgm.battle_trainer_bw2'] as const;
+const GYM_TRACKS = ['bgm.battle_leader', 'bgm.battle_gym_oras', 'bgm.battle_gym_dppt', 'bgm.battle_gym_hgss'] as const;
+const ELITE_TRACKS = ['bgm.battle_elite', 'bgm.battle_elite_oras', 'bgm.battle_elite_dppt'] as const;
+/** Every song a battle can pick, besides the always-loaded wild and trainer defaults. */
+export const BATTLE_VARIANT_IDS: readonly string[] = [...WILD_TRACKS, ...TRAINER_TRACKS, ...GYM_TRACKS, ...ELITE_TRACKS].filter((id) => id !== 'bgm.battle' && id !== 'bgm.battle_trainer');
+
+function hashPick<T>(list: readonly T[], key: string): T {
+  let h = 0;
+  for (const c of key) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return list[h % list.length]!;
 }
 
 export function battleTrack(i: BattleMusicInput): string {
   if (i.raidTrack) return i.raidTrack;
   if (i.gbSounds) return 'bgm.battle_gb';
-  if (i.role && i.role !== 'wild' && i.role !== 'trainer') return ROLE_TRACKS[i.role];
+  const key = i.variantKey;
+  if (i.role && i.role !== 'wild' && i.role !== 'trainer') {
+    const base = ROLE_TRACKS[i.role];
+    if (key !== undefined && i.role === 'gym') return hashPick(GYM_TRACKS, key);
+    if (key !== undefined && i.role === 'elite') return hashPick(ELITE_TRACKS, key);
+    return base;
+  }
+  if (key !== undefined) return hashPick(i.trainer ? TRAINER_TRACKS : WILD_TRACKS, key);
   return i.trainer ? 'bgm.battle_trainer' : 'bgm.battle';
 }
 
@@ -39,7 +62,7 @@ export const LOW_HP_TRACK = 'bgm.battle_lowhp';
  * Boss, rival, raid and GB Sounds songs stay. Presentation only: it never touches the battle.
  */
 export function lowHpTrack(base: string, hpShare: number): string {
-  return hpShare < 0.2 && (base === 'bgm.battle' || base === 'bgm.battle_trainer') ? LOW_HP_TRACK : base;
+  return hpShare < 0.2 && ((WILD_TRACKS as readonly string[]).includes(base) || (TRAINER_TRACKS as readonly string[]).includes(base)) ? LOW_HP_TRACK : base;
 }
 
 /** The victory fanfare: the big one for bosses (gym leaders, Elite Four, champions), then trainers, then wild. */
@@ -83,8 +106,8 @@ export function expeditionTrack(tier: number): string {
 }
 export const EXPEDITION_TRACK_IDS: readonly string[] = [1, 2, 3, 4].map(expeditionTrack);
 
-/** Map songs: Route 101 plus the pack's Bicycle and Surfing themes. A region keeps one (string hash, never the gameplay RNG). */
-export const MAP_TRACKS = ['bgm.map', 'bgm.map_bike', 'bgm.map_surf'] as const;
+/** Map songs: Route 101 plus the pack's Bicycle and Surfing themes, and five route songs from Pokemon Decades. A region keeps one (string hash, never the gameplay RNG). */
+export const MAP_TRACKS = ['bgm.map', 'bgm.map_bike', 'bgm.map_surf', 'bgm.map_bw', 'bgm.map_oras', 'bgm.map_dppt', 'bgm.map_dppt2', 'bgm.map_hgss'] as const;
 export function mapTrack(regionId: string): string {
   let h = 0;
   for (const c of regionId) h = (h * 31 + c.charCodeAt(0)) >>> 0;

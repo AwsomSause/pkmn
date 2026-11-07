@@ -336,6 +336,10 @@ export const FIXED_ASSETS: AssetEntry[] = [
   ...['map', 'map_bike', 'map_surf', 'hub', 'shop', 'event', 'battle_leader', 'battle_elite', 'battle_rival', 'victory_elite'].map(
     (n): AssetEntry => ({ id: `bgm.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/${n}.mp3`, lazy: true }),
   ),
+  // Pokemon Decades battle and route songs (Audio/BGM, re-encoded to 96 kbps mp3): picked per battle or region by hash.
+  ...['battle_wild_oras', 'battle_wild_dppt', 'battle_wild_hgss', 'battle_wild_bw2', 'battle_trainer_oras', 'battle_trainer_dppt', 'battle_trainer_hgss', 'battle_trainer_bw2', 'battle_gym_oras', 'battle_gym_dppt', 'battle_gym_hgss', 'battle_elite_oras', 'battle_elite_dppt', 'map_bw', 'map_oras', 'map_dppt', 'map_dppt2', 'map_hgss'].map(
+    (n): AssetEntry => ({ id: `bgm.${n}`, kind: 'audio', category: 'music', path: `audio/bgm/${n}.mp3`, lazy: true }),
+  ),
   // Jingles (UIE "ME" folder): item, key item, badge, new Pokémon, evolution, healing, save, TM, berry, forgotten move.
   ...Object.entries({ item_get: 'item_get', key_item: 'key_item', badge: 'badge', pkmn_get: 'pkmn_get', evo_start: 'evo_start', evo_success: 'evo_success', heal: 'heal', save: 'save', tm_get: 'tm_get', berry: 'berry', forget_move: 'forget_move' }).map(
     ([id, file]): AssetEntry => ({ id: `me.${id}`, kind: 'audio', category: 'sound', path: `audio/me/${file}.ogg`, lazy: true }),
